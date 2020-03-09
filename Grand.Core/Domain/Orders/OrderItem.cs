@@ -133,5 +133,11 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets the date and time of order creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the vendor`s commission
+        /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
+        public decimal Commission { get; set; }
     }
 }

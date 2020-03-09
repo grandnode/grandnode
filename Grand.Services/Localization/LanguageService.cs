@@ -63,7 +63,7 @@ namespace Grand.Services.Localization
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public LanguageService(ICacheManager cacheManager,
             IRepository<Language> languageRepository,
             IStoreMappingService storeMappingService,
@@ -71,12 +71,12 @@ namespace Grand.Services.Localization
             LocalizationSettings localizationSettings,
             IMediator mediator)
         {
-            this._cacheManager = cacheManager;
-            this._languageRepository = languageRepository;
-            this._storeMappingService = storeMappingService;
-            this._settingService = settingService;
-            this._localizationSettings = localizationSettings;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _languageRepository = languageRepository;
+            _storeMappingService = storeMappingService;
+            _settingService = settingService;
+            _localizationSettings = localizationSettings;
+            _mediator = mediator;
         }
 
         #endregion
@@ -109,7 +109,7 @@ namespace Grand.Services.Localization
             await _languageRepository.DeleteAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(language);
@@ -135,7 +135,7 @@ namespace Grand.Services.Localization
             });
 
             //store mapping
-            if (!String.IsNullOrWhiteSpace(storeId))
+            if (!string.IsNullOrWhiteSpace(storeId))
             {
                 languages = languages
                     .Where(l => _storeMappingService.Authorize(l, storeId))
@@ -167,7 +167,7 @@ namespace Grand.Services.Localization
             await _languageRepository.InsertAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(language);
@@ -186,7 +186,7 @@ namespace Grand.Services.Localization
             await _languageRepository.UpdateAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(language);

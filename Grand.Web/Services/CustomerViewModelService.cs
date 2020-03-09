@@ -7,14 +7,17 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Security.Captcha;
+using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
+using Grand.Services.Documents;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -108,41 +111,41 @@ namespace Grand.Web.Services
                     OrderSettings orderSettings,
                     MediaSettings mediaSettings,
                     VendorSettings vendorSettings
-            )
+                 )
         {
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._genericAttributeService = genericAttributeService;
-            this._workflowMessageService = workflowMessageService;
-            this._returnRequestService = returnRequestService;
-            this._storeMappingService = storeMappingService;
-            this._addressViewModelService = addressViewModelService;
-            this._orderService = orderService;
-            this._downloadService = downloadService;
-            this._pictureService = pictureService;
-            this._productService = productService;
-            this._auctionService = auctionService;
-            this._newsletterCategoryService = newsletterCategoryService;
-            this._serviceProvider = serviceProvider;
-            this._customerSettings = customerSettings;
-            this._dateTimeSettings = dateTimeSettings;
-            this._taxSettings = taxSettings;
-            this._forumSettings = forumSettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._securitySettings = securitySettings;
-            this._captchaSettings = captchaSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._orderSettings = orderSettings;
-            this._mediaSettings = mediaSettings;
-            this._vendorSettings = vendorSettings;
+            _externalAuthenticationService = externalAuthenticationService;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _genericAttributeService = genericAttributeService;
+            _workflowMessageService = workflowMessageService;
+            _returnRequestService = returnRequestService;
+            _storeMappingService = storeMappingService;
+            _addressViewModelService = addressViewModelService;
+            _orderService = orderService;
+            _downloadService = downloadService;
+            _pictureService = pictureService;
+            _productService = productService;
+            _auctionService = auctionService;
+            _newsletterCategoryService = newsletterCategoryService;
+            _serviceProvider = serviceProvider;
+            _customerSettings = customerSettings;
+            _dateTimeSettings = dateTimeSettings;
+            _taxSettings = taxSettings;
+            _forumSettings = forumSettings;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _securitySettings = securitySettings;
+            _captchaSettings = captchaSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _orderSettings = orderSettings;
+            _mediaSettings = mediaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         public virtual async Task DeleteAccount(Customer customer)
@@ -173,8 +176,7 @@ namespace Grand.Web.Services
             var customerAttributes = await _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
-                var attributeModel = new CustomerAttributeModel
-                {
+                var attributeModel = new CustomerAttributeModel {
                     Id = attribute.Id,
                     Name = attribute.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     IsRequired = attribute.IsRequired,
@@ -187,8 +189,7 @@ namespace Grand.Web.Services
                     var attributeValues = attribute.CustomerAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
-                        var valueModel = new CustomerAttributeValueModel
-                        {
+                        var valueModel = new CustomerAttributeValueModel {
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             IsPreSelected = attributeValue.IsPreSelected
@@ -302,8 +303,7 @@ namespace Grand.Web.Services
                 model.Newsletter = newsletter != null && newsletter.Active;
 
                 var categories = (await _newsletterCategoryService.GetAllNewsletterCategory()).ToList();
-                categories.ForEach(x => model.NewsletterCategories.Add(new NewsletterSimpleCategory()
-                {
+                categories.ForEach(x => model.NewsletterCategories.Add(new NewsletterSimpleCategory() {
                     Id = x.Id,
                     Description = x.GetLocalized(y => y.Description, _workContext.WorkingLanguage.Id),
                     Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
@@ -327,8 +327,7 @@ namespace Grand.Web.Services
                 model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
                 foreach (var c in await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id))
                 {
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
+                    model.AvailableCountries.Add(new SelectListItem {
                         Text = c.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
@@ -352,8 +351,7 @@ namespace Grand.Web.Services
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
-                        model.AvailableStates.Add(new SelectListItem
-                        {
+                        model.AvailableStates.Add(new SelectListItem {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
                             Value = ""
                         });
@@ -390,7 +388,7 @@ namespace Grand.Web.Services
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
-
+            model.Is2faEnabled = customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled);
             //external authentication
             model.NumberOfExternalAuthenticationProviders = _externalAuthenticationService
                            .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
@@ -400,8 +398,7 @@ namespace Grand.Web.Services
                 if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
                     continue;
 
-                model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
-                {
+                model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel {
                     Id = ear.Id,
                     Email = ear.Email,
                     ExternalIdentifier = ear.ExternalDisplayIdentifier,
@@ -465,8 +462,7 @@ namespace Grand.Web.Services
 
                 foreach (var c in await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id))
                 {
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
+                    model.AvailableCountries.Add(new SelectListItem {
                         Text = c.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
@@ -490,8 +486,7 @@ namespace Grand.Web.Services
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
-                        model.AvailableStates.Add(new SelectListItem
-                        {
+                        model.AvailableStates.Add(new SelectListItem {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
                             Value = ""
                         });
@@ -511,8 +506,7 @@ namespace Grand.Web.Services
             var newsletterCategories = await _newsletterCategoryService.GetNewsletterCategoriesByStore(_storeContext.CurrentStore.Id);
             foreach (var item in newsletterCategories)
             {
-                model.NewsletterCategories.Add(new NewsletterSimpleCategory()
-                {
+                model.NewsletterCategories.Add(new NewsletterSimpleCategory() {
                     Id = item.Id,
                     Name = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     Description = item.GetLocalized(x => x.Description, _workContext.WorkingLanguage.Id),
@@ -658,6 +652,10 @@ namespace Grand.Web.Services
             model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
             model.HideAuctions = _customerSettings.HideAuctionsTab;
             model.HideNotes = _customerSettings.HideNotesTab;
+            model.HideDocuments = _customerSettings.HideDocumentsTab;
+            model.HideReviews = _customerSettings.HideReviewsTab;
+            model.HideCourses = _customerSettings.HideCoursesTab;
+
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;
@@ -709,8 +707,7 @@ namespace Grand.Web.Services
             {
                 var order = await _orderService.GetOrderByOrderItemId(item.Id);
                 var product = await productService.GetProductByIdIncludeArch(item.ProductId);
-                var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
-                {
+                var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel {
                     OrderItemGuid = item.OrderItemGuid,
                     OrderId = order.Id,
                     OrderNumber = order.OrderNumber,
@@ -722,11 +719,11 @@ namespace Grand.Web.Services
                 };
                 model.Items.Add(itemModel);
 
-                if (await _downloadService.IsDownloadAllowed(item))
+                if (await _downloadService.IsDownloadAllowed(order, item))
                     itemModel.DownloadId = product.DownloadId;
 
-                if (await _downloadService.IsLicenseDownloadAllowed(item))
-                    itemModel.LicenseId = !String.IsNullOrEmpty(item.LicenseDownloadId) ? item.LicenseDownloadId : "";
+                if (await _downloadService.IsLicenseDownloadAllowed(order, item))
+                    itemModel.LicenseId = !string.IsNullOrEmpty(item.LicenseDownloadId) ? item.LicenseDownloadId : "";
             }
             return model;
         }
@@ -762,6 +759,8 @@ namespace Grand.Web.Services
         {
             var model = new CustomerAuctionsModel();
             var priceFormatter = _serviceProvider.GetRequiredService<IPriceFormatter>();
+            var currencyService = _serviceProvider.GetRequiredService<ICurrencyService>();
+            var primaryCurrency = await currencyService.GetPrimaryStoreCurrency();
 
             var customerBids = (await _auctionService.GetBidsByCustomerId(customer.Id)).GroupBy(x => x.ProductId);
             foreach (var item in customerBids)
@@ -773,14 +772,14 @@ namespace Grand.Web.Services
                     bid.Ended = product.AuctionEnded;
                     bid.OrderId = item.Where(x => x.Win && x.CustomerId == customer.Id).FirstOrDefault()?.OrderId;
                     var amount = product.HighestBid;
-                    bid.CurrentBidAmount = priceFormatter.FormatPrice(amount);
+                    bid.CurrentBidAmount = priceFormatter.FormatPrice(amount, true, primaryCurrency);
                     bid.CurrentBidAmountValue = amount;
                     bid.HighestBidder = product.HighestBidder == customer.Id;
                     bid.EndBidDate = product.AvailableEndDateTimeUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc) : DateTime.MaxValue;
                     bid.ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
                     bid.ProductSeName = product.GetSeName(_workContext.WorkingLanguage.Id);
                     bid.BidAmountValue = item.Max(x => x.Amount);
-                    bid.BidAmount = priceFormatter.FormatPrice(bid.BidAmountValue);
+                    bid.BidAmount = priceFormatter.FormatPrice(bid.BidAmountValue, true, primaryCurrency);
                     model.ProductBidList.Add(bid);
                 }
             }
@@ -806,6 +805,86 @@ namespace Grand.Web.Services
                 mm.DownloadId = item.DownloadId;
                 model.CustomerNoteList.Add(mm);
             }
+            return model;
+        }
+
+        public virtual async Task<DocumentsModel> PrepareDocuments(Customer customer)
+        {
+            var model = new DocumentsModel();
+            model.CustomerId = customer.Id;
+            var documentService = _serviceProvider.GetRequiredService<IDocumentService>();
+            var documentTypeService = _serviceProvider.GetRequiredService<IDocumentTypeService>();
+            var documents = await documentService.GetAll(customer.Id);
+            foreach (var item in documents.Where(x => x.Published).OrderBy(x => x.DisplayOrder))
+            {
+                var doc = new Document();
+                doc.Id = item.Id;
+                doc.Amount = item.TotalAmount;
+                doc.OutstandAmount = item.OutstandAmount;
+                doc.Link = item.Link;
+                doc.Name = item.Name;
+                doc.Number = item.Number;
+                doc.Quantity = item.Quantity;
+                doc.Status = item.DocumentStatus.GetLocalizedEnum(_localizationService, _workContext);
+                doc.Description = item.Description;
+                doc.DocDate = item.DocDate;
+                doc.DueDate = item.DueDate;
+                doc.DocumentType = (await documentTypeService.GetById(item.DocumentTypeId))?.Name;
+                doc.DownloadId = item.DownloadId;
+                model.DocumentList.Add(doc);
+            }
+            return model;
+        }
+
+        public virtual async Task<CustomerProductReviewsModel> PrepareReviews(Customer customer)
+        {
+            var reviewsModel = new CustomerProductReviewsModel();
+
+            reviewsModel.CustomerId = customer.Id;
+            reviewsModel.CustomerInfo = customer != null ? customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest") : "";
+
+            var productReviews = await _productService.GetAllProductReviews(customer.Id);
+            foreach (var productReview in productReviews)
+            {
+                var product = await _productService.GetProductById(productReview.ProductId);
+
+                var reviewModel = new CustomerProductReviewModel();
+
+                reviewModel.Id = productReview.Id;
+                reviewModel.ProductId = productReview.ProductId;
+                reviewModel.ProductName = product.Name;
+                reviewModel.ProductSeName = product.GetSeName(_workContext.WorkingLanguage.Id);
+                reviewModel.Rating = productReview.Rating;
+                reviewModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
+                reviewModel.Signature = productReview.Signature;
+                reviewModel.ReviewText = productReview.ReviewText;
+                reviewModel.ReplyText = productReview.ReplyText;
+                reviewModel.IsApproved = productReview.IsApproved;
+
+                reviewsModel.Reviews.Add(reviewModel);
+            }
+
+            return reviewsModel;
+        }
+
+        public virtual async Task<CoursesModel> PrepareCourses(Customer customer, Store store)
+        {
+            var courseService = _serviceProvider.GetRequiredService<ICourseViewModelService>();
+            var model = await courseService.GetCoursesByCustomer(customer, store.Id);
+            return model;
+        }
+
+        public virtual CustomerInfoModel.TwoFactorAuthenticationModel PrepareTwoFactorAuthenticationModel()
+        {
+            var twoFactorAuthenticationService = _serviceProvider.GetRequiredService<ITwoFactorAuthenticationService>();
+
+            var secretkey = Guid.NewGuid().ToString();
+            var setupInfo = twoFactorAuthenticationService.GenerateCodeSetup(secretkey, _workContext.CurrentCustomer.Email);
+
+            var model = new CustomerInfoModel.TwoFactorAuthenticationModel {
+                CustomValues = setupInfo.CustomValues,
+                SecretKey = secretkey
+            };
             return model;
         }
     }

@@ -19,9 +19,9 @@ namespace Grand.Plugin.Tax.FixedRate
 
         public FixedRateTaxProvider(ISettingService settingService, IWebHelper webHelper, IServiceProvider serviceProvider)
         {
-            this._settingService = settingService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
+            _settingService = settingService;
+            _webHelper = webHelper;
+            _serviceProvider = serviceProvider;
         }
         
         /// <summary>
@@ -45,7 +45,7 @@ namespace Grand.Plugin.Tax.FixedRate
         /// <returns>Tax rate</returns>
         protected decimal GetTaxRate(string taxCategoryId)
         {
-            var rate = this._settingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
+            var rate = _settingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
             return rate;
         }
 

@@ -13,9 +13,9 @@ namespace Grand.Services.Customers
         Task AddToCart(ShoppingCartItem cart, Product product, Customer customer);
 
         /// <summary>
-        /// Run action add new order
+        /// Run action add new order / paid order
         /// </summary>
-        Task AddOrder(Order order, Customer customer);
+        Task AddOrder(Order order, CustomerActionTypeEnum customerActionType);
 
         /// <summary>
         /// Viewed

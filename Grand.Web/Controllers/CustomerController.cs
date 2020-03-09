@@ -9,14 +9,12 @@ using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Tax;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
-using Grand.Services.Events;
 using Grand.Services.ExportImport;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -92,27 +90,27 @@ namespace Grand.Web.Controllers
             TaxSettings taxSettings
             )
         {
-            this._customerViewModelService = customerViewModelService;
-            this._authenticationService = authenticationService;
-            this._dateTimeSettings = dateTimeSettings;
-            this._taxSettings = taxSettings;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._customerService = customerService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._genericAttributeService = genericAttributeService;
-            this._customerRegistrationService = customerRegistrationService;
-            this._taxService = taxService;
-            this._customerSettings = customerSettings;
-            this._countryService = countryService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._customerActivityService = customerActivityService;
-            this._addressViewModelService = addressViewModelService;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._captchaSettings = captchaSettings;
-            this._mediator = mediator;
+            _customerViewModelService = customerViewModelService;
+            _authenticationService = authenticationService;
+            _dateTimeSettings = dateTimeSettings;
+            _taxSettings = taxSettings;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _customerService = customerService;
+            _customerAttributeParser = customerAttributeParser;
+            _genericAttributeService = genericAttributeService;
+            _customerRegistrationService = customerRegistrationService;
+            _taxService = taxService;
+            _customerSettings = customerSettings;
+            _countryService = countryService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _customerActivityService = customerActivityService;
+            _addressViewModelService = addressViewModelService;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _captchaSettings = captchaSettings;
+            _mediator = mediator;
         }
 
         #endregion
@@ -148,7 +146,7 @@ namespace Grand.Web.Controllers
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         [ValidateCaptcha]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> Login(LoginModel model, string returnUrl, bool captchaValid,
                        [FromServices] IShoppingCartService shoppingCartService)
         {
@@ -170,25 +168,18 @@ namespace Grand.Web.Controllers
                     case CustomerLoginResults.Successful:
                         {
                             var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(model.Username) : await _customerService.GetCustomerByEmail(model.Email);
-
-                            //migrate shopping cart
-                            await shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
-
-                            //sign in new customer
-                            await _authenticationService.SignIn(customer, model.RememberMe);
-
-                            //raise event       
-                            await _mediator.Publish(new CustomerLoggedinEvent(customer));
-
-                            //activity log
-                            await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
-
-
-                            if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                                return RedirectToRoute("HomePage");
-
-                            return Redirect(returnUrl);
+                            //sign in
+                            return await SignInAction(shoppingCartService, customer, returnUrl);
                         }
+                    case CustomerLoginResults.RequiresTwoFactor:
+                        {
+                            var userName = _customerSettings.UsernamesEnabled ? model.Username : model.Email;
+
+                            HttpContext.Session.SetString("RequiresTwoFactor", userName);
+
+                            return RedirectToRoute("TwoFactorAuthorization");
+                        }
+
                     case CustomerLoginResults.CustomerNotExist:
                         ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist"));
                         break;
@@ -216,7 +207,85 @@ namespace Grand.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage;
+
             return View(model);
+        }
+
+        public async Task<IActionResult> TwoFactorAuthorization()
+        {
+            if (!_customerSettings.TwoFactorAuthenticationEnabled)
+                return RedirectToRoute("Login");
+
+            var username = HttpContext.Session.GetString("RequiresTwoFactor");
+            if (string.IsNullOrEmpty(username))
+                return RedirectToRoute("HomePage");
+
+            var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(username) : await _customerService.GetCustomerByEmail(username);
+            if (customer == null)
+                return RedirectToRoute("HomePage");
+
+            if (!customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled))
+                return RedirectToRoute("HomePage");
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TwoFactorAuthorization(string token, 
+            [FromServices] IShoppingCartService shoppingCartService,
+            [FromServices] ITwoFactorAuthenticationService twoFactorAuthenticationService
+            )
+        {
+            if (!_customerSettings.TwoFactorAuthenticationEnabled)
+                return RedirectToRoute("Login");
+
+            var username = HttpContext.Session.GetString("RequiresTwoFactor");
+            if (string.IsNullOrEmpty(username))
+                return RedirectToRoute("HomePage");
+
+            var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(username) : await _customerService.GetCustomerByEmail(username);
+            if (customer == null)
+                return RedirectToRoute("Login");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Account.TwoFactorAuth.SecurityCodeIsRequired"));
+            }
+            else
+            {
+                var secretKey = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.TwoFactorSecretKey);
+                if (twoFactorAuthenticationService.AuthenticateTwoFactor(secretKey, token))
+                {
+                    //remove session
+                    HttpContext.Session.Remove("RequiresTwoFactor");
+
+                    //sign in
+                    return await SignInAction(shoppingCartService, customer);
+                }
+                ModelState.AddModelError("", _localizationService.GetResource("Account.TwoFactorAuth.WrongSecurityCode"));
+            }
+
+            return View();
+        }
+
+        protected async Task<IActionResult> SignInAction(IShoppingCartService shoppingCartService, Customer customer, string returnUrl = null)
+        {
+            //migrate shopping cart
+            await shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
+
+            //sign in new customer
+            await _authenticationService.SignIn(customer, true);
+
+            //raise event       
+            await _mediator.Publish(new CustomerLoggedinEvent(customer));
+
+            //activity log
+            await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
+
+            if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+                return RedirectToRoute("HomePage");
+
+            return Redirect(returnUrl);
         }
 
         //available even when a store is closed
@@ -255,6 +324,9 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("HomePage");
         }
 
+
+
+
         #endregion
 
         #region Password recovery
@@ -268,7 +340,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("PasswordRecovery")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -308,7 +380,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("PasswordRecoveryConfirm")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("set-password")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -379,7 +451,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         [ValidateCaptcha]
         [ValidateHoneypot]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form,
@@ -511,8 +583,7 @@ namespace Grand.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                var newsLetterSubscription = new NewsLetterSubscription
-                                {
+                                var newsLetterSubscription = new NewsLetterSubscription {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = model.Email,
                                     CustomerId = customer.Id,
@@ -534,8 +605,7 @@ namespace Grand.Web.Controllers
                         await _authenticationService.SignIn(customer, true);
 
                     //insert default address (if possible)
-                    var defaultAddress = new Address
-                    {
+                    var defaultAddress = new Address {
                         FirstName = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.FirstName),
                         LastName = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastName),
                         Email = customer.Email,
@@ -644,15 +714,14 @@ namespace Grand.Web.Controllers
                 default:
                     break;
             }
-            var model = new RegisterResultModel
-            {
+            var model = new RegisterResultModel {
                 Result = resultText
             };
             return View(model);
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> CheckUsernameAvailability(string username)
@@ -729,7 +798,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> Info(CustomerInfoModel model, IFormCollection form, [FromServices] ForumSettings forumSettings)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -869,8 +938,7 @@ namespace Grand.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                var newsLetterSubscription = new NewsLetterSubscription
-                                {
+                                var newsLetterSubscription = new NewsLetterSubscription {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customer.Email,
                                     CustomerId = customer.Id,
@@ -903,7 +971,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> RemoveExternalAssociation(string id, [FromServices] IExternalAuthenticationService openAuthenticationService)
         {
 
@@ -957,7 +1025,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> AddressDelete(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -996,7 +1064,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> AddressAdd(CustomerAddressEditModel model, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1057,7 +1125,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, string addressId, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1145,7 +1213,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1175,7 +1243,6 @@ namespace Grand.Web.Controllers
 
         #endregion
 
-
         #region My account / Delete account
 
         public virtual IActionResult DeleteAccount()
@@ -1192,7 +1259,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> DeleteAccount(DeleteAccountModel model)
         {
             var customer = _workContext.CurrentCustomer;
@@ -1265,7 +1332,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("upload-avatar")]
         public virtual async Task<IActionResult> UploadAvatar(CustomerAvatarModel model, IFormFile uploadedFile, [FromServices] IPictureService pictureService, [FromServices] MediaSettings mediaSettings)
         {
@@ -1322,7 +1389,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("remove-avatar")]
         public virtual async Task<IActionResult> RemoveAvatar(CustomerAvatarModel model, [FromServices] IPictureService pictureService)
         {
@@ -1371,6 +1438,133 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
 
             var model = await _customerViewModelService.PrepareNotes(_workContext.CurrentCustomer);
+
+            return View(model);
+        }
+
+        #endregion
+
+        #region My account / Documents
+
+        public virtual async Task<IActionResult> Documents()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (_customerSettings.HideDocumentsTab)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = await _customerViewModelService.PrepareDocuments(_workContext.CurrentCustomer);
+
+            return View(model);
+        }
+
+        #endregion
+
+        #region My account / Reviews
+
+        public virtual async Task<IActionResult> Reviews()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (_customerSettings.HideReviewsTab)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = await _customerViewModelService.PrepareReviews(_workContext.CurrentCustomer);
+
+            return View(model);
+        }
+
+        #endregion
+
+        #region My account / TwoFactorAuth
+
+        public IActionResult EnableTwoFactorAuthenticator()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_customerSettings.TwoFactorAuthenticationEnabled)
+                return RedirectToRoute("CustomerInfo");
+
+            if (_workContext.CurrentCustomer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled))
+                return RedirectToRoute("CustomerInfo");
+
+            var model = _customerViewModelService.PrepareTwoFactorAuthenticationModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EnableTwoFactorAuthenticator(CustomerInfoModel.TwoFactorAuthenticationModel model, 
+            [FromServices] ITwoFactorAuthenticationService twoFactorAuthenticationService)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_customerSettings.TwoFactorAuthenticationEnabled)
+                return RedirectToRoute("CustomerInfo");
+
+            if (_workContext.CurrentCustomer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled))
+                return RedirectToRoute("CustomerInfo");
+
+            if (string.IsNullOrEmpty(model.Code))
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Account.TwoFactorAuth.SecurityCodeIsRequired"));
+            }
+            else
+            {
+                if (twoFactorAuthenticationService.AuthenticateTwoFactor(model.SecretKey, model.Code))
+                {
+                    await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.TwoFactorEnabled, true);
+                    await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.TwoFactorSecretKey, model.SecretKey);
+
+                    SuccessNotification(_localizationService.GetResource("Account.TwoFactorAuth.Enabled"));
+
+                    return RedirectToRoute("CustomerInfo");
+                }
+                ModelState.AddModelError("", _localizationService.GetResource("Account.TwoFactorAuth.WrongSecurityCode"));
+            }
+
+            return View(model);
+        }
+
+        
+        public async Task<IActionResult> DisableTwoFactorAuthenticator()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_customerSettings.TwoFactorAuthenticationEnabled)
+                return RedirectToRoute("CustomerInfo");
+
+            var customer = _workContext.CurrentCustomer;
+            if (customer != null)
+            {
+                await _genericAttributeService.SaveAttribute<bool>(customer, SystemCustomerAttributeNames.TwoFactorEnabled, false);
+                await _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.TwoFactorSecretKey, null);
+
+                SuccessNotification(_localizationService.GetResource("Account.TwoFactorAuth.Disabled"));
+
+                return RedirectToRoute("CustomerInfo");
+            }
+            return View();
+        }
+
+
+        #endregion
+
+        #region My account / Courses
+
+        public virtual async Task<IActionResult> Courses()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (_customerSettings.HideCoursesTab)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = await _customerViewModelService.PrepareCourses(_workContext.CurrentCustomer, _storeContext.CurrentStore);
 
             return View(model);
         }

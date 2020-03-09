@@ -19,20 +19,7 @@ namespace Grand.Services.Catalog
     public partial class SpecificationAttributeService : ISpecificationAttributeService
     {
         #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product ID
-        /// {1} : allow filtering
-        /// {2} : show on product page
-        /// </remarks>
-        private const string PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY = "Grand.productspecificationattribute.allbyproductid-{0}-{1}-{2}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY = "Grand.productspecificationattribute.";
+        
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -64,8 +51,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="specificationAttributeRepository">Specification attribute repository</param>
-        /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<Product> productRepository,
@@ -123,8 +109,7 @@ namespace Grand.Services.Catalog
 
             await _specificationAttributeRepository.DeleteAsync(specificationAttribute);
 
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(specificationAttribute);
@@ -141,8 +126,6 @@ namespace Grand.Services.Catalog
 
             await _specificationAttributeRepository.InsertAsync(specificationAttribute);
 
-            await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
-
             //event notification
             await _mediator.EntityInserted(specificationAttribute);
         }
@@ -157,8 +140,6 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("specificationAttribute");
 
             await _specificationAttributeRepository.UpdateAsync(specificationAttribute);
-
-            await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(specificationAttribute);
@@ -207,8 +188,7 @@ namespace Grand.Services.Catalog
             specificationAttribute.SpecificationAttributeOptions.Remove(sao);
             await UpdateSpecificationAttribute(specificationAttribute);
 
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(specificationAttributeOption);
@@ -233,8 +213,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productSpecificationAttribute.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
             await _mediator.EntityDeleted(productSpecificationAttribute);
@@ -254,8 +233,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productSpecificationAttribute.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
             await _mediator.EntityInserted(productSpecificationAttribute);
@@ -285,8 +263,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
             await _mediator.EntityUpdated(productSpecificationAttribute);
@@ -302,9 +279,9 @@ namespace Grand.Services.Catalog
         {
             var query = _productRepository.Table;
 
-            if (!String.IsNullOrEmpty(productId))
+            if (!string.IsNullOrEmpty(productId))
                 query = query.Where(psa => psa.Id == productId);
-            if (!String.IsNullOrEmpty(specificationAttributeOptionId))
+            if (!string.IsNullOrEmpty(specificationAttributeOptionId))
                 query = query.Where(psa => psa.ProductSpecificationAttributes.Any(x => x.SpecificationAttributeOptionId == specificationAttributeOptionId));
 
             return query.Count();

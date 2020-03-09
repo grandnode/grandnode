@@ -3,12 +3,16 @@ using Grand.Api.DTOs.Catalog;
 using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
+using System.Collections.Generic;
 
 namespace Grand.Api.Validators.Catalog
 {
     public class SpecificationAttributeValidator : BaseGrandValidator<SpecificationAttributeDto>
     {
-        public SpecificationAttributeValidator(ILocalizationService localizationService, ISpecificationAttributeService specificationAttributeService)
+        public SpecificationAttributeValidator(
+            IEnumerable<IValidatorConsumer<SpecificationAttributeDto>> validators,
+            ILocalizationService localizationService, ISpecificationAttributeService specificationAttributeService)
+            : base(validators)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.SpecificationAttribute.Fields.Name.Required"));
             RuleFor(x => x).MustAsync(async (x, y, context) =>

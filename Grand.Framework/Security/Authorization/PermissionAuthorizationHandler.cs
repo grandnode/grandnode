@@ -1,6 +1,5 @@
 ﻿using Grand.Services.Customers;
 using Grand.Services.Security;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +16,9 @@ namespace Grand.Framework.Security.Authorization
         private readonly IHttpContextAccessor _contextAccessor;
         public PermissionAuthorizationHandler(IPermissionService permissionService, ICustomerService customerService, IHttpContextAccessor contextAccessor)
         {
-            this._permissionService = permissionService;
-            this._customerService = customerService;
-            this._contextAccessor = contextAccessor;
+            _permissionService = permissionService;
+            _customerService = customerService;
+            _contextAccessor = contextAccessor;
         }
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)

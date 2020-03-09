@@ -1,5 +1,4 @@
-﻿using Grand.Core;
-using Grand.Core.Extensions;
+﻿using Grand.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -38,10 +37,10 @@ namespace Grand.Framework.Mvc.Rss
         /// <param name="lastBuildDate">Last build date</param>
         private void Init(string title, string description, Uri link, DateTimeOffset lastBuildDate)
         {
-            this.Title = new XElement("title", title);
-            this.Description = new XElement("description", description);
-            this.Link = new XElement("link", link);
-            this.LastBuildDate = new XElement("lastBuildDate", lastBuildDate.ToString("r"));
+            Title = new XElement("title", title);
+            Description = new XElement("description", description);
+            Link = new XElement("link", link);
+            LastBuildDate = new XElement("lastBuildDate", lastBuildDate.ToString("r"));
         }
 
         /// <summary>

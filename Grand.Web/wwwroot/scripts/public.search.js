@@ -11,7 +11,7 @@ var SearchAction = {
         this.EnterSearchTerms = enterSearchTerms;
 
         $("#small-search-box-form").submit(function (event) {
-            if ($("#small-searchterms").val() == "") {
+            if ($("#small-searchterms").val() === "") {
                 alert(SearchAction.EnterSearchTerms);
                 $("#small-searchterms").focus();
                 event.preventDefault();
@@ -115,14 +115,40 @@ var SearchAction = {
                 tin = $('#small-searchterms').val();
                 var image = '';
                 if (SearchAction.ShowProductImagesInSearch) {
-                    image = "<img class='d-inline-flex' src='" + item.PictureUrl + "'>";
+                    image = "<img src='" + item.PictureUrl + "'>";
+                }
+                var pricereviewline = "";
+                if (item.SearchType === "Product") {
+                    pricereviewline = "<div class='d-flex justify-content-between w-100 ratings'><div class='price'>" + item.Price + "</div>";
+                    if (item.AllowCustomerReviews)
+                        pricereviewline += "<div class='rating-box'><div class='rating' style='width: " + item.Rating + "%'></div></div>";
+                    pricereviewline += "</div>";
                 }
                 return $("<li data-type='" + item.SearchType + "' class='list-group-item' ></li>")
                     .data("item.autocomplete", item)
-                    .append("<a href='" + item.Url + "' class='generalImg row mx-0'>" + image + "<div class='container-off col px-0'><div class='product-in'></div><div class='in-separator'>in</div><div class='product-title'>" + t + "</div><div class='product-desc'>" + desc + "</div></div></a>")
+                    .append("<a class='d-inline-flex align-items-start w-100' href='" + item.Url + "' class='generalImg'>" + image + "<div class='container-off col px-0'><div class='product-in'></div><div class='in-separator'>in</div><div class='product-title'>" + t + "</div>" + pricereviewline + "</div></a>")
                     .appendTo(ul)
-                    .find(".product-in").text(tin)
+                    .find(".product-in").text(tin);
             };
 
     }
 }
+function closeSearchBox() {
+    if (window.matchMedia('(min-width: 992px)').matches) {
+        $(window).click(function () {
+            $('.advanced-search-results').removeClass("open");
+        });
+        $('.advanced-search-results').click(function (event) {
+            event.stopPropagation();
+        });
+    }
+}
+$(document).ready(function () {
+
+    closeSearchBox();
+
+    $(window).resize(function () {
+        closeSearchBox();
+    });
+
+});

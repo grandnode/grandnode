@@ -274,7 +274,7 @@ namespace Grand.Services.Localization
             {
                 var lsr = await localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr != null)
-                    localizationService.DeleteLocaleStringResource(lsr).Wait();
+                    await localizationService.DeleteLocaleStringResource(lsr);
             }
         }
 
@@ -463,13 +463,13 @@ namespace Grand.Services.Localization
                 if (string.IsNullOrWhiteSpace(localizedFriendlyName))
                 {
                     //delete
-                    localizationService.DeleteLocaleStringResource(resource).Wait();
+                    await localizationService.DeleteLocaleStringResource(resource);
                 }
                 else
                 {
                     //update
                     resource.ResourceValue = localizedFriendlyName;
-                    localizationService.UpdateLocaleStringResource(resource).Wait();
+                    await localizationService.UpdateLocaleStringResource(resource);
                 }
             }
             else

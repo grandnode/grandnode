@@ -202,6 +202,9 @@ namespace Grand.Services.Catalog
         public string FormatPrice(decimal price, bool showCurrency, 
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
+            if (targetCurrency == null)
+                targetCurrency = new Currency();
+
             //round before rendering
             //should we use RoundingHelper.RoundPrice here?
             price = RoundingHelper.RoundPrice(price, targetCurrency);

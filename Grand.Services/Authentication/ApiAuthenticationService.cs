@@ -1,5 +1,4 @@
-﻿using Grand.Core.Configuration;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,7 +11,6 @@ namespace Grand.Services.Authentication
 {
     public partial class ApiAuthenticationService : IApiAuthenticationService
     {
-        private readonly ApiConfig _apiConfig;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICustomerService _customerService;
         private readonly IUserApiService _userApiService;
@@ -22,13 +20,12 @@ namespace Grand.Services.Authentication
         private string _errorMessage;
         private string _email;
 
-        public ApiAuthenticationService(ApiConfig apiConfig, IHttpContextAccessor httpContextAccessor,
+        public ApiAuthenticationService(IHttpContextAccessor httpContextAccessor,
             ICustomerService customerService, IUserApiService userApiService)
         {
-            this._apiConfig = apiConfig;
-            this._httpContextAccessor = httpContextAccessor;
-            this._customerService = customerService;
-            this._userApiService = userApiService;
+            _httpContextAccessor = httpContextAccessor;
+            _customerService = customerService;
+            _userApiService = userApiService;
         }
 
         /// <summary>
@@ -98,12 +95,23 @@ namespace Grand.Services.Authentication
             if (_cachedCustomer != null)
                 return _cachedCustomer;
 
+            Customer customer = null;
+
+            if (_httpContextAccessor.HttpContext.Request.Path.Value.ToLowerInvariant().Contains("/api/token/create"))
+            {
+                customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
+                if (customer != null)
+                    return customer;
+            }
+
             //try to get authenticated user identity
-            var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme).Result;
-            if (!authenticateResult.Succeeded)
+            string authHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith(JwtBearerDefaults.AuthenticationScheme))
                 return null;
 
-            Customer customer = null;
+            var authenticateResult = await _httpContextAccessor.HttpContext.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme);
+            if (!authenticateResult.Succeeded)
+                return null;
 
             //try to get customer by email
             var emailClaim = authenticateResult.Principal.Claims.FirstOrDefault(claim => claim.Type == "Email");

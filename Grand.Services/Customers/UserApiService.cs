@@ -19,8 +19,8 @@ namespace Grand.Services.Customers
         #endregion
         public UserApiService(IRepository<UserApi> userRepository, IMediator mediator)
         {
-            this._userRepository = userRepository;
-            this._mediator = mediator;
+            _userRepository = userRepository;
+            _mediator = mediator;
         }
         
         /// <summary>

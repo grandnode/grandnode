@@ -17,9 +17,9 @@ namespace Grand.Web.ViewComponents
             IPermissionService permissionService,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._shoppingCartViewModelService = shoppingCartViewModelService;
-            this._permissionService = permissionService;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _shoppingCartViewModelService = shoppingCartViewModelService;
+            _permissionService = permissionService;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

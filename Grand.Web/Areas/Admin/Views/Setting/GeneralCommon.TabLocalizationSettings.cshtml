@@ -15,13 +15,16 @@
             </div>
         </div>
         <div class="form-group">
+            <div class="note note-warning">
+                <span>@T("Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Note")</span>
+            </div>
             <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled" class="control-label" />
             </div>
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled"></span>
             </div>

@@ -1,0 +1,43 @@
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Login").Text);
+
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] });
+}
+<div class="page login-page">
+    <h2 class="generalTitle text-center">@T("Login.TwoFactorAuth.EnterCode")</h2>
+    <div class="mb-2">
+        <div class="row flex-md-row justify-content-center text-center my-3">
+            @* login main block *@
+            <div class="col-sm-8 col-12">
+                <div class="card p-3 bg-light">
+                    <form asp-route="TwoFactorAuthorization" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                        <div class="card-body">
+                            <div class="row">
+                                <div asp-validation-summary="ModelOnly" class="col-12 justify-content-around text-danger"></div>
+                                <div class="col-12 form-group mb-0 d-flex justify-content-around">
+                                    <div class="form-group row">
+                                        <div class="col-lg-3 col-12">
+                                            <label name="token" class="col-form-label">@T("Login.TwoFactorAuth.DigitCode")</label>
+                                        </div>
+                                        <div class="col-lg-9 col-12">
+                                            <input name="token" type="text" class="form-control" autofocus />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="buttons">
+                                <input class="btn btn-info login-button" type="submit" value="@T("Login.TwoFactorAuth.SendCode")" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

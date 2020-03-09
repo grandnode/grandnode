@@ -32,16 +32,19 @@ namespace Grand.Framework.Mvc.Filters
 
             private readonly ICustomerService _customerService;
             private readonly IWorkContext _workContext;
+            private readonly ICustomerActionEventService _customerActionEventService;
 
             #endregion
 
             #region Ctor
 
             public SaveLastActivityFilter(ICustomerService customerService,
-                IWorkContext workContext)
+                IWorkContext workContext,
+                ICustomerActionEventService customerActionEventService)
             {
-                this._customerService = customerService;
-                this._workContext = workContext;
+                _customerService = customerService;
+                _workContext = workContext;
+                _customerActionEventService = customerActionEventService;
             }
 
             #endregion
@@ -71,6 +74,8 @@ namespace Grand.Framework.Mvc.Filters
                     _workContext.CurrentCustomer.LastActivityDateUtc = DateTime.UtcNow;
                     await _customerService.UpdateCustomerLastActivityDate(_workContext.CurrentCustomer);
                 }
+
+                await _customerActionEventService.Url(_workContext.CurrentCustomer, context.HttpContext?.Request?.Path.ToString(), context.HttpContext?.Request?.Headers["Referer"]);
             }
 
            

@@ -1,21 +1,22 @@
 <!--More info https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/using-custom-rewrite-providers-with-url-rewrite-module -->
 <rewrite>
-    <rewriteMaps>
-      <!--Write maps here-->
-      <!--sample rewriteMap-->
-      <rewriteMap name="StaticRedirects" defaultValue="">
-        <add key="/ibm" value="/computers" />
-      </rewriteMap>
-    </rewriteMaps>
-    <rules>
-      <!--Write rules here-->
-      <!--sample rule-->
-      <rule name="Redirect rule">
-        <match url=".*" />
-        <conditions>
-          <add input="{StaticRedirects:{REQUEST_URI}}" pattern="(.+)" />
-        </conditions>
-        <action type="Redirect" url="http://localhost:16592{C:1}" redirectType="Found" />
-      </rule>
-    </rules>
+  <rules>
+    <!--Redirect www to non-www -->
+    <rule name="RedirectWwwToNonWww" stopProcessing="false">
+      <match url="(.*)" />
+      <conditions logicalGrouping="MatchAll" trackAllCaptures="false">
+        <add input="{HTTP_HOST}" pattern="^(www\.)(.*)$" />
+      </conditions>
+      <action type="Redirect" url="https://{C:2}{REQUEST_URI}" redirectType="Permanent" />
+    </rule>
+    <!--Redirect non-www to www 
+    <rule name="RedirectNonWwwToWww" stopProcessing="true">
+      <match url="(.*)" />
+      <conditions>
+        <add input="{HTTP_HOST}" pattern="^domain.com$" />
+      </conditions>
+      <action type="Redirect" url="http://www.domain.com/{R:0}" redirectType="Permanent" />
+    </rule>
+    -->
+  </rules>
 </rewrite>

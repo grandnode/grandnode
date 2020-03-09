@@ -15,11 +15,11 @@ namespace Grand.Web.Models.Customer
     {
         public RegisterModel()
         {
-            this.AvailableTimeZones = new List<SelectListItem>();
-            this.AvailableCountries = new List<SelectListItem>();
-            this.AvailableStates = new List<SelectListItem>();
-            this.CustomerAttributes = new List<CustomerAttributeModel>();
-            this.NewsletterCategories = new List<NewsletterSimpleCategory>();
+            AvailableTimeZones = new List<SelectListItem>();
+            AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
+            CustomerAttributes = new List<CustomerAttributeModel>();
+            NewsletterCategories = new List<NewsletterSimpleCategory>();
         }
 
         [GrandResourceDisplayName("Account.Fields.Email")]

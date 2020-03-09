@@ -37,10 +37,10 @@ namespace Grand.Plugin.Widgets.Slider.Services
             IStoreContext storeContext, IStoreMappingService storeMappingService,
             ICacheManager cacheManager)
         {
-            this._reporistoryPictureSlider = reporistoryPictureSlider;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._cacheManager = cacheManager;
+            _reporistoryPictureSlider = reporistoryPictureSlider;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _cacheManager = cacheManager;
         }
         /// <summary>
         /// Delete a slider
@@ -52,7 +52,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.DeleteAsync(slide);
         }
@@ -108,7 +108,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.InsertAsync(slide);
         }
@@ -123,7 +123,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.UpdateAsync(slide);
         }
@@ -138,7 +138,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.DeleteAsync(slide);
         }

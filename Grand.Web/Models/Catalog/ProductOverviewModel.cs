@@ -32,6 +32,7 @@ namespace Grand.Web.Models.Catalog
         public bool ShowSku { get; set; }
         public bool ShowQty { get; set; }
         public DateTime? EndTime { get; set; }
+        public DateTime? EndTimeLocalTime { get; set; }
         public TaxDisplayType TaxDisplayType { get; set; }
 
         //price

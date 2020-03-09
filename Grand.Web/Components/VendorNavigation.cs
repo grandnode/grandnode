@@ -14,8 +14,8 @@ namespace Grand.Web.ViewComponents
         public VendorNavigationViewComponent(ICatalogViewModelService catalogViewModelService,
             VendorSettings vendorSettings)
         {
-            this._catalogViewModelService = catalogViewModelService;
-            this._vendorSettings = vendorSettings;
+            _catalogViewModelService = catalogViewModelService;
+            _vendorSettings = vendorSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

@@ -1,11 +1,8 @@
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
@@ -34,13 +31,6 @@ namespace Grand.Services.Customers
         /// Key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : show hidden records?
-        /// </remarks>
-        private const string CUSTOMERROLES_ALL_KEY = "Grand.customerrole.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
         /// {0} : system name
         /// </remarks>
         private const string CUSTOMERROLES_BY_SYSTEMNAME_KEY = "Grand.customerrole.systemname-{0}";
@@ -52,8 +42,16 @@ namespace Grand.Services.Customers
 
         /// <summary>
         /// Key pattern to clear cache
+        /// {0} customer id
         /// </summary>
         private const string CUSTOMER_PRODUCT_KEY = "Grand.product.personal-{0}";
+
+        /// <summary>
+        /// Key for cache 
+        /// {0} - customer id
+        /// {1} - product id
+        /// </summary>
+        private const string CUSTOMER_PRODUCT_PRICE_KEY_ID = "Grand.product.price-{0}-{1}";
 
         /// <summary>
         /// Key for caching
@@ -74,11 +72,6 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordProductRepository;
         private readonly IRepository<CustomerNote> _customerNoteRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<ForumPost> _forumPostRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICacheManager _cacheManager;
         private readonly IMediator _mediator;
@@ -96,31 +89,21 @@ namespace Grand.Services.Customers
             IRepository<CustomerHistoryPassword> customerHistoryPasswordProductRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
             IRepository<CustomerNote> customerNoteRepository,
-            IRepository<Order> orderRepository,
-            IRepository<ForumPost> forumPostRepository,
-            IRepository<ForumTopic> forumTopicRepository,
-            IRepository<BlogComment> blogCommentRepository,
-            IRepository<ProductReview> productReviewRepository,
             IGenericAttributeService genericAttributeService,
             IMediator mediator,
             IServiceProvider serviceProvider)
         {
-            this._cacheManager = cacheManager;
-            this._customerRepository = customerRepository;
-            this._customerRoleRepository = customerRoleRepository;
-            this._customerProductRepository = customerProductRepository;
-            this._customerProductPriceRepository = customerProductPriceRepository;
-            this._customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
-            this._customerRoleProductRepository = customerRoleProductRepository;
-            this._customerNoteRepository = customerNoteRepository;
-            this._orderRepository = orderRepository;
-            this._forumPostRepository = forumPostRepository;
-            this._forumTopicRepository = forumTopicRepository;
-            this._blogCommentRepository = blogCommentRepository;
-            this._productReviewRepository = productReviewRepository;
-            this._genericAttributeService = genericAttributeService;
-            this._mediator = mediator;
-            this._serviceProvider = serviceProvider;
+            _cacheManager = cacheManager;
+            _customerRepository = customerRepository;
+            _customerRoleRepository = customerRoleRepository;
+            _customerProductRepository = customerProductRepository;
+            _customerProductPriceRepository = customerProductPriceRepository;
+            _customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
+            _customerRoleProductRepository = customerRoleProductRepository;
+            _customerNoteRepository = customerNoteRepository;
+            _genericAttributeService = genericAttributeService;
+            _mediator = mediator;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -815,6 +798,8 @@ namespace Grand.Services.Customers
 
             filter = filter & builder.Eq(x => x.HasContributions, false);
 
+            filter = filter & builder.Eq(x => x.IsSystemAccount, false);
+
             var customers = await _customerRepository.Collection.DeleteManyAsync(filter);
 
             return (int)customers.DeletedCount;
@@ -843,7 +828,7 @@ namespace Grand.Services.Customers
             var updatefilter = builder.PullFilter(x => x.CustomerRoles, y => y.Id == customerRole.Id);
             await _customerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(customerRole);
@@ -882,17 +867,14 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer roles</returns>
-        public virtual async Task<IList<CustomerRole>> GetAllCustomerRoles(bool showHidden = false)
+        public virtual async Task<IPagedList<CustomerRole>> GetAllCustomerRoles(int pageIndex = 0, 
+            int pageSize = int.MaxValue, bool showHidden = false)
         {
-            string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
-            return await _cacheManager.GetAsync(key, () =>
-            {
-                var query = from cr in _customerRoleRepository.Table
-                            where (showHidden || cr.Active)
-                            orderby cr.Name
-                            select cr;
-                return query.ToListAsync();
-            });
+            var query = from cr in _customerRoleRepository.Table
+                        where (showHidden || cr.Active)
+                        orderby cr.Name
+                        select cr;
+            return await PagedList<CustomerRole>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -906,7 +888,7 @@ namespace Grand.Services.Customers
 
             await _customerRoleRepository.InsertAsync(customerRole);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(customerRole);
@@ -930,7 +912,7 @@ namespace Grand.Services.Customers
 
             await _customerRepository.Collection.UpdateManyAsync(filter, update);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(customerRole);
@@ -978,8 +960,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.DeleteAsync(customerRoleProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(customerRoleProduct);
@@ -998,8 +980,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.InsertAsync(customerRoleProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(customerRoleProduct);
@@ -1021,8 +1003,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.Collection.UpdateOneAsync(filter, update);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(customerRoleProduct);
@@ -1235,6 +1217,7 @@ namespace Grand.Services.Customers
             var filter = builder.Eq(x => x.Id, customerId);
             filter = filter & builder.ElemMatch(x => x.ShoppingCartItems, y => y.Id == shoppingCartItem.Id);
             var update = Builders<Customer>.Update
+                .Set(x => x.ShoppingCartItems.ElementAt(-1).WarehouseId, shoppingCartItem.WarehouseId)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).Quantity, shoppingCartItem.Quantity)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).AdditionalShippingChargeProduct, shoppingCartItem.AdditionalShippingChargeProduct)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).IsFreeShipping, shoppingCartItem.IsFreeShipping)
@@ -1282,14 +1265,22 @@ namespace Grand.Services.Customers
         /// <returns>Customer product price</returns>
         public virtual async Task<decimal?> GetPriceByCustomerProduct(string customerId, string productId)
         {
-            var builder = Builders<CustomerProductPrice>.Filter;
-            var filter = builder.Eq(x => x.CustomerId, customerId);
-            filter = filter & builder.Eq(x => x.ProductId, productId);
-            var productprice = await _customerProductPriceRepository.Collection.Find(filter).FirstOrDefaultAsync();
-            if (productprice == null)
+            var key = string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerId, productId);
+            var productprice = await _cacheManager.GetAsync(key, async () =>
+            {
+                var pp = await _customerProductPriceRepository.Table
+                .Where(x => x.CustomerId == customerId && x.ProductId == productId)
+                .FirstOrDefaultAsync();
+                if (pp == null)
+                    return (null, false);
+                else
+                    return (pp, true);
+            });
+
+            if (!productprice.Item2)
                 return null;
             else
-                return productprice.Price;
+                return productprice.pp.Price;
         }
 
         /// <summary>
@@ -1302,6 +1293,9 @@ namespace Grand.Services.Customers
                 throw new ArgumentNullException("customerProductPrice");
 
             await _customerProductPriceRepository.InsertAsync(customerProductPrice);
+
+            //clear cache
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
 
             //event notification
             await _mediator.EntityInserted(customerProductPrice);
@@ -1318,6 +1312,9 @@ namespace Grand.Services.Customers
 
             await _customerProductPriceRepository.UpdateAsync(customerProductPrice);
 
+            //clear cache
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
+
             //event notification
             await _mediator.EntityUpdated(customerProductPrice);
         }
@@ -1332,6 +1329,9 @@ namespace Grand.Services.Customers
                 throw new ArgumentNullException("customerProductPrice");
 
             await _customerProductPriceRepository.DeleteAsync(customerProductPrice);
+
+            //clear cache
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
 
             //event notification
             await _mediator.EntityDeleted(customerProductPrice);
@@ -1354,13 +1354,9 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="id">Identifier</param>
         /// <returns>Customer product</returns>
-        public virtual Task<CustomerProduct> GetCustomerProduct(string id)
+        public virtual async Task<CustomerProduct> GetCustomerProduct(string id)
         {
-            var query = from pp in _customerProductRepository.Table
-                        where pp.Id == id
-                        select pp;
-
-            return query.FirstOrDefaultAsync();
+            return await _customerProductRepository.GetByIdAsync(id);
         }
 
         /// <summary>
@@ -1390,7 +1386,7 @@ namespace Grand.Services.Customers
             await _customerProductRepository.InsertAsync(customerProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
 
             //event notification
             await _mediator.EntityInserted(customerProduct);
@@ -1408,7 +1404,7 @@ namespace Grand.Services.Customers
             await _customerProductRepository.UpdateAsync(customerProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
 
             //event notification
             await _mediator.EntityUpdated(customerProduct);
@@ -1426,7 +1422,7 @@ namespace Grand.Services.Customers
             await _customerProductRepository.DeleteAsync(customerProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
 
             //event notification
             await _mediator.EntityDeleted(customerProduct);

@@ -287,7 +287,7 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a value indicating whether the product is telecommunications or broadcasting or electronic services
         /// </summary>
-        public bool IsTelecommunicationsOrBroadcastingOrElectronicServices { get; set; }
+        public bool IsTele { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating how to manage inventory
@@ -438,6 +438,11 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets a unit of product 
         /// </summary>
         public string UnitId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a course ident
+        /// </summary>
+        public string CourseId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this product is marked as new

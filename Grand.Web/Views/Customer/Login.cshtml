@@ -1,5 +1,4 @@
 ﻿@model LoginModel
-@using System.Net
 @inject IWebHelper webHelper
 @{
     Layout = "_ColumnsOne";
@@ -11,24 +10,24 @@
     var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] });
 }
 <div class="page login-page">
-    <h2 class="generalTitle">@T("Account.Login.Welcome")</h2>
+    <h2 class="generalTitle text-center">@T("Account.Login.Welcome")</h2>
     <partial name="_ExternalAuthentication.Errors" />
     <div class="mb-2">
-        <div class="row flex-md-row mt-3 mb-3">
+        <div class="row flex-md-row justify-content-center text-center my-3">
             @* login main block *@
-            <div class="col-lg-6 col-12">
-                <div class="card">
+            <div class="col-sm-8 col-12">
+                <div class="card p-3 bg-light">
                     <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
                         <h5 class="card-header"><strong>@T("Account.Login.ReturningCustomer")</strong></h5>
                         <div class="card-body">
                             <div class="row">
-                                <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
+                                <div asp-validation-summary="ModelOnly" class="message-error w-100 text-center">@T("Account.Login.Unsuccessful")</div>
                                 <div class="col-12 form-group mb-0">
                                     @if (Model.UsernamesEnabled)
                                     {
                                         <div class="form-group row">
-                                            <div class="col-lg-3 col-12">
-                                                <label asp-for="Username" class="col-form-label">@T("Account.Login.Fields.UserName"):</label>
+                                            <div class="col-lg-3 col-12 d-flex align-items-start justify-content-sm-start">
+                                                <label asp-for="Username" class="h5 m-0">@T("Account.Login.Fields.UserName"):</label>
                                             </div>
                                             <div class="col-lg-9 col-12">
                                                 <input asp-for="Username" class="form-control username" autofocus="autofocus" />
@@ -39,8 +38,8 @@
                                     else
                                     {
                                         <div class="form-group row">
-                                            <div class="col-lg-3 col-12">
-                                                <label asp-for="Email" class="col-form-label">@T("Account.Login.Fields.Email"):</label>
+                                            <div class="col-lg-3 col-12 d-flex align-items-start justify-content-start">
+                                                <label asp-for="Email" class="h5 m-0">@T("Account.Login.Fields.Email"):</label>
                                             </div>
                                             <div class="col-lg-9 col-12">
                                                 <input asp-for="Email" class="form-control email" autofocus="autofocus" />
@@ -49,15 +48,15 @@
                                         </div>
                                     }
                                     <div class="form-group row">
-                                        <div class="col-lg-3 col-12">
-                                            <label asp-for="Password" class="col-form-label">@T("Account.Login.Fields.Password"):</label>
+                                        <div class="col-lg-3 col-12 d-flex align-items-center justify-content-start">
+                                            <label asp-for="Password" class="h5 m-0">@T("Account.Login.Fields.Password"):</label>
                                         </div>
                                         <div class="col-lg-9 col-12">
                                             <input asp-for="Password" class="form-control password" />
                                             <span asp-validation-for="Password"></span>
                                         </div>
                                     </div>
-                                    <div class="inputs d-flex flex-row">
+                                    <div class="inputs d-flex flex-sm-row flex-column justify-content-center">
                                         <label class="custom-control custom-checkbox">
                                             <input class="custom-control-input" asp-for="RememberMe" />
                                             <input class="custom-control-label" name="RememberMe" type="hidden" value="false">
@@ -77,18 +76,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer px-0">
                             <div class="buttons">
-                                <input class="btn btn-info login-button" type="submit" value="@T("Account.Login.LoginButton")" />
+                                <input class="btn btn-info login-button px-5" type="submit" value="@T("Account.Login.LoginButton")" />
                             </div>
                         </div>
                     </form>
+                    <div class="external-authentication">
+                        @await Component.InvokeAsync("ExternalMethods")
+                    </div>
                 </div>
             </div>
             @* want some register? *@
             @if (Model.CheckoutAsGuest)
             {
-                <div class="col-lg-6 col-12 new-wrapper checkout-as-guest-or-register-block mt-2">
+                <div class="col-sm-8 col-12 new-wrapper checkout-as-guest-or-register-block mt-2">
                     <h5 class="pt-1">
                         <strong>@T("Account.Login.CheckoutAsGuestOrRegister")</strong>
                     </h5>
@@ -105,22 +107,21 @@
             }
             else
             {
-                <div class="col-lg-6 col-12">
+                <div class="col-sm-8 col-12">
                     <div class="card-body register-block">
-                        <h5><strong>@T("Account.Login.NewCustomer")</strong></h5>
                         <div class="text generalMarginSupporter">
                             @T("Account.Login.NewCustomerText")
                         </div>
-                        <div class="buttons">
-                            <input type="button" class="btn btn-secondary register-button" onclick="location.href='@registerUrl'" value="@T("Account.Register")" />
+                        <div class="d-inline-flex align-items-center justify-content-center w-100">
+                            <a><strong>@T("Account.Login.NewCustomer")</strong></a>
+                            <a class="ml-3 register-button" href="@registerUrl">
+                                @T("Account.Register")
+                            </a>
                         </div>
                     </div>
                 </div>
             }
         </div>
-    </div>
-    <div class="external-authentication">
-        @await Component.InvokeAsync("ExternalMethods")
     </div>
     <div class="row">
         <div class="col-12 mb-2">

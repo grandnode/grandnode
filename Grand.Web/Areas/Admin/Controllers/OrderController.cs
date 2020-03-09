@@ -34,6 +34,7 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class OrderController : BaseAdminController
     {
         #region Fields
+
         private readonly IOrderViewModelService _orderViewModelService;
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
@@ -41,6 +42,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
         private readonly IExportManager _exportManager;
+
         #endregion
 
         #region Ctor
@@ -51,17 +53,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             IWorkContext workContext,
-            ICurrencyService currencyService,
             IPdfService pdfService,
             IExportManager exportManager)
         {
-            this._orderViewModelService = orderViewModelService;
-            this._orderService = orderService;
-            this._orderProcessingService = orderProcessingService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._pdfService = pdfService;
-            this._exportManager = exportManager;
+            _orderViewModelService = orderViewModelService;
+            _orderService = orderService;
+            _orderProcessingService = orderProcessingService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _pdfService = pdfService;
+            _exportManager = exportManager;
         }
 
         #endregion
@@ -75,6 +76,34 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var model = await _orderViewModelService.PrepareOrderListModel(orderStatusId, paymentStatusId, shippingStatusId, startDate, _workContext.CurrentCustomer.StaffStoreId);
             return View(model);
+        }
+
+        public async Task<IActionResult> ProductSearchAutoComplete(string term, [FromServices] IProductService productService)
+        {
+            const int searchTermMinimumLength = 3;
+            if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
+                return Content("");
+
+            var storeId = string.Empty;
+            if (_workContext.CurrentCustomer.IsStaff())
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
+
+            //products
+            const int productNumber = 15;
+            var products = (await productService.SearchProducts(
+                storeId: storeId,
+                keywords: term,
+                pageSize: productNumber,
+                showHidden: true)).products;
+
+            var result = (from p in products
+                          select new
+                          {
+                              label = p.Name,
+                              productid = p.Id
+                          })
+                .ToList();
+            return Json(result);
         }
 
         [HttpPost]
@@ -819,6 +848,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             order.OrderTax = model.TaxValue;
             order.OrderDiscount = model.OrderTotalDiscountValue;
             order.OrderTotal = model.OrderTotalValue;
+            order.CurrencyRate = model.CurrencyRate;
             await _orderService.UpdateOrder(order);
 
             //add a note
@@ -866,10 +896,42 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("save-generic-attributes")]
+        public async Task<IActionResult> EditGenericAttributes(string id, OrderModel model)
+        {
+            var order = await _orderService.GetOrderById(id);
+            if (order == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+                return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
+
+            order.GenericAttributes = model.GenericAttributes;
+
+            await _orderService.UpdateOrder(order);
+            await _orderViewModelService.LogEditOrder(order.Id);
+
+            await _orderViewModelService.PrepareOrderDetailsModel(model, order);
+
+            //selected tab
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
+
+            return View(model);
+        }
+
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
@@ -953,7 +1015,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -995,7 +1057,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     ErrorNotification($"This order item is in associated with shipment {shipment.ShipmentNumber}. Please delete it first.", false);
                     //selected tab
-                    SaveSelectedTabIndex(persistForTheNextRequest: false);
+                    await SaveSelectedTabIndex(persistForTheNextRequest: false);
                     var model = new OrderModel();
                     await _orderViewModelService.PrepareOrderDetailsModel(model, order);
                     return View(model);
@@ -1014,7 +1076,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification("This order item has an associated gift card record. Please delete it first.", false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
 
@@ -1040,7 +1102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -1082,7 +1144,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1123,7 +1185,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1490,5 +1552,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
         #endregion
+
     }
 }

@@ -208,11 +208,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //order statuses
-            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //payment statuses
-            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(HttpContext, false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //billing countries
@@ -520,12 +520,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new CountryReportModel
             {
                 //order statuses
-                AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList()
+                AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList()
             };
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //payment statuses
-            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(HttpContext, false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);

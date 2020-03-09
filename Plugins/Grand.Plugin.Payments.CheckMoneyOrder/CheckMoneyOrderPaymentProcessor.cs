@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
-using Grand.Plugin.Payments.CheckMoneyOrder.Controllers;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
@@ -35,12 +34,12 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder
             ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService, 
             ILocalizationService localizationService, IWebHelper webHelper, IServiceProvider serviceProvider)
         {
-            this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
-            this._settingService = settingService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
+            _checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
+            _settingService = settingService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -204,11 +203,6 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder
             actionName = "PaymentInfo";
             controllerName = "PaymentCheckMoneyOrder";
             routeValues = new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Payments.CheckMoneyOrder.Controllers" }, { "area", null } };
-        }
-
-        public Type GetControllerType()
-        {
-            return typeof(PaymentCheckMoneyOrderController);
         }
 
         public override async Task Install()

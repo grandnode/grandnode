@@ -1,0 +1,147 @@
+﻿@model CourseModel
+<script type="text/javascript">
+    $(document).ready(function () {
+        toggleRemoveButton();
+    });
+    function toggleRemoveButton() {
+        if ($('#@Html.FieldIdFor(model => model.ProductId)').val() != '' ) {
+            $('#purchased-with-product-name-remove').show();
+        }
+        else {
+            $('#purchased-with-product-name-remove').hide();
+        }
+    }
+</script>
+<vc:admin-widget widget-zone="course_details_info_top" additional-data="Model" />
+@(await Html.LocalizedEditor<CourseModel, CourseLocalizedModel>("course-info-localized",
+            @<div class="form-horizontal">
+                 <div class="form-body">
+                     <div class="form-group">
+                         <admin-label asp-for="@Model.Locales[item].Name" />
+                         <div class="col-md-9 col-sm-9">
+                             <admin-input asp-for="@Model.Locales[item].Name" />
+                             <span asp-validation-for="@Model.Locales[item].Name"></span>
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <admin-label asp-for="@Model.Locales[item].ShortDescription" />
+                         <div class="col-md-9 col-sm-9">
+                             <admin-textarea asp-for="@Model.Locales[item].ShortDescription"></admin-textarea>
+                             <span asp-validation-for="@Model.Locales[item].ShortDescription"></span>
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <admin-label asp-for="@Model.Locales[item].Description" />
+                         <div class="col-md-9 col-sm-9">
+                             <admin-input asp-for="@Model.Locales[item].Description" asp-template="RichEditor" />
+                             <span asp-validation-for="@Model.Locales[item].Description"></span>
+                         </div>
+                     </div>
+                     <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                 </div>
+            </div>
+            ,
+            @<div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <admin-label asp-for="Name" />
+                            <div class="col-md-9 col-sm-9">
+                                <admin-input asp-for="Name" />
+                                <span asp-validation-for="Name"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <admin-label asp-for="ShortDescription" />
+                            <div class="col-md-9 col-sm-9">
+                                <admin-textarea asp-for="ShortDescription"></admin-textarea>
+                                <span asp-validation-for="ShortDescription"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <admin-label asp-for="Description" />
+                            <div class="col-md-9 col-sm-9">
+                                <admin-input asp-for="Description" asp-template="RichEditor" />
+                                <span asp-validation-for="Description"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <admin-label asp-for="PictureId" />
+                            <div class="col-md-9 col-sm-9">
+                                <admin-input asp-for="PictureId" />
+                                <span asp-validation-for="PictureId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <admin-label asp-for="LevelId" />
+                            <div class="col-md-9 col-sm-9">
+                                <admin-select asp-for="LevelId" asp-items="Model.AvailableLevels" />
+                                <span asp-validation-for="LevelId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <admin-label asp-for="Published" />
+                            <div class="col-md-9 col-sm-9">
+                                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                                    <admin-input asp-for="Published" />
+                                    <div class="control__indicator"></div>
+                                </label>
+                                <span asp-validation-for="Published"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <admin-label asp-for="DisplayOrder" />
+                            <div class="col-md-9 col-sm-9">
+                                <admin-input asp-for="DisplayOrder" />
+                                <span asp-validation-for="DisplayOrder"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <admin-label asp-for="ProductId" />
+                            <div class="col-md-9 col-sm-9">
+                                <input asp-for="ProductId" type="hidden" />
+                                <label class="control-label" id="purchased-with-product-name">
+                                    @if (!string.IsNullOrEmpty(Model.ProductId))
+                                                {
+                                        @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId })
+                                                }
+                                </label>
+                                <span asp-validation-for="ProductId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-3"></div>
+                            <div class="col-md-9 col-sm-9">
+                                <button type="button"
+                                        onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToCoursePopup", "Course",
+                                    new { productIdInput = Html.FieldIdFor(model => model.ProductId),
+                                        productNameInput = "purchased-with-product-name",
+                                        btnId = "btnRefreshPurchasedWithProduct" }))', 800, 800, true); return false;" class="k-button">
+                                    @T("Admin.Courses.Course.Fields.PurchasedWithProduct.Choose")
+                                </button>
+                                <button type="button" id="purchased-with-product-name-remove" class="k-button">
+                                    @T("Admin.Courses.Course.Fields.PurchasedWithProduct.Remove")
+                                </button>
+                                <input type="button" id="btnRefreshPurchasedWithProduct" style="display: none" />
+                                <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $('#purchased-with-product-name-remove').click(function () {
+                                        $('#purchased-with-product-name').text('');
+                                        $("#@Html.FieldIdFor(model => model.ProductId)").val('');
+                                        toggleRemoveButton();
+                                        //return false to don't reload a page
+                                        return false;
+                                    });
+                                    $('#btnRefreshPurchasedWithProduct').click(function () {
+                                        toggleRemoveButton();
+                                        //return false to don't reload a page
+                                        return false;
+                                    });
+                                });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+))
+
+<vc:admin-widget widget-zone="course_details_info_bottom" additional-data="Model" />

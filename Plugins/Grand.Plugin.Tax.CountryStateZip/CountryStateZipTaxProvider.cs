@@ -28,11 +28,11 @@ namespace Grand.Plugin.Tax.CountryStateZip
             IWebHelper webHelper,
             IServiceProvider serviceProvider)
         {
-            this._taxRateService = taxRateService;
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
+            _taxRateService = taxRateService;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _webHelper = webHelper;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>

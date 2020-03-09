@@ -17,7 +17,7 @@ namespace Grand.Web.Components
             ITopicViewModelService topicViewModelService
 )
         {
-            this._topicViewModelService = topicViewModelService;
+            _topicViewModelService = topicViewModelService;
         }
 
         #endregion

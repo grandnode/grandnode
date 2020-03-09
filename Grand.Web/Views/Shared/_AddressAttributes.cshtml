@@ -53,7 +53,7 @@
                     {
                     <li>
                         <label class="custom-control custom-checkbox">
-                            <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                            <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@(attributeValue.Id)" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
                             <span class="custom-control-label"></span>
                             <span class="custom-control-description">@attributeValue.Name</span>
                         </label>
@@ -64,12 +64,12 @@
             break;
             case AttributeControlType.TextBox:
             {
-                <input name="@(controlId)" type="text" class="form-control textbox" id="@(controlId)" value="@attribute.DefaultValue" />
+                <input name="@(controlId)" type="text" class="form-control textbox" id="@(controlId)" value="@(attribute.DefaultValue)" />
             }
             break;
             case AttributeControlType.MultilineTextbox:
             {
-            <textarea class="form-control" id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
+            <textarea class="form-control" id="@(controlId)" name="@(controlId)">@(attribute.DefaultValue)</textarea>
                 }
                 break;
             case AttributeControlType.Datepicker:

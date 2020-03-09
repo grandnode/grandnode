@@ -85,6 +85,7 @@ namespace Grand.Services.Logging
         /// <summary>
         /// Gets all activity log items
         /// </summary>
+        /// <param name="comment">Log item message text or text part; null or empty string to load all</param>
         /// <param name="createdOnFrom">Log item creation from; null to load all customers</param>
         /// <param name="createdOnTo">Log item creation to; null to load all customers</param>
         /// <param name="customerId">Customer identifier; null to load all customers</param>
@@ -92,7 +93,8 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        Task<IPagedList<ActivityLog>> GetAllActivities(DateTime? createdOnFrom = null,
+        Task<IPagedList<ActivityLog>> GetAllActivities(string comment = "",
+            DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string customerId = "", string activityLogTypeId = "",
             string ipAddress = null, int pageIndex = 0, int pageSize = int.MaxValue);
 

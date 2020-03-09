@@ -17,7 +17,7 @@
         }
 </script>
 <vc:admin-widget widget-zone="manufacturer_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
+@(await Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -85,7 +85,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowOnHomePage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowOnHomePage"></span>
             </div>
@@ -95,7 +95,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="FeaturedProductsOnHomaPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="FeaturedProductsOnHomaPage"></span>
             </div>
@@ -105,7 +105,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IncludeInTopMenu" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IncludeInTopMenu"></span>
             </div>
@@ -115,7 +115,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AllowCustomersToSelectPageSize" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
             </div>
@@ -135,6 +135,13 @@
             </div>
         </div>
         <div class="form-group">
+            <admin-label asp-for="DefaultSort" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="DefaultSort" asp-items="Model.AvailableSortOptions" />
+                <span asp-validation-for="DefaultSort"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <admin-label asp-for="Icon" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="Icon" />
@@ -146,7 +153,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="Published" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="Published"></span>
             </div>

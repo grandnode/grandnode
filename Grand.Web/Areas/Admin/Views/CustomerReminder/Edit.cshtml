@@ -5,7 +5,7 @@
 }
 <form asp-controller="CustomerReminder" 
       asp-action="Edit" method="post" id="customer-reminder-form">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -35,7 +35,7 @@
 
 @*run report*@
 <form asp-controller="CustomerReminder" asp-action="Run" method="post" id="run-form">
-    <antiforgery-token />
+    
     <input asp-for="Id" type="hidden" />
 </form>
 

@@ -16,7 +16,7 @@ namespace Grand.Services.Shipping
 
         public GetShippingOptionRequest()
         {
-            this.Items = new List<PackageItem>();
+            Items = new List<PackageItem>();
         }
 
         #endregion

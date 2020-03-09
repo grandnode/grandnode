@@ -103,8 +103,6 @@ namespace Grand.Services.Payments
         /// <param name="viewComponentName">View component name</param>
         void GetPublicViewComponent(out string viewComponentName);
 
-        Type GetControllerType();
-
         #endregion
 
         #region Properties

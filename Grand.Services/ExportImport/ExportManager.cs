@@ -63,15 +63,15 @@ namespace Grand.Services.ExportImport
             IDiscountService discountService,
             IServiceProvider serviceProvider)
         {
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productAttributeService = productAttributeService;
-            this._pictureService = pictureService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._storeService = storeService;
-            this._productService = productService;
-            this._discountService = discountService;
-            this._serviceProvider = serviceProvider;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _productAttributeService = productAttributeService;
+            _pictureService = pictureService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _storeService = storeService;
+            _productService = productService;
+            _discountService = discountService;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -370,7 +370,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("DeliveryDateId", null, product.DeliveryDateId);
                 xmlWriter.WriteElementString("IsTaxExempt", null, product.IsTaxExempt.ToString());
                 xmlWriter.WriteElementString("TaxCategoryId", null, product.TaxCategoryId);
-                xmlWriter.WriteElementString("IsTelecommunicationsOrBroadcastingOrElectronicServices", null, product.IsTelecommunicationsOrBroadcastingOrElectronicServices.ToString());
+                xmlWriter.WriteElementString("IsTele", null, product.IsTele.ToString());
                 xmlWriter.WriteElementString("ManageInventoryMethodId", null, product.ManageInventoryMethodId.ToString());
                 xmlWriter.WriteElementString("UseMultipleWarehouses", null, product.UseMultipleWarehouses.ToString());
                 xmlWriter.WriteElementString("WarehouseId", null, product.WarehouseId);
@@ -636,7 +636,7 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Product>("DeliveryDateId", p => p.DeliveryDateId),
                 new PropertyByName<Product>("IsTaxExempt", p => p.IsTaxExempt),
                 new PropertyByName<Product>("TaxCategoryId", p => p.TaxCategoryId),
-                new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices", p => p.IsTelecommunicationsOrBroadcastingOrElectronicServices),
+                new PropertyByName<Product>("IsTele", p => p.IsTele),
                 new PropertyByName<Product>("ManageInventoryMethodId", p => p.ManageInventoryMethodId),
                 new PropertyByName<Product>("UseMultipleWarehouses", p => p.UseMultipleWarehouses),
                 new PropertyByName<Product>("WarehouseId", p => p.WarehouseId),
@@ -1015,7 +1015,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("Company", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company));
 
                 xmlWriter.WriteElementString("CountryId", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CountryId));
-                xmlWriter.WriteElementString("StateProvinceId", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId).ToString());
+                xmlWriter.WriteElementString("StateProvinceId", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId));
                 xmlWriter.WriteElementString("StreetAddress", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress));
                 xmlWriter.WriteElementString("StreetAddress2", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress2));
                 xmlWriter.WriteElementString("ZipPostalCode", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ZipPostalCode));
@@ -1311,8 +1311,8 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Customer>("StreetAddress2", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress2)),
                 new PropertyByName<Customer>("ZipPostalCode", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ZipPostalCode)),
                 new PropertyByName<Customer>("City", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.City)),
-                new PropertyByName<Customer>("CountryId", p => p.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.CountryId)),
-                new PropertyByName<Customer>("StateProvinceId", p => p.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.StateProvinceId)),
+                new PropertyByName<Customer>("CountryId", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CountryId)),
+                new PropertyByName<Customer>("StateProvinceId", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId)),
                 new PropertyByName<Customer>("Phone", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone)),
                 new PropertyByName<Customer>("Fax", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Fax)),
                 new PropertyByName<Customer>("VatNumber", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber)),

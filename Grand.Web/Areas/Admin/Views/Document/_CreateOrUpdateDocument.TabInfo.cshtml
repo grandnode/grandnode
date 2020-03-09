@@ -1,0 +1,103 @@
+﻿@model DocumentModel
+<vc:admin-widget widget-zone="document_details_info_top" additional-data="Model" />
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="Number" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Number" />
+                <span asp-validation-for="Number"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Name" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Name" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Description" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Description" asp-template="RichEditor" />
+                <span asp-validation-for="Description"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="Link" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Link" />
+                <span asp-validation-for="Link"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="DocumentTypeId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="DocumentTypeId" asp-items="Model.AvailableDocumentTypes" />
+                <span asp-validation-for="DocumentTypeId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="StatusId" />
+            <div class="col-md-4 col-sm-6">
+                <admin-select asp-for="StatusId" asp-items="((DocumentStatus)Model.StatusId).ToSelectList(Context)" />
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="ReferenceId" />
+            <div class="col-md-4 col-sm-6">
+                <admin-select asp-for="ReferenceId" asp-items="((Reference)Model.ReferenceId).ToSelectList(Context)" />
+            </div>
+        </div>
+        <div class="form-group object-reference">
+            <admin-label asp-for="ObjectId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="ObjectId" />
+                <span asp-validation-for="ObjectId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Published" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="Published" />
+                    <div class="control__indicator"></div>
+                </label>
+                <span asp-validation-for="Published"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="DownloadId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="DownloadId" />
+                <span asp-validation-for="DownloadId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="DisplayOrder" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Flag" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Flag" />
+                <span asp-validation-for="Flag"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="PictureId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="PictureId" />
+                <span asp-validation-for="PictureId"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<vc:admin-widget widget-zone="document_details_info_bottom" additional-data="Model" />

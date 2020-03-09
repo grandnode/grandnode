@@ -1,35 +1,86 @@
 ﻿@model TopMenuModel.CategoryLineModel
-<li class="@(Model.Category.SubCategories.Count() == 0 ? "nav-item": "nav-item dropdown" )">
 
-    <a id="@Model.Category.Id-menu" class="@(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")  @(Model.Category.IncludeInTopMenu ? "": "d-lg-none")" @(Model.Category.SubCategories.Count() == 0 ? "" : "data-toggle=dropdown aria-haspopup=true aria-expanded=false" ) href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
-        @if (!string.IsNullOrEmpty(Model.Category.Icon))
-        {
-            <span class="category-icon @Model.Category.Icon"></span>
-        }
-        <span>@Model.Category.Name</span>
-        @if (Model.Category.SubCategories.Count() > 0)
-        {
-            <span class="mdi mdi-chevron-down arrow-down"></span>
-        }
-    </a>
+@if (Model.Category.IncludeInTopMenu) {
+        <li class="@(Model.Category.SubCategories.Count() == 0 ? "nav-item": "nav-item dropdown" )">
 
-
-    @if (!string.IsNullOrEmpty(Model.Category.FlagStyle))
-    {
-        <label class="badge @Model.Category.FlagStyle">@Model.Category.Flag</label>
-    }
-    @{
-        //subcategories
-        var subCategories =
-            Model.Category.SubCategories.Where(x => x.IncludeInTopMenu).ToList();
-
-        var levelClass = "";
-        if (Model.Level == 0)
-        {
-            levelClass = "first-level";
-            if (subCategories.Any())
+        <a id="@Model.Category.Id-menu" class="@(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")" @(Model.Category.SubCategories.Count() == 0 ? "" : "aria-haspopup=true aria-expanded=false") href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+            @if (!string.IsNullOrEmpty(Model.Category.Icon))
             {
-                <ul class="dropdown-menu @levelClass" aria-labelledby="@Model.Category.Id-menu">
+                <span class="category-icon @Model.Category.Icon"></span>
+            }
+            <span>@Model.Category.Name</span>
+            @if (Model.Category.SubCategories.Count() > 0)
+            {
+                <span class="mdi mdi-chevron-down arrow-down"></span>
+            }
+            @if (!string.IsNullOrEmpty(Model.Category.FlagStyle))
+            {
+                <span class="badge @Model.Category.FlagStyle">@Model.Category.Flag</span>
+            }
+        </a>
+
+
+        @{
+            //subcategories
+            var subCategories =
+                Model.Category.SubCategories.Where(x => x.IncludeInTopMenu).ToList();
+
+            var levelClass = "";
+            if (Model.Level == 0)
+            {
+                levelClass = "first-level";
+                if (subCategories.Any())
+                {
+                <ul class="dropdown-menu @levelClass @if (!string.IsNullOrEmpty(Model.Category.ImageUrl)) { <text>with-img</text> } " aria-labelledby="@Model.Category.Id-menu">
+                    @if (!string.IsNullOrEmpty(Model.Category.ImageUrl))
+                    {
+                        string str = Model.Category.ImageUrl;
+
+                        if (!str.Contains("default-image"))
+                        {
+                            <li class="mainCatimg d-lg-inline-flex d-none">
+                                <a class="picture" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+                                    <picture>
+                                        <source media="(max-width: 991px)" sizes="1px" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 1w" />
+                                        <img src="@Model.Category.ImageUrl" alt="" />
+                                    </picture>
+                                </a>
+                            </li>
+                        }
+                    }
+                    <li>
+                        <ul class="rest-categories m-0">
+                            <li class="nav-item cat-back d-lg-none d-inline-flex">
+                                <a class="nav-link justify-content-start align-items-center">
+                                    <span class="mdi mdi-arrow-left"></span>
+                                    <span>@T("Mobile.Categories.Back")</span>
+                                </a>
+                            </li>
+                            <li class="nav-item d-lg-none d-inline-flex sub-cat-name-container">
+                                <a class="nav-link sub-cat-name" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+                                    <span>@T("Mobile.Category.Show") @Model.Category.Name</span>
+                                </a>
+                            </li>
+                            @foreach (var subCategory in subCategories)
+                            {
+                                var categoryLineModel = new TopMenuModel.CategoryLineModel
+                                {
+                                    Category = subCategory,
+                                    Level = Model.Level + 1,
+                                    ResponsiveMobileMenu = Model.ResponsiveMobileMenu
+                                };
+                                <partial name="_CategoryLine.TopMenu" model="categoryLineModel" />
+                            }
+                        </ul>
+                    </li>
+                </ul>
+                }
+            }
+            if (Model.Level >= 1 && subCategories.Any())
+            {
+                levelClass = "next-level";
+                <div class="sublist-toggle"></div>
+                <ul class="dropdown-menu sublist @levelClass">
                     <li class="nav-item cat-back d-lg-none d-inline-flex">
                         <a class="nav-link justify-content-start align-items-center">
                             <span class="mdi mdi-arrow-left"></span>
@@ -38,7 +89,7 @@
                     </li>
                     <li class="nav-item d-lg-none d-inline-flex sub-cat-name-container">
                         <a class="nav-link sub-cat-name" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
-                            <span><strong>@T("Mobile.Category.Show") @Model.Category.Name</strong></span>
+                            <span>@T("Mobile.Category.Show") @Model.Category.Name</span>
                         </a>
                     </li>
                     @foreach (var subCategory in subCategories)
@@ -54,35 +105,6 @@
                 </ul>
             }
         }
-        if (Model.Level >= 1 && subCategories.Any())
-        {
-            levelClass = "next-level";
-            <div class="sublist-toggle"></div>
-            <ul class="dropdown-menu sublist @levelClass">
-                <li class="nav-item cat-back d-lg-none d-inline-flex">
-                    <a class="nav-link justify-content-start align-items-center">
-                        <span class="mdi mdi-arrow-left"></span>
-                        <span>@T("Mobile.Categories.Back")</span>
-                    </a>
-                </li>
-                <li class="nav-item d-lg-none d-inline-flex sub-cat-name-container">
-                    <a class="nav-link sub-cat-name" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
-                        <span><strong>@T("Mobile.Category.Show") @Model.Category.Name</strong></span>
-                    </a>
-                </li>
-                @foreach (var subCategory in subCategories)
-                {
-                    var categoryLineModel = new TopMenuModel.CategoryLineModel
-                    {
-                        Category = subCategory,
-                        Level = Model.Level + 1,
-                        ResponsiveMobileMenu = Model.ResponsiveMobileMenu
-                    };
-                    <partial name="_CategoryLine.TopMenu" model="categoryLineModel" />
-                }
-            </ul>
-        }
-    }
-</li>
-
+    </li>
+}
 

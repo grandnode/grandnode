@@ -33,7 +33,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxRateRepository">Tax rate repository</param>
         public TaxRateService(IMediator mediator,
@@ -60,7 +60,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.DeleteAsync(taxRate);
 
-            await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(taxRate);
@@ -103,7 +103,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.InsertAsync(taxRate);
 
-            await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(taxRate);
@@ -120,7 +120,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.UpdateAsync(taxRate);
 
-            await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(taxRate);

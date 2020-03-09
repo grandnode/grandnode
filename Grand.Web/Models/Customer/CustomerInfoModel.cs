@@ -14,12 +14,12 @@ namespace Grand.Web.Models.Customer
     {
         public CustomerInfoModel()
         {
-            this.AvailableTimeZones = new List<SelectListItem>();
-            this.AvailableCountries = new List<SelectListItem>();
-            this.AvailableStates = new List<SelectListItem>();
-            this.AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
-            this.CustomerAttributes = new List<CustomerAttributeModel>();
-            this.NewsletterCategories = new List<NewsletterSimpleCategory>();
+            AvailableTimeZones = new List<SelectListItem>();
+            AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
+            AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
+            CustomerAttributes = new List<CustomerAttributeModel>();
+            NewsletterCategories = new List<NewsletterSimpleCategory>();
         }
 
         [GrandResourceDisplayName("Account.Fields.Email")]
@@ -120,6 +120,9 @@ namespace Grand.Web.Models.Customer
         [GrandResourceDisplayName("Account.Fields.Signature")]
         public string Signature { get; set; }
 
+        //2factory
+        public bool Is2faEnabled { get; set; }
+        
         //time zone
         [GrandResourceDisplayName("Account.Fields.TimeZone")]
         public string TimeZoneId { get; set; }
@@ -139,19 +142,35 @@ namespace Grand.Web.Models.Customer
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
 
-        public IList<NewsletterSimpleCategory> NewsletterCategories { get; set; }
+        public IList<NewsletterSimpleCategory> NewsletterCategories { get; set; }        
+        
 
         #region Nested classes
 
         public partial class AssociatedExternalAuthModel : BaseGrandEntityModel
         {
             public string Email { get; set; }
-
             public string ExternalIdentifier { get; set; }
-
             public string AuthMethodName { get; set; }
         }
-        
+
+        public class TwoFactorAuthenticationModel : BaseGrandModel
+        {
+            public TwoFactorAuthenticationModel()
+            {
+                CustomValues = new Dictionary<string, string>();
+            }
+            public string SecretKey { get; set; }
+            public string Code { get; set; }
+            public IDictionary<string, string> CustomValues { get; set; }
+        }
+
+        public class TwoFactorAuthorizationModel : BaseGrandModel
+        {
+            public string Code { get; set; }
+            public string UserName { get; set; }
+        }
+
         #endregion
     }
 }

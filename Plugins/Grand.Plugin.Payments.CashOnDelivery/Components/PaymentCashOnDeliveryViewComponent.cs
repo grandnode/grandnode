@@ -17,9 +17,9 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Components
             ISettingService settingService,
             IStoreContext storeContext)
         {
-            this._workContext = workContext;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
+            _workContext = workContext;
+            _settingService = settingService;
+            _storeContext = storeContext;
 
         }
 

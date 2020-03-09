@@ -367,9 +367,13 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                             <col width="1">
                             <col width="1">
                             <col width="1">
+                            <col width="1">
                         </colgroup>
                         <thead>
                             <tr>
+                                <th class="product-picture text-center">
+                                    @T("Order.Product(s).Picture")
+                                </th>
                                 <th class="product text-center">
                                     @T("Order.Product(s).Name")
                                 </th>
@@ -388,6 +392,9 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                             @foreach (var item in Model.Items)
                             {
                                 <tr class="item-container">
+                                    <td class="product-picture text-center">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                    </td>
                                     <td class="product">
                                         @if (!Model.PrintMode)
                                         {
@@ -467,7 +474,7 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                 {
                     var inclTax = Model.PricesIncludeTax;
                     <div class="tax-shipping-info">
-                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
+                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
                     </div>
                 }
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))

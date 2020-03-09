@@ -26,8 +26,6 @@ namespace Grand.Plugin.ExternalAuth.Google.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -47,8 +45,6 @@ namespace Grand.Plugin.ExternalAuth.Google.Controllers
             _localizationService = localizationService;
             _permissionService = permissionService;
             _settingService = settingService;
-            _storeService = storeService;
-            _workContext = workContext;
         }
 
         #endregion
@@ -72,7 +68,7 @@ namespace Grand.Plugin.ExternalAuth.Google.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [AuthorizeAdmin]
         [Area("Admin")]
         public async Task<IActionResult> Configure(ConfigurationModel model)
@@ -117,7 +113,7 @@ namespace Grand.Plugin.ExternalAuth.Google.Controllers
         public async Task<IActionResult> LoginCallback(string returnUrl)
         {
             //authenticate google user
-            var authenticateResult = await this.HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            var authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
             if (!authenticateResult.Succeeded || !authenticateResult.Principal.Claims.Any())
                 return RedirectToRoute("Login");
 
@@ -125,7 +121,7 @@ namespace Grand.Plugin.ExternalAuth.Google.Controllers
             var authenticationParameters = new ExternalAuthenticationParameters
             {
                 ProviderSystemName = GoogleAuthenticationDefaults.ProviderSystemName,
-                AccessToken = await this.HttpContext.GetTokenAsync(GoogleDefaults.AuthenticationScheme, "access_token"),
+                AccessToken = await HttpContext.GetTokenAsync(GoogleDefaults.AuthenticationScheme, "access_token"),
                 Email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value,
                 ExternalIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value,
                 ExternalDisplayIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value,

@@ -97,7 +97,7 @@ namespace Grand.Services.Directory
         /// <param name="measureWeightRepository">Weight repository</param>
         /// <param name="measureUnitRepository">Unit repository</param>
         /// <param name="measureSettings">Measure settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public MeasureService(ICacheManager cacheManager,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
@@ -132,7 +132,7 @@ namespace Grand.Services.Directory
 
             await _measureDimensionRepository.DeleteAsync(measureDimension);
 
-            await _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(measureDimension);
@@ -193,7 +193,7 @@ namespace Grand.Services.Directory
 
             await _measureDimensionRepository.InsertAsync(measure);
 
-            await _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(measure);
@@ -210,7 +210,7 @@ namespace Grand.Services.Directory
 
             await _measureDimensionRepository.UpdateAsync(measure);
 
-            await _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(measure);
@@ -307,7 +307,7 @@ namespace Grand.Services.Directory
 
             await _measureWeightRepository.DeleteAsync(measureWeight);
 
-            await _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(measureWeight);
@@ -368,7 +368,7 @@ namespace Grand.Services.Directory
 
             await _measureWeightRepository.InsertAsync(measure);
 
-            await _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(measure);
@@ -385,7 +385,7 @@ namespace Grand.Services.Directory
 
             await _measureWeightRepository.UpdateAsync(measure);
             
-            await _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(measure);
@@ -489,8 +489,8 @@ namespace Grand.Services.Directory
 
             await _measureUnitRepository.DeleteAsync(measureUnit);
 
-            await _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MEASUREUNITS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(measureUnit);
@@ -535,7 +535,7 @@ namespace Grand.Services.Directory
 
             await _measureUnitRepository.InsertAsync(measure);
 
-            await _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MEASUREUNITS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(measure);
@@ -552,7 +552,7 @@ namespace Grand.Services.Directory
 
             await _measureUnitRepository.UpdateAsync(measure);
 
-            await _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MEASUREUNITS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(measure);

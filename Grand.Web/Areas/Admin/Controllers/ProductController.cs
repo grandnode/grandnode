@@ -11,6 +11,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.ExportImport;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
@@ -36,6 +37,7 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class ProductController : BaseAdminController
     {
         #region Fields
+
         private readonly IProductViewModelService _productViewModelService;
         private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
@@ -47,6 +49,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+
         #endregion
 
         #region Constructors
@@ -62,19 +66,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             IImportManager importManager,
             IStoreService storeService,
             IProductReservationService productReservationService,
-            IAuctionService auctionService)
+            IAuctionService auctionService, 
+            IDateTimeHelper dateTimeHelper)
         {
-            this._productViewModelService = productViewModelService;
-            this._productService = productService;
-            this._customerService = customerService;
-            this._workContext = workContext;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
-            this._storeService = storeService;
-            this._productReservationService = productReservationService;
-            this._auctionService = auctionService;
+            _productViewModelService = productViewModelService;
+            _productService = productService;
+            _customerService = customerService;
+            _workContext = workContext;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _exportManager = exportManager;
+            _importManager = importManager;
+            _storeService = storeService;
+            _productReservationService = productReservationService;
+            _auctionService = auctionService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -183,7 +189,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit product
         public async Task<IActionResult> Edit(string id)
         {
-            var product = await _productService.GetProductById(id);
+            var product = await _productService.GetProductById(id, true);
             if (product == null)
                 //No product found with the specified id
                 return RedirectToAction("List");
@@ -203,7 +209,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
 
-            var model = product.ToModel();
+            var model = product.ToModel(_dateTimeHelper);
             model.Ticks = product.UpdatedOnUtc.Ticks;
 
             await _productViewModelService.PrepareProductModel(model, product, false, false);
@@ -227,7 +233,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(ProductModel model, bool continueEditing)
         {
-            var product = await _productService.GetProductById(model.Id);
+            var product = await _productService.GetProductById(model.Id, true);
             if (product == null)
                 //No product found with the specified id
                 return RedirectToAction("List");
@@ -254,7 +260,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
                     return RedirectToAction("Edit", new { id = product.Id });
                 }
                 return RedirectToAction("List");
@@ -270,7 +276,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            var product = await _productService.GetProductById(id);
+            var product = await _productService.GetProductById(id, true);
             if (product == null)
                 //No product found with the specified id
                 return RedirectToAction("List");
@@ -312,7 +318,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var copyModel = model.CopyProductModel;
             try
             {
-                var originalProduct = await _productService.GetProductById(copyModel.Id);
+                var originalProduct = await _productService.GetProductById(copyModel.Id, true);
 
                 //a vendor should have access only to his products
                 if (_workContext.CurrentVendor != null && originalProduct.VendorId != _workContext.CurrentVendor.Id)
@@ -1451,7 +1457,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (product == null)
                     throw new ArgumentException("No product found with the specified id");
 
-                var tierPrice = model.ToEntity();
+                var tierPrice = model.ToEntity(_dateTimeHelper);
                 await _productService.InsertTierPrice(tierPrice);
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -1479,7 +1485,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return Content("This is not your product");
 
-            var model = tierPrice.ToModel();
+            var model = tierPrice.ToModel(_dateTimeHelper);
             model.ProductId = productId;
             await _productViewModelService.PrepareTierPriceModel(model);
             return View(model);
@@ -1490,7 +1496,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var product = await _productService.GetProductById(productId);
+                var product = await _productService.GetProductById(productId, true);
                 if (product == null)
                     throw new ArgumentException("No product found with the specified id");
 
@@ -1498,7 +1504,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (tierPrice == null)
                     return Content("Empty tier price");
 
-                tierPrice = model.ToEntity(tierPrice);
+                tierPrice = model.ToEntity(tierPrice, _dateTimeHelper);
                 await _productService.UpdateTierPrice(tierPrice);
 
                 ViewBag.RefreshPage = true;
@@ -1515,7 +1521,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var product = await _productService.GetProductById(model.ProductId);
+                var product = await _productService.GetProductById(model.ProductId, true);
                 if (product == null)
                     throw new ArgumentException("No product found with the specified id");
 
@@ -2026,7 +2032,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var pr = await _productService.GetProductById(productId);
                 pr.StockQuantity = pr.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                await _productService.UpdateStockProduct(pr);
+                await _productService.UpdateStockProduct(pr, false);
             }
 
             return new NullJsonResult();
@@ -2126,7 +2132,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                 {
                     product.StockQuantity = 0;
-                    await _productService.UpdateStockProduct(product);
+                    await _productService.UpdateStockProduct(product, false);
                 }
                 return Json(new { Success = true });
             }

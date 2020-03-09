@@ -21,7 +21,7 @@ namespace Grand.Core
             if (pageSize <= 0)
                 throw new ArgumentException("pageSize must be greater than zero");
 
-            TotalCount = totalCount ?? (int)await source.CountAsync();
+            TotalCount = totalCount ?? await source.CountAsync();
             source = totalCount == null ? source.Skip(pageIndex * pageSize).Take(pageSize) : source;
             AddRange(source);
             
@@ -38,7 +38,7 @@ namespace Grand.Core
 
         private async Task InitializeAsync(IMongoCollection<T> source, FilterDefinition<T> filterdefinition, SortDefinition<T> sortdefinition, int pageIndex, int pageSize)
         {
-            TotalCount = (int)source.CountDocuments(filterdefinition);
+            TotalCount = (int) await source.CountDocumentsAsync(filterdefinition);
             AddRange(await source.Find(filterdefinition).Sort(sortdefinition).Skip(pageIndex * pageSize).Limit(pageSize).ToListAsync());
             if (pageSize > 0)
             {
@@ -48,6 +48,22 @@ namespace Grand.Core
             }
             PageSize = pageSize;
             PageIndex = pageIndex;
+        }
+
+        private async Task InitializeAsync(IAggregateFluent<T> source, int pageIndex, int pageSize)
+        {
+            var range = source.Skip(pageIndex * pageSize).Limit(pageSize + 1).ToList();
+            int total = range.Count > pageSize ? range.Count : pageSize;
+            TotalCount = (await source.ToListAsync()).Count;
+            if (pageSize > 0)
+                TotalPages = total / pageSize;
+
+            if (total % pageSize > 0)
+                TotalPages++;
+
+            PageSize = pageSize;
+            PageIndex = pageIndex;
+            AddRange(range.Take(pageSize));
         }
 
         private void Initialize(IEnumerable<T> source, int pageIndex, int pageSize, int? totalCount = null)
@@ -85,7 +101,12 @@ namespace Grand.Core
             await pagelist.InitializeAsync(source, pageIndex, pageSize);
             return pagelist;
         }
-
+        public static async Task<PagedList<T>> Create(IAggregateFluent<T> source, int pageIndex, int pageSize)
+        {
+            var pagelist = new PagedList<T>();
+            await pagelist.InitializeAsync(source, pageIndex, pageSize);
+            return pagelist;
+        }
 
         public PagedList()
         {
@@ -95,22 +116,6 @@ namespace Grand.Core
             Initialize(source, pageIndex, pageSize);
         }
         
-        public PagedList(IAggregateFluent<T> source, int pageIndex, int pageSize)
-        {
-            var range = source.Skip(pageIndex * pageSize).Limit(pageSize+1).ToList();
-            int total = range.Count > pageSize ? range.Count : pageSize;
-            this.TotalCount = source.ToListAsync().Result.Count;
-            if(pageSize > 0)
-                this.TotalPages = total / pageSize;
-
-            if (total % pageSize > 0)
-                TotalPages++;
-
-            this.PageSize = pageSize;
-            this.PageIndex = pageIndex;
-            this.AddRange(range.Take(pageSize));
-        }
-
         public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
         {
             Initialize(source, pageIndex, pageSize, totalCount);

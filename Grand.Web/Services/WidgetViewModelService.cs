@@ -7,6 +7,7 @@ using Grand.Web.Interfaces;
 using Grand.Web.Models.Cms;
 using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Services
@@ -20,15 +21,15 @@ namespace Grand.Web.Services
         public WidgetViewModelService(IStoreContext storeContext, ICacheManager cacheManager,
             IWidgetService widgetService, IThemeContext themeContext)
         {
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._widgetService = widgetService;
-            this._themeContext = themeContext;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _widgetService = widgetService;
+            _themeContext = themeContext;
         }
 
         public virtual async Task<List<RenderWidgetModel>> PrepareRenderWidget(string widgetZone, object additionalData = null)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY,
+            var cacheKey = string.Format(ModelCacheEventConst.WIDGET_MODEL_KEY,
                 _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
 
             //add widget zone to view component arguments

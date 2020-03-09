@@ -1,28 +1,30 @@
 ﻿@model IList<CategoryModel>
 @inject DisplayOrderHomePage order
-<div class="categoryGrid order-@order.HomePageCategories">
-    <div class="flex-grid row">
-        @foreach (var item in Model)
-        {
-            <div class="col-xl-@order.Pc_Xl col-lg-@order.Pc_Lg col-md-@order.Pc_Md col-sm-@order.Pc_Sm col-@order.Pc_Col mb-2">
-                <div class="card pb-0">
-                    <div class="list-picture">
-                        <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                            <picture>
-                                <source media="(max-width: 480px)" picture-id="@item.PictureModel.Id" picture-size="350" />
-                                <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
-                            </picture>
-                        </a>
-                    </div>
-                    <div class="list-title mt-3">
-                        <h3 class="h5 card-title m-0 p-0">
-                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })">
-                                @item.Name
+<div class="categoryGrid py-3 text-center order-@order.HomePageCategories">
+    <div class="col-12 px-0">
+        <div class="flex-grid form-row">
+            @foreach (var item in Model)
+            {
+                <div class="col-xl-@order.Pc_Xl col-lg-@order.Pc_Lg col-md-@order.Pc_Md col-sm-@order.Pc_Sm col-@order.Pc_Col mb-2">
+                    <div class="card p-0">
+                        <div class="list-picture">
+                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                <picture>
+                                    <source media="(max-width: 480px)" picture-id="@item.PictureModel.Id" picture-size="350" />
+                                    <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                </picture>
                             </a>
-                        </h3>
+                        </div>
+                        <div class="list-title mt-3">
+                            <h3 class="h6 card-title m-0 p-0">
+                                <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })">
+                                    @item.Name
+                                </a>
+                            </h3>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 </div>

@@ -1,7 +1,7 @@
 ﻿using Grand.Api.DTOs.Customers;
 using Grand.Api.Extensions;
 using Grand.Api.Interfaces;
-using Grand.Data;
+using Grand.Core.Data;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;

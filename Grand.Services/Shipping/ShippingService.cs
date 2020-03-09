@@ -6,6 +6,7 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
+using Grand.Core.Domain.Stores;
 using Grand.Core.Plugins;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -15,7 +16,6 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -56,6 +56,21 @@ namespace Grand.Services.Shipping
         private const string PICKUPPOINTS_PATTERN_KEY = "Grand.pickuppoint.";
 
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : delivery date ID
+        /// </remarks>
+        private const string DELIVERYDATE_BY_ID_KEY = "Grand.deliverydate.id-{0}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        private const string DELIVERYDATE_PATTERN_KEY = "Grand.deliverydate.";
+
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
@@ -73,7 +88,6 @@ namespace Grand.Services.Shipping
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
@@ -101,7 +115,6 @@ namespace Grand.Services.Shipping
             IProductService productService,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
-            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IAddressService addressService,
             ICountryService countryService,
@@ -115,27 +128,26 @@ namespace Grand.Services.Shipping
             ShoppingCartSettings shoppingCartSettings,
             ShippingSettings shippingSettings)
         {
-            this._shippingMethodRepository = shippingMethodRepository;
-            this._deliveryDateRepository = deliveryDateRepository;
-            this._warehouseRepository = warehouseRepository;
-            this._pickupPointsRepository = pickupPointsRepository;
-            this._logger = logger;
-            this._productService = productService;
-            this._productAttributeParser = productAttributeParser;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._pluginFinder = pluginFinder;
-            this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._mediator = mediator;
-            this._cacheManager = cacheManager;
-            this._productRepository = productRepository;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._shippingSettings = shippingSettings;
+            _shippingMethodRepository = shippingMethodRepository;
+            _deliveryDateRepository = deliveryDateRepository;
+            _warehouseRepository = warehouseRepository;
+            _pickupPointsRepository = pickupPointsRepository;
+            _logger = logger;
+            _productService = productService;
+            _productAttributeParser = productAttributeParser;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _localizationService = localizationService;
+            _addressService = addressService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _pluginFinder = pluginFinder;
+            _storeContext = storeContext;
+            _currencyService = currencyService;
+            _mediator = mediator;
+            _cacheManager = cacheManager;
+            _productRepository = productRepository;
+            _shoppingCartSettings = shoppingCartSettings;
+            _shippingSettings = shippingSettings;
         }
 
         #endregion
@@ -205,7 +217,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.DeleteAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(shippingMethod);
@@ -262,7 +274,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.InsertAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(shippingMethod);
@@ -280,7 +292,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.UpdateAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(shippingMethod);
@@ -306,7 +318,10 @@ namespace Grand.Services.Shipping
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             await _deliveryDateRepository.DeleteAsync(deliveryDate);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+
+            //clear cache
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DELIVERYDATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(deliveryDate);
@@ -319,7 +334,8 @@ namespace Grand.Services.Shipping
         /// <returns>Delivery date</returns>
         public virtual Task<DeliveryDate> GetDeliveryDateById(string deliveryDateId)
         {
-            return _deliveryDateRepository.GetByIdAsync(deliveryDateId);
+            string key = string.Format(DELIVERYDATE_BY_ID_KEY, deliveryDateId);
+            return _cacheManager.GetAsync(key, () => _deliveryDateRepository.GetByIdAsync(deliveryDateId));
         }
 
         /// <summary>
@@ -360,6 +376,9 @@ namespace Grand.Services.Shipping
 
             await _deliveryDateRepository.UpdateAsync(deliveryDate);
 
+            //clear cache
+            await _cacheManager.RemoveByPrefix(DELIVERYDATE_PATTERN_KEY);
+
             //event notification
             await _mediator.EntityUpdated(deliveryDate);
         }
@@ -390,8 +409,8 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.DeleteAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(warehouse);
@@ -432,7 +451,7 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.InsertAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(warehouse);
@@ -450,7 +469,7 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.UpdateAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(warehouse);
@@ -510,7 +529,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.InsertAsync(pickupPoint);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(pickupPoint);
@@ -528,7 +547,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.UpdateAsync(pickupPoint);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(pickupPoint);
@@ -544,7 +563,7 @@ namespace Grand.Services.Shipping
                 throw new ArgumentNullException("pickupPoint");
 
             await _pickupPointsRepository.DeleteAsync(pickupPoint);
-            await _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(pickupPoint);
@@ -820,7 +839,7 @@ namespace Grand.Services.Shipping
         /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
         /// <returns>Shipment packages (requests)</returns>
         public virtual async Task<(IList<GetShippingOptionRequest> shippingOptionRequest, bool shippingFromMultipleLocations)> CreateShippingOptionRequests(Customer customer,
-            IList<ShoppingCartItem> cart, Address shippingAddress, string storeId)
+            IList<ShoppingCartItem> cart, Address shippingAddress, Store store)
         {
             //if we always ship from the default shipping origin, then there's only one request
             //if we ship from warehouses ("ShippingSettings.UseWarehouseLocation" enabled),
@@ -865,6 +884,18 @@ namespace Grand.Services.Shipping
                         warehouse = await GetWarehouseById(product.WarehouseId);
                     }
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(sci.WarehouseId))
+                        warehouse = await GetWarehouseById(sci.WarehouseId);
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(store?.DefaultWarehouseId))
+                            warehouse = await GetWarehouseById(store.DefaultWarehouseId);
+                    }
+
+                }
+
                 string warehouseId = warehouse != null ? warehouse.Id : "";
 
                 if (requests.ContainsKey(warehouseId) && !product.ShipSeparately)
@@ -877,7 +908,7 @@ namespace Grand.Services.Shipping
                     //create a new request
                     var request = new GetShippingOptionRequest();
                     //store
-                    request.StoreId = storeId;
+                    request.StoreId = store?.Id;
                     //add item
                     request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
                     //ship to
@@ -940,7 +971,7 @@ namespace Grand.Services.Shipping
         /// <returns>Shipping options</returns>
         public virtual async Task<GetShippingOptionResponse> GetShippingOptions(Customer customer, IList<ShoppingCartItem> cart,
             Address shippingAddress, string allowedShippingRateComputationMethodSystemName = "",
-            string storeId = "")
+            Store store = null)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -948,10 +979,10 @@ namespace Grand.Services.Shipping
             var result = new GetShippingOptionResponse();
 
             //create a package
-            var shippingOptionRequests = await CreateShippingOptionRequests(customer, cart, shippingAddress, storeId);
+            var shippingOptionRequests = await CreateShippingOptionRequests(customer, cart, shippingAddress, store);
             result.ShippingFromMultipleLocations = shippingOptionRequests.shippingFromMultipleLocations;
 
-            var shippingRateComputationMethods = await LoadActiveShippingRateComputationMethods(storeId, cart);
+            var shippingRateComputationMethods = await LoadActiveShippingRateComputationMethods(store?.Id, cart);
             //filter by system name
             if (!String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName))
             {

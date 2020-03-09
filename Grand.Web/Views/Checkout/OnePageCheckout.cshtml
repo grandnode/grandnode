@@ -173,8 +173,11 @@
                         PaymentInfo.init('#co-payment-info-form', '@(storeLocation)checkout/OpcSavePaymentInfo/');
                 </script>
                 <div class="col-12 buttons pt-1 pb-1 my-3 px-0" id="payment-info-buttons-container">
-                    <a class="btn btn-secondary" href="#" onclick="Checkout.back(); return false;">@T("Common.Back")</a>
-                    <input type="button" class="btn btn-info payment-info-next-step-button" onclick="PaymentInfo.save()" value="@T("Common.Continue")" />
+                    @if (!Model.HasSinglePaymentMethod || paymentMethodStepNumber > 1)
+                    {
+                        <a class="btn btn-secondary" href="#" onclick="Checkout.back();return false;">@T("Common.Back")</a>
+                    }
+                    <input type="button" class="btn btn-info payment-info-next-step-button" onclick="PaymentInfo.save()" value="@T("Common.Continue")"/>
                     <span class="please-wait" id="payment-info-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
                 </div>
             </div>

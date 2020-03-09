@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
@@ -10,6 +11,7 @@ using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
@@ -24,10 +26,10 @@ namespace Grand.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -39,10 +41,10 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IShoppingCartViewModelService shoppingCartViewModelService,
-            IProductAttributeParser productAttributeParser,
             IProductAttributeFormatter productAttributeFormatter,
             CatalogSettings catalogSettings,
-            CustomerSettings customerSettings)
+            CustomerSettings customerSettings,
+            ShoppingCartSettings shoppingCartSettings)
         {
             _productService = productService;
             _workContext = workContext;
@@ -51,9 +53,9 @@ namespace Grand.Web.Controllers
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _shoppingCartViewModelService = shoppingCartViewModelService;
             _productAttributeFormatter = productAttributeFormatter;
-            _productAttributeParser = productAttributeParser;
             _catalogSettings = catalogSettings;
             _customerSettings = customerSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -61,28 +63,31 @@ namespace Grand.Web.Controllers
         #region Methods
 
         // Product details page > back in stock subscribe button
-        public virtual async Task<IActionResult> SubscribeButton(string productId)
+        public virtual async Task<IActionResult> SubscribeButton(string productId, string warehouseId)
         {
             var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
             var customer = _workContext.CurrentCustomer;
-            var store = _storeContext.CurrentStore;
             if (!customer.IsRegistered())
                 return Content(_localizationService.GetResource("BackInStockSubscriptions.NotifyMeWhenAvailable"));
 
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
                 return Content(_localizationService.GetResource("BackInStockSubscriptions.NotifyMeWhenAvailable"));
 
+            warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
+               (string.IsNullOrEmpty(warehouseId) ? "" : warehouseId) :
+               (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
+
             var subscription = await _backInStockSubscriptionService
-                   .FindSubscription(customer.Id, product.Id, string.Empty, _storeContext.CurrentStore.Id, product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "");
+                   .FindSubscription(customer.Id, product.Id, string.Empty, _storeContext.CurrentStore.Id,
+                   warehouseId);
 
             if (subscription != null)
             {
                 return Content(_localizationService.GetResource("BackInStockSubscriptions.DeleteNotifyWhenAvailable"));
-            }
-
+            }            
             return Content(_localizationService.GetResource("BackInStockSubscriptions.NotifyMeWhenAvailable"));
         }
 
@@ -95,6 +100,11 @@ namespace Grand.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
+            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
+                form["WarehouseId"].ToString() :
+                 product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : 
+                 (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
+
             if (!customer.IsRegistered())
                 return Json(new
                 {
@@ -106,10 +116,10 @@ namespace Grand.Web.Controllers
             if ((product.ManageInventoryMethod == ManageInventoryMethod.ManageStock) &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId) <= 0)
+                product.GetTotalStockQuantity(warehouseId: warehouseId) <= 0)
             {
                 var subscription = await _backInStockSubscriptionService
-                    .FindSubscription(customer.Id, product.Id, string.Empty, _storeContext.CurrentStore.Id, product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "");
+                    .FindSubscription(customer.Id, product.Id, string.Empty, _storeContext.CurrentStore.Id, warehouseId);
                 if (subscription != null)
                 {
                     //subscription already exists
@@ -141,7 +151,7 @@ namespace Grand.Web.Controllers
                     CustomerId = customer.Id,
                     ProductId = product.Id,
                     StoreId = _storeContext.CurrentStore.Id,
-                    WarehouseId = product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "",
+                    WarehouseId = warehouseId,
                     CreatedOnUtc = DateTime.UtcNow
                 };
                 await _backInStockSubscriptionService.InsertSubscription(subscription);
@@ -158,9 +168,8 @@ namespace Grand.Web.Controllers
                 product.AllowBackInStockSubscriptions)
             {
                 string attributeXml = await _shoppingCartViewModelService.ParseProductAttributes(product, form);
-                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributeXml);
                 var subscription = await _backInStockSubscriptionService
-                    .FindSubscription(customer.Id, product.Id, attributeXml, _storeContext.CurrentStore.Id, product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "");
+                    .FindSubscription(customer.Id, product.Id, attributeXml, _storeContext.CurrentStore.Id, warehouseId);
 
                 if (subscription != null)
                 {
@@ -194,7 +203,7 @@ namespace Grand.Web.Controllers
                     ProductId = product.Id,
                     AttributeXml = attributeXml,
                     StoreId = _storeContext.CurrentStore.Id,
-                    WarehouseId = product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "",
+                    WarehouseId = warehouseId,
                     CreatedOnUtc = DateTime.UtcNow
                 };
 

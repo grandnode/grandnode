@@ -1,0 +1,31 @@
+﻿@model DocumentTypeModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Documents.Type.AddNew").Text;
+}
+<form asp-controller="Document" asp-action="CreateType" method="post">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-tag"></i>
+                        @T("Admin.Documents.Type.AddNew")
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Documents.Type.BackToList").Text, "Types")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                            <span id="banner-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                            <vc:admin-widget widget-zone="documenttype_details_buttons" additional-data="Model" />
+                        </div>
+                    </div>
+                </div>
+                <div class="x_content form">
+                   <partial name="_CreateOrUpdateType" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

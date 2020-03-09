@@ -28,12 +28,12 @@ namespace Grand.Web.Services
         public PollViewModelService(IPollService pollService, IWorkContext workContext, IStoreContext storeContext, ICacheManager cacheManager, IAclService aclService,
             IServiceProvider serviceProvider)
         {
-            this._pollService = pollService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._aclService = aclService;
-            this._serviceProvider = serviceProvider;
+            _pollService = pollService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _aclService = aclService;
+            _serviceProvider = serviceProvider;
         }
 
         public virtual async Task<PollModel> PreparePoll(Poll poll, bool setAlreadyVotedProperty)
@@ -61,7 +61,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<PollModel> PreparePollBySystemName(string systemKeyword)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.POLL_BY_SYSTEMNAME__MODEL_KEY, systemKeyword, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConst.POLL_BY_SYSTEMNAME__MODEL_KEY, systemKeyword, _storeContext.CurrentStore.Id);
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 Poll poll = await _pollService.GetPollBySystemKeyword(systemKeyword, _storeContext.CurrentStore.Id);
@@ -89,7 +89,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<List<PollModel>> PrepareHomePagePoll()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConst.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var pollModels = new List<PollModel>();

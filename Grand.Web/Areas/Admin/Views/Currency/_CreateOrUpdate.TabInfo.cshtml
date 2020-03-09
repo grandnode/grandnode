@@ -1,6 +1,6 @@
 ﻿@model CurrencyModel
 
-@(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
+@(await Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
 @<div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -91,14 +91,14 @@
         <div class="form-group">
             <admin-label asp-for="RoundingTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="RoundingTypeId" asp-items="((RoundingType)Model.RoundingTypeId).ToSelectList()" />
+                <admin-select asp-for="RoundingTypeId" asp-items="((RoundingType)Model.RoundingTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="RoundingTypeId"></span>
             </div>
         </div>
         <div class="form-group">
             <admin-label asp-for="MidpointRoundId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="MidpointRoundId" asp-items="((MidpointRounding)Model.MidpointRoundId).ToSelectList()" />
+                <admin-select asp-for="MidpointRoundId" asp-items="((MidpointRounding)Model.MidpointRoundId).ToSelectList(Context)" />
                 <span asp-validation-for="MidpointRoundId"></span>
             </div>
         </div>

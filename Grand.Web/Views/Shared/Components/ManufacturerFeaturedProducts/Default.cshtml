@@ -1,28 +1,30 @@
 ﻿@model IList<ManufacturerModel>
 @inject DisplayOrderHomePage order
-<div class="manufacturerGrid order-@order.ManufacturerFeaturedProducts">
-    <div class="flex-grid row">
+<div class="product-grid col-12 px-0 order-@order.ManufacturerFeaturedProducts">
+    <div class="flex-grid form-row">
         @foreach (var item in Model)
         {
-            <div class="col-xl-@order.MF_m_Xl col-lg-@order.MF_m_Lg col-md-@order.MF_m_Md col-sm-@order.MF_m_Sm col-@order.MF_m_Col mx-lg-0 mx-md-auto mx-0 pb-0 mb-0">
-                <div class="card manufacturer-card pb-0">
-                    <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                        <div class="img-holder">
-                            <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
-                        </div>
-                    </a>
-                    <h4 class="h5 p-sm-3 p-2 mb-0 card-title">
+            <div class="col-xl-@order.MF_m_Xl col-lg-@order.MF_m_Lg col-md-@order.MF_m_Md col-sm-@order.MF_m_Sm col-@order.MF_m_Col mb-3">
+                <div class="card p-0">
+                    <div class="featured-list-picture">
                         <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                            @item.Name
+                            <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
                         </a>
-                    </h4>
+                    </div>
+                    <div class="list-title mt-3">
+                        <h3 class="h5 card-title m-0 p-0">
+                            <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })">
+                                @item.Name
+                            </a>
+                        </h3>
+                    </div>
                 </div>
             </div>
             <div class="col-xl-@order.MF_p_Xl col-lg-@order.MF_p_Lg col-md-@order.MF_p_Md col-sm-@order.MF_p_Sm col-@order.MF_p_Col">
-                <div class="row px-lg-3 px-0 mx-0 w-100">
+                <div class="form-row flex-grid">
                     @foreach (var product in item.FeaturedProducts)
                     {
-                        <div class="col-xl-@order.MF_pp_Xl col-lg-@order.MF_pp_Lg col-md-@order.MF_pp_Md col-sm-@order.MF_pp_Sm col-@order.MF_pp_Col px-0 featured-product-container mb-3">
+                        <div class="col-xl-@order.MF_pp_Xl col-lg-@order.MF_pp_Lg col-md-@order.MF_pp_Md col-sm-@order.MF_pp_Sm col-@order.MF_pp_Col px-0 featured-product-container mb-2">
                             <partial name="_ProductBoxFeatured" model="product" />
                         </div>
                     }

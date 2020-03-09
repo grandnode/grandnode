@@ -11,6 +11,12 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the product identifier
         /// </summary>
         public string ProductId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the warehouse identifier
+        /// </summary>
+        public string WarehouseId { get; set; }
+
         /// <summary>
         /// Gets or sets the bid date
         /// </summary>

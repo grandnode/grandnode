@@ -2,19 +2,26 @@
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Customers;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Validators.Customers
 {
     public class CustomerReminderValidator : BaseGrandValidator<CustomerReminderModel>
     {
-        public CustomerReminderValidator(ILocalizationService localizationService)
+        public CustomerReminderValidator(
+            IEnumerable<IValidatorConsumer<CustomerReminderModel>> validators,
+            ILocalizationService localizationService)
+            : base(validators)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.CustomerReminder.Fields.Name.Required"));
         }
     }
     public class CustomerReminderLevelValidator : BaseGrandValidator<CustomerReminderModel.ReminderLevelModel>
     {
-        public CustomerReminderLevelValidator(ILocalizationService localizationService)
+        public CustomerReminderLevelValidator(
+            IEnumerable<IValidatorConsumer<CustomerReminderModel.ReminderLevelModel>> validators,
+            ILocalizationService localizationService)
+            : base(validators)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.CustomerReminder.Level.Fields.Name.Required"));
             RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.CustomerReminder.Level.Fields.Subject.Required"));

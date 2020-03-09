@@ -55,7 +55,6 @@ namespace Grand.Services.Forums
         private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
         private readonly IRepository<ForumPostVote> _forumPostVoteRepository;
         private readonly ForumSettings _forumSettings;
-        private readonly IRepository<Customer> _customerRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerService _customerService;
@@ -78,12 +77,11 @@ namespace Grand.Services.Forums
         /// <param name="forumPrivateMessageRepository">Private message repository</param>
         /// <param name="forumSubscriptionRepository">Forum subscription repository</param>
         /// <param name="forumSettings">Forum settings</param>
-        /// <param name="customerRepository">Customer repository</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public ForumService(ICacheManager cacheManager,
             IRepository<ForumGroup> forumGroupRepository,
             IRepository<Forum> forumRepository,
@@ -93,7 +91,6 @@ namespace Grand.Services.Forums
             IRepository<ForumSubscription> forumSubscriptionRepository,
             IRepository<ForumPostVote> forumPostVoteRepository,
             ForumSettings forumSettings,
-            IRepository<Customer> customerRepository,
             IGenericAttributeService genericAttributeService,
             ICustomerService customerService,
             IWorkContext workContext,
@@ -110,7 +107,6 @@ namespace Grand.Services.Forums
             _forumSubscriptionRepository = forumSubscriptionRepository;
             _forumPostVoteRepository = forumPostVoteRepository;
             _forumSettings = forumSettings;
-            _customerRepository = customerRepository;
             _genericAttributeService = genericAttributeService;
             _customerService = customerService;
             _workContext = workContext;
@@ -287,8 +283,8 @@ namespace Grand.Services.Forums
 
             await _forumGroupRepository.DeleteAsync(forumGroup);
 
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(forumGroup);
@@ -334,8 +330,8 @@ namespace Grand.Services.Forums
             await _forumGroupRepository.InsertAsync(forumGroup);
 
             //cache
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(forumGroup);
@@ -355,8 +351,8 @@ namespace Grand.Services.Forums
             await _forumGroupRepository.UpdateAsync(forumGroup);
 
             //cache
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(forumGroup);
@@ -403,8 +399,8 @@ namespace Grand.Services.Forums
             //delete forum
             await _forumRepository.DeleteAsync(forum);
 
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(forum);
@@ -451,8 +447,8 @@ namespace Grand.Services.Forums
 
             await _forumRepository.InsertAsync(forum);
 
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(forum);
@@ -471,8 +467,8 @@ namespace Grand.Services.Forums
 
             await _forumRepository.UpdateAsync(forum);
             
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(forum);
@@ -518,8 +514,8 @@ namespace Grand.Services.Forums
             await UpdateForumStats(forumId);
             await UpdateCustomerStats(customerId);
 
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(forumTopic);
@@ -665,8 +661,8 @@ namespace Grand.Services.Forums
             await UpdateForumStats(forumTopic.ForumId);
 
             //cache            
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(forumTopic);
@@ -708,8 +704,8 @@ namespace Grand.Services.Forums
 
             await _forumTopicRepository.UpdateAsync(forumTopic);
 
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(forumTopic);
@@ -791,8 +787,8 @@ namespace Grand.Services.Forums
             await UpdateCustomerStats(customerId);
 
             //clear cache            
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(forumPost);
@@ -888,8 +884,8 @@ namespace Grand.Services.Forums
             await UpdateCustomerStats(customerId);
 
             //clear cache            
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(forumPost);
@@ -937,8 +933,8 @@ namespace Grand.Services.Forums
 
             await _forumPostRepository.UpdateAsync(forumPost);
 
-            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(FORUM_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(forumPost);

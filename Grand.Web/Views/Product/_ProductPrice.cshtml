@@ -1,6 +1,6 @@
 ﻿@model ProductDetailsModel.ProductPriceModel
 @inject IWorkContext workContext
-<div class="prices d-flex align-items-center row px-3 flex-column" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+<div class="prices d-flex justify-content-center align-items-start row px-3 flex-column" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
     @if (Model.CustomerEntersPrice)
     {
         @*display nothing*@
@@ -16,14 +16,14 @@
     {
         if (Model.IsReservation)
         {
-            <div class="rental-price col-12 mb-3">
+            <div class="rental-price mb-3">
                 <label class="mb-0">@T("Products.Price.ReservationPrice"):</label>
                 <span>@Model.ReservationPrice</span>
             </div>
         }
         if (Model.IsAuction)
         {
-            <div class="col-12 mb-3">
+            <div class="actual-price">
                 @if (Model.HighestBidValue > 0)
                 {
                     <label class="mb-0">@T("Products.Price.CurrentPrice"):</label>
@@ -50,13 +50,8 @@
         {<text>product-price col-12 d-inline-flex align-items-center</text>}
         else
         {<text>non-discounted-price col-12 d-flex align-items-center</text>}">
-                @if ((!String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) && Model.IsAuction)
-                {
-                    @*display "Price:" label if we have old price or discounted one*@
-                    <label class="mb-0">@T("Products.Price"):</label>
-                }
                 @*render price*@
-                <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="actual-price price-value-@(Model.ProductId)" </text> }>
+                <span class="price-value-@(Model.ProductId)">
                     @if (Model.IsAuction)
                     {
                         <strong class="actual-price">@T("Products.BuyNowPrice"):</strong>
@@ -96,9 +91,10 @@
             @*discounted price*@
             <div class="d-inline-flex align-items-center product-price discounted-price col-12">
                 <label class="mb-0 mr-2">@T("Products.Price.WithDiscount"):</label>
-                <span itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="your-price price-value-@(Model.ProductId)">
+                <span class="your-price price-value-@(Model.ProductId)">
                     <strong>@Html.Raw(Model.PriceWithDiscount)</strong>
                 </span>
+                 <meta itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="your-price price-value-@(Model.ProductId)" />
             </div>
         }
         if (!String.IsNullOrEmpty(Model.BasePricePAngV))
@@ -113,12 +109,15 @@
             //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
             //of course, you can modify appropriate locales to include VAT info there
             <div class="tax-shipping-info generalMarginSupporter">
-                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
+                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
             </div>
         }
         if (!String.IsNullOrEmpty(Model.CurrencyCode))
         {
             <meta itemprop="priceCurrency" content="@Model.CurrencyCode" />
+        }
+        @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) {
+            <meta itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"/> 
         }
     }
 </div>

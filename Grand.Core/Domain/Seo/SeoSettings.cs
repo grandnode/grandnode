@@ -41,6 +41,12 @@ namespace Grand.Core.Domain.Seo
         /// A value indicating whether we should conver non-wetern chars to western ones
         /// </summary>
         public bool ConvertNonWesternChars { get; set; }
+
+        /// <summary>
+        /// A value indicating to conver non-wetern chars to western ones
+        /// </summary>
+        public string SeoCharConversion { get; set; }
+
         /// <summary>
         /// A value indicating whether unicode chars are allowed
         /// </summary>
@@ -48,11 +54,7 @@ namespace Grand.Core.Domain.Seo
         /// <summary>
         /// A value indicating whether canonical URL tags should be used
         /// </summary>
-        public bool CanonicalUrlsEnabled { get; set; }
-        /// <summary>
-        /// WWW requires (with or without WWW)
-        /// </summary>
-        public WwwRequirement WwwRequirement { get; set; }
+        public bool CanonicalUrlsEnabled { get; set; }        
         /// <summary>
         /// A value indicating whether JS file bundling and minification is enabled
         /// </summary>

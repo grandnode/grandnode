@@ -15,9 +15,6 @@ namespace Grand.Web.Infrastructure
             //installation localization service
             builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerLifetimeScope();
 
-            //blog service
-            builder.RegisterType<BlogViewModelService>().As<IBlogViewModelService>().InstancePerLifetimeScope();
-
             //address service
             builder.RegisterType<AddressViewModelService>().As<IAddressViewModelService>().InstancePerLifetimeScope();
 
@@ -27,18 +24,11 @@ namespace Grand.Web.Infrastructure
             //product service
             builder.RegisterType<ProductViewModelService>().As<IProductViewModelService>().InstancePerLifetimeScope();
 
-            //news service
-            builder.RegisterType<NewsViewModelService>().As<INewsViewModelService>().InstancePerLifetimeScope();
-
             //topic service
             builder.RegisterType<TopicViewModelService>().As<ITopicViewModelService>().InstancePerLifetimeScope();
 
             //customer service
-            builder.RegisterType<CustomerViewModelService>().As<ICustomerViewModelService>().InstancePerLifetimeScope();
-
-            //common service
-            builder.RegisterType<CommonViewModelService>().As<ICommonViewModelService>().InstancePerLifetimeScope();
-
+            builder.RegisterType<CustomerViewModelService>().As<ICustomerViewModelService>().InstancePerLifetimeScope();           
             //shipping service 
             builder.RegisterType<ShoppingCartViewModelService>().As<IShoppingCartViewModelService>().InstancePerLifetimeScope();
 
@@ -47,12 +37,6 @@ namespace Grand.Web.Infrastructure
 
             //widgetZone servie
             builder.RegisterType<WidgetViewModelService>().As<IWidgetViewModelService>().InstancePerLifetimeScope();
-
-            //order service
-            builder.RegisterType<OrderViewModelService>().As<IOrderViewModelService>().InstancePerLifetimeScope();
-
-            //country service
-            builder.RegisterType<CountryViewModelService>().As<ICountryViewModelService>().InstancePerLifetimeScope();
 
             //checkout service
             builder.RegisterType<CheckoutViewModelService>().As<ICheckoutViewModelService>().InstancePerLifetimeScope();
@@ -66,16 +50,12 @@ namespace Grand.Web.Infrastructure
             //ReturnRequest service
             builder.RegisterType<ReturnRequestViewModelService>().As<IReturnRequestViewModelService>().InstancePerLifetimeScope();
 
-            //Newsletter service
-            builder.RegisterType<NewsletterViewModelService>().As<INewsletterViewModelService>().InstancePerLifetimeScope();
+            //course service
+            builder.RegisterType<CourseViewModelService>().As<ICourseViewModelService>().InstancePerLifetimeScope();
 
-            //vendor service
-            builder.RegisterType<VendorViewModelService>().As<IVendorViewModelService>().InstancePerLifetimeScope();
-           
         }
 
-        public int Order
-        {
+        public int Order {
             get { return 2; }
         }
     }

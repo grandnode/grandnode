@@ -53,7 +53,9 @@
                     <div class="col d-md-inline-flex d-md-flex px-0 item-container">
                         @if (!string.IsNullOrEmpty(Model.Flag))
                         {
-                            <span class="new-product-label bg-info text-white">@Model.Flag</span>
+                            <div class="product-labels">
+                                <span class="product-label badge bg-info text-white">@Model.Flag</span>
+                            </div>
                         }
                         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
                         <!--product pictures-->
@@ -77,6 +79,11 @@
                             <partial name="_ProductReviewOverview" model="Model.ProductReviewOverview" />
                             <!--product manufacturers-->
                             <partial name="_ProductManufacturers" model="Model.ProductManufacturers" />
+                            <!--warehouses-->
+                            @if (Model.AllowToSelectWarehouse)
+                            {
+                                <partial name="_ProductWarehouses" model="Model" />
+                            }
                             <!--compare, email a friend-->
                             <div class="overview-buttons mt-3 mb-3">
                                 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_before", additionalData = Model.Id })
@@ -111,7 +118,7 @@
                         @if (Model.ProductReviewOverview.AllowCustomerReviews)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="spec" aria-selected="false"><span class="d-none d-md-block">@T("Products.Reviews") (@Model.ProductReviewOverview.TotalReviews)</span><span class="mdi mdi-account-star d-md-none"></span></a>
+                                <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false"><span class="d-none d-md-block">@T("Products.Reviews") (@Model.ProductReviewOverview.TotalReviews)</span><span class="mdi mdi-account-star d-md-none"></span></a>
                             </li>
                         }
                         @if (Model.AskQuestionOnProduct)
@@ -207,13 +214,15 @@
                                                             dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
                                                             <partial name="_ProductPrice" model="variant.ProductPrice" view-data="dataDictPrice" />
                                                         }
-                                                        <div class="btn-group mt-3">
-                                                            @{
-                                                                <partial name="_AddToCartGroup" model="variant.AddToCart" view-data="dataDictAddToCart" />
-                                                                var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
-                                                                dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
-                                                                <partial name="_AddToWishlistGroup" model="variant.AddToCart" view-data="dataDictAddToWishlist" />
-                                                            }
+                                                        <div class="generalAdToCart">
+                                                            <div class="btn-group product-simple-share my-3 d-inline-flex flex-wrap">
+                                                                @{
+                                                                    <partial name="_AddToCart" model="variant.AddToCart" view-data="dataDictAddToCart" />
+                                                                    var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
+                                                                    dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                                                    <partial name="_AddToWishlist" model="variant.AddToCart" view-data="dataDictAddToWishlist" />
+                                                                }
+                                                            </div>
                                                         </div>
                                                     </div>
                                             </div>

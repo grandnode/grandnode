@@ -18,7 +18,7 @@ namespace Grand.Web.Components
             ICatalogViewModelService catalogViewModelService
 )
         {
-            this._catalogViewModelService = catalogViewModelService;
+            _catalogViewModelService = catalogViewModelService;
         }
 
         #endregion

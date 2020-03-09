@@ -38,10 +38,10 @@ namespace Grand.Web.Controllers
         public InstallController(IInstallationLocalizationService locService, GrandConfig config, ICacheManager cacheManager,
             IServiceProvider serviceProvider)
         {
-            this._locService = locService;
-            this._config = config;
-            this._cacheManager = cacheManager;
-            this._serviceProvider = serviceProvider;
+            _locService = locService;
+            _config = config;
+            _cacheManager = cacheManager;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -61,10 +61,14 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        public virtual IActionResult Index()
+        public virtual async Task<IActionResult> Index()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
+
+            var installed = await _cacheManager.GetAsync<bool>("Installed");
+            if (installed)
+                return View(new InstallModel() { Installed = true });
 
             var model = new InstallModel
             {
@@ -143,7 +147,7 @@ namespace Grand.Web.Controllers
                     var client = new MongoClient(connectionString);
                     var databaseName = new MongoUrl(connectionString).DatabaseName;
                     var database = client.GetDatabase(databaseName);
-                    database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
+                    await database.RunCommandAsync((Command<BsonDocument>)"{ping:1}");
 
                     var filter = new BsonDocument("name", "GrandNodeVersion");
                     var found = database.ListCollectionsAsync(new ListCollectionsOptions { Filter = filter }).Result;
@@ -240,16 +244,8 @@ namespace Grand.Web.Controllers
                     }
 
                     //restart application
-                    if (Core.OperatingSystem.IsWindows())
-                    {
-                        webHelper.RestartAppDomain();
-                        //Redirect to home page
-                        return RedirectToRoute("HomePage");
-                    }
-                    else
-                    {
-                        return View(new InstallModel() { Installed = true });
-                    }
+                    await _cacheManager.SetAsync("Installed", true, 120);
+                    return View(new InstallModel() { Installed = true });
                 }
                 catch (Exception exception)
                 {

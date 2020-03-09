@@ -13,18 +13,18 @@
                  Selected = x.Id.Equals(Model.CurrentCurrencyId)
              });
             <div class="btn-group btn-group-sm float-xs-right">
-                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
                     @currencies.FirstOrDefault(x => x.Selected).Text
                     <span class="sr-only">Toggle Dropdown</span>
                     <span class="mdi mdi-chevron-down"></span>
                 </button>
-                <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-menu">
                     <ul class="pl-0 mb-0">
                         @foreach (var item in currencies)
                         {
                             var className = item.Selected ? "active" : "";
                             <li class="@className">
-                                <a href="@item.Value">@item.Text</a>
+                                <a class="text-dark" href="@item.Value">@item.Text</a>
                             </li>
                         }
                     </ul>

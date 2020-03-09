@@ -66,9 +66,9 @@ namespace Grand.Services.Seo
             IRepository<UrlRecord> urlRecordRepository,
             LocalizationSettings localizationSettings)
         {
-            this._cacheManager = cacheManager;
-            this._urlRecordRepository = urlRecordRepository;
-            this._localizationSettings = localizationSettings;
+            _cacheManager = cacheManager;
+            _urlRecordRepository = urlRecordRepository;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -145,7 +145,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.DeleteAsync(urlRecord);
 
             //cache
-            await _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.InsertAsync(urlRecord);
 
             //cache
-            await _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.UpdateAsync(urlRecord);
 
             //cache
-            await _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -197,6 +197,8 @@ namespace Grand.Services.Seo
         {
             if (String.IsNullOrEmpty(slug))
                 return null;
+
+            slug = slug.ToLowerInvariant();
 
             var query = from ur in _urlRecordRepository.Table
                         where ur.Slug == slug
@@ -216,6 +218,8 @@ namespace Grand.Services.Seo
         {
             if (String.IsNullOrEmpty(slug))
                 return null;
+
+            slug = slug.ToLowerInvariant();
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
@@ -255,7 +259,7 @@ namespace Grand.Services.Seo
             var query = _urlRecordRepository.Table;
 
             if (!String.IsNullOrWhiteSpace(slug))
-                query = query.Where(ur => ur.Slug.ToLower().Contains(slug.ToLower()));
+                query = query.Where(ur => ur.Slug.ToLower().Contains(slug.ToLowerInvariant()));
             query = query.OrderBy(ur => ur.Slug);
             return await PagedList<UrlRecord>.Create(query, pageIndex, pageSize);
         }
@@ -293,7 +297,7 @@ namespace Grand.Services.Seo
             {
                 //gradual loading
                 string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
-                return _cacheManager.Get(key, () =>
+                return await _cacheManager.GetAsync(key, async () =>
                 {
 
                     var source = _urlRecordRepository.Table;
@@ -303,7 +307,7 @@ namespace Grand.Services.Seo
                                 ur.LanguageId == languageId &&
                                 ur.IsActive
                                 select ur.Slug;
-                    var slug = query.FirstOrDefault();
+                    var slug = await query.FirstOrDefaultAsync();
                     //little hack here. nulls aren't cacheable so set it to ""
                     if (slug == null)
                         slug = "";
@@ -335,6 +339,9 @@ namespace Grand.Services.Seo
 
             var allUrlRecords = await query.ToListAsync();
             var activeUrlRecord = allUrlRecords.FirstOrDefault(x => x.IsActive);
+
+            if (!string.IsNullOrWhiteSpace(slug))
+                slug = slug.ToLowerInvariant();
 
             if (activeUrlRecord == null && !string.IsNullOrWhiteSpace(slug))
             {

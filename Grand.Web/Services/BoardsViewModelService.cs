@@ -29,9 +29,7 @@ namespace Grand.Web.Services
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
         private readonly ICountryService _countryService;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly ForumSettings _forumSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly MediaSettings _mediaSettings;
@@ -42,27 +40,23 @@ namespace Grand.Web.Services
             ILocalizationService localizationService,
             IPictureService pictureService,
             ICountryService countryService,
-            IWebHelper webHelper,
             IWorkContext workContext,
-            IStoreContext storeContext,
             ForumSettings forumSettings,
             CustomerSettings customerSettings,
             MediaSettings mediaSettings,
             IDateTimeHelper dateTimeHelper,
             IServiceProvider serviceProvider)
         {
-            this._forumService = forumService;
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
-            this._countryService = countryService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._forumSettings = forumSettings;
-            this._customerSettings = customerSettings;
-            this._mediaSettings = mediaSettings;
-            this._dateTimeHelper = dateTimeHelper;
-            this._serviceProvider = serviceProvider;
+            _forumService = forumService;
+            _localizationService = localizationService;
+            _pictureService = pictureService;
+            _countryService = countryService;
+            _workContext = workContext;
+            _forumSettings = forumSettings;
+            _customerSettings = customerSettings;
+            _mediaSettings = mediaSettings;
+            _dateTimeHelper = dateTimeHelper;
+            _serviceProvider = serviceProvider;
         }
 
         public virtual async Task<BoardsIndexModel> PrepareBoardsIndex()

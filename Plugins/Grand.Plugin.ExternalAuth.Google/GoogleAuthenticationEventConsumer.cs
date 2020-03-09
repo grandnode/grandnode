@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Authentication.External;
 using Grand.Services.Common;
-using Grand.Services.Events;
 using MediatR;
 
 namespace Grand.Plugin.ExternalAuth.Google.Infrastructure.Cache

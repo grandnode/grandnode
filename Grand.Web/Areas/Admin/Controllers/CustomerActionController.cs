@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Grand.Web.Areas.Admin.Models.Catalog;
+using Grand.Services.Helpers;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -43,6 +44,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerActionService _customerActionService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+
         #endregion
 
         #region Constructors
@@ -61,22 +64,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             IVendorService vendorService,
             ICustomerActionService customerActionService,
             IProductAttributeService productAttributeService,
-            ISpecificationAttributeService specificationAttributeService)
+            ISpecificationAttributeService specificationAttributeService,
+            IDateTimeHelper dateTimeHelper)
         {
-            this._customerActionViewModelService = customerActionViewModelService;
-            this._customerService = customerService;
-            this._customerAttributeService = customerAttributeService;
-            this._customerTagService = customerTagService;
-            this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
-            this._productService = productService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._customerActionService = customerActionService;
-            this._productAttributeService = productAttributeService;
-            this._specificationAttributeService = specificationAttributeService;
+            _customerActionViewModelService = customerActionViewModelService;
+            _customerService = customerService;
+            _customerAttributeService = customerAttributeService;
+            _customerTagService = customerTagService;
+            _localizationService = localizationService;
+            _customerActivityService = customerActivityService;
+            _productService = productService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _storeService = storeService;
+            _vendorService = vendorService;
+            _customerActionService = customerActionService;
+            _productAttributeService = productAttributeService;
+            _specificationAttributeService = specificationAttributeService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -141,7 +146,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (customerAction == null)
                 return RedirectToAction("List");
 
-            var model = customerAction.ToModel();
+            var model = customerAction.ToModel(_dateTimeHelper);
             model.ConditionCount = customerAction.Conditions.Count();
             await _customerActionViewModelService.PrepareReactObjectModel(model);
             return View(model);

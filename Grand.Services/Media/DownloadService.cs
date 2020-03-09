@@ -3,7 +3,6 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Events;
 using Grand.Services.Orders;
@@ -36,7 +35,7 @@ namespace Grand.Services.Media
         /// Ctor
         /// </summary>
         /// <param name="downloadRepository">Download repository</param>
-        /// <param name="eventPubisher"></param>
+        /// <param name="mediator">Mediator</param>
         public DownloadService(IRepository<Download> downloadRepository,
             IMediator mediator, IServiceProvider serviceProvider)
         {
@@ -144,15 +143,14 @@ namespace Grand.Services.Media
         /// <summary>
         /// Gets a value indicating whether download is allowed
         /// </summary>
+        /// <param name="order">Order</param>
         /// <param name="orderItem">Order item to check</param>
         /// <returns>True if download is allowed; otherwise, false.</returns>
-        public virtual async Task<bool> IsDownloadAllowed(OrderItem orderItem)
+        public virtual async Task<bool> IsDownloadAllowed(Order order, OrderItem orderItem)
         {
             if (orderItem == null)
                 return false;
 
-            var orderService = _serviceProvider.GetRequiredService<IOrderService>();
-            var order = await orderService.GetOrderByOrderItemId(orderItem.Id);
             if (order == null || order.Deleted)
                 return false;
 
@@ -216,15 +214,16 @@ namespace Grand.Services.Media
         /// <summary>
         /// Gets a value indicating whether license download is allowed
         /// </summary>
+        /// <param name="order">Order</param>
         /// <param name="orderItem">Order item to check</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
-        public virtual async Task<bool> IsLicenseDownloadAllowed(OrderItem orderItem)
+        public virtual async Task<bool> IsLicenseDownloadAllowed(Order order, OrderItem orderItem)
         {
             if (orderItem == null)
                 return false;
 
-            return await IsDownloadAllowed(orderItem) &&
-                !String.IsNullOrEmpty(orderItem.LicenseDownloadId);
+            return !string.IsNullOrEmpty(orderItem.LicenseDownloadId) && 
+                await IsDownloadAllowed(order, orderItem);
         }
 
         #endregion

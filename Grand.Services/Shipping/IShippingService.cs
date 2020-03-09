@@ -2,6 +2,7 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
+using Grand.Core.Domain.Stores;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -219,7 +220,7 @@ namespace Grand.Services.Shipping
         /// <returns>Shipment packages (requests)</returns>
         /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
         Task<(IList<GetShippingOptionRequest> shippingOptionRequest, bool shippingFromMultipleLocations)> CreateShippingOptionRequests(Customer customer,
-            IList<ShoppingCartItem> cart, Address shippingAddress, string storeId);
+            IList<ShoppingCartItem> cart, Address shippingAddress, Store store);
 
         /// <summary>
         ///  Gets available shipping options
@@ -230,6 +231,6 @@ namespace Grand.Services.Shipping
         /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Shipping options</returns>
         Task<GetShippingOptionResponse> GetShippingOptions(Customer customer, IList<ShoppingCartItem> cart, Address shippingAddress,
-            string allowedShippingRateComputationMethodSystemName = "", string storeId = "");
+            string allowedShippingRateComputationMethodSystemName = "", Store store = null);
     }
 }

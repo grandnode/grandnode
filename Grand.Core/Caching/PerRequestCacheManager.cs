@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Extensions;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace Grand.Core.Caching
         /// </summary>
         public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
         {
-            this._httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -48,7 +49,22 @@ namespace Grand.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Key of cached item</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public virtual T Get<T>(string key)
+        public virtual Task<T> GetAsync<T>(string key)
+        {
+            var items = GetItems();
+            if (items == null)
+                return Task.FromResult(default(T));
+
+            return Task.FromResult((T)items[key]);
+        }
+
+        /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Key of cached item</param>
+        /// <returns>The cached value associated with the specified key</returns>
+        public T Get<T>(string key)
         {
             var items = GetItems();
             if (items == null)
@@ -72,13 +88,18 @@ namespace Grand.Core.Caching
             return ((T)items[key], true);
         }
 
+        public Task<(T Result, bool FromCache)> TryGetValueAsync<T>(string key)
+        {
+            return Task.FromResult(TryGetValue<T>(key));
+        }
+
         /// <summary>
         /// Adds the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
         /// <param name="cacheTime">Cache time in minutes</param>
-        public virtual Task Set(string key, object data, int cacheTime)
+        public virtual Task SetAsync(string key, object data, int cacheTime)
         {
             var items = GetItems();
             if (items == null)
@@ -88,6 +109,26 @@ namespace Grand.Core.Caching
                 items[key] = data;
 
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Adds the specified key and object to the cache
+        /// </summary>
+        /// <param name="key">Key of cached item</param>
+        /// <param name="data">Value for caching</param>
+        /// <param name="cacheTime">Cache time in minutes</param>
+        public void Set(string key, object data, int cacheTime)
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            var items = GetItems();
+            if (items == null)
+                return;
+
+            items[key] = data;
         }
 
         /// <summary>
@@ -106,7 +147,7 @@ namespace Grand.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
-        public virtual Task Remove(string key)
+        public virtual Task RemoveAsync(string key)
         {
             var items = GetItems();
 
@@ -115,16 +156,30 @@ namespace Grand.Core.Caching
         }
 
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public virtual async Task RemoveByPattern(string pattern)
+        /// <param name="prefix">String prefix</param>
+        public virtual Task RemoveByPrefix(string prefix)
         {
             var items = GetItems();
             if (items == null)
-                return;
+                return Task.CompletedTask;
 
-            await this.RemoveByPattern(pattern, items.Keys.Select(p => p.ToString()));
+            var keysToRemove = items.Keys.Where(x => x.ToString().StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
+            foreach (var key in keysToRemove)
+            {
+                items.Remove(key);
+            }
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Removes items by key prefix
+        /// </summary>
+        /// <param name="prefix">String prefix</param>
+        public Task RemoveByPrefixAsync(string prefix)
+        {
+            return RemoveByPrefix(prefix);
         }
 
         /// <summary>

@@ -11,6 +11,7 @@
         public const string ProductTags = "ManageProductTags";
         public const string Attributes = "ManageAttributes";
         public const string Customers = "ManageCustomers";
+        public const string Documents = "ManageDocuments";
         public const string Reports = "ManageReports";
         public const string CustomerRoles = "ManageCustomerRoles";
         public const string Actions = "ManageActions";
@@ -37,6 +38,7 @@
         public const string Topics = "ManageTopics";
         public const string Forums = "ManageForums";
         public const string Knowledgebase = "ManageKnowledgebase";
+        public const string Courses = "ManageCourses";
         public const string MessageTemplates = "ManageMessageTemplates";
         public const string Countries = "ManageCountries";
         public const string Languages = "ManageLanguages";
@@ -57,6 +59,7 @@
         public const string MessageContactForm = "ManageMessageContactForm";
         public const string Maintenance = "ManageMaintenance";
         public const string Files = "ManageFiles";
+        public const string GenericAttributes = "GenericAttributes";
         public const string HtmlEditor = "HtmlEditor.ManagePictures";
         public const string ScheduleTasks = "ManageScheduleTasks";
 

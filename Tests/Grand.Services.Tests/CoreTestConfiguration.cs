@@ -99,7 +99,7 @@ namespace Grand.Services.Tests
                 .ConfigureWithConnectionString(__connectionString)
                 .ConfigureCluster(c => c.With(serverSelectionTimeout: TimeSpan.FromMilliseconds(int.Parse(serverSelectionTimeoutString))));
 
-            if (__connectionString.Ssl.HasValue && __connectionString.Ssl.Value)
+            if (__connectionString.Tls.HasValue && __connectionString.Tls.Value)
             {
                 var certificateFilename = Environment.GetEnvironmentVariable("MONGO_SSL_CERT_FILE");
                 if (certificateFilename != null)

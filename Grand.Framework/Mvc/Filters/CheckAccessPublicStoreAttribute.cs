@@ -21,8 +21,8 @@ namespace Grand.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public CheckAccessPublicStoreAttribute(bool ignore = false) : base(typeof(CheckAccessPublicStoreFilter))
         {
-            this._ignoreFilter = ignore;
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
 
         public bool IgnoreFilter => _ignoreFilter;
@@ -45,8 +45,8 @@ namespace Grand.Framework.Mvc.Filters
 
             public CheckAccessPublicStoreFilter(bool ignoreFilter, IPermissionService permissionService)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._permissionService = permissionService;
+                _ignoreFilter = ignoreFilter;
+                _permissionService = permissionService;
             }
 
             #endregion

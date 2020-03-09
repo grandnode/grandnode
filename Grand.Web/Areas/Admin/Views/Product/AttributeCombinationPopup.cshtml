@@ -20,7 +20,7 @@
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
 
-    <antiforgery-token />
+    
     <div asp-validation-summary="All"></div>
     <input asp-for="Id" type="hidden" />
     <input asp-for="ProductId" type="hidden" />
@@ -413,7 +413,7 @@
                 Name : "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All")"
             }
             @{
-                var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+                var allCustomerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             }
             @foreach (var customerRole in allCustomerRoles)
             {

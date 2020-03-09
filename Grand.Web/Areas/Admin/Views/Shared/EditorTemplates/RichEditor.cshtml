@@ -1,5 +1,7 @@
 ﻿@model String
 @inject IPermissionService permissionService
+@inject IWorkContext workContext
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment webHostEnvironment
 @inject AdminAreaSettings adminAreaSettings
 @using Grand.Web.Areas.Admin.Helpers
 @using Grand.Core
@@ -7,7 +9,7 @@
 @using Grand.Framework.UI
 @{
     // tinyMCE language
-    var language = TinyMceHelper.GetTinyMceLanguage();
+    var language = TinyMceHelper.GetTinyMceLanguage(workContext, webHostEnvironment);
 
     var allowJbimages = false;
     var allowRoxyFileman = await permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);

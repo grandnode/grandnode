@@ -37,15 +37,15 @@ namespace Grand.Web.Areas.Admin.Components
             model.AffliateId = affiliateId;
 
             //order statuses
-            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //payment statuses
-            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(HttpContext, false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //shipping statuses
-            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
+            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(HttpContext, false).ToList();
             model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);

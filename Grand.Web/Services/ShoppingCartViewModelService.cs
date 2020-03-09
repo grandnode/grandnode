@@ -8,7 +8,6 @@ using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
-using Grand.Core.Http;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -69,7 +68,6 @@ namespace Grand.Web.Services
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IAuctionService _auctionService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IDateTimeHelper _dateTimeHelper;
 
         private readonly MediaSettings _mediaSettings;
@@ -111,7 +109,6 @@ namespace Grand.Web.Services
             IPriceCalculationService priceCalculationService,
             IGenericAttributeService genericAttributeService,
             IAuctionService auctionService,
-            IHttpContextAccessor httpContextAccessor,
             IDateTimeHelper dateTimeHelper,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
@@ -122,63 +119,61 @@ namespace Grand.Web.Services
             RewardPointsSettings rewardPointsSettings,
             CommonSettings commonSettings)
         {
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
-            this._webHelper = webHelper;
-            this._paymentService = paymentService;
-            this._productService = productService;
-            this._pictureService = pictureService;
-            this._productAttributeParser = productAttributeParser;
-            this._localizationService = localizationService;
-            this._checkoutAttributeFormatter = checkoutAttributeFormatter;
-            this._orderProcessingService = orderProcessingService;
-            this._currencyService = currencyService;
-            this._discountService = discountService;
-            this._shoppingCartService = shoppingCartService;
-            this._storeContext = storeContext;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._permissionService = permissionService;
-            this._taxService = taxService;
-            this._priceFormatter = priceFormatter;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._downloadService = downloadService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressViewModelService = addressViewModelService;
-            this._shippingService = shippingService;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._priceCalculationService = priceCalculationService;
-            this._genericAttributeService = genericAttributeService;
-            this._auctionService = auctionService;
-            this._httpContextAccessor = httpContextAccessor;
-            this._dateTimeHelper = dateTimeHelper;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
+            _webHelper = webHelper;
+            _paymentService = paymentService;
+            _productService = productService;
+            _pictureService = pictureService;
+            _productAttributeParser = productAttributeParser;
+            _localizationService = localizationService;
+            _checkoutAttributeFormatter = checkoutAttributeFormatter;
+            _orderProcessingService = orderProcessingService;
+            _currencyService = currencyService;
+            _discountService = discountService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _checkoutAttributeService = checkoutAttributeService;
+            _permissionService = permissionService;
+            _taxService = taxService;
+            _priceFormatter = priceFormatter;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _downloadService = downloadService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _addressViewModelService = addressViewModelService;
+            _shippingService = shippingService;
+            _productAttributeFormatter = productAttributeFormatter;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _priceCalculationService = priceCalculationService;
+            _genericAttributeService = genericAttributeService;
+            _auctionService = auctionService;
+            _dateTimeHelper = dateTimeHelper;
 
-            this._mediaSettings = mediaSettings;
-            this._orderSettings = orderSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._catalogSettings = catalogSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._commonSettings = commonSettings;
+            _mediaSettings = mediaSettings;
+            _orderSettings = orderSettings;
+            _shoppingCartSettings = shoppingCartSettings;
+            _catalogSettings = catalogSettings;
+            _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _commonSettings = commonSettings;
         }
 
         public virtual async Task<PictureModel> PrepareCartItemPicture(Product product, string attributesXml,
             int pictureSize, bool showDefaultPicture, string productName)
         {
-            var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var pictureCacheKey = string.Format(ModelCacheEventConst.CART_PICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
             var model = await _cacheManager.GetAsync(pictureCacheKey, async () =>
-                {
-                    var sciPicture = await product.GetProductPicture(attributesXml, _productService, _pictureService, _productAttributeParser);
-                    return new PictureModel
-                    {
-                        Id = sciPicture?.Id,
-                        ImageUrl = await _pictureService.GetPictureUrl(sciPicture, pictureSize, showDefaultPicture),
-                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), productName),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), productName),
-                    };
-                });
+            {
+                var sciPicture = await product.GetProductPicture(attributesXml, _productService, _pictureService, _productAttributeParser);
+                return new PictureModel {
+                    Id = sciPicture?.Id,
+                    ImageUrl = await _pictureService.GetPictureUrl(sciPicture, pictureSize, showDefaultPicture),
+                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), productName),
+                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), productName),
+                };
+            });
 
             return model;
         }
@@ -232,8 +227,7 @@ namespace Grand.Web.Services
                     discount.RequiresCouponCode &&
                     (await _discountService.ValidateDiscount(discount, customer)).IsValid)
                 {
-                    model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel()
-                    {
+                    model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel() {
                         Id = discount.Id,
                         CouponCode = couponCode
                     });
@@ -254,8 +248,7 @@ namespace Grand.Web.Services
             var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
             foreach (var attribute in checkoutAttributes)
             {
-                var attributeModel = new ShoppingCartModel.CheckoutAttributeModel
-                {
+                var attributeModel = new ShoppingCartModel.CheckoutAttributeModel {
                     Id = attribute.Id,
                     Name = attribute.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     TextPrompt = attribute.GetLocalized(x => x.TextPrompt, _workContext.WorkingLanguage.Id),
@@ -276,8 +269,7 @@ namespace Grand.Web.Services
                     var attributeValues = attribute.CheckoutAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
-                        var attributeValueModel = new ShoppingCartModel.CheckoutAttributeValueModel
-                        {
+                        var attributeValueModel = new ShoppingCartModel.CheckoutAttributeValueModel {
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb,
@@ -390,11 +382,11 @@ namespace Grand.Web.Services
             foreach (var sci in cart)
             {
                 var product = await _productService.GetProductById(sci.ProductId);
-                var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel
-                {
+                var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel {
                     Id = sci.Id,
                     Sku = product.FormatSku(sci.AttributesXml, _productAttributeParser),
                     ProductId = product.Id,
+                    WarehouseId = sci.WarehouseId,
                     ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     ProductSeName = product.GetSeName(_workContext.WorkingLanguage.Id),
                     Quantity = sci.Quantity,
@@ -416,12 +408,15 @@ namespace Grand.Web.Services
                 if (product.RequireOtherProducts)
                     cartItemModel.DisableRemoval = product.RequireOtherProducts && product.ParseRequiredProductIds().Intersect(cart.Select(x => x.ProductId)).Any();
 
+                //warehouse
+                if (!string.IsNullOrEmpty(cartItemModel.WarehouseId))
+                    cartItemModel.WarehouseName = (await _shippingService.GetWarehouseById(cartItemModel.WarehouseId))?.Name;
+
                 //allowed quantities
                 var allowedQuantities = product.ParseAllowedQuantities();
                 foreach (var qty in allowedQuantities)
                 {
-                    cartItemModel.AllowedQuantities.Add(new SelectListItem
-                    {
+                    cartItemModel.AllowedQuantities.Add(new SelectListItem {
                         Text = qty.ToString(),
                         Value = qty.ToString(),
                         Selected = sci.Quantity == qty
@@ -477,7 +472,7 @@ namespace Grand.Web.Services
                     decimal taxRate = productprices.taxRate;
                     decimal shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
 
-                    cartItemModel.UnitPriceWithoutDiscountValue = 
+                    cartItemModel.UnitPriceWithoutDiscountValue =
                          await _currencyService.ConvertFromPrimaryStoreCurrency(
                         (await _taxService.GetProductPrice(product,
                         (await _priceCalculationService.GetUnitPrice(sci, false)).unitprice)).productprice,
@@ -490,7 +485,7 @@ namespace Grand.Web.Services
                     {
                         var discount = await _discountService.GetDiscountById(appliedDiscounts.FirstOrDefault().DiscountId);
                         if (discount != null && discount.MaximumDiscountedQuantity.HasValue)
-                            cartItemModel.DiscountedQty =  discount.MaximumDiscountedQuantity.Value;
+                            cartItemModel.DiscountedQty = discount.MaximumDiscountedQuantity.Value;
 
                         foreach (var disc in appliedDiscounts)
                         {
@@ -594,8 +589,7 @@ namespace Grand.Web.Services
                         if (pickup != null)
                         {
                             var country = await _countryService.GetCountryById(pickup.Address.CountryId);
-                            model.OrderReviewData.PickupAddress = new AddressModel
-                            {
+                            model.OrderReviewData.PickupAddress = new AddressModel {
                                 Address1 = pickup.Address.Address1,
                                 City = pickup.Address.City,
                                 CountryName = country != null ? country.Name : string.Empty,
@@ -617,12 +611,6 @@ namespace Grand.Web.Services
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
                 model.OrderReviewData.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : "";
 
-                //custom values
-                var processPaymentRequest = _httpContextAccessor.HttpContext?.Session?.Get<ProcessPaymentRequest>("OrderPaymentInfo");
-                if (processPaymentRequest != null)
-                {
-                    model.OrderReviewData.CustomValues = processPaymentRequest.CustomValues;
-                }
             }
             #endregion
         }
@@ -664,8 +652,7 @@ namespace Grand.Web.Services
             foreach (var sci in cart)
             {
                 var product = await _productService.GetProductById(sci.ProductId);
-                var cartItemModel = new WishlistModel.ShoppingCartItemModel
-                {
+                var cartItemModel = new WishlistModel.ShoppingCartItemModel {
                     Id = sci.Id,
                     Sku = product.FormatSku(sci.AttributesXml, _productAttributeParser),
                     ProductId = product.Id,
@@ -686,8 +673,7 @@ namespace Grand.Web.Services
                 var allowedQuantities = product.ParseAllowedQuantities();
                 foreach (var qty in allowedQuantities)
                 {
-                    cartItemModel.AllowedQuantities.Add(new SelectListItem
-                    {
+                    cartItemModel.AllowedQuantities.Add(new SelectListItem {
                         Text = qty.ToString(),
                         Value = qty.ToString(),
                         Selected = sci.Quantity == qty
@@ -775,8 +761,7 @@ namespace Grand.Web.Services
 
                 model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
                 foreach (var c in await _countryService.GetAllCountriesForShipping(languageId))
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
+                    model.AvailableCountries.Add(new SelectListItem {
                         Text = c.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         Value = c.Id.ToString(),
                         Selected = c.Id == defaultEstimateCountryId
@@ -786,8 +771,7 @@ namespace Grand.Web.Services
                 var states = !String.IsNullOrEmpty(defaultEstimateCountryId) ? await _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId, languageId) : new List<StateProvince>();
                 if (states.Any())
                     foreach (var s in states)
-                        model.AvailableStates.Add(new SelectListItem
-                        {
+                        model.AvailableStates.Add(new SelectListItem {
                             Text = s.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             Value = s.Id.ToString(),
                             Selected = s.Id == defaultEstimateStateId
@@ -807,8 +791,7 @@ namespace Grand.Web.Services
             var storeId = _storeContext.CurrentStore.Id;
             var currency = _workContext.WorkingCurrency;
 
-            var model = new MiniShoppingCartModel
-            {
+            var model = new MiniShoppingCartModel {
                 ShowProductImages = _shoppingCartSettings.ShowProductImagesInMiniShoppingCart,
                 DisplayShoppingCartButton = true,
                 CurrentCustomerIsGuest = customer.IsGuest(),
@@ -837,14 +820,13 @@ namespace Grand.Web.Services
                     //1. "terms of service" are enabled
                     //2. min order sub-total is OK
                     //3. we have at least one checkout attribute
-                    var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConsumer.CHECKOUTATTRIBUTES_EXIST_KEY,
+                    var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConst.CHECKOUTATTRIBUTES_EXIST_KEY,
                         storeId, requiresShipping);
-                    var checkoutAttributesExist = await _cacheManager.GetAsync(checkoutAttributesExistCacheKey,
-                        async () =>
-                        {
-                            var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes(storeId, !requiresShipping);
-                            return checkoutAttributes.Any();
-                        });
+                    var checkoutAttributesExist = await _cacheManager.GetAsync(checkoutAttributesExistCacheKey, async () =>
+                    {
+                        var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes(storeId, !requiresShipping);
+                        return checkoutAttributes.Any();
+                    });
 
                     bool minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
                     model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage &&
@@ -858,8 +840,7 @@ namespace Grand.Web.Services
                         .ToList())
                     {
                         var product = await _productService.GetProductById(sci.ProductId);
-                        var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel
-                        {
+                        var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel {
                             Id = sci.Id,
                             ProductId = product.Id,
                             ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
@@ -933,9 +914,7 @@ namespace Grand.Web.Services
                 var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
                 var shoppingCartSubTotal = await _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax);
                 decimal orderSubTotalDiscountAmountBase = shoppingCartSubTotal.discountAmount;
-                List<AppliedDiscount> orderSubTotalAppliedDiscounts = shoppingCartSubTotal.appliedDiscounts;
                 decimal subTotalWithoutDiscountBase = shoppingCartSubTotal.subTotalWithoutDiscount;
-                decimal subTotalWithDiscountBase = shoppingCartSubTotal.subTotalWithDiscount;
                 decimal subtotalBase = subTotalWithoutDiscountBase;
                 decimal subtotal = await _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                 model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
@@ -1003,8 +982,7 @@ namespace Grand.Web.Services
                         model.Tax = _priceFormatter.FormatPrice(shoppingCartTax, true, false);
                         foreach (var tr in taxRates)
                         {
-                            model.TaxRates.Add(new OrderTotalsModel.TaxRate
-                            {
+                            model.TaxRates.Add(new OrderTotalsModel.TaxRate {
                                 Rate = _priceFormatter.FormatTaxRate(tr.Key),
                                 Value = _priceFormatter.FormatPrice(await _currencyService.ConvertFromPrimaryStoreCurrency(tr.Value, _workContext.WorkingCurrency), true, false),
                             });
@@ -1018,7 +996,6 @@ namespace Grand.Web.Services
                 var carttotal = await _orderTotalCalculationService.GetShoppingCartTotal(cart);
                 decimal? shoppingCartTotalBase = carttotal.shoppingCartTotal;
                 decimal orderTotalDiscountAmountBase = carttotal.discountAmount;
-                List<AppliedDiscount> orderTotalAppliedDiscounts = carttotal.appliedDiscounts;
                 List<AppliedGiftCard> appliedGiftCards = carttotal.appliedGiftCards;
                 int redeemedRewardPoints = carttotal.redeemedRewardPoints;
                 decimal redeemedRewardPointsAmount = carttotal.redeemedRewardPointsAmount;
@@ -1040,8 +1017,7 @@ namespace Grand.Web.Services
                 {
                     foreach (var appliedGiftCard in appliedGiftCards)
                     {
-                        var gcModel = new OrderTotalsModel.GiftCard
-                        {
+                        var gcModel = new OrderTotalsModel.GiftCard {
                             Id = appliedGiftCard.GiftCard.Id,
                             CouponCode = appliedGiftCard.GiftCard.GiftCardCouponCode,
                         };
@@ -1492,14 +1468,13 @@ namespace Grand.Web.Services
 
             if (cart.RequiresShipping())
             {
-                var address = new Address
-                {
+                var address = new Address {
                     CountryId = countryId,
                     StateProvinceId = stateProvinceId,
                     ZipPostalCode = zipPostalCode,
                 };
                 GetShippingOptionResponse getShippingOptionResponse = await _shippingService
-                    .GetShippingOptions(_workContext.CurrentCustomer, cart, address, "", _storeContext.CurrentStore.Id);
+                    .GetShippingOptions(_workContext.CurrentCustomer, cart, address, "", _storeContext.CurrentStore);
                 if (!getShippingOptionResponse.Success)
                 {
                     foreach (var error in getShippingOptionResponse.Errors)
@@ -1511,8 +1486,7 @@ namespace Grand.Web.Services
                     {
                         foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                         {
-                            var soModel = new EstimateShippingResultModel.ShippingOptionModel
-                            {
+                            var soModel = new EstimateShippingResultModel.ShippingOptionModel {
                                 Name = shippingOption.Name,
                                 Description = shippingOption.Description,
 
@@ -1535,8 +1509,7 @@ namespace Grand.Web.Services
                             var pickupPoints = await _shippingService.GetAllPickupPoints();
                             if (pickupPoints.Count > 0)
                             {
-                                var soModel = new EstimateShippingResultModel.ShippingOptionModel
-                                {
+                                var soModel = new EstimateShippingResultModel.ShippingOptionModel {
                                     Name = _localizationService.GetResource("Checkout.PickUpInStore"),
                                     Description = _localizationService.GetResource("Checkout.PickUpInStore.Description"),
                                 };

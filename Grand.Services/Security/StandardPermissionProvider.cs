@@ -30,6 +30,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageRecurringPayments = new PermissionRecord { Name = "Admin area. Manage Recurring Payments", SystemName = PermissionSystemName.RecurringPayments, Category = "Orders" };
         public static readonly PermissionRecord ManageGiftCards = new PermissionRecord { Name = "Admin area. Manage Gift Cards", SystemName = PermissionSystemName.GiftCards, Category = "Orders" };
         public static readonly PermissionRecord ManageReturnRequests = new PermissionRecord { Name = "Admin area. Manage Return Requests", SystemName = PermissionSystemName.ReturnRequests, Category = "Orders" };
+        public static readonly PermissionRecord ManageDocuments = new PermissionRecord { Name = "Admin area. Manage Documents", SystemName = PermissionSystemName.Documents, Category = "Customers" };
         public static readonly PermissionRecord ManageReports = new PermissionRecord { Name = "Admin area. Manage Reports", SystemName = PermissionSystemName.Reports, Category = "Reports" };
         public static readonly PermissionRecord ManageAffiliates = new PermissionRecord { Name = "Admin area. Manage Affiliates", SystemName = PermissionSystemName.Affiliates, Category = "Promo" };
         public static readonly PermissionRecord ManagePushNotifications = new PermissionRecord { Name = "Admin area. Manage Push Notifications", SystemName = PermissionSystemName.PushNotifications, Category = "Promo" };
@@ -45,6 +46,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageTopics = new PermissionRecord { Name = "Admin area. Manage Topics", SystemName = PermissionSystemName.Topics, Category = "Content Management" };
         public static readonly PermissionRecord ManageForums = new PermissionRecord { Name = "Admin area. Manage Forums", SystemName = PermissionSystemName.Forums, Category = "Content Management" };
         public static readonly PermissionRecord ManageKnowledgebase = new PermissionRecord { Name = "Admin area. Manage Knowledgebase", SystemName = PermissionSystemName.Knowledgebase, Category = "Content Management" };
+        public static readonly PermissionRecord ManageCourses = new PermissionRecord { Name = "Admin area. Manage Courses", SystemName = PermissionSystemName.Courses, Category = "Content Management" };
         public static readonly PermissionRecord ManageMessageTemplates = new PermissionRecord { Name = "Admin area. Manage Message Templates", SystemName = PermissionSystemName.MessageTemplates, Category = "Content Management" };
         public static readonly PermissionRecord ManageCountries = new PermissionRecord { Name = "Admin area. Manage Countries", SystemName = PermissionSystemName.Countries, Category = "Configuration" };
         public static readonly PermissionRecord ManageLanguages = new PermissionRecord { Name = "Admin area. Manage Languages", SystemName = PermissionSystemName.Languages, Category = "Configuration" };
@@ -65,6 +67,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageMessageContactForm = new PermissionRecord { Name = "Admin area. Manage Message Contact form", SystemName = PermissionSystemName.MessageContactForm, Category = "Configuration" };
         public static readonly PermissionRecord ManageMaintenance = new PermissionRecord { Name = "Admin area. Manage Maintenance", SystemName = PermissionSystemName.Maintenance, Category = "Configuration" };
         public static readonly PermissionRecord ManageFiles = new PermissionRecord { Name = "Admin area. Manage Files", SystemName = PermissionSystemName.Files, Category = "Configuration" };
+        public static readonly PermissionRecord ManageGenericAttributes = new PermissionRecord { Name = "Admin area. Manage Generic Attributes", SystemName = PermissionSystemName.GenericAttributes, Category = "Configuration" };
         public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = PermissionSystemName.HtmlEditor, Category = "Configuration" };
         public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = PermissionSystemName.ScheduleTasks, Category = "Configuration" };
 
@@ -101,6 +104,7 @@ namespace Grand.Services.Security
                 ManageRecurringPayments,
                 ManageGiftCards,
                 ManageReturnRequests,
+                ManageDocuments,
                 ManageReports,
                 ManageAffiliates,
                 ManagePushNotifications,
@@ -114,6 +118,7 @@ namespace Grand.Services.Security
                 ManageTopics,
                 ManageForums,
                 ManageKnowledgebase,
+                ManageCourses,
                 ManageMessageTemplates,
                 ManageCountries,
                 ManageLanguages,
@@ -134,6 +139,7 @@ namespace Grand.Services.Security
                 ManageMessageContactForm,
                 ManageMaintenance,
                 ManageFiles,
+                ManageGenericAttributes,
                 HtmlEditorManagePictures,
                 ManageScheduleTasks,
                 DisplayPrices,
@@ -171,6 +177,7 @@ namespace Grand.Services.Security
                         ManageRecurringPayments,
                         ManageGiftCards,
                         ManageReturnRequests,
+                        ManageDocuments,
                         ManageReports,
                         ManageAffiliates,
                         ManagePushNotifications,
@@ -184,6 +191,7 @@ namespace Grand.Services.Security
                         ManageTopics,
                         ManageForums,
                         ManageKnowledgebase,
+                        ManageCourses,
                         ManageMessageTemplates,
                         ManageCountries,
                         ManageLanguages,
@@ -204,6 +212,7 @@ namespace Grand.Services.Security
                         ManageMessageContactForm,
                         ManageMaintenance,
                         ManageFiles,
+                        ManageGenericAttributes,
                         HtmlEditorManagePictures,
                         ManageScheduleTasks,
                         DisplayPrices,

@@ -225,7 +225,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //validate customer roles
-            var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+            var allCustomerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
@@ -303,7 +303,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //validate customer roles
-            var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+            var allCustomerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
@@ -341,7 +341,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     if (continueEditing)
                     {
                         //selected tab
-                        SaveSelectedTabIndex();
+                        await SaveSelectedTabIndex();
 
                         return RedirectToAction("Edit", new { id = customer.Id });
                     }

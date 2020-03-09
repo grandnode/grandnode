@@ -4,7 +4,6 @@ using Grand.Api.Tests.Helpers;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Seo;
-using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -68,29 +67,26 @@ namespace Grand.Api.Tests.ServicesTests
 
             var languageService = new Mock<ILanguageService>();
             _languageService = languageService.Object;
-            
+
             var seoSettings = new Mock<SeoSettings>();
             _seoSettings = seoSettings.Object;
 
-            _categoryApiService = new CategoryApiService(_mongoDBContext, _categoryService, _urlRecordService,_languageService, _pictureService, _customerActivityService, _localizationService, _seoSettings);
+            _categoryApiService = new CategoryApiService(_mongoDBContext, _categoryService, _urlRecordService, _languageService, _pictureService, _customerActivityService, _localizationService, _seoSettings);
 
         }
         private void InitCategoryRepo()
         {
             _categoryRepo = new MongoDBRepositoryTest<Category>();
             _categoryRepo.Collection.DeleteMany(new BsonDocument());
-            _categoryRepo.Insert(new Category()
-            {
+            _categoryRepo.Insert(new Category() {
                 Id = _id1,
                 Name = "sample category 1"
             });
-            _categoryRepo.Insert(new Category()
-            {
+            _categoryRepo.Insert(new Category() {
                 Id = _id2,
                 Name = "sample category 2"
             });
-            _categoryRepo.Insert(new Category()
-            {
+            _categoryRepo.Insert(new Category() {
                 Id = _id3,
                 Name = "sample category 3"
             });

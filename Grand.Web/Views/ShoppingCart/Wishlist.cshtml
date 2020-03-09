@@ -36,13 +36,13 @@
                 <div class="shopping-cart-container">
                     <table class="shopping-cart">
                         <colgroup>
-                            <col width="1">
-                            <col width="1">
-                            <col width="1">
+                            <col span="1">
+                            <col span="1">
+                            <col span="1">
                             <col>
-                            <col width="1">
-                            <col width="1">
-                            <col width="1">
+                            <col span="1">
+                            <col span="1">
+                            <col span="1">
                         </colgroup>
                         <thead>
                             <tr>
@@ -223,30 +223,30 @@
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <div class="tax-shipping-info">
-                        @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
+                        @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
                     </div>
                 }
 
-                <div class="btn-group my-3 w-100">
+                <div class="btn-group my-3">
                     @if (Model.IsEditable)
                     {
-                        <button type="submit" name="updatecart" class="btn btn-info update-wishlist-button">
+                        <button type="submit" name="updatecart" class="btn btn-info update-wishlist-button d-flex align-items-center">
                             <span class="mdi mdi-update pr-sm-2 pr-0"></span>
                             <span class="d-sm-block d-none">@T("Wishlist.UpdateCart")</span>
                         </button>
                     }
                     @if (Model.DisplayAddToCart)
                     {
-                        <button type="submit" name="addtocartbutton" class="btn btn-info ml-1 wishlist-add-to-cart-button d-sm-flex justify-content-center">
-                            <span class="mdi mdi-cart d-sm-none d-block pr-sm-0 pr-2"></span>
-                            <span class="hidden-down">@T("ShoppingCart.AddToCart")</span> 
+                        <button type="submit" name="addtocartbutton" class="btn btn-info ml-1 wishlist-add-to-cart-button d-sm-flex justify-content-center align-items-center">
+                            <span class="mdi mdi-cart-outline pr-2"></span>
+                            <span class="d-sm-block d-none">@T("ShoppingCart.AddToCart")</span> 
                         </button>
                     }
                     @if (Model.IsEditable && Model.EmailWishlistEnabled)
                     {
-                        <button type="button" class="btn btn-secondary email-a-friend-wishlist-button ml-1" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')">
+                        <button type="button" class="btn btn-secondary email-a-friend-wishlist-button d-flex align-items-center ml-1" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')">
                             <span class="mdi mdi-email pr-sm-2 pr-0"></span>
-                            <span class="hidden-down d-sm-block d-none">@T("Wishlist.EmailAFriend")</span>
+                            <span class="d-sm-block d-none">@T("Wishlist.EmailAFriend")</span>
                         </button>
                     }
                 </div>

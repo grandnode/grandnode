@@ -1,27 +1,30 @@
-﻿//code from Telerik MVC Extensions
-
-using Grand.Core;
-using Grand.Core.Infrastructure;
+﻿using Grand.Core;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Grand.Framework.Menu
 {
     public class XmlSiteMap
     {
-        public XmlSiteMap()
+        private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+
+        public XmlSiteMap(ILocalizationService localizationService, IPermissionService permissionService)
         {
             RootNode = new SiteMapNode();
+            _localizationService = localizationService;
+            _permissionService = permissionService;
         }
 
         public SiteMapNode RootNode { get; set; }
 
-        public virtual void LoadFrom(string physicalPath)
+        public virtual async Task LoadFrom(string physicalPath)
         {
             string filePath = CommonHelper.MapPath(physicalPath);
             string content = File.ReadAllText(filePath);
@@ -45,16 +48,16 @@ namespace Grand.Framework.Menu
                         if ((doc.DocumentElement != null) && doc.HasChildNodes)
                         {
                             XmlNode xmlRootNode = doc.DocumentElement.FirstChild;
-                            Iterate(RootNode, xmlRootNode);
+                            await Iterate(RootNode, xmlRootNode);
                         }
                     }
                 }
             }
         }
 
-        private static void Iterate(SiteMapNode siteMapNode, XmlNode xmlNode)
+        private async Task Iterate(SiteMapNode siteMapNode, XmlNode xmlNode)
         {
-            PopulateNode(siteMapNode, xmlNode);
+            await PopulateNode(siteMapNode, xmlNode);
 
             foreach (XmlNode xmlChildNode in xmlNode.ChildNodes)
             {
@@ -63,20 +66,19 @@ namespace Grand.Framework.Menu
                     var siteMapChildNode = new SiteMapNode();
                     siteMapNode.ChildNodes.Add(siteMapChildNode);
 
-                    Iterate(siteMapChildNode, xmlChildNode);
+                    await Iterate(siteMapChildNode, xmlChildNode);
                 }
             }
         }
 
-        private static void PopulateNode(SiteMapNode siteMapNode, XmlNode xmlNode)
+        private async Task PopulateNode(SiteMapNode siteMapNode, XmlNode xmlNode)
         {
             //system name
             siteMapNode.SystemName = GetStringValueFromAttribute(xmlNode, "SystemName");
 
             //title
             var resource = GetStringValueFromAttribute(xmlNode, "grandResource");
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            siteMapNode.Title = localizationService.GetResource(resource);
+            siteMapNode.Title = _localizationService.GetResource(resource);
 
             //routes, url
             string controllerName = GetStringValueFromAttribute(xmlNode, "controller");
@@ -104,15 +106,21 @@ namespace Grand.Framework.Menu
                 var fullpermissions = GetStringValueFromAttribute(xmlNode, "AllPermissions");
                 if (!string.IsNullOrEmpty(fullpermissions) && fullpermissions == "true")
                 {
-                    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-                    siteMapNode.Visible = permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                       .All(permissionName => permissionService.Authorize(permissionName.Trim()).Result);
+                    siteMapNode.Visible = true;
+                    foreach (var permissionName in permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (!await _permissionService.Authorize(permissionName.Trim()))
+                            siteMapNode.Visible = false;
+                    }
                 }
                 else
                 {
-                    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-                    siteMapNode.Visible = permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                       .Any(permissionName => permissionService.Authorize(permissionName.Trim()).Result);
+                    siteMapNode.Visible = false;
+                    foreach (var permissionName in permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (await _permissionService.Authorize(permissionName.Trim()))
+                            siteMapNode.Visible = true;
+                    }
                 }
             }
             else

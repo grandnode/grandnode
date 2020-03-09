@@ -5,7 +5,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.Manage").Text;
 }
-<antiforgery-token />
+
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">
@@ -173,7 +173,7 @@
 @*import categories form*@
 <div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
     <form asp-controller="Category" asp-action="ImportFromXlsx" method="post" enctype="multipart/form-data">
-        <antiforgery-token />
+        
         <em>@T("Admin.Catalog.Category.List.ImportFromExcelTip")</em>
         <div class="form-group">
             &nbsp;

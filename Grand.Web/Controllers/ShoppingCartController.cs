@@ -5,8 +5,8 @@ using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
+using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Discounts;
@@ -14,9 +14,11 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Security;
-using Grand.Web.Models.ShoppingCart;
 using Grand.Web.Interfaces;
+using Grand.Web.Models.ShoppingCart;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -37,12 +39,12 @@ namespace Grand.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IDiscountService _discountService;
         private readonly ICustomerService _customerService;
-        private readonly IGiftCardService _giftCardService;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IMediator _mediator;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly OrderSettings _orderSettings;
 
@@ -57,29 +59,29 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             IDiscountService discountService,
             ICustomerService customerService,
-            IGiftCardService giftCardService,
             ICheckoutAttributeService checkoutAttributeService,
             IPermissionService permissionService,
             IDownloadService downloadService,
             IShoppingCartViewModelService shoppingCartViewModelService,
             IGenericAttributeService genericAttributeService,
+            IMediator mediator,
             ShoppingCartSettings shoppingCartSettings,
             OrderSettings orderSettings)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._shoppingCartService = shoppingCartService;
-            this._localizationService = localizationService;
-            this._discountService = discountService;
-            this._customerService = customerService;
-            this._giftCardService = giftCardService;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._permissionService = permissionService;
-            this._downloadService = downloadService;
-            this._shoppingCartViewModelService = shoppingCartViewModelService;
-            this._genericAttributeService = genericAttributeService;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._orderSettings = orderSettings;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _shoppingCartService = shoppingCartService;
+            _localizationService = localizationService;
+            _discountService = discountService;
+            _customerService = customerService;
+            _checkoutAttributeService = checkoutAttributeService;
+            _permissionService = permissionService;
+            _downloadService = downloadService;
+            _shoppingCartViewModelService = shoppingCartViewModelService;
+            _genericAttributeService = genericAttributeService;
+            _mediator = mediator;
+            _shoppingCartSettings = shoppingCartSettings;
+            _orderSettings = orderSettings;
         }
 
         #endregion
@@ -116,7 +118,7 @@ namespace Grand.Web.Controllers
             {
                 enabledattributeids = enabledAttributeIds.ToArray(),
                 disabledattributeids = disabledAttributeIds.ToArray(),
-                htmlordertotal = this.RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
+                htmlordertotal = await RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
                 checkoutattributeinfo = await checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
             });
         }
@@ -134,7 +136,8 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var httpPostedFile = Request.Form.Files.FirstOrDefault();
+            var form = await HttpContext.Request.ReadFormAsync();
+            var httpPostedFile = form.Files.FirstOrDefault();
             if (httpPostedFile == null)
             {
                 return Json(new
@@ -149,8 +152,8 @@ namespace Grand.Web.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
-                fileName = Request.Form[qqFileNameParameter].ToString();
+            if (string.IsNullOrEmpty(fileName) && form.ContainsKey(qqFileNameParameter))
+                fileName = form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
             fileName = Path.GetFileName(fileName);
 
@@ -177,8 +180,7 @@ namespace Grand.Web.Controllers
                 }
             }
 
-            var download = new Download
-            {
+            var download = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
                 DownloadUrl = "",
@@ -213,7 +215,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> UpdateCart(IFormCollection form)
         {
@@ -232,7 +234,7 @@ namespace Grand.Web.Controllers
                         if (int.TryParse(form[formKey], out int newQuantity))
                         {
                             var currSciWarnings = await _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
+                                sci.Id, sci.WarehouseId, sci.AttributesXml, sci.CustomerEnteredPrice,
                                 sci.RentalStartDateUtc, sci.RentalEndDateUtc,
                                 newQuantity, true, sci.ReservationId, sci.Id);
                             innerWarnings.Add(sci.Id, currSciWarnings);
@@ -363,14 +365,14 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("Checkout");
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> ApplyDiscountCoupon(string discountcouponcode)
         {
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             var model = new ShoppingCartModel();
-            if (!String.IsNullOrWhiteSpace(discountcouponcode))
+            if (!string.IsNullOrWhiteSpace(discountcouponcode))
             {
                 discountcouponcode = discountcouponcode.ToUpper();
                 //we find even hidden records here. this way we can display a user-friendly message if it's expired
@@ -435,7 +437,7 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
+                model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Required");
                 model.DiscountBox.IsApplied = false;
             }
 
@@ -447,7 +449,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> ApplyGiftCard(string giftcardcouponcode)
         {
@@ -460,13 +462,16 @@ namespace Grand.Web.Controllers
             var model = new ShoppingCartModel();
             if (!cart.IsRecurring())
             {
-                if (!String.IsNullOrWhiteSpace(giftcardcouponcode))
+                if (!string.IsNullOrWhiteSpace(giftcardcouponcode))
                 {
-                    var giftCard = (await _giftCardService.GetAllGiftCards(giftCardCouponCode: giftcardcouponcode)).FirstOrDefault();
+                    var giftCard = (await _mediator.Send(new GetGiftCardQueryModel() { GiftCardCouponCode = giftcardcouponcode, IsGiftCardActivated = true })).FirstOrDefault();
                     bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
                     if (isGiftCardValid)
                     {
-                        await _workContext.CurrentCustomer.ApplyGiftCardCouponCode(_genericAttributeService, giftcardcouponcode);
+                        await _mediator.Send(new ApplyGiftCardCommandModel() {
+                            Customer = _workContext.CurrentCustomer,
+                            GiftCardCouponCode = giftcardcouponcode
+                        });
                         model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Applied");
                         model.GiftCardBox.IsApplied = true;
                     }
@@ -478,7 +483,7 @@ namespace Grand.Web.Controllers
                 }
                 else
                 {
-                    model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
+                    model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Required");
                     model.GiftCardBox.IsApplied = false;
                 }
             }
@@ -491,11 +496,11 @@ namespace Grand.Web.Controllers
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return Json(new
             {
-                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
             });
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> GetEstimateShipping(string countryId, string stateProvinceId, string zipPostalCode, IFormCollection form)
         {
@@ -508,7 +513,7 @@ namespace Grand.Web.Controllers
             return PartialView("_EstimateShippingResult", model);
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> RemoveDiscountCoupon(string discountId)
         {
@@ -530,29 +535,25 @@ namespace Grand.Web.Controllers
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return Json(new
             {
-                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
             });
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> RemoveGiftCardCode(string giftCardId)
         {
             var model = new ShoppingCartModel();
-
-            //get gift card identifier
-            var gc = await _giftCardService.GetGiftCardById(giftCardId);
-            if (gc != null)
+            if (!string.IsNullOrEmpty(giftCardId))
             {
-                await _workContext.CurrentCustomer.RemoveGiftCardCouponCode(_genericAttributeService, gc.GiftCardCouponCode);
+                await _mediator.Send(new RemoveGiftCardCommandModel() { Customer = _workContext.CurrentCustomer, GiftCardId = giftCardId });
             }
-
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
 
             return Json(new
             {
-                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
             });
 
         }
@@ -570,10 +571,14 @@ namespace Grand.Web.Controllers
                 : _workContext.CurrentCustomer;
             if (customer == null)
                 return RedirectToRoute("HomePage");
-            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
+
+            var cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist);
+
+            if (!string.IsNullOrEmpty(_storeContext.CurrentStore.Id))
+                cart = cart.LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id);
 
             var model = new WishlistModel();
-            await _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
+            await _shoppingCartViewModelService.PrepareWishlist(model, cart.ToList(), !customerGuid.HasValue);
             return View(model);
         }
 
@@ -609,7 +614,7 @@ namespace Grand.Web.Controllers
                             if (int.TryParse(form[formKey], out int newQuantity))
                             {
                                 var currSciWarnings = await _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                    sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
+                                    sci.Id, sci.WarehouseId, sci.AttributesXml, sci.CustomerEnteredPrice,
                                     sci.RentalStartDateUtc, sci.RentalEndDateUtc,
                                     newQuantity, true);
                                 innerWarnings.Add(sci.Id, currSciWarnings);
@@ -657,7 +662,9 @@ namespace Grand.Web.Controllers
             if (pageCustomer == null)
                 return RedirectToRoute("HomePage");
 
-            var pageCart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
+            var pageCart = pageCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist);
+            if (!string.IsNullOrEmpty(_storeContext.CurrentStore.Id))
+                pageCart = pageCart.LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id);
 
             var allWarnings = new List<string>();
             var numberOfAddedItems = 0;
@@ -665,13 +672,13 @@ namespace Grand.Web.Controllers
                 .Select(x => x)
                 .ToList()
                 : new List<string>();
-            foreach (var sci in pageCart)
+            foreach (var sci in pageCart.ToList())
             {
                 if (allIdsToAdd.Contains(sci.Id))
                 {
                     var warnings = await _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                         sci.ProductId, ShoppingCartType.ShoppingCart,
-                        _storeContext.CurrentStore.Id,
+                        _storeContext.CurrentStore.Id, sci.WarehouseId,
                         sci.AttributesXml, sci.CustomerEnteredPrice,
                         sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, true);
                     if (!warnings.Any())
@@ -724,8 +731,7 @@ namespace Grand.Web.Controllers
             if (!cart.Any())
                 return RedirectToRoute("HomePage");
 
-            var model = new WishlistEmailAFriendModel
-            {
+            var model = new WishlistEmailAFriendModel {
                 YourEmailAddress = _workContext.CurrentCustomer.Email,
                 DisplayCaptcha = captchaSettings.Enabled && captchaSettings.ShowOnEmailWishlistToFriendPage
             };
@@ -734,7 +740,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("EmailWishlist")]
         [FormValueRequired("send-email")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid,
             [FromServices] IWorkflowMessageService workflowMessageService,

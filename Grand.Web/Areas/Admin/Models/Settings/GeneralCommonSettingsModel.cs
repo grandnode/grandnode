@@ -152,14 +152,13 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool ConvertNonWesternChars { get; set; }
             public bool ConvertNonWesternChars_OverrideForStore { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SeoCharConversion")]
+            public string SeoCharConversion { get; set; }
+            public bool SeoCharConversion_OverrideForStore { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CanonicalUrlsEnabled")]
             public bool CanonicalUrlsEnabled { get; set; }
             public bool CanonicalUrlsEnabled_OverrideForStore { get; set; }
-
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.WwwRequirement")]
-            public int WwwRequirement { get; set; }
-            public bool WwwRequirement_OverrideForStore { get; set; }
-            public SelectList WwwRequirementValues { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableJsBundling")]
             public bool EnableJsBundling { get; set; }

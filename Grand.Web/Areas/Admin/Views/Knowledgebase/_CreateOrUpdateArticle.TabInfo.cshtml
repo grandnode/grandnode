@@ -2,7 +2,7 @@
 
 @Html.ValidationSummary(true)
 <input asp-for="Id" type="hidden" />
-@(Html.LocalizedEditor<KnowledgebaseArticleModel, KnowledgebaseArticleLocalizedModel>("knowledbasearticle-info-localized",
+@(await Html.LocalizedEditor<KnowledgebaseArticleModel, KnowledgebaseArticleLocalizedModel>("knowledbasearticle-info-localized",
 @<div class="form-horizontal">
      <div class="form-body">
          <div class="form-group">

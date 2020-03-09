@@ -28,10 +28,10 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
             ICustomerService customerService, ISettingService settingService,
             IPermissionService permissionService)
         {
-            this._discountService = discountService;
-            this._customerService = customerService;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
+            _discountService = discountService;
+            _customerService = customerService;
+            _settingService = settingService;
+            _permissionService = permissionService;
         }
 
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId)
@@ -60,7 +60,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
             //customer roles
             //TODO localize "Select customer role"
             model.AvailableCustomerRoles.Add(new SelectListItem { Text = "Select customer role", Value = "" });
-            foreach (var cr in await _customerService.GetAllCustomerRoles(true))
+            foreach (var cr in await _customerService.GetAllCustomerRoles(showHidden: true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString(), Selected = discountRequirement != null && cr.Id == restrictedToCustomerRoleId });
 
             //add a prefix
@@ -70,7 +70,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId, string customerRoleId)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))

@@ -1,4 +1,9 @@
 ﻿@model ManufacturerModel
+@inject Grand.Services.Security.IPermissionService permissionService
+@{
+    //has "Manage Documents" permission?
+    var canManageDocuments = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageDocuments);
+}
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <admin-tabstrip name="manufacturer-edit">
@@ -45,7 +50,28 @@
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Catalog.Manufacturers.ActivityLog")" tab-index="6">
+        @if (canManageDocuments)
+        {
+            <tabstrip-item text="@T("Admin.Catalog.Manufacturers.Documents")" tab-index="6">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabDocuments" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+        }
+        <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="7">
+            <content>
+                <div>
+                    @{
+                        ViewData["ObjectType"] = "Manufacturer";
+                        ViewData["TabIndex"] = 7;
+                    }
+                    <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Manufacturers.ActivityLog")" tab-index="8">
             <content>
                 <div>
                     <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />

@@ -16,7 +16,7 @@
         }
 </script>
 <vc:admin-widget widget-zone="vendor_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
+@(await Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -66,7 +66,7 @@
             </div>
         </div>
         @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        {
             <div class="form-group">
                 <admin-label asp-for="AssociatedCustomers" />
                 <div class="col-md-9 col-sm-9">
@@ -116,7 +116,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AllowCustomersToSelectPageSize" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
             </div>
@@ -140,7 +140,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="Active" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="Active"></span>
             </div>
@@ -157,19 +157,30 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AllowCustomerReviews" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AllowCustomerReviews"></span>
             </div>
         </div>
+        <div class="form-group">
+            <admin-label asp-for="Commission" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Commission" /> [%]
+                <span asp-validation-for="Commission"></span>
+            </div>
+        </div>
     </div>
 </div>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        @T("Admin.Vendors.Fields.Address")
+@if (Model.Address.FaxEnabled || Model.Address.PhoneEnabled || Model.Address.StateProvinceEnabled || Model.Address.StreetAddressEnabled || Model.Address.ZipPostalCodeEnabled ||
+ Model.Address.CityEnabled || Model.Address.CompanyEnabled || Model.Address.CountryEnabled || Model.Address.StreetAddress2Enabled)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("Admin.Vendors.Fields.Address")
+        </div>
+        <div class="panel-body">
+            <admin-input asp-for="Address" asp-template="Address" />
+        </div>
     </div>
-    <div class="panel-body">
-        <admin-input asp-for="Address" asp-template="Address" />
-    </div>
-</div>
+}
 <vc:admin-widget widget-zone="vendor_details_info_bottom" additional-data="Model" />

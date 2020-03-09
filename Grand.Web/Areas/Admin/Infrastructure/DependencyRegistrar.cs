@@ -21,6 +21,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<ContactAttributeViewModelService>().As<IContactAttributeViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<ContactFormViewModelService>().As<IContactFormViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CountryViewModelService>().As<ICountryViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<CourseViewModelService>().As<ICourseViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CurrencyViewModelService>().As<ICurrencyViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerActionViewModelService>().As<ICustomerActionViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerAttributeViewModelService>().As<ICustomerAttributeViewModelService>().InstancePerLifetimeScope();
@@ -29,6 +30,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<CustomerRoleViewModelService>().As<ICustomerRoleViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerTagViewModelService>().As<ICustomerTagViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<DiscountViewModelService>().As<IDiscountViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<DocumentViewModelService>().As<IDocumentViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<EmailAccountViewModelService>().As<IEmailAccountViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<GiftCardViewModelService>().As<IGiftCardViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<KnowledgebaseViewModelService>().As<IKnowledgebaseViewModelService>().InstancePerLifetimeScope();

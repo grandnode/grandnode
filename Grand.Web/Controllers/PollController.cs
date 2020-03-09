@@ -26,10 +26,10 @@ namespace Grand.Web.Controllers
             IWorkContext workContext,
             IPollService pollService)
         {
-            this._pollViewModelService = pollViewModelService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._pollService = pollService;
+            _pollViewModelService = pollViewModelService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _pollService = pollService;
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace Grand.Web.Controllers
 
             return Json(new
             {
-                html = this.RenderPartialViewToString("_Poll", await _pollViewModelService.PreparePoll(poll, true)),
+                html = await RenderPartialViewToString("_Poll", await _pollViewModelService.PreparePoll(poll, true)),
             });
         }
         

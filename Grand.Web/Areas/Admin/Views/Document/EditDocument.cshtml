@@ -1,0 +1,65 @@
+﻿@model DocumentModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Documents.Document.Edit").Text;
+}
+<form asp-controller="Document" asp-action="EditDocument" method="post" id="document-form">
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-sitemap"></i>
+                        @T("Admin.Documents.Document.Edit") - @Model.Name
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Documents.Document.BackToList").Text, "List")</small>
+                        @if (!string.IsNullOrEmpty(Model.CustomerId))
+                        {
+                            <small><i class="fa fa-user"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToCustomer").Text, "Edit", "Customer", new { id = Model.CustomerId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 10)
+                        {
+                            <small><i class="fa fa-shopping-cart"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToOrder").Text, "Edit", "Order", new { id = Model.ObjectId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 20)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToShipment").Text, "ShipmentDetails", "Shipment", new { id = Model.ObjectId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 30)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToReturnRequest").Text, "Edit", "ReturnRequest", new { id = Model.ObjectId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 40)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToProduct").Text, "Edit", "Product", new { id = Model.ObjectId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 50)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToCategory").Text, "Edit", "Category", new { id = Model.ObjectId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 60)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToManufacturer").Text, "Edit", "Manufacturer", new { id = Model.ObjectId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 70)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToVendor").Text, "Edit", "Vendor", new { id = Model.ObjectId })</small>
+                        }
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                            <span id="document-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                        </div>
+                    </div>
+                </div>
+                <vc:admin-widget widget-zone="document_details_buttons" additional-data="Model" />
+                <div class="x_content form">
+                    <partial name="_CreateOrUpdateDocument" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<admin-delete-confirmation button-id="document-delete" action-name="DeleteDocument" />

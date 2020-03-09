@@ -5,6 +5,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Helpers;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -35,7 +36,7 @@ namespace Grand.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="orderRepository">Order repository</param>
-        /// <param name="productAlsoPurchased">Product also purchased repository</param>
+        /// <param name="productAlsoPurchasedRepository">Product also purchased repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
         public OrderReportService(IRepository<Order> orderRepository,
@@ -43,10 +44,10 @@ namespace Grand.Services.Orders
             IRepository<Product> productRepository,
             IDateTimeHelper dateTimeHelper)
         {
-            this._orderRepository = orderRepository;
-            this._productAlsoPurchasedRepository = productAlsoPurchasedRepository;
-            this._productRepository = productRepository;
-            this._dateTimeHelper = dateTimeHelper;
+            _orderRepository = orderRepository;
+            _productAlsoPurchasedRepository = productAlsoPurchasedRepository;
+            _productRepository = productRepository;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -426,33 +427,44 @@ namespace Grand.Services.Orders
                 filter = filter & builder.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 filter = filter & builder.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
+
+            FilterDefinition<BsonDocument> filterPublishedProduct = new BsonDocument("Product.Published", true);
+            var groupBy = new BsonDocument
+            {
+                 new BsonElement("_id", "$OrderItems.ProductId"),
+                 new BsonElement("TotalAmount", new BsonDocument("$sum", "$OrderItems.PriceExclTax")),
+                 new BsonElement("TotalQuantity", new BsonDocument("$sum", "$OrderItems.Quantity"))
+            };
+
             var query = _orderRepository.Collection
-                    .Aggregate()
-                    .Match(filter)
-                    .Unwind<Order, UnwindedOrderItem>(x => x.OrderItems)
-                    .Match(filterItem)
-                    .Group(x => x.OrderItems.ProductId, g => new BestsellersReportLine
-                    {
-                        ProductId = g.Key,
-                        TotalAmount = g.Sum(x => x.OrderItems.PriceExclTax),
-                        TotalQuantity = g.Sum(x => x.OrderItems.Quantity),
-                    });
+                .Aggregate()
+                .Match(filter)
+                .Unwind<Order, UnwindedOrderItem>(x => x.OrderItems)
+                .Match(filterItem)
+                .Lookup("Product", "OrderItems.ProductId", "_id", "Product")
+                .Match(filterPublishedProduct)
+                .Group(groupBy);
 
             if (orderBy == 1)
             {
-
-                query = query.SortByDescending(x => x.TotalQuantity);
-
+                query = query.SortByDescending(x=>x["TotalQuantity"]);
             }
             else
             {
-                query = query.SortByDescending(x => x.TotalAmount);
+                query = query.SortByDescending(x => x["TotalAmount"]);
             }
 
-            var query2 = await query.ToListAsync();
+            var query2 = new List<BestsellersReportLine>();
+            await query.ForEachAsync(q =>
+            {
+                var line = new BestsellersReportLine();
+                line.ProductId = q["_id"].ToString();
+                line.TotalAmount = q["TotalAmount"].AsDecimal;
+                line.TotalQuantity = q["TotalQuantity"].AsInt32;
+                query2.Add(line);
+            });
             var result = new PagedList<BestsellersReportLine>(query2, pageIndex, pageSize);
             return result;
-
         }
 
 

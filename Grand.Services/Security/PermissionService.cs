@@ -61,14 +61,14 @@ namespace Grand.Services.Security
             IWorkContext workContext,
             ILocalizationService localizationService,
             ILanguageService languageService,
-            IEnumerable<ICacheManager> cacheManager)
+            ICacheManager cacheManager)
         {
-            this._permissionRecordRepository = permissionRecordRepository;
-            this._customerService = customerService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._cacheManager = cacheManager.FirstOrDefault(); 
+            _permissionRecordRepository = permissionRecordRepository;
+            _customerService = customerService;
+            _workContext = workContext;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -83,17 +83,14 @@ namespace Grand.Services.Security
         /// <returns>true - authorized; otherwise, false</returns>
         protected virtual async Task<bool> Authorize(string permissionRecordSystemName, CustomerRole customerRole)
         {
-            if (String.IsNullOrEmpty(permissionRecordSystemName))
+            if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
             string key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
             return await _cacheManager.GetAsync(key, async () =>
             {
-                var permissionRecord = await _permissionRecordRepository.Table.Where(x => x.CustomerRoles.Contains(customerRole.Id) && x.SystemName== permissionRecordSystemName).ToListAsync();
-                if (permissionRecord.Any())
-                    return true;
-
-                return false;
+                var permissionRecord = await _permissionRecordRepository.Table.FirstOrDefaultAsync(x => x.SystemName == permissionRecordSystemName);
+                return permissionRecord?.CustomerRoles.Contains(customerRole.Id) ?? false;
             });
         }
 
@@ -112,7 +109,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.DeleteAsync(permission);
 
-            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -166,7 +163,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.InsertAsync(permission);
 
-            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -180,7 +177,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.UpdateAsync(permission);
 
-            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>

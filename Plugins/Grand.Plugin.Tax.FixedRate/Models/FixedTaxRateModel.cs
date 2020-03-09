@@ -1,5 +1,4 @@
-﻿using Grand.Framework;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 
 namespace Grand.Plugin.Tax.FixedRate.Models
 {

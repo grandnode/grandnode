@@ -37,12 +37,12 @@ namespace Grand.Services.Catalog
             ICacheManager cacheManager,
             IServiceProvider serviceProvider)
         {
-            this._bidRepository = bidRepository;
-            this._mediator = mediator;
-            this._productService = productService;
-            this._productRepository = productRepository;
-            this._cacheManager = cacheManager;
-            this._serviceProvider = serviceProvider;
+            _bidRepository = bidRepository;
+            _mediator = mediator;
+            _productService = productService;
+            _productRepository = productRepository;
+            _cacheManager = cacheManager;
+            _serviceProvider = serviceProvider;
         }
 
         public virtual async Task DeleteBid(Bid bid)
@@ -53,7 +53,7 @@ namespace Grand.Services.Catalog
             await _bidRepository.DeleteAsync(bid);
             await _mediator.EntityDeleted(bid);
 
-            var productToUpdate = await _productService.GetProductById(bid.ProductId);
+            var productToUpdate = await _productService.GetProductById(bid.ProductId, true);
             var _bid = await GetBidsByProductId(bid.ProductId);
             var highestBid = _bid.OrderByDescending(x => x.Amount).FirstOrDefault();
             if (productToUpdate != null)
@@ -114,7 +114,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             await _mediator.EntityUpdated(product);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
         }
 
         public virtual async Task<IList<Product>> GetAuctionsToEnd()
@@ -138,7 +138,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             await _mediator.EntityUpdated(product);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
         }
 
 
@@ -148,9 +148,10 @@ namespace Grand.Services.Catalog
         /// <param name="customer"></param>
         /// <param name="product"></param>
         /// <param name="store"></param>
+        /// <param name="warehouseId"></param>
         /// <param name="language"></param>
         /// <param name="amount"></param>
-        public virtual async Task NewBid(Customer customer, Product product, Store store, Language language, decimal amount)
+        public virtual async Task NewBid(Customer customer, Product product, Store store, Language language, string warehouseId, decimal amount)
         {
             var latestbid = await GetLatestBid(product.Id);
             await InsertBid(new Bid {
@@ -158,7 +159,8 @@ namespace Grand.Services.Catalog
                 Amount = amount,
                 CustomerId = customer.Id,
                 ProductId = product.Id,
-                StoreId = store.Id
+                StoreId = store.Id,
+                WarehouseId = warehouseId,
             });
 
             if (latestbid != null)

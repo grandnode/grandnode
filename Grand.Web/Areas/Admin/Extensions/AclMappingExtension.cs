@@ -15,7 +15,7 @@ namespace Grand.Web.Areas.Admin.Extensions
             where T : BaseGrandEntityModel, IAclMappingModel
         {
             baseGrandEntityModel.AvailableCustomerRoles = (await customerService
-               .GetAllCustomerRoles(true))
+               .GetAllCustomerRoles(showHidden: true))
                .Select(s => new CustomerRoleModel { Id = s.Id, Name = s.Name })
                .ToList();
             if (!excludeProperties)

@@ -15,7 +15,7 @@ namespace Grand.Core.Data
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
-            this.Settings = settings;
+            Settings = settings;
         }
 
         /// <summary>

@@ -66,23 +66,23 @@ namespace Grand.Web.Areas.Admin.Services
             IAddressAttributeParser addressAttributeParser,
             OrderSettings orderSettings)
         {
-            this._orderService = orderService;
-            this._productService = productService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._customerActivityService = customerActivityService;
-            this._returnRequestService = returnRequestService;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._addressSettings = addressSettings;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._orderSettings = orderSettings;
+            _orderService = orderService;
+            _productService = productService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _customerActivityService = customerActivityService;
+            _returnRequestService = returnRequestService;
+            _priceFormatter = priceFormatter;
+            _currencyService = currencyService;
+            _addressSettings = addressSettings;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _addressAttributeService = addressAttributeService;
+            _addressAttributeParser = addressAttributeParser;
+            _orderSettings = orderSettings;
         }
 
         #endregion
@@ -144,7 +144,20 @@ namespace Grand.Web.Areas.Admin.Services
                 else
                     customerId = "00000000-0000-0000-0000-000000000000";
             }
-            var returnRequests = await _returnRequestService.SearchReturnRequests(model.StoreId, customerId, "", (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null), pageIndex - 1, pageSize);
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            var returnRequests = await _returnRequestService.SearchReturnRequests(model.StoreId,
+                customerId,
+                "",
+                (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null),
+                pageIndex - 1,
+                pageSize,
+                startDateValue,
+                endDateValue);
             var returnRequestModels = new List<ReturnRequestModel>();
             foreach (var rr in returnRequests)
             {
@@ -159,7 +172,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 if (!excludeProperties)
                 {
-                    model = address.ToModel();
+                    model = await address.ToModel(_countryService, _stateProvinceService);
                 }
             }
 
@@ -217,10 +230,9 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual ReturnReqestListModel PrepareReturnReqestListModel()
         {
-            var model = new ReturnReqestListModel
-            {
+            var model = new ReturnReqestListModel {
                 //Return request status
-                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList(false).ToList()
+                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList().ToList()
             };
             model.ReturnRequestStatus.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
 
@@ -236,8 +248,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
 
-                items.Add(new ReturnRequestModel.ReturnRequestItemModel
-                {
+                items.Add(new ReturnRequestModel.ReturnRequestItemModel {
                     ProductId = orderItem.ProductId,
                     ProductName = (await _productService.GetProductByIdIncludeArch(orderItem.ProductId)).Name,
                     Quantity = item.Quantity,

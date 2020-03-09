@@ -15,7 +15,7 @@
     var ordersToday = await orderReportService.GetOrderPeriodReport(0, workContext.CurrentCustomer.StaffStoreId);
     var ordersAmount = priceFormatter.FormatPrice(ordersToday.Amount, true, false);
 }
-<antiforgery-token />
+
 <vc:admin-widget widget-zone="admin_dashboard_top" additional-data="null" />
 @if (!Model.IsLoggedInAsVendor && canManageOrders)
 {
@@ -24,7 +24,11 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-user"></i></div>
                 <div class="count">@customersOnline</div>
-                <h3> @T("Admin.Dashboard.OnlineCustomers")</h3>
+                <h3> 
+                    <a href="@Url.Action("List", "OnlineCustomer")">
+                        @T("Admin.Dashboard.OnlineCustomers")
+                    </a>
+                </h3>
                 <p>@T("Admin.Dashboard.OnlineCustomerMinutes", customerSettings.OnlineCustomerMinutes)</p>
             </div>
         </div>
@@ -32,7 +36,11 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-shopping-cart"></i></div>
                 <div class="count">@customersShoppingCart</div>
-                <h3> @T("Admin.Dashboard.ActiveShoppingCarts")</h3>
+                <h3>
+                    <a href="@Url.Action("CurrentCarts", "ShoppingCart")">
+                        @T("Admin.Dashboard.ActiveShoppingCarts")
+                    </a>
+                </h3>
                 <p>@T("Admin.Dashboard.OnlineShoppingCart", customerSettings.OnlineShoppingCartMinutes)</p>
             </div>
         </div>
@@ -40,7 +48,11 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-money"></i></div>
                 <div class="count"> @ordersAmount / @ordersToday.Count</div>
-                <h3>  @T("Admin.Dashboard.TodayOrders")</h3>
+                <h3>
+                    <a href="@Url.Action("List", "Order", new { startDate = DateTime.UtcNow.ToUniversalTime() })">
+                        @T("Admin.Dashboard.TodayOrders")
+                    </a>
+                </h3>
                 <p> @T("Admin.Dashboard.TodayOrders.AmountCount")</p>
             </div>
         </div>
@@ -112,7 +124,7 @@
                 </div>
                 @if (canAccessReports)
                 {
-                    <div class="col-sm-12 col-lg-8 col-md-12 whiteBg sssss">
+                    <div class="col-sm-12 col-lg-8 col-md-12">
                         @await Component.InvokeAsync("OrderReportOrderTimeChart")
                     </div>
                 }
@@ -121,7 +133,7 @@
             {
                 @if (canAccessReports)
                 {
-                    <div class="col-sm-12 col-lg-12 col-md-12 whiteBg">
+                    <div class="col-sm-12 col-lg-12 col-md-12">
                         @await Component.InvokeAsync("OrderReportOrderTimeChart")
                     </div>
                 }
@@ -265,11 +277,11 @@
                     startDate: moment().startOf('month'),
                     "ranges": {
                         'Today': [moment(), moment()],
-                        'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
-                        'Last 7 Days': [moment().subtract('days', 6), moment()],
-                        'Last 30 Days': [moment().subtract('days', 29), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
                         'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                     },
                     "locale": {
                         "format": "MM/DD/YYYY",
@@ -322,21 +334,19 @@
     Dashboard.init();
 
     $('#dashboard-report-range').on('apply.daterangepicker', function (ev, picker) {
-        if ($.fn.initReportCustomerTimeChart) {
+        if ($.isFunction(window.initReportCustomerTimeChart)) {
             initReportCustomerTimeChart(false);
         };
-
-        if ($.fn.initReportOrderTimeChart) {
+        if ($.isFunction(window.initReportOrderTimeChart)) {
             initReportOrderTimeChart(false);
         };
-
         var gridOrders = $('#latest-orders-grid').data('kendoGrid');
         if (gridOrders != undefined) {
             gridOrders.dataSource.read();
         }
 
         $(".Dashboard_GoogleAnalytics_Data").each(function (index, item) {
-            $(item).html('<img src="administration/images/loading.gif" /> Loading ...');
+            $(item).html('<img src="administration/build/images/loading.gif" /> Loading ...');
             var url = $(item).data("url") + '?startDate=' + $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD') + '&endDate=' + $('#dashboard-report-range').data('daterangepicker').endDate.format('YYYY-MM-DD');
             if (url && url.length > 0) {
                 $(item).load(url);

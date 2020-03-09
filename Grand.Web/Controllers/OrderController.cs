@@ -3,14 +3,16 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Framework.Controllers;
-using Grand.Framework.Security;
 using Grand.Services.Common;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
+using Grand.Web.Commands.Models;
+using Grand.Web.Features.Models.Orders;
 using Grand.Web.Interfaces;
-using Grand.Web.Models.Order;
+using Grand.Web.Models.Orders;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -24,33 +26,36 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly IOrderViewModelService _orderViewModelService;
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IPaymentService _paymentService;
         private readonly ILocalizationService _localizationService;
+        private readonly IMediator _mediator;
         private readonly OrderSettings _orderSettings;
 
         #endregion
 
         #region Constructors
 
-        public OrderController(IOrderViewModelService orderViewModelService,
-            IOrderService orderService,
+        public OrderController(IOrderService orderService,
             IWorkContext workContext,
+            IStoreContext storeContext,
             IOrderProcessingService orderProcessingService,
             IPaymentService paymentService,
             ILocalizationService localizationService,
+            IMediator mediator,
             OrderSettings orderSettings)
         {
-            this._orderViewModelService = orderViewModelService;
-            this._orderService = orderService;
-            this._workContext = workContext;
-            this._orderProcessingService = orderProcessingService;
-            this._paymentService = paymentService;
-            this._localizationService = localizationService;
-            this._orderSettings = orderSettings;
+            _orderService = orderService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _orderProcessingService = orderProcessingService;
+            _paymentService = paymentService;
+            _localizationService = localizationService;
+            _mediator = mediator;
+            _orderSettings = orderSettings;
         }
 
         #endregion
@@ -63,13 +68,17 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            var model = await _orderViewModelService.PrepareCustomerOrderList();
+            var model = await _mediator.Send(new GetCustomerOrderList() { 
+                Customer = _workContext.CurrentCustomer, 
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
             return View(model);
         }
 
         //My account / Orders / Cancel recurring order
         [HttpPost, ActionName("CustomerOrders")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
         public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form)
         {
@@ -92,7 +101,11 @@ namespace Grand.Web.Controllers
             {
                 var errors = await _orderProcessingService.CancelRecurringPayment(recurringPayment);
 
-                var model = await _orderViewModelService.PrepareCustomerOrderList();
+                var model = await _mediator.Send(new GetCustomerOrderList() {
+                    Customer = _workContext.CurrentCustomer,
+                    Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore
+                });
                 model.CancelRecurringPaymentErrors = errors;
 
                 return View(model);
@@ -112,8 +125,11 @@ namespace Grand.Web.Controllers
             if (!rewardPointsSettings.Enabled)
                 return RedirectToRoute("CustomerInfo");
 
-            var customer = _workContext.CurrentCustomer;
-            var model = await _orderViewModelService.PrepareCustomerRewardPoints(customer);
+            var model = await _mediator.Send(new GetCustomerRewardPoints() { 
+                Customer = _workContext.CurrentCustomer,
+                Store = _storeContext.CurrentStore,
+                Currency = _workContext.WorkingCurrency
+            });
             return View(model);
         }
 
@@ -124,7 +140,7 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = await _orderViewModelService.PrepareOrderDetails(order);
+            var model = await _mediator.Send(new GetOrderDetails() { Order = order, Language = _workContext.WorkingLanguage });
 
             return View(model);
         }
@@ -136,7 +152,7 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = await _orderViewModelService.PrepareOrderDetails(order);
+            var model = await _mediator.Send(new GetOrderDetails() { Order = order, Language = _workContext.WorkingLanguage });
             model.PrintMode = true;
 
             return View("Details", model);
@@ -194,7 +210,7 @@ namespace Grand.Web.Controllers
 
         //My account / Order details page / Add order note
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> AddOrderNote(AddOrderNoteModel model)
         {
             if (!_orderSettings.AllowCustomerToAddOrderNote)
@@ -209,10 +225,10 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            await _orderViewModelService.InsertOrderNote(model);
+            await _mediator.Send(new InsertOrderNoteCommandModel() { OrderNote = model, Language = _workContext.WorkingLanguage });
 
             AddNotification(Framework.UI.NotifyType.Success, _localizationService.GetResource("OrderNote.Added"), true);
-            return RedirectToRoute("OrderDetails", model.OrderId);
+            return RedirectToRoute("OrderDetails", new { orderId = model.OrderId });
         }
 
         //My account / Order details page / re-order
@@ -229,7 +245,7 @@ namespace Grand.Web.Controllers
         //My account / Order details page / Complete payment
         [HttpPost, ActionName("Details")]
         [FormValueRequired("repost-payment")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> RePostPayment(string orderId, [FromServices] IWebHelper webHelper)
         {
             var order = await _orderService.GetOrderById(orderId);
@@ -267,7 +283,12 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = await _orderViewModelService.PrepareShipmentDetails(shipment);
+            var model = await _mediator.Send(new GetShipmentDetails() { 
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Order = order,
+                Shipment = shipment
+            }); 
 
             return View(model);
         }

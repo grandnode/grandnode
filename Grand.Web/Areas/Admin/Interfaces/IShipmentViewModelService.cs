@@ -15,6 +15,9 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task<int> GetPlannedQty(Product product, string warehouseId);
         Task<int> GetReservedQty(Product product, string warehouseId);
         Task LogShipment(string shipmentId, string message);
+        Task<IList<ShipmentModel.ShipmentNote>> PrepareShipmentNotes(Shipment shipment);
+        Task InsertShipmentNote(Shipment shipment, string downloadId, bool displayToCustomer, string message);
+        Task DeleteShipmentNote(Shipment shipment, string id);
         Task<ShipmentListModel> PrepareShipmentListModel();
         Task<ShipmentModel> PrepareShipmentModel(Order order);
         Task<(Shipment shipment, decimal? totalWeight)> PrepareShipment(Order order, IList<OrderItem> orderItems, IFormCollection form);

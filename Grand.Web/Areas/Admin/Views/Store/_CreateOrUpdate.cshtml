@@ -20,7 +20,7 @@
     }
 </script>
 <vc:admin-widget widget-zone="store_details_top" additional-data="Model" />
-@(Html.LocalizedEditor<StoreModel, StoreLocalizedModel>("store-localized",
+@(await Html.LocalizedEditor<StoreModel, StoreLocalizedModel>("store-localized",
     @<div class="form-horizontal">
          <div class="form-body">
              <div class="form-group">

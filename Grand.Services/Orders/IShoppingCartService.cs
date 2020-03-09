@@ -148,6 +148,7 @@ namespace Grand.Services.Orders
         Task<ShoppingCartItem> FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
             ShoppingCartType shoppingCartType,
             string productId,
+            string warehouseId = null,
             string attributesXml = "",
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null,
@@ -169,7 +170,7 @@ namespace Grand.Services.Orders
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
         Task<IList<string>> AddToCart(Customer customer, string productId,
-            ShoppingCartType shoppingCartType, string storeId, string attributesXml = null,
+            ShoppingCartType shoppingCartType, string storeId, string warehouseId = null, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero, 
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true, string reservationId = "", string parameter = "", string duration = "");
@@ -187,7 +188,7 @@ namespace Grand.Services.Orders
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
         Task<IList<string>> UpdateShoppingCartItem(Customer customer,
-            string shoppingCartItemId, string attributesXml,
+            string shoppingCartItemId, string warehouseId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool resetCheckoutData = true, string reservationId = "", string sciId = "");

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
@@ -19,6 +19,10 @@
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\Feed.GoogleShopping\refs" />
+  </Target>
+
   <ItemGroup>
     <None Remove="Files\taxonomy.txt" />
   </ItemGroup>
@@ -29,9 +33,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Grand.Data\Grand.Data.csproj">
       <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Grand.Framework\Grand.Framework.csproj">

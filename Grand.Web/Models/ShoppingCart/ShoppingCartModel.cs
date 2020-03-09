@@ -60,6 +60,8 @@ namespace Grand.Web.Models.ShoppingCart
             public string ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
+            public string WarehouseId { get; set; }
+            public string WarehouseName { get; set; }
             public string UnitPriceWithoutDiscount { get; set; }
             public decimal UnitPriceWithoutDiscountValue { get; set; }
             public string UnitPrice { get; set; }
@@ -157,10 +159,9 @@ namespace Grand.Web.Models.ShoppingCart
         {
             public OrderReviewDataModel()
             {
-                this.BillingAddress = new AddressModel();
-                this.ShippingAddress = new AddressModel();
-                this.PickupAddress = new AddressModel();
-                this.CustomValues= new Dictionary<string, object>();
+                BillingAddress = new AddressModel();
+                ShippingAddress = new AddressModel();
+                PickupAddress = new AddressModel();
             }
             public bool Display { get; set; }
 
@@ -175,7 +176,6 @@ namespace Grand.Web.Models.ShoppingCart
 
             public string PaymentMethod { get; set; }
 
-            public Dictionary<string, object> CustomValues { get; set; }
         }
 		#endregion
     }

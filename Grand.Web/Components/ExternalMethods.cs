@@ -11,7 +11,7 @@ namespace Grand.Web.ViewComponents
 
         public ExternalMethodsViewComponent(IExternalAuthenticationViewModelService externalAuthenticationViewModelService)
         {
-            this._externalAuthenticationViewModelService = externalAuthenticationViewModelService;
+            _externalAuthenticationViewModelService = externalAuthenticationViewModelService;
         }
 
         public IViewComponentResult Invoke()

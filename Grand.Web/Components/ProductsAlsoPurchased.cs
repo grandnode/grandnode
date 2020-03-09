@@ -18,7 +18,6 @@ namespace Grand.Web.Components
     {
         #region Fields
         private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IProductViewModelService _productViewModelService;
@@ -32,7 +31,6 @@ namespace Grand.Web.Components
 
         public ProductsAlsoPurchasedViewComponent(
             IProductService productService,
-            IWorkContext workContext,
             IAclService aclService,
             IStoreMappingService storeMappingService,
             IProductViewModelService productViewModelService,
@@ -42,15 +40,14 @@ namespace Grand.Web.Components
             CatalogSettings catalogSettings
 )
         {
-            this._productService = productService;
-            this._workContext = workContext;
-            this._aclService = aclService;
-            this._catalogSettings = catalogSettings;
-            this._productViewModelService = productViewModelService;
-            this._storeMappingService = storeMappingService;
-            this._cacheManager = cacheManager;
-            this._orderReportService = orderReportService;
-            this._storeContext = storeContext;
+            _productService = productService;
+            _aclService = aclService;
+            _catalogSettings = catalogSettings;
+            _productViewModelService = productViewModelService;
+            _storeMappingService = storeMappingService;
+            _cacheManager = cacheManager;
+            _orderReportService = orderReportService;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -63,7 +60,7 @@ namespace Grand.Web.Components
                 return Content("");
 
             //load and cache report
-            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.PRODUCTS_ALSO_PURCHASED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.PRODUCTS_ALSO_PURCHASED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                 () =>
                     _orderReportService
                     .GetAlsoPurchasedProductsIds(_storeContext.CurrentStore.Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)

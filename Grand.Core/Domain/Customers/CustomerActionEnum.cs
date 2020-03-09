@@ -7,7 +7,7 @@
         Viewed = 3,
         Url = 4,
         Registration = 5,
-
+        PaidOrder = 6
     }
     public enum CustomerActionConditionEnum
     {

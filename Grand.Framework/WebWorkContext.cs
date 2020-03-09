@@ -115,15 +115,14 @@ namespace Grand.Framework
             _httpContextAccessor.HttpContext.Response.Cookies.Delete(CUSTOMER_COOKIE_NAME);
 
             //get date of cookie expiration
-            var cookieExpires = 24 * 365; //TODO make configurable
-            var cookieExpiresDate = DateTime.Now.AddHours(cookieExpires);
+            var cookieExpiresDate = DateTime.UtcNow.AddHours(CommonHelper.CookieAuthExpires);
 
             //if passed guid is empty set cookie as expired
             if (customerGuid == Guid.Empty)
-                cookieExpiresDate = DateTime.Now.AddMonths(-1);
+                cookieExpiresDate = DateTime.UtcNow.AddMonths(-1);
 
             //set new cookie value
-            var options = new Microsoft.AspNetCore.Http.CookieOptions {
+            var options = new CookieOptions {
                 HttpOnly = true,
                 Expires = cookieExpiresDate
             };
@@ -268,7 +267,7 @@ namespace Grand.Framework
 
             if (customer == null || customer.Deleted || !customer.Active)
             {
-                var crawler = _httpContextAccessor?.HttpContext?.Request.Crawler();
+                var crawler = _httpContextAccessor.HttpContext.Request?.Crawler();
                 //check whether request is made by a search engine, in this case return built-in customer record for search engines
                 if (crawler != null)
                     customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
@@ -289,6 +288,7 @@ namespace Grand.Framework
             //cache the found customer
             return _cachedCustomer = customer ?? throw new Exception("No customer could be loaded");
         }
+
 
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)

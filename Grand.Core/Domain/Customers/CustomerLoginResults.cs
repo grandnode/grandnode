@@ -32,6 +32,10 @@ namespace Grand.Core.Domain.Customers
         /// <summary>
         /// Locked out
         /// </summary>
-        LockedOut = 7
+        LockedOut = 7,
+        /// <summary>
+        /// Requires 2fa
+        /// </summary>
+        RequiresTwoFactor = 8
     }
 }

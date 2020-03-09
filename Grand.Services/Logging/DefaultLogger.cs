@@ -20,7 +20,6 @@ namespace Grand.Services.Logging
 
         private readonly IRepository<Log> _logRepository;
         private readonly IWebHelper _webHelper;
-        private readonly IDataProvider _dataProvider;
         
         #endregion
         
@@ -31,15 +30,11 @@ namespace Grand.Services.Logging
         /// </summary>
         /// <param name="logRepository">Log repository</param>
         /// <param name="webHelper">Web helper</param>
-        /// <param name="dbContext">DB context</param>
-        /// <param name="dataProvider">WeData provider</param>
         public DefaultLogger(IRepository<Log> logRepository, 
-            IWebHelper webHelper,
-            IDataProvider dataProvider)
+            IWebHelper webHelper)
         {
-            this._logRepository = logRepository;
-            this._webHelper = webHelper;
-            this._dataProvider = dataProvider;
+            _logRepository = logRepository;
+            _webHelper = webHelper;
         }
 
         #endregion

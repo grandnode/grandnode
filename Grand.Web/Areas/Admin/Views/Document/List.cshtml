@@ -1,0 +1,181 @@
+﻿@model DocumentListModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Documents.Document.Manage").Text;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="x_panel light form-fit">
+            <div class="x_title">
+                <div class="caption">
+                    <i class="fa fa-sitemap"></i>
+                    @T("Admin.Documents.Document.Manage")
+                </div>
+                <div class="actions btn-group btn-group-devided util-btn-margin-bottom-5">
+                    <a href="@Url.Action("CreateDocument")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
+                    <vc:admin-widget widget-zone="documents_list_buttons" additional-data="null" />
+                </div>
+            </div>
+            <div class="x_content form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <admin-label asp-for="SearchName" />
+                            <div class="col-md-4 col-sm-6">
+                                <admin-input asp-for="SearchName" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <admin-label asp-for="SearchNumber" />
+                            <div class="col-md-4 col-sm-6">
+                                <admin-input asp-for="SearchNumber" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <admin-label asp-for="SearchEmail" />
+                            <div class="col-md-4 col-sm-6">
+                                <admin-input asp-for="SearchEmail" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <admin-label asp-for="StatusId" />
+                            <div class="col-md-4 col-sm-6">
+                                <admin-select asp-for="StatusId" asp-items="((DocumentStatus)Model.StatusId).ToSelectList(Context)"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                <button class="btn btn-success filter-submit" id="search-documents">
+                                    <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="x_content">
+                <div id="documents-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#documents-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ListDocuments", "Document"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: additionalData
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Number",
+                title: "@T("Admin.Documents.Document.Fields.Number")",
+                template: '<a class="k-link" href="EditDocument/#=Id#">#=kendo.htmlEncode(Number)#</a>',
+            },
+            {
+                field: "Name",
+                title: "@T("Admin.Documents.Document.Fields.Name")",
+                template: '<a class="k-link" href="EditDocument/#=Id#">#=kendo.htmlEncode(Name)#</a>',
+            },
+            {
+                field: "CustomerEmail",
+                title: "@T("Admin.Documents.Document.Fields.CustomerEmail")",
+                template: '<a class="k-link" href="EditDocument/#=Id#">#=kendo.htmlEncode(CustomerEmail)#</a>',
+            },
+            {
+                field: "Published",
+                title: "@T("Admin.Documents.Document.Fields.Published")",
+                width: 100,
+                minScreenWidth: 500,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "DisplayOrder",
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                title: "@T("Admin.Documents.Document.Fields.DisplayOrder")",
+                width: 100,    
+                minScreenWidth: 750,
+            }]
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //search button
+        $('#search-documents').click(function () {
+            //search
+            var grid = $('#documents-grid').data('kendoGrid');
+            grid.dataSource.page(1); //new search. Set page size to 1
+            //grid.dataSource.read(); we already loaded the grid above using "page" function
+            return false;
+        });
+
+        $("#@Html.FieldIdFor(model => model.SearchName)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#search-documents").click();
+                return false;
+            }
+        });
+        $("#@Html.FieldIdFor(model => model.SearchNumber)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#search-documents").click();
+                return false;
+            }
+        });
+        $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#search-documents").click();
+                return false;
+            }
+        });
+
+
+    });
+
+    function additionalData() {
+        var data = {
+            SearchName: $('#@Html.FieldIdFor(model => model.SearchName)').val(),
+            SearchNumber: $('#@Html.FieldIdFor(model => model.SearchNumber)').val(),
+            SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
+            StatusId: $('#StatusId').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+</script>

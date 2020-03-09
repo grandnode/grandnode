@@ -41,10 +41,10 @@ namespace Grand.Services.Catalog
             IMediator mediator,
             IServiceProvider serviceProvider)
         {
-            this._backInStockSubscriptionRepository = backInStockSubscriptionRepository;
-            this._workflowMessageService = workflowMessageService;
-            this._mediator = mediator;
-            this._serviceProvider = serviceProvider;
+            _backInStockSubscriptionRepository = backInStockSubscriptionRepository;
+            _workflowMessageService = workflowMessageService;
+            _mediator = mediator;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion

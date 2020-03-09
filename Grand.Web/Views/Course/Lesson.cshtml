@@ -1,0 +1,80 @@
+﻿@model LessonModel
+@{
+    Layout = "_ColumnsOne";
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : $"{Model.CourseName} - {Model.Name}");
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+}
+
+<div class="page category-page">
+    <div class="w-100">
+        <h5 class="mt-0 mb-1">@T("Course.GoBack") <a href="@Url.RouteUrl("Course", new { SeName = Model.CourseSeName })">@Model.CourseName</a></h5>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "courselessondetails_top", additionalData = Model.Id })
+    <div class="p-4">
+        <div class="container d-inline-flex px-0">
+            <div class="d-inline-flex flex-sm-row flex-column align-items-sm-start w-100">
+                <img src="@Model.PictureUrl" class="mr-3" />
+                <div class="media-body">
+                    <h2 class="d-flex flex-column">@Model.Name<span class="h6">(@Model.CourseLevel)</span></h2>
+                    @if (Model.DownloadFile)
+                    {
+                        <a class="btn btn-secondary" id="btnDownloadFile" href="@Url.Action("DownloadFile", "Course", new { id = Model.Id  })">@T("Course.DownloadLesson")</a>
+                    }
+                    @if (!String.IsNullOrWhiteSpace(Model.ShortDescription))
+                    {
+                        <p>
+                            @Html.Raw(Model.ShortDescription)
+                        </p>
+                    }
+                </div>
+            </div>
+            <div class="d-inline-flex flex-column align-items-end">
+                @if (Model.Approved)
+                {
+                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                        <input type="checkbox" class="custom-control-input" id="customControlInline" checked disabled>
+                        <label class="custom-control-label" for="customControlInline"></label>
+                    </div>
+                }
+                else
+                {
+                    <div class="custom-control disabled custom-checkbox my-1 mr-sm-2">
+                        <input type="checkbox" class="custom-control-input" id="customControlInline" disabled>
+                        <label class="custom-control-label" for="customControlInline"></label>
+                    </div>
+                    <button class="btn btn-info" id="btnApprove">@T("Course.ApproveLesson")</button>
+                    <script asp-location="Footer">
+                        $(document).ready(function () {
+                            $("#btnApprove").click(function (event) {
+                                if (confirm('@T("Admin.Common.AreYouSure")')) {
+                                    var posting = $.post('@Url.Action("Approved", "Course", new { Id = Model.Id })');
+                                    posting.done(function (result) {
+                                    if (result) {
+                                        $('#btnApprove').hide();
+                                        $('#customControlInline').prop("checked", true);
+                                    }
+                                });
+                                }
+                            });
+                        });
+                    </script>
+                }
+            </div>
+        </div>
+    </div>
+    @if (Model.VideoFile)
+    {
+        <div>
+            <video controls controlsList="nodownload">
+                <source src="@Url.Action("VideoFile", "Course", new { id = Model.Id  })" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    }
+    <div class="description">
+        @Html.Raw(Model.Description)
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "courselessondetails_bottom", additionalData = Model.Id })
+</div>

@@ -1,6 +1,7 @@
 ﻿@model WarehouseModel
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
+<input id="active-menu-item" type="hidden" value="/Admin/Shipping/Warehouses" />
 <div class="form-horizontal">
     <vc:admin-widget widget-zone="warehouse_details_top" additional-data="Model" />
     <div class="form-body">

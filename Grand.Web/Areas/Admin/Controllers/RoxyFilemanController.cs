@@ -1,16 +1,15 @@
 ﻿using Grand.Core;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using SkiaSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
@@ -22,7 +21,6 @@ namespace Grand.Web.Areas.Admin.Controllers
     //the original file was \RoxyFileman-1.4.5-net\fileman\asp_net\main.ashx
 
     //do not validate request token (XSRF)
-    [AdminAntiForgery(true)]
     [PermissionAuthorize(PermissionSystemName.Files)]
     public class RoxyFilemanController : BaseAdminController
     {
@@ -50,21 +48,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         private Dictionary<string, string> _settings;
         private Dictionary<string, string> _languageResources;
 
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
-
+        private readonly IHttpContextAccessor _httpContextAccessor;
         #endregion
 
         #region Ctor
 
-        public RoxyFilemanController(IHostingEnvironment hostingEnvironment,
+        public RoxyFilemanController(IWebHostEnvironment hostingEnvironment,
             IPermissionService permissionService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IHttpContextAccessor httpContextAccessor)
         {
             this._hostingEnvironment = hostingEnvironment;
             this._permissionService = permissionService;
             this._workContext = workContext;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -179,10 +179,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <summary>
         /// Process request
         /// </summary>
-        public virtual void ProcessRequest()
+        [IgnoreAntiforgeryToken]
+        public virtual async Task ProcessRequest()
         {
             //async requests are disabled in the js code, so use .Wait() method here
-            ProcessRequestAsync().Wait();
+            await ProcessRequestAsync();
         }
 
         #endregion
@@ -246,12 +247,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                         await RenameFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "GENERATETHUMB":
-                        int.TryParse(HttpContext.Request.Query["width"].ToString().Replace("px", ""), out int w);
-                        int.TryParse(HttpContext.Request.Query["height"].ToString().Replace("px", ""), out int h);
-                        CreateThumbnail(HttpContext.Request.Query["f"], w, h);
+                        await CreateThumbnail(HttpContext.Request.Query["f"]);
                         break;
                     case "UPLOAD":
-                        await UploadFilesAsync(HttpContext.Request.Form["d"]);
+                        var form = await HttpContext.Request.ReadFormAsync();
+                        await UploadFilesAsync(form["d"]);
                         break;
                     default:
                         await HttpContext.Response.WriteAsync(GetErrorResponse("This action is not implemented."));
@@ -260,7 +260,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                if (action == "UPLOAD" && !IsAjaxRequest())
+                if (action == "UPLOAD" && !await IsAjaxRequest())
                     await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({GetErrorResponse(GetLanguageResource("E_UploadNoFiles"))});</script>");
                 else
                     await HttpContext.Response.WriteAsync(GetErrorResponse(ex.Message));
@@ -292,11 +292,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <returns>Path</returns>
         protected virtual string GetVirtualPath(string path)
         {
-            path = path ?? string.Empty;
-
             var rootDirectory = GetRootDirectory();
-            if (!path.StartsWith(rootDirectory))
-                path = rootDirectory + path;
+            path = path ?? rootDirectory;
+            if (!string.IsNullOrEmpty(path))
+            {
+                var fullPath = System.IO.Path.GetFullPath(path);
+                var fullPathRootDirectory = System.IO.Path.GetFullPath(rootDirectory);
+                if (!fullPath.StartsWith(fullPathRootDirectory))
+                    path = rootDirectory;
+            }
 
             return path;
         }
@@ -312,7 +316,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!virtualPath.StartsWith("/"))
                 virtualPath = "/" + virtualPath;
             virtualPath = virtualPath.TrimEnd('/');
-            if(Grand.Core.OperatingSystem.IsWindows())
+            if (Grand.Core.OperatingSystem.IsWindows())
                 virtualPath = virtualPath.Replace('/', '\\');
 
             return _hostingEnvironment.WebRootPath + virtualPath;
@@ -414,7 +418,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var fileType = "file";
 
             fileExtension = fileExtension.ToLower();
-            if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif")
+            if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == ".bmp" || fileExtension == ".webp")
                 fileType = "image";
 
             if (fileExtension == ".swf" || fileExtension == ".flv")
@@ -494,7 +498,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var rootDirectoryPath = GetFullPath(GetVirtualPath(null));
             var rootDirectory = new DirectoryInfo(rootDirectoryPath);
             if (!rootDirectory.Exists)
-                throw new Exception("Invalid files root directory. Check your configuration - "+ rootDirectoryPath);
+                throw new Exception("Invalid files root directory. Check your configuration - " + rootDirectoryPath);
 
             var allDirectories = GetDirectories(rootDirectory.FullName);
             allDirectories.Insert(0, rootDirectory.FullName);
@@ -553,14 +557,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                     {
                         using (var stream = new FileStream(file.FullName, FileMode.Open))
                         {
-                            using (var image = Image.FromStream(stream))
+                            using (var image = SKBitmap.Decode(stream))
                             {
                                 width = image.Width;
                                 height = image.Height;
                             }
                         }
                     }
-                    catch {
+                    catch
+                    {
                         continue;
                     }
                 }
@@ -952,91 +957,54 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// Create the thumbnail of the image and write it to the response
         /// </summary>
         /// <param name="path">Path to the image</param>
-        /// <param name="width">Width</param>
-        /// <param name="height">Height</param>
-        protected virtual void CreateThumbnail(string path, int width, int height)
+        protected virtual async Task CreateThumbnail(string path)
         {
             try
             {
                 path = GetFullPath(GetVirtualPath(path));
-                using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                HttpContext.Response.Headers.Add("Content-Type", "image/png");
+                byte[] file = System.IO.File.ReadAllBytes(path);
+                using (var image = SKBitmap.Decode(file))
                 {
-                    using (var image = new Bitmap(Image.FromStream(stream)))
+                    float width, height;
+                    int targetSize = 120;
+                    if (image.Height > image.Width)
                     {
-                        var cropX = 0;
-                        var cropY = 0;
-
-                        var imgRatio = (double)image.Width / (double)image.Height;
-
-                        if (height == 0)
-                            height = Convert.ToInt32(Math.Floor((double)width / imgRatio));
-
-                        if (width > image.Width)
-                            width = image.Width;
-                        if (height > image.Height)
-                            height = image.Height;
-
-                        var cropRatio = (double)width / (double)height;
-                        var cropWidth = Convert.ToInt32(Math.Floor((double)image.Height * cropRatio));
-                        var cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
-
-                        if (cropWidth > image.Width)
+                        // portrait
+                        width = image.Width * (targetSize / (float)image.Height);
+                        height = targetSize;
+                    }
+                    else
+                    {
+                        // landscape or square
+                        width = targetSize;
+                        height = image.Height * (targetSize / (float)image.Width);
+                    }
+                    using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.None))
+                    {
+                        using (var image2 = SKImage.FromBitmap(resized))
                         {
-                            cropWidth = image.Width;
-                            cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
-                        }
-
-                        if (cropHeight > image.Height)
-                        {
-                            cropHeight = image.Height;
-                            cropWidth = Convert.ToInt32(Math.Floor((double)cropHeight * cropRatio));
-                        }
-
-                        if (cropWidth < image.Width)
-                            cropX = Convert.ToInt32(Math.Floor((double)(image.Width - cropWidth) / 2));
-                        if (cropHeight < image.Height)
-                            cropY = Convert.ToInt32(Math.Floor((double)(image.Height - cropHeight) / 2));
-
-                        using (var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare))
-                        {
-                            HttpContext.Response.Headers.Add("Content-Type", "image/png");
-                            cropImg.GetThumbnailImage(width, height, () => { return false; }, IntPtr.Zero).Save(HttpContext.Response.Body, ImageFormat.Png);
-                            HttpContext.Response.Body.Close();
+                            file = image2.Encode().ToArray();
                         }
                     }
                 }
+                await HttpContext.Response.Body.WriteAsync(file, 0, file.Length);
+                HttpContext.Response.Body.Close();
+
             }
             catch { }
-        }
-
-        /// <summary>
-        /// Get the file format of the image
-        /// </summary>
-        /// <param name="path">Path to the image</param>
-        /// <returns>Image format</returns>
-        protected virtual ImageFormat GetImageFormat(string path)
-        {
-            var fileExtension = new FileInfo(path).Extension.ToLower();
-            switch (fileExtension)
-            {
-                case ".png":
-                    return ImageFormat.Png;
-                case ".gif":
-                    return ImageFormat.Gif;
-                default:
-                    return ImageFormat.Jpeg;
-            }
         }
 
         /// <summary>
         /// Whether the request is made with ajax 
         /// </summary>
         /// <returns>True or false</returns>
-        protected virtual bool IsAjaxRequest()
+        protected virtual async Task<bool> IsAjaxRequest()
         {
-            return HttpContext.Request.Form != null &&
-                !StringValues.IsNullOrEmpty(HttpContext.Request.Form["method"]) &&
-                HttpContext.Request.Form["method"] == "ajax";
+            var form = await HttpContext.Request.ReadFormAsync();
+            return form != null &&
+                !StringValues.IsNullOrEmpty(form["method"]) &&
+                form["method"] == "ajax";
         }
 
         /// <summary>
@@ -1051,9 +1019,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             try
             {
                 directoryPath = GetFullPath(GetVirtualPath(directoryPath));
-                for (var i = 0; i < HttpContext.Request.Form.Files.Count; i++)
+                var form = await HttpContext.Request.ReadFormAsync();
+                for (var i = 0; i < form.Files.Count; i++)
                 {
-                    var fileName = HttpContext.Request.Form.Files[i].FileName;
+                    var fileName = form.Files[i].FileName;
                     if (CanHandleFile(fileName))
                     {
                         var file = new FileInfo(fileName);
@@ -1061,7 +1030,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         var destinationFile = Path.Combine(directoryPath, uniqueFileName);
                         using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
                         {
-                            HttpContext.Request.Form.Files[i].CopyTo(stream);
+                            form.Files[i].CopyTo(stream);
                         }
                     }
                     else
@@ -1075,7 +1044,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 result = GetErrorResponse(ex.Message);
             }
-            if (IsAjaxRequest())
+            if (await IsAjaxRequest())
             {
                 if (hasErrors)
                     result = GetErrorResponse(GetLanguageResource("E_UploadNotAll"));

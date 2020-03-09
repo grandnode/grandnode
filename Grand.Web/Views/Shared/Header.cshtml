@@ -1,42 +1,27 @@
 ﻿<header role="presentation">
     @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
-    <nav class="navbar fixed-top navbar-light navUp mobile-top p-0" role="navigation">
-        <ul class="mobile-top-menu container px-2 px-sm-0 d-lg-none d-flex mb-0">
-            <li class="logo-mobile"></li>
-            <li class="nav-item d-flex align-items-center d-lg-none mobile-search" data-toggle="modal" data-target="#searchModal">
-                <a class="nav-link">
-                    <span class="mdi mdi-magnify"></span>
-                </a>
-            </li>
-        </ul>
-        <ul class="nav navbar-nav header-links flex-row container px-lg-3 px-0">
-            <li class="nav-item col d-lg-none d-flex menu-open-button">
-                <a class="js-offcanvas-trigger nav-link" data-offcanvas-trigger="left" href="#left">
-                    <div id="mobile-menu-opener"><span></span><span></span><span></span></div>
-                    <span class="d-lg-none d-block text-muted mobile-desc">@T("Mobile.Menu")</span>
-                </a>
-            </li>
-            <li class="nav-item float-xs-right mr-auto dropdowns-container">
-                <div class="generalDropDown btn-toolbar float-xs-right">
-                    @await Component.InvokeAsync("TaxTypeSelector")
-                    @await Component.InvokeAsync("CurrencySelector")
-                    @await Component.InvokeAsync("LanguageSelector")
-                    @await Component.InvokeAsync("StoreSelector")
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
-                </div>
-            </li>
-            @await Component.InvokeAsync("HeaderLinks")
-        </ul>
-    </nav>
     <div class="container">
         <div class="headBottom d-flex align-items-center d-lg-inline-flex text-lg-left text-center mt-0 mb-0">
-            <div class="header-logo pr-0 pl-0 d-lg-inline-flex align-items-center d-none">
+            <a class="js-offcanvas-trigger mobile-menu-trigger d-lg-none d-flex justify-content-center align-content-center mr-3" data-offcanvas-trigger="mobile_menu" href="#mobile_menu">
+                <span class="mdi mdi-menu"></span>
+            </a>
+            <div class="header-logo pr-0 pl-0 mx-lg-0 mx-auto d-inline-flex align-items-center">
                 @await Component.InvokeAsync("Logo")
             </div>
-            <div class="col formSearch ml-auto pr-0 d-none d-lg-inline-flex align-items-end">
-                @await Component.InvokeAsync("SearchBox")            
-            </div>    
+            <div class="formSearch ml-lg-auto ml-2 pl-lg-3 pl-0 d-inline-flex align-items-end">
+                @await Component.InvokeAsync("SearchBox")
+            </div>
+            <a class="js-offcanvas-trigger user-panel-trigger d-flex justify-content-center align-content-center ml-lg-3 ml-2" data-offcanvas-trigger="user_panel" href="#user_panel">
+                <span class="mdi mdi-account-outline"></span>
+            </a>
             @await Component.InvokeAsync("ShoppingCartLinks")
         </div>
     </div>
+    <nav class="navbar mainNav navbar-expand-sm offcanvas-desktop">
+        <div class="navbar-collapse container">
+            <ul class="navbar-nav">
+                @await Component.InvokeAsync("TopMenu")
+            </ul>
+        </div>
+    </nav>
 </header>

@@ -490,7 +490,7 @@
         <div class="form-group">
             <admin-label asp-for="ProductTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ProductTypeId" asp-items="((ProductType)Model.ProductTypeId).ToSelectList()" />
+                <admin-select asp-for="ProductTypeId" asp-items="((ProductType)Model.ProductTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="ProductTypeId"></span>
             </div>
         </div>
@@ -524,7 +524,7 @@
         </div>
     </div>
 </div>
-@(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
+@(await Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
     @<div class="form-horizontal portlet bg-inverse form-fit">
         <div class="form-body">
             <div class="form-group">

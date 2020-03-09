@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Domain.Common;
 
 namespace Grand.Web.Controllers
 {
@@ -47,7 +48,8 @@ namespace Grand.Web.Controllers
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly AddressSettings _addressSettings;
+
         #endregion
 
         #region Constructors
@@ -70,27 +72,27 @@ namespace Grand.Web.Controllers
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
-            ShoppingCartSettings shoppingCartSettings)
+            AddressSettings addressSettings)
         {
-            this._checkoutViewModelService = checkoutViewModelService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._customerService = customerService;
-            this._shoppingCartService = shoppingCartService;
-            this._genericAttributeService = genericAttributeService;
-            this._shippingService = shippingService;
-            this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
-            this._logger = logger;
-            this._orderService = orderService;
-            this._webHelper = webHelper;
-            this._addressViewModelService = addressViewModelService;
-            this._orderSettings = orderSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _checkoutViewModelService = checkoutViewModelService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _customerService = customerService;
+            _shoppingCartService = shoppingCartService;
+            _genericAttributeService = genericAttributeService;
+            _shippingService = shippingService;
+            _paymentService = paymentService;
+            _pluginFinder = pluginFinder;
+            _logger = logger;
+            _orderService = orderService;
+            _webHelper = webHelper;
+            _addressViewModelService = addressViewModelService;
+            _orderSettings = orderSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _paymentSettings = paymentSettings;
+            _shippingSettings = shippingSettings;
+            _addressSettings = addressSettings;
         }
 
         #endregion
@@ -580,7 +582,7 @@ namespace Grand.Web.Controllers
             {
                 //not found? let's load them using shipping service
                 shippingOptions = (await _shippingService
-                    .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store.Id))
+                    .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store))
                     .ShippingOptions
                     .ToList();
             }
@@ -634,16 +636,7 @@ namespace Grand.Web.Controllers
             }
 
             //filter by country
-            string filterByCountryId = "";
-            if (_addressViewModelService.AddressSettings().CountryEnabled &&
-                _workContext.CurrentCustomer.BillingAddress != null &&
-                !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
-            {
-                filterByCountryId = _workContext.CurrentCustomer.BillingAddress.CountryId;
-            }
-
-            //model
-            var paymentMethodModel = await _checkoutViewModelService.PreparePaymentMethod(cart, filterByCountryId);
+            var paymentMethodModel = await GetCheckoutPaymentMethodModel(cart);
 
             if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                 paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
@@ -660,6 +653,7 @@ namespace Grand.Web.Controllers
 
             return View(paymentMethodModel);
         }
+
         [HttpPost, ActionName("PaymentMethod")]
         [FormValueRequired("nextstep")]
         public virtual async Task<IActionResult> SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
@@ -897,8 +891,7 @@ namespace Grand.Web.Controllers
 
         public virtual IActionResult GetShippingFormPartialView(string shippingOption)
         {
-            string viewcomponent = "";
-            GetShippingComputation(shippingOption).GetPublicViewComponent(out viewcomponent);
+            GetShippingComputation(shippingOption).GetPublicViewComponent(out string viewcomponent);
             if (string.IsNullOrEmpty(viewcomponent))
                 return Content("");
 
@@ -948,7 +941,7 @@ namespace Grand.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "shipping-method",
-                    html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
+                    html = await RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
                 },
                 goto_section = "shipping_method"
             });
@@ -964,7 +957,7 @@ namespace Grand.Web.Controllers
             {
                 //filter by country
                 string filterByCountryId = "";
-                if (_addressViewModelService.AddressSettings().CountryEnabled &&
+                if (_addressSettings.CountryEnabled &&
                     _workContext.CurrentCustomer.BillingAddress != null &&
                     !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
                 {
@@ -1000,7 +993,7 @@ namespace Grand.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "payment-method",
-                        html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
+                        html = await RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
                     },
                     goto_section = "payment_method"
                 });
@@ -1016,7 +1009,7 @@ namespace Grand.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "confirm-order",
-                    html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                    html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                 },
                 goto_section = "confirm_order"
             });
@@ -1040,7 +1033,7 @@ namespace Grand.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "confirm-order",
-                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                        html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                     },
                     goto_section = "confirm_order"
                 });
@@ -1054,7 +1047,7 @@ namespace Grand.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "payment-info",
-                    html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                    html = await RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
                 },
                 goto_section = "payment_info"
             });
@@ -1074,11 +1067,14 @@ namespace Grand.Web.Controllers
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                 return Challenge();
 
+            var paymentMethodModel = await GetCheckoutPaymentMethodModel(cart);
+
             var model = new OnePageCheckoutModel
             {
                 ShippingRequired = cart.RequiresShipping(),
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep,
-                BillingAddress = await _checkoutViewModelService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true)
+                BillingAddress = await _checkoutViewModelService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true),
+                HasSinglePaymentMethod = paymentMethodModel.PaymentMethods?.Count == 1 
             };
             return View(model);
         }
@@ -1132,7 +1128,7 @@ namespace Grand.Web.Controllers
                             update_section = new UpdateSectionJsonModel
                             {
                                 name = "billing",
-                                html = this.RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
+                                html = await RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
                             },
                             wrong_billing_address = true,
                         });
@@ -1188,7 +1184,7 @@ namespace Grand.Web.Controllers
                             update_section = new UpdateSectionJsonModel
                             {
                                 name = "shipping",
-                                html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
+                                html = await RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
                             },
                             goto_section = "shipping"
                         });
@@ -1314,7 +1310,7 @@ namespace Grand.Web.Controllers
                             update_section = new UpdateSectionJsonModel
                             {
                                 name = "shipping",
-                                html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
+                                html = await RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
                             }
                         });
                     }
@@ -1389,7 +1385,7 @@ namespace Grand.Web.Controllers
                 {
                     //not found? let's load them using shipping service
                     shippingOptions = (await _shippingService
-                        .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store.Id))
+                        .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store))
                         .ShippingOptions
                         .ToList();
                 }
@@ -1463,7 +1459,7 @@ namespace Grand.Web.Controllers
                         update_section = new UpdateSectionJsonModel
                         {
                             name = "confirm-order",
-                            html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                            html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                         },
                         goto_section = "confirm_order"
                     });
@@ -1519,7 +1515,7 @@ namespace Grand.Web.Controllers
                         update_section = new UpdateSectionJsonModel
                         {
                             name = "confirm-order",
-                            html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                            html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                         },
                         goto_section = "confirm_order"
                     });
@@ -1532,7 +1528,7 @@ namespace Grand.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "payment-info",
-                        html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                        html = await RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
                     }
                 });
             }
@@ -1616,7 +1612,7 @@ namespace Grand.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "confirm-order",
-                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                        html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                     },
                     goto_section = "confirm_order"
                 });
@@ -1682,6 +1678,20 @@ namespace Grand.Web.Controllers
                 _logger.Warning(exc.Message, exc, _workContext.CurrentCustomer);
                 return Content(exc.Message);
             }
+        }
+
+        private async Task<CheckoutPaymentMethodModel> GetCheckoutPaymentMethodModel(IList<ShoppingCartItem> cart)
+        {
+            var filterByCountryId = "";
+            if (_addressSettings.CountryEnabled &&
+                _workContext.CurrentCustomer.BillingAddress != null &&
+                !string.IsNullOrWhiteSpace(_workContext.CurrentCustomer.BillingAddress.CountryId))
+            {
+                filterByCountryId = _workContext.CurrentCustomer.BillingAddress.CountryId;
+            }
+
+            var paymentMethodModel = await _checkoutViewModelService.PreparePaymentMethod(cart, filterByCountryId);
+            return paymentMethodModel;
         }
 
         #endregion

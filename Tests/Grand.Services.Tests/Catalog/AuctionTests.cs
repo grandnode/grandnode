@@ -58,7 +58,7 @@ namespace Grand.Services.Tests.Catalog
             {
                 Amount = 1,
                 Bin = true,
-                CustomerId = "CustomerId",
+                CustomerId = "CustomerIdTest1",
                 Date = date,
                 OrderId = "OrderId",
                 ProductId = "ProductId",
@@ -66,11 +66,11 @@ namespace Grand.Services.Tests.Catalog
                 Win = true
             });
 
-            var inserted = _bidRepository.Table.First();
+            var inserted = _bidRepository.Table.Where(x=>x.CustomerId == "CustomerIdTest1").First();
 
             Assert.AreEqual(1, inserted.Amount);
             Assert.AreEqual(true, inserted.Bin);
-            Assert.AreEqual("CustomerId", inserted.CustomerId);
+            Assert.AreEqual("CustomerIdTest1", inserted.CustomerId);
             Assert.AreEqual(date.Date, inserted.Date.Date);
             Assert.AreEqual("OrderId", inserted.OrderId);
             Assert.AreEqual("ProductId", inserted.ProductId);
@@ -241,7 +241,7 @@ namespace Grand.Services.Tests.Catalog
             _productRepository.Insert(cancelProductBid);
 
             var productService = new Mock<IProductService>();
-            productService.Setup(x => x.GetProductById(cancelProductBid.Id)).ReturnsAsync(cancelProductBid);
+            productService.Setup(x => x.GetProductById(cancelProductBid.Id, false)).ReturnsAsync(cancelProductBid);
             var _cancelproductService = productService.Object;
             var _cancelauctionService = new AuctionService(_bidRepository, _eventPublisher, _cancelproductService, _productRepository, _cacheManager, _serviceProvider);
 

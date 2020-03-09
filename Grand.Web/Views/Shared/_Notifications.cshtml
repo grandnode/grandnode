@@ -43,44 +43,29 @@
     <div id="loading"><div class="loader"></div></div>
 </div>
 
-<div id="bar-notification" class="generalNote card text-white text-xs-center" style="display:none;">
-    <span class="close" title="@T("Common.Close")"><span class="mdi mdi-close" aria-hidden="true"></span></span>
-</div>
+<div id="bar-notification" class="generalNote"></div>
 
-<a class="popup-action-banner" data-mfp-src="#action_modal_banner" style="display:none"></a>
-<div id="action_modal_banner" class="zoom-anim-dialog mfp-hide">
-    <div id="action-body-banner"></div>
-</div>
-<a class="popup-action-form" data-mfp-src="#action_modal_form" style="display:none"></a>
-<div id="action_modal_form" class="zoom-anim-dialog mfp-hide">
-    <form asp-route="PopupInteractiveForm" method="post" id="interactive-form">
-        <div id="action-body-form"></div>
-    </form>
-</div>
-<div class="modal fade" id="ModalAddToCart" tabindex="-1" role="dialog" aria-labelledby="ModalAddToCartLabel" aria-hidden="true">
-</div>
-<div class="modal fade" id="ModalQuickView" tabindex="-2" role="dialog" aria-labelledby="ModalQuickViewLabel" aria-hidden="true">
-</div>
-<div class="modal fade" id="generalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-          <div class="modal-header p-0 border-bottom-0">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body p-0">
-              <div id="dialog_error" class="bg-danger"></div>
-              <div id="dialog_success" class="bg-success"></div>
-          </div>
-      </div>
-  </div>
-</div>
-<script asp-location="Footer">
-    $(document).ready(function () {
-        CustomerAction.init('@Url.Action("CustomerActionEventUrl", "Common")', '@Url.Action("GetActivePopup", "Common")', '@Url.Action("RemovePopup", "Common")');
-        CustomerAction.checkActiveUrl('@Context.Request.Path.ToString()', '@Context.Request.Headers["Referer"]');
-    });
-</script>
+@await Component.InvokeAsync("PopupAction")
 
-@await Component.InvokeAsync("Widget", new { widgetZone = "notifications" })
+<div class="modal fade" id="ModalAddToCart" tabindex="-1" role="dialog" aria-hidden="true">
+</div>
+<div class="modal fade" id="ModalQuickView" tabindex="-2" role="dialog" aria-hidden="true">
+</div>
+<a class="nc-action-form" data-mfp-src="#nc_modal_form" style="display:none"></a>
+<div id="nc_modal_form" class="zoom-anim-dialog mfp-hide">
+</div>
+<div class="modal fade" id="generalModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-0 border-bottom-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="dialog_error"></div>
+                <div id="dialog_success"></div>
+            </div>
+        </div>
+    </div>
+</div>

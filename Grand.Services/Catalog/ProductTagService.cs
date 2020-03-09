@@ -1,7 +1,6 @@
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
 using Grand.Services.Events;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -45,8 +44,6 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IDataProvider _dataProvider;
-        private readonly CommonSettings _commonSettings;
         private readonly ICacheManager _cacheManager;
         private readonly IMediator _mediator;
 
@@ -58,25 +55,18 @@ namespace Grand.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="productTagRepository">Product tag repository</param>
-        /// <param name="dataProvider">Data provider</param>
-        /// <param name="dbContext">Database Context</param>
-        /// <param name="commonSettings">Common settings</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public ProductTagService(IRepository<ProductTag> productTagRepository,
             IRepository<Product> productRepository,
-            IDataProvider dataProvider, 
-            CommonSettings commonSettings,
             ICacheManager cacheManager,
             IMediator mediator
             )
         {
-            this._productTagRepository = productTagRepository;
-            this._dataProvider = dataProvider;
-            this._commonSettings = commonSettings;
-            this._cacheManager = cacheManager;
-            this._mediator = mediator;
-            this._productRepository = productRepository;
+            _productTagRepository = productTagRepository;
+            _cacheManager = cacheManager;
+            _mediator = mediator;
+            _productRepository = productRepository;
         }
 
         #endregion
@@ -90,7 +80,7 @@ namespace Grand.Services.Catalog
         }
 
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
@@ -98,20 +88,19 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Dictionary of "product tag ID : product count"</returns>
-        private Dictionary<string, int> GetProductCount(string storeId)
+        private async Task<Dictionary<string, int>> GetProductCount(string storeId)
         {
             string key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from pt in _productTagRepository.Table
-                            select pt;
+            return await _cacheManager.GetAsync(key, async () =>
+             {
+                 var query = from pt in _productTagRepository.Table
+                             select pt;
 
-                var dictionary = new Dictionary<string, int>();
-                foreach (var item in query.ToList())
-                    dictionary.Add(item.Id, item.Count);
-                return dictionary;
-
-            });
+                 var dictionary = new Dictionary<string, int>();
+                 foreach (var item in await query.ToListAsync())
+                     dictionary.Add(item.Id, item.Count);
+                 return dictionary;
+             });
         }
 
         #endregion
@@ -134,8 +123,8 @@ namespace Grand.Services.Catalog
             await _productTagRepository.DeleteAsync(productTag);
 
             //cache
-            await _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTTAG_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(productTag);
@@ -200,7 +189,7 @@ namespace Grand.Services.Catalog
             await _productTagRepository.InsertAsync(productTag);
 
             //cache
-            await _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTTAG_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(productTag);
@@ -229,7 +218,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTTAG_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(productTag);
@@ -241,12 +230,12 @@ namespace Grand.Services.Catalog
         /// <param name="productTagId">Product tag identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Number of products</returns>
-        public virtual int GetProductCount(string productTagId, string storeId)
+        public virtual async Task<int> GetProductCount(string productTagId, string storeId)
         {
-            var dictionary = GetProductCount(storeId);
+            var dictionary = await GetProductCount(storeId);
             if (dictionary.ContainsKey(productTagId))
                 return dictionary[productTagId];
-            
+
             return 0;
         }
 

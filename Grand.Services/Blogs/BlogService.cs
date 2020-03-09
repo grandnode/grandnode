@@ -38,12 +38,12 @@ namespace Grand.Services.Blogs
             CatalogSettings catalogSettings,
             IMediator mediator)
         {
-            this._blogPostRepository = blogPostRepository;
-            this._blogCommentRepository = blogCommentRepository;
-            this._blogCategoryRepository = blogCategoryRepository;
-            this._blogProductRepository = blogProductRepository;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
+            _blogPostRepository = blogPostRepository;
+            _blogCommentRepository = blogCommentRepository;
+            _blogCategoryRepository = blogCategoryRepository;
+            _blogProductRepository = blogProductRepository;
+            _catalogSettings = catalogSettings;
+            _mediator = mediator;
         }
 
         #endregion
@@ -253,11 +253,11 @@ namespace Grand.Services.Blogs
         /// </summary>
         /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <returns>Comments</returns>
-        public virtual async Task<IList<BlogComment>> GetAllComments(string customerId)
+        public virtual async Task<IList<BlogComment>> GetAllComments(string customerId, string storeId)
         {
             var query = from c in _blogCommentRepository.Table
                         orderby c.CreatedOnUtc
-                        where (customerId == "" || c.CustomerId == customerId)
+                        where (customerId == "" || c.CustomerId == customerId) && (storeId == "" || c.StoreId == storeId)
                         select c;        
             
             return await query.ToListAsync();

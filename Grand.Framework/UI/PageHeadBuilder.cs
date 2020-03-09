@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Hosting;
 
 namespace Grand.Framework.UI
 {
@@ -23,7 +24,7 @@ namespace Grand.Framework.UI
         private static readonly object s_lock = new object();
 
         private readonly SeoSettings _seoSettings;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private BundleFileProcessor _processor;
 
         private readonly List<string> _titleParts;
@@ -46,20 +47,20 @@ namespace Grand.Framework.UI
         /// </summary>
         /// <param name="seoSettings">SEO settings</param>
         /// <param name="hostingEnvironment">Hosting environment</param>
-        public PageHeadBuilder(SeoSettings seoSettings, IHostingEnvironment hostingEnvironment)
+        public PageHeadBuilder(SeoSettings seoSettings, IWebHostEnvironment hostingEnvironment)
         {
-            this._seoSettings = seoSettings;
-            this._hostingEnvironment = hostingEnvironment;
-            this._processor = new BundleFileProcessor();
+            _seoSettings = seoSettings;
+            _hostingEnvironment = hostingEnvironment;
+            _processor = new BundleFileProcessor();
 
-            this._titleParts = new List<string>();
-            this._metaDescriptionParts = new List<string>();
-            this._metaKeywordParts = new List<string>();
-            this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
-            this._cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
-            this._canonicalUrlParts = new List<string>();
-            this._headCustomParts = new List<string>();
-            this._pageCssClassParts = new List<string>();
+            _titleParts = new List<string>();
+            _metaDescriptionParts = new List<string>();
+            _metaKeywordParts = new List<string>();
+            _scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
+            _cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
+            _canonicalUrlParts = new List<string>();
+            _headCustomParts = new List<string>();
+            _pageCssClassParts = new List<string>();
         }
 
         #endregion

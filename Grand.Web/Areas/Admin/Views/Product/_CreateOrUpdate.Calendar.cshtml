@@ -3,6 +3,8 @@
 @using Grand.Core.Domain.Catalog;
 @if (!String.IsNullOrEmpty(Model.Id))
 {
+    <input type="hidden" asp-for="CalendarModel.ProductId" />
+
     <vc:admin-widget widget-zone="product_details_calendar_top" additional-data="Model" />
     <div class="form-horizontal">
         <h2>@T("Admin.Catalog.Products.Calendar.Calendarconfiguration")</h2>
@@ -49,7 +51,7 @@
                     <span id="pnlInterval">
                         <admin-input asp-for="CalendarModel.Interval" />
                     </span>
-                    <admin-select asp-for="CalendarModel.IntervalUnit" asp-items="((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList()" class="form-control input-xsmall" style="height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " />
+                    <admin-select asp-for="CalendarModel.IntervalUnit" asp-items="((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList(Context)" class="form-control input-xsmall" style="height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " />
                 </div>
             </div>
             <div class="form-group" id="pnlQuantity">

@@ -171,6 +171,16 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AcceptPrivacyPolicyEnabled")]
             public bool AcceptPrivacyPolicyEnabled { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideReviewsTab")]
+            public bool HideReviewsTab { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideCoursesTab")]
+            public bool HideCoursesTab { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationEnabled")]
+            public bool TwoFactorAuthenticationEnabled { get; set; }
+
         }
 
         public partial class AddressSettingsModel : BaseGrandModel

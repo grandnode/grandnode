@@ -99,7 +99,11 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public string RefundedAmount { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.Profit")]
         public string Profit { get; set; }
+        [GrandResourceDisplayName("Admin.Orders.Fields.Currency")]
         public string CurrencyCode { get; set; }
+        [GrandResourceDisplayName("Admin.Orders.Fields.CurrencyRate")]
+
+        [UIHint("DecimalN4")]
         public decimal CurrencyRate { get; set; }
         //edit totals
         [GrandResourceDisplayName("Admin.Orders.Fields.Edit.OrderSubtotal")]
@@ -283,6 +287,9 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             public DownloadActivationType DownloadActivationType { get; set; }
             public bool IsDownloadActivated { get; set; }
             public Guid LicenseDownloadGuid { get; set; }
+
+            public string Commission { get; set; }
+            public decimal CommissionValue { get; set; } 
         }
 
         public partial class TaxRate : BaseGrandModel

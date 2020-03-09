@@ -1,0 +1,70 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+@model Grand.Plugin.Widgets.FacebookPixel.Models.ConfigurationModel
+@using Grand.Framework;
+@await Component.InvokeAsync("StoreScopeConfiguration")
+<form asp-controller="WidgetsFacebookPixel" asp-action="Configure" method="post">    
+    <div class="form-horizonal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="note note-info">
+                    <p>
+                        Please note that Purchase and Add to cart events work only when you have \"Disable order completed page\" order setting unticked and \"Display cart after adding product\" shopping cart setting ticked.
+                    </p>
+                    <ul>
+                        <li>1. Go to <a href="https://business.facebook.com/ads/manager/pixel/facebook_pixel">Facebook Pixel configuration page</a>.</li>
+                        <li>2. Provide the name of the pixel and optionally URL of the store</li>
+                        <li>3. Navigate to the Settings tab and copy "Pixel ID" field.</li>
+                        <li>4. Paste it to the PixelId field and save changes.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.PixelId_OverrideForStore, model => model.PixelId, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="PixelId" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <admin-input asp-for="PixelId" />
+                    <span asp-validation-for="PixelId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.PixelScript_OverrideForStore, model => model.PixelScript, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="PixelScript" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <admin-textarea asp-for="PixelScript"></admin-textarea>
+                    <span asp-validation-for="PixelScript"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.AddToCartScript_OverrideForStore, model => model.AddToCartScript, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="AddToCartScript" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <admin-textarea asp-for="AddToCartScript"></admin-textarea>
+                    <span asp-validation-for="AddToCartScript"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.DetailsOrderScript_OverrideForStore, model => model.DetailsOrderScript, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="DetailsOrderScript" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <admin-textarea asp-for="DetailsOrderScript"></admin-textarea>
+                    <span asp-validation-for="DetailsOrderScript"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+            </div>
+        </div>
+    </div>
+</form>

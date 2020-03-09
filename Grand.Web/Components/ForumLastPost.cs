@@ -10,7 +10,7 @@ namespace Grand.Web.ViewComponents
         private readonly IBoardsViewModelService _boardsViewModelService;
         public ForumLastPostViewComponent(IBoardsViewModelService boardsViewModelService)
         {
-            this._boardsViewModelService = boardsViewModelService;
+            _boardsViewModelService = boardsViewModelService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string forumPostId, bool showTopic)

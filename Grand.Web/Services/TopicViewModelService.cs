@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Topics;
-using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
@@ -16,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Services
 {
-    public partial class TopicViewModelService: ITopicViewModelService
+    public partial class TopicViewModelService : ITopicViewModelService
     {
         private readonly ITopicService _topicService;
         private readonly IWorkContext _workContext;
@@ -34,21 +33,20 @@ namespace Grand.Web.Services
             IStoreMappingService storeMappingService,
             IAclService aclService)
         {
-            this._topicService = topicService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._topicTemplateService = topicTemplateService;
-            this._storeMappingService = storeMappingService;
-            this._aclService = aclService;
+            _topicService = topicService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _topicTemplateService = topicTemplateService;
+            _storeMappingService = storeMappingService;
+            _aclService = aclService;
         }
         public virtual TopicModel PrepareTopicModel(Topic topic)
         {
             if (topic == null)
                 throw new ArgumentNullException("topic");
 
-            var model = new TopicModel
-            {
+            var model = new TopicModel {
                 Id = topic.Id,
                 SystemName = topic.SystemName,
                 IncludeInSitemap = topic.IncludeInSitemap,
@@ -59,85 +57,58 @@ namespace Grand.Web.Services
                 MetaDescription = topic.GetLocalized(x => x.MetaDescription, _workContext.WorkingLanguage.Id),
                 MetaTitle = topic.GetLocalized(x => x.MetaTitle, _workContext.WorkingLanguage.Id),
                 SeName = topic.GetSeName(_workContext.WorkingLanguage.Id),
-                TopicTemplateId = topic.TopicTemplateId
+                TopicTemplateId = topic.TopicTemplateId,
+                Published = topic.Published
             };
             return model;
 
         }
         public virtual async Task<TopicModel> TopicDetails(string topicId)
         {
+            var topic = await _topicService.GetTopicById(topicId);
+            if (topic == null)
+                return null;
+            //Store mapping
+            if (!_storeMappingService.Authorize(topic))
+                return null;
+            //ACL (access control list)
+            if (!_aclService.Authorize(topic))
+                return null;
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_ID_KEY,
-                topicId,
-                _workContext.WorkingLanguage.Id,
-                _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
-                {
-                    var topic = await _topicService.GetTopicById(topicId);
-                    if (topic == null)
-                        return null;
-                    //Store mapping
-                    if (! _storeMappingService.Authorize(topic))
-                        return null;
-                    //ACL (access control list)
-                    if (!_aclService.Authorize(topic))
-                        return null;
-
-                    return PrepareTopicModel(topic);
-                }
-            );
-
-            return cacheModel;
+            return PrepareTopicModel(topic);
 
         }
+
         public virtual async Task<TopicModel> TopicDetailsPopup(string systemName)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_SYSTEMNAME_KEY,
-                systemName,
-                _workContext.WorkingLanguage.Id,
-                _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-
-            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
-            {
-                //load by store
-                var topic = await _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
-                if (topic == null)
-                    return null;
-                //ACL (access control list)
-                if (!_aclService.Authorize(topic))
-                    return null;
-                return PrepareTopicModel(topic);
-            });
-            return cacheModel;
+            //load by store
+            var topic = await _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
+            if (topic == null)
+                return null;
+            //ACL (access control list)
+            if (!_aclService.Authorize(topic))
+                return null;
+            return PrepareTopicModel(topic);
         }
+
         public virtual async Task<TopicModel> TopicBlock(string systemName)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_SYSTEMNAME_KEY,
-                systemName,
-                _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
-            {
-                //load by store
-                var topic = await _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
-                if (topic == null)
-                    return null;
-                //Store mapping
-                if (!_storeMappingService.Authorize(topic))
-                    return null;
-                //ACL (access control list)
-                if (!_aclService.Authorize(topic))
-                    return null;
-                return PrepareTopicModel(topic);
-            });
+            //load by store
+            var topic = await _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
+            if (topic == null || !topic.Published)
+                return null;
+            //Store mapping
+            if (!_storeMappingService.Authorize(topic))
+                return null;
+            //ACL (access control list)
+            if (!_aclService.Authorize(topic))
+                return null;
+            return PrepareTopicModel(topic);
 
-            return cacheModel;
         }
         public virtual async Task<string> PrepareTopicTemplateViewPath(string templateId)
         {
-            var templateCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TEMPLATE_MODEL_KEY, templateId);
+            var templateCacheKey = string.Format(ModelCacheEventConst.TOPIC_TEMPLATE_MODEL_KEY, templateId);
             var templateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _topicTemplateService.GetTopicTemplateById(templateId);

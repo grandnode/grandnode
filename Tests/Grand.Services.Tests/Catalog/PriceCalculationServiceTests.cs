@@ -2,7 +2,6 @@
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Stores;
@@ -10,8 +9,8 @@ using Grand.Core.Tests.Caching;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
-using Grand.Services.Stores;
 using Grand.Services.Vendors;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -36,13 +35,12 @@ namespace Grand.Services.Catalog.Tests
         private IProductService _productService;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
-        private CurrencySettings _currencySettings;
-        private ICacheManager _cacheManager;
         private IPriceCalculationService _priceCalcService;
         private IVendorService _vendorService;
-        private IStoreService _storeService;
         private ICustomerService _customerService;
         private ICurrencyService _currencyService;
+        private IMediator _eventPublisher;
+
         [TestInitialize()]
         public void TestInitialize()
         {
@@ -64,7 +62,6 @@ namespace Grand.Services.Catalog.Tests
             _categoryService = new Mock<ICategoryService>().Object;
             _manufacturerService = new Mock<IManufacturerService>().Object;
             _vendorService = new Mock<IVendorService>().Object;
-            _storeService = new Mock<IStoreService>().Object;
             _customerService = new Mock<ICustomerService>().Object;
             _currencyService = new Mock<ICurrencyService>().Object;
             tempProductService = new Mock<IProductService>();
@@ -74,8 +71,10 @@ namespace Grand.Services.Catalog.Tests
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
-            _currencySettings = new CurrencySettings();
-            _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+
+            var eventPublisher = new Mock<IMediator>();
+            _eventPublisher = eventPublisher.Object;
+
             _priceCalcService = new PriceCalculationService(
                 _workContext,
                 _storeContext,
@@ -85,9 +84,7 @@ namespace Grand.Services.Catalog.Tests
                 _productAttributeParser,
                 _productService,
                 _customerService,
-                _cacheManager,
                 _vendorService,
-                _storeService,
                 _currencyService,
                 _shoppingCartSettings,
                 _catalogSettings);
@@ -270,15 +267,17 @@ namespace Grand.Services.Catalog.Tests
             product.AppliedDiscounts.Add(discount001.Id);
 
             tempDiscountServiceMock.Setup(x => x.ValidateDiscount(discount001, customer)).ReturnsAsync(new DiscountValidationResult() { IsValid = true });
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToSkus, "1", "", "", false)).ReturnsAsync(new List<Discount>() { discount001 });
 
             var discountAmount = discount001.DiscountAmount;
             tempDiscountServiceMock.Setup(x => x.GetPreferredDiscount(It.IsAny<List<AppliedDiscount>>(), customer, product, 49.99M)).ReturnsAsync((new List<AppliedDiscount>(), 10));
 
             //it should return 39.99 - price cheaper about 10 
-            var pp = (await _priceCalcService.GetFinalPrice(product, customer, 0, true, 1)).finalPrice;
+            var finalprice = await _priceCalcService.GetFinalPrice(product, customer, 0, true, 1);
+            var pp = finalprice.finalPrice;
 
             Assert.AreEqual(39.99M, pp);
         }
@@ -297,7 +296,7 @@ namespace Grand.Services.Catalog.Tests
                 CustomerEntersPrice = false,
                 Published = true,
             };
-            tempProductService.Setup(x => x.GetProductById("242422")).ReturnsAsync(product001);
+            tempProductService.Setup(x => x.GetProductById("242422", false)).ReturnsAsync(product001);
 
             var shoppingCartItem = new ShoppingCartItem
             {
@@ -307,9 +306,9 @@ namespace Grand.Services.Catalog.Tests
 
             customer001.ShoppingCartItems.Add(shoppingCartItem);
 
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "1", "", "", false)).ReturnsAsync(new List<Discount>());
 
             Assert.AreEqual(49.99M, (await _priceCalcService.GetUnitPrice(shoppingCartItem)).unitprice);
         }
@@ -325,7 +324,7 @@ namespace Grand.Services.Catalog.Tests
                 CustomerEntersPrice = false,
                 Published = true,
             };
-            tempProductService.Setup(x => x.GetProductById("242422")).ReturnsAsync(product001);
+            tempProductService.Setup(x => x.GetProductById("242422", false)).ReturnsAsync(product001);
 
             var customer001 = new Customer { Id = "98767" };
             tempWorkContext.Setup(x => x.CurrentCustomer).Returns(customer001);
@@ -338,9 +337,9 @@ namespace Grand.Services.Catalog.Tests
 
             customer001.ShoppingCartItems.Add(shoppingCartItem);
 
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "1", "", "", false)).ReturnsAsync(new List<Discount>());
 
             Assert.AreEqual(110.22M,(await _priceCalcService.GetSubTotal(shoppingCartItem)).subTotal);
         }

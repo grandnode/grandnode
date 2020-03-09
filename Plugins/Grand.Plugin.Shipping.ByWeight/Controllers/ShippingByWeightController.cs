@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Grand.Core.Domain.Directory;
+﻿using Grand.Core.Domain.Directory;
+using Grand.Framework.Controllers;
+using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc;
+using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Shipping.ByWeight.Domain;
 using Grand.Plugin.Shipping.ByWeight.Models;
 using Grand.Plugin.Shipping.ByWeight.Services;
@@ -12,19 +13,18 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
-using Grand.Framework.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Kendoui;
-using Grand.Framework.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.ByWeight.Controllers
 {
     [AuthorizeAdmin]
     [Area("Admin")]
+    [PermissionAuthorize(PermissionSystemName.ShippingSettings)]
     public class ShippingByWeightController : BaseShippingController
     {
         private readonly IShippingService _shippingService;
@@ -35,8 +35,6 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         private readonly IShippingByWeightService _shippingByWeightService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
@@ -50,25 +48,23 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             IShippingByWeightService shippingByWeightService,
             ISettingService settingService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             ICurrencyService currencyService,
             CurrencySettings currencySettings,
             IMeasureService measureService,
             MeasureSettings measureSettings)
         {
-            this._shippingService = shippingService;
-            this._storeService = storeService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._shippingByWeightSettings = shippingByWeightSettings;
-            this._shippingByWeightService = shippingByWeightService;
-            this._settingService = settingService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
-            this._measureService = measureService;
-            this._measureSettings = measureSettings;
+            _shippingService = shippingService;
+            _storeService = storeService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _shippingByWeightSettings = shippingByWeightSettings;
+            _shippingByWeightService = shippingByWeightService;
+            _settingService = settingService;
+            _localizationService = localizationService;
+            _currencyService = currencyService;
+            _currencySettings = currencySettings;
+            _measureService = measureService;
+            _measureSettings = measureSettings;
         }
         public IActionResult Configure()
         {
@@ -80,7 +76,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> SaveGeneralSettings(ShippingByWeightListModel model)
         {
             //save settings
@@ -92,20 +88,16 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> RatesList(DataSourceRequest command)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
-
             var records = await _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
 
             var sbwModel = new List<ShippingByWeightModel>();
-            foreach (var x in sbwModel)
+            foreach (var x in records)
             {
 
-                var m = new ShippingByWeightModel
-                {
+                var m = new ShippingByWeightModel {
                     Id = x.Id,
                     StoreId = x.StoreId,
                     WarehouseId = x.WarehouseId,
@@ -155,8 +147,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
                 sbwModel.Add(m);
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = sbwModel,
                 Total = records.TotalCount
             };
@@ -165,12 +156,9 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> RateDelete(string id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
-
             var sbw = await _shippingByWeightService.GetById(id);
             if (sbw != null)
                 await _shippingByWeightService.DeleteShippingByWeightRecord(sbw);
@@ -180,9 +168,6 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
         public async Task<IActionResult> AddPopup()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
-
             var model = new ShippingByWeightModel();
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
             model.BaseWeightIn = (await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name;
@@ -213,15 +198,12 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
             return View("~/Plugins/Shipping.ByWeight/Views/AddPopup.cshtml", model);
         }
+
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> AddPopup(ShippingByWeightModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
-
-            var sbw = new ShippingByWeightRecord
-            {
+            var sbw = new ShippingByWeightRecord {
                 StoreId = model.StoreId,
                 WarehouseId = model.WarehouseId,
                 CountryId = model.CountryId,
@@ -245,16 +227,12 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         //edit
         public async Task<IActionResult> EditPopup(string id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
-
             var sbw = await _shippingByWeightService.GetById(id);
             if (sbw == null)
                 //No record found with the specified id
                 return RedirectToAction("Configure");
 
-            var model = new ShippingByWeightModel
-            {
+            var model = new ShippingByWeightModel {
                 Id = sbw.Id,
                 StoreId = sbw.StoreId,
                 WarehouseId = sbw.WarehouseId,
@@ -306,12 +284,9 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             return View("~/Plugins/Shipping.ByWeight/Views/EditPopup.cshtml", model);
         }
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> EditPopup(ShippingByWeightModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
-
             var sbw = await _shippingByWeightService.GetById(model.Id);
             if (sbw == null)
                 //No record found with the specified id
@@ -335,7 +310,5 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
             return View("~/Plugins/Shipping.ByWeight/Views/EditPopup.cshtml", model);
         }
-
-
     }
 }

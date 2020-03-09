@@ -135,49 +135,49 @@ namespace Grand.Services.Orders
             TaxSettings taxSettings,
             LocalizationSettings localizationSettings)
         {
-            this._orderService = orderService;
-            this._webHelper = webHelper;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._productService = productService;
-            this._paymentService = paymentService;
-            this._logger = logger;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._giftCardService = giftCardService;
-            this._shoppingCartService = shoppingCartService;
-            this._checkoutAttributeFormatter = checkoutAttributeFormatter;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._vendorService = vendorService;
-            this._shippingService = shippingService;
-            this._shipmentService = shipmentService;
-            this._taxService = taxService;
-            this._customerService = customerService;
-            this._discountService = discountService;
-            this._encryptionService = encryptionService;
-            this._customerActivityService = customerActivityService;
-            this._customerActionEventService = customerActionEventService;
-            this._currencyService = currencyService;
-            this._affiliateService = affiliateService;
-            this._mediator = mediator;
-            this._pdfService = pdfService;
-            this._rewardPointsService = rewardPointsService;
-            this._returnRequestService = returnRequestService;
-            this._storeContext = storeContext;
-            this._productReservationService = productReservationService;
-            this._auctionService = auctionService;
-            this._genericAttributeService = genericAttributeService;
-            this._serviceProvider = serviceProvider;
-            this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._orderSettings = orderSettings;
-            this._taxSettings = taxSettings;
-            this._localizationSettings = localizationSettings;
+            _orderService = orderService;
+            _webHelper = webHelper;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _productService = productService;
+            _paymentService = paymentService;
+            _logger = logger;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeFormatter = productAttributeFormatter;
+            _giftCardService = giftCardService;
+            _shoppingCartService = shoppingCartService;
+            _checkoutAttributeFormatter = checkoutAttributeFormatter;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _vendorService = vendorService;
+            _shippingService = shippingService;
+            _shipmentService = shipmentService;
+            _taxService = taxService;
+            _customerService = customerService;
+            _discountService = discountService;
+            _encryptionService = encryptionService;
+            _customerActivityService = customerActivityService;
+            _customerActionEventService = customerActionEventService;
+            _currencyService = currencyService;
+            _affiliateService = affiliateService;
+            _mediator = mediator;
+            _pdfService = pdfService;
+            _rewardPointsService = rewardPointsService;
+            _returnRequestService = returnRequestService;
+            _storeContext = storeContext;
+            _productReservationService = productReservationService;
+            _auctionService = auctionService;
+            _genericAttributeService = genericAttributeService;
+            _serviceProvider = serviceProvider;
+            _paymentSettings = paymentSettings;
+            _shippingSettings = shippingSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _orderSettings = orderSettings;
+            _taxSettings = taxSettings;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -193,9 +193,12 @@ namespace Grand.Services.Orders
                 throw new ArgumentException("Customer is not set");
 
             //affiliate
-            var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
-            if (affiliate != null && affiliate.Active && !affiliate.Deleted)
-                details.AffiliateId = affiliate.Id;
+            if (!string.IsNullOrEmpty(details.Customer.AffiliateId))
+            {
+                var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
+                if (affiliate != null && affiliate.Active && !affiliate.Deleted)
+                    details.AffiliateId = affiliate.Id;
+            }
 
             // Recurring orders.Load initial order
             details.InitialOrder = await _orderService.GetOrderById(processPaymentRequest.InitialOrderId);
@@ -375,6 +378,7 @@ namespace Grand.Services.Orders
                 StoreId = processPaymentRequest.StoreId,
                 OrderGuid = processPaymentRequest.OrderGuid,
                 CustomerId = details.Customer.Id,
+                OwnerId = string.IsNullOrEmpty(details.Customer.OwnerId) ? details.Customer.Id : details.Customer.OwnerId,
                 CustomerLanguageId = details.CustomerLanguage.Id,
                 CustomerTaxDisplayType = details.CustomerTaxDisplayType,
                 CustomerIp = _webHelper.GetCurrentIpAddress(),
@@ -448,10 +452,12 @@ namespace Grand.Services.Orders
                 throw new ArgumentException("Customer is not set");
 
             //affiliate
-            var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
-            if (affiliate != null && affiliate.Active && !affiliate.Deleted)
-                details.AffiliateId = affiliate.Id;
-
+            if (!string.IsNullOrEmpty(details.Customer.AffiliateId))
+            {
+                var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
+                if (affiliate != null && affiliate.Active && !affiliate.Deleted)
+                    details.AffiliateId = affiliate.Id;
+            }
             //customer currency
             var currencyTmp = await _currencyService.GetCurrencyById(await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
             var customerCurrency = (currencyTmp != null && currencyTmp.Published) ? currencyTmp : _workContext.WorkingCurrency;
@@ -717,6 +723,7 @@ namespace Grand.Services.Orders
                 decimal taxRate;
                 List<AppliedDiscount> scDiscounts;
                 decimal discountAmount;
+                decimal commissionRate;
                 decimal scUnitPrice = (await _priceCalculationService.GetUnitPrice(sc)).unitprice;
                 decimal scUnitPriceWithoutDisc = (await _priceCalculationService.GetUnitPrice(sc, false)).unitprice;
 
@@ -725,6 +732,15 @@ namespace Grand.Services.Orders
                 decimal scSubTotal = subtotal.subTotal;
                 discountAmount = subtotal.discountAmount;
                 scDiscounts = subtotal.appliedDiscounts;
+
+                if (string.IsNullOrEmpty(product.VendorId))
+                {
+                    commissionRate = 0;
+                }
+                else
+                {
+                    commissionRate = (await _vendorService.GetVendorById(product.VendorId)).Commission;
+                }
 
                 var prices = await _taxService.GetTaxProductPrice(product, details.Customer, scUnitPrice, scUnitPriceWithoutDisc, scSubTotal, discountAmount, _taxSettings.PricesIncludeTax);
                 taxRate = prices.taxRate;
@@ -750,9 +766,9 @@ namespace Grand.Services.Orders
                     attributeDescription = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
 
                 var itemWeight = await _shippingService.GetShoppingCartItemWeight(sc);
-
-                var warehouseId = _storeContext.CurrentStore.DefaultWarehouseId;
-                if (!product.UseMultipleWarehouses)
+                
+                var warehouseId = !string.IsNullOrEmpty(sc.WarehouseId) ? sc.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+                if (!product.UseMultipleWarehouses && string.IsNullOrEmpty(warehouseId))
                 {
                     if (!string.IsNullOrEmpty(product.WarehouseId))
                     {
@@ -785,6 +801,7 @@ namespace Grand.Services.Orders
                     RentalStartDateUtc = sc.RentalStartDateUtc,
                     RentalEndDateUtc = sc.RentalEndDateUtc,
                     CreatedOnUtc = DateTime.UtcNow,
+                    Commission = Math.Round((commissionRate * scSubTotal / 100), 2),
                 };
 
                 string reservationInfo = "";
@@ -1376,8 +1393,8 @@ namespace Grand.Services.Orders
             }
 
             //gift cards deactivation
-            if (_orderSettings.GiftCards_Deactivated_OrderStatusId > 0 &&
-               _orderSettings.GiftCards_Deactivated_OrderStatusId == (int)order.OrderStatus)
+            if (_orderSettings.DeactivateGiftCardsAfterCancelOrder &&
+                order.OrderStatus == OrderStatus.Cancelled)
             {
                 await SetActivatedValueForPurchasedGiftCards(order, false);
             }
@@ -1394,6 +1411,9 @@ namespace Grand.Services.Orders
 
             //raise event
             await _mediator.Publish(new OrderPaidEvent(order));
+
+            //customer action event service - paid order
+            await _customerActionEventService.AddOrder(order, CustomerActionTypeEnum.PaidOrder);
 
             //order paid email notification
             if (order.OrderTotal != decimal.Zero)
@@ -1420,75 +1440,6 @@ namespace Grand.Services.Orders
                     await _workflowMessageService.SendOrderPaidVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
                 }
                 //TODO add "order paid email sent" order note
-            }
-
-            //customer roles with "purchased with product" specified
-            await ProcessCustomerRolesWithPurchasedProductSpecified(order, true);
-        }
-
-        /// <summary>
-        /// Process customer roles with "Purchased with Product" property configured
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <param name="add">A value indicating whether to add configured customer role; true - add, false - remove</param>
-        protected virtual async Task ProcessCustomerRolesWithPurchasedProductSpecified(Order order, bool add)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-
-            //purchased product identifiers
-            var purchasedProductIds = new List<string>();
-            foreach (var orderItem in order.OrderItems)
-            {
-                //standard items
-                purchasedProductIds.Add(orderItem.ProductId);
-
-                //bundled (associated) products
-                var product = await _productService.GetProductById(orderItem.ProductId);
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, orderItem.AttributesXml);
-                foreach (var attributeValue in attributeValues)
-                {
-                    if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                    {
-                        purchasedProductIds.Add(attributeValue.AssociatedProductId);
-                    }
-                }
-            }
-
-            //list of customer roles
-            var customerRoles = (await _customerService
-                .GetAllCustomerRoles(true))
-                .Where(cr => purchasedProductIds.Contains(cr.PurchasedWithProductId))
-                .ToList();
-
-            if (customerRoles.Any())
-            {
-                var customer = await _customerService.GetCustomerById(order.CustomerId);
-                foreach (var customerRole in customerRoles)
-                {
-                    if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
-                    {
-                        //not in the list yet
-                        if (add)
-                        {
-                            //add
-                            customerRole.CustomerId = customer.Id;
-                            customer.CustomerRoles.Add(customerRole);
-                            await _customerService.InsertCustomerRoleInCustomer(customerRole);
-                        }
-                    }
-                    else
-                    {
-                        //already in the list
-                        if (!add)
-                        {
-                            //remove
-                            customer.CustomerRoles.Remove(customerRole);
-                            customerRole.CustomerId = customer.Id;
-                            await _customerService.InsertCustomerRoleInCustomer(customerRole);
-                        }
-                    }
-                }
             }
         }
 
@@ -1741,7 +1692,8 @@ namespace Grand.Services.Orders
                     //raise event       
                     await _mediator.Publish(new OrderPlacedEvent(order));
 
-                    await _customerActionEventService.AddOrder(order, _workContext.CurrentCustomer);
+                    //cutomer action - add order
+                    await _customerActionEventService.AddOrder(order, CustomerActionTypeEnum.AddOrder);
 
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
@@ -2033,8 +1985,6 @@ namespace Grand.Services.Orders
             return true;
         }
 
-
-
         /// <summary>
         /// Send a shipment
         /// </summary>
@@ -2064,7 +2014,8 @@ namespace Grand.Services.Orders
             }
 
             //check whether we have more items to ship
-            if (await order.HasItemsToAddToShipment(_orderService, _shipmentService, _productService) || await order.HasItemsToShip(_orderService, _shipmentService, _productService))
+            if (await order.HasItemsToAddToShipment(_orderService, _shipmentService, _productService) || 
+                await order.HasItemsToShip(_orderService, _shipmentService, _productService))
                 order.ShippingStatusId = (int)ShippingStatus.PartiallyShipped;
             else
                 order.ShippingStatusId = (int)ShippingStatus.Shipped;
@@ -2124,7 +2075,9 @@ namespace Grand.Services.Orders
             shipment.DeliveryDateUtc = DateTime.UtcNow;
             await _shipmentService.UpdateShipment(shipment);
 
-            if (!await order.HasItemsToAddToShipment(_orderService, _shipmentService, _productService) && !await order.HasItemsToShip(_orderService, _shipmentService, _productService) && !await order.HasItemsToDeliver(_orderService, _shipmentService, _productService))
+            if (!await order.HasItemsToAddToShipment(_orderService, _shipmentService, _productService) 
+                && !await order.HasItemsToShip(_orderService, _shipmentService, _productService) 
+                && !await order.HasItemsToDeliver(_shipmentService, _productService))
                 order.ShippingStatusId = (int)ShippingStatus.Delivered;
 
             await _orderService.UpdateOrder(order);
@@ -2158,7 +2111,6 @@ namespace Grand.Services.Orders
             //check order status
             await CheckOrderStatus(order);
         }
-
 
 
         /// <summary>
@@ -2241,6 +2193,7 @@ namespace Grand.Services.Orders
             //cancel discount
             await _discountService.CancelDiscount(order.Id);
 
+            //event notification
             await _mediator.Publish(new OrderCancelledEvent(order));
 
         }
@@ -2283,6 +2236,9 @@ namespace Grand.Services.Orders
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
             });
+
+            //event notification
+            await _mediator.Publish(new OrderMarkAsAuthorizedEvent(order));
 
             //check order status
             await CheckOrderStatus(order);
@@ -2331,6 +2287,9 @@ namespace Grand.Services.Orders
                 //old info from placing order
                 request.Order = order;
                 result = await _paymentService.Capture(request);
+
+                //event notification
+                await _mediator.CaptureOrderDetailsEvent(result, request);
 
                 if (result.Success)
                 {
@@ -2942,6 +2901,9 @@ namespace Grand.Services.Orders
                 request.Order = order;
                 result = await _paymentService.Void(request);
 
+                //event notification
+                await _mediator.VoidOrderDetailsEvent(result, request);
+
                 if (result.Success)
                 {
                     //update order info
@@ -3033,6 +2995,10 @@ namespace Grand.Services.Orders
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
             });
+
+            //event notification
+            await _mediator.Publish(new OrderVoidOfflineEvent(order));
+
             //check orer status
             await CheckOrderStatus(order);
         }
@@ -3050,13 +3016,13 @@ namespace Grand.Services.Orders
 
             foreach (var orderItem in order.OrderItems)
             {
-                if (_productService.GetProductById(orderItem.ProductId) != null)
+                var product = await _productService.GetProductById(orderItem.ProductId);
+                if (product != null)
                 {
-                    var product = await _productService.GetProductById(orderItem.ProductId);
-                    if (product != null && product.ProductType == ProductType.SimpleProduct)
+                    if (product.ProductType == ProductType.SimpleProduct)
                     {
                         await _shoppingCartService.AddToCart(customer, orderItem.ProductId,
-                            ShoppingCartType.ShoppingCart, order.StoreId,
+                            ShoppingCartType.ShoppingCart, order.StoreId, orderItem.WarehouseId,
                             orderItem.AttributesXml, orderItem.UnitPriceExclTax,
                             orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
                             orderItem.Quantity, false);
@@ -3125,13 +3091,8 @@ namespace Grand.Services.Orders
             if (cart.Any() && _orderSettings.MinOrderSubtotalAmount > decimal.Zero)
             {
                 //subtotal
-                var (discountAmount, appliedDiscounts, subTotalWithoutDiscount, subTotalWithDiscount, taxRates) = await _orderTotalCalculationService.GetShoppingCartSubTotal(cart, false);
-                decimal orderSubTotalDiscountAmountBase = discountAmount;
-                List<AppliedDiscount> orderSubTotalAppliedDiscounts = appliedDiscounts;
-                decimal subTotalWithoutDiscountBase = subTotalWithoutDiscount;
-                decimal subTotalWithDiscountBase = subTotalWithDiscount;
-
-                if (subTotalWithoutDiscountBase < _orderSettings.MinOrderSubtotalAmount)
+                var (_, _, subTotalWithoutDiscount, _, _) = await _orderTotalCalculationService.GetShoppingCartSubTotal(cart, false);
+                if (subTotalWithoutDiscount < _orderSettings.MinOrderSubtotalAmount)
                     return false;
             }
 

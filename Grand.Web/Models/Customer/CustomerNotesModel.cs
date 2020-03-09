@@ -8,7 +8,7 @@ namespace Grand.Web.Models.Customer
     {
         public CustomerNotesModel()
         {
-            this.CustomerNoteList = new List<CustomerNote>();
+            CustomerNoteList = new List<CustomerNote>();
         }
 
         public List<CustomerNote> CustomerNoteList { get; set; }

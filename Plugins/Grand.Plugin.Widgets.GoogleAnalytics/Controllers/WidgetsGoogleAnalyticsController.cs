@@ -1,70 +1,45 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Orders;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Widgets.GoogleAnalytics.Models;
-using Grand.Services.Catalog;
 using Grand.Services.Configuration;
-using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
-using Grand.Services.Orders;
+using Grand.Services.Security;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
 {
     [Area("Admin")]
+    [AuthorizeAdmin]
+    [PermissionAuthorize(PermissionSystemName.Widgets)]
     public class WidgetsGoogleAnalyticsController : BasePluginController
     {
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
-        private readonly ILogger _logger;
-        private readonly ICategoryService _categoryService;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILocalizationService _localizationService;
-        private readonly IServiceProvider _serviceProvider;
 
         public WidgetsGoogleAnalyticsController(IWorkContext workContext,
-            IStoreContext storeContext, 
             IStoreService storeService,
-            ISettingService settingService, 
-            IOrderService orderService, 
-            ILogger logger, 
-            ICategoryService categoryService,
-            IProductService productService,
-            IProductAttributeParser productAttributeParser,
-            ILocalizationService localizationService,
-            IServiceProvider serviceProvider)
+            ISettingService settingService,
+            ILogger logger,
+            ILocalizationService localizationService)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._orderService = orderService;
-            this._productService = productService;
-            this._logger = logger;
-            this._categoryService = categoryService;
-            this._productAttributeParser = productAttributeParser;
-            this._localizationService = localizationService;
-            this._serviceProvider = serviceProvider;
+            _workContext = workContext;
+            _storeService = storeService;
+            _settingService = settingService;
+            _localizationService = localizationService;
         }
 
-        [AuthorizeAdmin]
         public async Task<IActionResult> Configure()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsEcommerceSettings>(storeScope);
             var model = new ConfigurationModel();
             model.GoogleId = googleAnalyticsSettings.GoogleId;
@@ -87,11 +62,10 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
         }
 
         [HttpPost]
-        [AuthorizeAdmin]
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsEcommerceSettings>(storeScope);
             googleAnalyticsSettings.GoogleId = model.GoogleId;
             googleAnalyticsSettings.TrackingScript = model.TrackingScript;
@@ -106,17 +80,17 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
                 await _settingService.SaveSetting(googleAnalyticsSettings, x => x.GoogleId, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.GoogleId, storeScope);
-            
+
             if (model.TrackingScript_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 await _settingService.SaveSetting(googleAnalyticsSettings, x => x.TrackingScript, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.TrackingScript, storeScope);
-            
+
             if (model.EcommerceScript_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 await _settingService.SaveSetting(googleAnalyticsSettings, x => x.EcommerceScript, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.EcommerceScript, storeScope);
-            
+
             if (model.EcommerceDetailScript_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 await _settingService.SaveSetting(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -126,123 +100,13 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
                 await _settingService.SaveSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
-            
+
             //now clear settings cache
             await _settingService.ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return await Configure();
-        }
-        
-        public async Task<IActionResult> PublicInfo(string widgetZone, object additionalData = null)
-        {
-            string globalScript = "";
-            var routeData = Url.ActionContext.RouteData;
-
-            try
-            {
-                var controller = routeData.Values["controller"];
-                var action = routeData.Values["action"];
-
-                if (controller == null || action == null)
-                    return Content("");
-
-                //Special case, if we are in last step of checkout, we can use order total for conversion value
-                if (controller.ToString().Equals("checkout", StringComparison.OrdinalIgnoreCase) &&
-                    action.ToString().Equals("completed", StringComparison.OrdinalIgnoreCase))
-                {
-                    var lastOrder = await GetLastOrder();
-                    globalScript += await GetEcommerceScript(lastOrder);
-                }
-                else
-                {
-                    globalScript += GetTrackingScript();
-                }
-            }
-            catch (Exception ex)
-            {
-                await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for google ecommerce tracking", ex.ToString());
-            }
-            return Content(globalScript);
-        }
-
-        private async Task<Order> GetLastOrder()
-        {
-            var order = (await _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                customerId: _workContext.CurrentCustomer.Id, pageSize: 1)).FirstOrDefault();
-            return order;
-        }
-        
-        private string GetTrackingScript()
-        {
-            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsEcommerceSettings>(_storeContext.CurrentStore.Id);
-            var analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
-            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
-            analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", "");
-            return analyticsTrackingScript;
-        }
-        
-        private async Task<string> GetEcommerceScript(Order order)
-        {
-            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsEcommerceSettings>(_storeContext.CurrentStore.Id);
-            var usCulture = new CultureInfo("en-US");
-            var analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
-            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
-
-            if (order != null)
-            {
-                var analyticsEcommerceScript = googleAnalyticsSettings.EcommerceScript + "\n";
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{ORDERID}", order.Id.ToString());
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SITE}", _storeContext.CurrentStore.Url.Replace("http://", "").Replace("/", ""));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TOTAL}", order.OrderTotal.ToString("0.00", usCulture));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TAX}", order.OrderTax.ToString("0.00", usCulture));
-                var orderShipping = googleAnalyticsSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", orderShipping.ToString("0.00", usCulture));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{CITY}", order.BillingAddress == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.City));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{STATEPROVINCE}", order.BillingAddress == null || String.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? "" : FixIllegalJavaScriptChars((await _serviceProvider.GetRequiredService<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId)).Name));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{COUNTRY}", order.BillingAddress == null || String.IsNullOrEmpty(order.BillingAddress.CountryId) ? "" : FixIllegalJavaScriptChars((await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(order.BillingAddress.CountryId)).Name));
-
-                var sb = new StringBuilder();
-                foreach (var item in order.OrderItems)
-                {
-                    var product = await _productService.GetProductById(item.ProductId);
-                    string analyticsEcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
-                    //get category
-                    string category = "";
-                    if (product.ProductCategories.FirstOrDefault() != null)
-                    {
-                        var defaultProductCategory = await _categoryService.GetCategoryById(product.ProductCategories.FirstOrDefault().CategoryId); 
-                        if (defaultProductCategory != null)
-                            category = defaultProductCategory.Name;
-                    }
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{ORDERID}", order.Id.ToString());
-                    //The SKU code is a required parameter for every item that is added to the transaction
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(product.FormatSku(item.AttributesXml, _productAttributeParser)));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(product.Name));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
-                    var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{UNITPRICE}", unitPrice.ToString("0.00", usCulture));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{QUANTITY}", item.Quantity.ToString());
-                    sb.AppendLine(analyticsEcommerceDetailScript);
-                }
-
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{DETAILS}", sb.ToString());
-
-                analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", analyticsEcommerceScript);
-            }
-            return analyticsTrackingScript;
-        }
-
-        private string FixIllegalJavaScriptChars(string text)
-        {
-            if (String.IsNullOrEmpty(text))
-                return text;
-
-            //replace ' with \' (http://stackoverflow.com/questions/4292761/need-to-url-encode-labels-when-tracking-events-with-google-analytics)
-            text = text.Replace("'", "\\'");
-            return text;
         }
     }
 }

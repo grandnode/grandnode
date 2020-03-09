@@ -6,9 +6,9 @@ namespace Grand.Plugin.ExternalAuth.Facebook
 {
     public partial class RouteProvider : IRouteProvider
     {
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
-            routeBuilder.MapRoute("Plugin.ExternalAuth.Facebook.SignInFacebook",
+            routeBuilder.MapControllerRoute("Plugin.ExternalAuth.Facebook.SignInFacebook",
                  "fb-signin-failed",
                  new { controller = "FacebookAuthentication", action = "SignInFailed" }
             );

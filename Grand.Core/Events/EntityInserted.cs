@@ -10,7 +10,7 @@ namespace Grand.Core.Events
     {
         public EntityInserted(T entity)
         {
-            this.Entity = entity;
+            Entity = entity;
         }
 
         public T Entity { get; private set; }

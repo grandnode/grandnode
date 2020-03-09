@@ -8,9 +8,10 @@
 <form asp-controller="Order" asp-action="PartiallyRefundOrderPopup" method="post"
       asp-route-OrderId="@Context.Request.Query["OrderId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-online="@Context.Request.Query["online"]"
       asp-route-formId="@Context.Request.Query["formId"]"
       >
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

@@ -1,0 +1,74 @@
+﻿@model CourseLessonModel
+<vc:admin-widget widget-zone="course_details_lesson_info_top" additional-data="Model" />
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="Name" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Name" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="ShortDescription" />
+            <div class="col-md-9 col-sm-9">
+                <admin-textarea asp-for="ShortDescription"></admin-textarea>
+                <span asp-validation-for="ShortDescription"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Description" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Description" asp-template="RichEditor" />
+                <span asp-validation-for="Description"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="PictureId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="PictureId" />
+                <span asp-validation-for="PictureId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="VideoFile" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="VideoFile" />
+                <span asp-validation-for="VideoFile"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="AttachmentId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="AttachmentId" />
+                <span asp-validation-for="AttachmentId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="SubjectId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="SubjectId" asp-items="Model.AvailableSubjects" />
+                <span asp-validation-for="SubjectId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Published" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="Published" />
+                    <div class="control__indicator"></div>
+                </label>
+                <span asp-validation-for="Published"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="DisplayOrder" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<vc:admin-widget widget-zone="course_details_lesson_info_bottom" additional-data="Model" />

@@ -47,25 +47,26 @@ namespace Grand.Services.Logging
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Cache manager list</param>
         /// <param name="activityLogRepository">Activity log repository</param>
         /// <param name="activityLogTypeRepository">Activity log type repository</param>
         /// <param name="workContext">Work context</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="activityKeywordsProvider">Activity Keywords provider</param>
-        public CustomerActivityService(ICacheManager cacheManager,
+        public CustomerActivityService(
+            ICacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IWorkContext workContext,
             IWebHelper webHelper,
             IActivityKeywordsProvider activityKeywordsProvider)
         {
-            this._cacheManager = cacheManager;
-            this._activityLogRepository = activityLogRepository;
-            this._activityLogTypeRepository = activityLogTypeRepository;
-            this._workContext = workContext;
-            this._webHelper = webHelper;
-            this._activityKeywordsProvider = activityKeywordsProvider;
+            _cacheManager = cacheManager;
+            _activityLogRepository = activityLogRepository;
+            _activityLogTypeRepository = activityLogTypeRepository;
+            _workContext = workContext;
+            _webHelper = webHelper;
+            _activityKeywordsProvider = activityKeywordsProvider;
         }
 
         #endregion
@@ -126,7 +127,7 @@ namespace Grand.Services.Logging
                 throw new ArgumentNullException("activityLogType");
 
             await _activityLogTypeRepository.InsertAsync(activityLogType);
-            await _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ACTIVITYTYPE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -139,7 +140,7 @@ namespace Grand.Services.Logging
                 throw new ArgumentNullException("activityLogType");
 
             await _activityLogTypeRepository.UpdateAsync(activityLogType);
-            await _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ACTIVITYTYPE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace Grand.Services.Logging
                 throw new ArgumentNullException("activityLogType");
 
             await _activityLogTypeRepository.DeleteAsync(activityLogType);
-            await _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ACTIVITYTYPE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -270,6 +271,7 @@ namespace Grand.Services.Logging
         /// <summary>
         /// Gets all activity log items
         /// </summary>
+        /// <param name="comment">Log item message text or text part; null or empty string to load all</param>
         /// <param name="createdOnFrom">Log item creation from; null to load all customers</param>
         /// <param name="createdOnTo">Log item creation to; null to load all customers</param>
         /// <param name="customerId">Customer identifier; null to load all customers</param>
@@ -277,12 +279,15 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual async Task<IPagedList<ActivityLog>> GetAllActivities(DateTime? createdOnFrom = null,
+        public virtual async Task<IPagedList<ActivityLog>> GetAllActivities(string comment = "",
+            DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string customerId = "", string activityLogTypeId = "",
             string ipAddress = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
+            if (!String.IsNullOrEmpty(comment))
+                query = query.Where(al => al.Comment != null && al.Comment.ToLower().Contains(comment.ToLower()));
             if (createdOnFrom.HasValue)
                 query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
             if (createdOnTo.HasValue)
@@ -339,7 +344,7 @@ namespace Grand.Services.Logging
                     })
                     .SortByDescending(x => x.Count);
 
-            return await Task.FromResult(new PagedList<ActivityStats>(query, pageIndex, pageSize));
+            return await PagedList<ActivityStats>.Create(query, pageIndex, pageSize);
         }
         /// <summary>
         /// Gets category activity log items

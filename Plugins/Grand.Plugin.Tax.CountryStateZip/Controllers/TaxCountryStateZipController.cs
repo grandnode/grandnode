@@ -3,6 +3,7 @@ using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Tax.CountryStateZip.Domain;
 using Grand.Plugin.Tax.CountryStateZip.Models;
 using Grand.Plugin.Tax.CountryStateZip.Services;
@@ -21,28 +22,26 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
 {
     [AuthorizeAdmin]
     [Area("Admin")]
+    [PermissionAuthorize(PermissionSystemName.TaxSettings)]
     public class TaxCountryStateZipController : BasePluginController
     {
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ITaxRateService _taxRateService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
 
         public TaxCountryStateZipController(ITaxCategoryService taxCategoryService,
             ICountryService countryService, 
             IStateProvinceService stateProvinceService,
             ITaxRateService taxRateService,
-            IPermissionService permissionService,
             IStoreService storeService)
         {
-            this._taxCategoryService = taxCategoryService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._taxRateService = taxRateService;
-            this._permissionService = permissionService;
-            this._storeService = storeService;
+            _taxCategoryService = taxCategoryService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _taxRateService = taxRateService;
+            _storeService = storeService;
         }
         
         public async Task<IActionResult> Configure()
@@ -78,12 +77,9 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> RatesList(DataSourceRequest command)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return Content("Access denied");
-
             var records = await _taxRateService.GetAllTaxRates(command.Page - 1, command.PageSize);
             var taxRatesModel = new List<TaxRateModel>();
             foreach (var x in records)
@@ -125,12 +121,9 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> RateUpdate(TaxRateModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return Content("Access denied");
-
             var taxRate = await _taxRateService.GetTaxRateById(model.Id);
             taxRate.Zip = model.Zip == "*" ? null : model.Zip;
             taxRate.Percentage = model.Percentage;
@@ -140,12 +133,9 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> RateDelete(string id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return Content("Access denied");
-
             var taxRate = await _taxRateService.GetTaxRateById(id);
             if (taxRate != null)
                 await _taxRateService.DeleteTaxRate(taxRate);
@@ -154,12 +144,9 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> AddTaxRate(TaxRateListModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return Content("Access denied");
-
             var taxRate = new TaxRate
             {
                 StoreId = model.AddStoreId,

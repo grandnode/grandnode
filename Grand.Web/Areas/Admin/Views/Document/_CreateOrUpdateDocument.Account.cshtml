@@ -1,0 +1,63 @@
+﻿@model DocumentModel
+<vc:admin-widget widget-zone="document_details_account_top" additional-data="Model" />
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="CustomerEmail" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="CustomerEmail" />
+                <span asp-validation-for="CustomerEmail"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Username" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Username" />
+                <span asp-validation-for="Username"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="CurrencyCode" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="CurrencyCode" />
+                <span asp-validation-for="CurrencyCode"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="TotalAmount" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="TotalAmount" />
+                <span asp-validation-for="TotalAmount"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="OutstandAmount" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="OutstandAmount" />
+                <span asp-validation-for="OutstandAmount"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Quantity" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Quantity" />
+                <span asp-validation-for="Quantity"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="DocDate" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="DocDate" />
+                <span asp-validation-for="DocDate"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="DueDate" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="DueDate" />
+                <span asp-validation-for="DueDate"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<vc:admin-widget widget-zone="document_details_account_bottom" additional-data="Model" />

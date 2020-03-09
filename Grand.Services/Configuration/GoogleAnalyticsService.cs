@@ -308,7 +308,7 @@ namespace Grand.Services.Configuration
 
             //Dimension
             IList<Dimension> dimensions = new List<Dimension>();
-            dimensions.Add(new Dimension() { Name = "ga:browser" });
+            //dimensions.Add(new Dimension() { Name = "ga:browser" });
             dimensions.Add(new Dimension() { Name = "ga:mobileDeviceInfo" });
 
             //OrderBy
@@ -316,7 +316,7 @@ namespace Grand.Services.Configuration
             orderBys.Add(new OrderBy() { FieldName = "ga:pageviews", SortOrder = "DESCENDING", OrderType = "VALUE" });
 
             //final assembling
-            ReportRequest request = new ReportRequest() {
+            var request = new ReportRequest() {
                 ViewId = _googleAnalyticsSettings.gaviewID,
                 DateRanges = dateRanges,
                 Metrics = metrics,
@@ -324,10 +324,10 @@ namespace Grand.Services.Configuration
                 OrderBys = orderBys
             };
 
-            List<ReportRequest> requests = new List<ReportRequest>();
+            var requests = new List<ReportRequest>();
             requests.Add(request);
 
-            GetReportsRequest reportsRequest = new GetReportsRequest();
+            var reportsRequest = new GetReportsRequest();
             reportsRequest.ReportRequests = requests;
 
             var response = await (await _analyticsReportingService()).Reports.BatchGet(reportsRequest).ExecuteAsync();

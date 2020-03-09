@@ -1,46 +1,58 @@
 ﻿@model HeaderLinksModel
 @using System.Text.Encodings.Web
+@{
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] });
+}
+
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_before" })
 @if (Model.IsAuthenticated)
 {
     @await Component.InvokeAsync("AdminHeaderLinks")
-    <li class="nav-item col d-flex">
-        <a class="ico-account nav-link d-flex justify-content-center" href="@Url.RouteUrl("CustomerInfo")">
-            <span class="hl-label"><span class="mdi mdi-account-circle"></span></span>
-            <span class="d-flex align-items-center mobile-desc">@T("Account.MyAccount")</span>
+    <li class="nav-item">
+        <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("CustomerInfo")">
+            <span class="mdi mdi-account-circle"></span>
+            <span class="text text-uppercase ml-3">@T("Account.MyAccount")</span>
         </a>
     </li>
-    <li class="nav-item col d-flex">
-        <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
-            <span class="hl-label">
-                <span class="mdi mdi-lock"></span>
-            </span>
-            <span class="d-flex align-items-center mobile-desc">@T("Account.Logout")</span>
+    <li class="nav-item">
+        <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("CustomerOrders")">
+            <span class="mdi mdi-cart"></span>
+            <span class="text text-uppercase ml-3">@T("Account.CustomerOrders")</span>
+        </a>
+    </li>
+    @if (Model.AllowPrivateMessages)
+    {
+        <li class="nav-item">
+            <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
+                <span class="mdi mdi-email"></span>
+                <span class="text text-uppercase ml-3">@T("PrivateMessages.Inbox")</span>
+                <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
+            </a>
+        </li>
+    }
+    <li class="nav-item">
+        <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("Logout")">
+            <span class="mdi mdi-lock"></span>
+            <span class="text text-uppercase ml-3">@T("Account.Logout")</span>
         </a>
     </li>
 }
 else
 {
-    <li class="nav-item col d-flex">
-        <a class="nav-link" href="@Url.RouteUrl("Login")">
-            <span class="hl-label">
-                <span class="mdi mdi-lock-open"></span>
-            </span>
-            <span class="d-flex align-items-center mobile-desc">@T("Account.Login")</span>
+    <li class="nav-item sidebar-info d-inline-flex justify-content-center flex-wrap my-3">
+        <h5 class="d-flex justify-content-center mb-3 w-100">@T("Account.Login.ReturningCustomer") / @T("SideBar.NewCustomer")</h5>
+        <a class="d-flex align-items-center nav-link btn btn-secondary" href="@Url.RouteUrl("Login")">
+            <span class="mdi mdi-lock"></span>
+            <span class="text text-uppercase ml-sm-3 ml-2">@T("Account.Login")</span>
+        </a>
+        <a class="d-flex align-items-center nav-link btn btn-outline-secondary ml-3" href="@registerUrl">
+            <span class="text text-uppercase">@T("Account.Register")</span>
         </a>
     </li>
-}
-@if (Model.AllowPrivateMessages)
-{
-    <li class="nav-item col d-flex">
-        <a class="nav-link" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
-            <span class="hl-label">
-                <span class="mdi mdi-email"></span>
-            </span>
-            <span class="inbox-label d-none d-lg-flex align-items-center">@T("PrivateMessages.Inbox")</span>
-            <span class="inbox-unread d-none d-lg-flex align-items-center">@Model.UnreadPrivateMessages</span>
-            <span class="d-lg-none d-flex align-items-center text-muted mobile-desc">@T("PrivateMessages.Inbox")</span>
-        </a>
+    <li class="nav-item">
+        <div class="text-center generalMarginSupporter">
+            @T("Account.Login.NewCustomerText")
+        </div>
     </li>
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })

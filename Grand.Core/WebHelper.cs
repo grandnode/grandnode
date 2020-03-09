@@ -1,12 +1,13 @@
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Microsoft.AspNetCore.Hosting;
+using Grand.Core.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
@@ -28,7 +29,8 @@ namespace Grand.Core
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HostingConfig _hostingConfig;
-        private readonly IApplicationLifetime _applicationLifetime;
+        private readonly IHostApplicationLifetime _applicationLifetime;
+        private readonly IMachineNameProvider _machineNameProvider;
         private readonly IServiceProvider _serviceProvider;
         #endregion
 
@@ -38,12 +40,15 @@ namespace Grand.Core
         /// Ctor
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
-        public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig, IApplicationLifetime applicationLifetime, IServiceProvider serviceProvider)
+        public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig, IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider,
+            IMachineNameProvider machineNameProvider
+            )
         {
-            this._hostingConfig = hostingConfig;
-            this._httpContextAccessor = httpContextAccessor;
-            this._applicationLifetime = applicationLifetime;
-            this._serviceProvider = serviceProvider;
+            _hostingConfig = hostingConfig;
+            _httpContextAccessor = httpContextAccessor;
+            _applicationLifetime = applicationLifetime;
+            _serviceProvider = serviceProvider;
+            _machineNameProvider = machineNameProvider;
         }
 
         #endregion
@@ -246,7 +251,7 @@ namespace Grand.Core
             {
                 var currentStore = _serviceProvider.GetRequiredService<IStoreContext>().CurrentStore;
                 if (currentStore != null)
-                    storeLocation = currentStore.Url;
+                    storeLocation = !currentStore.SslEnabled ? currentStore.Url : currentStore.SecureUrl;
                 else
                     throw new Exception("Current store cannot be loaded");
             }
@@ -408,6 +413,16 @@ namespace Grand.Core
 
             return rawUrl;
         }
+
+        /// <summary>
+        /// Get machine name
+        /// </summary>
+        /// <returns>Machine name</returns>
+        public virtual string GetMachineName()
+        {
+            return _machineNameProvider.GetMachineName();
+        }
+
         #endregion
     }
 }

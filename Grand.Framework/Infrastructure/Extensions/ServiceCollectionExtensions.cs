@@ -5,7 +5,6 @@ using Grand.Core.Data;
 using Grand.Core.Domain;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
-using Grand.Framework.FluentValidation;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Routing;
 using Grand.Framework.Security.Authorization;
@@ -13,21 +12,22 @@ using Grand.Framework.Themes;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
 using Grand.Services.Configuration;
-using Grand.Services.Logging;
 using Grand.Services.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.WebEncoders;
 using Newtonsoft.Json.Serialization;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,7 +35,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using WebMarkupMin.AspNet.Common.UrlMatchers;
-using WebMarkupMin.AspNetCore2;
+using WebMarkupMin.AspNetCore3;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -50,7 +50,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Configured service provider</returns>
-        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             //add GrandConfig configuration parameters
             services.ConfigureStartupConfig<GrandConfig>(configuration.GetSection("Grand"));
@@ -58,22 +58,15 @@ namespace Grand.Framework.Infrastructure.Extensions
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
             //add api configuration parameters
             services.ConfigureStartupConfig<ApiConfig>(configuration.GetSection("Api"));
+
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
             //create, initialize and configure the engine
             var engine = EngineContext.Create();
-            engine.Initialize(services);
-            var serviceProvider = engine.ConfigureServices(services, configuration);
+            engine.Initialize(services, configuration);
+            engine.ConfigureServices(services, configuration);
 
-            if (DataSettingsHelper.DatabaseIsInstalled())
-            {
-                //log application start
-                var logger = serviceProvider.GetRequiredService<ILogger>();
-                logger.Information("Application started", null, null);
-            }
-
-            return serviceProvider;
         }
 
         /// <summary>
@@ -117,7 +110,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Adds services required for anti-forgery support
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddAntiForgery(this IServiceCollection services)
+        public static void AddAntiForgery(this IServiceCollection services, GrandConfig config)
         {
             //override cookie name
             services.AddAntiforgery(options =>
@@ -128,7 +121,8 @@ namespace Grand.Framework.Infrastructure.Extensions
                 if (DataSettingsHelper.DatabaseIsInstalled())
                 {
                     //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                    options.Cookie.SecurePolicy = config.CookieSecurePolicyAlways ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
+
                 }
             });
         }
@@ -137,7 +131,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Adds services required for application session state
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddHttpSession(this IServiceCollection services)
+        public static void AddHttpSession(this IServiceCollection services, GrandConfig config)
         {
             services.AddSession(options =>
             {
@@ -147,7 +141,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 };
                 if (DataSettingsHelper.DatabaseIsInstalled())
                 {
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                    options.Cookie.SecurePolicy = config.CookieSecurePolicyAlways ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
                 }
             });
         }
@@ -172,21 +166,31 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Adds data protection services
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddGrandDataProtection(this IServiceCollection services)
+        public static void AddGrandDataProtection(this IServiceCollection services, GrandConfig config)
         {
-            var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
-            var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
-
-            //configure the data protection system to persist keys to the specified directory
-            services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+            if (config.PersistKeysToRedis)
+            {
+                services.AddDataProtection(opt => opt.ApplicationDiscriminator = "grandnode")
+                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(config.PersistKeysToRedisUrl));
+            }
+            else
+            {
+                var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
+                var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
+                //configure the data protection system to persist keys to the specified directory
+                services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+            }
         }
 
         /// <summary>
         /// Adds authentication service
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddGrandAuthentication(this IServiceCollection services)
+        public static void AddGrandAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
+
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
@@ -202,7 +206,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
 
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.Cookie.SecurePolicy = config.CookieSecurePolicyAlways ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
             });
 
             //add external authentication
@@ -212,7 +216,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.Cookie.SecurePolicy = config.CookieSecurePolicyAlways ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
             });
 
             //register external authentication plugins now
@@ -226,7 +230,7 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             //configure services
             foreach (var instance in externalAuthInstances)
-                instance.Configure(authenticationBuilder);
+                instance.Configure(authenticationBuilder, configuration);
 
             services.AddSingleton<IAuthorizationPolicyProvider, PermisionPolicyProvider>();
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
@@ -237,23 +241,22 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <returns>A builder for configuring MVC services</returns>
-        public static IMvcBuilder AddGrandMvc(this IServiceCollection services)
+        public static IMvcBuilder AddGrandMvc(this IServiceCollection services, IConfiguration configuration)
         {
             //add basic MVC feature
             var mvcBuilder = services.AddMvc(options =>
             {
-                // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
-                options.EnableEndpointRouting = false;
+                //add custom display metadata provider
+                options.ModelMetadataDetailsProviders.Add(new GrandMetadataProvider());
             });
 
-            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
+            mvcBuilder.AddRazorRuntimeCompilation();
 
-            //Allow recompiling views on file change
-            if (config.AllowRecompilingViewsOnFileChange)
-                mvcBuilder.AddRazorOptions(options => options.AllowRecompilingViewsOnFileChange = true);
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
 
             //set compatibility version
-            mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
+            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             if (config.UseHsts)
             {
@@ -279,13 +282,20 @@ namespace Grand.Framework.Infrastructure.Extensions
             }
 
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
-            mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
-
-            //add custom display metadata provider
-            mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new GrandMetadataProvider()));
+            mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             //add fluent validation
-            mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(GrandValidatorFactory));
+            mvcBuilder.AddFluentValidation(configuration =>
+            {
+                var assemblies = mvcBuilder.PartManager.ApplicationParts
+                    .OfType<AssemblyPart>()
+                    .Where(part => part.Name.StartsWith("Grand", StringComparison.InvariantCultureIgnoreCase))
+                    .Select(part => part.Assembly);
+                configuration.RegisterValidatorsFromAssemblies(assemblies);
+                configuration.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                //implicit/automatic validation of child properties
+                configuration.ImplicitlyValidateChildProperties = true;
+            });
 
             //register controllers as services, it'll allow to override them
             mvcBuilder.AddControllersAsServices();
@@ -310,13 +320,10 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.IgnoredPaths.Add("/odata");
                 options.IgnoredPaths.Add("/health/live");
                 options.IgnoredPaths.Add("/.well-known/acme-challenge");
-                var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
-                options.Storage = new StackExchange.Profiling.Storage.MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60));
                 //determine who can access the MiniProfiler results
                 options.ResultsAuthorize = request =>
-                    !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
-                    EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel).Result;
-
+                    !request.HttpContext.RequestServices.GetRequiredService<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
+                    request.HttpContext.RequestServices.GetRequiredService<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel).Result;
             });
         }
 
@@ -327,7 +334,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void AddGrandRedirectResultExecutor(this IServiceCollection services)
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
-            services.AddSingleton<RedirectResultExecutor, GrandRedirectResultExecutor>();
+            services.AddSingleton<IActionResultExecutor<RedirectResult>, GrandRedirectResultExecutor>();
         }
 
         public static void AddSettings(this IServiceCollection services)
@@ -341,8 +348,8 @@ namespace Grand.Framework.Infrastructure.Extensions
                 {
                     var type = item.GetType();
                     var storeId = string.Empty;
-                    var settingService = x.GetService<ISettingService>();
-                    var storeContext = x.GetService<IStoreContext>();
+                    var settingService = x.GetRequiredService<ISettingService>();
+                    var storeContext = x.GetRequiredService<IStoreContext>();
                     if (storeContext.CurrentStore == null)
                         storeId = ""; //storeContext.SetCurrentStore().Result.Id;
                     else
@@ -428,12 +435,13 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Add Progressive Web App
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddPWA(this IServiceCollection services)
+        public static void AddPWA(this IServiceCollection services, IConfiguration configuration)
         {
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
             if (config.EnableProgressiveWebApp)
             {
                 var options = new WebEssentials.AspNetCore.Pwa.PwaOptions {

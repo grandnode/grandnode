@@ -5,7 +5,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Feed.GoogleShopping.Domain;
 using Grand.Plugin.Feed.GoogleShopping.Models;
 using Grand.Plugin.Feed.GoogleShopping.Services;
@@ -26,6 +26,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
 {
     [Area("Admin")]
     [AuthorizeAdmin]
+    [PermissionAuthorize(PermissionSystemName.Plugins)]
     public class FeedGoogleShoppingController : BasePluginController
     {
         private readonly IGoogleService _googleService;
@@ -54,18 +55,18 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
             IPermissionService permissionService,
             IServiceProvider serviceProvider)
         {
-            this._googleService = googleService;
-            this._productService = productService;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._pluginFinder = pluginFinder;
-            this._logger = logger;
-            this._webHelper = webHelper;
-            this._storeService = storeService;
-            this._GoogleShoppingSettings = GoogleShoppingSettings;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
-            this._serviceProvider = serviceProvider;
+            _googleService = googleService;
+            _productService = productService;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _pluginFinder = pluginFinder;
+            _logger = logger;
+            _webHelper = webHelper;
+            _storeService = storeService;
+            _GoogleShoppingSettings = GoogleShoppingSettings;
+            _settingService = settingService;
+            _permissionService = permissionService;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<IActionResult> Configure()
@@ -168,7 +169,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> GoogleProductList(DataSourceRequest command)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -209,7 +210,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> GoogleProductUpdate(FeedGoogleShoppingModel.GoogleProductModel model)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))

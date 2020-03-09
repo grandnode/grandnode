@@ -11,7 +11,7 @@ namespace Grand.Services.Tasks
         private readonly ILogger _logger;
         public ClearLogScheduleTask(ILogger logger)
         {
-            this._logger = logger;
+            _logger = logger;
         }
 
         /// <summary>

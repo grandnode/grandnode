@@ -3,32 +3,28 @@
 {
     @if (Model.IsCustomerImpersonated)
     {
-        <li class="nav-item col d-flex align-items-center">
-            <span class="impersonated-text">@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerEmailUsername)</span>
-            <a class="nav-link finish-impersonation p-0" href="@Url.RouteUrl("Logout")" title="@T("Account.ImpersonatedAs.Finish.Hint")">
-                <span class="mdi mdi-close pl-2"></span>
+        <li class="nav-item">
+            <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("Logout")" title="@T("Account.ImpersonatedAs.Finish.Hint")">
+                <span class="mdi mdi-close"></span>
+                <span class="text text-uppercase ml-3">@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerEmailUsername)</span>
             </a>
         </li>
     }
     @if (Model.DisplayAdminLink)
     {
-        <li class="nav-item col d-flex">
-            <a class="nav-link" href="@Url.Content("~/Admin")">
-                <span class="hl-label">
-                    <span class="mdi mdi-settings pr-1"></span>
-                </span>
-                <span class="d-lg-none d-block text-muted mobile-desc">@T("admin")</span>
+        <li class="nav-item">
+            <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.Content("~/Admin")">
+                <span class="mdi mdi-settings"></span>
+                <span class="text text-uppercase ml-3">@T("admin")</span>
             </a>
         </li>
     }
     @if (!string.IsNullOrEmpty(Model.EditPageUrl))
     {
-        <li class="nav-item col d-sm-flex d-none">
-            <a target="_blank" class="nav-link edit-page" href="@Model.EditPageUrl">
-                <span class="hl-label">
-                    <span class="mdi mdi-wrench-outline"></span>
-                </span>
-                <span class="d-lg-none d-block text-muted mobile-desc">@T("edit")</span>
+        <li class="nav-item">
+            <a target="_blank" class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Model.EditPageUrl">
+                <span class="mdi mdi-wrench-outline"></span>
+                <span class="text text-uppercase ml-3">@T("edit")</span>
             </a>
         </li>
     }

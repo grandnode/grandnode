@@ -10,7 +10,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IgnoreAcl" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IgnoreAcl"></span>
             </div>
@@ -23,7 +23,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IgnoreStoreLimitations" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IgnoreStoreLimitations"></span>
             </div>
@@ -36,7 +36,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IgnoreDiscounts" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IgnoreDiscounts"></span>
             </div>
@@ -49,7 +49,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IgnoreFeaturedProducts" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IgnoreFeaturedProducts"></span>
             </div>
@@ -62,7 +62,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IgnoreFilterableSpecAttributeOption" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IgnoreFilterableSpecAttributeOption"></span>
             </div>
@@ -75,22 +75,22 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IgnoreFilterableAvailableStartEndDateTime" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IgnoreFilterableAvailableStartEndDateTime"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-xs-8 col-md-4 col-sm-4 text-right">
-                @Html.OverrideStoreCheckboxFor(model => model.CacheProductPrices_OverrideForStore, model => model.CacheProductPrices, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="CacheProductPrices" class="control-label" />
+                @Html.OverrideStoreCheckboxFor(model => model.CustomerProductPrice_OverrideForStore, model => model.CustomerProductPrice, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="CustomerProductPrice" class="control-label" />
             </div>
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="CacheProductPrices" />
-                     <div class="control__indicator"></div>
+                    <admin-input asp-for="CustomerProductPrice" />
+                    <div class="control__indicator"></div>
                 </label>
-                <span asp-validation-for="CacheProductPrices"></span>
+                <span asp-validation-for="CustomerProductPrice"></span>
             </div>
         </div>
     </div>

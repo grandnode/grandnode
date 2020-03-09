@@ -24,7 +24,6 @@ using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Infrastructure.Cache;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Orders;
@@ -306,7 +305,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //customer roles
             model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var role in await _customerService.GetAllCustomerRoles(true))
+            foreach (var role in await _customerService.GetAllCustomerRoles(showHidden: true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = role.Name, Value = role.Id.ToString() });
         }
         public virtual async Task PrepareProductAttributeValueModel(Product product, ProductModel.ProductAttributeValueModel model)
@@ -368,7 +367,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task BackInStockNotifications(ProductAttributeCombination combination)
         {
-            var product = await _productService.GetDbProductById(combination.ProductId);
+            var product = await _productService.GetProductById(combination.ProductId, true);
             var prevcombination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == combination.Id);
 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes &&
@@ -436,6 +435,7 @@ namespace Grand.Web.Areas.Admin.Services
                 }
 
                 //reservation
+                model.CalendarModel.ProductId = product.Id;
                 model.CalendarModel.Interval = product.Interval;
                 model.CalendarModel.IntervalUnit = product.IntervalUnitId;
                 model.CalendarModel.IncBothDate = product.IncBothDate;
@@ -468,19 +468,15 @@ namespace Grand.Web.Areas.Admin.Services
                 }
 
                 //specification attributes
-                model.AddSpecificationAttributeModel.AvailableAttributes = await _cacheManager
-                    .GetAsync(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, async () =>
-                    {
-                        var availableSpecificationAttributes = new List<SelectListItem>();
-                        foreach (var sa in await _specificationAttributeService.GetSpecificationAttributes())
-                        {
-                            availableSpecificationAttributes.Add(new SelectListItem {
-                                Text = sa.Name,
-                                Value = sa.Id.ToString()
-                            });
-                        }
-                        return availableSpecificationAttributes;
+                var availableSpecificationAttributes = new List<SelectListItem>();
+                foreach (var sa in await _specificationAttributeService.GetSpecificationAttributes())
+                {
+                    availableSpecificationAttributes.Add(new SelectListItem {
+                        Text = sa.Name,
+                        Value = sa.Id.ToString()
                     });
+                }
+                model.AddSpecificationAttributeModel.AvailableAttributes = availableSpecificationAttributes;
 
                 //default specs values
                 model.AddSpecificationAttributeModel.ShowOnProductPage = true;
@@ -612,8 +608,8 @@ namespace Grand.Web.Areas.Admin.Services
 
             //discounts
             model.AvailableDiscounts = (await _discountService
-                .GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true))
-                .Select(d => d.ToModel())
+                .GetAllDiscounts(DiscountType.AssignedToSkus, storeId: _workContext.CurrentCustomer.StaffStoreId, showHidden: true))
+                .Select(d => d.ToModel(_dateTimeHelper))
                 .ToList();
             if (!excludeProperties && product != null)
             {
@@ -725,6 +721,9 @@ namespace Grand.Web.Areas.Admin.Services
                 }
 
             }
+            product.StockQuantity = product.ProductWarehouseInventory.Sum(x => x.StockQuantity);
+            await _productService.UpdateStockProduct(product, false);
+
         }
         public virtual async Task PrepareProductReviewModel(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties, bool formatReviewText)
@@ -808,7 +807,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //"published" property
@@ -866,7 +865,7 @@ namespace Grand.Web.Areas.Admin.Services
             var items = new List<ProductModel>();
             foreach (var x in products)
             {
-                var productModel = x.ToModel();
+                var productModel = x.ToModel(_dateTimeHelper);
                 //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
                 //also it improves performance
                 productModel.FullDescription = "";
@@ -954,7 +953,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
 
             //product
-            var product = model.ToEntity();
+            var product = model.ToEntity(_dateTimeHelper);
             product.CreatedOnUtc = DateTime.UtcNow;
             product.UpdatedOnUtc = DateTime.UtcNow;
 
@@ -971,7 +970,7 @@ namespace Grand.Web.Areas.Admin.Services
             //warehouses
             await SaveProductWarehouseInventory(product, model.ProductWarehouseInventoryModels);
             //discounts
-            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, storeId: _workContext.CurrentCustomer.StaffStoreId, showHidden: true);
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
@@ -1019,7 +1018,7 @@ namespace Grand.Web.Areas.Admin.Services
             var prevSampleDownloadId = product.SampleDownloadId;
 
             //product
-            product = model.ToEntity(product);
+            product = model.ToEntity(product, _dateTimeHelper);
             product.UpdatedOnUtc = DateTime.UtcNow;
 
             model.SeName = await product.ValidateSeName(model.SeName, product.Name, true, _serviceProvider.GetRequiredService<SeoSettings>(), _urlRecordService, _languageService);
@@ -1035,7 +1034,7 @@ namespace Grand.Web.Areas.Admin.Services
             //picture seo names
             await UpdatePictureSeoNames(product);
             //discounts
-            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, storeId: _workContext.CurrentCustomer.StaffStoreId, showHidden: true);
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
@@ -1139,7 +1138,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             return model;
         }
@@ -1155,7 +1154,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddRelatedProductModel model, int pageIndex, int pageSize)
         {
@@ -1168,7 +1167,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddSimilarProductModel model, int pageIndex, int pageSize)
         {
@@ -1181,7 +1180,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddBundleProductModel model, int pageIndex, int pageSize)
         {
@@ -1195,7 +1194,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, (int)ProductType.SimpleProduct, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddCrossSellProductModel model, int pageIndex, int pageSize)
         {
@@ -1210,7 +1209,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddAssociatedProductModel model, int pageIndex, int pageSize)
         {
@@ -1224,7 +1223,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model, int pageIndex, int pageSize)
         {
@@ -1238,7 +1237,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, (int)ProductType.SimpleProduct, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<IList<ProductModel.ProductCategoryModel>> PrepareProductCategoryModel(Product product)
         {
@@ -1259,7 +1258,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task InsertProductCategoryModel(ProductModel.ProductCategoryModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId, true);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -1286,7 +1285,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task UpdateProductCategoryModel(ProductModel.ProductCategoryModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId, true);
             var productCategory = product.ProductCategories.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
@@ -1314,7 +1313,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task DeleteProductCategory(string id, string productId)
         {
-            var product = await _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId, true);
             var productCategory = product.ProductCategories.Where(x => x.Id == id).FirstOrDefault();
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
@@ -1349,7 +1348,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task InsertProductManufacturer(ProductModel.ProductManufacturerModel model)
         {
             var manufacturerId = model.ManufacturerId;
-            var product = await _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId, true);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -1377,7 +1376,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task UpdateProductManufacturer(ProductModel.ProductManufacturerModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId, true);
             var productManufacturer = product.ProductManufacturers.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
@@ -1405,7 +1404,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task DeleteProductManufacturer(string id, string productId)
         {
-            var product = await _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId, true);
             var productManufacturer = product.ProductManufacturers.Where(x => x.Id == id).FirstOrDefault();
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
@@ -1422,7 +1421,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task InsertRelatedProductModel(ProductModel.AddRelatedProductModel model)
         {
-            var productId1 = await _productService.GetProductById(model.ProductId);
+            var productId1 = await _productService.GetProductById(model.ProductId, true);
 
             foreach (var id in model.SelectedProductIds)
             {
@@ -1450,7 +1449,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task UpdateRelatedProductModel(ProductModel.RelatedProductModel model)
         {
-            var product1 = await _productService.GetProductById(model.ProductId1);
+            var product1 = await _productService.GetProductById(model.ProductId1, true);
             var relatedProduct = product1.RelatedProducts.Where(x => x.Id == model.Id).FirstOrDefault();
             if (relatedProduct == null)
                 throw new ArgumentException("No related product found with the specified id");
@@ -1472,7 +1471,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task DeleteRelatedProductModel(ProductModel.RelatedProductModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId1);
+            var product = await _productService.GetProductById(model.ProductId1, true);
             var relatedProduct = product.RelatedProducts.Where(x => x.Id == model.Id).FirstOrDefault();
             if (relatedProduct == null)
                 throw new ArgumentException("No related product found with the specified id");
@@ -1490,7 +1489,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task InsertSimilarProductModel(ProductModel.AddSimilarProductModel model)
         {
-            var productId1 = await _productService.GetProductById(model.ProductId);
+            var productId1 = await _productService.GetProductById(model.ProductId, true);
 
             foreach (string id in model.SelectedProductIds)
             {
@@ -1518,7 +1517,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task UpdateSimilarProductModel(ProductModel.SimilarProductModel model)
         {
-            var product1 = await _productService.GetProductById(model.ProductId1);
+            var product1 = await _productService.GetProductById(model.ProductId1, true);
             var similarProduct = product1.SimilarProducts.Where(x => x.Id == model.Id).FirstOrDefault();
             if (similarProduct == null)
                 throw new ArgumentException("No similar product found with the specified id");
@@ -1540,7 +1539,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task DeleteSimilarProductModel(ProductModel.SimilarProductModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId1);
+            var product = await _productService.GetProductById(model.ProductId1, true);
             var similarProduct = product.SimilarProducts.Where(x => x.Id == model.Id).FirstOrDefault();
             if (similarProduct == null)
                 throw new ArgumentException("No similar product found with the specified id");
@@ -1558,7 +1557,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task InsertBundleProductModel(ProductModel.AddBundleProductModel model)
         {
-            var productId1 = await _productService.GetProductById(model.ProductId);
+            var productId1 = await _productService.GetProductById(model.ProductId, true);
 
             foreach (var id in model.SelectedProductIds)
             {
@@ -1587,7 +1586,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task UpdateBundleProductModel(ProductModel.BundleProductModel model)
         {
-            var product = await _productService.GetProductById(model.ProductBundleId);
+            var product = await _productService.GetProductById(model.ProductBundleId, true);
             var bundleProduct = product.BundleProducts.Where(x => x.Id == model.Id).FirstOrDefault();
             if (bundleProduct == null)
                 throw new ArgumentException("No bundle product found with the specified id");
@@ -1611,7 +1610,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task DeleteBundleProductModel(ProductModel.BundleProductModel model)
         {
-            var product = await _productService.GetProductById(model.ProductBundleId);
+            var product = await _productService.GetProductById(model.ProductBundleId, true);
             var bundleProduct = product.BundleProducts.Where(x => x.Id == model.Id).FirstOrDefault();
             if (bundleProduct == null)
                 throw new ArgumentException("No bundle product found with the specified id");
@@ -1629,7 +1628,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task InsertCrossSellProductModel(ProductModel.AddCrossSellProductModel model)
         {
-            var crossSellProduct = await _productService.GetProductById(model.ProductId);
+            var crossSellProduct = await _productService.GetProductById(model.ProductId, true);
             foreach (var id in model.SelectedProductIds)
             {
                 var product = await _productService.GetProductById(id);
@@ -1717,7 +1716,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             return model;
         }
@@ -1754,7 +1753,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             return model;
         }
@@ -1825,7 +1824,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return model;
@@ -1863,7 +1862,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return model;
@@ -1873,9 +1872,7 @@ namespace Grand.Web.Areas.Admin.Services
             var model = new BulkEditListModel();
 
             var storeId = string.Empty;
-            if (_workContext.CurrentCustomer.IsStaff())
-                storeId = _workContext.CurrentCustomer.StaffStoreId;
-
+                            
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = await _categoryService.GetAllCategories(showHidden: true, storeId: storeId);
@@ -1888,21 +1885,37 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
+            // avaible stores
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
+                var store = (await _storeService.GetAllStores()).Where(x => x.Id == storeId).FirstOrDefault();
+                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+            }
+            else
+            {
+                model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+
+                foreach (var s in (await _storeService.GetAllStores()))
+                {
+                    model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                }
+            }
             return model;
         }
         public virtual async Task<(IEnumerable<BulkEditProductModel> bulkEditProductModels, int totalCount)> PrepareBulkEditProductModel(BulkEditListModel model, int pageIndex, int pageSize)
         {
+            var storeId = model.SearchStoreId;
+            if (_workContext.CurrentCustomer.IsStaff())
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
+
             var vendorId = "";
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
-
-            var storeId = string.Empty;
-            if (_workContext.CurrentCustomer.IsStaff())
-                storeId = _workContext.CurrentCustomer.StaffStoreId;
 
             var searchCategoryIds = new List<string>();
             if (!string.IsNullOrEmpty(model.SearchCategoryId))
@@ -1944,7 +1957,7 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var pModel in products)
             {
                 //update
-                var product = await _productService.GetProductById(pModel.Id);
+                var product = await _productService.GetProductById(pModel.Id, true);
                 if (product != null)
                 {
                     //a vendor should have access only to his products
@@ -1987,7 +2000,7 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var pModel in products)
             {
                 //delete
-                var product = await _productService.GetProductById(pModel.Id);
+                var product = await _productService.GetProductById(pModel.Id, true);
                 if (product != null)
                 {
                     //a vendor should have access only to his products
@@ -2210,7 +2223,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task UpdateProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId, true);
             if (product != null)
             {
                 var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.Id).FirstOrDefault();
@@ -2444,7 +2457,7 @@ namespace Grand.Web.Areas.Admin.Services
                     ColorSquaresRgb = x.ColorSquaresRgb,
                     ImageSquaresPictureId = x.ImageSquaresPictureId,
                     PriceAdjustment = x.PriceAdjustment,
-                    PriceAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.PriceAdjustment.ToString("G29") : "",
+                    PriceAdjustmentStr = x.PriceAdjustment.ToString("G29"),
                     WeightAdjustment = x.WeightAdjustment,
                     WeightAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.WeightAdjustment.ToString("G29") : "",
                     Cost = x.Cost,
@@ -2561,7 +2574,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             return model;
         }
@@ -2836,7 +2849,7 @@ namespace Grand.Web.Areas.Admin.Services
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                     {
                         product.StockQuantity = product.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                        await _productService.UpdateStockProduct(product);
+                        await _productService.UpdateStockProduct(product, false);
                     }
                 }
             }
@@ -2870,7 +2883,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     var pr = await _productService.GetProductById(model.ProductId);
                     pr.StockQuantity = pr.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                    await _productService.UpdateStockProduct(pr);
+                    await _productService.UpdateStockProduct(pr, false);
                 }
             }
             return warnings;
@@ -2914,7 +2927,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
                 product.StockQuantity = product.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                await _productService.UpdateStockProduct(product);
+                await _productService.UpdateStockProduct(product, false);
             }
         }
         public virtual async Task<IList<ProductModel.ProductAttributeCombinationTierPricesModel>> PrepareProductAttributeCombinationTierPricesModel(Product product, string productAttributeCombinationId)
@@ -3055,7 +3068,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task UpdateProductPicture(ProductModel.ProductPictureModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId, true);
 
             var productPicture = product.ProductPictures.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productPicture == null)
@@ -3093,7 +3106,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task DeleteProductPicture(ProductModel.ProductPictureModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId, true);
 
             var productPicture = product.ProductPictures.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productPicture == null)

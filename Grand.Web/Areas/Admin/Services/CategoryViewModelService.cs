@@ -99,14 +99,14 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        protected virtual async Task PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
+        protected virtual async Task PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties, string storeId)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
             model.AvailableDiscounts = (await _discountService
-                .GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true))
-                .Select(d => d.ToModel())
+                .GetAllDiscounts(DiscountType.AssignedToCategories, storeId: storeId, showHidden: true))
+                .Select(d => d.ToModel(_dateTimeHelper))
                 .ToList();
 
             if (!excludeProperties && category != null)
@@ -119,9 +119,8 @@ namespace Grand.Web.Areas.Admin.Services
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableSortOptions = ProductSortingEnum.Position.ToSelectList(false).ToList();
+            model.AvailableSortOptions = ProductSortingEnum.Position.ToSelectList().ToList();
             model.AvailableSortOptions.Insert(0, new SelectListItem { Text = "None", Value = "-1" });
-
         }
 
         protected void FillChildNodes(TreeNode parentNode, List<ITreeNode> nodes)
@@ -153,8 +152,8 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<List<TreeNode>> PrepareCategoryNodeListModel(string storeId)
         {
             var categories = await _categoryService.GetAllCategories(storeId: storeId);
-            List<TreeNode> nodeList = new List<TreeNode>();
-            List<ITreeNode> list = new List<ITreeNode>();
+            var nodeList = new List<TreeNode>();
+            var list = new List<ITreeNode>();
             list.AddRange(categories);
             foreach (var node in list)
             {
@@ -197,7 +196,7 @@ namespace Grand.Web.Areas.Admin.Services
             //categories
             await PrepareAllCategoriesModel(model, storeId);
             //discounts
-            await PrepareDiscountModel(model, null, true);
+            await PrepareDiscountModel(model, null, true, storeId);
             //ACL
             await model.PrepareACLModel(null, false, _customerService);
             //Stores
@@ -222,7 +221,7 @@ namespace Grand.Web.Areas.Admin.Services
             //categories
             await PrepareAllCategoriesModel(model, storeId);
             //discounts
-            await PrepareDiscountModel(model, category, false);
+            await PrepareDiscountModel(model, category, false, storeId);
             return model;
         }
 
@@ -379,7 +378,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             return model;
         }
@@ -426,7 +425,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(CategoryModel.AddCategoryProductModel model, int pageIndex, int pageSize)
         {
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
     }
 }

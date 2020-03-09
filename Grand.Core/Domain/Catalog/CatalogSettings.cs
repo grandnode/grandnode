@@ -248,11 +248,7 @@ namespace Grand.Core.Domain.Catalog
         /// </summary>
         public bool ShowProductImagesInSearchAutoComplete { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to show blog posts in the auto complete search
-        /// </summary>
-        public bool ShowBlogPostsInSearchAutoComplete { get; set; }
-
+       
         /// <summary>
         /// Gets or sets a minimum search term length
         /// </summary>
@@ -272,6 +268,11 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets a number of bestsellers on home page
         /// </summary>
         public int NumberOfBestsellersOnHomepage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of time period for bestsellers on home page
+        /// </summary>
+        public int PeriodBestsellers { get; set; }
 
         /// <summary>
         /// Gets or sets a number of review on product page
@@ -367,9 +368,9 @@ namespace Grand.Core.Domain.Catalog
         public bool IgnoreStoreLimitations { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to cache product prices. It can significantly improve performance when enabled.
+        /// Gets or sets a value indicating whether to use customer product prices. It can significantly improve performance when disable.
         /// </summary>
-        public bool CacheProductPrices { get; set; }
+        public bool CustomerProductPrice { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to ignore load Filterable Specification Attribute Option (side-wide). It can significantly improve performance when enabled.

@@ -1,0 +1,58 @@
+﻿@model DocumentModel
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="CustomerId" type="hidden" />
+
+<input id="active-menu-item" type="hidden" value="/Admin/Document/List" />
+
+<admin-tabstrip name="document-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Documents.Document.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdateDocument.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Documents.Document.Account")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdateDocument.Account" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Documents.Document.Acl")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_TabAcl" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Documents.Document.Stores")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <vc:admin-widget widget-zone="document_details_tabs" additional-data="Model" />
+    </items>
+</admin-tabstrip>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.ReferenceId)").change(toggleReferenceType);
+        toggleReferenceType();
+
+
+        function toggleReferenceType() {
+            var selectedReferenceId = $("#@Html.FieldIdFor(model => model.ReferenceId)").val();
+            if (selectedReferenceId == @(((int) Reference.None).ToString())) {
+                $('.object-reference').hide();
+            } else {
+                $('.object-reference').show();
+            }
+        }
+
+    });
+</script>

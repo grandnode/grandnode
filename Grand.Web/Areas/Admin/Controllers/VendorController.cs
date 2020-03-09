@@ -145,7 +145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (vendor == null || vendor.Deleted)
                 //No vendor found with the specified id
                 return RedirectToAction("List");
-
+            
             if (ModelState.IsValid)
             {
                 vendor = await _vendorViewModelService.UpdateVendorModel(vendor, model);
@@ -154,7 +154,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = vendor.Id });
                 }
