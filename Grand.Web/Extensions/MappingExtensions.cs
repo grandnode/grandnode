@@ -4,12 +4,14 @@ using Grand.Core.Domain.Courses;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Polls;
+using Grand.Core.Domain.Topics;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Course;
 using Grand.Web.Models.Polls;
+using Grand.Web.Models.Topics;
 using Grand.Web.Models.Vendors;
 using System;
 using System.Linq;
@@ -112,6 +114,28 @@ namespace Grand.Web.Extensions
             return model;
 
         }
+        
+        public static TopicModel ToModel(this Topic entity, Language language)
+        {
+            var model = new TopicModel {
+                Id = entity.Id,
+                SystemName = entity.SystemName,
+                IncludeInSitemap = entity.IncludeInSitemap,
+                IsPasswordProtected = entity.IsPasswordProtected,
+                Password = entity.Password,
+                Title = entity.IsPasswordProtected ? "" : entity.GetLocalized(x => x.Title, language.Id),
+                Body = entity.IsPasswordProtected ? "" : entity.GetLocalized(x => x.Body, language.Id),
+                MetaKeywords = entity.GetLocalized(x => x.MetaKeywords, language.Id),
+                MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
+                MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
+                SeName = entity.GetSeName(language.Id),
+                TopicTemplateId = entity.TopicTemplateId,
+                Published = entity.Published
+            };
+            return model;
+
+        }
+
 
         public static Address ToEntity(this AddressModel model, bool trimFields = true)
         {
