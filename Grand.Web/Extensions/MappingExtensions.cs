@@ -1,14 +1,18 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Courses;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Polls;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Course;
+using Grand.Web.Models.Polls;
 using Grand.Web.Models.Vendors;
 using System;
+using System.Linq;
 
 namespace Grand.Web.Extensions
 {
@@ -76,6 +80,37 @@ namespace Grand.Web.Extensions
                 GenericAttributes = entity.GenericAttributes
             };
             return model;
+        }
+
+        //poll
+        public static PollModel ToModel(this Poll entity, Language language, Customer customer)
+        {
+            if (entity == null)
+                return null;
+
+            var model = new PollModel {
+                Id = entity.Id,
+                Name = entity.GetLocalized(x => x.Name, language.Id)
+            };
+            model.AlreadyVoted = entity.
+                PollAnswers.Any(x=>x.PollVotingRecords.Any(z => z.CustomerId == customer.Id));
+
+            var answers = entity.PollAnswers.OrderBy(x => x.DisplayOrder);
+            foreach (var answer in answers)
+                model.TotalVotes += answer.NumberOfVotes;
+            foreach (var pa in answers)
+            {
+                model.Answers.Add(new PollAnswerModel {
+                    Id = pa.Id,
+                    PollId = entity.Id,
+                    Name = pa.GetLocalized(x => x.Name, language.Id),
+                    NumberOfVotes = pa.NumberOfVotes,
+                    PercentOfTotalVotes = model.TotalVotes > 0 ? ((Convert.ToDouble(pa.NumberOfVotes) / Convert.ToDouble(model.TotalVotes)) * Convert.ToDouble(100)) : 0,
+                });
+            }
+
+            return model;
+
         }
 
         public static Address ToEntity(this AddressModel model, bool trimFields = true)
