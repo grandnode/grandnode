@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.Polls
 {
-    public class PollBySystemNameHandler : IRequestHandler<GetPollBySystemName, PollModel>
+    public class GetPollBySystemNameHandler : IRequestHandler<GetPollBySystemName, PollModel>
     {
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
@@ -21,7 +21,8 @@ namespace Grand.Web.Features.Handlers.Polls
         private readonly IPollService _pollService;
         private readonly IAclService _aclService;
 
-        public PollBySystemNameHandler(ICacheManager cacheManager,
+        public GetPollBySystemNameHandler(
+            ICacheManager cacheManager,
             IWorkContext workContext,
             IStoreContext storeContext,
             IPollService pollService,

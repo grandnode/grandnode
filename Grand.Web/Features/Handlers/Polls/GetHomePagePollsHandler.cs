@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.Polls
 {
-    public class HomePagePollsHandler : IRequestHandler<GetHomePagePolls, IList<PollModel>>
+    public class GetHomePagePollsHandler : IRequestHandler<GetHomePagePolls, IList<PollModel>>
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ICacheManager _cacheManager;
         private readonly IPollService _pollService;
 
-        public HomePagePollsHandler(IWorkContext workContext,
+        public GetHomePagePollsHandler(IWorkContext workContext,
             IStoreContext storeContext,
             ICacheManager cacheManager,
             IPollService pollService
