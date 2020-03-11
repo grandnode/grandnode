@@ -38,9 +38,6 @@ namespace Grand.Web.Infrastructure
             //poll service
             builder.RegisterType<BoardsViewModelService>().As<IBoardsViewModelService>().InstancePerLifetimeScope();
 
-            //ReturnRequest service
-            builder.RegisterType<ReturnRequestViewModelService>().As<IReturnRequestViewModelService>().InstancePerLifetimeScope();
-
             //course service
             builder.RegisterType<CourseViewModelService>().As<ICourseViewModelService>().InstancePerLifetimeScope();
 

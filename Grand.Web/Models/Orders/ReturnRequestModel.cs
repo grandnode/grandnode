@@ -1,13 +1,14 @@
 ﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Common;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Orders
 {
-    public partial class SubmitReturnRequestModel : BaseGrandModel
+    public partial class ReturnRequestModel : BaseGrandModel
     {
-        public SubmitReturnRequestModel()
+        public ReturnRequestModel()
         {
             Items = new List<OrderItemModel>();
             AvailableReturnReasons = new List<ReturnRequestReasonModel>();
@@ -27,6 +28,8 @@ namespace Grand.Web.Models.Orders
 
         [GrandResourceDisplayName("ReturnRequests.Comments")]
         public string Comments { get; set; }
+
+        public DateTime? PickupDate { get; set; }
 
         public string Result { get; set; }
 
