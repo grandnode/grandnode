@@ -39,9 +39,6 @@ namespace Grand.Web.Infrastructure
             //poll service
             builder.RegisterType<BoardsViewModelService>().As<IBoardsViewModelService>().InstancePerLifetimeScope();
 
-            //course service
-            builder.RegisterType<CourseViewModelService>().As<ICourseViewModelService>().InstancePerLifetimeScope();
-
         }
 
         public int Order {
