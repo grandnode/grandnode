@@ -51,26 +51,7 @@ namespace Grand.Web.Services
             return _courseService.GetById(courseId);
         }
 
-        public virtual async Task<CoursesModel> GetCoursesByCustomer(Customer customer, string storeId)
-        {
-            var model = new CoursesModel();
-            model.CustomerId = customer.Id;
-            var courses = await _courseService.GetByCustomer(customer, storeId);
-            foreach (var item in courses)
-            {
-                var level = await _courseLevelService.GetById(item.LevelId);
-                model.CourseList.Add(new CoursesModel.Course() {
-                    Id = item.Id,
-                    Name = item.Name,
-                    SeName = item.SeName,
-                    ShortDescription = item.ShortDescription,
-                    Level = level?.Name,
-                    Approved = await IsApprovedCourse(item, customer),
-                });
-            }
-            return model;
-        }
-
+       
         public virtual Task<CourseLesson> GetLessonById(string lessonId)
         {
             return _courseLessonService.GetById(lessonId);
@@ -87,16 +68,7 @@ namespace Grand.Web.Services
 
             return false;
         }
-        public virtual async Task<bool> IsApprovedCourse(Course course, Customer customer)
-        {
-            var lessons = await _courseLessonService.GetByCourseId(course.Id);
-            foreach (var item in lessons.Where(x=>x.Published))
-            {
-                if (!await _courseActionService.CustomerLessonCompleted(customer.Id, item.Id))
-                    return false;
-            }
-            return true;
-        }
+        
 
         public virtual async Task<CourseModel> PrepareCourseModel(Course course)
         {
