@@ -30,9 +30,6 @@ namespace Grand.Web.Infrastructure
             //shipping service 
             builder.RegisterType<ShoppingCartViewModelService>().As<IShoppingCartViewModelService>().InstancePerLifetimeScope();
 
-            //externalAuth service
-            builder.RegisterType<ExternalAuthenticationViewModelService>().As<IExternalAuthenticationViewModelService>().InstancePerLifetimeScope();
-
             //widgetZone servie
             builder.RegisterType<WidgetViewModelService>().As<IWidgetViewModelService>().InstancePerLifetimeScope();
 
