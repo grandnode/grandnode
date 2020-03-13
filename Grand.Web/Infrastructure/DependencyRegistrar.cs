@@ -27,9 +27,6 @@ namespace Grand.Web.Infrastructure
             //customer custom attributes service
             builder.RegisterType<CustomerCustomAttributes>().As<ICustomerCustomAttributes>().InstancePerLifetimeScope();           
 
-            //shipping service 
-            builder.RegisterType<ShoppingCartViewModelService>().As<IShoppingCartViewModelService>().InstancePerLifetimeScope();
-
             //widgetZone servie
             builder.RegisterType<WidgetViewModelService>().As<IWidgetViewModelService>().InstancePerLifetimeScope();
 

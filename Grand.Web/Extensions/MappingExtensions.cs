@@ -13,7 +13,9 @@ using Grand.Web.Models.Course;
 using Grand.Web.Models.Polls;
 using Grand.Web.Models.Topics;
 using Grand.Web.Models.Vendors;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace Grand.Web.Extensions
@@ -226,6 +228,28 @@ namespace Grand.Web.Extensions
             destination.FaxNumber = model.FaxNumber;
 
             return destination;
+        }
+
+        public static void ParseReservationDates(this Product product, IFormCollection form,
+            out DateTime? startDate, out DateTime? endDate)
+        {
+            startDate = null;
+            endDate = null;
+
+            string startControlId = string.Format("reservationDatepickerFrom_{0}", product.Id);
+            string endControlId = string.Format("reservationDatepickerTo_{0}", product.Id);
+            var ctrlStartDate = form[startControlId];
+            var ctrlEndDate = form[endControlId];
+            try
+            {
+                //currenly we support only this format (as in the \Views\Product\_RentalInfo.cshtml file)
+                const string datePickerFormat = "MM/dd/yyyy";
+                startDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
+                endDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+            }
         }
     }
 }
