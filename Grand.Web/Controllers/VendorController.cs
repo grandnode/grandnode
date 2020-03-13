@@ -15,7 +15,7 @@ using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Seo;
 using Grand.Services.Vendors;
-using Grand.Web.Commands.Models;
+using Grand.Web.Commands.Models.Vendors;
 using Grand.Web.Extensions;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
@@ -387,7 +387,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model = await _mediator.Send(new SendContactVendorCommandModel() { Model = model, Vendor = vendor });;
+                model = await _mediator.Send(new ContactVendorSendCommandModel() { Model = model, Vendor = vendor });;
                 return View(model);
             }
 

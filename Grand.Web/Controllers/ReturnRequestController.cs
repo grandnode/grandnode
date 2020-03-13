@@ -4,7 +4,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
-using Grand.Web.Commands.Models;
+using Grand.Web.Commands.Models.Orders;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Orders;
 using Grand.Web.Interfaces;

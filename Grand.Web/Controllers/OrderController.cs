@@ -8,7 +8,7 @@ using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
-using Grand.Web.Commands.Models;
+using Grand.Web.Commands.Models.Orders;
 using Grand.Web.Features.Models.Orders;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Orders;

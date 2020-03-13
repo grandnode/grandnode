@@ -9,7 +9,7 @@ using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Security;
 using Grand.Services.Stores;
-using Grand.Web.Commands.Models;
+using Grand.Web.Commands.Models.Courses;
 using Grand.Web.Features.Models.Courses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

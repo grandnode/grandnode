@@ -14,7 +14,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
-using Grand.Web.Commands.Models;
+using Grand.Web.Commands.Models.Customers;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Customers;
 using Grand.Web.Interfaces;

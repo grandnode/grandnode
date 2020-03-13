@@ -12,7 +12,7 @@ using Grand.Services.News;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
-using Grand.Web.Commands.Models;
+using Grand.Web.Commands.Models.News;
 using Grand.Web.Features.Handlers.News;
 using Grand.Web.Features.Models.News;
 using Grand.Web.Interfaces;

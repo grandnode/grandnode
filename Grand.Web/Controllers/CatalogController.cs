@@ -15,7 +15,7 @@ using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
-using Grand.Web.Commands.Models;
+using Grand.Web.Commands.Models.Vendors;
 using Grand.Web.Features.Models.Vendors;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;

@@ -11,7 +11,7 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
-using Grand.Web.Commands.Models;
+using Grand.Web.Commands.Models.Blogs;
 using Grand.Web.Features.Models.Blogs;
 using Grand.Web.Models.Blogs;
 using MediatR;

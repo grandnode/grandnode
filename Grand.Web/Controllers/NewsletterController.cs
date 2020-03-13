@@ -1,4 +1,4 @@
-﻿using Grand.Web.Commands.Models;
+﻿using Grand.Web.Commands.Models.Newsletter;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

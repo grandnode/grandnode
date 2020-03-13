@@ -16,7 +16,7 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Stores;
-using Grand.Web.Commands.Models;
+using Grand.Web.Commands.Models.Common;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Models.Common;
 using MediatR;
