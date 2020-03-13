@@ -7,7 +7,6 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Web.Features.Models.Customers;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Customer;
 using Grand.Web.Models.Newsletter;
 using MediatR;
@@ -26,7 +25,7 @@ namespace Grand.Web.Features.Handlers.Customers
         private readonly ILocalizationService _localizationService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly ICustomerCustomAttributes _customerCustomAttributes;
+        private readonly IMediator _mediator;
 
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
@@ -40,7 +39,7 @@ namespace Grand.Web.Features.Handlers.Customers
             ILocalizationService localizationService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
-            ICustomerCustomAttributes customerCustomAttributes,
+            IMediator mediator,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings,
@@ -52,7 +51,7 @@ namespace Grand.Web.Features.Handlers.Customers
             _localizationService = localizationService;
             _countryService = countryService;
             _stateProvinceService = stateProvinceService;
-            _customerCustomAttributes = customerCustomAttributes;
+            _mediator = mediator;
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
             _taxSettings = taxSettings;
@@ -145,7 +144,11 @@ namespace Grand.Web.Features.Handlers.Customers
             }
 
             //custom customer attributes
-            var customAttributes = await _customerCustomAttributes.PrepareCustomAttributes(request.Customer, request.Language, request.OverrideCustomCustomerAttributesXml);
+            var customAttributes = await _mediator.Send(new GetCustomAttributes() {
+                Customer = request.Customer,
+                Language = request.Language,
+                OverrideAttributesXml = request.OverrideCustomCustomerAttributesXml
+            });
             foreach (var item in customAttributes)
             {
                 model.CustomerAttributes.Add(item);

@@ -33,12 +33,10 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly IGrandAuthenticationService _authenticationService;
-        private readonly ICustomerCustomAttributes _customerCustomAttributes;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ICustomerService _customerService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICountryService _countryService;
@@ -55,12 +53,10 @@ namespace Grand.Web.Controllers
 
         public CustomerController(
             IGrandAuthenticationService authenticationService,
-            ICustomerCustomAttributes customerCustomAttributes,
             ILocalizationService localizationService,
             IWorkContext workContext,
             IStoreContext storeContext,
             ICustomerService customerService,
-            ICustomerAttributeParser customerAttributeParser,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
             ICountryService countryService,
@@ -72,12 +68,10 @@ namespace Grand.Web.Controllers
             CustomerSettings customerSettings)
         {
             _authenticationService = authenticationService;
-            _customerCustomAttributes = customerCustomAttributes;
             _localizationService = localizationService;
             _workContext = workContext;
             _storeContext = storeContext;
             _customerService = customerService;
-            _customerAttributeParser = customerAttributeParser;
             _genericAttributeService = genericAttributeService;
             _customerRegistrationService = customerRegistrationService;
             _customerSettings = customerSettings;
@@ -420,7 +414,7 @@ namespace Grand.Web.Controllers
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form,
-           [FromServices] IWebHelper webHelper)
+           [FromServices] IWebHelper webHelper, [FromServices] ICustomerAttributeParser customerAttributeParser)
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
@@ -435,8 +429,8 @@ namespace Grand.Web.Controllers
                 _workContext.CurrentCustomer = await _customerService.InsertGuestCustomer(_storeContext.CurrentStore);
             }
             //custom customer attributes
-            var customerAttributesXml = await _customerCustomAttributes.ParseCustomAttributes(form);
-            var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
+            var customerAttributesXml = await _mediator.Send(new GetParseCustomAttributes() { Form = form });
+            var customerAttributeWarnings = await customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -636,14 +630,15 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public virtual async Task<IActionResult> Info(CustomerInfoModel model, IFormCollection form)
+        public virtual async Task<IActionResult> Info(CustomerInfoModel model, IFormCollection form,
+            [FromServices] ICustomerAttributeParser customerAttributeParser)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
             //custom customer attributes
-            var customerAttributesXml = await _customerCustomAttributes.ParseCustomAttributes(form);
-            var customerAttributeWarnings = await _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
+            var customerAttributesXml = await _mediator.Send(new GetParseCustomAttributes() { Form = form });
+            var customerAttributeWarnings = await customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
 
             foreach (var error in customerAttributeWarnings)
             {
