@@ -1206,7 +1206,7 @@ namespace Grand.Services.Messages
             }
             return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
-                toEmail, toName);
+                toEmail, toName, replyToEmailAddress: customerEmail);
         }
 
         #endregion
