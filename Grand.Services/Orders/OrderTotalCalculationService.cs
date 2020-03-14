@@ -682,10 +682,6 @@ namespace Grand.Services.Orders
             decimal subTotalTaxTotal = decimal.Zero;
 
             var shoppingCartSubTotal = await GetShoppingCartSubTotal(cart, false);
-            decimal orderSubTotalDiscountAmount = shoppingCartSubTotal.discountAmount;
-            List<AppliedDiscount> orderSubTotalAppliedDiscounts = shoppingCartSubTotal.appliedDiscounts;
-            decimal subTotalWithoutDiscountBase = shoppingCartSubTotal.subTotalWithoutDiscount;
-            decimal subTotalWithDiscountBase = shoppingCartSubTotal.subTotalWithDiscount;
             SortedDictionary<decimal, decimal> orderSubTotalTaxRates = shoppingCartSubTotal.taxRates;
 
             foreach (KeyValuePair<decimal, decimal> kvp in orderSubTotalTaxRates)
@@ -800,10 +796,6 @@ namespace Grand.Services.Orders
             GetShoppingCartTotal(IList<ShoppingCartItem> cart, bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true)
         {
 
-            //out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
-            //out List<AppliedGiftCard> appliedGiftCards,
-            //out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount
-
             var redeemedRewardPoints = 0;
             var redeemedRewardPointsAmount = decimal.Zero;
 
@@ -820,9 +812,6 @@ namespace Grand.Services.Orders
 
             //subtotal without tax
             var subTotal = await GetShoppingCartSubTotal(cart, false);
-            decimal orderSubTotalDiscountAmount = subTotal.discountAmount;
-            List<AppliedDiscount> orderSubTotalAppliedDiscounts = subTotal.appliedDiscounts;
-            decimal subTotalWithoutDiscountBase = subTotal.subTotalWithoutDiscount;
             decimal subTotalWithDiscountBase = subTotal.subTotalWithDiscount;
 
             //subtotal with discount
@@ -860,6 +849,7 @@ namespace Grand.Services.Orders
                 resultTemp = RoundingHelper.RoundPrice(resultTemp, currency);
             }
             #region Order total discount
+
             var totalDiscount = await GetOrderTotalDiscount(customer, resultTemp);
             var discountAmount = totalDiscount.orderTotalDiscount;
             var appliedDiscounts = totalDiscount.appliedDiscounts;
