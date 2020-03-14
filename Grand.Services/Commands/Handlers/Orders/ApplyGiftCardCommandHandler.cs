@@ -9,7 +9,7 @@ using Grand.Services.Orders;
 
 namespace Grand.Services.Commands.Handlers.Orders
 {
-    public class ApplyGiftCardCommandHandler : AsyncRequestHandler<ApplyGiftCardCommand>
+    public class ApplyGiftCardCommandHandler : IRequestHandler<ApplyGiftCardCommand, bool>
     {
         private readonly IGenericAttributeService _genericAttributeService;
 
@@ -18,7 +18,7 @@ namespace Grand.Services.Commands.Handlers.Orders
             _genericAttributeService = genericAttributeService;
         }
 
-        protected override async Task Handle(ApplyGiftCardCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(ApplyGiftCardCommand request, CancellationToken cancellationToken)
         {
             if (request.Customer == null)
                 throw new ArgumentNullException("customer");
@@ -28,6 +28,8 @@ namespace Grand.Services.Commands.Handlers.Orders
 
             //apply new value
             await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.GiftCardCouponCodes, result);
+
+            return true;
         }
 
 

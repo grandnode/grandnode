@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Services.Commands.Handlers.Orders
 {
-    public class RemoveGiftCardCommandHandler : AsyncRequestHandler<RemoveGiftCardCommand>
+    public class RemoveGiftCardCommandHandler : IRequestHandler<RemoveGiftCardCommand, bool>
     {
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGiftCardService _giftCardService;
@@ -21,7 +21,7 @@ namespace Grand.Services.Commands.Handlers.Orders
             _giftCardService = giftCardService;
         }
 
-        protected override async Task Handle(RemoveGiftCardCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(RemoveGiftCardCommand request, CancellationToken cancellationToken)
         {
             if (request.Customer == null)
                 throw new ArgumentNullException("customer");
@@ -44,6 +44,8 @@ namespace Grand.Services.Commands.Handlers.Orders
                             existingCouponCode);
                     await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.GiftCardCouponCodes, result);
                 }
+
+            return true;
 
         }
 
