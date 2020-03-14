@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Grand.Web.Commands.Models.Orders
 {
-    public class InsertOrderNoteCommandModel : IRequest<OrderNote>
+    public class InsertOrderNoteCommand : IRequest<OrderNote>
     {
         public Language Language { get; set; }
         public AddOrderNoteModel OrderNote { get; set; }

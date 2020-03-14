@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Customers
 {
-    public class CustomerRegisteredCommandHandler : IRequestHandler<CustomerRegisteredCommandModel, bool>
+    public class CustomerRegisteredCommandHandler : IRequestHandler<CustomerRegisteredCommand, bool>
     {
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ITaxService _taxService;
@@ -58,7 +58,7 @@ namespace Grand.Web.Commands.Handler.Customers
             _localizationSettings = localizationSettings;
         }
 
-        public async Task<bool> Handle(CustomerRegisteredCommandModel request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CustomerRegisteredCommand request, CancellationToken cancellationToken)
         {
 
             //properties

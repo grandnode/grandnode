@@ -222,7 +222,7 @@ namespace Grand.Web.Controllers
         [CheckAccessClosedStore(true)]
         public virtual async Task<IActionResult> ContactUs()
         {
-            var model = await _mediator.Send(new ContactUsCommandModel() {
+            var model = await _mediator.Send(new ContactUsCommand() {
                 Customer = _workContext.CurrentCustomer,
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore
@@ -243,7 +243,7 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
-            var result = await _mediator.Send(new ContactUsSendCommandModel() {
+            var result = await _mediator.Send(new ContactUsSendCommand() {
                 CaptchaValid = captchaValid,
                 Form = form,
                 Model = model,
@@ -362,7 +362,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ContactAttributeChange(IFormCollection form)
         {
-            var result = await _mediator.Send(new ContactAttributeChangeCommandModel() {
+            var result = await _mediator.Send(new ContactAttributeChangeCommand() {
                 Form = form,
                 Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore
@@ -460,7 +460,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("PopupInteractiveForm")]
         public virtual async Task<IActionResult> PopupInteractiveForm(IFormCollection formCollection)
         {
-            var result = await _mediator.Send(new PopupInteractiveCommandModel() { Form = formCollection });
+            var result = await _mediator.Send(new PopupInteractiveCommand() { Form = formCollection });
             return Json(new
             {
                 success = result.Any(),

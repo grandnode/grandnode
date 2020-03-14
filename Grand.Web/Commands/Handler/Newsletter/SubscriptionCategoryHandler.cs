@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Newsletter
 {
-    public class SubscriptionCategoryHandler : IRequestHandler<SubscriptionCategoryCommandModel, (string message, bool success)>
+    public class SubscriptionCategoryHandler : IRequestHandler<SubscriptionCategoryCommand, (string message, bool success)>
     {
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 
@@ -16,7 +16,7 @@ namespace Grand.Web.Commands.Handler.Newsletter
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
         }
 
-        public async Task<(string message, bool success)> Handle(SubscriptionCategoryCommandModel request, CancellationToken cancellationToken)
+        public async Task<(string message, bool success)> Handle(SubscriptionCategoryCommand request, CancellationToken cancellationToken)
         {
             bool success = false;
             string message = string.Empty;

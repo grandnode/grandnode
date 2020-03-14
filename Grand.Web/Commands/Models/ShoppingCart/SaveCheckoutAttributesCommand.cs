@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Commands.Models.ShoppingCart
 {
-    public class SaveCheckoutAttributesCommandModel : IRequest<string>
+    public class SaveCheckoutAttributesCommand : IRequest<string>
     {
         public Customer Customer { get; set; }
         public Store Store { get; set; }

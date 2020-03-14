@@ -20,7 +20,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> SubscribeNewsletter(string email, bool subscribe)
         {
-            var model = await _mediator.Send(new SubscribeNewsletterCommandModel() { Email = email, Subscribe = subscribe });
+            var model = await _mediator.Send(new SubscribeNewsletterCommand() { Email = email, Subscribe = subscribe });
             if (model.NewsletterCategory != null)
             {
                 model.ShowCategories = true;
@@ -38,7 +38,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> SaveCategories(IFormCollection form)
         {
-            var model = await _mediator.Send(new SubscriptionCategoryCommandModel() { Values = form.Keys.ToDictionary(k => k, v => Request.Form[v].ToString()) });
+            var model = await _mediator.Send(new SubscriptionCategoryCommand() { Values = form.Keys.ToDictionary(k => k, v => Request.Form[v].ToString()) });
             return Json(new
             {
                 Success = model.success,
@@ -49,7 +49,7 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> SubscriptionActivation(Guid token, bool active)
         {
-            var model = await _mediator.Send(new SubscriptionActivationCommandModel() { Active = active, Token = token });
+            var model = await _mediator.Send(new SubscriptionActivationCommand() { Active = active, Token = token });
             if (model == null)
                 return RedirectToRoute("HomePage");
 

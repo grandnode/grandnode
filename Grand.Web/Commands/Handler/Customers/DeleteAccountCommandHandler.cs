@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Customers
 {
-    public class DeleteAccountCommandHandler : IRequestHandler<DeleteAccountCommandModel, bool>
+    public class DeleteAccountCommandHandler : IRequestHandler<DeleteAccountCommand, bool>
     {
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -30,7 +30,7 @@ namespace Grand.Web.Commands.Handler.Customers
             _localizationSettings = localizationSettings;
         }
 
-        public async Task<bool> Handle(DeleteAccountCommandModel request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
         {
             //send notification to customer
             await _workflowMessageService.SendCustomerDeleteStoreOwnerNotification(request.Customer, _localizationSettings.DefaultAdminLanguageId);

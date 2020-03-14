@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Commands.Models.Common
 {
-    public class ContactUsSendCommandModel : IRequest<(ContactUsModel model, IList<string> errors)>
+    public class ContactUsSendCommand : IRequest<(ContactUsModel model, IList<string> errors)>
     {
         public ContactUsModel Model { get; set; }
         public IFormCollection Form { get; set; }

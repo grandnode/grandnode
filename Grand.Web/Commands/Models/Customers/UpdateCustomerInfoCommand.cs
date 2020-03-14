@@ -6,12 +6,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Commands.Models.Customers
 {
-    public class CustomerRegisteredCommandModel : IRequest<bool>
+    public class UpdateCustomerInfoCommand : IRequest<bool>
     {
         public Customer Customer { get; set; }
         public Store Store { get; set; }
-        public RegisterModel Model { get; set; }
+        public CustomerInfoModel Model { get; set; }
         public IFormCollection Form { get; set; }
         public string CustomerAttributesXml { get; set; }
+        public Customer OriginalCustomerIfImpersonated { get; set; }
     }
 }

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Orders
 {
-    public class ReturnRequestSubmitCommandHandler : IRequestHandler<ReturnRequestSubmitCommandModel, (ReturnRequestModel model, ReturnRequest rr)>
+    public class ReturnRequestSubmitCommandHandler : IRequestHandler<ReturnRequestSubmitCommand, (ReturnRequestModel model, ReturnRequest rr)>
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -43,7 +43,7 @@ namespace Grand.Web.Commands.Handler.Orders
             _localizationSettings = localizationSettings;
         }
 
-        public async Task<(ReturnRequestModel model, ReturnRequest rr)> Handle(ReturnRequestSubmitCommandModel request, CancellationToken cancellationToken)
+        public async Task<(ReturnRequestModel model, ReturnRequest rr)> Handle(ReturnRequestSubmitCommand request, CancellationToken cancellationToken)
         {
             var rr = new ReturnRequest {
                 StoreId = _storeContext.CurrentStore.Id,

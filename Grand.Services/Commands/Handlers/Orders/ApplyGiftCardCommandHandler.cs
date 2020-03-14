@@ -9,7 +9,7 @@ using Grand.Services.Orders;
 
 namespace Grand.Services.Commands.Handlers.Orders
 {
-    public class ApplyGiftCardCommandHandler : AsyncRequestHandler<ApplyGiftCardCommandModel>
+    public class ApplyGiftCardCommandHandler : AsyncRequestHandler<ApplyGiftCardCommand>
     {
         private readonly IGenericAttributeService _genericAttributeService;
 
@@ -18,7 +18,7 @@ namespace Grand.Services.Commands.Handlers.Orders
             _genericAttributeService = genericAttributeService;
         }
 
-        protected override async Task Handle(ApplyGiftCardCommandModel request, CancellationToken cancellationToken)
+        protected override async Task Handle(ApplyGiftCardCommand request, CancellationToken cancellationToken)
         {
             if (request.Customer == null)
                 throw new ArgumentNullException("customer");

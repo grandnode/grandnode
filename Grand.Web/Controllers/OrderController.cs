@@ -225,7 +225,7 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            await _mediator.Send(new InsertOrderNoteCommandModel() { OrderNote = model, Language = _workContext.WorkingLanguage });
+            await _mediator.Send(new InsertOrderNoteCommand() { OrderNote = model, Language = _workContext.WorkingLanguage });
 
             AddNotification(Framework.UI.NotifyType.Success, _localizationService.GetResource("OrderNote.Added"), true);
             return RedirectToRoute("OrderDetails", new { orderId = model.OrderId });

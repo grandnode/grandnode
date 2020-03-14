@@ -149,7 +149,7 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                var result = await _mediator.Send(new ReturnRequestSubmitCommandModel() { Address = address, Model = model, Form = form, Order = order });
+                var result = await _mediator.Send(new ReturnRequestSubmitCommand() { Address = address, Model = model, Form = form, Order = order });
                 if (result.rr.ReturnNumber > 0)
                 {
                     model.Result = string.Format(_localizationService.GetResource("ReturnRequests.Submitted"), result.rr.ReturnNumber, Url.Link("ReturnRequestDetails", new { returnRequestId = result.rr.Id }));

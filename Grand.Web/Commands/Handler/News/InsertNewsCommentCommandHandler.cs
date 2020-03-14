@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.News
 {
-    public class InsertNewsCommentCommandHandler : IRequestHandler<InsertNewsCommentCommandModel, NewsComment>
+    public class InsertNewsCommentCommandHandler : IRequestHandler<InsertNewsCommentCommand, NewsComment>
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -37,7 +37,7 @@ namespace Grand.Web.Commands.Handler.News
             _localizationSettings = localizationSettings;
         }
 
-        public async Task<NewsComment> Handle(InsertNewsCommentCommandModel request, CancellationToken cancellationToken)
+        public async Task<NewsComment> Handle(InsertNewsCommentCommand request, CancellationToken cancellationToken)
         {
             var comment = new NewsComment {
                 NewsItemId = request.NewsItem.Id,

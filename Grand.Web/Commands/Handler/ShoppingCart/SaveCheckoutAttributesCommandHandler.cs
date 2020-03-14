@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.ShoppingCart
 {
-    public class SaveCheckoutAttributesCommandHandler : IRequestHandler<SaveCheckoutAttributesCommandModel, string>
+    public class SaveCheckoutAttributesCommandHandler : IRequestHandler<SaveCheckoutAttributesCommand, string>
     {
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
@@ -31,7 +31,7 @@ namespace Grand.Web.Commands.Handler.ShoppingCart
             _genericAttributeService = genericAttributeService;
         }
 
-        public async Task<string> Handle(SaveCheckoutAttributesCommandModel request, CancellationToken cancellationToken)
+        public async Task<string> Handle(SaveCheckoutAttributesCommand request, CancellationToken cancellationToken)
         {
             if (request.Cart == null)
                 throw new ArgumentNullException("cart");

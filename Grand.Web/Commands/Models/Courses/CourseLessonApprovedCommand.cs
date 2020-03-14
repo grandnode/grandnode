@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Grand.Web.Commands.Models.Courses
 {
-    public class CourseLessonApprovedCommandModel : IRequest<bool>
+    public class CourseLessonApprovedCommand : IRequest<bool>
     {
         public Course Course { get; set; }
         public CourseLesson Lesson { get; set; }

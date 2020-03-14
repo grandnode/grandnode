@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Common
 {
-    public class PopupInteractiveCommandHandler : IRequestHandler<PopupInteractiveCommandModel, IList<string>>
+    public class PopupInteractiveCommandHandler : IRequestHandler<PopupInteractiveCommand, IList<string>>
     {
         private readonly IInteractiveFormService _interactiveFormService;
         private readonly ILocalizationService _localizationService;
@@ -38,7 +38,7 @@ namespace Grand.Web.Commands.Handler.Common
             _customerActivityService = customerActivityService;
         }
 
-        public async Task<IList<string>> Handle(PopupInteractiveCommandModel request, CancellationToken cancellationToken)
+        public async Task<IList<string>> Handle(PopupInteractiveCommand request, CancellationToken cancellationToken)
         {
             var errors = new List<string>();
             var formid = request.Form["Id"];

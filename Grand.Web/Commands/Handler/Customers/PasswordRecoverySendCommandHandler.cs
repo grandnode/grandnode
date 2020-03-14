@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Customers
 {
-    public class PasswordRecoverySendCommandHandler : IRequestHandler<PasswordRecoverySendCommandModel, bool>
+    public class PasswordRecoverySendCommandHandler : IRequestHandler<PasswordRecoverySendCommand, bool>
     {
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -22,7 +22,7 @@ namespace Grand.Web.Commands.Handler.Customers
             _workflowMessageService = workflowMessageService;
         }
 
-        public async Task<bool> Handle(PasswordRecoverySendCommandModel request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(PasswordRecoverySendCommand request, CancellationToken cancellationToken)
         {
             //save token and current date
             var passwordRecoveryToken = Guid.NewGuid();

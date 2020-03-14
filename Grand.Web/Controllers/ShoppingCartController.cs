@@ -90,7 +90,7 @@ namespace Grand.Web.Controllers
         {
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
-            var attributeXml = await _mediator.Send(new SaveCheckoutAttributesCommandModel() {
+            var attributeXml = await _mediator.Send(new SaveCheckoutAttributesCommand() {
                 Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore,
                 Cart = cart,
@@ -378,7 +378,7 @@ namespace Grand.Web.Controllers
             //parse and save checkout attributes
             if (form != null && form.Count > 0)
             {
-                checkoutAttributes = await _mediator.Send(new SaveCheckoutAttributesCommandModel() {
+                checkoutAttributes = await _mediator.Send(new SaveCheckoutAttributesCommand() {
                     Customer = _workContext.CurrentCustomer,
                     Store = _storeContext.CurrentStore,
                     Cart = cart,
@@ -525,7 +525,7 @@ namespace Grand.Web.Controllers
                     bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
                     if (isGiftCardValid)
                     {
-                        await _mediator.Send(new ApplyGiftCardCommandModel() {
+                        await _mediator.Send(new ApplyGiftCardCommand() {
                             Customer = _workContext.CurrentCustomer,
                             GiftCardCouponCode = giftcardcouponcode
                         });
@@ -629,7 +629,7 @@ namespace Grand.Web.Controllers
         {
             if (!string.IsNullOrEmpty(giftCardId))
             {
-                await _mediator.Send(new RemoveGiftCardCommandModel() { Customer = _workContext.CurrentCustomer, GiftCardId = giftCardId });
+                await _mediator.Send(new RemoveGiftCardCommand() { Customer = _workContext.CurrentCustomer, GiftCardId = giftCardId });
             }
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
             

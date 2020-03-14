@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Vendors
 {
-    public class ContactVendorCommandHandler : IRequestHandler<ContactVendorSendCommandModel, ContactVendorModel>
+    public class ContactVendorCommandHandler : IRequestHandler<ContactVendorSendCommand, ContactVendorModel>
     {
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IWorkContext _workContext;
@@ -27,7 +27,7 @@ namespace Grand.Web.Commands.Handler.Vendors
             _commonSettings = commonSettings;
         }
 
-        public async Task<ContactVendorModel> Handle(ContactVendorSendCommandModel request, CancellationToken cancellationToken)
+        public async Task<ContactVendorModel> Handle(ContactVendorSendCommand request, CancellationToken cancellationToken)
         {
             var subject = _commonSettings.SubjectFieldOnContactUsForm ? request.Model.Subject : null;
             var body = Core.Html.HtmlHelper.FormatText(request.Model.Enquiry, false, true, false, false, false, false);

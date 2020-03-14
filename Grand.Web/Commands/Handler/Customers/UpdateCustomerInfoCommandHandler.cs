@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Customers
 {
-    public class UpdateCustomerInfoCommandHandler : IRequestHandler<UpdateCustomerInfoCommandModel, bool>
+    public class UpdateCustomerInfoCommandHandler : IRequestHandler<UpdateCustomerInfoCommand, bool>
     {
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly IGrandAuthenticationService _authenticationService;
@@ -59,7 +59,7 @@ namespace Grand.Web.Commands.Handler.Customers
             _forumSettings = forumSettings;
         }
 
-        public async Task<bool> Handle(UpdateCustomerInfoCommandModel request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateCustomerInfoCommand request, CancellationToken cancellationToken)
         {
             //username 
             if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
@@ -112,7 +112,7 @@ namespace Grand.Web.Commands.Handler.Customers
 
         }
 
-        private async Task UpdateTax(UpdateCustomerInfoCommandModel request)
+        private async Task UpdateTax(UpdateCustomerInfoCommand request)
         {
             var prevVatNumber = await request.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.VatNumber);
 
@@ -132,7 +132,7 @@ namespace Grand.Web.Commands.Handler.Customers
             }
         }
 
-        private async Task UpdateFormFields(UpdateCustomerInfoCommandModel request)
+        private async Task UpdateFormFields(UpdateCustomerInfoCommand request)
         {
             //properties
             if (_dateTimeSettings.AllowCustomersToSetTimeZone)
@@ -170,7 +170,7 @@ namespace Grand.Web.Commands.Handler.Customers
                 await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.Fax, request.Model.Fax);
         }
 
-        private async Task UpdateNewsletter(UpdateCustomerInfoCommandModel request)
+        private async Task UpdateNewsletter(UpdateCustomerInfoCommand request)
         {
             var categories = new List<string>();
             foreach (string formKey in request.Form.Keys)

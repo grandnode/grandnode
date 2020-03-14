@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Commands.Models.Common
 {
-    public class ContactAttributeChangeCommandModel : IRequest<(IList<string> enabledAttributeIds, IList<string> disabledAttributeIds)>
+    public class ContactAttributeChangeCommand : IRequest<(IList<string> enabledAttributeIds, IList<string> disabledAttributeIds)>
     {
         public IFormCollection Form { get; set; }
         public Customer Customer { get; set; }

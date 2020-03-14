@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Newsletter
 {
-    public class SubscribeNewsletterHandler : IRequestHandler<SubscribeNewsletterCommandModel, SubscribeNewsletterResultModel>
+    public class SubscribeNewsletterHandler : IRequestHandler<SubscribeNewsletterCommand, SubscribeNewsletterResultModel>
     {
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
@@ -32,7 +32,7 @@ namespace Grand.Web.Commands.Handler.Newsletter
             _newsletterCategoryService = newsletterCategoryService;
         }
 
-        public async Task<SubscribeNewsletterResultModel> Handle(SubscribeNewsletterCommandModel request, CancellationToken cancellationToken)
+        public async Task<SubscribeNewsletterResultModel> Handle(SubscribeNewsletterCommand request, CancellationToken cancellationToken)
         {
             var model = new SubscribeNewsletterResultModel();
             var email = request.Email;

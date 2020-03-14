@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Vendors
 {
-    public class SetVendorReviewHelpfulnessCommandHandler : IRequestHandler<SetVendorReviewHelpfulnessCommandModel, VendorReview>
+    public class SetVendorReviewHelpfulnessCommandHandler : IRequestHandler<SetVendorReviewHelpfulnessCommand, VendorReview>
     {
         private readonly ICustomerService _customerService;
         private readonly IVendorService _vendorService;
@@ -20,7 +20,7 @@ namespace Grand.Web.Commands.Handler.Vendors
             _vendorService = vendorService;
         }
 
-        public async Task<VendorReview> Handle(SetVendorReviewHelpfulnessCommandModel request, CancellationToken cancellationToken)
+        public async Task<VendorReview> Handle(SetVendorReviewHelpfulnessCommand request, CancellationToken cancellationToken)
         {
             //delete previous helpfulness
             var prh = request.Review.VendorReviewHelpfulnessEntries

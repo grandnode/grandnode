@@ -387,7 +387,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model = await _mediator.Send(new ContactVendorSendCommandModel() { Model = model, Vendor = vendor });;
+                model = await _mediator.Send(new ContactVendorSendCommand() { Model = model, Vendor = vendor });;
                 return View(model);
             }
 

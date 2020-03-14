@@ -154,7 +154,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _mediator.Send(new InsertNewsCommentCommandModel() { NewsItem = newsItem, Model = model });
+                await _mediator.Send(new InsertNewsCommentCommand() { NewsItem = newsItem, Model = model });
 
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.AddNewsComment", newsItem.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Grand.Web.Commands.Models.Common
 {
-    public class ContactUsCommandModel : IRequest<ContactUsModel>
+    public class ContactUsCommand : IRequest<ContactUsModel>
     {
         public Customer Customer { get; set; }
         public Store Store { get; set; }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Orders
 {
-    public class InsertOrderNoteCommandHandler : IRequestHandler<InsertOrderNoteCommandModel, OrderNote>
+    public class InsertOrderNoteCommandHandler : IRequestHandler<InsertOrderNoteCommand, OrderNote>
     {
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IOrderService _orderService;
@@ -20,7 +20,7 @@ namespace Grand.Web.Commands.Handler.Orders
             _orderService = orderService;
         }
 
-        public async Task<OrderNote> Handle(InsertOrderNoteCommandModel request, CancellationToken cancellationToken)
+        public async Task<OrderNote> Handle(InsertOrderNoteCommand request, CancellationToken cancellationToken)
         {
             var orderNote = new OrderNote {
                 CreatedOnUtc = DateTime.UtcNow,

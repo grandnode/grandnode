@@ -178,7 +178,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _mediator.Send(new InsertBlogCommentCommandModel() { Model = model, BlogPost = blogPost });
+                await _mediator.Send(new InsertBlogCommentCommand() { Model = model, BlogPost = blogPost });
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["Grand.blog.addcomment.result"] = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");

@@ -308,7 +308,7 @@ namespace Grand.Web.Controllers
                 var customer = await _customerService.GetCustomerByEmail(model.Email);
                 if (customer != null && customer.Active && !customer.Deleted)
                 {
-                    await _mediator.Send(new PasswordRecoverySendCommandModel() { Customer = customer, Language = _workContext.WorkingLanguage, Model = model });
+                    await _mediator.Send(new PasswordRecoverySendCommand() { Customer = customer, Language = _workContext.WorkingLanguage, Model = model });
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
                 }
                 else
@@ -456,7 +456,7 @@ namespace Grand.Web.Controllers
                 var registrationResult = await _customerRegistrationService.RegisterCustomer(registrationRequest);
                 if (registrationResult.Success)
                 {
-                    await _mediator.Send(new CustomerRegisteredCommandModel() {
+                    await _mediator.Send(new CustomerRegisteredCommand() {
                         Customer = _workContext.CurrentCustomer,
                         CustomerAttributesXml = customerAttributesXml,
                         Form = form,
@@ -649,7 +649,7 @@ namespace Grand.Web.Controllers
             {
                 if (ModelState.IsValid && ModelState.ErrorCount == 0)
                 {
-                    await _mediator.Send(new UpdateCustomerInfoCommandModel() {
+                    await _mediator.Send(new UpdateCustomerInfoCommand() {
                         Customer = _workContext.CurrentCustomer,
                         CustomerAttributesXml = customerAttributesXml,
                         Form = form,
@@ -989,7 +989,7 @@ namespace Grand.Web.Controllers
                             await _customerActivityService.InsertActivity("PublicStore.DeleteAccount", "", _localizationService.GetResource("ActivityLog.DeleteAccount"));
 
                             //delete account 
-                            await _mediator.Send(new DeleteAccountCommandModel() { Customer = customer, Store = _storeContext.CurrentStore });
+                            await _mediator.Send(new DeleteAccountCommand() { Customer = customer, Store = _storeContext.CurrentStore });
 
                             //standard logout 
                             await _authenticationService.SignOut();
@@ -1054,7 +1054,7 @@ namespace Grand.Web.Controllers
             {
                 try
                 {
-                    await _mediator.Send(new UploadAvatarCommandModel() { Customer = _workContext.CurrentCustomer, UploadedFile = uploadedFile });
+                    await _mediator.Send(new UploadAvatarCommand() { Customer = _workContext.CurrentCustomer, UploadedFile = uploadedFile });
 
                     model = await _mediator.Send(new GetAvatar() { Customer = _workContext.CurrentCustomer });
                     return View(model);
@@ -1082,7 +1082,7 @@ namespace Grand.Web.Controllers
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
 
-            await _mediator.Send(new UploadAvatarCommandModel() { Customer = _workContext.CurrentCustomer, Remove = true });
+            await _mediator.Send(new UploadAvatarCommand() { Customer = _workContext.CurrentCustomer, Remove = true });
 
             return RedirectToRoute("CustomerAvatar");
         }

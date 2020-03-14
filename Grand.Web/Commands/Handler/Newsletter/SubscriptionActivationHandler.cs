@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Newsletter
 {
-    public class SubscriptionActivationHandler : IRequestHandler<SubscriptionActivationCommandModel, SubscriptionActivationModel>
+    public class SubscriptionActivationHandler : IRequestHandler<SubscriptionActivationCommand, SubscriptionActivationModel>
     {
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
@@ -19,7 +19,7 @@ namespace Grand.Web.Commands.Handler.Newsletter
             _localizationService = localizationService;
         }
 
-        public async Task<SubscriptionActivationModel> Handle(SubscriptionActivationCommandModel request, CancellationToken cancellationToken)
+        public async Task<SubscriptionActivationModel> Handle(SubscriptionActivationCommand request, CancellationToken cancellationToken)
         {
             var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(request.Token);
             if (subscription == null)

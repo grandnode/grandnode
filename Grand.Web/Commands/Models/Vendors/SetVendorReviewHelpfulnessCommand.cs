@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Grand.Web.Commands.Models.Vendors
 {
-    public class SetVendorReviewHelpfulnessCommandModel : IRequest<VendorReview>
+    public class SetVendorReviewHelpfulnessCommand : IRequest<VendorReview>
     {
         public Customer Customer { get; set; }
         public Vendor Vendor { get; set; }

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Grand.Web.Commands.Models.News
 {
-    public class InsertNewsCommentCommandModel : IRequest<NewsComment>
+    public class InsertNewsCommentCommand : IRequest<NewsComment>
     {
         public NewsItem NewsItem { get; set; }
         public NewsItemModel Model { get; set; }

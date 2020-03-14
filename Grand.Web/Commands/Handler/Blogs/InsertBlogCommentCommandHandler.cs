@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Blogs
 {
-    public class InsertBlogCommentCommandHandler : IRequestHandler<InsertBlogCommentCommandModel, BlogComment>
+    public class InsertBlogCommentCommandHandler : IRequestHandler<InsertBlogCommentCommand, BlogComment>
     {
         private readonly IBlogService _blogService;
         private readonly IWorkContext _workContext;
@@ -43,7 +43,7 @@ namespace Grand.Web.Commands.Handler.Blogs
             _blogSettings = blogSettings;
         }
 
-        public async Task<BlogComment> Handle(InsertBlogCommentCommandModel request, CancellationToken cancellationToken)
+        public async Task<BlogComment> Handle(InsertBlogCommentCommand request, CancellationToken cancellationToken)
         {
             var customer = _workContext.CurrentCustomer;
             var comment = new BlogComment {

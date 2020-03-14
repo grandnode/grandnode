@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 namespace Grand.Web.Commands.Handler.Customers
 {
-    public class UploadAvatarCommandHandler : IRequestHandler<UploadAvatarCommandModel, bool>
+    public class UploadAvatarCommandHandler : IRequestHandler<UploadAvatarCommand, bool>
     {
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
@@ -30,7 +30,7 @@ namespace Grand.Web.Commands.Handler.Customers
             _customerSettings = customerSettings;
         }
 
-        public async Task<bool> Handle(UploadAvatarCommandModel request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UploadAvatarCommand request, CancellationToken cancellationToken)
         {
             var customerAvatar = await _pictureService.GetPictureById(request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId));
             if ((request.UploadedFile != null) && (!string.IsNullOrEmpty(request.UploadedFile.FileName)))

@@ -3,9 +3,9 @@ using MediatR;
 
 namespace Grand.Services.Commands.Models.Orders
 {
-    public class RemoveGiftCardCommandModel : IRequest
+    public class ApplyGiftCardCommand : IRequest
     {
-        public string GiftCardId { get; set; }
+        public string GiftCardCouponCode { get; set; }
         public Customer Customer { get; set; }
     }
 }

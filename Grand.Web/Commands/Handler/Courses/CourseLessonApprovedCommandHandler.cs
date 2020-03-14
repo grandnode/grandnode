@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Courses
 {
-    public class CourseLessonApprovedCommandHandler : IRequestHandler<CourseLessonApprovedCommandModel, bool>
+    public class CourseLessonApprovedCommandHandler : IRequestHandler<CourseLessonApprovedCommand, bool>
     {
         private readonly ICourseActionService _courseActionService;
 
@@ -16,7 +16,7 @@ namespace Grand.Web.Commands.Handler.Courses
             _courseActionService = courseActionService;
         }
 
-        public async Task<bool> Handle(CourseLessonApprovedCommandModel request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CourseLessonApprovedCommand request, CancellationToken cancellationToken)
         {
             var action = await _courseActionService.GetCourseAction(request.Customer.Id, request.Lesson.Id);
             if (action == null)

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Grand.Web.Commands.Models.Customers
 {
-    public class DeleteAccountCommandModel : IRequest<bool>
+    public class DeleteAccountCommand : IRequest<bool>
     {
         public Customer Customer { get; set; }
         public Store Store { get; set; }

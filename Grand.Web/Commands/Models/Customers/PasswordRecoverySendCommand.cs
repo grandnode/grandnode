@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Grand.Web.Commands.Models.Customers
 {
-    public class PasswordRecoverySendCommandModel : IRequest<bool>
+    public class PasswordRecoverySendCommand : IRequest<bool>
     {
         public PasswordRecoveryModel Model { get; set; }
         public Customer Customer { get; set; }

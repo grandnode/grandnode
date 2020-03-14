@@ -11,7 +11,7 @@ using MediatR;
 
 namespace Grand.Web.Commands.Handler.Common
 {
-    public class ContactAttributeChangeCommandHandler : IRequestHandler<ContactAttributeChangeCommandModel, (IList<string> enabledAttributeIds, IList<string> disabledAttributeIds)>
+    public class ContactAttributeChangeCommandHandler : IRequestHandler<ContactAttributeChangeCommand, (IList<string> enabledAttributeIds, IList<string> disabledAttributeIds)>
     {
         private readonly IContactAttributeService _contactAttributeService;
         private readonly IContactAttributeParser _contactAttributeParser;
@@ -25,7 +25,7 @@ namespace Grand.Web.Commands.Handler.Common
             _downloadService = downloadService;
         }
 
-        public async Task<(IList<string> enabledAttributeIds, IList<string> disabledAttributeIds)> Handle(ContactAttributeChangeCommandModel request, CancellationToken cancellationToken)
+        public async Task<(IList<string> enabledAttributeIds, IList<string> disabledAttributeIds)> Handle(ContactAttributeChangeCommand request, CancellationToken cancellationToken)
         {
             var attributeXml = await ParseContactAttributes(request);
 
@@ -46,7 +46,7 @@ namespace Grand.Web.Commands.Handler.Common
             return (enabledAttributeIds, disabledAttributeIds);
         }
 
-        private async Task<string> ParseContactAttributes(ContactAttributeChangeCommandModel request)
+        private async Task<string> ParseContactAttributes(ContactAttributeChangeCommand request)
         {
             string attributesXml = "";
             var contactAttributes = await _contactAttributeService.GetAllContactAttributes(request.Store.Id);

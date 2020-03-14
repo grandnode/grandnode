@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Common
 {
-    public class ContactUsSendCommandHandler : IRequestHandler<ContactUsSendCommandModel, (ContactUsModel model, IList<string> errors)>
+    public class ContactUsSendCommandHandler : IRequestHandler<ContactUsSendCommand, (ContactUsModel model, IList<string> errors)>
     {
         private readonly IWorkContext _workContext;
         private readonly IContactAttributeService _contactAttributeService;
@@ -51,7 +51,7 @@ namespace Grand.Web.Commands.Handler.Common
             _commonSettings = commonSettings;
         }
 
-        public async Task<(ContactUsModel model, IList<string> errors)> Handle(ContactUsSendCommandModel request, CancellationToken cancellationToken)
+        public async Task<(ContactUsModel model, IList<string> errors)> Handle(ContactUsSendCommand request, CancellationToken cancellationToken)
         {
             var errors = new List<string>();
             //parse contact attributes
@@ -83,7 +83,7 @@ namespace Grand.Web.Commands.Handler.Common
 
         }
 
-        private async Task<string> ParseContactAttributes(ContactUsSendCommandModel request)
+        private async Task<string> ParseContactAttributes(ContactUsSendCommand request)
         {
             string attributesXml = "";
             var contactAttributes = await _contactAttributeService.GetAllContactAttributes(request.Store.Id);

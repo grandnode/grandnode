@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Vendors
 {
-    public class InsertVendorReviewCommandHandler : IRequestHandler<InsertVendorReviewCommandModel, VendorReview>
+    public class InsertVendorReviewCommandHandler : IRequestHandler<InsertVendorReviewCommand, VendorReview>
     {
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
@@ -35,7 +35,7 @@ namespace Grand.Web.Commands.Handler.Vendors
             _vendorSettings = vendorSettings;
         }
 
-        public async Task<VendorReview> Handle(InsertVendorReviewCommandModel request, CancellationToken cancellationToken)
+        public async Task<VendorReview> Handle(InsertVendorReviewCommand request, CancellationToken cancellationToken)
         {
             //save review
             int rating = request.Model.AddVendorReview.Rating;

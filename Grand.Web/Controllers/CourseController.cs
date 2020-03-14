@@ -251,7 +251,7 @@ namespace Grand.Web.Controllers
             if (!await CheckPermission(course, customer))
                 return Json(new { result = false });
 
-            await _mediator.Send(new CourseLessonApprovedCommandModel() { Course = course, Lesson = lesson, Customer = _workContext.CurrentCustomer });
+            await _mediator.Send(new CourseLessonApprovedCommand() { Course = course, Lesson = lesson, Customer = _workContext.CurrentCustomer });
 
             return Json(new { result = true });
         }

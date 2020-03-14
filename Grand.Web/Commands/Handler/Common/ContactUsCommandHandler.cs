@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.Common
 {
-    public class ContactUsCommandHandler : IRequestHandler<ContactUsCommandModel, ContactUsModel>
+    public class ContactUsCommandHandler : IRequestHandler<ContactUsCommand, ContactUsModel>
     {
 
         private readonly IContactAttributeService _contactAttributeService;
@@ -29,7 +29,7 @@ namespace Grand.Web.Commands.Handler.Common
             _captchaSettings = captchaSettings;
         }
 
-        public async Task<ContactUsModel> Handle(ContactUsCommandModel request, CancellationToken cancellationToken)
+        public async Task<ContactUsModel> Handle(ContactUsCommand request, CancellationToken cancellationToken)
         {
             var model = new ContactUsModel {
                 Email = request.Customer.Email,
@@ -42,7 +42,7 @@ namespace Grand.Web.Commands.Handler.Common
             return model;
         }
 
-        private async Task<IList<ContactUsModel.ContactAttributeModel>> PrepareContactAttributeModel(ContactUsCommandModel request)
+        private async Task<IList<ContactUsModel.ContactAttributeModel>> PrepareContactAttributeModel(ContactUsCommand request)
         {
             var model = new List<ContactUsModel.ContactAttributeModel>();
 
