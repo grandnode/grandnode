@@ -424,7 +424,7 @@ namespace Grand.Web.Controllers
                 var discount = await _discountService.GetDiscountByCouponCode(discountcouponcode, true);
                 if (discount != null && discount.RequiresCouponCode)
                 {
-                    var coupons = await _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes(_genericAttributeService);
+                    var coupons = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
                     var existsAndUsed = false;
                     foreach (var item in coupons)
                     {
@@ -442,7 +442,9 @@ namespace Grand.Web.Controllers
                             if (validationResult.IsValid)
                             {
                                 //valid
-                                await _workContext.CurrentCustomer.ApplyDiscountCouponCode(_genericAttributeService, discountcouponcode);
+                                var applyCouponCode =  _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
+                                //apply new value
+                                await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCouponCode, applyCouponCode);
                                 message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
                                 isApplied = true;
                             }
@@ -597,12 +599,21 @@ namespace Grand.Web.Controllers
             var discount = await _discountService.GetDiscountById(discountId);
             if (discount != null)
             {
-                var coupons = await _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes(_genericAttributeService);
+                var coupons = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
                 foreach (var item in coupons)
                 {
                     var dd = await _discountService.GetDiscountByCouponCode(item);
                     if (dd.Id == discount.Id)
-                        await _workContext.CurrentCustomer.RemoveDiscountCouponCode(_genericAttributeService, item);
+                    {
+                        //clear coupons
+                        await _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCouponCode, "");
+                        var applycoupons = coupons.Except(new List<string> { item }).ToList();
+                        foreach (var cp in applycoupons)
+                        {
+                            var result = _workContext.CurrentCustomer.ApplyDiscountCouponCode(cp);
+                            await _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCouponCode, result);
+                        }
+                    }
                 }
             }
 

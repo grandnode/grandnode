@@ -248,6 +248,31 @@ namespace Grand.Services.Orders
             return (discountAmount, appliedDiscounts);
         }
 
+        /// <summary>
+        /// Get active gift cards that are applied by a customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Active gift cards</returns>
+        private async Task<IList<GiftCard>> GetActiveGiftCards(Customer customer)
+        {
+            var result = new List<GiftCard>();
+            if (customer == null)
+                return result;
+
+            string[] couponCodes = customer.ParseAppliedGiftCardCouponCodes();
+            foreach (var couponCode in couponCodes)
+            {
+                var giftCards = await _giftCardService.GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
+                foreach (var gc in giftCards)
+                {
+                    if (gc.IsGiftCardValid())
+                        result.Add(gc);
+                }
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Methods
@@ -871,7 +896,7 @@ namespace Grand.Services.Orders
             if (!cart.IsRecurring())
             {
                 //we don't apply gift cards for recurring products
-                var giftCards = await customer.GetActiveGiftCardsAppliedByCustomer(_giftCardService);
+                var giftCards = await GetActiveGiftCards(customer);
                 if (giftCards != null)
                     foreach (var gc in giftCards)
                         if (resultTemp > decimal.Zero)

@@ -178,7 +178,7 @@ namespace Grand.Services.Orders.Tests
 
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
-                _checkoutAttributeParser, _discountService, _giftCardService, _genericAttributeService,
+                _checkoutAttributeParser, _discountService, _giftCardService,
                 null, _productService, _currencyService, _taxSettings, _rewardPointsSettings,
                 _shippingSettings, _shoppingCartSettings, _catalogSettings);
         }

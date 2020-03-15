@@ -5,7 +5,6 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Plugins;
 using Grand.Services.Common;
@@ -84,7 +83,6 @@ namespace Grand.Services.Discounts
         private readonly ILocalizationService _localizationService;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IMediator _mediator;
         private readonly PerRequestCacheManager _perRequestCache;
@@ -104,7 +102,6 @@ namespace Grand.Services.Discounts
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
             ILocalizationService localizationService,
             IStoreContext storeContext,
-            IGenericAttributeService genericAttributeService,
             IPluginFinder pluginFinder,
             IMediator mediator,
             IRepository<Product> productRepository,
@@ -122,7 +119,6 @@ namespace Grand.Services.Discounts
             _discountUsageHistoryRepository = discountUsageHistoryRepository;
             _localizationService = localizationService;
             _storeContext = storeContext;
-            _genericAttributeService = genericAttributeService;
             _pluginFinder = pluginFinder;
             _mediator = mediator;
             _productRepository = productRepository;
@@ -520,7 +516,7 @@ namespace Grand.Services.Discounts
 
             string[] couponCodesToValidate = null;
             if (customer != null)
-                couponCodesToValidate = await customer.ParseAppliedDiscountCouponCodes(_genericAttributeService);
+                couponCodesToValidate = customer.ParseAppliedDiscountCouponCodes();
 
             return await ValidateDiscount(discount, customer, couponCodesToValidate);
         }
