@@ -37,7 +37,6 @@ namespace Grand.Services.Orders
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IDiscountService _discountService;
         private readonly IGiftCardService _giftCardService;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRewardPointsService _rewardPointsService;
         private readonly IProductService _productService;
         private readonly ICurrencyService _currencyService;
@@ -63,7 +62,6 @@ namespace Grand.Services.Orders
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="discountService">Discount service</param>
         /// <param name="giftCardService">Gift card service</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="rewardPointsService">Reward points service</param>
         /// <param name="currencyService">Currency service</param>
         /// <param name="taxSettings">Tax settings</param>
@@ -80,7 +78,6 @@ namespace Grand.Services.Orders
             ICheckoutAttributeParser checkoutAttributeParser,
             IDiscountService discountService,
             IGiftCardService giftCardService,
-            IGenericAttributeService genericAttributeService,
             IRewardPointsService rewardPointsService,
             IProductService productService,
             ICurrencyService currencyService,
@@ -99,7 +96,6 @@ namespace Grand.Services.Orders
             _checkoutAttributeParser = checkoutAttributeParser;
             _discountService = discountService;
             _giftCardService = giftCardService;
-            _genericAttributeService = genericAttributeService;
             _rewardPointsService = rewardPointsService;
             _productService = productService;
             _currencyService = currencyService;
@@ -320,7 +316,7 @@ namespace Grand.Services.Orders
             //checkout attributes
             if (customer != null)
             {
-                var checkoutAttributesXml = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+                var checkoutAttributesXml = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
                 var attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
                 if (attributeValues != null)
                 {
@@ -582,7 +578,7 @@ namespace Grand.Services.Orders
 
             ShippingOption shippingOption = null;
             if (customer != null)
-                shippingOption = await customer.GetAttribute<ShippingOption>(_genericAttributeService, SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
+                shippingOption = customer.GetAttributeFromEntity<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
 
             if (shippingOption != null)
             {
@@ -673,8 +669,8 @@ namespace Grand.Services.Orders
             string paymentMethodSystemName = "";
             if (customer != null)
             {
-                paymentMethodSystemName = await customer.GetAttribute<string>(
-                    _genericAttributeService, SystemCustomerAttributeNames.SelectedPaymentMethod,
+                paymentMethodSystemName = customer.GetAttributeFromEntity<string>(
+                    SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _storeContext.CurrentStore.Id);
             }
 
@@ -805,8 +801,8 @@ namespace Grand.Services.Orders
             string paymentMethodSystemName = "";
             if (customer != null)
             {
-                paymentMethodSystemName = await customer.GetAttribute<string>(
-                    _genericAttributeService, SystemCustomerAttributeNames.SelectedPaymentMethod,
+                paymentMethodSystemName = customer.GetAttributeFromEntity<string>(
+                    SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _storeContext.CurrentStore.Id);
             }
 
@@ -917,7 +913,7 @@ namespace Grand.Services.Orders
             if (_rewardPointsSettings.Enabled)
             {
                 if (!useRewardPoints.HasValue)
-                    useRewardPoints = await customer.GetAttribute<bool>(_genericAttributeService, SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, _storeContext.CurrentStore.Id);
+                    useRewardPoints = customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, _storeContext.CurrentStore.Id);
 
                 if (useRewardPoints.Value)
                 {
