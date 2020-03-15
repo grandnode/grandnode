@@ -36,7 +36,7 @@ namespace Grand.Web.Features.Handlers.Newsletter
         public async Task<CustomerRewardPointsModel> Handle(GetCustomerRewardPoints request, CancellationToken cancellationToken)
         {
             var model = new CustomerRewardPointsModel();
-            foreach (var rph in await _rewardPointsService.GetRewardPointsHistory(request.Customer.Id))
+            foreach (var rph in await _rewardPointsService.GetRewardPointsHistory(request.Customer.Id, request.Store.Id))
             {
                 model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel {
                     Points = rph.Points,
