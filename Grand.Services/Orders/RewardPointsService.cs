@@ -1,5 +1,4 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
+﻿using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Events;
 using MediatR;
