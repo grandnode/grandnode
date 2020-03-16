@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Security;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Security;
@@ -102,7 +101,6 @@ namespace Grand.Services.Catalog
         /// <param name="categoryRepository">Category repository</param>
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="aclService">ACL service</param>
         /// <param name="catalogSettings">Catalog settings</param>
@@ -221,7 +219,7 @@ namespace Grand.Services.Catalog
             var storeId = _storeContext.CurrentStore.Id;
             var customer = _workContext.CurrentCustomer;
             string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, customer.Id, storeId, includeAllLevels);
-            return await _cacheManager.GetAsync(key, async () => 
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var builder = Builders<Category>.Filter;
                 var filter = builder.Where(c => c.ParentCategoryId == parentCategoryId);
@@ -464,8 +462,7 @@ namespace Grand.Services.Catalog
                 }
                 var query_productCategories = from prod in query
                                               from pc in prod.ProductCategories
-                                              select new SerializeProductCategory
-                                              {
+                                              select new SerializeProductCategory {
                                                   CategoryId = pc.CategoryId,
                                                   DisplayOrder = pc.DisplayOrder,
                                                   Id = pc.Id,
