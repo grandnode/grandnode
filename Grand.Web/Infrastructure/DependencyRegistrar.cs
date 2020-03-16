@@ -18,9 +18,7 @@ namespace Grand.Web.Infrastructure
             //address service
             builder.RegisterType<AddressViewModelService>().As<IAddressViewModelService>().InstancePerLifetimeScope();
 
-            //catalog service
-            builder.RegisterType<CatalogViewModelService>().As<ICatalogViewModelService>().InstancePerLifetimeScope();
-
+ 
             //product service
             builder.RegisterType<ProductViewModelService>().As<IProductViewModelService>().InstancePerLifetimeScope();
 

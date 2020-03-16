@@ -16,6 +16,7 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Commands.Models.Vendors;
+using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Vendors;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
@@ -33,8 +34,9 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly ICatalogViewModelService _catalogViewModelService;
         private readonly IVendorService _vendorService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly ICategoryService _categoryService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
@@ -52,9 +54,10 @@ namespace Grand.Web.Controllers
         #endregion
 
         #region Constructors
-
-        public CatalogController(ICatalogViewModelService catalogViewModelService,
+        public CatalogController(
             IVendorService vendorService,
+            IManufacturerService manufacturerService,
+            ICategoryService categoryService,
             IWorkContext workContext, 
             IStoreContext storeContext,
             ILocalizationService localizationService,
@@ -68,8 +71,9 @@ namespace Grand.Web.Controllers
             IMediator mediator,
             VendorSettings vendorSettings)
         {
-            _catalogViewModelService = catalogViewModelService;
             _vendorService = vendorService;
+            _manufacturerService = manufacturerService;
+            _categoryService = categoryService;
             _workContext = workContext;
             _storeContext = storeContext;
             _localizationService = localizationService;
@@ -113,7 +117,7 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> Category(string categoryId, CatalogPagingFilteringModel command)
         {
-            var category = await _catalogViewModelService.GetCategoryById(categoryId);
+            var category = await _categoryService.GetCategoryById(categoryId);
             if (category == null)
                 return InvokeHttp404();
 
@@ -141,12 +145,20 @@ namespace Grand.Web.Controllers
 
             //activity log
             await _customerActivityService.InsertActivity("PublicStore.ViewCategory", category.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
-            await _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers["Referer"].ToString() : "");
-            //model
-            var model = await _catalogViewModelService.PrepareCategory(category, command);
+            await _customerActionEventService.Viewed(customer, HttpContext.Request.Path.ToString(), Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers["Referer"].ToString() : "");
 
+            //model
+            var model = await _mediator.Send(new GetCategory() { 
+                Category = category,
+                Command = command,
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
+            
             //template
-            var templateViewPath = await _catalogViewModelService.PrepareCategoryTemplateViewPath(category.CategoryTemplateId);
+            var templateViewPath = await _mediator.Send(new GetCategoryTemplateViewPath() { TemplateId = category.CategoryTemplateId });
 
             return View(templateViewPath, model);
         }
@@ -157,7 +169,7 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> Manufacturer(string manufacturerId, CatalogPagingFilteringModel command)
         {
-            var manufacturer = await _catalogViewModelService.GetManufacturerById(manufacturerId);
+            var manufacturer = await _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null)
                 return InvokeHttp404();
 
@@ -185,20 +197,30 @@ namespace Grand.Web.Controllers
 
             //activity log
             await _customerActivityService.InsertActivity("PublicStore.ViewManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name);
-            await _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
+            await _customerActionEventService.Viewed(customer, HttpContext.Request.Path.ToString(), Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
 
             //model
-            var model = await _catalogViewModelService.PrepareManufacturer(manufacturer, command);
+            var model = await _mediator.Send(new GetManufacturer() { 
+                Command = command,
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Manufacturer = manufacturer,
+                Store = _storeContext.CurrentStore
+            });
 
             //template
-            var templateViewPath = await _catalogViewModelService.PrepareManufacturerTemplateViewPath(manufacturer.ManufacturerTemplateId);
+            var templateViewPath = await _mediator.Send(new GetManufacturerTemplateViewPath() { TemplateId = manufacturer.ManufacturerTemplateId });
 
             return View(templateViewPath, model);
         }
 
         public virtual async Task<IActionResult> ManufacturerAll()
         {
-            var model = await _catalogViewModelService.PrepareManufacturerAll();
+            var model = await _mediator.Send(new GetManufacturerAll() {
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
             return View(model);
         }
 
@@ -225,8 +247,12 @@ namespace Grand.Web.Controllers
             if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
                 DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = "Admin" }));
 
-            var model = await _catalogViewModelService.PrepareVendor(vendor, command);
-
+            var model = await _mediator.Send(new GetVendor() { 
+                Command = command,
+                Vendor = vendor,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+            });
             //review
             model.VendorReviewOverview = PrepareVendorReviewOverviewModel(vendor);
 
@@ -239,7 +265,7 @@ namespace Grand.Web.Controllers
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return RedirectToRoute("HomePage");
 
-            var model = await _catalogViewModelService.PrepareVendorAll();
+            var model = await _mediator.Send(new GetVendorAll() { Language = _workContext.WorkingLanguage });
             return View(model);
         }
 
@@ -376,7 +402,12 @@ namespace Grand.Web.Controllers
             if (productTag == null)
                 return InvokeHttp404();
 
-            var model = await _catalogViewModelService.PrepareProductsByTag(productTag, command);
+            var model = await _mediator.Send(new GetProductsByTag() { 
+                Command = command,
+                Language = _workContext.WorkingLanguage,
+                ProductTag = productTag,
+                Store = _storeContext.CurrentStore
+            });  
             return View(model);
         }
         public virtual async Task<IActionResult> ProductsByTagName(string seName, CatalogPagingFilteringModel command, [FromServices] IProductTagService productTagService)
@@ -385,13 +416,21 @@ namespace Grand.Web.Controllers
             if (productTag == null)
                 return InvokeHttp404();
 
-            var model = await _catalogViewModelService.PrepareProductsByTag(productTag, command);
+            var model = await _mediator.Send(new GetProductsByTag() {
+                Command = command,
+                Language = _workContext.WorkingLanguage,
+                ProductTag = productTag,
+                Store = _storeContext.CurrentStore
+            });
             return View("ProductsByTag", model);
         }
 
         public virtual async Task<IActionResult> ProductTagsAll()
         {
-            var model = await _catalogViewModelService.PrepareProductTagsAll();
+            var model = await _mediator.Send(new GetProductTagsAll() { 
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
             return View(model);
         }
 
@@ -406,8 +445,15 @@ namespace Grand.Web.Controllers
 
             //Prepare model
             var isSearchTermSpecified = HttpContext?.Request?.Query.ContainsKey("q");
-            var searchmodel = await _catalogViewModelService.PrepareSearch(model, command, isSearchTermSpecified.HasValue ? isSearchTermSpecified.Value : false);
-
+            var searchmodel = await _mediator.Send(new GetSearch() { 
+                Command = command,
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                IsSearchTermSpecified = isSearchTermSpecified.HasValue ? isSearchTermSpecified.Value : false,
+                Language = _workContext.WorkingLanguage,
+                Model = model,
+                Store = _storeContext.CurrentStore
+            });
             return View(searchmodel);
         }
 
@@ -416,8 +462,13 @@ namespace Grand.Web.Controllers
             if (String.IsNullOrWhiteSpace(term) || term.Length < catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
-            var result = await _catalogViewModelService.PrepareSearchAutoComplete(term, categoryId);
-            
+            var result = await _mediator.Send(new GetSearchAutoComplete() { 
+                CategoryId = categoryId, 
+                Term = term, 
+                Customer = _workContext.CurrentCustomer,
+                Store = _storeContext.CurrentStore,
+                Language = _workContext.WorkingLanguage
+            });            
             return Json(result);
         }
 

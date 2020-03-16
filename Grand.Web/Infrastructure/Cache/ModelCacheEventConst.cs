@@ -41,9 +41,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : current store ID
         /// {1} : language ID
-        /// {2} : machine name
         /// </remarks>
-        public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}-{2}";
+        public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}";
 
         /// <summary>
         /// Key for caching of manufacturer displayed on home page
@@ -52,9 +51,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : customer role
         /// {1} : store ID
         /// {2} : language ID
-        /// {3} : machine name
         /// </remarks>
-        public const string MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-fp-{0}-{1}-{2}-{3}";
+        public const string MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-fp-{0}-{1}-{2}";
 
 
         /// <summary>
@@ -141,11 +139,10 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : roles of the current user
         /// {1} : current store ID
         /// {2} : language ID
-        /// {3} : machine name
         /// </remarks>
-        public const string CATEGORY_HOMEPAGE_KEY = "Grand.pres.category.homepage-{0}-{1}-{2}-{3}";
+        public const string CATEGORY_HOMEPAGE_KEY = "Grand.pres.category.homepage-{0}-{1}-{2}";
         public const string CATEGORY_HOMEPAGE_PATTERN_KEY = "Grand.pres.category.homepage";
-        public const string CATEGORY_FEATURED_PRODUCTS_HOMEPAGE_KEY = "Grand.pres.category.homepage-fp-{0}-{1}-{2}-{3}";
+        public const string CATEGORY_FEATURED_PRODUCTS_HOMEPAGE_KEY = "Grand.pres.category.homepage-fp-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for GetChildCategoryIds method results caching
