@@ -92,9 +92,16 @@
                                     </content>
                                 </tabstrip-item>
                             }
+                            <tabstrip-item text="@T("Admin.Orders.Shipments.ShipmentNotes")" tab-index="2">
+                                <content>
+                                    <div>
+                                        <partial name="_ShipmentNotes" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
                             @if (canManageGenericAttributes)
                             {
-                                <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="2">
+                                <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="3">
                                     <content>
                                         <div>
                                             <div class="form-actions">
@@ -104,7 +111,7 @@
                                                 @{
                                                     ViewData["ObjectType"] = "Shipment";
                                                     ViewData["TabIndex"] = 2;
-                                                 }
+                                                }
                                                 <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
                                             </div>
                                         </div>

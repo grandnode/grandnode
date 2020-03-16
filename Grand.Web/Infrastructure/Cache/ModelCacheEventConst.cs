@@ -334,10 +334,9 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized product name)
-        /// {4} : machine name
-        /// {5} : current store ID
+        /// {4} : current store ID
         /// </remarks>
-        public const string CART_PICTURE_MODEL_KEY = "Grand.pres.cart.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string CART_PICTURE_MODEL_KEY = "Grand.pres.cart.picture-{0}-{1}-{2}-{3}-{4}";
         public const string CART_PICTURE_PATTERN_KEY = "Grand.pres.cart.picture-{0}";
 
 
@@ -433,9 +432,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <summary>
         /// {0} : current store ID
         /// {1} : current theme
-        /// {2} : machine name
         /// </summary>
-        public const string STORE_LOGO_PATH = "Grand.pres.logo-{0}-{1}-{2}";
+        public const string STORE_LOGO_PATH = "Grand.pres.logo-{0}-{1}";
         public const string STORE_LOGO_PATH_PATTERN_KEY = "Grand.pres.logo";
         
         /// <summary>

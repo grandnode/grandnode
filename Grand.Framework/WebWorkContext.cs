@@ -289,6 +289,7 @@ namespace Grand.Framework
             return _cachedCustomer = customer ?? throw new Exception("No customer could be loaded");
         }
 
+
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)
         /// </summary>

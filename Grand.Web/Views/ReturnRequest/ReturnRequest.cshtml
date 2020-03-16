@@ -1,5 +1,5 @@
-﻿@model SubmitReturnRequestModel
-@using Grand.Web.Models.Order;
+﻿@model ReturnRequestModel
+@using Grand.Web.Models.Orders;
 @{
     Layout = "_ColumnsOne";
 
@@ -170,7 +170,7 @@
                 {
                     <div class="form-group">
                         @T("ReturnRequests.PickupDate"):
-                        <input id="pickupDateDatePicker" name="pickupDate" class="form-control datepicker" required="@Model.PickupDateRequired" />
+                        <input asp-for="PickupDate" type="date" class="form-control datepicker" required="@Model.PickupDateRequired"/>
                     </div>
                 }
             </div>
@@ -187,9 +187,5 @@
         if ($("#pickup-address-select option:selected").val() != "") {
             newAddress(false);
         }
-
-        $("#pickupDateDatePicker").datepicker({
-            firstDay: 1
-        });
     });
 </script>

@@ -2,6 +2,7 @@ using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Events;
+using Grand.Services.Queries.Models.Orders;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -84,25 +85,18 @@ namespace Grand.Services.Orders
             string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _giftCardRepository.Table;
+            var model = new GetGiftCardQueryModel() {
+                CreatedFromUtc = createdFromUtc,
+                CreatedToUtc = createdToUtc,
+                GiftCardCouponCode = giftCardCouponCode,
+                IsGiftCardActivated = isGiftCardActivated,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                PurchasedWithOrderItemId = purchasedWithOrderItemId,
+                RecipientName = recipientName
+            };
 
-            if (!string.IsNullOrEmpty(purchasedWithOrderItemId))
-                query = query.Where(gc => gc.PurchasedWithOrderItem.Id == purchasedWithOrderItemId);
-
-            if (createdFromUtc.HasValue)
-                query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
-            if (createdToUtc.HasValue)
-                query = query.Where(gc => createdToUtc.Value >= gc.CreatedOnUtc);
-            if (isGiftCardActivated.HasValue)
-                query = query.Where(gc => gc.IsGiftCardActivated == isGiftCardActivated.Value);
-            if (!string.IsNullOrEmpty(giftCardCouponCode))
-            {
-                giftCardCouponCode = giftCardCouponCode.ToLowerInvariant();
-                query = query.Where(gc => gc.GiftCardCouponCode == giftCardCouponCode);
-            }
-            if (!string.IsNullOrWhiteSpace(recipientName))
-                query = query.Where(c => c.RecipientName.Contains(recipientName));
-            query = query.OrderByDescending(gc => gc.CreatedOnUtc);
+            var query = await _mediator.Send(model);
             return await PagedList<GiftCard>.Create(query, pageIndex, pageSize);
         }
 

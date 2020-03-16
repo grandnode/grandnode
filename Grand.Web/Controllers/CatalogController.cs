@@ -5,17 +5,18 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
-using Grand.Services.Orders;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
+using Grand.Web.Commands.Models.Vendors;
+using Grand.Web.Features.Models.Vendors;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Vendors;
@@ -44,7 +45,8 @@ namespace Grand.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerActionEventService _customerActionEventService;
-        private readonly IVendorViewModelService _vendorViewModelService;
+        private readonly IMediator _mediator;
+
         private readonly VendorSettings _vendorSettings;
         
         #endregion
@@ -63,7 +65,7 @@ namespace Grand.Web.Controllers
             IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
             ICustomerActionEventService customerActionEventService,
-            IVendorViewModelService vendorViewModelService,
+            IMediator mediator,
             VendorSettings vendorSettings)
         {
             _catalogViewModelService = catalogViewModelService;
@@ -78,7 +80,7 @@ namespace Grand.Web.Controllers
             _permissionService = permissionService;
             _customerActivityService = customerActivityService;
             _customerActionEventService = customerActionEventService;
-            _vendorViewModelService = vendorViewModelService;
+            _mediator = mediator;
             _vendorSettings = vendorSettings;
         }
 
@@ -92,6 +94,17 @@ namespace Grand.Web.Controllers
                 SystemCustomerAttributeNames.LastContinueShoppingPage,
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
+        }
+
+        private VendorReviewOverviewModel PrepareVendorReviewOverviewModel(Vendor vendor)
+        {
+            var model = new VendorReviewOverviewModel() {
+                RatingSum = vendor.ApprovedRatingSum,
+                TotalReviews = vendor.ApprovedTotalReviews,
+                VendorId = vendor.Id,
+                AllowCustomerReviews = vendor.AllowCustomerReviews
+            };
+            return model;
         }
 
         #endregion
@@ -213,8 +226,9 @@ namespace Grand.Web.Controllers
                 DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = "Admin" }));
 
             var model = await _catalogViewModelService.PrepareVendor(vendor, command);
+
             //review
-            model.VendorReviewOverview = _vendorViewModelService.PrepareVendorReviewOverviewModel(vendor);
+            model.VendorReviewOverview = PrepareVendorReviewOverviewModel(vendor);
 
             return View(model);
         }
@@ -231,7 +245,6 @@ namespace Grand.Web.Controllers
 
         #endregion
 
-
         #region Vendor reviews
 
         public virtual async Task<IActionResult> VendorReviews(string vendorId)
@@ -240,8 +253,8 @@ namespace Grand.Web.Controllers
             if (vendor == null || !vendor.Active || !vendor.AllowCustomerReviews)
                 return RedirectToRoute("HomePage");
 
-            var model = new VendorReviewsModel();
-            await _vendorViewModelService.PrepareVendorReviewsModel(model, vendor);
+            var model = await _mediator.Send(new GetVendorReviews() { Vendor = vendor });
+
             //only registered users can leave reviews
             if (_workContext.CurrentCustomer.IsGuest() && !_vendorSettings.AllowAnonymousUsersToReviewVendor)
                 ModelState.AddModelError("", _localizationService.GetResource("VendorReviews.OnlyRegisteredUsersCanWriteReviews"));
@@ -255,7 +268,7 @@ namespace Grand.Web.Controllers
         [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> VendorReviewsAdd(string vendorId, VendorReviewsModel model, bool captchaValid, 
-            [FromServices] IOrderService orderService, [FromServices] IMediator eventPublisher, [FromServices] CaptchaSettings captchaSettings)
+            [FromServices] CaptchaSettings captchaSettings)
         {
             var vendor = await _vendorService.GetVendorById(vendorId);
             if (vendor == null || !vendor.Active || !vendor.AllowCustomerReviews)
@@ -274,20 +287,24 @@ namespace Grand.Web.Controllers
 
             //allow reviews only by customer that bought something from this vendor
             if (_vendorSettings.VendorReviewPossibleOnlyAfterPurchasing &&
-                    !(await orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, vendorId: vendorId, os: OrderStatus.Complete)).Any())
+                    !(await _mediator.Send(new GetOrderQueryModel() { 
+                        CustomerId = _workContext.CurrentCustomer.Id,
+                        VendorId = vendorId, 
+                        Os = OrderStatus.Complete, 
+                        PageSize = 1})).Any())
                 ModelState.AddModelError(string.Empty, _localizationService.GetResource("VendorReviews.VendorReviewPossibleOnlyAfterPurchasing"));
 
             if (ModelState.IsValid)
             {
-                var vendorReview = await _vendorViewModelService.InsertVendorReview(vendor, model);
+                var vendorReview = await _mediator.Send(new InsertVendorReviewCommand() { Vendor = vendor, Model = model });
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.AddVendorReview", vendor.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddVendorReview"), vendor.Name);
 
                 //raise event
                 if (vendorReview.IsApproved)
-                    await eventPublisher.Publish(new VendorReviewApprovedEvent(vendorReview));
+                    await _mediator.Publish(new VendorReviewApprovedEvent(vendorReview));
 
-                await _vendorViewModelService.PrepareVendorReviewsModel(model, vendor);
+                model = await _mediator.Send(new GetVendorReviews() { Vendor = vendor });
                 model.AddVendorReview.Title = null;
                 model.AddVendorReview.ReviewText = null;
 
@@ -299,9 +316,8 @@ namespace Grand.Web.Controllers
 
                 return View(model);
             }
-
-            //If we got this far, something failed, redisplay form
-            await _vendorViewModelService.PrepareVendorReviewsModel(model, vendor);
+            model = await _mediator.Send(new GetVendorReviews() { Vendor = vendor });
+            
             return View(model);
         }
 
@@ -336,34 +352,11 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            //delete previous helpfulness
-            var prh = vendorReview.VendorReviewHelpfulnessEntries
-                .FirstOrDefault(x => x.CustomerId == customer.Id);
-            if (prh != null)
-            {
-                //existing one
-                prh.WasHelpful = washelpful;
-            }
-            else
-            {
-                //insert new helpfulness
-                prh = new VendorReviewHelpfulness
-                {
-                    VendorReviewId = vendorReview.Id,
-                    CustomerId = customer.Id,
-                    WasHelpful = washelpful,
-                };
-                vendorReview.VendorReviewHelpfulnessEntries.Add(prh);
-                if (!customer.HasContributions)
-                {
-                    await customerService.UpdateContributions(customer);
-                }
-            }
-
-            //new totals
-            vendorReview.HelpfulYesTotal = vendorReview.VendorReviewHelpfulnessEntries.Count(x => x.WasHelpful);
-            vendorReview.HelpfulNoTotal = vendorReview.VendorReviewHelpfulnessEntries.Count(x => !x.WasHelpful);
-            await _vendorService.UpdateVendorReview(vendorReview);
+            vendorReview = await _mediator.Send(new SetVendorReviewHelpfulnessCommand() { 
+                Customer = _workContext.CurrentCustomer, 
+                Vendor = vendor, 
+                Review = vendorReview, 
+                Washelpful = washelpful });
 
             return Json(new
             {

@@ -23,13 +23,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Domain.Common;
+using MediatR;
+using Grand.Web.Features.Models.Checkout;
 
 namespace Grand.Web.Controllers
 {
     public partial class CheckoutController : BasePublicController
     {
         #region Fields
-        private readonly ICheckoutViewModelService _checkoutViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
@@ -43,15 +45,18 @@ namespace Grand.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
         private readonly IAddressViewModelService _addressViewModelService;
+        private readonly IMediator _mediator;
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly AddressSettings _addressSettings;
+
         #endregion
 
         #region Constructors
 
-        public CheckoutController(ICheckoutViewModelService checkoutViewModelService,
+        public CheckoutController(
             IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
@@ -65,12 +70,13 @@ namespace Grand.Web.Controllers
             IOrderService orderService,
             IWebHelper webHelper,
             IAddressViewModelService addressViewModelService,
+            IMediator mediator,
             OrderSettings orderSettings,
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            AddressSettings addressSettings)
         {
-            _checkoutViewModelService = checkoutViewModelService;
             _workContext = workContext;
             _storeContext = storeContext;
             _localizationService = localizationService;
@@ -84,10 +90,12 @@ namespace Grand.Web.Controllers
             _orderService = orderService;
             _webHelper = webHelper;
             _addressViewModelService = addressViewModelService;
+            _mediator = mediator;
             _orderSettings = orderSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _paymentSettings = paymentSettings;
             _shippingSettings = shippingSettings;
+            _addressSettings = addressSettings;
         }
 
         #endregion
@@ -213,7 +221,14 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //model
-            var model = await _checkoutViewModelService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true);
+            var model = await _mediator.Send(new GetBillingAddress() { 
+                Cart = cart,
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                PrePopulateNewAddressWithCustomerFields = true
+            });
 
             //check whether "billing address" step is enabled
             if (_orderSettings.DisableBillingAddressCheckoutStep)
@@ -330,9 +345,16 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _checkoutViewModelService.PrepareBillingAddress(cart,
-                selectedCountryId: model.NewAddress.CountryId,
-                overrideAttributesXml: customAttributes);
+            model = await _mediator.Send(new GetBillingAddress() {
+                Cart = cart,
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                SelectedCountryId = model.NewAddress.CountryId,
+                OverrideAttributesXml = customAttributes
+            });
+
             return View(model);
         }
 
@@ -358,7 +380,13 @@ namespace Grand.Web.Controllers
             }
 
             //model
-            var model = await _checkoutViewModelService.PrepareShippingAddress(prePopulateNewAddressWithCustomerFields: true);
+            var model = await _mediator.Send(new GetShippingAddress() { 
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                PrePopulateNewAddressWithCustomerFields = true,
+            });
 
             return View(model);
         }
@@ -485,9 +513,16 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _checkoutViewModelService.PrepareShippingAddress(
-                selectedCountryId: model.NewAddress.CountryId,
-                overrideAttributesXml: customAttributes);
+            model = await _mediator.Send(new GetShippingAddress() {
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                SelectedCountryId = model.NewAddress.CountryId,
+                OverrideAttributesXml = customAttributes
+            });
+
+
             return View(model);
         }
 
@@ -512,7 +547,14 @@ namespace Grand.Web.Controllers
             }
 
             //model
-            var model = await _checkoutViewModelService.PrepareShippingMethod(cart, _workContext.CurrentCustomer.ShippingAddress);
+            var model = await _mediator.Send(new GetShippingMethod() { 
+                Cart = cart,
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                ShippingAddress = _workContext.CurrentCustomer.ShippingAddress,
+                Store = _storeContext.CurrentStore
+            });
 
             if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                 model.ShippingMethods.Count == 1)
@@ -601,7 +643,14 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
-            var model = await _checkoutViewModelService.PrepareShippingMethod(cart, customer.ShippingAddress);
+            var model = await _mediator.Send(new GetShippingMethod() {
+                Cart = cart,
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                ShippingAddress = _workContext.CurrentCustomer.ShippingAddress,
+                Store = _storeContext.CurrentStore
+            });
             return View(model);
         }
 
@@ -622,7 +671,7 @@ namespace Grand.Web.Controllers
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = await _checkoutViewModelService.IsPaymentWorkflowRequired(cart, false);
+            bool isPaymentWorkflowRequired = await _mediator.Send(new GetIsPaymentWorkflowRequired() { Cart = cart, UseRewardPoints = false });
             if (!isPaymentWorkflowRequired)
             {
                 await _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -674,7 +723,7 @@ namespace Grand.Web.Controllers
             }
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = await _checkoutViewModelService.IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = await _mediator.Send(new GetIsPaymentWorkflowRequired() { Cart = cart }); 
             if (!isPaymentWorkflowRequired)
             {
                 await _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -713,7 +762,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = await _checkoutViewModelService.IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = await _mediator.Send(new GetIsPaymentWorkflowRequired() { Cart = cart }); 
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -735,12 +784,12 @@ namespace Grand.Web.Controllers
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
                 //session save
-                this.HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
+                HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
                 return RedirectToRoute("CheckoutConfirm");
             }
 
             //model
-            var model = _checkoutViewModelService.PreparePaymentInfo(paymentMethod);
+            var model = await _mediator.Send(new GetPaymentInfo() { PaymentMethod = paymentMethod });
             return View(model);
         }
 
@@ -761,7 +810,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = await _checkoutViewModelService.IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = await _mediator.Send(new GetIsPaymentWorkflowRequired() { Cart = cart }); 
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -783,13 +832,13 @@ namespace Grand.Web.Controllers
                 //get payment info
                 var paymentInfo = await paymentMethod.GetPaymentInfo(form);
                 //session save
-                this.HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
+                HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
                 return RedirectToRoute("CheckoutConfirm");
             }
 
             //If we got this far, something failed, redisplay form
-            //model
-            var model = _checkoutViewModelService.PreparePaymentInfo(paymentMethod);
+            var model = await _mediator.Send(new GetPaymentInfo() { PaymentMethod = paymentMethod });
+
             return View(model);
         }
 
@@ -809,7 +858,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //model
-            var model = await _checkoutViewModelService.PrepareConfirmOrder(cart);
+            var model = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
             return View(model);
         }
 
@@ -829,21 +878,23 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //model
-            var model = await _checkoutViewModelService.PrepareConfirmOrder(cart);
+            var model = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
             try
             {
                 var processPaymentRequest = this.HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (await _checkoutViewModelService.IsPaymentWorkflowRequired(cart))
+                    if (await _mediator.Send(new GetIsPaymentWorkflowRequired() { Cart = cart }))
                         return RedirectToRoute("CheckoutPaymentInfo");
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
 
                 //prevent 2 orders being placed within an X seconds time frame
-                if (!await _checkoutViewModelService.IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
+                if (!await _mediator.Send(new GetMinOrderPlaceIntervalValid() { 
+                    Customer = _workContext.CurrentCustomer,
+                    Store = _storeContext.CurrentStore}))
                     throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
 
                 //place order
@@ -915,7 +966,14 @@ namespace Grand.Web.Controllers
         [NonAction]
         protected async Task<JsonResult> OpcLoadStepAfterShippingAddress(IList<ShoppingCartItem> cart)
         {
-            var shippingMethodModel = await _checkoutViewModelService.PrepareShippingMethod(cart, _workContext.CurrentCustomer.ShippingAddress);
+            var shippingMethodModel = await _mediator.Send(new GetShippingMethod() {
+                Cart = cart,
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                ShippingAddress = _workContext.CurrentCustomer.ShippingAddress,
+                Store = _storeContext.CurrentStore
+            });
 
             if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                 shippingMethodModel.ShippingMethods.Count == 1)
@@ -947,12 +1005,12 @@ namespace Grand.Web.Controllers
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = await _checkoutViewModelService.IsPaymentWorkflowRequired(cart, false);
+            bool isPaymentWorkflowRequired = await _mediator.Send(new GetIsPaymentWorkflowRequired() { Cart = cart, UseRewardPoints = false });
             if (isPaymentWorkflowRequired)
             {
                 //filter by country
                 string filterByCountryId = "";
-                if (_addressViewModelService.AddressSettings().CountryEnabled &&
+                if (_addressSettings.CountryEnabled &&
                     _workContext.CurrentCustomer.BillingAddress != null &&
                     !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
                 {
@@ -960,8 +1018,15 @@ namespace Grand.Web.Controllers
                 }
 
                 //payment is required
-                var paymentMethodModel = await _checkoutViewModelService.PreparePaymentMethod(cart, filterByCountryId);
-
+                var paymentMethodModel = await _mediator.Send(new GetPaymentMethod() {
+                    Cart = cart,
+                    Currency = _workContext.WorkingCurrency,
+                    Customer = _workContext.CurrentCustomer,
+                    FilterByCountryId = filterByCountryId,
+                    Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore
+                }); 
+                    
                 if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                     paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
                 {
@@ -998,7 +1063,7 @@ namespace Grand.Web.Controllers
             await _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
-            var confirmOrderModel = await _checkoutViewModelService.PrepareConfirmOrder(cart);
+            var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -1020,9 +1085,9 @@ namespace Grand.Web.Controllers
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
                 //session save
-                this.HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
+                HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 
-                var confirmOrderModel = await _checkoutViewModelService.PrepareConfirmOrder(cart);
+                var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel
@@ -1034,9 +1099,8 @@ namespace Grand.Web.Controllers
                 });
             }
 
-
             //return payment info page
-            var paymenInfoModel = _checkoutViewModelService.PreparePaymentInfo(paymentMethod);
+            var paymenInfoModel = await _mediator.Send(new GetPaymentInfo() { PaymentMethod = paymentMethod });
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -1068,8 +1132,15 @@ namespace Grand.Web.Controllers
             {
                 ShippingRequired = cart.RequiresShipping(),
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep,
-                BillingAddress = await _checkoutViewModelService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true),
-                HasSinglePaymentMethod = paymentMethodModel.PaymentMethods?.Count == 1 
+                BillingAddress = await _mediator.Send(new GetBillingAddress() {
+                    Cart = cart,
+                    Currency = _workContext.WorkingCurrency,
+                    Customer = _workContext.CurrentCustomer,
+                    Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore,
+                    PrePopulateNewAddressWithCustomerFields = true
+                }),
+            HasSinglePaymentMethod = paymentMethodModel.PaymentMethods?.Count == 1 
             };
             return View(model);
         }
@@ -1114,9 +1185,16 @@ namespace Grand.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var billingAddressModel = await _checkoutViewModelService.PrepareBillingAddress(cart,
-                                                    selectedCountryId: model.NewAddress.CountryId,
-                                                    overrideAttributesXml: customAttributes);
+                        var billingAddressModel = await _mediator.Send(new GetBillingAddress() {
+                            Cart = cart,
+                            Currency = _workContext.WorkingCurrency,
+                            Customer = _workContext.CurrentCustomer,
+                            Language = _workContext.WorkingLanguage,
+                            Store = _storeContext.CurrentStore,
+                            SelectedCountryId = model.NewAddress.CountryId,
+                            OverrideAttributesXml = customAttributes
+                        });
+
                         billingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {
@@ -1167,7 +1245,14 @@ namespace Grand.Web.Controllers
                     }
                     else
                     {
-                        var shippingAddressModel = await _checkoutViewModelService.PrepareShippingAddress(prePopulateNewAddressWithCustomerFields: true);
+                        var shippingAddressModel = await _mediator.Send(new GetShippingAddress() {
+                            Currency = _workContext.WorkingCurrency,
+                            Customer = _workContext.CurrentCustomer,
+                            Language = _workContext.WorkingLanguage,
+                            Store = _storeContext.CurrentStore,
+                            PrePopulateNewAddressWithCustomerFields = true
+                        });
+
                         if (_shippingSettings.AllowPickUpInStore && !(await _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id)).Any())
                         {
                             shippingAddressModel.PickUpInStoreOnly = true;
@@ -1298,7 +1383,15 @@ namespace Grand.Web.Controllers
                             string tt = item.ErrorMessage;
                         }
                         //model is not valid. redisplay the form with errors
-                        var shippingAddressModel = await _checkoutViewModelService.PrepareShippingAddress(selectedCountryId: model.NewAddress.CountryId, overrideAttributesXml: customAttributes);
+                        var shippingAddressModel = await _mediator.Send(new GetShippingAddress() {
+                            Currency = _workContext.WorkingCurrency,
+                            Customer = _workContext.CurrentCustomer,
+                            Language = _workContext.WorkingLanguage,
+                            Store = _storeContext.CurrentStore,
+                            SelectedCountryId = model.NewAddress.CountryId,
+                            OverrideAttributesXml = customAttributes,
+                        });
+
                         shippingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {
@@ -1441,14 +1534,14 @@ namespace Grand.Web.Controllers
                 }
 
                 //Check whether payment workflow is required
-                bool isPaymentWorkflowRequired = await _checkoutViewModelService.IsPaymentWorkflowRequired(cart);
+                bool isPaymentWorkflowRequired = await _mediator.Send(new GetIsPaymentWorkflowRequired() { Cart = cart });
                 if (!isPaymentWorkflowRequired)
                 {
                     //payment is not required
                     await _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                         SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
-                    var confirmOrderModel = await _checkoutViewModelService.PrepareConfirmOrder(cart);
+                    var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
@@ -1502,9 +1595,9 @@ namespace Grand.Web.Controllers
                     //get payment info
                     var paymentInfo = await paymentMethod.GetPaymentInfo(form);
                     //session save
-                    this.HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
+                    HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 
-                    var confirmOrderModel = await _checkoutViewModelService.PrepareConfirmOrder(cart);
+                    var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
@@ -1517,7 +1610,7 @@ namespace Grand.Web.Controllers
                 }
 
                 //If we got this far, something failed, redisplay form
-                var paymenInfoModel = _checkoutViewModelService.PreparePaymentInfo(paymentMethod);
+                var paymenInfoModel = await _mediator.Send(new GetPaymentInfo() { PaymentMethod = paymentMethod });
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel
@@ -1543,7 +1636,9 @@ namespace Grand.Web.Controllers
                 OpcCartValidate(cart);
 
                 //prevent 2 orders being placed within an X seconds time frame
-                if (!await _checkoutViewModelService.IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
+                if (!await _mediator.Send(new GetMinOrderPlaceIntervalValid() {
+                    Customer = _workContext.CurrentCustomer,
+                    Store = _storeContext.CurrentStore}))
                     throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
 
                 //place order
@@ -1551,7 +1646,7 @@ namespace Grand.Web.Controllers
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (await _checkoutViewModelService.IsPaymentWorkflowRequired(cart))
+                    if (await _mediator.Send(new GetIsPaymentWorkflowRequired() { Cart = cart }))
                     {
                         throw new Exception("Payment information is not entered");
                     }
@@ -1678,14 +1773,22 @@ namespace Grand.Web.Controllers
         private async Task<CheckoutPaymentMethodModel> GetCheckoutPaymentMethodModel(IList<ShoppingCartItem> cart)
         {
             var filterByCountryId = "";
-            if (_addressViewModelService.AddressSettings().CountryEnabled &&
+            if (_addressSettings.CountryEnabled &&
                 _workContext.CurrentCustomer.BillingAddress != null &&
                 !string.IsNullOrWhiteSpace(_workContext.CurrentCustomer.BillingAddress.CountryId))
             {
                 filterByCountryId = _workContext.CurrentCustomer.BillingAddress.CountryId;
             }
 
-            var paymentMethodModel = await _checkoutViewModelService.PreparePaymentMethod(cart, filterByCountryId);
+            var paymentMethodModel = await _mediator.Send(new GetPaymentMethod() {
+                Cart = cart,
+                Currency = _workContext.WorkingCurrency,
+                Customer = _workContext.CurrentCustomer,
+                FilterByCountryId = filterByCountryId,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
+
             return paymentMethodModel;
         }
 

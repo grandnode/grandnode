@@ -1439,13 +1439,17 @@ namespace Grand.Services.Orders
             if (includeCouponCodes)
             {
                 //discount
-                foreach (var code in await fromCustomer.ParseAppliedDiscountCouponCodes(_genericAttributeService))
-                    await toCustomer.ApplyDiscountCouponCode(_genericAttributeService, code);
+                foreach (var code in fromCustomer.ParseAppliedDiscountCouponCodes())
+                {
+                    var result = toCustomer.ApplyDiscountCouponCode(code);
+                    await _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.DiscountCouponCode, result);
+                }
 
                 //gift card
-                foreach (var code in await fromCustomer.ParseAppliedGiftCardCouponCodes(_genericAttributeService))
-                    await toCustomer.ApplyGiftCardCouponCode(_genericAttributeService, code);
-
+                var giftCardCouponCodes = GiftCardExtensions.ApplyCouponCodes(
+                    fromCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.GiftCardCouponCodes), 
+                    toCustomer.ParseAppliedGiftCardCouponCodes());
+                await _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.GiftCardCouponCodes, giftCardCouponCodes);
             }
 
             //copy url referer

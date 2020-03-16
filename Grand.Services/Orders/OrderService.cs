@@ -5,6 +5,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Events;
+using Grand.Services.Queries.Models.Orders;
 using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -151,9 +152,12 @@ namespace Grand.Services.Orders
 
             var filters = Builders<ProductAlsoPurchased>.Filter;
             var filter = filters.Where(x => x.OrderId == order.Id);
-            await _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
             order.Deleted = true;
             await UpdateOrder(order);
+
+            //delete product also purchased
+            await _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
+
         }
 
         /// <summary>
@@ -187,78 +191,27 @@ namespace Grand.Services.Orders
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
-            var query = _orderRepository.Table;
-            if (!String.IsNullOrEmpty(storeId))
-                query = query.Where(o => o.StoreId == storeId);
-            if (!String.IsNullOrEmpty(vendorId))
-            {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.VendorId == vendorId));
-            }
-            if (!String.IsNullOrEmpty(customerId))
-                query = query.Where(o => o.CustomerId == customerId);
-            if (!String.IsNullOrEmpty(productId))
-            {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.ProductId == productId));
-            }
-            if (!String.IsNullOrEmpty(warehouseId))
-            {
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem =>
-                        orderItem.WarehouseId == warehouseId
-                        ));
-            }
-            if (!String.IsNullOrEmpty(billingCountryId))
-                query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
-            if (!String.IsNullOrEmpty(paymentMethodSystemName))
-                query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
-            if (!String.IsNullOrEmpty(affiliateId))
-                query = query.Where(o => o.AffiliateId == affiliateId);
-            if (createdFromUtc.HasValue)
-                query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
-            if (createdToUtc.HasValue)
-                query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
-            if (orderStatusId.HasValue)
-                query = query.Where(o => orderStatusId.Value == o.OrderStatusId);
-            if (paymentStatusId.HasValue)
-                query = query.Where(o => paymentStatusId.Value == o.PaymentStatusId);
-            if (shippingStatusId.HasValue)
-                query = query.Where(o => shippingStatusId.Value == o.ShippingStatusId);
-            if (!String.IsNullOrEmpty(billingEmail))
-                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
-            if (!String.IsNullOrEmpty(billingLastName))
-                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
-
-            query = query.Where(o => !o.Deleted);
-            query = query.OrderByDescending(o => o.CreatedOnUtc);
-
-
-
-            if (!String.IsNullOrEmpty(orderGuid))
-            {
-                //filter by GUID. Filter in BLL because EF doesn't support casting of GUID to string
-                var orders = await query.ToListAsync();
-                orders = orders.FindAll(o => o.OrderGuid.ToString().ToLowerInvariant().Contains(orderGuid.ToLowerInvariant()));
-                return new PagedList<Order>(orders, pageIndex, pageSize);
-            }
-
-            //database layer paging
+            var querymodel = new GetOrderQueryModel() {
+                AffiliateId = affiliateId,
+                BillingCountryId = billingCountryId,
+                BillingEmail = billingEmail,
+                BillingLastName = billingLastName,
+                CreatedFromUtc = createdFromUtc,
+                CreatedToUtc = createdToUtc,
+                CustomerId = customerId,
+                OrderGuid = orderGuid,
+                Os = os,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                PaymentMethodSystemName = paymentMethodSystemName,
+                ProductId = productId,
+                Ps = ps,
+                Ss = ss,
+                StoreId = storeId,
+                VendorId = vendorId,
+                WarehouseId = warehouseId
+            };
+            var query = await _mediator.Send(querymodel);
             return await PagedList<Order>.Create(query, pageIndex, pageSize);
         }
 
@@ -326,15 +279,16 @@ namespace Grand.Services.Orders
         /// <param name="authorizationTransactionId">Authorization transaction ID</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
-        public virtual Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId,
+        public virtual Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethod
+            (string authorizationTransactionId,
             string paymentMethodSystemName)
         {
             var query = _orderRepository.Table;
 
-            if (!String.IsNullOrWhiteSpace(authorizationTransactionId))
+            if (!string.IsNullOrWhiteSpace(authorizationTransactionId))
                 query = query.Where(o => o.AuthorizationTransactionId == authorizationTransactionId);
 
-            if (!String.IsNullOrWhiteSpace(paymentMethodSystemName))
+            if (!string.IsNullOrWhiteSpace(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
 
             query = query.OrderByDescending(o => o.CreatedOnUtc);
@@ -380,62 +334,38 @@ namespace Grand.Services.Orders
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             bool loadDownloableProductsOnly)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
-            var builder = Builders<Order>.Filter;
-
-            var filter = builder.Where(x => !x.Deleted);
-
-            if (!String.IsNullOrEmpty(orderId))
-                filter = filter & builder.Where(o => o.Id == orderId);
-
-            if (!String.IsNullOrEmpty(customerId))
-                filter = filter & builder.Where(o => o.CustomerId == customerId);
-
-            if (orderStatusId.HasValue)
-                filter = filter & builder.Where(o => o.OrderStatusId == orderStatusId.Value);
-
-            if (paymentStatusId.HasValue)
-                filter = filter & builder.Where(o => o.PaymentStatusId == paymentStatusId.Value);
-
-            if (shippingStatusId.HasValue)
-                filter = filter & builder.Where(o => o.ShippingStatusId == shippingStatusId.Value);
-
-            if (createdFromUtc.HasValue)
-                filter = filter & builder.Where(o => o.CreatedOnUtc >= createdFromUtc.Value);
-
-            if (createdToUtc.HasValue)
-                filter = filter & builder.Where(o => o.CreatedOnUtc <= createdToUtc.Value);
-
-            var query = await _orderRepository.Collection.Aggregate().Match(filter).Unwind<Order, UnwindOrderItem>(x => x.OrderItems).ToListAsync();
+            var querymodel = new GetOrderQueryModel() {
+                CreatedFromUtc = createdFromUtc,
+                CreatedToUtc = createdToUtc,
+                CustomerId = customerId,
+                Os = os,
+                OrderId = orderId,
+                Ps = ps,
+                Ss = ss,
+            };
+            var query = await _mediator.Send(querymodel);
             var items = new List<OrderItem>();
-            foreach (var item in query)
+            foreach (var order in await query.ToListAsync())
             {
-                if (loadDownloableProductsOnly)
+                foreach (var orderitem in order.OrderItems)
                 {
-                    var product = await _productRepository.GetByIdAsync(item.OrderItems.ProductId);
-                    if (product == null)
-                        product = await _productDeletedRepository.GetByIdAsync(item.OrderItems.ProductId) as Product;
-                    if (product != null)
+                    if (loadDownloableProductsOnly)
                     {
-                        if (product.IsDownload)
+                        var product = await _productRepository.GetByIdAsync(orderitem.ProductId);
+                        if (product == null)
+                            product = await _productDeletedRepository.GetByIdAsync(orderitem.ProductId) as Product;
+                        if (product != null)
                         {
-                            items.Add(item.OrderItems);
+                            if (product.IsDownload)
+                            {
+                                items.Add(orderitem);
+                            }
                         }
                     }
+                    else
+                        items.Add(orderitem);
                 }
-                else
-                    items.Add(item.OrderItems);
+
             }
             return items;
         }
@@ -612,16 +542,6 @@ namespace Grand.Services.Orders
 
         #endregion
 
-        #endregion
-
-        #region UnwindOrderItem
-
-        public class UnwindOrderItem
-        {
-            public OrderItem OrderItems { get; set; }
-        }
-
-        #endregion
-
+        #endregion      
     }
 }

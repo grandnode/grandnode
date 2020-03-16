@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
-using Grand.Web.Models.Order;
+using Grand.Web.Models.Orders;
 using System.Collections.Generic;
 
 namespace Grand.Web.Validators.Customer

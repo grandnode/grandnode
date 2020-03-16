@@ -197,8 +197,8 @@ namespace Grand.Services.Messages
 
                 #region Download
 
-                liqitem.IsDownloadAllowed = await downloadService.IsDownloadAllowed(item);
-                liqitem.IsLicenseDownloadAllowed = await downloadService.IsLicenseDownloadAllowed(item);
+                liqitem.IsDownloadAllowed = await downloadService.IsDownloadAllowed(order, item);
+                liqitem.IsLicenseDownloadAllowed = await downloadService.IsLicenseDownloadAllowed(order, item);
 
                 #endregion
 

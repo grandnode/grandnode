@@ -1114,7 +1114,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<IEnumerable<CustomerModel.RewardPointsHistoryModel>> PrepareRewardPointsHistoryModel(string customerId)
         {
             var model = new List<CustomerModel.RewardPointsHistoryModel>();
-            foreach (var rph in await _rewardPointsService.GetRewardPointsHistory(customerId, true))
+            foreach (var rph in await _rewardPointsService.GetRewardPointsHistory(customerId, showHidden: true))
             {
                 var store = await _storeService.GetStoreById(rph.StoreId);
                 model.Add(new CustomerModel.RewardPointsHistoryModel

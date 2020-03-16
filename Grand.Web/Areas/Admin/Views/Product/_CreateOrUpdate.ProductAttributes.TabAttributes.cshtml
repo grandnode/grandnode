@@ -8,7 +8,7 @@
     </div>
     <vc:admin-widget widget-zone="product_details_product_attributes_bottom" additional-data="Model" />
     <div class="panel-footer">
-        <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeMappingPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshProductAttributes", formId = "product-form" }))', 800, 600, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Catalog.Products.ProductAttributes.AddNew")</button>
+        <button type="submit" id="btnAddNewAttributes" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeMappingPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshProductAttributes", formId = "product-form" }))', 800, 600, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Catalog.Products.ProductAttributes.AddNew")</button>
     </div>
 </div>
 

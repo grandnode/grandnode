@@ -57,11 +57,6 @@ namespace Grand.Web.Services
             _addressSettings = addressSettings;
         }
 
-        public virtual AddressSettings AddressSettings()
-        {
-            return _addressSettings;
-        }
-
         //address
         /// <summary>
         /// Prepare address model

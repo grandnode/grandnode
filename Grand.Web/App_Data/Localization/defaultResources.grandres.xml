@@ -7641,6 +7641,15 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SecuritySettings">
     <Value>Security settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoCharConversion">
+    <Value>SEO char conversion</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoCharConversion.Hint">
+    <Value>Provide the characters which should be converted when Convert non-western chars setting is enabled. Example: ą:a;ę:e;ó:o;ć:c;ł:l;ś:s;ź:z;ż:z</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoCharConversion.Note">
+    <Value>NOTE: If you want to use SEO Char Conversion, don't forget to restart application to apply changes.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled">
     <Value>SEO friendly URLs with multiple languages enabled</Value>
   </LocaleResource>
@@ -14119,6 +14128,48 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough">
     <Value>[Reserved - Planned] quantity value of some products are less than specified quantity to be shipped. Are you sure?</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes">
+    <Value>Shipment notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.addbutton">
+    <Value>Add shipment note</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.addtitle">
+    <Value>Add shipment note</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.createdbycustomer">
+    <Value>Created by customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.createdon">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.download">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.fields.displaytocustomer">
+    <Value>Display to customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentNotes.Fields.DisplayToCustomer.Hint">
+    <Value>Mark this box if you want to display this note to customer on public store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentNotes.Fields.download">
+    <Value>Attached file</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.fields.download.hasdownload">
+    <Value>(check to upload file)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentNotes.Fields.Download.Hint">
+    <Value>Check this box if you want to add download to this shipment note.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentNotes.Fields.Note">
+    <Value>Note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentNotes.Fields.Note.Hint">
+    <Value>Provide the shipment note</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.note">
+    <Value>Note</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents">
     <Value>Shipment status events</Value>

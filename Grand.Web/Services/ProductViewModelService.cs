@@ -26,10 +26,12 @@ using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Web.Extensions;
+using Grand.Web.Features.Models.ShoppingCart;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,6 +76,8 @@ namespace Grand.Web.Services
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IProductReservationService _productReservationService;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IMediator _mediator;
+
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly SeoSettings _seoSettings;
@@ -91,7 +95,7 @@ namespace Grand.Web.Services
             IVendorService vendorService, ICategoryService categoryService, IAclService aclService, IStoreMappingService storeMappingService,
             IProductTagService productTagService, IProductAttributeService productAttributeService, IManufacturerService manufacturerService,
             IDateTimeHelper dateTimeHelper, IDownloadService downloadService, IWorkflowMessageService workflowMessageService, IProductReservationService productReservationService,
-            IServiceProvider serviceProvider,
+            IServiceProvider serviceProvider, IMediator mediator,
             MediaSettings mediaSettings, CatalogSettings catalogSettings, SeoSettings seoSettings, VendorSettings vendorSettings, CustomerSettings customerSettings,
             CaptchaSettings captchaSettings, LocalizationSettings localizationSettings, ShoppingCartSettings shoppingCartSettings)
         {
@@ -124,6 +128,7 @@ namespace Grand.Web.Services
             _workflowMessageService = workflowMessageService;
             _productReservationService = productReservationService;
             _serviceProvider = serviceProvider;
+            _mediator = mediator;
             _mediaSettings = mediaSettings;
             _catalogSettings = catalogSettings;
             _seoSettings = seoSettings;
@@ -1586,9 +1591,7 @@ namespace Grand.Web.Services
         {
             var model = new ProductDetailsAttributeChangeModel();
 
-            var shoppingCartViewModelService = _serviceProvider.GetRequiredService<IShoppingCartViewModelService>();
-
-            string attributeXml = await shoppingCartViewModelService.ParseProductAttributes(product, form);
+            string attributeXml = await _mediator.Send(new GetParseProductAttributes() { Product = product, Form = form  });
 
             string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
                form["WarehouseId"].ToString() :
@@ -1600,7 +1603,7 @@ namespace Grand.Web.Services
             DateTime? rentalEndDate = null;
             if (product.ProductType == ProductType.Reservation)
             {
-                shoppingCartViewModelService.ParseReservationDates(product, form, out rentalStartDate, out rentalEndDate);
+                product.ParseReservationDates(form, out rentalStartDate, out rentalEndDate);
             }
 
             model.Sku = product.FormatSku(attributeXml, _productAttributeParser);

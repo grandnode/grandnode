@@ -291,7 +291,9 @@ namespace Grand.Services.Vendors
             var update = Builders<VendorReview>.Update
                 .Set(x => x.Title, vendorreview.Title)
                 .Set(x => x.ReviewText, vendorreview.ReviewText)
-                .Set(x => x.IsApproved, vendorreview.IsApproved);
+                .Set(x => x.IsApproved, vendorreview.IsApproved)
+                .Set(x => x.HelpfulYesTotal, vendorreview.HelpfulYesTotal)
+                .Set(x => x.HelpfulNoTotal, vendorreview.HelpfulNoTotal);
 
             await _vendorReviewRepository.Collection.UpdateManyAsync(filter, update);
 
