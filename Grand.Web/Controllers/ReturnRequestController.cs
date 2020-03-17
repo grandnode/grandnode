@@ -8,8 +8,8 @@ using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Web.Commands.Models.Orders;
 using Grand.Web.Extensions;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.Orders;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Orders;
 using MediatR;
@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,9 +29,9 @@ namespace Grand.Web.Controllers
         private readonly IReturnRequestService _returnRequestService;
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ILocalizationService _localizationService;
-        private readonly IAddressViewModelService _addressViewModelService;
         private readonly IMediator _mediator;
 
         private readonly OrderSettings _orderSettings;
@@ -44,18 +43,18 @@ namespace Grand.Web.Controllers
             IReturnRequestService returnRequestService,
             IOrderService orderService,
             IWorkContext workContext,
+            IStoreContext storeContext,
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
-            IAddressViewModelService addressViewModelService,
             IMediator mediator,
             OrderSettings orderSettings)
         {
             _returnRequestService = returnRequestService;
             _orderService = orderService;
             _workContext = workContext;
+            _storeContext = storeContext;
             _orderProcessingService = orderProcessingService;
             _localizationService = localizationService;
-            _addressViewModelService = addressViewModelService;
             _mediator = mediator;
             _orderSettings = orderSettings;
         }
@@ -68,12 +67,16 @@ namespace Grand.Web.Controllers
         {
             var countryService = HttpContext.RequestServices.GetRequiredService<ICountryService>();
             var countries = await countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
-            await _addressViewModelService.PrepareModel(model: addressModel,
-            address: null,
-            excludeProperties: true,
-            loadCountries: () => countries,
-            prePopulateWithCustomerFields: true,
-            customer: _workContext.CurrentCustomer);
+            addressModel = await _mediator.Send(new GetAddressModel() {
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                Customer = _workContext.CurrentCustomer,
+                Model = addressModel,
+                Address = null,
+                ExcludeProperties = true,
+                PrePopulateWithCustomerFields = true,
+                LoadCountries = () => countries
+            });
         }
 
         protected async Task<Address> PrepareAddress(ReturnRequestModel model, IFormCollection form)
@@ -88,7 +91,7 @@ namespace Grand.Web.Controllers
                 }
                 else
                 {
-                    var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
+                    var customAttributes = await _mediator.Send(new GetParseCustomAddressAttributes() { Form = form });
                     var addressAttributeParser = HttpContext.RequestServices.GetRequiredService<IAddressAttributeParser>();
                     var customAttributeWarnings = await addressAttributeParser.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
@@ -130,7 +133,11 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             //var model = new ReturnRequestModel();
-            var model = await _mediator.Send(new GetReturnRequest() { Order = order });
+            var model = await _mediator.Send(new GetReturnRequest() {
+                Order = order,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
             model.Error = errors;
             return View(model);
         }
@@ -157,7 +164,11 @@ namespace Grand.Web.Controllers
 
             if (!ModelState.IsValid && ModelState.ErrorCount > 0)
             {
-                var returnmodel = await _mediator.Send(new GetReturnRequest() { Order = order });
+                var returnmodel = await _mediator.Send(new GetReturnRequest() {
+                    Order = order,
+                    Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore
+                });
                 returnmodel.Error = string.Join(", ", ModelState.Keys.SelectMany(k => ModelState[k].Errors).Select(m => m.ErrorMessage).ToArray());
                 returnmodel.Comments = model.Comments;
                 returnmodel.PickupDate = model.PickupDate;
@@ -178,7 +189,11 @@ namespace Grand.Web.Controllers
                     return View(result.model);
                 }
 
-                var returnmodel = await _mediator.Send(new GetReturnRequest() { Order = order });
+                var returnmodel = await _mediator.Send(new GetReturnRequest() {
+                    Order = order,
+                    Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore
+                });
                 returnmodel.Error = result.model.Error;
                 returnmodel.Comments = model.Comments;
                 returnmodel.PickupDate = model.PickupDate;
@@ -190,7 +205,7 @@ namespace Grand.Web.Controllers
                 }
                 return View(returnmodel);
             }
-            
+
         }
 
         public virtual async Task<IActionResult> ReturnRequestDetails(string returnRequestId)
@@ -203,7 +218,11 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = await _mediator.Send(new GetReturnRequestDetails() { Order = order, ReturnRequest = rr });
+            var model = await _mediator.Send(new GetReturnRequestDetails() {
+                Order = order,
+                Language = _workContext.WorkingLanguage,
+                ReturnRequest = rr,
+            });
 
             return View(model);
         }

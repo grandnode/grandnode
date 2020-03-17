@@ -16,8 +16,8 @@ using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Web.Commands.Models.Customers;
 using Grand.Web.Extensions;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.Customers;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Customer;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +41,6 @@ namespace Grand.Web.Controllers
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IAddressViewModelService _addressViewModelService;
         private readonly IMediator _mediator;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly CustomerSettings _customerSettings;
@@ -61,7 +60,6 @@ namespace Grand.Web.Controllers
             ICustomerRegistrationService customerRegistrationService,
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
-            IAddressViewModelService addressViewModelService,
             IMediator mediator,
             IWorkflowMessageService workflowMessageService,
             CaptchaSettings captchaSettings,
@@ -77,7 +75,6 @@ namespace Grand.Web.Controllers
             _customerSettings = customerSettings;
             _countryService = countryService;
             _customerActivityService = customerActivityService;
-            _addressViewModelService = addressViewModelService;
             _workflowMessageService = workflowMessageService;
             _captchaSettings = captchaSettings;
             _mediator = mediator;
@@ -727,7 +724,11 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            var model = await _mediator.Send(new GetAddressList() { Customer = _workContext.CurrentCustomer, Language = _workContext.WorkingLanguage });
+            var model = await _mediator.Send(new GetAddressList() { 
+                Customer = _workContext.CurrentCustomer, 
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
             return View(model);
         }
 
@@ -762,11 +763,16 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
-            var model = new CustomerAddressEditModel();
-            await _addressViewModelService.PrepareModel(model: model.Address,
-                address: null,
-                excludeProperties: false,
-                loadCountries: () => countries);
+            var model = new CustomerAddressEditModel {
+                Address = await _mediator.Send(new GetAddressModel() {
+                    Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore,
+                    Model = null,
+                    Address = null,
+                    ExcludeProperties = false,
+                    LoadCountries = () => countries
+                })
+            };
 
             return View(model);
         }
@@ -782,7 +788,7 @@ namespace Grand.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom address attributes
-            var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
+            var customAttributes = await _mediator.Send(new GetParseCustomAddressAttributes() { Form = form });
             var customAttributeWarnings = await addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -803,10 +809,14 @@ namespace Grand.Web.Controllers
             }
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
             //If we got this far, something failed, redisplay form
-            await _addressViewModelService.PrepareModel(model: model.Address,
-                address: null,
-                excludeProperties: true,
-                loadCountries: () => countries);
+            model.Address = await _mediator.Send(new GetAddressModel() {
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                Model = model.Address,
+                Address = null,
+                ExcludeProperties = true,
+                LoadCountries = () => countries
+            });
 
             return View(model);
         }
@@ -825,10 +835,14 @@ namespace Grand.Web.Controllers
 
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
             var model = new CustomerAddressEditModel();
-            await _addressViewModelService.PrepareModel(model: model.Address,
-                address: address,
-                excludeProperties: false,
-                loadCountries: () => countries);
+            model.Address = await _mediator.Send(new GetAddressModel() {
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                Model = model.Address,
+                Address = address,
+                ExcludeProperties = false,
+                LoadCountries = () => countries
+            });
 
             return View(model);
         }
@@ -849,7 +863,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             //custom address attributes
-            var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
+            var customAttributes = await _mediator.Send(new GetParseCustomAddressAttributes() { Form = form });
             var customAttributeWarnings = await addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -872,10 +886,15 @@ namespace Grand.Web.Controllers
             }
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
             //If we got this far, something failed, redisplay form
-            await _addressViewModelService.PrepareModel(model: model.Address,
-                address: address,
-                excludeProperties: true,
-                loadCountries: () => countries);
+            model.Address = await _mediator.Send(new GetAddressModel() {
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                Model = model.Address,
+                Address = address,
+                ExcludeProperties = true,
+                LoadCountries = () => countries
+            });
+
             return View(model);
         }
 

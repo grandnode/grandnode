@@ -5,7 +5,7 @@ using Grand.Services.Media;
 using Grand.Services.Seo;
 using Grand.Services.Vendors;
 using Grand.Web.Features.Models.Catalog;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using MediatR;
@@ -18,25 +18,24 @@ namespace Grand.Web.Features.Handlers.Catalog
     public class GetVendorAllHandler : IRequestHandler<GetVendorAll, IList<VendorModel>>
     {
         private readonly IVendorService _vendorService;
-        private readonly IAddressViewModelService _addressViewModelService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
-
+        private readonly IMediator _mediator;
         private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
 
         public GetVendorAllHandler(
             IVendorService vendorService,
-            IAddressViewModelService addressViewModelService,
             IPictureService pictureService,
             ILocalizationService localizationService,
+            IMediator mediator,
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
             _vendorService = vendorService;
-            _addressViewModelService = addressViewModelService;
             _pictureService = pictureService;
             _localizationService = localizationService;
+            _mediator = mediator;
             _mediaSettings = mediaSettings;
             _vendorSettings = vendorSettings;
         }
@@ -60,10 +59,12 @@ namespace Grand.Web.Features.Handlers.Catalog
                 };
 
                 //prepare vendor address
-                await _addressViewModelService.PrepareVendorAddressModel(model: vendorModel.Address,
-                address: vendor.Address,
-                excludeProperties: false,
-                vendorSettings: _vendorSettings);
+                vendorModel.Address = await _mediator.Send(new GetVendorAddress() {
+                    Language = request.Language,
+                    Address = vendor.Address,
+                    ExcludeProperties = false,
+                });
+
                 //prepare picture model
                 var pictureModel = new PictureModel {
                     Id = vendor.PictureId,

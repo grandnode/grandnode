@@ -6,8 +6,8 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Seo;
 using Grand.Web.Features.Models.Catalog;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.Products;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using MediatR;
@@ -20,7 +20,6 @@ namespace Grand.Web.Features.Handlers.Catalog
     public class GetVendorHandler : IRequestHandler<GetVendor, VendorModel>
     {
         private readonly IMediator _mediator;
-        private readonly IAddressViewModelService _addressViewModelService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
@@ -31,7 +30,6 @@ namespace Grand.Web.Features.Handlers.Catalog
 
         public GetVendorHandler(
             IMediator mediator,
-            IAddressViewModelService addressViewModelService,
             IPictureService pictureService,
             ILocalizationService localizationService,
             IProductService productService,
@@ -40,7 +38,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             CatalogSettings catalogSettings)
         {
             _mediator = mediator;
-            _addressViewModelService = addressViewModelService;
             _pictureService = pictureService;
             _localizationService = localizationService;
             _productService = productService;
@@ -62,10 +59,11 @@ namespace Grand.Web.Features.Handlers.Catalog
                 AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
             };
 
-            await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
-            address: request.Vendor.Address,
-            excludeProperties: false,
-            vendorSettings: _vendorSettings);
+            model.Address = await _mediator.Send(new GetVendorAddress() {
+                Language = request.Language,
+                Address = request.Vendor.Address,
+                ExcludeProperties = false,
+            });
 
             //prepare picture model
             var pictureModel = new PictureModel {

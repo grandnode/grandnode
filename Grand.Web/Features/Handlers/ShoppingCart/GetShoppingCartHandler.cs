@@ -19,9 +19,9 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.ShoppingCart;
 using Grand.Web.Infrastructure.Cache;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.ShoppingCart;
@@ -56,12 +56,11 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IDownloadService _downloadService;
         private readonly ICountryService _countryService;
-        private readonly IAddressViewModelService _addressViewModelService;
         private readonly IShippingService _shippingService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IMediator _mediator;
 
         private readonly MediaSettings _mediaSettings;
         private readonly OrderSettings _orderSettings;
@@ -89,12 +88,11 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             ICheckoutAttributeParser checkoutAttributeParser,
             IDownloadService downloadService,
             ICountryService countryService,
-            IAddressViewModelService addressViewModelService,
             IShippingService shippingService,
             IProductAttributeFormatter productAttributeFormatter,
             IPriceCalculationService priceCalculationService,
-            IGenericAttributeService genericAttributeService,
             IDateTimeHelper dateTimeHelper,
+            IMediator mediator,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings,
@@ -120,12 +118,11 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _checkoutAttributeParser = checkoutAttributeParser;
             _downloadService = downloadService;
             _countryService = countryService;
-            _addressViewModelService = addressViewModelService;
             _shippingService = shippingService;
             _productAttributeFormatter = productAttributeFormatter;
             _priceCalculationService = priceCalculationService;
-            _genericAttributeService = genericAttributeService;
             _dateTimeHelper = dateTimeHelper;
+            _mediator = mediator;
             _mediaSettings = mediaSettings;
             _orderSettings = orderSettings;
             _shoppingCartSettings = shoppingCartSettings;
@@ -530,10 +527,11 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 //billing info
                 var billingAddress = request.Customer.BillingAddress;
                 if (billingAddress != null)
-                    await _addressViewModelService.PrepareModel(model: model.OrderReviewData.BillingAddress,
-                        address: billingAddress,
-                        excludeProperties: false);
-
+                    model.OrderReviewData.BillingAddress = await _mediator.Send(new GetAddressModel() {
+                        Language = request.Language,
+                        Address = billingAddress,
+                        ExcludeProperties = false,
+                    });
                 //shipping info
                 if (request.Cart.RequiresShipping())
                 {
@@ -547,9 +545,11 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     {
                         var shippingAddress = request.Customer.ShippingAddress;
                         if (shippingAddress != null)
-                            await _addressViewModelService.PrepareModel(model: model.OrderReviewData.ShippingAddress,
-                                address: shippingAddress,
-                                excludeProperties: false);
+                            model.OrderReviewData.ShippingAddress = await _mediator.Send(new GetAddressModel() {
+                                Language = request.Language,
+                                Address = shippingAddress,
+                                ExcludeProperties = false,
+                            });
                     }
                     else
                     {

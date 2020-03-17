@@ -10,10 +10,9 @@ using Grand.Services.Orders;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.Orders;
 using Grand.Web.Infrastructure.Cache;
-using Grand.Web.Interfaces;
-using Grand.Web.Models.Common;
 using Grand.Web.Models.Orders;
 using MediatR;
 using System.Collections.Generic;
@@ -34,8 +33,7 @@ namespace Grand.Web.Features.Handlers.Orders
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICountryService _countryService;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly IAddressViewModelService _addressViewModelService;
-
+        private readonly IMediator _mediator;
         private readonly OrderSettings _orderSettings;
 
         public GetReturnRequestHandler(
@@ -48,7 +46,7 @@ namespace Grand.Web.Features.Handlers.Orders
             IPriceFormatter priceFormatter,
             ICountryService countryService,
             IStoreMappingService storeMappingService,
-            IAddressViewModelService addressViewModelService,
+            IMediator mediator,
             OrderSettings orderSettings
             )
         {
@@ -61,7 +59,7 @@ namespace Grand.Web.Features.Handlers.Orders
             _priceFormatter = priceFormatter;
             _countryService = countryService;
             _storeMappingService = storeMappingService;
-            _addressViewModelService = addressViewModelService;
+            _mediator = mediator;
             _orderSettings = orderSettings;
         }
 
@@ -191,21 +189,26 @@ namespace Grand.Web.Features.Handlers.Orders
 
             foreach (var address in addresses)
             {
-                var addressModel = new AddressModel();
-                await _addressViewModelService.PrepareModel(model: addressModel,
-                    address: address,
-                    excludeProperties: false);
+                var addressModel = await _mediator.Send(new GetAddressModel() {
+                    Language = request.Language,
+                    Store = request.Store,
+                    Address = address,
+                    ExcludeProperties = false,
+                });
                 model.ExistingAddresses.Add(addressModel);
             }
 
             //new address
             var countries = await _countryService.GetAllCountriesForShipping();
-            await _addressViewModelService.PrepareModel(model: model.NewAddress,
-                address: null,
-                excludeProperties: false,
-                loadCountries: () => countries,
-                prePopulateWithCustomerFields: true,
-                customer: _workContext.CurrentCustomer);
+            model.NewAddress = await _mediator.Send(new GetAddressModel() {
+                Language = request.Language,
+                Store = request.Store,
+                Address = null,
+                ExcludeProperties = false,
+                LoadCountries = () => countries,
+                PrePopulateWithCustomerFields = true,
+                Customer = _workContext.CurrentCustomer,
+            });
         }
     }
 }
