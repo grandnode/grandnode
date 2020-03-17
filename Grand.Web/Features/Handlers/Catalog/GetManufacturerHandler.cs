@@ -6,6 +6,7 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Catalog;
+using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
@@ -24,8 +25,6 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly ICurrencyService _currencyService;
         private readonly ICacheManager _cacheManager;
         private readonly IProductService _productService;
-        private readonly IProductViewModelService _productViewModelService;
-
         private readonly CatalogSettings _catalogSettings;
 
         public GetManufacturerHandler(
@@ -35,7 +34,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             ICurrencyService currencyService,
             ICacheManager cacheManager,
             IProductService productService,
-            IProductViewModelService productViewModelService,
             CatalogSettings catalogSettings)
         {
             _mediator = mediator;
@@ -44,7 +42,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             _currencyService = currencyService;
             _cacheManager = cacheManager;
             _productService = productService;
-            _productViewModelService = productViewModelService;
             _catalogSettings = catalogSettings;
         }
 
@@ -117,7 +114,9 @@ namespace Grand.Web.Features.Handlers.Catalog
                 }
                 if (featuredProducts != null)
                 {
-                    model.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts)).ToList();
+                    model.FeaturedProducts = (await _mediator.Send(new GetProductOverview() {
+                        Products = featuredProducts,
+                    })).ToList();
                 }
             }
             var products = (await _productService.SearchProducts(
@@ -130,7 +129,11 @@ namespace Grand.Web.Features.Handlers.Catalog
                 orderBy: (ProductSortingEnum)request.Command.OrderBy,
                 pageIndex: request.Command.PageNumber - 1,
                 pageSize: request.Command.PageSize)).products;
-            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
+
+            model.Products = (await _mediator.Send(new GetProductOverview() {
+                Products = products,
+                PrepareSpecificationAttributes= _catalogSettings.ShowSpecAttributeOnCatalogPages
+            })).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
 

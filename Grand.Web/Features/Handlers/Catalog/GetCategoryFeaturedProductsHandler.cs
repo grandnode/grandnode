@@ -8,8 +8,8 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Catalog;
+using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using MediatR;
@@ -22,31 +22,31 @@ namespace Grand.Web.Features.Handlers.Catalog
 {
     public class GetCategoryFeaturedProductsHandler : IRequestHandler<GetCategoryFeaturedProducts, IList<CategoryModel>>
     {
-        private readonly IProductViewModelService _productViewModelService;
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
         private readonly ICacheManager _cacheManager;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
+        private readonly IMediator _mediator;
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
 
         public GetCategoryFeaturedProductsHandler(
-            IProductViewModelService productViewModelService, 
-            ICategoryService categoryService, 
-            IProductService productService, 
-            ICacheManager cacheManager, 
-            IPictureService pictureService, 
-            ILocalizationService localizationService, 
-            MediaSettings mediaSettings, 
+            ICategoryService categoryService,
+            IProductService productService,
+            ICacheManager cacheManager,
+            IPictureService pictureService,
+            ILocalizationService localizationService,
+            IMediator mediator,
+            MediaSettings mediaSettings,
             CatalogSettings catalogSettings)
         {
-            _productViewModelService = productViewModelService;
             _categoryService = categoryService;
             _productService = productService;
             _cacheManager = cacheManager;
             _pictureService = pictureService;
             _localizationService = localizationService;
+            _mediator = mediator;
             _mediaSettings = mediaSettings;
             _catalogSettings = catalogSettings;
         }
@@ -110,7 +110,10 @@ namespace Grand.Web.Features.Handlers.Catalog
                 }
                 if (featuredProducts != null)
                 {
-                    item.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
+                    item.FeaturedProducts = (await _mediator.Send(new GetProductOverview() {
+                        PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages,
+                        Products = featuredProducts,
+                    })).ToList();
                 }
             }
 

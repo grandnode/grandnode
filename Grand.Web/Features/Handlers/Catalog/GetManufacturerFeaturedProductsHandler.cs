@@ -8,8 +8,8 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Catalog;
+using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using MediatR;
@@ -22,7 +22,7 @@ namespace Grand.Web.Features.Handlers.Catalog
 {
     public class GetManufacturerFeaturedProductsHandler : IRequestHandler<GetManufacturerFeaturedProducts, IList<ManufacturerModel>>
     {
-        private readonly IProductViewModelService _productViewModelService;
+        private readonly IMediator _mediator;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
         private readonly ICacheManager _cacheManager;
@@ -32,7 +32,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly CatalogSettings _catalogSettings;
 
         public GetManufacturerFeaturedProductsHandler(
-            IProductViewModelService productViewModelService,
+            IMediator mediator,
             IManufacturerService manufacturerService,
             IProductService productService,
             ICacheManager cacheManager,
@@ -41,7 +41,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings)
         {
-            _productViewModelService = productViewModelService;
+            _mediator = mediator;
             _manufacturerService = manufacturerService;
             _productService = productService;
             _cacheManager = cacheManager;
@@ -113,7 +113,9 @@ namespace Grand.Web.Features.Handlers.Catalog
                 }
                 if (featuredProducts != null)
                 {
-                    item.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts)).ToList();
+                    item.FeaturedProducts = (await _mediator.Send(new GetProductOverview() {
+                        Products = featuredProducts,
+                    })).ToList();
                 }
             }
             return model;

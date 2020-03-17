@@ -11,12 +11,14 @@ using Grand.Core.Domain.Media;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
+using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using Grand.Services.Tax;
 using Grand.Web.Features.Models.Catalog;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Products;
 using Grand.Web.Models.Catalog;
 using MediatR;
 
@@ -26,7 +28,6 @@ namespace Grand.Web.Features.Handlers.Catalog
     {
         private readonly IProductService _productService;
         private readonly IWebHelper _webHelper;
-        private readonly IProductViewModelService _productViewModelService;
         private readonly IPictureService _pictureService;
         private readonly IManufacturerService _manufacturerService;
         private readonly ICategoryService _categoryService;
@@ -34,6 +35,10 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IStoreMappingService _storeMappingService;
         private readonly ISearchTermService _searchTermService;
         private readonly IBlogService _blogService;
+        private readonly ITaxService _taxService;
+        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IPriceFormatter _priceFormatter;
         private readonly IMediator _mediator;
 
         private readonly CatalogSettings _catalogSettings;
@@ -43,14 +48,17 @@ namespace Grand.Web.Features.Handlers.Catalog
         public GetSearchAutoCompleteHandler(
             IProductService productService, 
             IWebHelper webHelper, 
-            IProductViewModelService productViewModelService, 
             IPictureService pictureService, 
             IManufacturerService manufacturerService, 
             ICategoryService categoryService, 
             IAclService aclService, 
             IStoreMappingService storeMappingService, 
             ISearchTermService searchTermService, 
-            IBlogService blogService, 
+            IBlogService blogService,
+            IPriceCalculationService priceCalculationService,
+            ITaxService taxService,
+            ICurrencyService currencyService,
+            IPriceFormatter priceFormatter,
             IMediator mediator, 
             CatalogSettings catalogSettings, 
             MediaSettings mediaSettings, 
@@ -58,7 +66,6 @@ namespace Grand.Web.Features.Handlers.Catalog
         {
             _productService = productService;
             _webHelper = webHelper;
-            _productViewModelService = productViewModelService;
             _pictureService = pictureService;
             _manufacturerService = manufacturerService;
             _categoryService = categoryService;
@@ -66,6 +73,10 @@ namespace Grand.Web.Features.Handlers.Catalog
             _storeMappingService = storeMappingService;
             _searchTermService = searchTermService;
             _blogService = blogService;
+            _priceCalculationService = priceCalculationService;
+            _taxService = taxService;
+            _currencyService = currencyService;
+            _priceFormatter = priceFormatter;
             _mediator = mediator;
             _catalogSettings = catalogSettings;
             _mediaSettings = mediaSettings;
@@ -113,9 +124,13 @@ namespace Grand.Web.Features.Handlers.Catalog
                     if (picture != null)
                         pictureUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.AutoCompleteSearchThumbPictureSize);
                 }
-                var rating = await _productViewModelService.PrepareProductReviewOverviewModel(item);
+                var rating = await _mediator.Send(new GetProductReviewOverview() { 
+                    Language = request.Language,
+                    Product = item,
+                    Store = request.Store
+                });
 
-                var price = await _productViewModelService.PrepareProductPriceModel(item);
+                var price = await PreparePrice(item, request);
 
                 model.Add(new SearchAutoCompleteModel() {
                     SearchType = "Product",
@@ -228,6 +243,26 @@ namespace Grand.Web.Features.Handlers.Catalog
 
             }
             return model;
+        }
+
+        private async Task<(string Price, string PriceWithDiscount)> PreparePrice(Product product, GetSearchAutoComplete request)
+        {
+            string price, priceWithDiscount;
+
+            decimal finalPriceWithoutDiscountBase = 
+                (await (_taxService.GetProductPrice(product, 
+                (await _priceCalculationService.GetFinalPrice(product, request.Customer, includeDiscounts: false)).finalPrice))).productprice;
+
+            var appliedPrice = (await _priceCalculationService.GetFinalPrice(product, request.Customer, includeDiscounts: true));
+            var finalPriceWithDiscountBase = (await _taxService.GetProductPrice(product, appliedPrice.finalPrice)).productprice;
+
+            var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, request.Currency);
+            var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, request.Currency);
+
+            price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
+            priceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+
+            return (price, priceWithDiscount);
         }
     }
 }

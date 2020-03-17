@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
@@ -17,11 +12,16 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Features.Models.Catalog;
+using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.Catalog
 {
@@ -37,26 +37,24 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly ICurrencyService _currencyService;
         private readonly IProductService _productService;
         private readonly IMediator _mediator;
-        private readonly IProductViewModelService _productViewModelService;
         private readonly ISearchTermService _searchTermService;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
 
         public GetSearchHandler(
-            ICategoryService categoryService, 
-            ICacheManager cacheManager, 
-            IAclService aclService, 
-            IStoreMappingService storeMappingService, 
-            ILocalizationService localizationService, 
-            IManufacturerService manufacturerService, 
-            IVendorService vendorService, 
-            ICurrencyService currencyService, 
-            IProductService productService, 
-            IMediator mediator, 
-            IProductViewModelService productViewModelService, 
-            ISearchTermService searchTermService, 
-            CatalogSettings catalogSettings, 
+            ICategoryService categoryService,
+            ICacheManager cacheManager,
+            IAclService aclService,
+            IStoreMappingService storeMappingService,
+            ILocalizationService localizationService,
+            IManufacturerService manufacturerService,
+            IVendorService vendorService,
+            ICurrencyService currencyService,
+            IProductService productService,
+            IMediator mediator,
+            ISearchTermService searchTermService,
+            CatalogSettings catalogSettings,
             VendorSettings vendorSettings)
         {
             _categoryService = categoryService;
@@ -69,7 +67,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             _currencyService = currencyService;
             _productService = productService;
             _mediator = mediator;
-            _productViewModelService = productViewModelService;
             _searchTermService = searchTermService;
             _catalogSettings = catalogSettings;
             _vendorSettings = vendorSettings;
@@ -91,7 +88,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                 request.Model.adv = true;
 
             //view/sorting/page size
-            var options = await _mediator.Send(new GetViewSortSizeOptions() { 
+            var options = await _mediator.Send(new GetViewSortSizeOptions() {
                 Command = request.Command,
                 PagingFilteringModel = request.Model.PagingFilteringContext,
                 Language = request.Language,
@@ -119,7 +116,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     var breadcrumb = c.GetCategoryBreadCrumb(allCategories, _aclService, _storeMappingService);
                     for (int i = 0; i <= breadcrumb.Count - 1; i++)
                     {
-                        categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name,request.Language.Id);
+                        categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name, request.Language.Id);
                         if (i != breadcrumb.Count - 1)
                             categoryBreadcrumb += " >> ";
                     }
@@ -158,7 +155,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                 foreach (var m in manufacturers)
                     request.Model.AvailableManufacturers.Add(new SelectListItem {
                         Value = m.Id.ToString(),
-                        Text = m.GetLocalized(x => x.Name,request.Language.Id),
+                        Text = m.GetLocalized(x => x.Name, request.Language.Id),
                         Selected = request.Model.mid == m.Id
                     });
             }
@@ -176,7 +173,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     foreach (var vendor in vendors)
                         request.Model.AvailableVendors.Add(new SelectListItem {
                             Value = vendor.Id.ToString(),
-                            Text = vendor.GetLocalized(x => x.Name,request.Language.Id),
+                            Text = vendor.GetLocalized(x => x.Name, request.Language.Id),
                             Selected = request.Model.vid == vendor.Id
                         });
                 }
@@ -248,12 +245,16 @@ namespace Grand.Web.Features.Handlers.Catalog
                         searchDescriptions: searchInDescriptions,
                         searchSku: searchInDescriptions,
                         searchProductTags: searchInProductTags,
-                        languageId:request.Language.Id,
+                        languageId: request.Language.Id,
                         orderBy: (ProductSortingEnum)request.Command.OrderBy,
                         pageIndex: request.Command.PageNumber - 1,
                         pageSize: request.Command.PageSize,
                         vendorId: vendorId)).products;
-                    request.Model.Products = (await _productViewModelService.PrepareProductOverviewModels(products, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
+
+                    request.Model.Products = (await _mediator.Send(new GetProductOverview() {
+                        Products = products,
+                        PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages
+                    })).ToList();
 
                     request.Model.NoResults = !request.Model.Products.Any();
 

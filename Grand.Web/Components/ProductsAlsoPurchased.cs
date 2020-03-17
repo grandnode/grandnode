@@ -6,8 +6,9 @@ using Grand.Services.Catalog;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
-using Grand.Web.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Grand.Web.Components
         private readonly IProductService _productService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly IProductViewModelService _productViewModelService;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IOrderReportService _orderReportService;
         private readonly IStoreContext _storeContext;
@@ -33,7 +34,7 @@ namespace Grand.Web.Components
             IProductService productService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
-            IProductViewModelService productViewModelService,
+            IMediator mediator,
             ICacheManager cacheManager,
             IOrderReportService orderReportService,
             IStoreContext storeContext,
@@ -43,7 +44,7 @@ namespace Grand.Web.Components
             _productService = productService;
             _aclService = aclService;
             _catalogSettings = catalogSettings;
-            _productViewModelService = productViewModelService;
+            _mediator = mediator;
             _storeMappingService = storeMappingService;
             _cacheManager = cacheManager;
             _orderReportService = orderReportService;
@@ -77,7 +78,12 @@ namespace Grand.Web.Components
                 return Content("");
 
             //prepare model
-            var model = await _productViewModelService.PrepareProductOverviewModels(products, true, true, productThumbPictureSize);
+            var model = await _mediator.Send(new GetProductOverview() {
+                PreparePictureModel = true,
+                PreparePriceModel = true,
+                ProductThumbPictureSize = productThumbPictureSize,
+                Products = products,
+            });
 
             return View(model);
         }

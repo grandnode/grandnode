@@ -467,7 +467,8 @@ namespace Grand.Web.Controllers
                 Term = term, 
                 Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore,
-                Language = _workContext.WorkingLanguage
+                Language = _workContext.WorkingLanguage,
+                Currency = _workContext.WorkingCurrency
             });            
             return Json(result);
         }
