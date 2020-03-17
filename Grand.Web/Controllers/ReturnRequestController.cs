@@ -3,12 +3,14 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Common;
+using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Web.Commands.Models.Orders;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Orders;
 using Grand.Web.Interfaces;
+using Grand.Web.Models.Common;
 using Grand.Web.Models.Orders;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -62,6 +64,18 @@ namespace Grand.Web.Controllers
 
         #region Utilities
 
+        private async Task PrepareModelAddress(AddressModel addressModel)
+        {
+            var countryService = HttpContext.RequestServices.GetRequiredService<ICountryService>();
+            var countries = await countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
+            await _addressViewModelService.PrepareModel(model: addressModel,
+            address: null,
+            excludeProperties: true,
+            loadCountries: () => countries,
+            prePopulateWithCustomerFields: true,
+            customer: _workContext.CurrentCustomer);
+        }
+
         protected async Task<Address> PrepareAddress(ReturnRequestModel model, IFormCollection form)
         {
             string pickupAddressId = form["pickup_address_id"];
@@ -90,6 +104,7 @@ namespace Grand.Web.Controllers
             }
             return address;
         }
+
 
         #endregion
 
@@ -148,6 +163,10 @@ namespace Grand.Web.Controllers
                 returnmodel.PickupDate = model.PickupDate;
                 returnmodel.NewAddressPreselected = model.NewAddressPreselected;
                 returnmodel.NewAddress = model.NewAddress;
+                if (returnmodel.NewAddressPreselected || _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
+                {
+                    await PrepareModelAddress(model.NewAddress);
+                }
                 return View(returnmodel);
             }
             else
@@ -165,6 +184,10 @@ namespace Grand.Web.Controllers
                 returnmodel.PickupDate = model.PickupDate;
                 returnmodel.NewAddressPreselected = model.NewAddressPreselected;
                 returnmodel.NewAddress = model.NewAddress;
+                if (returnmodel.NewAddressPreselected || _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
+                {
+                    await PrepareModelAddress(model.NewAddress);
+                }
                 return View(returnmodel);
             }
             
