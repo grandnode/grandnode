@@ -40,6 +40,6 @@ namespace Grand.Web.Interfaces
 
         Task<string> ParseCustomAddressAttributes(IFormCollection form);
 
-        Task<IList<string>> GetAttributeWarnings(string attributesXml);
+        
     }
 }

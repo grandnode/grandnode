@@ -29,7 +29,6 @@ namespace Grand.Web.Services
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IGenericAttributeService _genericAttributeService;
 
         private readonly AddressSettings _addressSettings;
 
@@ -41,7 +40,6 @@ namespace Grand.Web.Services
             IAddressAttributeFormatter addressAttributeFormatter,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IGenericAttributeService genericAttributeService,
             AddressSettings addressSettings
             )
         {
@@ -53,7 +51,6 @@ namespace Grand.Web.Services
             _addressAttributeFormatter = addressAttributeFormatter;
             _workContext = workContext;
             _storeContext = storeContext;
-            _genericAttributeService = genericAttributeService;
             _addressSettings = addressSettings;
         }
 
@@ -128,18 +125,18 @@ namespace Grand.Web.Services
                 if (customer == null)
                     throw new Exception("Customer cannot be null when prepopulating an address");
                 model.Email = customer.Email;
-                model.FirstName = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.FirstName);
-                model.LastName = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastName);
-                model.Company = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Company);
-                model.VatNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.VatNumber);
-                model.Address1 = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StreetAddress);
-                model.Address2 = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StreetAddress2);
-                model.ZipPostalCode = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ZipPostalCode);
-                model.City = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.City);
-                model.CountryId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CountryId);
-                model.StateProvinceId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StateProvinceId);
-                model.PhoneNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Phone);
-                model.FaxNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Fax);
+                model.FirstName = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName);
+                model.LastName = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName);
+                model.Company = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company);
+                model.VatNumber = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber);
+                model.Address1 = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress);
+                model.Address2 = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress2);
+                model.ZipPostalCode = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ZipPostalCode);
+                model.City = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.City);
+                model.CountryId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CountryId);
+                model.StateProvinceId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId);
+                model.PhoneNumber = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone);
+                model.FaxNumber = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Fax);
             }
 
             //countries and states
@@ -247,19 +244,19 @@ namespace Grand.Web.Services
             {
                 if (customer == null)
                     throw new Exception("Customer cannot be null when prepopulating an address");
-                model.Company = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Company);
-                model.Address1 = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StreetAddress);
-                model.Address2 = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StreetAddress2);
-                model.ZipPostalCode = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ZipPostalCode);
-                model.City = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.City);
-                model.PhoneNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Phone);
-                model.FaxNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Fax);
+                model.Company = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company);
+                model.Address1 = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress);
+                model.Address2 = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress2);
+                model.ZipPostalCode = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ZipPostalCode);
+                model.City = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.City);
+                model.PhoneNumber = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone);
+                model.FaxNumber = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Fax);
 
                 if(vendorSettings.CountryEnabled)
-                    model.CountryId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CountryId);
+                    model.CountryId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CountryId);
 
                 if (vendorSettings.StateProvinceEnabled)
-                    model.StateProvinceId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StateProvinceId);
+                    model.StateProvinceId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId);
             }
 
             //countries and states
@@ -492,10 +489,7 @@ namespace Grand.Web.Services
             return attributesXml;
         }
 
-        public virtual async Task<IList<string>> GetAttributeWarnings(string attributesXml)
-        {
-            return await _addressAttributeParser.GetAttributeWarnings(attributesXml);
-        }
+       
 
     }
 }

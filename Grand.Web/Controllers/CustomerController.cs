@@ -773,7 +773,8 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public virtual async Task<IActionResult> AddressAdd(CustomerAddressEditModel model, IFormCollection form)
+        public virtual async Task<IActionResult> AddressAdd(CustomerAddressEditModel model, IFormCollection form,
+            [FromServices] IAddressAttributeParser addressAttributeParser)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -782,7 +783,7 @@ namespace Grand.Web.Controllers
 
             //custom address attributes
             var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
-            var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
+            var customAttributeWarnings = await addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -834,7 +835,8 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, string addressId, IFormCollection form)
+        public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, string addressId, IFormCollection form, 
+            [FromServices] IAddressAttributeParser addressAttributeParser)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -848,7 +850,7 @@ namespace Grand.Web.Controllers
 
             //custom address attributes
             var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
-            var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
+            var customAttributeWarnings = await addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);

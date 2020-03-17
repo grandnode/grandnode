@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
+using Grand.Services.Common;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Web.Commands.Models.Orders;
@@ -12,6 +13,7 @@ using Grand.Web.Models.Orders;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -73,7 +75,8 @@ namespace Grand.Web.Controllers
                 else
                 {
                     var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
-                    var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
+                    var addressAttributeParser = HttpContext.RequestServices.GetRequiredService<IAddressAttributeParser>();
+                    var customAttributeWarnings = await addressAttributeParser.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
                         ModelState.AddModelError("", error);

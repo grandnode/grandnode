@@ -44,6 +44,7 @@ namespace Grand.Web.Controllers
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
+        private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressViewModelService _addressViewModelService;
         private readonly IMediator _mediator;
         private readonly OrderSettings _orderSettings;
@@ -69,6 +70,7 @@ namespace Grand.Web.Controllers
             ILogger logger,
             IOrderService orderService,
             IWebHelper webHelper,
+            IAddressAttributeParser addressAttributeParser,
             IAddressViewModelService addressViewModelService,
             IMediator mediator,
             OrderSettings orderSettings,
@@ -89,6 +91,7 @@ namespace Grand.Web.Controllers
             _logger = logger;
             _orderService = orderService;
             _webHelper = webHelper;
+            _addressAttributeParser = addressAttributeParser;
             _addressViewModelService = addressViewModelService;
             _mediator = mediator;
             _orderSettings = orderSettings;
@@ -295,7 +298,7 @@ namespace Grand.Web.Controllers
 
             //custom address attributes
             var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
-            var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
+            var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -481,7 +484,7 @@ namespace Grand.Web.Controllers
 
             //custom address attributes
             var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
-            var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
+            var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -1174,7 +1177,7 @@ namespace Grand.Web.Controllers
 
                     //custom address attributes
                     var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
-                    var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
+                    var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
                         ModelState.AddModelError("", error);
@@ -1367,7 +1370,7 @@ namespace Grand.Web.Controllers
                     await TryUpdateModelAsync(model.NewAddress, "ShippingNewAddress");
                     //custom address attributes
                     var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
-                    var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
+                    var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
                         ModelState.AddModelError("", error);
