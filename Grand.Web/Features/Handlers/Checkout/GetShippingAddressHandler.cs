@@ -8,7 +8,6 @@ using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Web.Features.Models.Checkout;
 using Grand.Web.Features.Models.Common;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Checkout;
 using MediatR;
 using System.Collections.Generic;
@@ -76,7 +75,7 @@ namespace Grand.Web.Features.Handlers.Checkout
                 PrePopulateWithCustomerFields = request.PrePopulateNewAddressWithCustomerFields,
                 Customer = request.Customer,
                 OverrideAttributesXml = request.OverrideAttributesXml,
-            });            
+            });
             return model;
         }
 

@@ -7,7 +7,6 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
-using Grand.Web.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -73,7 +72,7 @@ namespace Grand.Web.Components
                 ProductThumbPictureSize = productThumbPictureSize,
                 Products = products
             });
-           
+
             return View(model);
         }
 

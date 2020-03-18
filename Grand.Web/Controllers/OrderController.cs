@@ -10,7 +10,6 @@ using Grand.Services.Payments;
 using Grand.Services.Shipping;
 using Grand.Web.Commands.Models.Orders;
 using Grand.Web.Features.Models.Orders;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Orders;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -68,8 +67,8 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            var model = await _mediator.Send(new GetCustomerOrderList() { 
-                Customer = _workContext.CurrentCustomer, 
+            var model = await _mediator.Send(new GetCustomerOrderList() {
+                Customer = _workContext.CurrentCustomer,
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore
             });
@@ -125,7 +124,7 @@ namespace Grand.Web.Controllers
             if (!rewardPointsSettings.Enabled)
                 return RedirectToRoute("CustomerInfo");
 
-            var model = await _mediator.Send(new GetCustomerRewardPoints() { 
+            var model = await _mediator.Send(new GetCustomerRewardPoints() {
                 Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore,
                 Currency = _workContext.WorkingCurrency
@@ -255,8 +254,7 @@ namespace Grand.Web.Controllers
             if (!await _paymentService.CanRePostProcessPayment(order))
                 return RedirectToRoute("OrderDetails", new { orderId = orderId });
 
-            var postProcessPaymentRequest = new PostProcessPaymentRequest
-            {
+            var postProcessPaymentRequest = new PostProcessPaymentRequest {
                 Order = order
             };
             await _paymentService.PostProcessPayment(postProcessPaymentRequest);
@@ -283,12 +281,12 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = await _mediator.Send(new GetShipmentDetails() { 
+            var model = await _mediator.Send(new GetShipmentDetails() {
                 Customer = _workContext.CurrentCustomer,
                 Language = _workContext.WorkingLanguage,
                 Order = order,
                 Shipment = shipment
-            }); 
+            });
 
             return View(model);
         }

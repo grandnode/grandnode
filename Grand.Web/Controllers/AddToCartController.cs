@@ -10,7 +10,6 @@ using Grand.Services.Orders;
 using Grand.Services.Seo;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.ShoppingCart;
-using Grand.Web.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -138,7 +137,7 @@ namespace Grand.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            string warehouseId = 
+            string warehouseId =
                product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId :
                (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
@@ -183,7 +182,7 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var addtoCartModel = await _mediator.Send(new GetAddToCart() { 
+            var addtoCartModel = await _mediator.Send(new GetAddToCart() {
                 Product = product,
                 Customer = customer,
                 Quantity = quantity,
@@ -195,7 +194,7 @@ namespace Grand.Web.Controllers
                 Language = _workContext.WorkingLanguage,
                 TaxDisplayType = _workContext.TaxDisplayType,
             });
-               
+
             //added to the cart/wishlist
             switch (cartType)
             {
@@ -362,7 +361,7 @@ namespace Grand.Web.Controllers
             #endregion
 
             //product and gift card attributes
-            string attributes = await _mediator.Send(new GetParseProductAttributes(){ Product = product, Form = form  });
+            string attributes = await _mediator.Send(new GetParseProductAttributes() { Product = product, Form = form });
 
             //rental attributes
             DateTime? rentalStartDate = null;
@@ -458,7 +457,7 @@ namespace Grand.Web.Controllers
 
             string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
                 form["WarehouseId"].ToString() :
-                product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : 
+                product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId :
                 (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             if (updatecartitem == null)
@@ -522,7 +521,7 @@ namespace Grand.Web.Controllers
                 StartDate = rentalStartDate,
                 EndDate = rentalEndDate
             });
-            
+
             //added to the cart/wishlist
             switch (cartType)
             {

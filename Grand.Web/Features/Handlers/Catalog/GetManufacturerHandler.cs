@@ -8,7 +8,6 @@ using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using MediatR;
 using System.Linq;
@@ -132,7 +131,7 @@ namespace Grand.Web.Features.Handlers.Catalog
 
             model.Products = (await _mediator.Send(new GetProductOverview() {
                 Products = products,
-                PrepareSpecificationAttributes= _catalogSettings.ShowSpecAttributeOnCatalogPages
+                PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages
             })).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);

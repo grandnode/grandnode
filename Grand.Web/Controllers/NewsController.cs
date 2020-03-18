@@ -13,9 +13,7 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Commands.Models.News;
-using Grand.Web.Features.Handlers.News;
 using Grand.Web.Features.Models.News;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.News;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -46,10 +44,10 @@ namespace Grand.Web.Controllers
         #region Constructors
 
         public NewsController(INewsService newsService,
-            IWorkContext workContext, 
+            IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
-            IWebHelper webHelper, 
+            IWebHelper webHelper,
             ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
@@ -119,7 +117,7 @@ namespace Grand.Web.Controllers
                 !_storeMappingService.Authorize(newsItem))
                 return RedirectToRoute("HomePage");
 
-            var model = await _mediator.Send(new GetNewsItem() {  NewsItem = newsItem });
+            var model = await _mediator.Send(new GetNewsItem() { NewsItem = newsItem });
 
             //display "edit" (manage) link
             if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageNews))

@@ -18,7 +18,6 @@ using Grand.Services.Vendors;
 using Grand.Web.Commands.Models.Vendors;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Vendors;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Vendors;
 using MediatR;
@@ -50,7 +49,7 @@ namespace Grand.Web.Controllers
         private readonly IMediator _mediator;
 
         private readonly VendorSettings _vendorSettings;
-        
+
         #endregion
 
         #region Constructors
@@ -58,14 +57,14 @@ namespace Grand.Web.Controllers
             IVendorService vendorService,
             IManufacturerService manufacturerService,
             ICategoryService categoryService,
-            IWorkContext workContext, 
+            IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
-            IWebHelper webHelper, 
+            IWebHelper webHelper,
             IGenericAttributeService genericAttributeService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             ICustomerActivityService customerActivityService,
             ICustomerActionEventService customerActionEventService,
             IMediator mediator,
@@ -148,7 +147,7 @@ namespace Grand.Web.Controllers
             await _customerActionEventService.Viewed(customer, HttpContext.Request.Path.ToString(), Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers["Referer"].ToString() : "");
 
             //model
-            var model = await _mediator.Send(new GetCategory() { 
+            var model = await _mediator.Send(new GetCategory() {
                 Category = category,
                 Command = command,
                 Currency = _workContext.WorkingCurrency,
@@ -156,7 +155,7 @@ namespace Grand.Web.Controllers
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore
             });
-            
+
             //template
             var templateViewPath = await _mediator.Send(new GetCategoryTemplateViewPath() { TemplateId = category.CategoryTemplateId });
 
@@ -200,7 +199,7 @@ namespace Grand.Web.Controllers
             await _customerActionEventService.Viewed(customer, HttpContext.Request.Path.ToString(), Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
 
             //model
-            var model = await _mediator.Send(new GetManufacturer() { 
+            var model = await _mediator.Send(new GetManufacturer() {
                 Command = command,
                 Currency = _workContext.WorkingCurrency,
                 Customer = _workContext.CurrentCustomer,
@@ -247,7 +246,7 @@ namespace Grand.Web.Controllers
             if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
                 DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = "Admin" }));
 
-            var model = await _mediator.Send(new GetVendor() { 
+            var model = await _mediator.Send(new GetVendor() {
                 Command = command,
                 Vendor = vendor,
                 Language = _workContext.WorkingLanguage,
@@ -293,7 +292,7 @@ namespace Grand.Web.Controllers
         [FormValueRequired("add-review")]
         [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
-        public virtual async Task<IActionResult> VendorReviewsAdd(string vendorId, VendorReviewsModel model, bool captchaValid, 
+        public virtual async Task<IActionResult> VendorReviewsAdd(string vendorId, VendorReviewsModel model, bool captchaValid,
             [FromServices] CaptchaSettings captchaSettings)
         {
             var vendor = await _vendorService.GetVendorById(vendorId);
@@ -313,11 +312,12 @@ namespace Grand.Web.Controllers
 
             //allow reviews only by customer that bought something from this vendor
             if (_vendorSettings.VendorReviewPossibleOnlyAfterPurchasing &&
-                    !(await _mediator.Send(new GetOrderQueryModel() { 
+                    !(await _mediator.Send(new GetOrderQueryModel() {
                         CustomerId = _workContext.CurrentCustomer.Id,
-                        VendorId = vendorId, 
-                        Os = OrderStatus.Complete, 
-                        PageSize = 1})).Any())
+                        VendorId = vendorId,
+                        Os = OrderStatus.Complete,
+                        PageSize = 1
+                    })).Any())
                 ModelState.AddModelError(string.Empty, _localizationService.GetResource("VendorReviews.VendorReviewPossibleOnlyAfterPurchasing"));
 
             if (ModelState.IsValid)
@@ -343,7 +343,7 @@ namespace Grand.Web.Controllers
                 return View(model);
             }
             model = await _mediator.Send(new GetVendorReviews() { Vendor = vendor });
-            
+
             return View(model);
         }
 
@@ -378,11 +378,12 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            vendorReview = await _mediator.Send(new SetVendorReviewHelpfulnessCommand() { 
-                Customer = _workContext.CurrentCustomer, 
-                Vendor = vendor, 
-                Review = vendorReview, 
-                Washelpful = washelpful });
+            vendorReview = await _mediator.Send(new SetVendorReviewHelpfulnessCommand() {
+                Customer = _workContext.CurrentCustomer,
+                Vendor = vendor,
+                Review = vendorReview,
+                Washelpful = washelpful
+            });
 
             return Json(new
             {
@@ -402,12 +403,12 @@ namespace Grand.Web.Controllers
             if (productTag == null)
                 return InvokeHttp404();
 
-            var model = await _mediator.Send(new GetProductsByTag() { 
+            var model = await _mediator.Send(new GetProductsByTag() {
                 Command = command,
                 Language = _workContext.WorkingLanguage,
                 ProductTag = productTag,
                 Store = _storeContext.CurrentStore
-            });  
+            });
             return View(model);
         }
         public virtual async Task<IActionResult> ProductsByTagName(string seName, CatalogPagingFilteringModel command, [FromServices] IProductTagService productTagService)
@@ -427,7 +428,7 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> ProductTagsAll()
         {
-            var model = await _mediator.Send(new GetProductTagsAll() { 
+            var model = await _mediator.Send(new GetProductTagsAll() {
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore
             });
@@ -445,7 +446,7 @@ namespace Grand.Web.Controllers
 
             //Prepare model
             var isSearchTermSpecified = HttpContext?.Request?.Query.ContainsKey("q");
-            var searchmodel = await _mediator.Send(new GetSearch() { 
+            var searchmodel = await _mediator.Send(new GetSearch() {
                 Command = command,
                 Currency = _workContext.WorkingCurrency,
                 Customer = _workContext.CurrentCustomer,
@@ -462,14 +463,14 @@ namespace Grand.Web.Controllers
             if (String.IsNullOrWhiteSpace(term) || term.Length < catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
-            var result = await _mediator.Send(new GetSearchAutoComplete() { 
-                CategoryId = categoryId, 
-                Term = term, 
+            var result = await _mediator.Send(new GetSearchAutoComplete() {
+                CategoryId = categoryId,
+                Term = term,
                 Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore,
                 Language = _workContext.WorkingLanguage,
                 Currency = _workContext.WorkingCurrency
-            });            
+            });
             return Json(result);
         }
 
