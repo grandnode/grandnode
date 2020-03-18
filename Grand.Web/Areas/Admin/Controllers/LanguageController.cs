@@ -1,7 +1,6 @@
 ﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Security;
@@ -56,8 +55,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> List(DataSourceRequest command)
         {
             var languages = await _languageService.GetAllLanguages(true);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = languages.Select(x => x.ToModel()),
                 Total = languages.Count()
             };
@@ -198,8 +196,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             LanguageResourceFilterModel model)
         {
             var (languageResourceModels, totalCount) = await _languageViewModelService.PrepareLanguageResourceModel(model, languageId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = languageResourceModels.ToList(),
                 Total = totalCount
             };

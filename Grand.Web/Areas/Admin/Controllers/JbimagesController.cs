@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Media;
-using Grand.Framework.Security;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using System;

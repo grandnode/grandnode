@@ -1,22 +1,19 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Api.Extensions;
+using Grand.Core;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
-using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Grand.Api.Extensions;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -82,7 +79,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             return View(model);
         }
-        
+
         public async Task<IActionResult> Edit(string id)
         {
             var customerRole = await _customerService.GetCustomerRoleById(id);
@@ -152,7 +149,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customerRole.Id });
             }
-        }        
+        }
         #endregion
 
         #region Products
@@ -160,8 +157,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Products(string customerRoleId, DataSourceRequest command)
         {
             var products = await _customerRoleViewModelService.PrepareCustomerRoleProductModel(customerRoleId);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = products,
                 Total = products.Count()
             };
@@ -207,8 +203,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, CustomerRoleProductModel.AddProductModel model)
         {
             var products = await _customerRoleViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = products.products,
                 Total = products.totalCount
             };
