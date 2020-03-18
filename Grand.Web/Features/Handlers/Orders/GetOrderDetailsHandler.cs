@@ -408,10 +408,10 @@ namespace Grand.Web.Features.Handlers.Orders
                 }
 
                 //downloadable products
-                if (await _downloadService.IsDownloadAllowed(request.Order, orderItem))
+                if (_downloadService.IsDownloadAllowed(request.Order, orderItem, product))
                     orderItemModel.DownloadId = product.DownloadId;
-                if (await _downloadService.IsLicenseDownloadAllowed(request.Order, orderItem))
-                    orderItemModel.LicenseId = !String.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId : "";
+                if (_downloadService.IsLicenseDownloadAllowed(request.Order, orderItem, product))
+                    orderItemModel.LicenseId = !string.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId : "";
             }
 
         }

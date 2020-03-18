@@ -3,11 +3,8 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
-using Grand.Services.Catalog;
 using Grand.Services.Events;
-using Grand.Services.Orders;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -26,7 +23,7 @@ namespace Grand.Services.Media
 
         private readonly IRepository<Download> _downloadRepository;
         private readonly IMediator _mediator;
-        private readonly IServiceProvider _serviceProvider;
+
         #endregion
 
         #region Ctor
@@ -37,11 +34,10 @@ namespace Grand.Services.Media
         /// <param name="downloadRepository">Download repository</param>
         /// <param name="mediator">Mediator</param>
         public DownloadService(IRepository<Download> downloadRepository,
-            IMediator mediator, IServiceProvider serviceProvider)
+            IMediator mediator)
         {
             _downloadRepository = downloadRepository;
             _mediator = mediator;
-            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -55,11 +51,11 @@ namespace Grand.Services.Media
         /// <returns>Download</returns>
         public virtual async Task<Download> GetDownloadById(string downloadId)
         {
-            if (String.IsNullOrEmpty(downloadId))
+            if (string.IsNullOrEmpty(downloadId))
                 return null;
 
             var _download = await _downloadRepository.GetByIdAsync(downloadId);
-            if(!_download.UseDownloadUrl)
+            if (!_download.UseDownloadUrl)
                 _download.DownloadBinary = await DownloadAsBytes(_download.DownloadObjectId);
 
             return _download;
@@ -85,8 +81,8 @@ namespace Grand.Services.Media
                         where o.DownloadGuid == downloadGuid
                         select o;
             var order = await query.FirstOrDefaultAsync();
-            if(!order.UseDownloadUrl)
-                order.DownloadBinary = await DownloadAsBytes(order.DownloadObjectId); 
+            if (!order.UseDownloadUrl)
+                order.DownloadBinary = await DownloadAsBytes(order.DownloadObjectId);
 
             return order;
         }
@@ -145,8 +141,9 @@ namespace Grand.Services.Media
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="orderItem">Order item to check</param>
+        /// <param name="product">Product</param>
         /// <returns>True if download is allowed; otherwise, false.</returns>
-        public virtual async Task<bool> IsDownloadAllowed(Order order, OrderItem orderItem)
+        public virtual bool IsDownloadAllowed(Order order, OrderItem orderItem, Product product)
         {
             if (orderItem == null)
                 return false;
@@ -158,8 +155,6 @@ namespace Grand.Services.Media
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            var productService = _serviceProvider.GetRequiredService<IProductService>();
-            var product = await productService.GetProductById(orderItem.ProductId);
             if (product == null || !product.IsDownload)
                 return false;
 
@@ -216,14 +211,14 @@ namespace Grand.Services.Media
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="orderItem">Order item to check</param>
+        /// <param name="product">Product</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
-        public virtual async Task<bool> IsLicenseDownloadAllowed(Order order, OrderItem orderItem)
+        public virtual bool IsLicenseDownloadAllowed(Order order, OrderItem orderItem, Product product)
         {
             if (orderItem == null)
                 return false;
 
-            return !string.IsNullOrEmpty(orderItem.LicenseDownloadId) && 
-                await IsDownloadAllowed(order, orderItem);
+            return !string.IsNullOrEmpty(orderItem.LicenseDownloadId) && IsDownloadAllowed(order, orderItem, product);
         }
 
         #endregion

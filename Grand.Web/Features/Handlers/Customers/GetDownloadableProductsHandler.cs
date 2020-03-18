@@ -54,10 +54,10 @@ namespace Grand.Web.Features.Handlers.Customers
                 };
                 model.Items.Add(itemModel);
 
-                if (await _downloadService.IsDownloadAllowed(order, item))
+                if (_downloadService.IsDownloadAllowed(order, item, product))
                     itemModel.DownloadId = product.DownloadId;
 
-                if (await _downloadService.IsLicenseDownloadAllowed(order, item))
+                if (_downloadService.IsLicenseDownloadAllowed(order, item, product))
                     itemModel.LicenseId = !string.IsNullOrEmpty(item.LicenseDownloadId) ? item.LicenseDownloadId : "";
             }
             return model;

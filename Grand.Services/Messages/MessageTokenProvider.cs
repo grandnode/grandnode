@@ -1,5 +1,4 @@
-﻿using Grand.Core;
-using Grand.Core.Domain;
+﻿using Grand.Core.Domain;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
@@ -194,8 +193,8 @@ namespace Grand.Services.Messages
 
                 #region Download
 
-                liqitem.IsDownloadAllowed = await downloadService.IsDownloadAllowed(order, item);
-                liqitem.IsLicenseDownloadAllowed = await downloadService.IsLicenseDownloadAllowed(order, item);
+                liqitem.IsDownloadAllowed = downloadService.IsDownloadAllowed(order, item, product);
+                liqitem.IsLicenseDownloadAllowed = downloadService.IsLicenseDownloadAllowed(order, item, product);
 
                 #endregion
 
