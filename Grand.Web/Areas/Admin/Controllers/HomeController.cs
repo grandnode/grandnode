@@ -1,19 +1,17 @@
 ﻿using Grand.Core;
-using Grand.Core.Caching;
-using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
 using Grand.Services.Catalog;
-using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
+using Grand.Web.Areas.Admin.Features.Model.Common;
 using Grand.Web.Areas.Admin.Models.Home;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -26,18 +24,13 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class HomeController : BaseAdminController
     {
         #region Fields
+
         private readonly ILocalizationService _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly CommonSettings _commonSettings;
         private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
-        private readonly ISettingService _settingService;
         private readonly IWorkContext _workContext;
-        private readonly ICacheManager _cacheManager;
         private readonly IOrderReportService _orderReportService;
         private readonly ICustomerService _customerService;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ReturnRequest> _returnRequestRepository;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -45,30 +38,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public HomeController(
             ILocalizationService localizationService,
-            IStoreContext storeContext, 
-            CommonSettings commonSettings,
             GoogleAnalyticsSettings googleAnalyticsSettings,
-            ISettingService settingService,
             IWorkContext workContext,
-            ICacheManager cacheManager,
             IOrderReportService orderReportService,
             ICustomerService customerService,
-            IRepository<Product> productRepository,
-            IRepository<ReturnRequest> returnRequestRepository,
-            IServiceProvider serviceProvider)
+            IMediator mediator)
         {
-            this._localizationService = localizationService;
-            this._storeContext = storeContext;
-            this._commonSettings = commonSettings;
-            this._googleAnalyticsSettings = googleAnalyticsSettings;
-            this._settingService = settingService;
-            this._workContext = workContext;
-            this._cacheManager= cacheManager;
-            this._orderReportService = orderReportService;
-            this._customerService = customerService;
-            this._productRepository = productRepository;
-            this._returnRequestRepository = returnRequestRepository;
-            this._serviceProvider = serviceProvider;
+            _localizationService = localizationService;
+            _googleAnalyticsSettings = googleAnalyticsSettings;
+            _workContext = workContext;
+            _orderReportService = orderReportService;
+            _customerService = customerService;
+            _mediator = mediator;
         }
 
         #endregion
@@ -89,12 +70,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.OrdersPending = (await _orderReportService.GetOrderAverageReportLine(storeId: storeId, os: OrderStatus.Pending)).CountOrders;
             model.AbandonedCarts = (await _customerService.GetAllCustomers(storeId: storeId, loadOnlyWithShoppingCart: true, pageSize: 1)).TotalCount;
 
-            _serviceProvider.GetRequiredService<IProductService>()
-                .GetLowStockProducts(vendorId, storeId, out IList <Product> products, out IList<ProductAttributeCombination> combinations);
+            HttpContext.RequestServices.GetRequiredService<IProductService>().GetLowStockProducts(vendorId, storeId, out IList<Product> products, out IList<ProductAttributeCombination> combinations);
 
             model.LowStockProducts = products.Count + combinations.Count;
 
-            model.ReturnRequests = (int)_returnRequestRepository.Table.Where(x=>x.ReturnRequestStatusId == 0 && (string.IsNullOrEmpty(storeId) || x.StoreId == storeId)).Count();
+            model.ReturnRequests = await _mediator.Send(new GetReturnRequest() { RequestStatusId = 0, StoreId = storeId });
             model.TodayRegisteredCustomers = (await _customerService.GetAllCustomers(storeId: storeId, customerRoleIds: new string[] { (await _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered)).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1)).TotalCount;
             return model;
 
@@ -106,11 +86,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var model = new DashboardModel
-            {
+            var model = new DashboardModel {
                 IsLoggedInAsVendor = _workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff()
             };
-            if (string.IsNullOrEmpty(_googleAnalyticsSettings.gaprivateKey) || 
+            if (string.IsNullOrEmpty(_googleAnalyticsSettings.gaprivateKey) ||
                 string.IsNullOrEmpty(_googleAnalyticsSettings.gaserviceAccountEmail) ||
                 string.IsNullOrEmpty(_googleAnalyticsSettings.gaviewID))
                 model.HideReportGA = true;
@@ -120,8 +99,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Statistics()
         {
-            var model = new DashboardModel
-            {
+            var model = new DashboardModel {
                 IsLoggedInAsVendor = _workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff()
             };
             return View(model);
@@ -132,7 +110,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = await PrepareActivityModel();
             return PartialView(model);
         }
-        
+
         public async Task<IActionResult> SetLanguage(string langid, [FromServices] ILanguageService languageService, string returnUrl = "")
         {
             var language = await languageService.GetLanguageById(langid);
@@ -149,7 +127,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             return Redirect(returnUrl);
         }
-        
+
         [AcceptVerbs("Get")]
         public async Task<IActionResult> GetStatesByCountryId([FromServices] ICountryService countryService, [FromServices] IStateProvinceService stateProvinceService,
             string countryId, bool? addSelectStateItem, bool? addAsterisk)
