@@ -12,6 +12,7 @@ using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
 using Grand.Services.Affiliates;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Customers;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -1121,12 +1122,12 @@ namespace Grand.Services.Orders
         }
 
         protected virtual async Task UpdateCustomer(Order order)
-        {
+        {           
+            //Update customer reminder history
+            await _mediator.Send(new UpdateCustomerReminderHistoryCommand() { CustomerId = order.CustomerId, OrderId = order.Id });
+
             //Updated field "free shipping" after added a new order
             await _customerService.UpdateFreeShipping(order.CustomerId, false);
-
-            //Update customer reminder history
-            await _customerService.UpdateCustomerReminderHistory(order.CustomerId, order.Id);
 
             //Update field Last purchase date after added a new order
             await _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);

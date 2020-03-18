@@ -9,7 +9,6 @@ using Grand.Core.Domain.Stores;
 using Grand.Services.Common;
 using Grand.Services.Events;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -75,7 +74,6 @@ namespace Grand.Services.Customers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICacheManager _cacheManager;
         private readonly IMediator _mediator;
-        private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
@@ -90,8 +88,7 @@ namespace Grand.Services.Customers
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
             IRepository<CustomerNote> customerNoteRepository,
             IGenericAttributeService genericAttributeService,
-            IMediator mediator,
-            IServiceProvider serviceProvider)
+            IMediator mediator)
         {
             _cacheManager = cacheManager;
             _customerRepository = customerRepository;
@@ -103,7 +100,6 @@ namespace Grand.Services.Customers
             _customerNoteRepository = customerNoteRepository;
             _genericAttributeService = genericAttributeService;
             _mediator = mediator;
-            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -743,34 +739,6 @@ namespace Grand.Services.Customers
                 await _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.SelectedPaymentMethod, null, storeId);
             }
         }
-
-        public virtual async Task UpdateCustomerReminderHistory(string customerId, string orderId)
-        {
-            var builder = Builders<CustomerReminderHistory>.Filter;
-            var filter = builder.Eq(x => x.CustomerId, customerId);
-            var customerReminderRepository = _serviceProvider.GetRequiredService<IRepository<CustomerReminderHistory>>();
-
-            //update started reminders
-            filter = filter & builder.Eq(x => x.Status, (int)CustomerReminderHistoryStatusEnum.Started);
-            var update = Builders<CustomerReminderHistory>.Update
-                .Set(x => x.EndDate, DateTime.UtcNow)
-                .Set(x => x.Status, (int)CustomerReminderHistoryStatusEnum.CompletedOrdered)
-                .Set(x => x.OrderId, orderId);
-            await customerReminderRepository.Collection.UpdateManyAsync(filter, update);
-
-            //update Ended reminders
-            filter = builder.Eq(x => x.CustomerId, customerId);
-            filter = filter & builder.Eq(x => x.Status, (int)CustomerReminderHistoryStatusEnum.CompletedReminder);
-            filter = filter & builder.Gt(x => x.EndDate, DateTime.UtcNow.AddHours(-36));
-
-            update = Builders<CustomerReminderHistory>.Update
-                .Set(x => x.Status, (int)CustomerReminderHistoryStatusEnum.CompletedOrdered)
-                .Set(x => x.OrderId, orderId);
-
-            await customerReminderRepository.Collection.UpdateManyAsync(filter, update);
-
-        }
-
 
         /// <summary>
         /// Delete guest customer records
