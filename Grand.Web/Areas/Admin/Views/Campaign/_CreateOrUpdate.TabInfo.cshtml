@@ -45,6 +45,13 @@
                 <span asp-validation-for="EmailAccountId"></span>
             </div>
         </div>
+        <div class="form-group">
+            <admin-label asp-for="LanguageId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="LanguageId" asp-items="Model.AvailableLanguages" />
+                <span asp-validation-for="LanguageId"></span>
+            </div>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
