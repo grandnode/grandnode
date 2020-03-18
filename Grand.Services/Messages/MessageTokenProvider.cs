@@ -43,7 +43,6 @@ namespace Grand.Services.Messages
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
-        private readonly IWorkContext _workContext;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IStateProvinceService _stateProvinceService;
@@ -63,7 +62,6 @@ namespace Grand.Services.Messages
             IDateTimeHelper dateTimeHelper,
             IPriceFormatter priceFormatter,
             ICurrencyService currencyService,
-            IWorkContext workContext,
             IProductAttributeParser productAttributeParser,
             IAddressAttributeFormatter addressAttributeFormatter,
             ICountryService countryService,
@@ -80,7 +78,6 @@ namespace Grand.Services.Messages
             _dateTimeHelper = dateTimeHelper;
             _priceFormatter = priceFormatter;
             _currencyService = currencyService;
-            _workContext = workContext;
             _productAttributeParser = productAttributeParser;
             _addressAttributeFormatter = addressAttributeFormatter;
             _countryService = countryService;
@@ -465,7 +462,7 @@ namespace Grand.Services.Messages
         {
             var liquidReturnRequest = new LiquidReturnRequest(returnRequest, order);
 
-            liquidReturnRequest.Status = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext);
+            liquidReturnRequest.Status = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, language.Id);
             liquidReturnRequest.Products = await ProductListToHtmlTable();
             liquidReturnRequest.PickupAddressStateProvince =
                             !string.IsNullOrEmpty(returnRequest.PickupAddress.StateProvinceId) ?
