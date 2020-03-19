@@ -294,8 +294,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
                             if (defaultProductCategory != null)
                             {
                                 //TODO localize categories
-                                var category = await defaultProductCategory
-                                    .GetFormattedBreadCrumb(_categoryService, separator: ">", languageId: languageId);
+                                var category = await _categoryService.GetFormattedBreadCrumb(defaultProductCategory, separator: ">", languageId: languageId);
                                 if (!String.IsNullOrEmpty((category)))
                                 {
                                     writer.WriteStartElement("g", "product_type", googleBaseNamespace);

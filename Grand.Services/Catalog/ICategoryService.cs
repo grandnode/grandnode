@@ -58,6 +58,45 @@ namespace Grand.Services.Catalog
         Task<IList<Category>> GetAllCategoriesSearchBox();
 
         /// <summary>
+        /// Get category breadcrumb 
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Category breadcrumb </returns>
+        Task<IList<Category>> GetCategoryBreadCrumb(Category category, bool showHidden = false);
+
+        /// <summary>
+        /// Get category breadcrumb 
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="allCategories">All categories</param>
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Category breadcrumb </returns>
+        IList<Category> GetCategoryBreadCrumb(Category category, IList<Category> allCategories, bool showHidden = false);
+
+        /// <summary>
+        /// Get formatted category breadcrumb 
+        /// Note: ACL and store mapping is ignored
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="separator">Separator</param>
+        /// <param name="languageId">Language identifier for localization</param>
+        /// <returns>Formatted breadcrumb</returns>
+        Task<string> GetFormattedBreadCrumb(Category category, string separator = ">>", string languageId = "");
+
+        /// <summary>
+        /// Get formatted category breadcrumb 
+        /// Note: ACL and store mapping is ignored
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="allCategories">All categories</param>
+        /// <param name="separator">Separator</param>
+        /// <param name="languageId">Language identifier for localization</param>
+        /// <returns>Formatted breadcrumb</returns>
+        string GetFormattedBreadCrumb(Category category,
+            IList<Category> allCategories, string separator = ">>", string languageId = "");
+
+        /// <summary>
         /// Gets all categories by discount id
         /// </summary>
         /// <returns>Categories</returns>

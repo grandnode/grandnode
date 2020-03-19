@@ -498,7 +498,7 @@ namespace Grand.Web.Features.Handlers.Products
                     var category = await _categoryService.GetCategoryById(productCategories.OrderBy(x => x.DisplayOrder).FirstOrDefault().CategoryId);
                     if (category != null)
                     {
-                        foreach (var catBr in await category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
+                        foreach (var catBr in await _categoryService.GetCategoryBreadCrumb(category))
                         {
                             breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel {
                                 Id = catBr.Id,

@@ -414,7 +414,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var x in categories)
             {
                 var categoryModel = x.ToModel();
-                categoryModel.Breadcrumb = await x.GetFormattedBreadCrumb(_categoryService);
+                categoryModel.Breadcrumb = await _categoryService.GetFormattedBreadCrumb(x);
                 items.Add(categoryModel);
             }
             var gridModel = new DataSourceResult

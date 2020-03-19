@@ -121,8 +121,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     storeId,
                     languageId);
                 model.CategoryBreadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
-                    (await request.Category
-                    .GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
+                    (await _categoryService.GetCategoryBreadCrumb(request.Category))
                     .Select(catBr => new CategoryModel {
                         Id = catBr.Id,
                         Name = catBr.GetLocalized(x => x.Name, languageId),
