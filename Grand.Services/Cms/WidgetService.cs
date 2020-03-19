@@ -1,4 +1,3 @@
-using Grand.Core.Caching;
 using Grand.Core.Domain.Cms;
 using Grand.Core.Plugins;
 using System;
@@ -26,7 +25,7 @@ namespace Grand.Services.Cms
         /// </summary>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="widgetSettings">Widget settings</param>
-        public WidgetService(IPluginFinder pluginFinder, ICacheManager cacheManager,
+        public WidgetService(IPluginFinder pluginFinder,
             WidgetSettings widgetSettings)
         {
             _pluginFinder = pluginFinder;
@@ -55,7 +54,7 @@ namespace Grand.Services.Cms
         /// <param name="widgetZone">Widget zone</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Widgets</returns>
-        public virtual IList<IWidgetPlugin> LoadActiveWidgetsByWidgetZone(string  widgetZone, string storeId = "")
+        public virtual IList<IWidgetPlugin> LoadActiveWidgetsByWidgetZone(string widgetZone, string storeId = "")
         {
             if (String.IsNullOrWhiteSpace(widgetZone))
                 return new List<IWidgetPlugin>();
@@ -86,9 +85,9 @@ namespace Grand.Services.Cms
         /// <returns>Widgets</returns>
         public virtual IList<IWidgetPlugin> LoadAllWidgets(string storeId = "")
         {
-           return _pluginFinder.GetPlugins<IWidgetPlugin>(storeId: storeId).ToList();
+            return _pluginFinder.GetPlugins<IWidgetPlugin>(storeId: storeId).ToList();
         }
-        
+
         #endregion
     }
 }
