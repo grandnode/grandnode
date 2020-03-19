@@ -20861,6 +20861,9 @@
   <LocaleResource Name="Sitemap">
     <Value>Sitemap</Value>
   </LocaleResource>
+  <LocaleResource Name="Sitemap.BlogPosts">
+    <Value>Blog posts</Value>
+  </LocaleResource>
   <LocaleResource Name="Sitemap.Categories">
     <Value>Categories</Value>
   </LocaleResource>
