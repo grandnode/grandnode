@@ -18,8 +18,6 @@ namespace Grand.Web.Infrastructure
             //widgetZone servie
             builder.RegisterType<WidgetViewModelService>().As<IWidgetViewModelService>().InstancePerLifetimeScope();
 
-            //board service
-            builder.RegisterType<BoardsViewModelService>().As<IBoardsViewModelService>().InstancePerLifetimeScope();
 
         }
 

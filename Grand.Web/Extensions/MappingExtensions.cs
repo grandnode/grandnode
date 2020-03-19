@@ -2,11 +2,13 @@
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Courses;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Polls;
 using Grand.Core.Domain.Topics;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
+using Grand.Web.Models.Boards;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Course;
@@ -117,6 +119,7 @@ namespace Grand.Web.Extensions
 
         }
         
+        //topic
         public static TopicModel ToModel(this Topic entity, Language language)
         {
             var model = new TopicModel {
@@ -138,6 +141,20 @@ namespace Grand.Web.Extensions
 
         }
 
+        //forum
+        public static ForumRowModel ToModel(this Forum forum)
+        {
+            var forumModel = new ForumRowModel {
+                Id = forum.Id,
+                Name = forum.Name,
+                SeName = forum.GetSeName(),
+                Description = forum.Description,
+                NumTopics = forum.NumTopics,
+                NumPosts = forum.NumPosts,
+                LastPostId = forum.LastPostId,
+            };
+            return forumModel;
+        }
 
         public static Address ToEntity(this AddressModel model, bool trimFields = true)
         {

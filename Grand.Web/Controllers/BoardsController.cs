@@ -7,8 +7,10 @@ using Grand.Services.Customers;
 using Grand.Services.Forums;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
+using Grand.Web.Features.Models.Boards;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Boards;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,32 +24,33 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly IBoardsViewModelService _boardsViewModelService;
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
+        private readonly IMediator _mediator;
         private readonly ForumSettings _forumSettings;
 
         #endregion
 
         #region Constructors
 
-        public BoardsController(IBoardsViewModelService boardsViewModelService,
+        public BoardsController(
             IForumService forumService,
             ILocalizationService localizationService,
             IWebHelper webHelper,
             IWorkContext workContext,
             IStoreContext storeContext,
+            IMediator mediator,
             ForumSettings forumSettings)
         {
-            _boardsViewModelService = boardsViewModelService;
             _forumService = forumService;
             _localizationService = localizationService;
             _webHelper = webHelper;
             _workContext = workContext;
             _storeContext = storeContext;
+            _mediator = mediator;
             _forumSettings = forumSettings;
         }
         #endregion
@@ -60,7 +63,7 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("HomePage");
             }
-            var model = await _boardsViewModelService.PrepareBoardsIndex();
+            var model = await _mediator.Send(new GetBoardsIndex());
             return View(model);
         }
 
@@ -71,7 +74,7 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("HomePage");
             }
-            var model = await _boardsViewModelService.PrepareActiveDiscussions(forumId, pageNumber);
+            var model = await _mediator.Send(new GetForumActiveDiscussions() { ForumId = forumId, PageNumber = pageNumber });
             return View(model);
         }
 
@@ -128,7 +131,7 @@ namespace Grand.Web.Controllers
             if (forumGroup == null)
                 return RedirectToRoute("Boards");
 
-            var model = await _boardsViewModelService.PrepareForumGroup(forumGroup);
+            var model = await _mediator.Send(new GetForumGroup() { ForumGroup = forumGroup });
             return View(model);
         }
 
@@ -138,12 +141,15 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("HomePage");
             }
-
             var forum = await _forumService.GetForumById(id);
 
             if (forum != null)
             {
-                var model = await _boardsViewModelService.PrepareForumPage(forum, pageNumber);
+                var model = await _mediator.Send(new GetForumPage() {
+                    Customer = _workContext.CurrentCustomer,
+                    Forum = forum,
+                    PageNumber = pageNumber
+                });
                 return View(model);
             }
             return RedirectToRoute("Boards");
@@ -256,7 +262,11 @@ namespace Grand.Web.Controllers
 
             if (forumTopic != null)
             {
-                var model = await _boardsViewModelService.PrepareForumTopicPage(forumTopic, pageNumber);
+                var model = await _mediator.Send(new GetForumTopicPage() {
+                    Customer = _workContext.CurrentCustomer,
+                    ForumTopic = forumTopic,
+                    PageNumber = pageNumber
+                });
                 if (model == null && pageNumber > 1)
                 {
                     return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
@@ -326,7 +336,7 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("Boards");
             }
-            var model = await _boardsViewModelService.PrepareTopicMove(forumTopic);
+            var model = await _mediator.Send(new GetTopicMove() { ForumTopic = forumTopic });
             return View(model);
         }
 
@@ -410,7 +420,7 @@ namespace Grand.Web.Controllers
             {
                 return new ChallengeResult();
             }
-            var model = _boardsViewModelService.PrepareEditForumTopic(forum);
+            var model = await _mediator.Send(new GetEditForumTopic() { Customer = _workContext.CurrentCustomer, Forum = forum });
             return View(model);
         }
 
@@ -524,7 +534,7 @@ namespace Grand.Web.Controllers
                 }
             }
             // redisplay form
-            model.TopicPriorities = _boardsViewModelService.ForumTopicTypesList();
+            model.TopicPriorities = await _mediator.Send(new GetTopicTypesList());
             model.IsEdit = false;
             model.ForumId = forum.Id;
             model.ForumName = forum.Name;
@@ -561,8 +571,7 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("Boards");
             }
-
-            var model = _boardsViewModelService.PrepareEditForumTopic(forum);
+            var model = await _mediator.Send(new GetEditForumTopic() { Customer = _workContext.CurrentCustomer, Forum = forum });
             var firstPost = await forumTopic.GetFirstPost(_forumService);
             model.Text = firstPost.Text;
             model.Subject = forumTopic.Subject;
@@ -698,7 +707,7 @@ namespace Grand.Web.Controllers
             }
 
             // redisplay form
-            model.TopicPriorities = _boardsViewModelService.ForumTopicTypesList();
+            model.TopicPriorities = await _mediator.Send(new GetTopicTypesList());
             model.IsEdit = true;
             model.ForumName = forum.Name;
             model.ForumSeName = forum.GetSeName();
@@ -783,7 +792,12 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("Boards");
             }
-            var model = await _boardsViewModelService.PrepareEditForumPost(forum, forumTopic, quote);
+            var model = await _mediator.Send(new GetEditForumPost() { 
+                Customer = _workContext.CurrentCustomer,
+                Forum = forum,
+                ForumTopic = forumTopic,
+                Quote = quote
+            });
             return View(model);
         }
 
@@ -1068,7 +1082,14 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("HomePage");
             }
-            var model = await _boardsViewModelService.PrepareSearch(searchterms, adv, forumId, within, limitDays, pageNumber);
+            var model = await _mediator.Send(new GetSearch() { 
+                Searchterms = searchterms,
+                Adv = adv,
+                ForumId = forumId,
+                Within =within,
+                LimitDays = limitDays,
+                PageNumber = pageNumber,
+            });
             return View(model);
         }
 
@@ -1085,7 +1106,10 @@ namespace Grand.Web.Controllers
             {
                 pageIndex = pageNumber.Value - 1;
             }
-            var model = await _boardsViewModelService.PrepareCustomerForumSubscriptions(pageIndex);
+            var model = await _mediator.Send(new GetCustomerForumSubscriptions() { 
+                Customer = _workContext.CurrentCustomer,
+                PageIndex = pageIndex
+            });
             return View(model);
         }
         [HttpPost, ActionName("CustomerForumSubscriptions")]
