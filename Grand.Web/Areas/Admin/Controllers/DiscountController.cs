@@ -438,7 +438,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 items.Add(new DiscountModel.AppliedToCategoryModel {
                     CategoryId = item.Id,
-                    CategoryName = await item.GetFormattedBreadCrumb(categoryService)
+                    CategoryName = await categoryService.GetFormattedBreadCrumb(item)
                 });
             }
             var gridModel = new DataSourceResult {
@@ -482,7 +482,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var item in categories)
             {
                 var categoryModel = item.ToModel();
-                categoryModel.Breadcrumb = await item.GetFormattedBreadCrumb(categoryService);
+                categoryModel.Breadcrumb = await categoryService.GetFormattedBreadCrumb(item);
                 items.Add(categoryModel);
             }
             var gridModel = new DataSourceResult {

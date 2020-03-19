@@ -453,6 +453,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        public async Task<IActionResult> DeleteSelected(ICollection<string> selectedIds)
+        {
+            if (selectedIds != null)
+            {
+                await _customerViewModelService.DeleteSelected(selectedIds.ToList());
+            }
+
+            return Json(new { Result = true });
+        }
+
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("impersonate")]
         public async Task<IActionResult> Impersonate(string id)

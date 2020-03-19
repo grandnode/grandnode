@@ -365,7 +365,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ids.Add(str1);
                 }
 
-                var products = await _productService.GetProductsByIds(ids.ToArray());
+                var products = await _productService.GetProductsByIds(ids.ToArray(), true);
                 for (int i = 0; i <= products.Count - 1; i++)
                 {
                     result += products[i].Name;
@@ -1294,7 +1294,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x)
                     .ToArray();
-                products.AddRange(await _productService.GetProductsByIds(ids));
+                products.AddRange(await _productService.GetProductsByIds(ids, true));
             }
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1335,7 +1335,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x)
                     .ToArray();
-                products.AddRange(await _productService.GetProductsByIds(ids));
+                products.AddRange(await _productService.GetProductsByIds(ids, true));
             }
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)

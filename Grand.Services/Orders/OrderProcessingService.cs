@@ -1775,7 +1775,7 @@ namespace Grand.Services.Orders
                         var product = await _productService.GetProductById(shipmentItem.ProductId);
                         shipmentItem.ShipmentId = shipment.Id;
                         if (product != null)
-                            await _productService.ReverseBookedInventory(product, shipmentItem);
+                            await _productService.ReverseBookedInventory(product, shipment, shipmentItem);
                     }
                 }
                 //Adjust inventory
@@ -2176,7 +2176,7 @@ namespace Grand.Services.Orders
                 {
                     var product = await _productService.GetProductById(shipmentItem.ProductId);
                     shipmentItem.ShipmentId = shipment.Id;
-                    await _productService.ReverseBookedInventory(product, shipmentItem);
+                    await _productService.ReverseBookedInventory(product, shipment, shipmentItem);
                 }
             }
             //Adjust inventory

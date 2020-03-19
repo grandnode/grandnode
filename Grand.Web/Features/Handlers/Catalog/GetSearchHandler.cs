@@ -8,8 +8,6 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
-using Grand.Services.Security;
-using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Products;
@@ -29,8 +27,6 @@ namespace Grand.Web.Features.Handlers.Catalog
     {
         private readonly ICategoryService _categoryService;
         private readonly ICacheManager _cacheManager;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IVendorService _vendorService;
@@ -45,8 +41,6 @@ namespace Grand.Web.Features.Handlers.Catalog
         public GetSearchHandler(
             ICategoryService categoryService,
             ICacheManager cacheManager,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IVendorService vendorService,
@@ -59,8 +53,6 @@ namespace Grand.Web.Features.Handlers.Catalog
         {
             _categoryService = categoryService;
             _cacheManager = cacheManager;
-            _aclService = aclService;
-            _storeMappingService = storeMappingService;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _vendorService = vendorService;
@@ -113,7 +105,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                 {
                     //generate full category name (breadcrumb)
                     string categoryBreadcrumb = "";
-                    var breadcrumb = c.GetCategoryBreadCrumb(allCategories, _aclService, _storeMappingService);
+                    var breadcrumb = _categoryService.GetCategoryBreadCrumb(c, allCategories);
                     for (int i = 0; i <= breadcrumb.Count - 1; i++)
                     {
                         categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name, request.Language.Id);

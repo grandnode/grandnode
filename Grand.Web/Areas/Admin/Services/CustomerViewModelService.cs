@@ -1068,6 +1068,20 @@ namespace Grand.Web.Areas.Admin.Services
             //activity log
             await _customerActivityService.InsertActivity("DeleteCustomer", customer.Id, _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);
         }
+
+        public virtual async Task DeleteSelected(IList<string> selectedIds)
+        {
+            var customers = new List<Customer>();
+            customers.AddRange(await _customerService.GetCustomersByIds(selectedIds.ToArray()));
+            for (var i = 0; i < customers.Count; i++)
+            {
+                var customer = customers[i];
+                await _customerService.DeleteCustomer(customer);
+                //activity log
+                await _customerActivityService.InsertActivity("DeleteCustomer", customer.Id, _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);
+            }
+        }
+
         public async Task SendEmail(Customer customer, CustomerModel.SendEmailModel model)
         {
             var emailAccount = await _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
@@ -1442,7 +1456,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = _categoryService.GetFormattedBreadCrumb(c, categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
