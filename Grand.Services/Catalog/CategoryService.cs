@@ -314,8 +314,11 @@ namespace Grand.Services.Catalog
             var filter = builder.Eq(x => x.Published, true);
             filter = filter & builder.Eq(x => x.ShowOnSearchBox, true);
             var query = _categoryRepository.Collection.Find(filter).SortBy(x => x.SearchBoxDisplayOrder);
+            var categories = (await query.ToListAsync())
+                .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
+                .ToList();
 
-            return await query.ToListAsync();
+            return categories;
         }
 
         /// <summary>

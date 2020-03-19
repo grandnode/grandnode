@@ -3,8 +3,6 @@ using Grand.Core.Domain.Catalog;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
-using Grand.Services.Security;
-using Grand.Services.Stores;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
@@ -21,23 +19,17 @@ namespace Grand.Web.Features.Handlers.Catalog
     {
         private readonly ICacheManager _cacheManager;
         private readonly ICategoryService _categoryService;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly ILocalizationService _localizationService;
         private readonly CatalogSettings _catalogSettings;
 
         public GetSearchBoxHandler(
             ICacheManager cacheManager,
             ICategoryService categoryService,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
             ILocalizationService localizationService,
             CatalogSettings catalogSettings)
         {
             _cacheManager = cacheManager;
             _categoryService = categoryService;
-            _aclService = aclService;
-            _storeMappingService = storeMappingService;
             _localizationService = localizationService;
             _catalogSettings = catalogSettings;
         }
@@ -51,9 +43,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             return await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var searchbocategories = await _categoryService.GetAllCategoriesSearchBox();
-                searchbocategories = searchbocategories
-                    .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
-                    .ToList();
 
                 var availableCategories = new List<SelectListItem>();
                 if (searchbocategories.Any())
