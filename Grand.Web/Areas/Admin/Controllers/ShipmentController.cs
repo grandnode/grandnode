@@ -296,7 +296,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var product = await _productService.GetProductById(shipmentItem.ProductId);
                 shipmentItem.ShipmentId = shipment.Id;
                 if (product != null)
-                    await _productService.ReverseBookedInventory(product, shipmentItem);
+                    await _productService.ReverseBookedInventory(product, shipment, shipmentItem);
             }
 
             await _shipmentService.DeleteShipment(shipment);

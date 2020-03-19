@@ -4,8 +4,6 @@ using Grand.Core.Domain.Catalog;
 using Grand.Framework.Components;
 using Grand.Services.Catalog;
 using Grand.Services.Orders;
-using Grand.Services.Security;
-using Grand.Services.Stores;
 using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
 using MediatR;
@@ -19,8 +17,6 @@ namespace Grand.Web.Components
     {
         #region Fields
         private readonly IProductService _productService;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IOrderReportService _orderReportService;
@@ -32,8 +28,6 @@ namespace Grand.Web.Components
 
         public ProductsAlsoPurchasedViewComponent(
             IProductService productService,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
             IMediator mediator,
             ICacheManager cacheManager,
             IOrderReportService orderReportService,
@@ -42,10 +36,8 @@ namespace Grand.Web.Components
 )
         {
             _productService = productService;
-            _aclService = aclService;
             _catalogSettings = catalogSettings;
             _mediator = mediator;
-            _storeMappingService = storeMappingService;
             _cacheManager = cacheManager;
             _orderReportService = orderReportService;
             _storeContext = storeContext;
@@ -69,10 +61,6 @@ namespace Grand.Web.Components
 
             //load products
             var products = await _productService.GetProductsByIds(productIds);
-            //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
-            //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
 
             if (!products.Any())
                 return Content("");

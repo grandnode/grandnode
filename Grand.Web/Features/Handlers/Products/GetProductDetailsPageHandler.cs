@@ -56,8 +56,6 @@ namespace Grand.Web.Features.Handlers.Products
         private readonly IShippingService _shippingService;
         private readonly IVendorService _vendorService;
         private readonly ICategoryService _categoryService;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IProductTagService _productTagService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IManufacturerService _manufacturerService;
@@ -91,8 +89,6 @@ namespace Grand.Web.Features.Handlers.Products
             IShippingService shippingService, 
             IVendorService vendorService, 
             ICategoryService categoryService, 
-            IAclService aclService, 
-            IStoreMappingService storeMappingService, 
             IProductTagService productTagService, 
             IProductAttributeService productAttributeService, 
             IManufacturerService manufacturerService, 
@@ -124,8 +120,6 @@ namespace Grand.Web.Features.Handlers.Products
             _shippingService = shippingService;
             _vendorService = vendorService;
             _categoryService = categoryService;
-            _aclService = aclService;
-            _storeMappingService = storeMappingService;
             _productTagService = productTagService;
             _productAttributeService = productAttributeService;
             _manufacturerService = manufacturerService;
@@ -1025,12 +1019,13 @@ namespace Grand.Web.Features.Handlers.Products
         private async Task<IList<ProductDetailsModel.ProductBundleModel>> PrepareProductBundleModel(Product product)
         {
             var model = new List<ProductDetailsModel.ProductBundleModel>();
+            var displayPrices = await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+
             foreach (var bundle in product.BundleProducts.OrderBy(x => x.DisplayOrder))
             {
                 var p1 = await _productService.GetProductById(bundle.ProductId);
-                if (p1 != null && p1.Published && _aclService.Authorize(p1) && _storeMappingService.Authorize(p1) && p1.IsAvailable())
+                if (p1 != null && p1.Published && p1.IsAvailable())
                 {
-
                     var bundleProduct = new ProductDetailsModel.ProductBundleModel() {
                         ProductId = p1.Id,
                         Name = p1.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
@@ -1042,7 +1037,6 @@ namespace Grand.Web.Features.Handlers.Products
                         Quantity = bundle.Quantity,
                         GenericAttributes = p1.GenericAttributes
                     };
-                    var displayPrices = await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
                     if (displayPrices)
                     {
                         var productprice = await _taxService.GetProductPrice(p1, (await _priceCalculationService.GetFinalPrice(p1, _workContext.CurrentCustomer, includeDiscounts: true)).finalPrice);

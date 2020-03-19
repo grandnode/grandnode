@@ -23,8 +23,6 @@ namespace Grand.Web.Components
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IProductService _productService;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IMediator _mediator;
 
         private readonly CatalogSettings _catalogSettings;
@@ -37,8 +35,6 @@ namespace Grand.Web.Components
             ICacheManager cacheManager,
             IStoreContext storeContext,
             IProductService productService,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
             IMediator mediator,
             CatalogSettings catalogSettings)
         {
@@ -46,8 +42,6 @@ namespace Grand.Web.Components
             _cacheManager = cacheManager;
             _storeContext = storeContext;
             _productService = productService;
-            _aclService = aclService;
-            _storeMappingService = storeMappingService;
             _mediator = mediator;
             _catalogSettings = catalogSettings;
         }
@@ -73,11 +67,7 @@ namespace Grand.Web.Components
 
             //load products
             var products = await _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
-            //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
-            //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
-
+            
             if (!products.Any())
                 return Content("");
 

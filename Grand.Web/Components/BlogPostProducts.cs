@@ -2,8 +2,6 @@
 using Grand.Framework.Components;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
-using Grand.Services.Security;
-using Grand.Services.Stores;
 using Grand.Web.Features.Models.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +15,6 @@ namespace Grand.Web.Components
         #region Fields
 
         private readonly IProductService _productService;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IMediator _mediator;
         private readonly IBlogService _blogService;
 
@@ -30,15 +26,11 @@ namespace Grand.Web.Components
 
         public BlogPostProductsViewComponent(
             IProductService productService,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
             IMediator mediator,
             IBlogService blogService,
             CatalogSettings catalogSettings)
         {
             _productService = productService;
-            _aclService = aclService;
-            _storeMappingService = storeMappingService;
             _mediator = mediator;
             _blogService = blogService;
             _catalogSettings = catalogSettings;
@@ -55,10 +47,6 @@ namespace Grand.Web.Components
                 return Content("");
 
             var products = await _productService.GetProductsByIds(blogproducts.Select(x => x.ProductId).ToArray());
-            //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
-            //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
 
             if (!products.Any())
                 return Content("");

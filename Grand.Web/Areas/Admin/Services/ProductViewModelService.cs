@@ -1088,7 +1088,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task DeleteSelected(IList<string> selectedIds)
         {
             var products = new List<Product>();
-            products.AddRange(await _productService.GetProductsByIds(selectedIds.ToArray()));
+            products.AddRange(await _productService.GetProductsByIds(selectedIds.ToArray(), true));
             for (var i = 0; i < products.Count; i++)
             {
                 var product = products[i];

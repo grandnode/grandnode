@@ -286,6 +286,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCTS_RELATED_IDS_KEY = "Grand.pres.related-{0}-{1}";
         public const string PRODUCTS_RELATED_IDS_PATTERN_KEY = "Grand.pres.related-{0}";
+        public const string PRODUCTS_RELATED_IDS_PATTERN = "Grand.pres.related";
 
         /// <summary>
         /// Key for "similar" product identifiers displayed on the product details page
@@ -296,7 +297,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCTS_SIMILAR_IDS_KEY = "Grand.pres.similar-{0}-{1}";
         public const string PRODUCTS_SIMILAR_IDS_PATTERN_KEY = "Grand.pres.similar-{0}";
-
+        public const string PRODUCTS_SIMILAR_IDS_PATTERN = "Grand.pres.similar";
 
 
         /// <summary>

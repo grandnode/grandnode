@@ -239,7 +239,7 @@ namespace Grand.Plugin.DiscountRequirements.HasAllProducts.Controllers
                     ids.Add(str2);
                 }
 
-                var products = await _productService.GetProductsByIds(ids.ToArray());
+                var products = await _productService.GetProductsByIds(ids.ToArray(), true);
                 for (int i = 0; i <= products.Count - 1; i++)
                 {
                     result += products[i].Name;

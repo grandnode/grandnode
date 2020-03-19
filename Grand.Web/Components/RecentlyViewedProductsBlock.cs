@@ -2,8 +2,6 @@
 using Grand.Core.Domain.Catalog;
 using Grand.Framework.Components;
 using Grand.Services.Catalog;
-using Grand.Services.Security;
-using Grand.Services.Stores;
 using Grand.Web.Features.Models.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,8 +13,6 @@ namespace Grand.Web.Components
     public class RecentlyViewedProductsBlockViewComponent : BaseViewComponent
     {
         #region Fields
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
         private readonly IMediator _mediator;
@@ -27,15 +23,11 @@ namespace Grand.Web.Components
         #region Constructors
 
         public RecentlyViewedProductsBlockViewComponent(
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
             IWorkContext workContext,
             IRecentlyViewedProductsService recentlyViewedProductsService,
             IMediator mediator,
             CatalogSettings catalogSettings)
         {
-            _aclService = aclService;
-            _storeMappingService = storeMappingService;
             _workContext = workContext;
             _recentlyViewedProductsService = recentlyViewedProductsService;
             _mediator = mediator;
@@ -53,11 +45,6 @@ namespace Grand.Web.Components
 
             var preparePictureModel = productThumbPictureSize.HasValue;
             var products = await _recentlyViewedProductsService.GetRecentlyViewedProducts(_workContext.CurrentCustomer.Id, _catalogSettings.RecentlyViewedProductsNumber);
-
-            //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
-            //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
 
             if (!products.Any())
                 return Content("");

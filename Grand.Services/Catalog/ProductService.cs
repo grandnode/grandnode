@@ -4,19 +4,16 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Shipping;
+using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Events.Web;
-using Grand.Services.Messages;
 using Grand.Services.Security;
-using Grand.Services.Shipping;
 using Grand.Services.Stores;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -58,6 +55,7 @@ namespace Grand.Services.Catalog
         /// {0} : customer ID
         /// </remarks>
         private const string PRODUCTS_CUSTOMER_ROLE = "Grand.product.cr-{0}";
+        private const string PRODUCTS_CUSTOMER_ROLE_PATTERN = "Grand.product.cr";
 
         /// <summary>
         /// Key for caching
@@ -66,6 +64,7 @@ namespace Grand.Services.Catalog
         /// {0} : customer ID
         /// </remarks>
         private const string PRODUCTS_CUSTOMER_TAG = "Grand.product.ct-{0}";
+        private const string PRODUCTS_CUSTOMER_TAG_PATTERN = "Grand.product.ct";
 
         /// <summary>
         /// Key for caching
@@ -74,6 +73,7 @@ namespace Grand.Services.Catalog
         /// {0} : customer ID
         /// </remarks>
         private const string PRODUCTS_CUSTOMER_PERSONAL = "Grand.product.personal-{0}";
+        private const string PRODUCTS_CUSTOMER_PERSONAL_PATTERN = "Grand.product.personal";
 
         #endregion
 
@@ -91,14 +91,13 @@ namespace Grand.Services.Catalog
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
-        private readonly LocalizationSettings _localizationSettings;
+        private readonly IAclService _aclService;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IMediator _mediator;
         private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
-        private readonly IMediator _mediator;
-        private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
@@ -116,17 +115,16 @@ namespace Grand.Services.Catalog
             IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<ProductDeleted> productDeletedRepository,
             IRepository<CustomerProduct> customerProductRepository,
+            IRepository<ProductTag> productTagRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ISpecificationAttributeService specificationAttributeService,
-            IWorkflowMessageService workflowMessageService,
             IWorkContext workContext,
-            LocalizationSettings localizationSettings,
-            CommonSettings commonSettings,
-            CatalogSettings catalogSettings,
             IMediator mediator,
-            IRepository<ProductTag> productTagRepository,
-            IServiceProvider serviceProvider
+            IAclService aclService,
+            IStoreMappingService storeMappingService,
+            CommonSettings commonSettings,
+            CatalogSettings catalogSettings
             )
         {
             _cacheManager = cacheManager;
@@ -136,19 +134,18 @@ namespace Grand.Services.Catalog
             _customerRepository = customerRepository;
             _customerRoleProductRepository = customerRoleProductRepository;
             _customerTagProductRepository = customerTagProductRepository;
+            _productTagRepository = productTagRepository;
+            _customerProductRepository = customerProductRepository;
             _productDeletedRepository = productDeletedRepository;
             _productAttributeService = productAttributeService;
             _productAttributeParser = productAttributeParser;
             _specificationAttributeService = specificationAttributeService;
-            _workflowMessageService = workflowMessageService;
             _workContext = workContext;
-            _localizationSettings = localizationSettings;
+            _mediator = mediator;
+            _aclService = aclService;
+            _storeMappingService = storeMappingService;
             _commonSettings = commonSettings;
             _catalogSettings = catalogSettings;
-            _mediator = mediator;
-            _productTagRepository = productTagRepository;
-            _customerProductRepository = customerProductRepository;
-            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -234,7 +231,15 @@ namespace Grand.Services.Catalog
             filter &= builder.Eq(x => x.ShowOnHomePage, true);
             filter &= builder.Eq(x => x.VisibleIndividually, true);
             var query = _productRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x => x.Name);
-            return await query.ToListAsync();
+
+            var products = await query.ToListAsync();
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+            return products;
         }
 
         /// <summary>
@@ -276,7 +281,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Products</returns>
-        public virtual async Task<IList<Product>> GetProductsByIds(string[] productIds)
+        public virtual async Task<IList<Product>> GetProductsByIds(string[] productIds, bool showHidden = false)
         {
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
@@ -290,9 +295,10 @@ namespace Grand.Services.Catalog
             foreach (string id in productIds)
             {
                 var product = products.Find(x => x.Id == id);
-                if (product != null)
+                if (product != null && (showHidden || (_aclService.Authorize(product) && _storeMappingService.Authorize(product) && (product.IsAvailable()))))
                     sortedProducts.Add(product);
             }
+           
             return sortedProducts;
         }
 
@@ -490,6 +496,9 @@ namespace Grand.Services.Catalog
 
             //cache
             await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPrefix(PRODUCTS_CUSTOMER_PERSONAL_PATTERN);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_CUSTOMER_ROLE_PATTERN);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_CUSTOMER_TAG_PATTERN);
 
             //event notification
             await _mediator.EntityUpdated(product);
@@ -965,7 +974,6 @@ namespace Grand.Services.Catalog
         /// <param name="parentGroupedProductId">Parent product identifier (used with grouped products)</param>
         /// <param name="storeId">Store identifier; "" to load all records</param>
         /// <param name="vendorId">Vendor identifier; "" to load all records</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
         public virtual async Task<IList<Product>> GetAssociatedProducts(string parentGroupedProductId,
             string storeId = "", string vendorId = "", bool showHidden = false)
@@ -1000,14 +1008,12 @@ namespace Grand.Services.Catalog
             //ACL mapping
             if (!showHidden)
             {
-                var aclService = _serviceProvider.GetRequiredService<IAclService>();
-                products = products.Where(x => aclService.Authorize(x)).ToList();
+                products = products.Where(x => _aclService.Authorize(x)).ToList();
             }
             //Store mapping
             if (!showHidden && !string.IsNullOrEmpty(storeId))
             {
-                var storeMappingService = _serviceProvider.GetRequiredService<IStoreMappingService>();
-                products = products.Where(x => storeMappingService.Authorize(x, storeId)).ToList();
+                products = products.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
             }
 
             return products;
@@ -1330,7 +1336,10 @@ namespace Grand.Services.Catalog
                 //send email notification
                 if (quantityToChange < 0 && product.GetTotalStockQuantity(warehouseId: warehouseId) < product.NotifyAdminForQuantityBelow)
                 {
-                    await _workflowMessageService.SendQuantityBelowStoreOwnerNotification(_workContext.CurrentCustomer, product, _localizationSettings.DefaultAdminLanguageId);
+                    await _mediator.Send(new SendQuantityBelowStoreOwnerNotificationCommand() {
+                        Customer = _workContext.CurrentCustomer,
+                        Product = product
+                    });
                 }
             }
 
@@ -1359,7 +1368,11 @@ namespace Grand.Services.Catalog
                     //send email notification
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
                     {
-                        await _workflowMessageService.SendQuantityBelowStoreOwnerNotification(_workContext.CurrentCustomer, product, combination, _localizationSettings.DefaultAdminLanguageId);
+                        await _mediator.Send(new SendQuantityBelowStoreOwnerNotificationCommand() {
+                            Customer = _workContext.CurrentCustomer,
+                            Product = product,
+                            ProductAttributeCombination = combination
+                        });
                     }
                 }
             }
@@ -1737,7 +1750,7 @@ namespace Grand.Services.Catalog
         /// <param name="product">product</param>
         /// <param name="shipmentItem">Shipment item</param>
         /// <returns>Quantity reversed</returns>
-        public virtual async Task<int> ReverseBookedInventory(Product product, ShipmentItem shipmentItem)
+        public virtual async Task<int> ReverseBookedInventory(Product product, Shipment shipment, ShipmentItem shipmentItem)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1751,7 +1764,6 @@ namespace Grand.Services.Catalog
             if (!product.UseMultipleWarehouses && product.ManageInventoryMethod != ManageInventoryMethod.ManageStockByBundleProducts)
                 return 0;
 
-            var shipment = await _serviceProvider.GetRequiredService<IShipmentService>().GetShipmentById(shipmentItem.ShipmentId);
             var qty = shipmentItem.Quantity;
 
             //standard manage stock
@@ -1820,7 +1832,7 @@ namespace Grand.Services.Catalog
                     if (p1 != null && p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                     {
                         shipmentItem.Quantity = shipmentItem.Quantity * item.Quantity;
-                        await ReverseBookedInventory(p1, shipmentItem);
+                        await ReverseBookedInventory(p1, shipment, shipmentItem);
                     }
                 }
             }
@@ -2129,6 +2141,7 @@ namespace Grand.Services.Catalog
             }
             return result;
         }
+        
         #endregion
 
         #region Tier prices
