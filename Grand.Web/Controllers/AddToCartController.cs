@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Web.Controllers
 {
@@ -26,7 +27,6 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly IProductService _productService;
-        private readonly IProductReservationService _productReservationService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -42,7 +42,6 @@ namespace Grand.Web.Controllers
         #region CTOR
 
         public AddToCartController(IProductService productService,
-            IProductReservationService productReservationService,
             IShoppingCartService shoppingCartService,
             IWorkContext workContext,
             IStoreContext storeContext,
@@ -53,7 +52,6 @@ namespace Grand.Web.Controllers
             ShoppingCartSettings shoppingCartSettings)
         {
             _productService = productService;
-            _productReservationService = productReservationService;
             _shoppingCartService = shoppingCartService;
             _workContext = workContext;
             _storeContext = storeContext;
@@ -396,7 +394,8 @@ namespace Grand.Web.Controllers
                             message = _localizationService.GetResource("Product.Addtocart.Reservation.Required")
                         });
                     }
-                    var reservation = await _productReservationService.GetProductReservation(reservationId);
+                    var productReservationService = HttpContext.RequestServices.GetRequiredService<IProductReservationService>();
+                    var reservation = await productReservationService.GetProductReservation(reservationId);
                     if (reservation == null)
                     {
                         return Json(new
