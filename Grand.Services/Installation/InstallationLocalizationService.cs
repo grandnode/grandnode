@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace Grand.Web.Infrastructure.Installation
+namespace Grand.Services.Installation
 {
     /// <summary>
     /// Localization service for installation process
@@ -126,7 +126,7 @@ namespace Grand.Web.Infrastructure.Installation
                 return _availableLanguages;
 
             _availableLanguages = new List<InstallationLanguage>();
-            foreach (var filePath in Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
+            foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
             {
                 var xmlDocument = new XmlDocument();
                 xmlDocument.Load(File.OpenRead(filePath));
