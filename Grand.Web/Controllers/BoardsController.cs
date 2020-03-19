@@ -8,7 +8,6 @@ using Grand.Services.Forums;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Features.Models.Boards;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Boards;
 using MediatR;
 using Microsoft.AspNetCore.Http;
