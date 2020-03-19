@@ -29,8 +29,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IStoreService _storeService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly EmailAccountSettings _emailAccountSettings;
 
         #endregion Fields
@@ -39,12 +37,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public MessageTemplateController(IMessageTemplateService messageTemplateService,
             IEmailAccountService emailAccountService,
-            ILanguageService languageService, 
-            ILocalizationService localizationService, 
-            IMessageTokenProvider messageTokenProvider, 
+            ILanguageService languageService,
+            ILocalizationService localizationService,
+            IMessageTokenProvider messageTokenProvider,
             IStoreService storeService,
-            IStoreMappingService storeMappingService,
-            IWorkflowMessageService workflowMessageService,
             EmailAccountSettings emailAccountSettings)
         {
             this._messageTemplateService = messageTemplateService;
@@ -53,8 +49,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._localizationService = localizationService;
             this._messageTokenProvider = messageTokenProvider;
             this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
-            this._workflowMessageService = workflowMessageService;
             this._emailAccountSettings = emailAccountSettings;
         }
 
@@ -91,7 +85,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var templateModel = x.ToModel();
                 await templateModel.PrepareStoresMappingModel(x, _storeService, false);
-                var stores =(await _storeService
+                var stores = (await _storeService
                         .GetAllStores())
                         .Where(s => !x.LimitedToStores || templateModel.SelectedStoreIds.Contains(s.Id))
                         .ToList();
@@ -103,8 +97,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
                 items.Add(templateModel);
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = messageTemplates.Count
             };

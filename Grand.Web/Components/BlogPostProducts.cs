@@ -1,6 +1,11 @@
-﻿using Grand.Framework.Components;
+﻿using Grand.Core.Domain.Catalog;
+using Grand.Framework.Components;
 using Grand.Services.Blogs;
-using Grand.Web.Interfaces;
+using Grand.Services.Catalog;
+using Grand.Services.Security;
+using Grand.Services.Stores;
+using Grand.Web.Features.Models.Products;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,19 +16,32 @@ namespace Grand.Web.Components
     {
         #region Fields
 
-        private readonly IProductViewModelService _productViewModelService;
-        private readonly IBlogService _blogService; 
+        private readonly IProductService _productService;
+        private readonly IAclService _aclService;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IMediator _mediator;
+        private readonly IBlogService _blogService;
+
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
         #region Constructors
 
         public BlogPostProductsViewComponent(
-            IProductViewModelService productViewModelService,
-            IBlogService blogService)
+            IProductService productService,
+            IAclService aclService,
+            IStoreMappingService storeMappingService,
+            IMediator mediator,
+            IBlogService blogService,
+            CatalogSettings catalogSettings)
         {
-            _productViewModelService = productViewModelService;
+            _productService = productService;
+            _aclService = aclService;
+            _storeMappingService = storeMappingService;
+            _mediator = mediator;
             _blogService = blogService;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -32,13 +50,26 @@ namespace Grand.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string blogPostId, int? productThumbPictureSize)
         {
-            var products = await _blogService.GetProductsByBlogPostId(blogPostId);
-            if(!products.Any())
+            var blogproducts = await _blogService.GetProductsByBlogPostId(blogPostId);
+            if (!blogproducts.Any())
                 return Content("");
 
-            var model = await _productViewModelService.PrepareIdsProducts(products.Select(x=>x.ProductId).ToArray(), productThumbPictureSize);
-            if (!model.Any())
+            var products = await _productService.GetProductsByIds(blogproducts.Select(x => x.ProductId).ToArray());
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
                 return Content("");
+
+            var model = await _mediator.Send(new GetProductOverview() {
+                PreparePictureModel = true,
+                PreparePriceModel = true,
+                PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages,
+                ProductThumbPictureSize = productThumbPictureSize,
+                Products = products
+            });
 
             return View(model);
         }

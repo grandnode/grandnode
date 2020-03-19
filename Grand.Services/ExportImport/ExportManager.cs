@@ -178,7 +178,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("UpdatedOnUtc", null, manufacturer.UpdatedOnUtc.ToString());
 
                 xmlWriter.WriteStartElement("Products");
-                var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerId(manufacturer.Id, showHidden: true);
+                var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerId(manufacturer.Id, "", showHidden: true);
                 if (productManufacturers != null)
                 {
                     var productService = _serviceProvider.GetRequiredService<IProductService>();

@@ -128,5 +128,11 @@
   <LocaleResource Name="admin.orders.shipments.shipmentnotes.addbutton">
     <Value>Add shipment note</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Language.Hint">
+    <Value>Choose a language which subscribers will get this email.</Value>
+  </LocaleResource>
 </Language>
 

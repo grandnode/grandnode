@@ -8,7 +8,9 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
 using Grand.Services.Seo;
-using Grand.Web.Interfaces;
+using Grand.Web.Extensions;
+using Grand.Web.Features.Models.ShoppingCart;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -26,12 +28,13 @@ namespace Grand.Web.Controllers
         private readonly IProductService _productService;
         private readonly IProductReservationService _productReservationService;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IMediator _mediator;
+
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
@@ -41,23 +44,23 @@ namespace Grand.Web.Controllers
         public AddToCartController(IProductService productService,
             IProductReservationService productReservationService,
             IShoppingCartService shoppingCartService,
-            IShoppingCartViewModelService shoppingCartViewModelService,
             IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
             ICurrencyService currencyService,
             ICustomerActivityService customerActivityService,
+            IMediator mediator,
             ShoppingCartSettings shoppingCartSettings)
         {
             _productService = productService;
             _productReservationService = productReservationService;
             _shoppingCartService = shoppingCartService;
-            _shoppingCartViewModelService = shoppingCartViewModelService;
             _workContext = workContext;
             _storeContext = storeContext;
             _localizationService = localizationService;
             _currencyService = currencyService;
             _customerActivityService = customerActivityService;
+            _mediator = mediator;
             _shoppingCartSettings = shoppingCartSettings;
         }
 
@@ -134,7 +137,7 @@ namespace Grand.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            string warehouseId = 
+            string warehouseId =
                product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId :
                (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
@@ -179,7 +182,18 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var addtoCartModel = await _shoppingCartViewModelService.PrepareAddToCartModel(product, customer, quantity, 0, "", cartType, null, null, "", "", "");
+            var addtoCartModel = await _mediator.Send(new GetAddToCart() {
+                Product = product,
+                Customer = customer,
+                Quantity = quantity,
+                CartType = cartType,
+                CustomerEnteredPrice = 0,
+                AttributesXml = "",
+                Currency = _workContext.WorkingCurrency,
+                Store = _storeContext.CurrentStore,
+                Language = _workContext.WorkingLanguage,
+                TaxDisplayType = _workContext.TaxDisplayType,
+            });
 
             //added to the cart/wishlist
             switch (cartType)
@@ -347,14 +361,14 @@ namespace Grand.Web.Controllers
             #endregion
 
             //product and gift card attributes
-            string attributes = await _shoppingCartViewModelService.ParseProductAttributes(product, form);
+            string attributes = await _mediator.Send(new GetParseProductAttributes() { Product = product, Form = form });
 
             //rental attributes
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
             if (product.ProductType == ProductType.Reservation)
             {
-                _shoppingCartViewModelService.ParseReservationDates(product, form, out rentalStartDate, out rentalEndDate);
+                product.ParseReservationDates(form, out rentalStartDate, out rentalEndDate);
             }
 
             //product reservation
@@ -443,7 +457,7 @@ namespace Grand.Web.Controllers
 
             string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
                 form["WarehouseId"].ToString() :
-                product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : 
+                product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId :
                 (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             if (updatecartitem == null)
@@ -490,7 +504,23 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var addtoCartModel = await _shoppingCartViewModelService.PrepareAddToCartModel(product, _workContext.CurrentCustomer, quantity, customerEnteredPriceConverted, attributes, cartType, rentalStartDate, rentalEndDate, reservationId, parameter, duration);
+            var addtoCartModel = await _mediator.Send(new GetAddToCart() {
+                Product = product,
+                Customer = _workContext.CurrentCustomer,
+                Quantity = quantity,
+                CartType = cartType,
+                CustomerEnteredPrice = customerEnteredPriceConverted,
+                AttributesXml = attributes,
+                Currency = _workContext.WorkingCurrency,
+                Store = _storeContext.CurrentStore,
+                Language = _workContext.WorkingLanguage,
+                TaxDisplayType = _workContext.TaxDisplayType,
+                Duration = duration,
+                Parameter = parameter,
+                ReservationId = reservationId,
+                StartDate = rentalStartDate,
+                EndDate = rentalEndDate
+            });
 
             //added to the cart/wishlist
             switch (cartType)
@@ -647,7 +677,17 @@ namespace Grand.Web.Controllers
             //activity log
             await _customerActivityService.InsertActivity("PublicStore.AddNewBid", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddToBid"), product.Name);
 
-            var addtoCartModel = await _shoppingCartViewModelService.PrepareAddToCartModel(product, customer, 1, 0, "", ShoppingCartType.Auctions, null, null, "", "", "");
+            var addtoCartModel = await _mediator.Send(new GetAddToCart() {
+                Product = product,
+                Customer = customer,
+                Quantity = 1,
+                CartType = ShoppingCartType.Auctions,
+                CustomerEnteredPrice = 0,
+                Currency = _workContext.WorkingCurrency,
+                Store = _storeContext.CurrentStore,
+                Language = _workContext.WorkingLanguage,
+                TaxDisplayType = _workContext.TaxDisplayType,
+            });
 
             return Json(new
             {

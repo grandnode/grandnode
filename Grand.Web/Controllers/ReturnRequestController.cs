@@ -2,15 +2,21 @@
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
+using Grand.Services.Common;
+using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
+using Grand.Web.Commands.Models.Orders;
 using Grand.Web.Extensions;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Common;
+using Grand.Web.Features.Models.Orders;
+using Grand.Web.Models.Common;
 using Grand.Web.Models.Orders;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,35 +25,37 @@ namespace Grand.Web.Controllers
     public partial class ReturnRequestController : BasePublicController
     {
         #region Fields
-        private readonly IReturnRequestViewModelService _returnRequestViewModelService;
+
         private readonly IReturnRequestService _returnRequestService;
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ILocalizationService _localizationService;
-        private readonly IAddressViewModelService _addressViewModelService;
+        private readonly IMediator _mediator;
+
         private readonly OrderSettings _orderSettings;
         #endregion
 
         #region Constructors
 
         public ReturnRequestController(
-            IReturnRequestViewModelService returnRequestViewModelService,
             IReturnRequestService returnRequestService,
             IOrderService orderService,
             IWorkContext workContext,
+            IStoreContext storeContext,
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
-            IAddressViewModelService addressViewModelService,
+            IMediator mediator,
             OrderSettings orderSettings)
         {
-            _returnRequestViewModelService = returnRequestViewModelService;
             _returnRequestService = returnRequestService;
             _orderService = orderService;
             _workContext = workContext;
+            _storeContext = storeContext;
             _orderProcessingService = orderProcessingService;
             _localizationService = localizationService;
-            _addressViewModelService = addressViewModelService;
+            _mediator = mediator;
             _orderSettings = orderSettings;
         }
 
@@ -55,7 +63,23 @@ namespace Grand.Web.Controllers
 
         #region Utilities
 
-        protected async Task<Address> PrepareAddress(SubmitReturnRequestModel model, IFormCollection form)
+        private async Task PrepareModelAddress(AddressModel addressModel)
+        {
+            var countryService = HttpContext.RequestServices.GetRequiredService<ICountryService>();
+            var countries = await countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
+            addressModel = await _mediator.Send(new GetAddressModel() {
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                Customer = _workContext.CurrentCustomer,
+                Model = addressModel,
+                Address = null,
+                ExcludeProperties = true,
+                PrePopulateWithCustomerFields = true,
+                LoadCountries = () => countries
+            });
+        }
+
+        protected async Task<Address> PrepareAddress(ReturnRequestModel model, IFormCollection form)
         {
             string pickupAddressId = form["pickup_address_id"];
             var address = new Address();
@@ -67,8 +91,9 @@ namespace Grand.Web.Controllers
                 }
                 else
                 {
-                    var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
-                    var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
+                    var customAttributes = await _mediator.Send(new GetParseCustomAddressAttributes() { Form = form });
+                    var addressAttributeParser = HttpContext.RequestServices.GetRequiredService<IAddressAttributeParser>();
+                    var customAttributeWarnings = await addressAttributeParser.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
                         ModelState.AddModelError("", error);
@@ -83,6 +108,7 @@ namespace Grand.Web.Controllers
             return address;
         }
 
+
         #endregion
 
         #region Methods
@@ -92,7 +118,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            var model = await _returnRequestViewModelService.PrepareCustomerReturnRequests();
+            var model = await _mediator.Send(new GetReturnRequests());
 
             return View(model);
         }
@@ -106,15 +132,19 @@ namespace Grand.Web.Controllers
             if (!await _orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
 
-            var model = new SubmitReturnRequestModel();
-            model = await _returnRequestViewModelService.PrepareReturnRequest(model, order);
+            //var model = new ReturnRequestModel();
+            var model = await _mediator.Send(new GetReturnRequest() {
+                Order = order,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
             model.Error = errors;
             return View(model);
         }
 
         [HttpPost, ActionName("ReturnRequest")]
         [AutoValidateAntiforgeryToken]
-        public virtual async Task<IActionResult> ReturnRequestSubmit(string orderId, SubmitReturnRequestModel model, IFormCollection form)
+        public virtual async Task<IActionResult> ReturnRequestSubmit(string orderId, ReturnRequestModel model, IFormCollection form)
         {
             var order = await _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -125,13 +155,7 @@ namespace Grand.Web.Controllers
 
             ModelState.Clear();
 
-            string pD = form["pickupDate"];
-            DateTime pickupDate = default(DateTime);
-            if (!string.IsNullOrEmpty(pD))
-            {
-                pickupDate = DateTime.ParseExact(form["pickupDate"], "MM/dd/yyyy", CultureInfo.InvariantCulture);
-            }
-            else if (_orderSettings.ReturnRequests_AllowToSpecifyPickupDate && _orderSettings.ReturnRequests_PickupDateRequired)
+            if (_orderSettings.ReturnRequests_AllowToSpecifyPickupDate && _orderSettings.ReturnRequests_PickupDateRequired && model.PickupDate == null)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("ReturnRequests.PickupDateRequired"));
             }
@@ -140,16 +164,48 @@ namespace Grand.Web.Controllers
 
             if (!ModelState.IsValid && ModelState.ErrorCount > 0)
             {
-                model.Error = string.Join(", ", ModelState.Keys.SelectMany(k => ModelState[k].Errors).Select(m => m.ErrorMessage).ToArray());
-                model = await _returnRequestViewModelService.PrepareReturnRequest(model, order);
-                return View(model);
+                var returnmodel = await _mediator.Send(new GetReturnRequest() {
+                    Order = order,
+                    Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore
+                });
+                returnmodel.Error = string.Join(", ", ModelState.Keys.SelectMany(k => ModelState[k].Errors).Select(m => m.ErrorMessage).ToArray());
+                returnmodel.Comments = model.Comments;
+                returnmodel.PickupDate = model.PickupDate;
+                returnmodel.NewAddressPreselected = model.NewAddressPreselected;
+                returnmodel.NewAddress = model.NewAddress;
+                if (returnmodel.NewAddressPreselected || _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
+                {
+                    await PrepareModelAddress(model.NewAddress);
+                }
+                return View(returnmodel);
+            }
+            else
+            {
+                var result = await _mediator.Send(new ReturnRequestSubmitCommand() { Address = address, Model = model, Form = form, Order = order });
+                if (result.rr.ReturnNumber > 0)
+                {
+                    model.Result = string.Format(_localizationService.GetResource("ReturnRequests.Submitted"), result.rr.ReturnNumber, Url.Link("ReturnRequestDetails", new { returnRequestId = result.rr.Id }));
+                    return View(result.model);
+                }
+
+                var returnmodel = await _mediator.Send(new GetReturnRequest() {
+                    Order = order,
+                    Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore
+                });
+                returnmodel.Error = result.model.Error;
+                returnmodel.Comments = model.Comments;
+                returnmodel.PickupDate = model.PickupDate;
+                returnmodel.NewAddressPreselected = model.NewAddressPreselected;
+                returnmodel.NewAddress = model.NewAddress;
+                if (returnmodel.NewAddressPreselected || _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
+                {
+                    await PrepareModelAddress(model.NewAddress);
+                }
+                return View(returnmodel);
             }
 
-            var result = await _returnRequestViewModelService.ReturnRequestSubmit(model, order, address, pickupDate, form);
-            if (result.rr.ReturnNumber > 0)
-                model.Result = string.Format(_localizationService.GetResource("ReturnRequests.Submitted"), result.rr.ReturnNumber, Url.Link("ReturnRequestDetails", new { returnRequestId = result.rr.Id }));
-
-            return View(result.model);
         }
 
         public virtual async Task<IActionResult> ReturnRequestDetails(string returnRequestId)
@@ -162,7 +218,11 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = await _returnRequestViewModelService.PrepareReturnRequestDetails(rr, order);
+            var model = await _mediator.Send(new GetReturnRequestDetails() {
+                Order = order,
+                Language = _workContext.WorkingLanguage,
+                ReturnRequest = rr,
+            });
 
             return View(model);
         }

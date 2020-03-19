@@ -1439,8 +1439,11 @@ namespace Grand.Services.Orders
             if (includeCouponCodes)
             {
                 //discount
-                foreach (var code in await fromCustomer.ParseAppliedDiscountCouponCodes(_genericAttributeService))
-                    await toCustomer.ApplyDiscountCouponCode(_genericAttributeService, code);
+                foreach (var code in fromCustomer.ParseAppliedDiscountCouponCodes())
+                {
+                    var result = toCustomer.ApplyDiscountCouponCode(code);
+                    await _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.DiscountCouponCode, result);
+                }
 
                 //gift card
                 var giftCardCouponCodes = GiftCardExtensions.ApplyCouponCodes(

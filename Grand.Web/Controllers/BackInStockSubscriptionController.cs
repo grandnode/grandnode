@@ -5,13 +5,13 @@ using Grand.Core.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.ShoppingCart;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
@@ -25,8 +25,8 @@ namespace Grand.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
-        private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
+        private readonly IMediator _mediator;
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -40,8 +40,8 @@ namespace Grand.Web.Controllers
             IStoreContext storeContext,
             ILocalizationService localizationService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
-            IShoppingCartViewModelService shoppingCartViewModelService,
             IProductAttributeFormatter productAttributeFormatter,
+            IMediator mediator,
             CatalogSettings catalogSettings,
             CustomerSettings customerSettings,
             ShoppingCartSettings shoppingCartSettings)
@@ -51,8 +51,8 @@ namespace Grand.Web.Controllers
             _storeContext = storeContext;
             _localizationService = localizationService;
             _backInStockSubscriptionService = backInStockSubscriptionService;
-            _shoppingCartViewModelService = shoppingCartViewModelService;
             _productAttributeFormatter = productAttributeFormatter;
+            _mediator = mediator;
             _catalogSettings = catalogSettings;
             _customerSettings = customerSettings;
             _shoppingCartSettings = shoppingCartSettings;
@@ -87,7 +87,7 @@ namespace Grand.Web.Controllers
             if (subscription != null)
             {
                 return Content(_localizationService.GetResource("BackInStockSubscriptions.DeleteNotifyWhenAvailable"));
-            }            
+            }
             return Content(_localizationService.GetResource("BackInStockSubscriptions.NotifyMeWhenAvailable"));
         }
 
@@ -102,7 +102,7 @@ namespace Grand.Web.Controllers
 
             string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
                 form["WarehouseId"].ToString() :
-                 product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : 
+                 product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId :
                  (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             if (!customer.IsRegistered())
@@ -167,7 +167,7 @@ namespace Grand.Web.Controllers
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions)
             {
-                string attributeXml = await _shoppingCartViewModelService.ParseProductAttributes(product, form);
+                string attributeXml = await _mediator.Send(new GetParseProductAttributes() { Product = product, Form = form });
                 var subscription = await _backInStockSubscriptionService
                     .FindSubscription(customer.Id, product.Id, attributeXml, _storeContext.CurrentStore.Id, warehouseId);
 

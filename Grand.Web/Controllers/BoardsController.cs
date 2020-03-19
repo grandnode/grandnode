@@ -3,7 +3,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Rss;
-using Grand.Framework.Security;
 using Grand.Services.Customers;
 using Grand.Services.Forums;
 using Grand.Services.Localization;
@@ -227,8 +226,7 @@ namespace Grand.Web.Controllers
             bool subscribed;
             if (forumSubscription == null)
             {
-                forumSubscription = new ForumSubscription
-                {
+                forumSubscription = new ForumSubscription {
                     SubscriptionGuid = Guid.NewGuid(),
                     CustomerId = _workContext.CurrentCustomer.Id,
                     ForumId = forum.Id,
@@ -296,8 +294,7 @@ namespace Grand.Web.Controllers
             bool subscribed;
             if (forumSubscription == null)
             {
-                forumSubscription = new ForumSubscription
-                {
+                forumSubscription = new ForumSubscription {
                     SubscriptionGuid = Guid.NewGuid(),
                     CustomerId = _workContext.CurrentCustomer.Id,
                     TopicId = forumTopic.Id,
@@ -468,8 +465,7 @@ namespace Grand.Web.Controllers
                     }
 
                     //forum topic
-                    var forumTopic = new ForumTopic
-                    {
+                    var forumTopic = new ForumTopic {
                         ForumId = forum.Id,
                         ForumGroupId = forum.ForumGroupId,
                         CustomerId = _workContext.CurrentCustomer.Id,
@@ -484,8 +480,7 @@ namespace Grand.Web.Controllers
                         await customerService.UpdateContributions(_workContext.CurrentCustomer);
                     }
                     //forum post
-                    var forumPost = new ForumPost
-                    {
+                    var forumPost = new ForumPost {
                         TopicId = forumTopic.Id,
                         ForumId = forum.Id,
                         ForumGroupId = forum.ForumGroupId,
@@ -510,8 +505,7 @@ namespace Grand.Web.Controllers
                     {
                         if (model.Subscribed)
                         {
-                            var forumSubscription = new ForumSubscription
-                            {
+                            var forumSubscription = new ForumSubscription {
                                 SubscriptionGuid = Guid.NewGuid(),
                                 CustomerId = _workContext.CurrentCustomer.Id,
                                 TopicId = forumTopic.Id,
@@ -653,8 +647,7 @@ namespace Grand.Web.Controllers
                     else
                     {
                         //error (not possible)
-                        firstPost = new ForumPost
-                        {
+                        firstPost = new ForumPost {
                             TopicId = forumTopic.Id,
                             ForumId = forum.Id,
                             ForumGroupId = forum.ForumGroupId,
@@ -676,8 +669,7 @@ namespace Grand.Web.Controllers
                         {
                             if (forumSubscription == null)
                             {
-                                forumSubscription = new ForumSubscription
-                                {
+                                forumSubscription = new ForumSubscription {
                                     SubscriptionGuid = Guid.NewGuid(),
                                     CustomerId = _workContext.CurrentCustomer.Id,
                                     TopicId = forumTopic.Id,
@@ -826,8 +818,7 @@ namespace Grand.Web.Controllers
 
                     DateTime nowUtc = DateTime.UtcNow;
 
-                    var forumPost = new ForumPost
-                    {
+                    var forumPost = new ForumPost {
                         TopicId = forumTopic.Id,
                         ForumId = forumTopic.ForumId,
                         ForumGroupId = forumTopic.ForumGroupId,
@@ -852,8 +843,7 @@ namespace Grand.Web.Controllers
                         {
                             if (forumSubscription == null)
                             {
-                                forumSubscription = new ForumSubscription
-                                {
+                                forumSubscription = new ForumSubscription {
                                     SubscriptionGuid = Guid.NewGuid(),
                                     CustomerId = _workContext.CurrentCustomer.Id,
                                     TopicId = forumPost.TopicId,
@@ -938,8 +928,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("Boards");
             }
 
-            var model = new EditForumPostModel
-            {
+            var model = new EditForumPostModel {
                 Id = forumPost.Id,
                 ForumTopicId = forumTopic.Id,
                 IsEdit = true,
@@ -1021,8 +1010,7 @@ namespace Grand.Web.Controllers
                         {
                             if (forumSubscription == null)
                             {
-                                forumSubscription = new ForumSubscription
-                                {
+                                forumSubscription = new ForumSubscription {
                                     SubscriptionGuid = Guid.NewGuid(),
                                     CustomerId = _workContext.CurrentCustomer.Id,
                                     TopicId = forumPost.TopicId,
@@ -1170,8 +1158,7 @@ namespace Grand.Web.Controllers
                 });
 
 
-            await _forumService.InsertPostVote(new ForumPostVote
-            {
+            await _forumService.InsertPostVote(new ForumPostVote {
                 CustomerId = _workContext.CurrentCustomer.Id,
                 ForumPostId = postId,
                 IsUp = isUp,

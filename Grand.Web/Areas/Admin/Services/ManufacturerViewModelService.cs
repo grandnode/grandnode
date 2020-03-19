@@ -246,9 +246,9 @@ namespace Grand.Web.Areas.Admin.Services
             return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
 
-        public virtual async Task<(IEnumerable<ManufacturerModel.ManufacturerProductModel> manufacturerProductModels, int totalCount)> PrepareManufacturerProductModel(string manufacturerId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<ManufacturerModel.ManufacturerProductModel> manufacturerProductModels, int totalCount)> PrepareManufacturerProductModel(string manufacturerId, string storeId, int pageIndex, int pageSize)
         {
-            var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId,
+            var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId, storeId, 
                 pageIndex - 1, pageSize, true);
             var items = new List<ManufacturerModel.ManufacturerProductModel>();
             foreach (var x in productManufacturers)

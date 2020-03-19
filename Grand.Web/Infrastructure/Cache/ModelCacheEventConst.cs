@@ -41,9 +41,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : current store ID
         /// {1} : language ID
-        /// {2} : machine name
         /// </remarks>
-        public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}-{2}";
+        public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}";
 
         /// <summary>
         /// Key for caching of manufacturer displayed on home page
@@ -52,9 +51,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : customer role
         /// {1} : store ID
         /// {2} : language ID
-        /// {3} : machine name
         /// </remarks>
-        public const string MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-fp-{0}-{1}-{2}-{3}";
+        public const string MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-fp-{0}-{1}-{2}";
 
 
         /// <summary>
@@ -141,11 +139,10 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : roles of the current user
         /// {1} : current store ID
         /// {2} : language ID
-        /// {3} : machine name
         /// </remarks>
-        public const string CATEGORY_HOMEPAGE_KEY = "Grand.pres.category.homepage-{0}-{1}-{2}-{3}";
+        public const string CATEGORY_HOMEPAGE_KEY = "Grand.pres.category.homepage-{0}-{1}-{2}";
         public const string CATEGORY_HOMEPAGE_PATTERN_KEY = "Grand.pres.category.homepage";
-        public const string CATEGORY_FEATURED_PRODUCTS_HOMEPAGE_KEY = "Grand.pres.category.homepage-fp-{0}-{1}-{2}-{3}";
+        public const string CATEGORY_FEATURED_PRODUCTS_HOMEPAGE_KEY = "Grand.pres.category.homepage-fp-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for GetChildCategoryIds method results caching
@@ -334,10 +331,9 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized product name)
-        /// {4} : machine name
-        /// {5} : current store ID
+        /// {4} : current store ID
         /// </remarks>
-        public const string CART_PICTURE_MODEL_KEY = "Grand.pres.cart.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string CART_PICTURE_MODEL_KEY = "Grand.pres.cart.picture-{0}-{1}-{2}-{3}-{4}";
         public const string CART_PICTURE_PATTERN_KEY = "Grand.pres.cart.picture-{0}";
 
 
@@ -433,9 +429,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <summary>
         /// {0} : current store ID
         /// {1} : current theme
-        /// {2} : machine name
         /// </summary>
-        public const string STORE_LOGO_PATH = "Grand.pres.logo-{0}-{1}-{2}";
+        public const string STORE_LOGO_PATH = "Grand.pres.logo-{0}-{1}";
         public const string STORE_LOGO_PATH_PATTERN_KEY = "Grand.pres.logo";
         
         /// <summary>

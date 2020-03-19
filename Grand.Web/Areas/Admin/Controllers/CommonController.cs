@@ -4,7 +4,6 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Logging;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Infrastructure;
@@ -14,22 +13,21 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security;
 using Grand.Framework.Security.Authorization;
-using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
-using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
+using Grand.Web.Areas.Admin.Commands.Model.Common;
 using Grand.Web.Areas.Admin.Models.Common;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Bindings;
@@ -52,79 +50,67 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         private readonly IPaymentService _paymentService;
         private readonly IShippingService _shippingService;
-        private readonly IShoppingCartService _shoppingCartService;
         private readonly ICurrencyService _currencyService;
         private readonly IMeasureService _measureService;
         private readonly ICustomerService _customerService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
-        private readonly CurrencySettings _currencySettings;
-        private readonly MeasureSettings _measureSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
-        private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
-        private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
-        private readonly IRepository<Product> _repositoryProduct;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly IHttpContextAccessor _httpContext;
-        private readonly GrandConfig _grandConfig;
         private readonly IMongoDBContext _mongoDBContext;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IMachineNameProvider _machineNameProvider;
+        private readonly IMediator _mediator;
+        private readonly CurrencySettings _currencySettings;
+        private readonly MeasureSettings _measureSettings;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly GrandConfig _grandConfig;
         #endregion
 
         #region Constructors
 
         public CommonController(IPaymentService paymentService,
             IShippingService shippingService,
-            IShoppingCartService shoppingCartService,
             ICurrencyService currencyService,
             IMeasureService measureService,
             ICustomerService customerService,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
-            CurrencySettings currencySettings,
-            MeasureSettings measureSettings,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
-            IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
-            ISettingService settingService,
             IStoreService storeService,
-            IRepository<Product> repositoryProduct,
-            CatalogSettings catalogSettings,
-            IHttpContextAccessor httpContext,
-            GrandConfig grandConfig,
             IMongoDBContext mongoDBContext,
-            IServiceProvider serviceProvider
+            IMachineNameProvider machineNameProvider,
+            IMediator mediator,
+            CatalogSettings catalogSettings,
+            CurrencySettings currencySettings,
+            MeasureSettings measureSettings,
+            GrandConfig grandConfig
             )
         {
-            this._paymentService = paymentService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._currencyService = currencyService;
-            this._measureService = measureService;
-            this._customerService = customerService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._currencySettings = currencySettings;
-            this._measureSettings = measureSettings;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._settingService = settingService;
-            this._storeService = storeService;
-            this._repositoryProduct = repositoryProduct;
-            this._catalogSettings = catalogSettings;
-            this._httpContext = httpContext;
-            this._grandConfig = grandConfig;
-            this._mongoDBContext = mongoDBContext;
-            this._serviceProvider = serviceProvider;
+            _paymentService = paymentService;
+            _shippingService = shippingService;
+            _currencyService = currencyService;
+            _measureService = measureService;
+            _customerService = customerService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _currencySettings = currencySettings;
+            _measureSettings = measureSettings;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _catalogSettings = catalogSettings;
+            _grandConfig = grandConfig;
+            _mongoDBContext = mongoDBContext;
+            _machineNameProvider = machineNameProvider;
+            _mediator = mediator;
         }
 
         #endregion
@@ -171,8 +157,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             catch (Exception) { }
 
-            var machineNameProvider = _serviceProvider.GetRequiredService<IMachineNameProvider>();
-            model.MachineName = machineNameProvider.GetMachineName();
+            model.MachineName = _machineNameProvider.GetMachineName();
 
             model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
             model.ServerLocalTime = DateTime.Now;
@@ -425,8 +410,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("clear-most-view")]
         public async Task<IActionResult> MaintenanceClearMostViewed(MaintenanceModel model)
         {
-            var update = new UpdateDefinitionBuilder<Product>().Set(x => x.Viewed, 0);
-            await _repositoryProduct.Collection.UpdateManyAsync(x => x.Viewed != 0, update);
+            await _mediator.Send(new ClearMostViewedCommand());
             return View(model);
         }
         [HttpPost, ActionName("Maintenance")]
@@ -449,8 +433,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-activitylog")]
         public async Task<IActionResult> MaintenanceDeleteActivitylog(MaintenanceModel model)
         {
-            var _activityLogRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLog>>();
-            await _activityLogRepository.Collection.DeleteManyAsync(new BsonDocument());
+            await _mediator.Send(new DeleteActivitylogCommand());
             model.DeleteActivityLog = true;
             return View(model);
         }

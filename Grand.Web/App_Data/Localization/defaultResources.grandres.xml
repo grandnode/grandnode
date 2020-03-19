@@ -14402,6 +14402,12 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.EmailAccount.hint">
     <Value>Email account</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Language.Hint">
+    <Value>Choose a language which subscribers will get this email.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>

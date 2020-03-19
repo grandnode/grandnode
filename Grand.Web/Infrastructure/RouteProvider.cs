@@ -205,6 +205,12 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("ApplyVendorAccount",
                             pattern + "vendor/apply",
                             new { controller = "Vendor", action = "ApplyVendor" });
+
+            //contact vendor
+            routeBuilder.MapControllerRoute("ContactVendor",
+                            pattern + "vendor/contact/{vendorId}",
+                            new { controller = "Vendor", action = "ContactVendor" });
+
         }
 
         private void RegisterCatalogRoute(IEndpointRouteBuilder routeBuilder, string pattern)
@@ -368,11 +374,6 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("ChangeStore",
                             pattern + "changestore/{store}",
                             new { controller = "Common", action = "SetStore" });
-
-            //contact vendor
-            routeBuilder.MapControllerRoute("ContactVendor",
-                            pattern + "contactvendor/{vendorId}",
-                            new { controller = "Common", action = "ContactVendor" });
 
             //get state list by country ID  (AJAX link)
             routeBuilder.MapControllerRoute("GetStatesByCountryId",

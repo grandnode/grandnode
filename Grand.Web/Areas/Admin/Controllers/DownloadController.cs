@@ -1,5 +1,4 @@
 ﻿using Grand.Core.Domain.Media;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Media;
 using Grand.Services.Security;
@@ -38,30 +37,28 @@ namespace Grand.Web.Areas.Admin.Controllers
             string contentType = !String.IsNullOrWhiteSpace(download.ContentType)
                 ? download.ContentType
                 : "application/octet-stream";
-            return new FileContentResult(download.DownloadBinary, contentType)
-            {
+            return new FileContentResult(download.DownloadBinary, contentType) {
                 FileDownloadName = fileName + download.Extension
             };
         }
 
         [HttpPost]
-        
+
         //do not validate request token (XSRF)
-        [IgnoreAntiforgeryToken] 
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> SaveDownloadUrl(string downloadUrl)
         {
-            if(string.IsNullOrEmpty(downloadUrl))
+            if (string.IsNullOrEmpty(downloadUrl))
             {
                 return Json(new { success = false, error = "URL can't be empty" });
             }
             //insert
-            var download = new Download
-            {
+            var download = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = true,
                 DownloadUrl = downloadUrl,
                 IsNew = true
-              };
+            };
             await _downloadService.InsertDownload(download);
 
             return Json(new { downloadId = download.Id, success = true });
@@ -100,8 +97,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 fileExtension = fileExtension.ToLowerInvariant();
 
 
-            var download = new Download
-            {
+            var download = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
                 DownloadUrl = "",

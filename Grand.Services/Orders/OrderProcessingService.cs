@@ -12,6 +12,7 @@ using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
 using Grand.Services.Affiliates;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Customers;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -26,7 +27,6 @@ using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -79,8 +79,9 @@ namespace Grand.Services.Orders
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ICountryService _countryService;
         private readonly ShippingSettings _shippingSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
@@ -127,8 +128,9 @@ namespace Grand.Services.Orders
             IProductReservationService productReservationService,
             IAuctionService auctionService,
             IGenericAttributeService genericAttributeService,
-            IServiceProvider serviceProvider,
+            ICountryService countryService,
             ShippingSettings shippingSettings,
+            ShoppingCartSettings shoppingCartSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
@@ -171,9 +173,10 @@ namespace Grand.Services.Orders
             _productReservationService = productReservationService;
             _auctionService = auctionService;
             _genericAttributeService = genericAttributeService;
-            _serviceProvider = serviceProvider;
+            _countryService = countryService;
             _paymentSettings = paymentSettings;
             _shippingSettings = shippingSettings;
+            _shoppingCartSettings = shoppingCartSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _orderSettings = orderSettings;
             _taxSettings = taxSettings;
@@ -218,7 +221,7 @@ namespace Grand.Services.Orders
             details.BillingAddress = (Address)details.InitialOrder.BillingAddress.Clone();
             if (!String.IsNullOrEmpty(details.BillingAddress.CountryId))
             {
-                var country = await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(details.BillingAddress.CountryId);
+                var country = await _countryService.GetCountryById(details.BillingAddress.CountryId);
                 if (country != null)
                     if (!country.AllowsBilling)
                         throw new GrandException(string.Format("Country '{0}' is not allowed for billing", country.Name));
@@ -254,7 +257,7 @@ namespace Grand.Services.Orders
                     details.ShippingAddress = (Address)details.InitialOrder.ShippingAddress.Clone();
                     if (!String.IsNullOrEmpty(details.ShippingAddress.CountryId))
                     {
-                        var country = await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(details.ShippingAddress.CountryId);
+                        var country = await _countryService.GetCountryById(details.ShippingAddress.CountryId);
                         if (country != null)
                             if (!country.AllowsShipping)
                                 throw new GrandException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
@@ -459,7 +462,7 @@ namespace Grand.Services.Orders
                     details.AffiliateId = affiliate.Id;
             }
             //customer currency
-            var currencyTmp = await _currencyService.GetCurrencyById(await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
+            var currencyTmp = await _currencyService.GetCurrencyById(details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
             var customerCurrency = (currencyTmp != null && currencyTmp.Published) ? currencyTmp : _workContext.WorkingCurrency;
             details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
             var primaryStoreCurrency = await _currencyService.GetPrimaryStoreCurrency();
@@ -488,7 +491,7 @@ namespace Grand.Services.Orders
             details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
             if (!String.IsNullOrEmpty(details.BillingAddress.CountryId))
             {
-                var country = await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(details.BillingAddress.CountryId);
+                var country = await _countryService.GetCountryById(details.BillingAddress.CountryId);
                 if (country != null)
                     if (!country.AllowsBilling)
                         throw new GrandException(string.Format("Country '{0}' is not allowed for billing", country.Name));
@@ -499,10 +502,9 @@ namespace Grand.Services.Orders
             details.CheckoutAttributeDescription = await _checkoutAttributeFormatter.FormatAttributes(details.CheckoutAttributesXml, details.Customer);
 
             //load and validate customer shopping cart
-            //load shopping cart
             details.Cart = details.Customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_serviceProvider.GetRequiredService<ShoppingCartSettings>().CartsSharedBetweenStores, processPaymentRequest.StoreId)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, processPaymentRequest.StoreId)
                 .ToList();
 
             if (!details.Cart.Any())
@@ -608,7 +610,7 @@ namespace Grand.Services.Orders
                     details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
                     if (!String.IsNullOrEmpty(details.ShippingAddress.CountryId))
                     {
-                        var country = await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(details.ShippingAddress.CountryId);
+                        var country = await _countryService.GetCountryById(details.ShippingAddress.CountryId);
                         if (country != null)
                             if (!country.AllowsShipping)
                                 throw new GrandException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
@@ -1121,12 +1123,12 @@ namespace Grand.Services.Orders
         }
 
         protected virtual async Task UpdateCustomer(Order order)
-        {
+        {           
+            //Update customer reminder history
+            await _mediator.Send(new UpdateCustomerReminderHistoryCommand() { CustomerId = order.CustomerId, OrderId = order.Id });
+
             //Updated field "free shipping" after added a new order
             await _customerService.UpdateFreeShipping(order.CustomerId, false);
-
-            //Update customer reminder history
-            await _customerService.UpdateCustomerReminderHistory(order.CustomerId, order.Id);
 
             //Update field Last purchase date after added a new order
             await _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);
@@ -2062,7 +2064,7 @@ namespace Grand.Services.Orders
             if (shipment == null)
                 throw new ArgumentNullException("shipment");
 
-            var order = await _serviceProvider.GetRequiredService<IOrderService>().GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
@@ -2167,7 +2169,7 @@ namespace Grand.Services.Orders
 
             //Adjust inventory for already shipped shipments
             //only products with "use multiple warehouses"
-            var shipments = await _serviceProvider.GetRequiredService<IShipmentService>().GetShipmentsByOrder(order.Id);
+            var shipments = await _shipmentService.GetShipmentsByOrder(order.Id);
             foreach (var shipment in shipments)
             {
                 foreach (var shipmentItem in shipment.ShipmentItems)

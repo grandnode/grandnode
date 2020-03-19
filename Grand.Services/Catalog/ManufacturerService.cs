@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Security;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Security;
@@ -72,7 +71,6 @@ namespace Grand.Services.Catalog
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
@@ -91,7 +89,6 @@ namespace Grand.Services.Catalog
         /// <param name="manufacturerRepository">Category repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="mediator">Mediator</param>
         /// <param name="storeMappingService">Store mapping service</param>
@@ -100,7 +97,6 @@ namespace Grand.Services.Catalog
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
             IWorkContext workContext,
-            IStoreContext storeContext,
             CatalogSettings catalogSettings,
             IMediator mediator,
             IStoreMappingService storeMappingService,
@@ -110,7 +106,6 @@ namespace Grand.Services.Catalog
             _manufacturerRepository = manufacturerRepository;
             _productRepository = productRepository;
             _workContext = workContext;
-            _storeContext = storeContext;
             _catalogSettings = catalogSettings;
             _mediator = mediator;
             _storeMappingService = storeMappingService;
@@ -288,10 +283,10 @@ namespace Grand.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        public virtual async Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerId(string manufacturerId,
+        public virtual async Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerId(string manufacturerId, string storeId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, storeId);
             return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _productRepository.Table.Where(x => x.ProductManufacturers.Any(y => y.ManufacturerId == manufacturerId));
@@ -306,12 +301,11 @@ namespace Grand.Services.Catalog
                                 where !p.SubjectToAcl || allowedCustomerRolesIds.Any(x => p.CustomerRoles.Contains(x))
                                 select p;
                     }
-                    if (!_catalogSettings.IgnoreStoreLimitations)
+                    if (!_catalogSettings.IgnoreStoreLimitations && !string.IsNullOrEmpty(storeId))
                     {
                         //Store mapping
-                        var currentStoreId = _storeContext.CurrentStore.Id;
                         query = from p in query
-                                where !p.LimitedToStores || p.Stores.Contains(currentStoreId)
+                                where !p.LimitedToStores || p.Stores.Contains(storeId)
                                 select p;
 
                     }
@@ -320,8 +314,7 @@ namespace Grand.Services.Catalog
 
                 var query_ProductManufacturer = from prod in query
                                                 from pm in prod.ProductManufacturers
-                                                select new SerializeProductManufacturer
-                                                {
+                                                select new SerializeProductManufacturer {
                                                     Id = pm.Id,
                                                     ProductId = prod.Id,
                                                     DisplayOrder = pm.DisplayOrder,

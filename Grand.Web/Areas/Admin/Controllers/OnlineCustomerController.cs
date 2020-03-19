@@ -11,7 +11,6 @@ using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
@@ -44,7 +43,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
         public IActionResult List() => View();
@@ -57,8 +56,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var items = new List<OnlineCustomerModel>();
             foreach (var x in customers)
             {
-                var item = new OnlineCustomerModel()
-                {
+                var item = new OnlineCustomerModel() {
                     Id = x.Id,
                     CustomerInfo = !string.IsNullOrEmpty(x.Email) ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
                     LastIpAddress = x.LastIpAddress,
@@ -71,8 +69,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 items.Add(item);
             }
 
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = customers.TotalCount
             };

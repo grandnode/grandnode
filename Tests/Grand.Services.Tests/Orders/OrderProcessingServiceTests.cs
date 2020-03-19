@@ -211,7 +211,7 @@ namespace Grand.Services.Orders.Tests
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
-                _genericAttributeService, null, _productService, _currencyService,
+                null, _productService, _currencyService,
                 _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
 
             _orderService = new Mock<IOrderService>().Object;
@@ -252,8 +252,8 @@ namespace Grand.Services.Orders.Tests
                 _workflowMessageService, _vendorService,
                 _customerActivityService, tempICustomerActionEventService,
                 _currencyService, _affiliateService,
-                _eventPublisher, _pdfService, null, null, _storeContext, _productReservationService, _auctionService, _genericAttributeService, _serviceProvider,
-                _shippingSettings, _paymentSettings, _rewardPointsSettings,
+                _eventPublisher, _pdfService, null, null, _storeContext, _productReservationService, _auctionService, _genericAttributeService, _countryService,
+                _shippingSettings, _shoppingCartSettings,  _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings);
         }
 

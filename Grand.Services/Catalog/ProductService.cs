@@ -231,8 +231,8 @@ namespace Grand.Services.Catalog
         {
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Published, true);
-            filter = filter & builder.Eq(x => x.ShowOnHomePage, true);
-            filter = filter & builder.Eq(x => x.VisibleIndividually, true);
+            filter &= builder.Eq(x => x.ShowOnHomePage, true);
+            filter &= builder.Eq(x => x.VisibleIndividually, true);
             var query = _productRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x => x.Name);
             return await query.ToListAsync();
         }

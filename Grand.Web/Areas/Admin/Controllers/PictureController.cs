@@ -1,5 +1,4 @@
-﻿using Grand.Framework.Security;
-using Grand.Framework.Security.Authorization;
+﻿using Grand.Framework.Security.Authorization;
 using Grand.Services.Media;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;

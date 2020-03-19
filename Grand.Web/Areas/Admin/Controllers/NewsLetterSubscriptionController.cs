@@ -3,7 +3,6 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
-using Grand.Services.Customers;
 using Grand.Services.ExportImport;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -31,7 +30,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
-        private readonly ICustomerService _customerService;
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
 
@@ -40,7 +38,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IStoreService storeService,
-            ICustomerService customerService,
             IExportManager exportManager,
             IImportManager importManager)
         {
@@ -49,7 +46,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._storeService = storeService;
-            this._customerService = customerService;
             this._exportManager = exportManager;
             this._importManager = importManager;
         }
@@ -87,18 +83,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //active
-            model.ActiveList.Add(new SelectListItem
-            {
+            model.ActiveList.Add(new SelectListItem {
                 Value = " ",
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All")
             });
-            model.ActiveList.Add(new SelectListItem
-            {
+            model.ActiveList.Add(new SelectListItem {
                 Value = "1",
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.ActiveOnly")
             });
-            model.ActiveList.Add(new SelectListItem
-            {
+            model.ActiveList.Add(new SelectListItem {
                 Value = "2",
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
             });
@@ -130,8 +123,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 m.Categories = await GetCategoryNames(x.Categories.ToList());
                 items.Add(m);
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = newsletterSubscriptions.TotalCount
             };

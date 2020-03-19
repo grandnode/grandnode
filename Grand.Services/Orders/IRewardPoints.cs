@@ -34,9 +34,10 @@ namespace Grand.Services.Orders
         /// Load reward point history records
         /// </summary>
         /// <param name="customerId">Customer identifier; "" to load all records</param>
+        /// <param name="storeId">Store ident</param>
         /// <param name="showHidden">A value indicating whether to show hidden records (filter by current store if possible)</param>
         /// <returns>Reward point history records</returns>
-        Task<IList<RewardPointsHistory>> GetRewardPointsHistory(string customerId = "", bool showHidden = false);
+        Task<IList<RewardPointsHistory>> GetRewardPointsHistory(string customerId = "", string storeId = "", bool showHidden = false);
 
     }
 }
