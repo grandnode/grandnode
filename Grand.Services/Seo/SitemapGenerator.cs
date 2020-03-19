@@ -5,6 +5,7 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.News;
+using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Helpers;
 using Grand.Services.Topics;
@@ -42,6 +43,7 @@ namespace Grand.Services.Seo
         private readonly IProductService _productService;
         private readonly IManufacturerService _manufacturerService;
         private readonly ITopicService _topicService;
+        private readonly IBlogService _blogService;
         private readonly IWebHelper _webHelper;
         private readonly CommonSettings _commonSettings;
         private readonly BlogSettings _blogSettings;
@@ -58,6 +60,7 @@ namespace Grand.Services.Seo
             IProductService productService,
             IManufacturerService manufacturerService,
             ITopicService topicService,
+            IBlogService blogService,
             IWebHelper webHelper,
             CommonSettings commonSettings,
             BlogSettings blogSettings,
@@ -70,6 +73,7 @@ namespace Grand.Services.Seo
             _productService = productService;
             _manufacturerService = manufacturerService;
             _topicService = topicService;
+            _blogService = blogService;
             _webHelper = webHelper;
             _commonSettings = commonSettings;
             _blogSettings = blogSettings;
@@ -187,6 +191,9 @@ namespace Grand.Services.Seo
             //topics
             sitemapUrls.AddRange(await GetTopicUrls(urlHelper, language));
 
+            //blog posts
+            sitemapUrls.AddRange(await GetBlogPostsUrls(urlHelper, language));
+
             //custom URLs
             sitemapUrls.AddRange(GetCustomUrls());
 
@@ -256,6 +263,21 @@ namespace Grand.Services.Seo
             return topics.Where(t => t.IncludeInSitemap).Select(topic =>
             {
                 var url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName(language) }, GetHttpProtocol());
+                return new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow);
+            });
+        }
+
+        /// <summary>
+        /// Get blog posts URLs for the sitemap
+        /// </summary>
+        /// <param name="urlHelper">URL helper</param>
+        /// <returns>Collection of sitemap URLs</returns>
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetBlogPostsUrls(IUrlHelper urlHelper, string language)
+        {
+            var blogposts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
+            return blogposts.Select(blogpost =>
+            {
+                var url = urlHelper.RouteUrl("BlogPost", new { SeName = blogpost.GetSeName(language) }, GetHttpProtocol());
                 return new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             });
         }

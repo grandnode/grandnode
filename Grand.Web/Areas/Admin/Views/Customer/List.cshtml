@@ -40,6 +40,10 @@
                             </ul>
                             <vc:admin-widget widget-zone="customer_list_buttons" additional-data="null" />
                         </div>
+                        <button type="button" name="delete-selected" id="delete-selected" class="btn red">
+                            <i class="fa fa-trash-o"></i>
+                            @T("Admin.Common.Delete.Selected")
+                        </button>
                     </div>
                 </div>
                 <div class="x_content form">
@@ -337,6 +341,34 @@
                         $("#search-customers").click();
                         return false;
                     }
+                });
+
+                //delete selected
+                $('#delete-selected').click(function(e) {
+
+                    e.preventDefault();
+
+                    var postData = {
+                        selectedIds: selectedIds
+                    };
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("DeleteSelected", "Customer"))",
+                        data: postData,
+                        complete: function(data) {
+                            //reload grid
+                            var grid = $('#customers-grid').data('kendoGrid');
+                            grid.dataSource.read();
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert(thrownError);
+                        },
+                        traditional: true
+                    });
+                    return false;
                 });
 
                 $('#mastercheckbox').click(function () {

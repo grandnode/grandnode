@@ -58,6 +58,18 @@
             }
         </div>
     </div>
+    @if (Model.BlogPosts.Any())
+    {
+        <div class="col-lg-4 col-md-6">
+            <h2 class="generalTitle">@T("Sitemap.BlogPosts")</h2>
+            <div class="list-group">
+                @foreach (var item in Model.BlogPosts)
+                {
+                <a class="list-group-item list-group-item-action" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">@item.Title</a>
+                }
+            </div>
+        </div>
+    }
     @if (Model.Manufacturers.Any())
     {
         <div class="col-lg-4 col-md-6">
