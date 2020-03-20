@@ -78,7 +78,6 @@ namespace Grand.Services.Orders
         private readonly IStoreContext _storeContext;
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICountryService _countryService;
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -127,7 +126,6 @@ namespace Grand.Services.Orders
             IStoreContext storeContext,
             IProductReservationService productReservationService,
             IAuctionService auctionService,
-            IGenericAttributeService genericAttributeService,
             ICountryService countryService,
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings,
@@ -172,7 +170,6 @@ namespace Grand.Services.Orders
             _storeContext = storeContext;
             _productReservationService = productReservationService;
             _auctionService = auctionService;
-            _genericAttributeService = genericAttributeService;
             _countryService = countryService;
             _paymentSettings = paymentSettings;
             _shippingSettings = shippingSettings;
@@ -208,69 +205,26 @@ namespace Grand.Services.Orders
             if (details.InitialOrder == null)
                 throw new ArgumentException("Initial order is not set for recurring payment");
 
-            processPaymentRequest.PaymentMethodSystemName = details.InitialOrder.PaymentMethodSystemName;
-
+            processPaymentRequest.PaymentMethodSystemName = details.InitialOrder.PaymentMethodSystemName;            
             details.CustomerCurrencyCode = details.InitialOrder.CustomerCurrencyCode;
             details.CustomerCurrencyRate = details.InitialOrder.CurrencyRate;
             details.CustomerLanguage = await _languageService.GetLanguageById(details.InitialOrder.CustomerLanguageId);
-            
-            if (details.InitialOrder.BillingAddress == null)
-                throw new GrandException("Billing address is not available");
-
-            //clone billing address
-            details.BillingAddress = (Address)details.InitialOrder.BillingAddress.Clone();
-            if (!String.IsNullOrEmpty(details.BillingAddress.CountryId))
-            {
-                var country = await _countryService.GetCountryById(details.BillingAddress.CountryId);
-                if (country != null)
-                    if (!country.AllowsBilling)
-                        throw new GrandException(string.Format("Country '{0}' is not allowed for billing", country.Name));
-            }
-
             details.CheckoutAttributesXml = details.InitialOrder.CheckoutAttributesXml;
             details.CheckoutAttributeDescription = details.InitialOrder.CheckoutAttributeDescription;
-
             details.CustomerTaxDisplayType = details.InitialOrder.CustomerTaxDisplayType;
-
             details.OrderSubTotalInclTax = details.InitialOrder.OrderSubtotalInclTax;
             details.OrderSubTotalExclTax = details.InitialOrder.OrderSubtotalExclTax;
             details.OrderDiscountAmount = details.InitialOrder.OrderDiscount;
             details.OrderSubTotalDiscountExclTax = details.InitialOrder.OrderSubTotalDiscountExclTax;
             details.OrderSubTotalDiscountInclTax = details.InitialOrder.OrderSubTotalDiscountInclTax;
             details.OrderTotal = details.InitialOrder.OrderTotal;
-
+            details.BillingAddress = details.InitialOrder.BillingAddress;
+            details.ShippingAddress = details.InitialOrder.ShippingAddress;
+            details.PickupPoint = details.InitialOrder.PickupPoint;
+            details.ShippingMethodName = details.InitialOrder.ShippingMethod;
+            details.ShippingRateComputationMethodSystemName = details.InitialOrder.ShippingRateComputationMethodSystemName;
             var shoppingCartRequiresShipping = details.InitialOrder.ShippingStatus != ShippingStatus.ShippingNotRequired;
-            if (shoppingCartRequiresShipping)
-            {
-                var pickupPoint = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.SelectedPickupPoint, processPaymentRequest.StoreId);
-                if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
-                {
-                    details.PickUpInStore = true;
-                    details.PickupPoint = await _shippingService.GetPickupPointById(pickupPoint);
-                }
-                else
-                {
-                    if (details.InitialOrder.ShippingAddress == null)
-                        throw new GrandException("Shipping address is not available");
-
-                    //clone shipping address
-                    details.ShippingAddress = (Address)details.InitialOrder.ShippingAddress.Clone();
-                    if (!String.IsNullOrEmpty(details.ShippingAddress.CountryId))
-                    {
-                        var country = await _countryService.GetCountryById(details.ShippingAddress.CountryId);
-                        if (country != null)
-                            if (!country.AllowsShipping)
-                                throw new GrandException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
-                    }
-                }
-
-                details.ShippingMethodName = details.InitialOrder.ShippingMethod;
-                details.ShippingRateComputationMethodSystemName = details.InitialOrder.ShippingRateComputationMethodSystemName;
-            }
-            details.ShippingStatus = shoppingCartRequiresShipping
-                ? ShippingStatus.NotYetShipped
-                : ShippingStatus.ShippingNotRequired;
-
+            details.ShippingStatus = shoppingCartRequiresShipping ? ShippingStatus.NotYetShipped : ShippingStatus.ShippingNotRequired;
             details.OrderShippingTotalInclTax = details.InitialOrder.OrderShippingInclTax;
             details.OrderShippingTotalExclTax = details.InitialOrder.OrderShippingExclTax;
             details.PaymentAdditionalFeeInclTax = details.InitialOrder.PaymentMethodAdditionalFeeInclTax;
@@ -375,7 +329,7 @@ namespace Grand.Services.Orders
             return processPaymentResult;
         }
 
-        protected virtual async Task<Order> PrepareOrder(ProcessPaymentRequest processPaymentRequest, ProcessPaymentResult processPaymentResult, PlaceOrderContainter details)
+        protected virtual Order PrepareOrder(ProcessPaymentRequest processPaymentRequest, ProcessPaymentResult processPaymentResult, PlaceOrderContainter details)
         {
             var order = new Order {
                 StoreId = processPaymentRequest.StoreId,
@@ -430,15 +384,15 @@ namespace Grand.Services.Orders
                 PickupPoint = details.PickupPoint,
                 ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
                 CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
-                VatNumber = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.VatNumber),
-                VatNumberStatusId = await details.Customer.GetAttribute<int>(_genericAttributeService, SystemCustomerAttributeNames.VatNumberStatusId),
-                CompanyName = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Company),
-                FirstName = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.FirstName),
-                LastName = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastName),
+                VatNumber = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber),
+                VatNumberStatusId = details.Customer.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.VatNumberStatusId),
+                CompanyName = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company),
+                FirstName = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName),
+                LastName = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName),
                 CustomerEmail = details.Customer.Email,
-                UrlReferrer = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastUrlReferrer),
-                ShippingOptionAttributeDescription = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, processPaymentRequest.StoreId),
-                ShippingOptionAttributeXml = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ShippingOptionAttributeXml, processPaymentRequest.StoreId),
+                UrlReferrer = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastUrlReferrer),
+                ShippingOptionAttributeDescription = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ShippingOptionAttributeDescription, processPaymentRequest.StoreId),
+                ShippingOptionAttributeXml = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ShippingOptionAttributeXml, processPaymentRequest.StoreId),
                 CreatedOnUtc = DateTime.UtcNow
             };
 
@@ -470,8 +424,7 @@ namespace Grand.Services.Orders
             details.PrimaryCurrencyCode = primaryStoreCurrency.CurrencyCode;
 
             //customer language
-            details.CustomerLanguage = await _languageService.GetLanguageById(await details.Customer.GetAttribute<string>(
-               _genericAttributeService, SystemCustomerAttributeNames.LanguageId, processPaymentRequest.StoreId));
+            details.CustomerLanguage = await _languageService.GetLanguageById(details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId, processPaymentRequest.StoreId));
 
             if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
                 details.CustomerLanguage = _workContext.WorkingLanguage;
@@ -498,7 +451,7 @@ namespace Grand.Services.Orders
             }
 
             //checkout attributes
-            details.CheckoutAttributesXml = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, processPaymentRequest.StoreId);
+            details.CheckoutAttributesXml = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, processPaymentRequest.StoreId);
             details.CheckoutAttributeDescription = await _checkoutAttributeFormatter.FormatAttributes(details.CheckoutAttributesXml, details.Customer);
 
             //load and validate customer shopping cart
@@ -558,7 +511,7 @@ namespace Grand.Services.Orders
 
             //tax display type
             if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
-                details.CustomerTaxDisplayType = (TaxDisplayType)await details.Customer.GetAttribute<int>(_genericAttributeService, SystemCustomerAttributeNames.TaxDisplayTypeId, processPaymentRequest.StoreId);
+                details.CustomerTaxDisplayType = (TaxDisplayType)details.Customer.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.TaxDisplayTypeId, processPaymentRequest.StoreId);
             else
                 details.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
 
@@ -592,7 +545,7 @@ namespace Grand.Services.Orders
 
             if (shoppingCartRequiresShipping)
             {
-                var pickupPoint = await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.SelectedPickupPoint, processPaymentRequest.StoreId);
+                var pickupPoint = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.SelectedPickupPoint, processPaymentRequest.StoreId);
                 if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
                 {
                     details.PickUpInStore = true;
@@ -607,7 +560,7 @@ namespace Grand.Services.Orders
                         throw new GrandException("Email is not valid");
 
                     //clone shipping address
-                    details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
+                    details.ShippingAddress = details.Customer.ShippingAddress;
                     if (!String.IsNullOrEmpty(details.ShippingAddress.CountryId))
                     {
                         var country = await _countryService.GetCountryById(details.ShippingAddress.CountryId);
@@ -616,7 +569,7 @@ namespace Grand.Services.Orders
                                 throw new GrandException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
                     }
                 }
-                var shippingOption = await details.Customer.GetAttribute<ShippingOption>(_genericAttributeService, SystemCustomerAttributeNames.SelectedShippingOption, processPaymentRequest.StoreId);
+                var shippingOption = details.Customer.GetAttributeFromEntity<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, processPaymentRequest.StoreId);
                 if (shippingOption != null)
                 {
                     details.ShippingMethodName = shippingOption.Name;
@@ -981,7 +934,7 @@ namespace Grand.Services.Orders
             //insert order
             await _orderService.InsertOrder(order);
             
-            var reserved = await _productReservationService.GetCustomerReservationsHelpers();
+            var reserved = await _productReservationService.GetCustomerReservationsHelpers(order.CustomerId);
             foreach (var res in reserved)
             {
                 await _productReservationService.DeleteCustomerReservationsHelper(res);
@@ -1052,10 +1005,8 @@ namespace Grand.Services.Orders
             var initialOrderItems = details.InitialOrder.OrderItems;
             foreach (var orderItem in initialOrderItems)
             {
-
                 //save item
                 var newOrderItem = new OrderItem {
-
                     OrderItemGuid = Guid.NewGuid(),
                     ProductId = orderItem.ProductId,
                     VendorId = orderItem.VendorId,
@@ -1079,6 +1030,7 @@ namespace Grand.Services.Orders
                     RentalStartDateUtc = orderItem.RentalStartDateUtc,
                     RentalEndDateUtc = orderItem.RentalEndDateUtc,
                     CreatedOnUtc = DateTime.UtcNow,
+                    Commission = orderItem.Commission
                 };
                 order.OrderItems.Add(newOrderItem);
 
@@ -1631,7 +1583,9 @@ namespace Grand.Services.Orders
                     processPaymentRequest.OrderGuid = Guid.NewGuid();
 
                 //prepare order details
-                var details = !processPaymentRequest.IsRecurringPayment ? await PreparePlaceOrderDetails(processPaymentRequest) : await PreparePlaceOrderDetailsForRecurringPayment(processPaymentRequest);
+                var details = !processPaymentRequest.IsRecurringPayment ? 
+                    await PreparePlaceOrderDetails(processPaymentRequest) : 
+                    await PreparePlaceOrderDetailsForRecurringPayment(processPaymentRequest);
 
                 //event notification
                 await _mediator.PlaceOrderDetailsEvent(result, details);
@@ -1650,7 +1604,7 @@ namespace Grand.Services.Orders
                 {
                     #region Save order details
 
-                    var order = await PrepareOrder(processPaymentRequest, processPaymentResult, details);
+                    var order = PrepareOrder(processPaymentRequest, processPaymentResult, details);
 
                     if (!processPaymentRequest.IsRecurringPayment)
                     {
