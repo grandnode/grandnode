@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Grand.Core.Caching;
-using System.Collections.Generic;
 
 namespace Grand.Services.Media
 {
@@ -374,7 +373,7 @@ namespace Grand.Services.Media
             string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
-            var pictureKey = string.Format(PICTURE_BY_KEY, pictureId, _storeContext.CurrentStore.Id, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
+            var pictureKey = string.Format(PICTURE_BY_KEY, pictureId, _storeContext.CurrentStore?.Id, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
             return await _cacheManager.GetAsync(pictureKey, async () =>
             {
                 var picture = await GetPictureById(pictureId);
