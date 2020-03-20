@@ -22,6 +22,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Payments;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
@@ -74,7 +75,6 @@ namespace Grand.Services.Orders
         private readonly IMediator _mediator;
         private readonly IPdfService _pdfService;
         private readonly IRewardPointsService _rewardPointsService;
-        private readonly IReturnRequestService _returnRequestService;
         private readonly IStoreContext _storeContext;
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
@@ -122,7 +122,6 @@ namespace Grand.Services.Orders
             IMediator mediator,
             IPdfService pdfService,
             IRewardPointsService rewardPointsService,
-            IReturnRequestService returnRequestService,
             IStoreContext storeContext,
             IProductReservationService productReservationService,
             IAuctionService auctionService,
@@ -166,7 +165,6 @@ namespace Grand.Services.Orders
             _mediator = mediator;
             _pdfService = pdfService;
             _rewardPointsService = rewardPointsService;
-            _returnRequestService = returnRequestService;
             _storeContext = storeContext;
             _productReservationService = productReservationService;
             _auctionService = auctionService;
@@ -2363,8 +2361,6 @@ namespace Grand.Services.Orders
             }
         }
 
-
-
         /// <summary>
         /// Gets a value indicating whether refund from admin panel is allowed
         /// </summary>
@@ -3016,9 +3012,8 @@ namespace Grand.Services.Orders
                     return false;
 
                 var qtyDelivery = shipments.Where(x => x.DeliveryDateUtc.HasValue).SelectMany(x => x.ShipmentItems).Where(x => x.OrderItemId == item.Id).Sum(x => x.Quantity);
-                var returnRequests = await _returnRequestService.SearchReturnRequests(customerId: order.CustomerId, orderItemId: item.Id);
+                var returnRequests = (await _mediator.Send(new GetReturnRequestQueryModel() { CustomerId = order.CustomerId, OrderItemId = item.Id })).ToList();
                 int qtyReturn = 0;
-
                 foreach (var rr in returnRequests)
                 {
                     foreach (var rrItem in rr.ReturnRequestItems)
