@@ -137,5 +137,8 @@
   <LocaleResource Name="Sitemap.BlogPosts">
     <Value>Blog posts</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.UndoneChange">
+    <Value>This action can not be undone!</Value>
+  </LocaleResource>
 </Language>
 
