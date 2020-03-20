@@ -24,7 +24,7 @@ namespace Grand.Framework.Security.Authorization
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
             var email = context.User.FindFirst(c => c.Type == ClaimTypes.Email);
-            var customer = await _customerService.GetCustomerByEmail(email.Value);
+            var customer = await _customerService.GetCustomerByEmail(email?.Value);
             if (customer != null)
             {
                 if (!await _permissionService.Authorize(requirement.Permission, customer))

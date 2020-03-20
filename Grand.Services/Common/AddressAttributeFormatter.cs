@@ -16,16 +16,13 @@ namespace Grand.Services.Common
     public partial class AddressAttributeFormatter : IAddressAttributeFormatter
     {
         private readonly IWorkContext _workContext;
-        private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressAttributeParser _addressAttributeParser;
 
         public AddressAttributeFormatter(IWorkContext workContext,
-            IAddressAttributeService addressAttributeService,
             IAddressAttributeParser addressAttributeParser)
         {
-            this._workContext = workContext;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeParser = addressAttributeParser;
+            _workContext = workContext;
+            _addressAttributeParser = addressAttributeParser;
         }
         
         /// <summary>
