@@ -12323,6 +12323,9 @@
   <LocaleResource Name="Admin.Customers.Customers.List.SearchZipCode.Hint">
     <Value>Search by zip code.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.NoSelfDelete">
+    <Value>You can not delete yourself.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Orders">
     <Value>Orders</Value>
   </LocaleResource>

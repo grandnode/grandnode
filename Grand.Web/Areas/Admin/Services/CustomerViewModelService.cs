@@ -1076,7 +1076,10 @@ namespace Grand.Web.Areas.Admin.Services
             for (var i = 0; i < customers.Count; i++)
             {
                 var customer = customers[i];
-                await _customerService.DeleteCustomer(customer);
+                if (customer.Id != _workContext.CurrentCustomer.Id)
+                {
+                    await _customerService.DeleteCustomer(customer);
+                }
                 //activity log
                 await _customerActivityService.InsertActivity("DeleteCustomer", customer.Id, _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);
             }
