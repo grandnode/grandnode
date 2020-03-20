@@ -7,9 +7,7 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Media;
-using Grand.Services.Security;
 using Grand.Services.Seo;
-using Grand.Services.Stores;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Products;
@@ -33,8 +31,6 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly ICacheManager _cacheManager;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
@@ -49,8 +45,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             ICacheManager cacheManager,
             IProductService productService,
             ICategoryService categoryService,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
             IPictureService pictureService,
             ILocalizationService localizationService,
             ISpecificationAttributeService specificationAttributeService,
@@ -64,8 +58,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             _cacheManager = cacheManager;
             _productService = productService;
             _categoryService = categoryService;
-            _aclService = aclService;
-            _storeMappingService = storeMappingService;
             _pictureService = pictureService;
             _localizationService = localizationService;
             _specificationAttributeService = specificationAttributeService;
