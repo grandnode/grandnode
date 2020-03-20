@@ -252,7 +252,7 @@ namespace Grand.Services.Orders.Tests
                 _workflowMessageService, _vendorService,
                 _customerActivityService, tempICustomerActionEventService,
                 _currencyService, _affiliateService,
-                _eventPublisher, _pdfService, null, null, _storeContext, _productReservationService, _auctionService, _countryService,
+                _eventPublisher, _pdfService, null, _storeContext, _productReservationService, _auctionService, _countryService,
                 _shippingSettings, _shoppingCartSettings,  _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings);
         }
