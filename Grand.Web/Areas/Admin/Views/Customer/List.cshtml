@@ -40,7 +40,7 @@
                             </ul>
                             <vc:admin-widget widget-zone="customer_list_buttons" additional-data="null" />
                         </div>
-                        <button type="button" name="delete-selected" id="delete-selected" class="btn red">
+                        <button type="button" name="delete-selected" id="delete-selected" class="btn red" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); ">
                             <i class="fa fa-trash-o"></i>
                             @T("Admin.Common.Delete.Selected")
                         </button>

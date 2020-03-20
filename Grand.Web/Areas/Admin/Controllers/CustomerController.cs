@@ -434,6 +434,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (customer == null)
                 //No customer found with the specified id
                 return RedirectToAction("List");
+            if (customer.Id == _workContext.CurrentCustomer.Id)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.NoSelfDelete"));
+                return RedirectToAction("List");
+            }
 
             try
             {
