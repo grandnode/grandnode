@@ -4863,6 +4863,9 @@
   <LocaleResource Name="Admin.Common.UndoneChange">
     <Value>This action can not be undone!</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.SaveChanges">
+    <Value>Save changes</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Update">
     <Value>Update</Value>
   </LocaleResource>
