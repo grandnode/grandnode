@@ -4860,6 +4860,9 @@
   <LocaleResource Name="Admin.Common.Treeview">
     <Value>Tree view</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.UndoneChange">
+    <Value>This action can not be undone!</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Update">
     <Value>Update</Value>
   </LocaleResource>

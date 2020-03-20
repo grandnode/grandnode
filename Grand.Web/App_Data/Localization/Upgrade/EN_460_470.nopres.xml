@@ -134,5 +134,8 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Language.Hint">
     <Value>Choose a language which subscribers will get this email.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.UndoneChange">
+    <Value>This action can not be undone!</Value>
+  </LocaleResource>
 </Language>
 
