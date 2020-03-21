@@ -1242,7 +1242,7 @@ namespace Grand.Services.Messages
             if (customer != null)
                 await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
-            await _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order, language);
+            await _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, store, order, language);
 
             //event notification
             await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1283,7 +1283,7 @@ namespace Grand.Services.Messages
             if (customer != null)
                 await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
-            await _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order, language);
+            await _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, store, order, language);
 
             //event notification
             await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1329,7 +1329,48 @@ namespace Grand.Services.Messages
             if (customer != null)
                 await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
-            await _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order, language);
+            await _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, store, order, language);
+
+            //event notification
+            await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
+
+            var toEmail = customer.IsGuest() ?
+                order.BillingAddress.Email :
+                customer.Email;
+            var toName = customer.IsGuest() ?
+                order.BillingAddress.FirstName :
+                customer.GetFullName();
+            return await SendNotification(messageTemplate, emailAccount,
+                languageId, liquidObject,
+                toEmail, toName);
+        }
+
+        public virtual async Task<int> SendNewReturnRequestNoteAddedCustomerNotification(ReturnRequestNote returnRequestNote, Order order, string languageId)
+        {
+            if (returnRequestNote == null)
+                throw new ArgumentNullException("returnRequestNote");
+
+            var returnRequest = await _serviceProvider.GetRequiredService<IReturnRequestService>().GetReturnRequestById(returnRequestNote.ReturnRequestId);
+
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.NewReturnRequestNote", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(returnRequest.CustomerId);
+
+            LiquidObject liquidObject = new LiquidObject();
+            await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            if (customer != null)
+                await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+
+            await _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, store, order, language, returnRequestNote);
 
             //event notification
             await _mediator.MessageTokensAdded(messageTemplate, liquidObject);

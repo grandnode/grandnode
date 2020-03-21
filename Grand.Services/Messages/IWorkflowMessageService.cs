@@ -293,6 +293,14 @@ namespace Grand.Services.Messages
         /// <returns></returns>
         Task<int> SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, Order order, string languageId);
 
+        /// <summary>
+        /// Sends a new return request note added notification to a customer
+        /// </summary>
+        /// <param name="returnRequestNote">Return request note</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        Task<int> SendNewReturnRequestNoteAddedCustomerNotification(ReturnRequestNote returnRequestNote, Order order, string languageId);
+
         #endregion
 
         #region Forum Notifications

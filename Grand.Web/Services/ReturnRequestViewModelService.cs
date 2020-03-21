@@ -248,6 +248,21 @@ namespace Grand.Web.Services
                     ProductPrice = unitPrice
                 });
             }
+
+            foreach (var returnRequestNote in (await _returnRequestService.GetReturnRequestNotes(returnRequest.Id))
+                .Where(rrn => rrn.DisplayToCustomer)
+                .OrderByDescending(rrn => rrn.CreatedOnUtc)
+                .ToList())
+            {
+                model.ReturnRequestNotes.Add(new ReturnRequestDetailsModel.ReturnRequestNote {
+                    Id = returnRequestNote.Id,
+                    ReturnRequestId = returnRequestNote.ReturnRequestId,
+                    HasDownload = !String.IsNullOrEmpty(returnRequestNote.DownloadId),
+                    Note = returnRequestNote.FormatReturnRequestNoteText(),
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequestNote.CreatedOnUtc, DateTimeKind.Utc)
+                });
+            }
+
             return model;
         }
         public virtual async Task<CustomerReturnRequestsModel> PrepareCustomerReturnRequests()

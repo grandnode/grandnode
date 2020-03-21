@@ -15698,6 +15698,48 @@
   <LocaleResource Name="Admin.ReturnRequests.View">
     <Value>View</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes">
+    <Value>Return request notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.AddButton">
+    <Value>Add return request note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.AddTitle">
+    <Value>Add return request note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.CreatedByCustomer">
+    <Value>Created by customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.DisplayToCustomer">
+    <Value>Display to customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.DisplayToCustomer.Hint">
+    <Value>A value indicating whether to display this return request note to a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.Download">
+    <Value>Attached file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.Download.HasDownload">
+    <Value>(check to upload file)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.Download.Hint">
+    <Value>Upload a file attached to this return request note.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.Download.Link">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.Download.Link.No">
+    <Value>No file attached</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.Note">
+    <Value>Note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.ReturnRequestNotes.Fields.Note.Hint">
+    <Value>Enter this return request note message.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Review.Fields.ReviewText.Required">
     <Value>Review text is required</Value>
   </LocaleResource>
@@ -20221,6 +20263,18 @@
   </LocaleResource>
   <LocaleResource Name="Remove">
     <Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.Notes">
+    <Value>Note(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.Notes.CreatedOn">
+    <Value>Created On</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.Notes.Download">
+    <Value>Download attached file</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.Notes.Note">
+    <Value>Note</Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.Comments">
     <Value>Comments</Value>
