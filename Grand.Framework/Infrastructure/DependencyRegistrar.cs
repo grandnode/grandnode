@@ -340,6 +340,7 @@ namespace Grand.Framework.Infrastructure
             if (!databaseInstalled)
             {
                 //installation service
+                builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerLifetimeScope();
                 builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
             }
             else

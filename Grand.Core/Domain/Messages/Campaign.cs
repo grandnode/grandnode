@@ -28,9 +28,14 @@ namespace Grand.Core.Domain.Messages
         public string Body { get; set; }
 
         /// <summary>
-        /// Gets or sets the store identifier  which subscribers it will be sent to; set 0 for all newsletter subscribers
+        /// Gets or sets the store identifier
         /// </summary>
         public string StoreId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lang identifier
+        /// </summary>
+        public string LanguageId { get; set; }
 
         public DateTime? CustomerCreatedDateFrom { get; set; }
         public DateTime? CustomerCreatedDateTo { get; set; }

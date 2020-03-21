@@ -2,9 +2,9 @@
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <script asp-location="Footer">
-            function loadStates(selectedItem)
-            {
-                //var selectedItem = $(this).val();
+        $(function () {
+            $("#@Html.IdFor(model => model.CountryId)").change(function () {
+                var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
                 var statesProgress = $("#states-loading-progress");
                 statesProgress.show();
@@ -25,20 +25,8 @@
                         statesProgress.hide();
                     }
                 });
-
-            }
-
-            $(function () {
-                $("#@Html.IdFor(model => model.CountryId)").change(function () {
-                    var selectedItem = $(this).val();
-                    loadStates(selectedItem);
-                });
-                if ($("#@Html.IdFor(model => model.CountryId)").val().length > 0)
-                {
-                    var selectedItem = $("#@Html.IdFor(model => model.CountryId)").val();
-                    loadStates(selectedItem);
-                }
             });
+        });
     </script>
 }
 <input asp-for="Id" type="hidden" />
@@ -51,7 +39,7 @@
             {
                 <span class="required">*</span>
             }
-            <input asp-for="Company" class="form-control"/>
+            <input asp-for="Company" class="form-control" />
             <span asp-validation-for="Company"></span>
         </div>
     }
@@ -82,7 +70,7 @@
             {
                 <span class="required">*</span>
             }
-            <input asp-for="City" class="form-control"/>
+            <input asp-for="City" class="form-control" />
             <span asp-validation-for="City"></span>
         </div>
     }

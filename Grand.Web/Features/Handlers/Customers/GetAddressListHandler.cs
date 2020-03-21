@@ -1,9 +1,8 @@
 ﻿using Grand.Core.Domain.Common;
 using Grand.Services.Directory;
 using Grand.Services.Stores;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.Customers;
-using Grand.Web.Interfaces;
-using Grand.Web.Models.Common;
 using Grand.Web.Models.Customer;
 using MediatR;
 using System.Collections.Generic;
@@ -16,15 +15,14 @@ namespace Grand.Web.Features.Handlers.Customers
     {
         private readonly ICountryService _countryService;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly IAddressViewModelService _addressViewModelService;
-
-        public GetAddressListHandler(ICountryService countryService, 
-            IStoreMappingService storeMappingService, 
-            IAddressViewModelService addressViewModelService)
+        private readonly IMediator _mediator;
+        public GetAddressListHandler(ICountryService countryService,
+            IStoreMappingService storeMappingService,
+            IMediator mediator)
         {
             _countryService = countryService;
             _storeMappingService = storeMappingService;
-            _addressViewModelService = addressViewModelService;
+            _mediator = mediator;
         }
 
         public async Task<CustomerAddressListModel> Handle(GetAddressList request, CancellationToken cancellationToken)
@@ -49,11 +47,14 @@ namespace Grand.Web.Features.Handlers.Customers
             foreach (var address in addresses)
             {
                 var countries = await _countryService.GetAllCountries(request.Language.Id);
-                var addressModel = new AddressModel();
-                await _addressViewModelService.PrepareModel(model: addressModel,
-                    address: address,
-                    excludeProperties: false,
-                    loadCountries: () => countries);
+                var addressModel = await _mediator.Send(new GetAddressModel() {
+                    Language = request.Language,
+                    Store = request.Store,
+                    Model = null,
+                    Address = address,
+                    ExcludeProperties = false,
+                    LoadCountries = () => countries
+                });
                 model.Addresses.Add(addressModel);
             }
 

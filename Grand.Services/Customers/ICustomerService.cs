@@ -224,15 +224,7 @@ namespace Grand.Services.Customers
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true);
-
-        /// <summary>
-        /// Update Customer Reminder History
-        /// </summary>
-        /// <param name="customerId"></param>
-        /// <param name="orderId"></param>
-        Task UpdateCustomerReminderHistory(string customerId, string orderId);
-
-
+        
         /// <summary>
         /// Delete guest customer records
         /// </summary>

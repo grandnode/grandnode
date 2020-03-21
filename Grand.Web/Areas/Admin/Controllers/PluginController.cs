@@ -16,7 +16,6 @@ using Grand.Services.Authentication.External;
 using Grand.Services.Cms;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
-using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Payments;
@@ -181,8 +180,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            var model = new PluginListModel
-            {
+            var model = new PluginListModel {
                 //load modes
                 AvailableLoadModes = LoadPluginsMode.All.ToSelectList(HttpContext, false).ToList()
             };
@@ -199,12 +197,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             var loadMode = (LoadPluginsMode)model.SearchLoadModeId;
             var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode, "", model.SearchGroup).ToList();
             var items = new List<PluginModel>();
-            foreach (var item in pluginDescriptors.OrderBy(x=>x.Group))
+            foreach (var item in pluginDescriptors.OrderBy(x => x.Group))
             {
                 items.Add(await PreparePluginModel(item, false, false));
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = pluginDescriptors.Count()
             };
@@ -541,8 +538,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Redirect("List");
 
             var plugin = descriptor.Instance<IMiscPlugin>(_pluginFinder.ServiceProvider);
-            var model = new MiscPluginModel
-            {
+            var model = new MiscPluginModel {
                 FriendlyName = descriptor.FriendlyName,
                 ConfigurationUrl = plugin.GetConfigurationPageUrl()
             };

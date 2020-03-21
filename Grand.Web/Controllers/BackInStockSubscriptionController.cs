@@ -6,14 +6,12 @@ using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Features.Models.ShoppingCart;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
@@ -89,7 +87,7 @@ namespace Grand.Web.Controllers
             if (subscription != null)
             {
                 return Content(_localizationService.GetResource("BackInStockSubscriptions.DeleteNotifyWhenAvailable"));
-            }            
+            }
             return Content(_localizationService.GetResource("BackInStockSubscriptions.NotifyMeWhenAvailable"));
         }
 
@@ -104,7 +102,7 @@ namespace Grand.Web.Controllers
 
             string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
                 form["WarehouseId"].ToString() :
-                 product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : 
+                 product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId :
                  (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             if (!customer.IsRegistered())

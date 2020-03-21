@@ -9,7 +9,6 @@ using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
-using Grand.Services.Directory;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Logging;

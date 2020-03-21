@@ -33,6 +33,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IManufacturerViewModelService _manufacturerViewModelService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ICustomerService _customerService;
         private readonly IStoreService _storeService;
         private readonly ILanguageService _languageService;
@@ -47,6 +48,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IManufacturerViewModelService manufacturerViewModelService,
             IManufacturerService manufacturerService,
             IWorkContext workContext,
+            IStoreContext storeContext,
             ICustomerService customerService,
             IStoreService storeService,
             ILanguageService languageService,
@@ -57,6 +59,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _manufacturerViewModelService = manufacturerViewModelService;
             _manufacturerService = manufacturerService;
             _workContext = workContext;
+            _storeContext = storeContext;
             _customerService = customerService;
             _storeService = storeService;
             _languageService = languageService;
@@ -367,7 +370,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!permission.allow)
                 return ErrorForKendoGridJson(permission.message);
 
-            var (manufacturerProductModels, totalCount) = await _manufacturerViewModelService.PrepareManufacturerProductModel(manufacturerId, command.Page, command.PageSize);
+            var (manufacturerProductModels, totalCount) = await _manufacturerViewModelService.PrepareManufacturerProductModel(manufacturerId, _storeContext.CurrentStore.Id, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
             {

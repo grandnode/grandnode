@@ -8,7 +8,6 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Web.Features.Models.Customers;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Customer;
 using Grand.Web.Models.Newsletter;
 using MediatR;
@@ -97,10 +96,10 @@ namespace Grand.Web.Features.Handlers.Customers
             await PrepareExternalAuth(model, request);
 
             //custom customer attributes
-            var customAttributes = await _mediator.Send(new GetCustomAttributes() { 
-                Customer = request.Customer, 
-                Language = request.Language, 
-                OverrideAttributesXml = request.OverrideCustomCustomerAttributesXml 
+            var customAttributes = await _mediator.Send(new GetCustomAttributes() {
+                Customer = request.Customer,
+                Language = request.Language,
+                OverrideAttributesXml = request.OverrideCustomCustomerAttributesXml
             });
             foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);

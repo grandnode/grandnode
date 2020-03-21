@@ -1163,7 +1163,7 @@ namespace Grand.Services.Orders
             if (rentalStartDate.HasValue && rentalEndDate.HasValue)
             {
                 var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, null);
-                var reserved = await _productReservationService.GetCustomerReservationsHelpers();
+                var reserved = await _productReservationService.GetCustomerReservationsHelpers(_workContext.CurrentCustomer.Id);
                 foreach (var item in reserved)
                 {
                     var match = reservations.Where(x => x.Id == item.ReservationId).FirstOrDefault();

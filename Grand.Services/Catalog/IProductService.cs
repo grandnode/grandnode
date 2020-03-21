@@ -65,8 +65,9 @@ namespace Grand.Services.Catalog
         /// Gets products by identifier
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
+        /// <param name="showHidden">Show hidden</param>
         /// <returns>Products</returns>
-        Task<IList<Product>> GetProductsByIds(string[] productIds);
+        Task<IList<Product>> GetProductsByIds(string[] productIds, bool showHidden = false);
 
         /// <summary>
         /// Gets products by discount
@@ -290,9 +291,10 @@ namespace Grand.Services.Catalog
         /// Reverse booked inventory (if acceptable)
         /// </summary>
         /// <param name="product">product</param>
+        /// <param name="shipment">Shipment</param>
         /// <param name="shipmentItem">Shipment item</param>
         /// <returns>Quantity reversed</returns>
-        Task<int> ReverseBookedInventory(Product product, ShipmentItem shipmentItem);
+        Task<int> ReverseBookedInventory(Product product, Shipment shipment, ShipmentItem shipmentItem);
 
         #endregion
 

@@ -1,11 +1,10 @@
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
+using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Events;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -84,7 +83,7 @@ namespace Grand.Services.Directory
         private readonly ICacheManager _cacheManager;
         private readonly MeasureSettings _measureSettings;
         private readonly IMediator _mediator;
-        private readonly IServiceProvider _serviceProvider;
+
         #endregion
 
         #region Ctor
@@ -103,8 +102,7 @@ namespace Grand.Services.Directory
             IRepository<MeasureWeight> measureWeightRepository,
             IRepository<MeasureUnit> measureUnitRepository,
             MeasureSettings measureSettings,
-            IMediator mediator,
-            IServiceProvider serviceProvider)
+            IMediator mediator)
         {
             _cacheManager = cacheManager;
             _measureDimensionRepository = measureDimensionRepository;
@@ -112,7 +110,6 @@ namespace Grand.Services.Directory
             _measureUnitRepository = measureUnitRepository;
             _measureSettings = measureSettings;
             _mediator = mediator;
-            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -137,7 +134,7 @@ namespace Grand.Services.Directory
             //event notification
             await _mediator.EntityDeleted(measureDimension);
         }
-        
+
         /// <summary>
         /// Gets a measure dimension by identifier
         /// </summary>
@@ -224,7 +221,7 @@ namespace Grand.Services.Directory
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        public virtual async Task<decimal> ConvertDimension(decimal value, 
+        public virtual async Task<decimal> ConvertDimension(decimal value,
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true)
         {
             if (sourceMeasureDimension == null)
@@ -384,7 +381,7 @@ namespace Grand.Services.Directory
                 throw new ArgumentNullException("measure");
 
             await _measureWeightRepository.UpdateAsync(measure);
-            
+
             await _cacheManager.RemoveByPrefix(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
@@ -479,16 +476,13 @@ namespace Grand.Services.Directory
             if (measureUnit == null)
                 throw new ArgumentNullException("measureUnit");
 
-            var builder = Builders<Product>.Filter;
-            var filter = builder.Eq(x => x.UnitId, measureUnit.Id);
-            var update = Builders<Product>.Update
-                .Set(x => x.UnitId, "");
+            //remove unit from products
+            await _mediator.Send(new DeleteMeasureUnitOnProductCommand() { MeasureUnitId = measureUnit.Id });
 
-            await _serviceProvider.GetRequiredService<IRepository<Product>>()
-                .Collection.UpdateManyAsync(filter, update);
-
+            //delete
             await _measureUnitRepository.DeleteAsync(measureUnit);
 
+            //clear cache
             await _cacheManager.RemoveByPrefix(MEASUREUNITS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
@@ -507,7 +501,7 @@ namespace Grand.Services.Directory
             return _cacheManager.GetAsync(key, () => _measureUnitRepository.GetByIdAsync(measureUnitId));
         }
 
-        
+
         /// <summary>
         /// Gets all measure units
         /// </summary>

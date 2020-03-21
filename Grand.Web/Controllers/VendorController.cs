@@ -17,7 +17,7 @@ using Grand.Services.Seo;
 using Grand.Services.Vendors;
 using Grand.Web.Commands.Models.Vendors;
 using Grand.Web.Extensions;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Vendors;
 using MediatR;
@@ -40,9 +40,7 @@ namespace Grand.Web.Controllers
         private readonly IVendorService _vendorService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
-        private readonly IAddressViewModelService _addressViewModelService;
         private readonly ICountryService _countryService;
-        private readonly IServiceProvider _serviceProvider;
         private readonly IMediator _mediator;
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
@@ -60,9 +58,7 @@ namespace Grand.Web.Controllers
             IVendorService vendorService,
             IUrlRecordService urlRecordService,
             IPictureService pictureService,
-            IAddressViewModelService addressViewModelService,
             ICountryService countryService,
-            IServiceProvider serviceProvider,
             IMediator mediator,
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
@@ -77,9 +73,7 @@ namespace Grand.Web.Controllers
             _vendorService = vendorService;
             _urlRecordService = urlRecordService;
             _pictureService = pictureService;
-            _addressViewModelService = addressViewModelService;
             _countryService = countryService;
-            _serviceProvider = serviceProvider;
             _mediator = mediator;
             _localizationSettings = localizationSettings;
             _vendorSettings = vendorSettings;
@@ -125,13 +119,14 @@ namespace Grand.Web.Controllers
             model.TermsOfServiceEnabled = _vendorSettings.TermsOfServiceEnabled;
             model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
-            await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
-                address: null,
-                excludeProperties: false,
-                prePopulateWithCustomerFields: true,
-                customer: _workContext.CurrentCustomer,
-                loadCountries: () => countries,
-                vendorSettings: _vendorSettings);
+            model.Address = await _mediator.Send(new GetVendorAddress() {
+                Language = _workContext.WorkingLanguage,
+                Address = null,
+                ExcludeProperties = false,
+                PrePopulateWithCustomerFields = true,
+                Customer = _workContext.CurrentCustomer,
+                LoadCountries = () => countries,
+            });
 
             return View(model);
         }
@@ -189,9 +184,10 @@ namespace Grand.Web.Controllers
                 };
                 model.Address.ToEntity(vendor.Address, true);
                 await _vendorService.InsertVendor(vendor);
-                //search engine name (the same as vendor name)
-                var seName = await vendor.ValidateSeName(vendor.Name, vendor.Name, true, _serviceProvider.GetRequiredService<SeoSettings>(),
-                    _serviceProvider.GetRequiredService<IUrlRecordService>(), _serviceProvider.GetRequiredService<ILanguageService>());
+
+                //search engine name (the same as vendor name)                
+                var seName = await vendor.ValidateSeName(vendor.Name, vendor.Name, true, HttpContext.RequestServices.GetRequiredService<SeoSettings>(),
+                    HttpContext.RequestServices.GetRequiredService<IUrlRecordService>(), HttpContext.RequestServices.GetRequiredService<ILanguageService>());
                 await _urlRecordService.SaveSlug(vendor, seName, "");
 
                 //associate to the current customer
@@ -212,14 +208,15 @@ namespace Grand.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
-            await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
-                address: null,
-                excludeProperties: false,
-                prePopulateWithCustomerFields: true,
-                customer: _workContext.CurrentCustomer,
-                loadCountries: () => countries,
-                vendorSettings: _vendorSettings);
-
+            model.Address = await _mediator.Send(new GetVendorAddress() {
+                Language = _workContext.WorkingLanguage,
+                Address = null,
+                Model = model.Address,
+                ExcludeProperties = false,
+                PrePopulateWithCustomerFields = true,
+                Customer = _workContext.CurrentCustomer,
+                LoadCountries = () => countries,
+            });
             return View(model);
         }
 
@@ -239,11 +236,12 @@ namespace Grand.Web.Controllers
 
             model.PictureUrl = await _pictureService.GetPictureUrl(vendor.PictureId, _mediaSettings.AvatarPictureSize, false);
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
-            await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
-                address: vendor.Address,
-                excludeProperties: false,
-                loadCountries: () => countries,
-                vendorSettings: _vendorSettings);
+            model.Address = await _mediator.Send(new GetVendorAddress() {
+                Language = _workContext.WorkingLanguage,
+                Address = vendor.Address,
+                ExcludeProperties = false,
+                LoadCountries = () => countries,
+            });
 
             return View(model);
         }
@@ -307,11 +305,13 @@ namespace Grand.Web.Controllers
                 return RedirectToAction("Info");
             }
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
-            await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
-                address: vendor.Address,
-                excludeProperties: false,
-                loadCountries: () => countries,
-                vendorSettings: _vendorSettings);
+            model.Address = await _mediator.Send(new GetVendorAddress() {
+                Language = _workContext.WorkingLanguage,
+                Model = model.Address,
+                Address = vendor.Address,
+                ExcludeProperties = false,
+                LoadCountries = () => countries,
+            });
 
             return View(model);
         }

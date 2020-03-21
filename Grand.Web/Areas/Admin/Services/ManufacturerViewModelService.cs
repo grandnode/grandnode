@@ -217,7 +217,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = _categoryService.GetFormattedBreadCrumb(c, categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
@@ -246,9 +246,9 @@ namespace Grand.Web.Areas.Admin.Services
             return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
 
-        public virtual async Task<(IEnumerable<ManufacturerModel.ManufacturerProductModel> manufacturerProductModels, int totalCount)> PrepareManufacturerProductModel(string manufacturerId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<ManufacturerModel.ManufacturerProductModel> manufacturerProductModels, int totalCount)> PrepareManufacturerProductModel(string manufacturerId, string storeId, int pageIndex, int pageSize)
         {
-            var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId,
+            var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId, storeId, 
                 pageIndex - 1, pageSize, true);
             var items = new List<ManufacturerModel.ManufacturerProductModel>();
             foreach (var x in productManufacturers)

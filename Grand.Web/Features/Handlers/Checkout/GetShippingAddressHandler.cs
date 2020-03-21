@@ -7,9 +7,8 @@ using Grand.Services.Shipping;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Web.Features.Models.Checkout;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Models.Checkout;
-using Grand.Web.Models.Common;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +26,7 @@ namespace Grand.Web.Features.Handlers.Checkout
         private readonly ILocalizationService _localizationService;
         private readonly ICountryService _countryService;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly IAddressViewModelService _addressViewModelService;
-
+        private readonly IMediator _mediator;
         private readonly ShippingSettings _shippingSettings;
 
         public GetShippingAddressHandler(IShippingService shippingService,
@@ -38,7 +36,7 @@ namespace Grand.Web.Features.Handlers.Checkout
             ILocalizationService localizationService,
             ICountryService countryService,
             IStoreMappingService storeMappingService,
-            IAddressViewModelService addressViewModelService,
+            IMediator mediator,
             ShippingSettings shippingSettings)
         {
             _shippingService = shippingService;
@@ -48,7 +46,7 @@ namespace Grand.Web.Features.Handlers.Checkout
             _localizationService = localizationService;
             _countryService = countryService;
             _storeMappingService = storeMappingService;
-            _addressViewModelService = addressViewModelService;
+            _mediator = mediator;
             _shippingSettings = shippingSettings;
         }
 
@@ -67,13 +65,17 @@ namespace Grand.Web.Features.Handlers.Checkout
             //new address
             model.NewAddress.CountryId = request.SelectedCountryId;
             var countries = await _countryService.GetAllCountriesForShipping();
-            await _addressViewModelService.PrepareModel(model: model.NewAddress,
-                address: null,
-                excludeProperties: false,
-                loadCountries: () => countries,
-                prePopulateWithCustomerFields: request.PrePopulateNewAddressWithCustomerFields,
-                customer: request.Customer,
-                overrideAttributesXml: request.OverrideAttributesXml);
+            model.NewAddress = await _mediator.Send(new GetAddressModel() {
+                Language = request.Language,
+                Store = request.Store,
+                Model = model.NewAddress,
+                Address = null,
+                ExcludeProperties = false,
+                LoadCountries = () => countries,
+                PrePopulateWithCustomerFields = request.PrePopulateNewAddressWithCustomerFields,
+                Customer = request.Customer,
+                OverrideAttributesXml = request.OverrideAttributesXml,
+            });
             return model;
         }
 
@@ -133,11 +135,13 @@ namespace Grand.Web.Features.Handlers.Checkout
             }
             foreach (var address in addresses)
             {
-                var addressModel = new AddressModel();
-                await _addressViewModelService.PrepareModel(model: addressModel,
-                    address: address,
-                    excludeProperties: false);
-
+                var addressModel = await _mediator.Send(new GetAddressModel() {
+                    Language = request.Language,
+                    Store = request.Store,
+                    Model = null,
+                    Address = address,
+                    ExcludeProperties = false,
+                });
                 model.ExistingAddresses.Add(addressModel);
             }
         }

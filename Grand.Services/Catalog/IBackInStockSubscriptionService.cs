@@ -29,19 +29,6 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="attributeXml">Attribute xml</param>
-        /// <param name="warehouseId">Warehouse ident</param>
-        /// <param name="storeId">Store identifier; pass "" to load all records</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>Subscriptions</returns>
-        Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(string productId, string attributeXml, string warehouseId,
-            string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue);
-
-        /// <summary>
-        /// Gets all subscriptions
-        /// </summary>
         /// <param name="customerId">Customer id</param>
         /// <param name="productId">Product identifier</param>
         /// <param name="attrxml">Attribute xml</param>
@@ -75,7 +62,7 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="warehouse">Warehouse ident</param>
         /// <returns>Number of sent email</returns>
-        Task<int> SendNotificationsToSubscribers(Product product, string warehouse);
+        Task SendNotificationsToSubscribers(Product product, string warehouse);
 
         /// <summary>
         /// Send notification to subscribers
@@ -84,6 +71,6 @@ namespace Grand.Services.Catalog
         /// <param name="attributeXml">Attribute xml</param>
         /// <param name="warehouse">Warehouse ident</param>
         /// <returns>Number of sent email</returns>
-        Task<int> SendNotificationsToSubscribers(Product product, string attributeXml, string warehouse);
+        Task SendNotificationsToSubscribers(Product product, string attributeXml, string warehouse);
     }
 }

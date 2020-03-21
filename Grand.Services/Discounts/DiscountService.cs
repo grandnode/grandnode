@@ -7,7 +7,6 @@ using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Plugins;
-using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Discounts.Cache;
 using Grand.Services.Events;

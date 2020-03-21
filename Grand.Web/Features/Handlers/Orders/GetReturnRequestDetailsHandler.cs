@@ -5,8 +5,8 @@ using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.Orders;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Orders;
 using MediatR;
 using System.Linq;
@@ -17,26 +17,26 @@ namespace Grand.Web.Features.Handlers.Orders
 {
     public class GetReturnRequestDetailsHandler : IRequestHandler<GetReturnRequestDetails, ReturnRequestDetailsModel>
     {
-        private readonly IAddressViewModelService _addressViewModelService;
         private readonly IProductService _productService;
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IWorkContext _workContext;
-
+        private readonly IMediator _mediator;
         private readonly OrderSettings _orderSettings;
 
-        public GetReturnRequestDetailsHandler(IAddressViewModelService addressViewModelService,
+        public GetReturnRequestDetailsHandler(
             IProductService productService,
             ICurrencyService currencyService,
             IPriceFormatter priceFormatter,
             IWorkContext workContext,
+            IMediator mediator,
             OrderSettings orderSettings)
         {
-            _addressViewModelService = addressViewModelService;
             _productService = productService;
             _currencyService = currencyService;
             _priceFormatter = priceFormatter;
             _workContext = workContext;
+            _mediator = mediator;
             _orderSettings = orderSettings;
         }
 
@@ -50,7 +50,12 @@ namespace Grand.Web.Features.Handlers.Orders
             model.ShowPickupAddress = _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress;
             model.ShowPickupDate = _orderSettings.ReturnRequests_AllowToSpecifyPickupDate;
             model.PickupDate = request.ReturnRequest.PickupDate;
-            await _addressViewModelService.PrepareModel(model: model.PickupAddress, address: request.ReturnRequest.PickupAddress, excludeProperties: false);
+
+            model.PickupAddress = await _mediator.Send(new GetAddressModel() {
+                Language = request.Language,
+                Address = request.ReturnRequest.PickupAddress,
+                ExcludeProperties = false,
+            });
 
             foreach (var item in request.ReturnRequest.ReturnRequestItems)
             {

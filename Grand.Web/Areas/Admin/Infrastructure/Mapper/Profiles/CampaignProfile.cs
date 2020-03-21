@@ -13,6 +13,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowedTokens, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableLanguages, mo => mo.Ignore())
                 .ForMember(dest => dest.TestEmail, mo => mo.Ignore());
 
             CreateMap<CampaignModel, Campaign>()

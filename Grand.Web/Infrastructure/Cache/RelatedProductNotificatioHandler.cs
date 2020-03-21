@@ -22,16 +22,19 @@ namespace Grand.Web.Infrastructure.Cache
 
         public async Task Handle(EntityInserted<RelatedProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
+            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
+            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
 
         }
         public async Task Handle(EntityUpdated<RelatedProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
+            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
+            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
         }
         public async Task Handle(EntityDeleted<RelatedProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
+            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
+            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
         }
     }
 }

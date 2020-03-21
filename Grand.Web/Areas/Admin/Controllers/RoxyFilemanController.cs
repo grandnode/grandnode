@@ -51,20 +51,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         #endregion
 
         #region Ctor
 
         public RoxyFilemanController(IWebHostEnvironment hostingEnvironment,
             IPermissionService permissionService,
-            IWorkContext workContext,
-            IHttpContextAccessor httpContextAccessor)
+            IWorkContext workContext)
         {
             this._hostingEnvironment = hostingEnvironment;
             this._permissionService = permissionService;
             this._workContext = workContext;
-            this._httpContextAccessor = httpContextAccessor;
         }
 
         #endregion

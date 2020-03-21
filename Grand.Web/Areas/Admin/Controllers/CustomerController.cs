@@ -434,6 +434,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (customer == null)
                 //No customer found with the specified id
                 return RedirectToAction("List");
+            if (customer.Id == _workContext.CurrentCustomer.Id)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.NoSelfDelete"));
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -451,6 +456,16 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
+        }
+
+        public async Task<IActionResult> DeleteSelected(ICollection<string> selectedIds)
+        {
+            if (selectedIds != null)
+            {
+                await _customerViewModelService.DeleteSelected(selectedIds.ToList());
+            }
+
+            return Json(new { Result = true });
         }
 
         [HttpPost, ActionName("Edit")]

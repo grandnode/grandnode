@@ -290,12 +290,12 @@ namespace Grand.Web.Models.Catalog
             public virtual async Task PrepareSpecsFilters(IList<string> alreadyFilteredSpecOptionIds,
                 IList<string> filterableSpecificationAttributeOptionIds,
                 ISpecificationAttributeService specificationAttributeService,
-                IWebHelper webHelper, IWorkContext workContext, ICacheManager cacheManager)
+                IWebHelper webHelper, ICacheManager cacheManager, string langId)
             {
                 Enabled = false;
                 var optionIds = filterableSpecificationAttributeOptionIds != null
                     ? string.Join(",", filterableSpecificationAttributeOptionIds.Union(alreadyFilteredSpecOptionIds)) : string.Empty;
-                var cacheKey = string.Format(ModelCacheEventConst.SPECS_FILTER_MODEL_KEY, optionIds, workContext.WorkingLanguage.Id);
+                var cacheKey = string.Format(ModelCacheEventConst.SPECS_FILTER_MODEL_KEY, optionIds, langId);
 
                 var allFilters = await cacheManager.GetAsync(cacheKey, async () =>
                 {
@@ -308,10 +308,10 @@ namespace Grand.Web.Models.Catalog
                             _allFilters.Add(new SpecificationAttributeOptionFilter
                             {
                                 SpecificationAttributeId = sa.Id,
-                                SpecificationAttributeName = sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+                                SpecificationAttributeName = sa.GetLocalized(x => x.Name, langId),
                                 SpecificationAttributeDisplayOrder = sa.DisplayOrder,
                                 SpecificationAttributeOptionId = sao,
-                                SpecificationAttributeOptionName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+                                SpecificationAttributeOptionName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).GetLocalized(x => x.Name, langId),
                                 SpecificationAttributeOptionDisplayOrder = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).DisplayOrder,
                                 SpecificationAttributeOptionColorRgb = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).ColorSquaresRgb,
                             });

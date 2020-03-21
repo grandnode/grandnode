@@ -40,7 +40,7 @@ namespace Grand.Services.Tests.Catalog
 
             _serviceProvider = new Mock<IServiceProvider>().Object;
 
-            _auctionService = new AuctionService(_bidRepository, _eventPublisher, _productService, _productRepository, _cacheManager, _serviceProvider);
+            _auctionService = new AuctionService(_bidRepository, _productService, _productRepository, _cacheManager, _eventPublisher);
 
             _productRepository.Insert(new Product
             {
@@ -243,7 +243,7 @@ namespace Grand.Services.Tests.Catalog
             var productService = new Mock<IProductService>();
             productService.Setup(x => x.GetProductById(cancelProductBid.Id, false)).ReturnsAsync(cancelProductBid);
             var _cancelproductService = productService.Object;
-            var _cancelauctionService = new AuctionService(_bidRepository, _eventPublisher, _cancelproductService, _productRepository, _cacheManager, _serviceProvider);
+            var _cancelauctionService = new AuctionService(_bidRepository, _cancelproductService, _productRepository, _cacheManager, _eventPublisher);
 
             Bid bid = new Bid();
             bid.Amount = 1;

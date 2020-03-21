@@ -1,34 +1,22 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Media;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Tax;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
-using Grand.Services.Affiliates;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
-using Grand.Services.Customers;
-using Grand.Services.Directory;
-using Grand.Services.ExportImport;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
-using Grand.Services.Logging;
-using Grand.Services.Media;
-using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
-using Grand.Services.Stores;
-using Grand.Services.Tax;
-using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Orders;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -36,8 +24,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Grand.Core.Domain.Customers;
-using Grand.Services.Helpers;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -52,36 +38,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
         private readonly IProductService _productService;
-        private readonly IExportManager _exportManager;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IGiftCardService _giftCardService;
-        private readonly IDownloadService _downloadService;
         private readonly IShipmentService _shipmentService;
-        private readonly IShippingService _shippingService;
-        private readonly IStoreService _storeService;
-        private readonly IVendorService _vendorService;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAffiliateService _affiliateService;
-        private readonly IPictureService _pictureService;
-        private readonly ITaxService _taxService;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly ICustomerService _customerService;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly CurrencySettings _currencySettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly MeasureSettings _measureSettings;
-        private readonly AddressSettings _addressSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly MediaSettings _mediaSettings;
         #endregion
 
         public ShipmentController(
@@ -92,74 +50,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             IPdfService pdfService,
             IProductService productService,
-            IExportManager exportManager,
-            IWorkflowMessageService workflowMessageService,
-            ICategoryService categoryService,
-            IManufacturerService manufacturerService,
-            IProductAttributeService productAttributeService,
-            IProductAttributeParser productAttributeParser,
-            IProductAttributeFormatter productAttributeFormatter,
-            IShoppingCartService shoppingCartService,
-            IGiftCardService giftCardService,
-            IDownloadService downloadService,
             IShipmentService shipmentService,
-            IShippingService shippingService,
-            IStoreService storeService,
-            IVendorService vendorService,
-            IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
-            IAffiliateService affiliateService,
-            IPictureService pictureService,
-            ITaxService taxService,
-            IReturnRequestService returnRequestService,
-            ICustomerService customerService,
-            ICustomerActivityService customerActivityService,
-            IDateTimeHelper dateTimeHelper,
-            CurrencySettings currencySettings,
-            TaxSettings taxSettings,
-            MeasureSettings measureSettings,
-            AddressSettings addressSettings,
-            ShippingSettings shippingSettings,
-            MediaSettings mediaSettings)
+            IDateTimeHelper dateTimeHelper)
         {
-             _shipmentViewModelService = shipmentViewModelService;
-             _orderService = orderService;
-             _orderProcessingService = orderProcessingService;
-             _localizationService = localizationService;
-             _workContext = workContext;
-             _pdfService = pdfService;
-             _productService = productService;
-             _exportManager = exportManager;
-             _workflowMessageService = workflowMessageService;
-             _categoryService = categoryService;
-             _manufacturerService = manufacturerService;
-             _productAttributeService = productAttributeService;
-             _productAttributeParser = productAttributeParser;
-             _productAttributeFormatter = productAttributeFormatter;
-             _shoppingCartService = shoppingCartService;
-             _giftCardService = giftCardService;
-             _downloadService = downloadService;
-             _shipmentService = shipmentService;
-             _shippingService = shippingService;
-             _storeService = storeService;
-             _vendorService = vendorService;
-             _addressAttributeParser = addressAttributeParser;
-             _addressAttributeService = addressAttributeService;
-             _addressAttributeFormatter = addressAttributeFormatter;
-             _affiliateService = affiliateService;
-             _pictureService = pictureService;
-             _taxService = taxService;
-             _returnRequestService = returnRequestService;
-             _customerActivityService = customerActivityService;
-             _dateTimeHelper = dateTimeHelper;
-             _currencySettings = currencySettings;
-             _taxSettings = taxSettings;
-             _measureSettings = measureSettings;
-             _addressSettings = addressSettings;
-             _shippingSettings = shippingSettings;
-             _customerService = customerService;
-             _mediaSettings = mediaSettings;
+            _shipmentViewModelService = shipmentViewModelService;
+            _orderService = orderService;
+            _orderProcessingService = orderProcessingService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _pdfService = pdfService;
+            _productService = productService;
+            _shipmentService = shipmentService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #region Shipments
@@ -188,8 +90,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 items.Add(await _shipmentViewModelService.PrepareShipmentModel(item, false));
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = shipments.totalCount
             };
@@ -232,8 +133,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 foreach (var shipment in shipments)
                     shipmentModels.Add(await _shipmentViewModelService.PrepareShipmentModel(shipment, false));
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = shipmentModels,
                 Total = shipmentModels.Count
             };
@@ -262,8 +162,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //shipments
             var shipmentModel = await _shipmentViewModelService.PrepareShipmentModel(shipment, true);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = shipmentModel.Items,
                 Total = shipmentModel.Items.Count
             };
@@ -325,8 +224,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _shipmentService.InsertShipment(shipment);
 
                 //add a note
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = $"A shipment #{shipment.ShipmentNumber} has been added",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -398,13 +296,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var product = await _productService.GetProductById(shipmentItem.ProductId);
                 shipmentItem.ShipmentId = shipment.Id;
                 if (product != null)
-                    await _productService.ReverseBookedInventory(product, shipmentItem);
+                    await _productService.ReverseBookedInventory(product, shipment, shipmentItem);
             }
 
             await _shipmentService.DeleteShipment(shipment);
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = $"A shipment #{shipment.ShipmentNumber} has been deleted",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -652,7 +549,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             shipment.GenericAttributes = model.GenericAttributes;
             await _shipmentService.UpdateShipment(shipment);
-            
+
             //selected tab
             await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
@@ -705,7 +602,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //load shipments
             var shipments = await _shipmentViewModelService.PrepareShipments(model, 1, 100);
-            
+
             //ensure that we at least one shipment selected
             if (shipments.totalCount == 0)
             {
@@ -754,7 +651,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     storeId = _workContext.CurrentCustomer.StaffStoreId;
                 }
-                shipments_access = shipments.Where(x=>x.StoreId == storeId || string.IsNullOrEmpty(storeId)).ToList();
+                shipments_access = shipments.Where(x => x.StoreId == storeId || string.IsNullOrEmpty(storeId)).ToList();
             }
             //ensure that we at least one shipment selected
             if (shipments.Count == 0)

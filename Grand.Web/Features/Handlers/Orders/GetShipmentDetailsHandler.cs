@@ -1,14 +1,12 @@
 ﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Catalog;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.Orders;
-using Grand.Web.Interfaces;
-using Grand.Web.Models.Common;
 using Grand.Web.Models.Orders;
 using MediatR;
 using System;
@@ -24,22 +22,21 @@ namespace Grand.Web.Features.Handlers.Orders
         private readonly IShippingService _shippingService;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IAddressViewModelService _addressViewModelService;
+        private readonly IMediator _mediator;
 
         private readonly ShippingSettings _shippingSettings;
         private readonly CatalogSettings _catalogSettings;
 
 
         public GetShipmentDetailsHandler(IDateTimeHelper dateTimeHelper, IProductService productService, IProductAttributeParser productAttributeParser,
-            IShippingService shippingService, IAddressViewModelService addressViewModelService,
+            IShippingService shippingService, IMediator mediator,
             ShippingSettings shippingSettings, CatalogSettings catalogSettings)
         {
             _dateTimeHelper = dateTimeHelper;
             _productService = productService;
             _productAttributeParser = productAttributeParser;
             _shippingService = shippingService;
-            _addressViewModelService = addressViewModelService;
-
+            _mediator = mediator;
             _shippingSettings = shippingSettings;
             _catalogSettings = catalogSettings;
         }
@@ -113,14 +110,15 @@ namespace Grand.Web.Features.Handlers.Orders
             }
 
             //order details model
-            model.Order = await PrepareOrderModel(request.Order);
+            model.Order = await PrepareOrderModel(request);
 
             return model;
         }
 
-        private async Task<ShipmentDetailsModel.OrderModel> PrepareOrderModel(Order order)
+        private async Task<ShipmentDetailsModel.OrderModel> PrepareOrderModel(GetShipmentDetails request)
         {
             var model = new ShipmentDetailsModel.OrderModel();
+            var order = request.Order;
             model.GenericAttributes = order.GenericAttributes;
             model.Id = order.Id;
             model.OrderNumber = order.OrderNumber;
@@ -128,10 +126,11 @@ namespace Grand.Web.Features.Handlers.Orders
             model.PickUpInStore = order.PickUpInStore;
             if (!order.PickUpInStore)
             {
-                model.ShippingAddress = new AddressModel();
-                await _addressViewModelService.PrepareModel(model: model.ShippingAddress,
-                    address: order.ShippingAddress,
-                    excludeProperties: false);
+                model.ShippingAddress = await _mediator.Send(new GetAddressModel() {
+                    Language = request.Language,
+                    Address = order.ShippingAddress,
+                    ExcludeProperties = false,
+                });
             }
             else
             {
@@ -139,14 +138,14 @@ namespace Grand.Web.Features.Handlers.Orders
                 {
                     if (order.PickupPoint.Address != null)
                     {
-                        model.PickupAddress = new AddressModel();
-                        await _addressViewModelService.PrepareModel(model: model.PickupAddress,
-                            address: order.PickupPoint.Address,
-                            excludeProperties: false);
+                        model.PickupAddress = await _mediator.Send(new GetAddressModel() {
+                            Language = request.Language,
+                            Address = order.PickupPoint.Address,
+                            ExcludeProperties = false,
+                        });
                     }
                 }
             }
-
             return model;
         }
 

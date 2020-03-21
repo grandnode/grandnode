@@ -78,7 +78,7 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var c in categories)
             {
                 model.AvailableCategories.Add(new SelectListItem {
-                    Text = c.GetFormattedBreadCrumb(categories),
+                    Text = _categoryService.GetFormattedBreadCrumb(c, categories),
                     Value = c.Id.ToString()
                 });
             }
@@ -180,7 +180,7 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var x in categories)
             {
                 var categoryModel = x.ToModel();
-                categoryModel.Breadcrumb = await x.GetFormattedBreadCrumb(_categoryService);
+                categoryModel.Breadcrumb = await _categoryService.GetFormattedBreadCrumb(x);
                 categoryListModel.Add(categoryModel);
             }
             return (categoryListModel, categories.TotalCount);
@@ -360,7 +360,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = await _categoryService.GetAllCategories(showHidden: true, storeId: storeId);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = _categoryService.GetFormattedBreadCrumb(c, categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });

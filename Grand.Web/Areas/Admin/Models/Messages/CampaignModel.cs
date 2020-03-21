@@ -14,13 +14,14 @@ namespace Grand.Web.Areas.Admin.Models.Messages
     {
         public CampaignModel()
         {
-            this.AvailableStores = new List<SelectListItem>();
-            this.AvailableCustomerTags = new List<SelectListItem>();
-            this.CustomerTags = new List<string>();
-            this.NewsletterCategories = new List<string>();
-            this.AvailableCustomerRoles = new List<SelectListItem>();
-            this.CustomerRoles = new List<string>();
-            this.AvailableEmailAccounts = new List<EmailAccountModel>();
+            AvailableStores = new List<SelectListItem>();
+            AvailableLanguages = new List<SelectListItem>();
+            AvailableCustomerTags = new List<SelectListItem>();
+            CustomerTags = new List<string>();
+            NewsletterCategories = new List<string>();
+            AvailableCustomerRoles = new List<SelectListItem>();
+            CustomerRoles = new List<string>();
+            AvailableEmailAccounts = new List<EmailAccountModel>();
         }
 
         [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.Name")]
@@ -39,6 +40,10 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         public string StoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
+        [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.Language")]
+        public string LanguageId { get; set; }
+        public IList<SelectListItem> AvailableLanguages { get; set; }
+        
 
         [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.CustomerCreatedDateFrom")]
         [UIHint("DateTimeNullable")]

@@ -65,7 +65,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             {
                 model.AvailableCategories.Add(new SelectListItem
                 {
-                    Text = c.GetFormattedBreadCrumb(categories),
+                    Text = _categoryService.GetFormattedBreadCrumb(c, categories),
                     Value = c.Id.ToString()
                 });
             }

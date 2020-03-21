@@ -2,6 +2,7 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Events;
+using Grand.Services.Queries.Models.Orders;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -19,6 +20,7 @@ namespace Grand.Services.Orders
     {
         #region Fields
         private static readonly Object _locker = new object();
+
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
@@ -101,24 +103,18 @@ namespace Grand.Services.Orders
             string orderItemId = "", ReturnRequestStatus? rs = null,
             int pageIndex = 0, int pageSize = int.MaxValue, DateTime? createdFromUtc = null, DateTime? createdToUtc = null)
         {
-            var query = _returnRequestRepository.Table;
-            if (!String.IsNullOrEmpty(storeId))
-                query = query.Where(rr => storeId == rr.StoreId);
-            if (!String.IsNullOrEmpty(customerId))
-                query = query.Where(rr => customerId == rr.CustomerId);
-            if (rs.HasValue)
-            {
-                var returnStatusId = (int)rs.Value;
-                query = query.Where(rr => rr.ReturnRequestStatusId == returnStatusId);
-            }
-            if (!String.IsNullOrEmpty(orderItemId))
-                query = query.Where(rr => rr.ReturnRequestItems.Any(x => x.OrderItemId == orderItemId));
-            if (createdFromUtc.HasValue)
-                query = query.Where(rr => createdFromUtc.Value <= rr.CreatedOnUtc);
-            if (createdToUtc.HasValue)
-                query = query.Where(rr => createdToUtc.Value >= rr.CreatedOnUtc);
+            var model = new GetReturnRequestQueryModel() {
+                CreatedFromUtc = createdFromUtc,
+                CreatedToUtc = createdToUtc,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                CustomerId = customerId,
+                StoreId = storeId,
+                OrderItemId = orderItemId,
+                Rs = rs,
+            };
 
-            query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr => rr.Id);
+            var query = await _mediator.Send(model);
             return await PagedList<ReturnRequest>.Create(query, pageIndex, pageSize);
         }
 

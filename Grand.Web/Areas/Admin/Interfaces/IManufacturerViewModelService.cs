@@ -15,7 +15,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task DeleteManufacturer(Manufacturer manufacturer);
         Task<ManufacturerModel.AddManufacturerProductModel> PrepareAddManufacturerProductModel(string storeId);
         Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ManufacturerModel.AddManufacturerProductModel model, int pageIndex, int pageSize);
-        Task<(IEnumerable<ManufacturerModel.ManufacturerProductModel> manufacturerProductModels, int totalCount)> PrepareManufacturerProductModel(string manufacturerId, int pageIndex, int pageSize);
+        Task<(IEnumerable<ManufacturerModel.ManufacturerProductModel> manufacturerProductModels, int totalCount)> PrepareManufacturerProductModel(string manufacturerId, string storeId, int pageIndex, int pageSize);
         Task ProductUpdate(ManufacturerModel.ManufacturerProductModel model);
         Task ProductDelete(string id, string productId);
         Task InsertManufacturerProductModel(ManufacturerModel.AddManufacturerProductModel model);
