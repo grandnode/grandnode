@@ -457,9 +457,9 @@ namespace Grand.Services.Messages
             await _mediator.EntityTokensAdded(recurringPayment, liquidRecurringPayment, liquidObject);
         }
 
-        public async Task AddReturnRequestTokens(LiquidObject liquidObject, ReturnRequest returnRequest, Order order, Language language)
+        public async Task AddReturnRequestTokens(LiquidObject liquidObject, ReturnRequest returnRequest, Store store, Order order, Language language, ReturnRequestNote returnRequestNote = null)
         {
-            var liquidReturnRequest = new LiquidReturnRequest(returnRequest, order);
+            var liquidReturnRequest = new LiquidReturnRequest(returnRequest, store, order, returnRequestNote);
 
             liquidReturnRequest.Status = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, language.Id);
             liquidReturnRequest.Products = await ProductListToHtmlTable();

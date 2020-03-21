@@ -60,7 +60,8 @@ namespace Grand.Services.Installation
         private readonly IRepository<CampaignHistory> _campaignHistoryRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<ReturnRequest> _returnrequestRepository;
+        private readonly IRepository<ReturnRequest> _returnRequestRepository;
+        private readonly IRepository<ReturnRequestNote> _returnRequestNoteRepository;
         private readonly IRepository<Store> _storeRepository;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
@@ -203,7 +204,8 @@ namespace Grand.Services.Installation
             _manufacturerTemplateRepository = serviceProvider.GetRequiredService<IRepository<ManufacturerTemplate>>();
             _topicTemplateRepository = serviceProvider.GetRequiredService<IRepository<TopicTemplate>>();
             _scheduleTaskRepository = serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
-            _returnrequestRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequest>>();
+            _returnRequestRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequest>>();
+            _returnRequestNoteRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequestNote>>();
             _rewardpointshistoryRepository = serviceProvider.GetRequiredService<IRepository<RewardPointsHistory>>();
             _searchtermRepository = serviceProvider.GetRequiredService<IRepository<SearchTerm>>();
             _settingRepository = serviceProvider.GetRequiredService<IRepository<Setting>>();
@@ -4499,6 +4501,14 @@ namespace Grand.Services.Installation
                                            Name = "Customer.NewCustomerNote",
                                            Subject = "New customer note has been added",
                                            Body = "<p><br />\r\nHello {{Customer.FullName}}, <br />\r\nNew customer note has been added to your account:<br />\r\n\"{{Customer.NewTitleText}}\".<br />\r\n</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                     new MessageTemplate
+                                       {
+                                           Name = "Customer.NewReturnRequestNote",
+                                           Subject = "{{Store.Name}}. New return request note has been added",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Customer.FullName}},<br />\r\nYour return request #{{ReturnRequest.ReturnNumber}} has a new note.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -10724,7 +10734,8 @@ namespace Grand.Services.Installation
             await _externalAuthenticationRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ExternalAuthenticationRecord>((Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.CustomerId)), new CreateIndexOptions() { Name = "CustomerId" }));
 
             //return request
-            await _returnrequestRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ReturnRequest>((Builders<ReturnRequest>.IndexKeys.Ascending(x => x.ReturnNumber)), new CreateIndexOptions() { Name = "ReturnNumber", Unique = true }));
+            await _returnRequestRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ReturnRequest>((Builders<ReturnRequest>.IndexKeys.Ascending(x => x.ReturnNumber)), new CreateIndexOptions() { Name = "ReturnNumber", Unique = true }));
+            await _returnRequestNoteRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ReturnRequestNote>((Builders<ReturnRequestNote>.IndexKeys.Ascending(x => x.ReturnRequestId).Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "Id", Unique = false, Background = true }));
 
             //contactus
             await _contactUsRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ContactUs>((Builders<ContactUs>.IndexKeys.Ascending(x => x.Email)), new CreateIndexOptions() { Name = "Email", Unique = false }));

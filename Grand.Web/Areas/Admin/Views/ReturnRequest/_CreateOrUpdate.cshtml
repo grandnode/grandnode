@@ -23,6 +23,13 @@
                 </content>
             </tabstrip-item>
         }
+        <tabstrip-item text="@T("Admin.ReturnRequests.ReturnRequestNotes")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_ReturnRequestNotes" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         <vc:admin-widget widget-zone="returnrequest_details_tabs" additional-data="Model" />
     </items>
 </admin-tabstrip>
