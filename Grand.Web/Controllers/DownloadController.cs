@@ -7,6 +7,7 @@ using Grand.Services.Documents;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Orders;
+using Grand.Services.Shipping;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
@@ -249,6 +250,41 @@ namespace Grand.Web.Controllers
 
             //return result
             string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : orderNote.Id.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
+        }
+
+        public virtual async Task<IActionResult> GetShipmentNoteFile(string shipmentNoteId, 
+            [FromServices] IShipmentService shipmentService)
+        {
+            var shipmentNote = await shipmentService.GetShipmentNote(shipmentNoteId);
+            if (shipmentNote == null)
+                return InvokeHttp404();
+
+            var shipment = await shipmentService.GetShipmentById(shipmentNote.ShipmentId);
+            if (shipment == null)
+                return InvokeHttp404();
+
+            var order = await _orderService.GetOrderById(shipment.OrderId);
+            if (order == null)
+                return InvokeHttp404();
+
+            if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
+                return Challenge();
+
+            var download = await _downloadService.GetDownloadById(shipmentNote.DownloadId);
+            if (download == null)
+                return Content("Download is not available any more.");
+
+            if (download.UseDownloadUrl)
+                return new RedirectResult(download.DownloadUrl);
+
+            //binary download
+            if (download.DownloadBinary == null)
+                return Content("Download data is not available any more.");
+
+            //return result
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : shipmentNote.Id.ToString();
             string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }

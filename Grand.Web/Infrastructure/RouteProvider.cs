@@ -806,6 +806,7 @@ namespace Grand.Web.Infrastructure
                             pattern + "orderdetails/shipment/{shipmentId}",
                             new { controller = "Order", action = "ShipmentDetails" });
 
+
             routeBuilder.MapControllerRoute("ReOrder",
                            pattern + "reorder/{orderId}",
                            new { controller = "Order", action = "ReOrder" });
@@ -882,10 +883,13 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Download", action = "GetLicense" });
 
 
-
             routeBuilder.MapControllerRoute("GetOrderNoteFile",
                             pattern + "download/ordernotefile/{ordernoteid}",
                             new { controller = "Download", action = "GetOrderNoteFile" });
+
+            routeBuilder.MapControllerRoute("GetShipmentNoteFile",
+                            pattern + "download/shipmentnotefile/{shipmentnoteid}",
+                            new { controller = "Download", action = "GetShipmentNoteFile" });
 
             routeBuilder.MapControllerRoute("GetCustomerNoteFile",
                             pattern + "download/customernotefile/{customernoteid}",
