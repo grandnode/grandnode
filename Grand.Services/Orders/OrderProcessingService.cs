@@ -68,7 +68,6 @@ namespace Grand.Services.Orders
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IVendorService _vendorService;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerActionEventService _customerActionEventService;
         private readonly ICurrencyService _currencyService;
         private readonly IAffiliateService _affiliateService;
@@ -115,7 +114,6 @@ namespace Grand.Services.Orders
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             IVendorService vendorService,
-            ICustomerActivityService customerActivityService,
             ICustomerActionEventService customerActionEventService,
             ICurrencyService currencyService,
             IAffiliateService affiliateService,
@@ -158,7 +156,6 @@ namespace Grand.Services.Orders
             _customerService = customerService;
             _discountService = discountService;
             _encryptionService = encryptionService;
-            _customerActivityService = customerActivityService;
             _customerActionEventService = customerActionEventService;
             _currencyService = currencyService;
             _affiliateService = affiliateService;
@@ -991,7 +988,6 @@ namespace Grand.Services.Orders
 
             //reset checkout data
             await _customerService.ResetCheckoutData(details.Customer, order.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
-            await _customerActivityService.InsertActivity("PublicStore.PlaceOrder", "", _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id);
 
             return order;
         }
