@@ -26,31 +26,31 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICampaignService _campaignService;
         private readonly ICampaignViewModelService _campaignViewModelService;
         private readonly IEmailAccountService _emailAccountService;
-        private readonly EmailAccountSettings _emailAccountSettings;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IExportManager _exportManager;
+        private readonly EmailAccountSettings _emailAccountSettings;
 
         public CampaignController(ICampaignService campaignService, ICampaignViewModelService campaignViewModelService,
             IEmailAccountService emailAccountService,
-            EmailAccountSettings emailAccountSettings,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ILocalizationService localizationService, 
             IStoreContext storeContext,
             IStoreService storeService,
-            IExportManager exportManager)
-		{
-            this._campaignService = campaignService;
-            this._campaignViewModelService = campaignViewModelService;
-            this._emailAccountService = emailAccountService;
-            this._emailAccountSettings = emailAccountSettings;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._localizationService = localizationService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._exportManager = exportManager;
+            IExportManager exportManager,
+            EmailAccountSettings emailAccountSettings)
+        {
+            _campaignService = campaignService;
+            _campaignViewModelService = campaignViewModelService;
+            _emailAccountService = emailAccountService;
+            _emailAccountSettings = emailAccountSettings;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _localizationService = localizationService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _exportManager = exportManager;
         }
 
         public IActionResult Index() => RedirectToAction("List");
