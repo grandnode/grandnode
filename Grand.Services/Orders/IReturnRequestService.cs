@@ -119,5 +119,35 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="returnRequest"></param>
         Task UpdateReturnRequest(ReturnRequest returnRequest);
+
+        #region Return request notes
+
+        /// <summary>
+        /// Deletes a return request note
+        /// </summary>
+        /// <param name="returnRequestNote">The return request note</param>
+        Task DeleteReturnRequestNote(ReturnRequestNote returnRequestNote);
+
+        /// <summary>
+        /// Insert a return request note
+        /// </summary>
+        /// <param name="returnRequestNote">The return request note</param>
+        Task InsertReturnRequestNote(ReturnRequestNote returnRequestNote);
+
+        /// <summary>
+        /// Get notes for return request
+        /// </summary>
+        /// <param name="returnRequestId">Return request identifier</param>
+        /// <returns>ReturnRequestNote</returns>
+        Task<IList<ReturnRequestNote>> GetReturnRequestNotes(string returnRequestId);
+
+        /// <summary>
+        /// Get return request note by id
+        /// </summary>
+        /// <param name="returnRequestNoteId">Return request note identifier</param>
+        /// <returns>ReturnRequestNote</returns>
+        Task<ReturnRequestNote> GetReturnRequestNote(string returnRequestNoteId);
+
+        #endregion
     }
 }
