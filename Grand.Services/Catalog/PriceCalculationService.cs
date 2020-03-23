@@ -28,7 +28,7 @@ namespace Grand.Services.Catalog
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
-        private readonly ICustomerService _customerService;
+        private readonly ICustomerProductService _customerProductService;
         private readonly IVendorService _vendorService;
         private readonly ICurrencyService _currencyService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -45,7 +45,7 @@ namespace Grand.Services.Catalog
             IManufacturerService manufacturerService,
             IProductAttributeParser productAttributeParser,
             IProductService productService,
-            ICustomerService customerService,
+            ICustomerProductService customerProductService,
             IVendorService vendorService,
             ICurrencyService currencyService,
             ShoppingCartSettings shoppingCartSettings,
@@ -58,7 +58,7 @@ namespace Grand.Services.Catalog
             _manufacturerService = manufacturerService;
             _productAttributeParser = productAttributeParser;
             _productService = productService;
-            _customerService = customerService;
+            _customerProductService = customerProductService;
             _vendorService = vendorService;
             _currencyService = currencyService;
             _shoppingCartSettings = shoppingCartSettings;
@@ -399,7 +399,7 @@ namespace Grand.Services.Catalog
                 //customer product price
                 if (_catalogSettings.CustomerProductPrice)
                 {
-                    var customerPrice = await _customerService.GetPriceByCustomerProduct(customer.Id, product.Id);
+                    var customerPrice = await _customerProductService.GetPriceByCustomerProduct(customer.Id, product.Id);
                     if (customerPrice.HasValue && customerPrice.Value < price)
                         price = customerPrice.Value;
                 }

@@ -48,6 +48,7 @@ namespace Grand.Web.Areas.Admin.Services
     public partial class CustomerViewModelService : ICustomerViewModelService
     {
         private readonly ICustomerService _customerService;
+        private readonly ICustomerProductService _customerProductService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
@@ -94,7 +95,9 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IDownloadService _downloadService;
         private readonly IServiceProvider _serviceProvider;
 
-        public CustomerViewModelService(ICustomerService customerService,
+        public CustomerViewModelService(
+            ICustomerService customerService,
+            ICustomerProductService customerProductService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
@@ -142,6 +145,7 @@ namespace Grand.Web.Areas.Admin.Services
             IServiceProvider serviceProvider)
         {
             _customerService = customerService;
+            _customerProductService = customerProductService;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _genericAttributeService = genericAttributeService;
             _customerRegistrationService = customerRegistrationService;
@@ -1420,7 +1424,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<(IEnumerable<CustomerModel.ProductPriceModel> productPriceModels, int totalCount)> PrepareProductPriceModel(string customerId, int pageIndex, int pageSize)
         {
-            var productPrices = await _customerService.GetProductsPriceByCustomer(customerId, pageIndex - 1, pageSize);
+            var productPrices = await _customerProductService.GetProductsPriceByCustomer(customerId, pageIndex - 1, pageSize);
             var items = new List<CustomerModel.ProductPriceModel>();
             foreach (var x in productPrices)
             {
@@ -1437,7 +1441,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<(IEnumerable<CustomerModel.ProductModel> productModels, int totalCount)> PreparePersonalizedProducts(string customerId, int pageIndex, int pageSize)
         {
-            var products = await _customerService.GetProductsByCustomer(customerId, pageIndex - 1, pageSize);
+            var products = await _customerProductService.GetProductsByCustomer(customerId, pageIndex - 1, pageSize);
             var items = new List<CustomerModel.ProductModel>();
             foreach (var x in products)
             {
@@ -1498,16 +1502,16 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     if (!personalized)
                     {
-                        if (!(await _customerService.GetPriceByCustomerProduct(customerId, id)).HasValue)
+                        if (!(await _customerProductService.GetPriceByCustomerProduct(customerId, id)).HasValue)
                         {
-                            await _customerService.InsertCustomerProductPrice(new CustomerProductPrice() { CustomerId = customerId, ProductId = id, Price = product.Price });
+                            await _customerProductService.InsertCustomerProductPrice(new CustomerProductPrice() { CustomerId = customerId, ProductId = id, Price = product.Price });
                         }
                     }
                     else
                     {
-                        if (await _customerService.GetCustomerProduct(customerId, id) == null)
+                        if (await _customerProductService.GetCustomerProduct(customerId, id) == null)
                         {
-                            await _customerService.InsertCustomerProduct(new CustomerProduct() { CustomerId = customerId, ProductId = id, DisplayOrder = 0 });
+                            await _customerProductService.InsertCustomerProduct(new CustomerProduct() { CustomerId = customerId, ProductId = id, DisplayOrder = 0 });
                         }
 
                     }
@@ -1516,37 +1520,37 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task UpdateProductPrice(CustomerModel.ProductPriceModel model)
         {
-            var productPrice = await _customerService.GetCustomerProductPriceById(model.Id);
+            var productPrice = await _customerProductService.GetCustomerProductPriceById(model.Id);
             if (productPrice != null)
             {
                 productPrice.Price = model.Price;
-                await _customerService.UpdateCustomerProductPrice(productPrice);
+                await _customerProductService.UpdateCustomerProductPrice(productPrice);
             }
         }
         public virtual async Task DeleteProductPrice(string id)
         {
-            var productPrice = await _customerService.GetCustomerProductPriceById(id);
+            var productPrice = await _customerProductService.GetCustomerProductPriceById(id);
             if (productPrice == null)
                 throw new ArgumentException("No productPrice found with the specified id");
 
-            await _customerService.DeleteCustomerProductPrice(productPrice);
+            await _customerProductService.DeleteCustomerProductPrice(productPrice);
         }
         public virtual async Task UpdatePersonalizedProduct(CustomerModel.ProductModel model)
         {
-            var customerproduct = await _customerService.GetCustomerProduct(model.Id);
+            var customerproduct = await _customerProductService.GetCustomerProduct(model.Id);
             if (customerproduct != null)
             {
                 customerproduct.DisplayOrder = model.DisplayOrder;
-                await _customerService.UpdateCustomerProduct(customerproduct);
+                await _customerProductService.UpdateCustomerProduct(customerproduct);
             }
         }
         public virtual async Task DeletePersonalizedProduct(string id)
         {
-            var customerproduct = await _customerService.GetCustomerProduct(id);
+            var customerproduct = await _customerProductService.GetCustomerProduct(id);
             if (customerproduct == null)
                 throw new ArgumentException("No customerproduct found with the specified id");
 
-            await _customerService.DeleteCustomerProduct(customerproduct);
+            await _customerProductService.DeleteCustomerProduct(customerproduct);
         }
         public virtual async Task<(IEnumerable<CustomerModel.ActivityLogModel> activityLogModels, int totalCount)> PrepareActivityLogModel(string customerId, int pageIndex, int pageSize)
         {
