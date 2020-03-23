@@ -1,0 +1,200 @@
+﻿@model ReturnRequestModel
+<div class="panel panel-default">
+    <vc:admin-widget widget-zone="returnrequest_details_notes_top" additional-data="Model" />
+    <div class="panel-body">
+        <div id="returnrequestnotes-grid"></div>
+    </div>
+    <vc:admin-widget widget-zone="returnrequest_details_notes_bottom" additional-data="Model" />
+</div>
+<script>
+        $(document).ready(function () {
+            $("#returnrequestnotes-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ReturnRequestNotesSelect", "ReturnRequest", new { returnrequestId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("ReturnRequestNoteDelete", "ReturnRequest", new { returnrequestId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                //do not implicitly specify all fields
+                                //we do it only for fields which implicitly require it
+                                //otherwise, they'll be formatted wrong way
+                                CreatedOn: {type: "date" }
+                            }
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "CreatedOn",
+                    title: "@T("Admin.ReturnRequests.ReturnRequestNotes.Fields.CreatedOn")",
+                    width: 180,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "Note",
+                    title: "@T("Admin.ReturnRequests.ReturnRequestNotes.Fields.Note")",
+                    width: 350,
+                    encoded: false
+                }, {
+                    field: "DownloadId",
+                    title: "@T("Admin.ReturnRequests.ReturnRequestNotes.Fields.Download")",
+                    width: 100,
+                    template: '# if(DownloadId != "") {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.ReturnRequests.ReturnRequestNotes.Fields.Download.Link")</a> #} else {# @T("Admin.ReturnRequests.ReturnRequestNotes.Fields.Download.Link.No") #} #'
+                }, {
+                    field: "CreatedByCustomer",
+                    title: "@T("Admin.ReturnRequests.ReturnRequestNotes.Fields.CreatedByCustomer")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(CreatedByCustomer) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
+                    field: "DisplayToCustomer",
+                    title: "@T("Admin.ReturnRequests.ReturnRequestNotes.Fields.DisplayToCustomer")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(DisplayToCustomer) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
+                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                    title: "@T("Admin.Common.Delete")",
+                    width: 100
+                }]
+            });
+        });
+</script>
+<p>
+    <strong>
+        @T("Admin.ReturnRequests.ReturnRequestNotes.AddTitle")
+    </strong>
+</p>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.AddReturnRequestNoteHasDownload)").change(toggleAddReturnRequestNoteHasDownload);
+        toggleAddReturnRequestNoteHasDownload();
+    });
+    function toggleAddReturnRequestNoteHasDownload() {
+        if ($('#@Html.FieldIdFor(model => model.AddReturnRequestNoteHasDownload)').is(':checked')) {
+            $('#pnlAddReturnRequestNoteDownloadId').show();
+        }
+        else {
+            $('#pnlAddReturnRequestNoteDownloadId').hide();
+        }
+    }
+
+</script>
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="AddReturnRequestNoteMessage" />
+            <div class="col-md-9 col-sm-9">
+                <admin-textarea asp-for="AddReturnRequestNoteMessage"></admin-textarea>
+                <span asp-validation-for="AddReturnRequestNoteMessage"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="AddReturnRequestNoteDownloadId" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="AddReturnRequestNoteHasDownload" />  @T("Admin.ReturnRequests.ReturnRequestNotes.Fields.Download.HasDownload")
+                    <div class="control__indicator"></div>
+                </label>
+                <div id="pnlAddReturnRequestNoteDownloadId">
+                    <admin-input asp-for="AddReturnRequestNoteDownloadId" />
+                    <span asp-validation-for="AddReturnRequestNoteDownloadId"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="AddReturnRequestNoteDisplayToCustomer" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="AddReturnRequestNoteDisplayToCustomer" />
+                    <div class="control__indicator"></div>
+                </label>
+                <span asp-validation-for="AddReturnRequestNoteDisplayToCustomer"></span>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="col-md-offset-3 col-md-9 col-sm-9">
+                <button type="button" id="addReturnRequestNote" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.ReturnRequests.ReturnRequestNotes.AddButton")</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#addReturnRequestNote').click(function () {
+            var returnrequestNoteMessage = $("#@Html.FieldIdFor(model => model.AddReturnRequestNoteMessage)").val();
+            if (returnrequestNoteMessage.length == 0) {
+                alert('Message text is required');
+                return;
+            }
+            var returnrequestNoteDownloadId = '';
+            if ($('#@Html.FieldIdFor(model => model.AddReturnRequestNoteHasDownload)').is(':checked')) {
+                returnrequestNoteDownloadId = $("#@Html.FieldIdFor(model => model.AddReturnRequestNoteDownloadId)").val();
+            }
+            var returnrequestNoteDisplayToCustomer = $("#@Html.FieldIdFor(model => model.AddReturnRequestNoteDisplayToCustomer)").is(':checked');
+            $('#addReturnRequestNote').attr('disabled', true);
+            var postData = {
+                DisplayToCustomer: returnrequestNoteDisplayToCustomer,
+                message: returnrequestNoteMessage,
+                downloadId: returnrequestNoteDownloadId,
+                returnrequestId: '@Model.Id',
+                orderId: '@Model.OrderId'
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("ReturnRequestNoteAdd", "ReturnRequest"))",
+                data: postData,
+                success: function (data) {
+                    var grid = $("#returnrequestnotes-grid").data('kendoGrid');
+                    grid.dataSource.read();
+                    $('#addReturnRequestNote').attr('disabled', false);
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('Failed to add return request note.');
+                    $('#addReturnRequestNote').attr('disabled', false);
+                }
+            });
+        });
+    });
+</script>

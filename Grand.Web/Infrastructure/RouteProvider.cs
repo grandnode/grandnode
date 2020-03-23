@@ -891,6 +891,10 @@ namespace Grand.Web.Infrastructure
                             pattern + "download/customernotefile/{customernoteid}",
                             new { controller = "Download", action = "GetCustomerNoteFile" });
 
+            routeBuilder.MapControllerRoute("GetReturnRequestNoteFile",
+                            pattern + "download/returnrequestnotefile/{returnrequestnoteid}",
+                            new { controller = "Download", action = "GetReturnRequestNoteFile" });
+
             routeBuilder.MapControllerRoute("GetDocumentFile",
                             pattern + "download/documentfile/{documentid}",
                             new { controller = "Download", action = "GetDocumentFile" });
