@@ -200,5 +200,17 @@
   <LocaleResource Name="ReturnRequests.Notes.Note">
     <Value>Note</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipment.Notes">
+    <Value>Note(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipment.Notes.CreatedOn">
+    <Value>Created On</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipment.Notes.Download">
+    <Value>Download attached file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipment.Notes.Note">
+    <Value>Note</Value>
+  </LocaleResource>
 </Language>
 
