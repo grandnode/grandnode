@@ -216,12 +216,6 @@ namespace Grand.Services.Orders
         Task VoidOffline(Order order);
 
         /// <summary>
-        /// Place order items in current user shopping cart.
-        /// </summary>
-        /// <param name="order">The order</param>
-        Task ReOrder(Order order);
-
-        /// <summary>
         /// Check whether return request is allowed
         /// </summary>
         /// <param name="order">Order</param>

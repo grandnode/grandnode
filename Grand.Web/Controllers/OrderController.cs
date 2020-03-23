@@ -3,6 +3,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Framework.Controllers;
+using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Common;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
@@ -17,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
@@ -237,7 +239,10 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            await _orderProcessingService.ReOrder(order);
+            var warnings = await _mediator.Send(new ReOrderCommand() { Order = order });
+            if(warnings.Any())
+                AddNotification(Framework.UI.NotifyType.Error, string.Join(",", warnings), true);
+
             return RedirectToRoute("ShoppingCart");
         }
 

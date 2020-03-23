@@ -2795,8 +2795,6 @@ namespace Grand.Services.Orders
             await _mediator.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
-
-
         /// <summary>
         /// Gets a value indicating whether void from admin panel is allowed
         /// </summary>
@@ -2937,34 +2935,6 @@ namespace Grand.Services.Orders
 
             //check orer status
             await CheckOrderStatus(order);
-        }
-
-        /// <summary>
-        /// Place order items in current user shopping cart.
-        /// </summary>
-        /// <param name="order">The order</param>
-        public virtual async Task ReOrder(Order order)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-
-            var customer = await _customerService.GetCustomerById(order.CustomerId);
-
-            foreach (var orderItem in order.OrderItems)
-            {
-                var product = await _productService.GetProductById(orderItem.ProductId);
-                if (product != null)
-                {
-                    if (product.ProductType == ProductType.SimpleProduct)
-                    {
-                        await _shoppingCartService.AddToCart(customer, orderItem.ProductId,
-                            ShoppingCartType.ShoppingCart, order.StoreId, orderItem.WarehouseId,
-                            orderItem.AttributesXml, orderItem.UnitPriceExclTax,
-                            orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
-                            orderItem.Quantity, false);
-                    }
-                }
-            }
         }
 
         /// <summary>
