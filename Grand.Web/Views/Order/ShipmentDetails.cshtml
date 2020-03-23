@@ -10,7 +10,11 @@
             <div class="card-body row">
                 <ul class="shipping-details col-md-6 col-12">
                     <li class="title">
-                        <h5 class="generalTitle">@T("Order.Shipments.Order#")@Model.Order.OrderNumber</h5>
+                        <h5 class="generalTitle">
+                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = Model.Order.Id })">
+                               @T("Order.Shipments.Order#") @Model.Order.OrderNumber
+                            </a>
+                        </h5>
                     </li>
                     <li class="shipping-method">
                         @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod
