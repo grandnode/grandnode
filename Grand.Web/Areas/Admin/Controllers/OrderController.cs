@@ -688,6 +688,27 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Edit", "Order", new { id = id });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteSelected(ICollection<string> selectedIds, [FromServices] ICustomerActivityService customerActivityService)
+        {
+            if (_workContext.CurrentVendor != null || _workContext.CurrentCustomer.IsStaff())
+                return RedirectToAction("List", "Order");
+
+            if (selectedIds != null)
+            {
+                var orders = new List<Order>();
+                orders.AddRange(await _orderService.GetOrdersByIds(selectedIds.ToArray()));
+                for (var i = 0; i < orders.Count; i++)
+                {
+                    var order = orders[i];
+                    await _orderService.DeleteOrder(order);
+                    await customerActivityService.InsertActivity("DeleteOrder", order.Id, _localizationService.GetResource("ActivityLog.DeleteOrder"), order.Id);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
         public async Task<IActionResult> PdfInvoice(string orderId)
         {
             var vendorId = string.Empty;
