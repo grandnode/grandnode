@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Services.Queries.Handlers.Orders
 {
-    public class GetOrderQueryHandler : IRequestHandler<GetOrderQueryModel, IMongoQueryable<Order>>
+    public class GetOrderQueryHandler : IRequestHandler<GetOrderQuery, IMongoQueryable<Order>>
     {
         private readonly IRepository<Order> _orderRepository;
 
@@ -20,7 +20,7 @@ namespace Grand.Services.Queries.Handlers.Orders
             _orderRepository = orderRepository;
         }
 
-        public Task<IMongoQueryable<Order>> Handle(GetOrderQueryModel request, CancellationToken cancellationToken)
+        public Task<IMongoQueryable<Order>> Handle(GetOrderQuery request, CancellationToken cancellationToken)
         {
             int? orderStatusId = null;
 

@@ -248,13 +248,13 @@ namespace Grand.Services.Orders.Tests
                 _orderTotalCalcService, _priceCalcService, _priceFormatter,
                 _productAttributeParser, _productAttributeFormatter,
                 _giftCardService, _shoppingCartService, _checkoutAttributeFormatter,
-                _shippingService, _shipmentService, _taxService,
+                _shippingService, _taxService,
                 _customerService, _discountService,
                 _encryptionService, _workContext,
                 _workflowMessageService, _vendorService,
                 _currencyService, _affiliateService,
                 _eventPublisher, _pdfService, null, _storeContext, _productReservationService, _auctionService, _countryService,
-                _shippingSettings, _shoppingCartSettings,  _paymentSettings, _rewardPointsSettings,
+                _shippingSettings, _shoppingCartSettings,  _paymentSettings, 
                 _orderSettings, _taxSettings, _localizationSettings);
         }
 

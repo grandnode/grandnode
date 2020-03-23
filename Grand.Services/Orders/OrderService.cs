@@ -191,7 +191,7 @@ namespace Grand.Services.Orders
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var querymodel = new GetOrderQueryModel() {
+            var querymodel = new GetOrderQuery() {
                 AffiliateId = affiliateId,
                 BillingCountryId = billingCountryId,
                 BillingEmail = billingEmail,
@@ -334,7 +334,7 @@ namespace Grand.Services.Orders
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             bool loadDownloableProductsOnly)
         {
-            var querymodel = new GetOrderQueryModel() {
+            var querymodel = new GetOrderQuery() {
                 CreatedFromUtc = createdFromUtc,
                 CreatedToUtc = createdToUtc,
                 CustomerId = customerId,

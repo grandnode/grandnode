@@ -8,6 +8,7 @@ using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Shipping;
 using Grand.Services.Common;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -17,6 +18,7 @@ using Grand.Services.Shipping;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Orders;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -40,6 +42,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IProductService _productService;
         private readonly IShipmentService _shipmentService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IMediator _mediator;
+
         #endregion
 
         public ShipmentController(
@@ -51,7 +55,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IPdfService pdfService,
             IProductService productService,
             IShipmentService shipmentService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            IMediator mediator)
         {
             _shipmentViewModelService = shipmentViewModelService;
             _orderService = orderService;
@@ -62,6 +67,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _productService = productService;
             _shipmentService = shipmentService;
             _dateTimeHelper = dateTimeHelper;
+            _mediator = mediator;
         }
 
         #region Shipments
@@ -398,7 +404,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                await _orderProcessingService.Ship(shipment, true);
+                await _mediator.Send(new ShipCommand() { Shipment = shipment, NotifyCustomer = true });
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
             catch (Exception exc)
@@ -475,7 +481,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                await _orderProcessingService.Deliver(shipment, true);
+                await _mediator.Send(new DeliveryCommand() { Shipment = shipment, NotifyCustomer = true });
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
             catch (Exception exc)
@@ -703,7 +709,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    await _orderProcessingService.Ship(shipment, true);
+                    await _mediator.Send(new ShipCommand() { Shipment = shipment, NotifyCustomer = true });
                 }
                 catch
                 {
@@ -748,7 +754,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    await _orderProcessingService.Deliver(shipment, true);
+                    await _mediator.Send(new DeliveryCommand() { Shipment = shipment, NotifyCustomer = true });
                 }
                 catch
                 {

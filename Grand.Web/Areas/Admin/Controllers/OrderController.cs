@@ -8,6 +8,7 @@ using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Common;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
@@ -18,6 +19,7 @@ using Grand.Services.Shipping;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Orders;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -41,7 +43,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
         private readonly IExportManager _exportManager;
-
+        private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
@@ -53,7 +55,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             IWorkContext workContext,
             IPdfService pdfService,
-            IExportManager exportManager)
+            IExportManager exportManager,
+            IMediator mediator)
         {
             _orderViewModelService = orderViewModelService;
             _orderService = orderService;
@@ -62,6 +65,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _workContext = workContext;
             _pdfService = pdfService;
             _exportManager = exportManager;
+            _mediator = mediator;
         }
 
         #endregion
@@ -276,7 +280,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                await _orderProcessingService.CancelOrder(order, true);
+                await  _mediator.Send(new CancelOrderCommand() { Order = order, NotifyCustomer = true });
                 await _orderViewModelService.LogEditOrder(order.Id);
                 var model = new OrderModel();
                 await _orderViewModelService.PrepareOrderDetailsModel(model, order);
@@ -680,7 +684,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                await _orderProcessingService.DeleteOrder(order);
+                await _mediator.Send(new DeleteOrderCommand() { Order = order });
                 await customerActivityService.InsertActivity("DeleteOrder", id, _localizationService.GetResource("ActivityLog.DeleteOrder"), order.Id);
                 return RedirectToAction("List");
             }

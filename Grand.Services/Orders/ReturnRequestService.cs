@@ -107,7 +107,7 @@ namespace Grand.Services.Orders
             string orderItemId = "", ReturnRequestStatus? rs = null,
             int pageIndex = 0, int pageSize = int.MaxValue, DateTime? createdFromUtc = null, DateTime? createdToUtc = null)
         {
-            var model = new GetReturnRequestQueryModel() {
+            var model = new GetReturnRequestQuery() {
                 CreatedFromUtc = createdFromUtc,
                 CreatedToUtc = createdToUtc,
                 PageIndex = pageIndex,

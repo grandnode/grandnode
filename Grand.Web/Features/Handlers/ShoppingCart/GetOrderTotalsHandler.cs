@@ -3,6 +3,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Orders;
@@ -25,6 +26,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly IPriceFormatter _priceFormatter;
         private readonly IPaymentService _paymentService;
         private readonly ITaxService _taxService;
+        private readonly IMediator _mediator;
 
         private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -35,6 +37,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             IPriceFormatter priceFormatter,
             IPaymentService paymentService,
             ITaxService taxService,
+            IMediator mediator,
             TaxSettings taxSettings,
             RewardPointsSettings rewardPointsSettings)
         {
@@ -43,6 +46,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _priceFormatter = priceFormatter;
             _paymentService = paymentService;
             _taxService = taxService;
+            _mediator = mediator;
             _taxSettings = taxSettings;
             _rewardPointsSettings = rewardPointsSettings;
         }
@@ -209,8 +213,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     : 0;
                 var earnRewardPoints = shoppingCartTotalBase.Value - shippingBaseInclTax.Value;
                 if (earnRewardPoints > 0)
-                    model.WillEarnRewardPoints = _orderTotalCalculationService
-                        .CalculateRewardPoints(request.Customer, earnRewardPoints);
+                    model.WillEarnRewardPoints = await _mediator.Send(new CalculateRewardPointsCommand() { Customer = request.Customer, Amount = earnRewardPoints });
             }
         }
         

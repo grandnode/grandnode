@@ -312,7 +312,7 @@ namespace Grand.Web.Controllers
 
             //allow reviews only by customer that bought something from this vendor
             if (_vendorSettings.VendorReviewPossibleOnlyAfterPurchasing &&
-                    !(await _mediator.Send(new GetOrderQueryModel() {
+                    !(await _mediator.Send(new GetOrderQuery() {
                         CustomerId = _workContext.CurrentCustomer.Id,
                         VendorId = vendorId,
                         Os = OrderStatus.Complete,

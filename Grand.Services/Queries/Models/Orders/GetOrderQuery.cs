@@ -7,7 +7,7 @@ using System;
 
 namespace Grand.Services.Queries.Models.Orders
 {
-    public class GetOrderQueryModel : IRequest<IMongoQueryable<Order>>
+    public class GetOrderQuery : IRequest<IMongoQueryable<Order>>
     {
         public string OrderId { get; set; } = "";
         public string StoreId { get; set; } = "";

@@ -523,7 +523,7 @@ namespace Grand.Web.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(giftcardcouponcode))
                 {
-                    var giftCard = (await _mediator.Send(new GetGiftCardQueryModel() { GiftCardCouponCode = giftcardcouponcode, IsGiftCardActivated = true })).FirstOrDefault();
+                    var giftCard = (await _mediator.Send(new GetGiftCardQuery() { GiftCardCouponCode = giftcardcouponcode, IsGiftCardActivated = true })).FirstOrDefault();
                     bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
                     if (isGiftCardValid)
                     {

@@ -171,7 +171,7 @@ namespace Grand.Web.Controllers
 
                 return Challenge();
 
-            await _orderProcessingService.CancelOrder(order, true, true);
+            await _mediator.Send(new CancelOrderCommand() { Order = order, NotifyCustomer = true, NotifyStoreOwner = true });
 
             return RedirectToRoute("OrderDetails", new { orderId = orderId });
         }

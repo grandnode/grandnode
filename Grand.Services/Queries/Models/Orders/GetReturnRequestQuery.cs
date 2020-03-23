@@ -5,7 +5,7 @@ using System;
 
 namespace Grand.Services.Queries.Models.Orders
 {
-    public class GetReturnRequestQueryModel : IRequest<IMongoQueryable<ReturnRequest>>
+    public class GetReturnRequestQuery : IRequest<IMongoQueryable<ReturnRequest>>
     {
         public string StoreId { get; set; } = "";
         public string CustomerId { get; set; } = "";

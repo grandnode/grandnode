@@ -32,6 +32,7 @@ namespace Grand.Services.Commands.Handlers.Orders
         {
             if (request.Order == null)
                 throw new ArgumentNullException("order");
+
             var warnings = new List<string>();
             var customer = await _customerService.GetCustomerById(request.Order.CustomerId);
 

@@ -5,7 +5,7 @@ using System;
 
 namespace Grand.Services.Queries.Models.Orders
 {
-    public class GetGiftCardQueryModel : IRequest<IMongoQueryable<GiftCard>>
+    public class GetGiftCardQuery : IRequest<IMongoQueryable<GiftCard>>
     {
         public string GiftCardId { get; set; } = "";
         public string PurchasedWithOrderItemId { get; set; } = "";
