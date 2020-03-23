@@ -16,12 +16,14 @@ using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Domain.Topics;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Security;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Topics;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -38,6 +40,7 @@ namespace Grand.Services.Installation
     {
         #region Fields
         private readonly IServiceProvider _serviceProvider;
+        private readonly IMediator _mediator;
         private readonly IRepository<GrandNodeVersion> _versionRepository;
 
         private const string version_400 = "4.00";
@@ -51,9 +54,12 @@ namespace Grand.Services.Installation
         #endregion
 
         #region Ctor
-        public UpgradeService(IServiceProvider serviceProvider, IRepository<GrandNodeVersion> versionRepository)
+        public UpgradeService(IServiceProvider serviceProvider,
+            IMediator mediator,
+            IRepository<GrandNodeVersion> versionRepository)
         {
             _serviceProvider = serviceProvider;
+            _mediator = mediator;
             _versionRepository = versionRepository;
         }
         #endregion
@@ -352,7 +358,7 @@ namespace Grand.Services.Installation
             #region Permisions
 
             IPermissionProvider provider = new StandardPermissionProvider();
-            await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
+            await _mediator.Send(new InstallPermissionsCommand() { PermissionProvider = provider });
 
             #endregion
 
@@ -582,7 +588,7 @@ namespace Grand.Services.Installation
 
             #region Permisions
             IPermissionProvider provider = new StandardPermissionProvider();
-            await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
+            await _mediator.Send(new InstallPermissionsCommand() { PermissionProvider = provider });
             #endregion
 
             #region Update tags on the products
@@ -745,7 +751,7 @@ namespace Grand.Services.Installation
             #region Permisions
 
             IPermissionProvider provider = new StandardPermissionProvider();
-            await _serviceProvider.GetRequiredService<IPermissionService>().InstallNewPermissions(provider);
+            await _mediator.Send(new InstallNewPermissionsCommand() { PermissionProvider = provider });
 
             #endregion
         }
@@ -774,8 +780,7 @@ namespace Grand.Services.Installation
             #region Permisions
 
             IPermissionProvider provider = new StandardPermissionProvider();
-            await _serviceProvider.GetRequiredService<IPermissionService>().InstallNewPermissions(provider);
-
+            await _mediator.Send(new InstallNewPermissionsCommand() { PermissionProvider = provider });
             #endregion
 
             #region Activity Log Type

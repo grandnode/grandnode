@@ -2,11 +2,13 @@
 using Grand.Core.Domain.Customers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Models;
+using Grand.Services.Commands.Models.Security;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Models.Security;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -25,19 +27,26 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
+        private readonly IMediator _mediator;
+
         #endregion
 
         #region Constructors
 
-        public SecurityController(ILogger logger, IWorkContext workContext,
+        public SecurityController(
+            ILogger logger, 
+            IWorkContext workContext,
             IPermissionService permissionService,
-            ICustomerService customerService, ILocalizationService localizationService)
+            ICustomerService customerService, 
+            ILocalizationService localizationService,
+            IMediator mediator)
 		{
-            this._logger = logger;
-            this._workContext = workContext;
-            this._permissionService = permissionService;
-            this._customerService = customerService;
-            this._localizationService = localizationService;
+            _logger = logger;
+            _workContext = workContext;
+            _permissionService = permissionService;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _mediator = mediator;
         }
 
 		#endregion 
@@ -136,7 +145,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             else
             {
                 IPermissionProvider provider = new StandardPermissionProvider();
-                await _permissionService.InstallNewPermissions(provider);
+                await _mediator.Send(new InstallNewPermissionsCommand() { PermissionProvider = provider });
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.ACL.Installed"));
             }
             return RedirectToAction("Permissions");
