@@ -1116,9 +1116,6 @@ namespace Grand.Services.Customers
             var update = updatebuilder.Pull(p => p.ShoppingCartItems, shoppingCartItem);
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
-            //event notification
-            await _mediator.EntityDeleted(shoppingCartItem);
-
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
             else
@@ -1148,9 +1145,6 @@ namespace Grand.Services.Customers
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.AddToSet(p => p.ShoppingCartItems, shoppingCartItem);
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
-
-            //event notification
-            await _mediator.EntityInserted(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
@@ -1183,8 +1177,6 @@ namespace Grand.Services.Customers
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).ShoppingCartTypeId, shoppingCartItem.ShoppingCartTypeId);
 
             await _customerRepository.Collection.UpdateManyAsync(filter, update);
-            //event notification
-            await _mediator.EntityUpdated(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);

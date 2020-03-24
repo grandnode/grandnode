@@ -37,43 +37,19 @@ namespace Grand.Services.Orders
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICustomerService _customerService;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IProductAttributeService _productAttributeService;
-        private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IProductReservationService _productReservationService;
         private readonly IShippingService _shippingService;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="currencyService">Currency service</param>
-        /// <param name="productService">Product settings</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="checkoutAttributeService">Checkout attribute service</param>
-        /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
-        /// <param name="priceFormatter">Price formatter</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="mediator">Mediator service</param>
-        /// <param name="permissionService">Permission service</param>
-        /// <param name="aclService">ACL service</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="productAttributeService">Product attribute service</param>
-        /// <param name="customerActionEventService">Customer action event service</param>
-        /// <param name="productReservationService">Product reservation service</param>
-        /// <param name="shippingService">Shipping service</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
         public ShoppingCartService(
             IWorkContext workContext,
             IStoreContext storeContext,
@@ -112,7 +88,6 @@ namespace Grand.Services.Orders
             _storeMappingService = storeMappingService;
             _genericAttributeService = genericAttributeService;
             _productAttributeService = productAttributeService;
-            _customerActionEventService = customerActionEventService;
             _productReservationService = productReservationService;
             _shippingService = shippingService;
             _shoppingCartSettings = shoppingCartSettings;
@@ -362,7 +337,7 @@ namespace Grand.Services.Orders
             }
 
             var warehouseId = !string.IsNullOrEmpty(shoppingCartItem.WarehouseId) ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
-                            //_shoppingCartSettings.AllowToSelectWarehouse ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+            //_shoppingCartSettings.AllowToSelectWarehouse ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
 
             if (!string.IsNullOrEmpty(warehouseId))
             {
@@ -1300,9 +1275,8 @@ namespace Grand.Services.Orders
                     customer.ShoppingCartItems.Add(shoppingCartItem);
                     await _customerService.InsertShoppingCartItem(customer.Id, shoppingCartItem);
 
-                    await _customerActionEventService.AddToCart(shoppingCartItem, product, customer);
                     //event notification
-                    await _mediator.EntityInserted(shoppingCartItem);
+                    await _mediator.Publish(new AddToCartEvent(customer, shoppingCartItem, product));
                 }
             }
 

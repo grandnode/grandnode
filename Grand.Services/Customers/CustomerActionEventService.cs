@@ -10,8 +10,6 @@ using Grand.Services.Catalog;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
-using MediatR;
-using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -90,7 +88,7 @@ namespace Grand.Services.Customers
         #endregion
 
         #region Utilities
-        
+
         protected async Task<IList<CustomerActionType>> GetAllCustomerActionType()
         {
             return await _cacheManager.GetAsync(CUSTOMER_ACTION_TYPE, () =>
