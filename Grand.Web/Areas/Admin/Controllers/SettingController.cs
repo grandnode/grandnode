@@ -941,12 +941,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.PointsForPurchases_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeScope) ||
                     _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope);
                 model.PointsForPurchases_Awarded_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Awarded, storeScope);
-                model.PointsForPurchases_Canceled_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Canceled, storeScope);
+                model.ReduceRewardPointsAfterCancelOrder_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.ReduceRewardPointsAfterCancelOrder, storeScope);
                 model.DisplayHowMuchWillBeEarned_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope);
                 model.PointsForRegistration_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
             }
             var currencySettings = _settingService.LoadSetting<CurrencySettings>(storeScope);
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+
+            //order statuses
+            model.PointsForPurchases_Awarded_OrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false, new int[] { 10, 40 }).ToList();
 
             return View(model);
         }
@@ -977,7 +980,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
 
                 await UpdateOverrideForStore(storeScope, model.PointsForPurchases_Awarded_OverrideForStore, rewardPointsSettings, x => x.PointsForPurchases_Awarded);
-                await UpdateOverrideForStore(storeScope, model.PointsForPurchases_Canceled_OverrideForStore, rewardPointsSettings, x => x.PointsForPurchases_Canceled);
+                await UpdateOverrideForStore(storeScope, model.ReduceRewardPointsAfterCancelOrder_OverrideForStore, rewardPointsSettings, x => x.ReduceRewardPointsAfterCancelOrder);
                 await UpdateOverrideForStore(storeScope, model.DisplayHowMuchWillBeEarned_OverrideForStore, rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned);
 
                 await _settingService.SaveSetting(rewardPointsSettings, x => x.PointsAccumulatedForAllStores, "", false);

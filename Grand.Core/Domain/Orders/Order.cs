@@ -203,7 +203,10 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets the value indicating whether reward points were earned for this order
         /// </summary>
         public bool RewardPointsWereAdded { get; set; }
-        
+
+        /// Gets or sets the value indicating for calculated reward points 
+        public int CalcRewardPoints { get; set; }
+
         /// <summary>
         /// Gets or sets the checkout attribute description
         /// </summary>

@@ -58,6 +58,7 @@ namespace Grand.Services.Commands.Handlers.Orders
 
                 //reduce (cancel) back reward points (previously awarded for this order)
                 await _mediator.Send(new ReduceRewardPointsCommand() { Order = request.Order });
+
                 //cancel recurring payments
                 var recurringPayments = await _orderService.SearchRecurringPayments(initialOrderId: request.Order.Id);
                 foreach (var rp in recurringPayments)

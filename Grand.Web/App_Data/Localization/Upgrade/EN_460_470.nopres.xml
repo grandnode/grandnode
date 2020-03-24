@@ -212,5 +212,11 @@
   <LocaleResource Name="Shipment.Notes.Note">
     <Value>Note</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ReduceRewardPointsAfterCancelOrder">
+    <Value>Points are canceled when the order status is canceled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ReduceRewardPointsAfterCancelOrder.Hint">
+    <Value>Points are canceled when the order status is canceled</Value>
+  </LocaleResource>
 </Language>
 

@@ -124,7 +124,7 @@ namespace Grand.Services.Commands.Handlers.Orders
             {
                 await _mediator.Send(new AwardRewardPointsCommand() { Order = request.Order });
             }
-            if (_rewardPointsSettings.PointsForPurchases_Canceled == request.Order.OrderStatus)
+            if (_rewardPointsSettings.ReduceRewardPointsAfterCancelOrder && request.Order.OrderStatus == OrderStatus.Cancelled)
             {
                 await _mediator.Send(new ReduceRewardPointsCommand() { Order = request.Order });
             }
