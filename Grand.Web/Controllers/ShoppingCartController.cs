@@ -424,7 +424,7 @@ namespace Grand.Web.Controllers
                 var discount = await _discountService.GetDiscountByCouponCode(discountcouponcode, true);
                 if (discount != null && discount.RequiresCouponCode)
                 {
-                    var coupons = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
+                    var coupons = _workContext.CurrentCustomer.ParseAppliedCouponCodes(SystemCustomerAttributeNames.DiscountCoupons);
                     var existsAndUsed = false;
                     foreach (var item in coupons)
                     {
@@ -442,9 +442,9 @@ namespace Grand.Web.Controllers
                             if (validationResult.IsValid)
                             {
                                 //valid
-                                var applyCouponCode =  _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
+                                var applyCouponCode =  _workContext.CurrentCustomer.ApplyCouponCode(SystemCustomerAttributeNames.DiscountCoupons, discountcouponcode);
                                 //apply new value
-                                await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCouponCode, applyCouponCode);
+                                await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCoupons, applyCouponCode);
                                 message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
                                 isApplied = true;
                             }
@@ -527,10 +527,10 @@ namespace Grand.Web.Controllers
                     bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
                     if (isGiftCardValid)
                     {
-                        await _mediator.Send(new ApplyGiftCardCommand() {
-                            Customer = _workContext.CurrentCustomer,
-                            GiftCardCouponCode = giftcardcouponcode
-                        });
+                        var result = _workContext.CurrentCustomer.ApplyCouponCode(SystemCustomerAttributeNames.GiftCardCoupons, giftcardcouponcode.Trim().ToLower());
+                        //apply new value
+                        await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.GiftCardCoupons, result);
+
                         message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Applied");
                         isApplied = true;
                     }
@@ -576,9 +576,6 @@ namespace Grand.Web.Controllers
         {
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
-            //parse and save checkout attributes
-            //await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
-
             var model = await _mediator.Send(new GetEstimateShippingResult() {
                 Cart = cart,
                 Currency = _workContext.WorkingCurrency,
@@ -599,20 +596,15 @@ namespace Grand.Web.Controllers
             var discount = await _discountService.GetDiscountById(discountId);
             if (discount != null)
             {
-                var coupons = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
+                var coupons = _workContext.CurrentCustomer.ParseAppliedCouponCodes(SystemCustomerAttributeNames.DiscountCoupons);
                 foreach (var item in coupons)
                 {
                     var dd = await _discountService.GetDiscountByCouponCode(item);
                     if (dd.Id == discount.Id)
                     {
-                        //clear coupons
-                        await _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCouponCode, "");
-                        var applycoupons = coupons.Except(new List<string> { item }).ToList();
-                        foreach (var cp in applycoupons)
-                        {
-                            var result = _workContext.CurrentCustomer.ApplyDiscountCouponCode(cp);
-                            await _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCouponCode, result);
-                        }
+                        //remove coupon
+                        var result = _workContext.CurrentCustomer.RemoveCouponCode(SystemCustomerAttributeNames.DiscountCoupons, item);
+                        await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCoupons, result);
                     }
                 }
             }
@@ -636,11 +628,17 @@ namespace Grand.Web.Controllers
 
         [AutoValidateAntiforgeryToken]
         [HttpPost]
-        public virtual async Task<IActionResult> RemoveGiftCardCode(string giftCardId)
+        public virtual async Task<IActionResult> RemoveGiftCardCode(string giftCardId, [FromServices] IGiftCardService giftCardService)
         {
             if (!string.IsNullOrEmpty(giftCardId))
             {
-                await _mediator.Send(new RemoveGiftCardCommand() { Customer = _workContext.CurrentCustomer, GiftCardId = giftCardId });
+                //remove card
+                var giftcard = await giftCardService.GetGiftCardById(giftCardId);
+                if (giftcard != null)
+                {
+                    var result = _workContext.CurrentCustomer.RemoveCouponCode(SystemCustomerAttributeNames.GiftCardCoupons, giftcard.GiftCardCouponCode);
+                    await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.GiftCardCoupons, result);
+                }
             }
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
             

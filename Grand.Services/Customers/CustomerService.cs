@@ -689,14 +689,14 @@ namespace Grand.Services.Customers
             //clear entered coupon codes
             if (clearCouponCodes)
             {
-                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.DiscountCouponCode, null);
-                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, null);
+                await _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.DiscountCoupons, null);
+                await _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.GiftCardCoupons, null);
             }
 
             //clear checkout attributes
             if (clearCheckoutAttributes)
             {
-                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.CheckoutAttributes, null, storeId);
+                await _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.CheckoutAttributes, null, storeId);
             }
 
             //clear reward points flag

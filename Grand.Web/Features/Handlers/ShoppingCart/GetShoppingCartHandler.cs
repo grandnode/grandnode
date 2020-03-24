@@ -177,7 +177,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
             //gift card and gift card boxes
             model.DiscountBox.Display = _shoppingCartSettings.ShowDiscountBox;
-            var discountCouponCodes = request.Customer.ParseAppliedDiscountCouponCodes();
+            var discountCouponCodes = request.Customer.ParseAppliedCouponCodes(SystemCustomerAttributeNames.DiscountCoupons);
             foreach (var couponCode in discountCouponCodes)
             {
                 var discount = await _discountService.GetDiscountByCouponCode(couponCode);

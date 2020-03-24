@@ -259,7 +259,7 @@ namespace Grand.Services.Orders
             if (customer == null)
                 return result;
 
-            string[] couponCodes = customer.ParseAppliedGiftCardCouponCodes();
+            string[] couponCodes = customer.ParseAppliedCouponCodes(SystemCustomerAttributeNames.GiftCardCoupons);
             foreach (var couponCode in couponCodes)
             {
                 var giftCards = await _giftCardService.GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);

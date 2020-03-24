@@ -4,13 +4,13 @@ using Grand.Core.Html;
 using Grand.Services.Common;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Xml;
 namespace Grand.Services.Customers
 {
     public static class CustomerExtensions
     {
+        public static string CouponSeparator => ";";
+
         /// <summary>
         /// Get full name
         /// </summary>
@@ -85,37 +85,64 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Coupon codes</returns>
-        public static string[] ParseAppliedDiscountCouponCodes(this Customer customer)
+        public static string[] ParseAppliedCouponCodes(this Customer customer, string key)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var existingCouponCodes = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.DiscountCouponCode);
+            var existingCouponCodes = customer.GetAttributeFromEntity<string>(key);
 
             var couponCodes = new List<string>();
-            if (String.IsNullOrEmpty(existingCouponCodes))
+            if (string.IsNullOrEmpty(existingCouponCodes))
                 return couponCodes.ToArray();
 
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(existingCouponCodes);
+            return existingCouponCodes.Split(CouponSeparator);
 
-                var nodeList1 = xmlDoc.SelectNodes(@"//DiscountCouponCodes/CouponCode");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
-                    {
-                        string code = node1.Attributes["Code"].InnerText.Trim();
-                        couponCodes.Add(code.ToUpper());
-                    }
-                }
-            }
-            catch (Exception exc)
+        }
+
+        /// <summary>
+        /// Adds a coupon code
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code</param>
+        /// <returns>New coupon codes document</returns>
+        public static string ApplyCouponCode(this Customer customer, string key, string couponCode)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var existingCouponCodes = customer.GetAttributeFromEntity<string>(key);
+            if (string.IsNullOrEmpty(existingCouponCodes))
             {
-                Debug.Write(exc.ToString());
+                return couponCode;
             }
-            return couponCodes.ToArray();
+            else
+            {
+                return string.Join(CouponSeparator, existingCouponCodes.Split(CouponSeparator).Append(couponCode).Distinct());
+            }
+        }
+        /// <summary>
+        /// Adds a coupon codes
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCode">Coupon code</param>
+        /// <returns>New coupon codes document</returns>
+        public static string ApplyCouponCode(this Customer customer, string key, string[] couponCodes)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var existingCouponCodes = customer.GetAttributeFromEntity<string>(key);
+            if (string.IsNullOrEmpty(existingCouponCodes))
+            {
+                return string.Join(CouponSeparator, couponCodes);
+            }
+            else
+            {
+                var coupons = existingCouponCodes.Split(CouponSeparator).ToList();
+                coupons.AddRange(couponCodes.ToList());
+                return string.Join(CouponSeparator, coupons.Distinct());
+            }
         }
         /// <summary>
         /// Adds a coupon code
@@ -123,102 +150,21 @@ namespace Grand.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code</param>
         /// <returns>New coupon codes document</returns>
-        public static string ApplyDiscountCouponCode(this Customer customer, string couponCode)
+        public static string RemoveCouponCode(this Customer customer, string key, string couponCode)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            string result = string.Empty;
-            try
-            {
-                var existingCouponCodes = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.DiscountCouponCode);
-
-                couponCode = couponCode.Trim().ToLower();
-
-                var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(existingCouponCodes))
-                {
-                    var element1 = xmlDoc.CreateElement("DiscountCouponCodes");
-                    xmlDoc.AppendChild(element1);
-                }
-                else
-                {
-                    xmlDoc.LoadXml(existingCouponCodes);
-                }
-                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//DiscountCouponCodes");
-
-                XmlElement gcElement = null;
-                //find existing
-                var nodeList1 = xmlDoc.SelectNodes(@"//DiscountCouponCodes/CouponCode");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
-                    {
-                        string couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
-                        if (couponCodeAttribute.ToLower() == couponCode.ToLower())
-                        {
-                            gcElement = (XmlElement)node1;
-                            break;
-                        }
-                    }
-                }
-
-                //create new one if not found
-                if (gcElement == null)
-                {
-                    gcElement = xmlDoc.CreateElement("CouponCode");
-                    gcElement.SetAttribute("Code", couponCode);
-                    rootElement.AppendChild(gcElement);
-                }
-
-                result = xmlDoc.OuterXml;
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets coupon codes
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>Coupon codes</returns>
-        public static string[] ParseAppliedGiftCardCouponCodes(this Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            var existingCouponCodes = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.GiftCardCouponCodes);
-
-            var couponCodes = new List<string>();
+            var existingCouponCodes = customer.GetAttributeFromEntity<string>(key);
             if (string.IsNullOrEmpty(existingCouponCodes))
-                return couponCodes.ToArray();
-
-            try
             {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(existingCouponCodes);
-
-                var nodeList1 = xmlDoc.SelectNodes(@"//GiftCardCouponCodes/CouponCode");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
-                    {
-                        string code = node1.Attributes["Code"].InnerText.Trim();
-                        couponCodes.Add(code);
-                    }
-                }
+                return "";
             }
-            catch (Exception exc)
+            else
             {
-                Debug.Write(exc.ToString());
+                return string.Join(CouponSeparator, existingCouponCodes.Split(CouponSeparator).Except(new List<string> { couponCode }).Distinct());
             }
-            return couponCodes.ToArray();
         }
-
 
         /// <summary>
         /// Check whether password recovery token is valid
