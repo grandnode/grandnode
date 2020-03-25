@@ -179,7 +179,7 @@ namespace Grand.Web.Controllers
                     DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = "Admin" }));
                 }
             }
-
+            
             //activity log
             await _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
             await _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");

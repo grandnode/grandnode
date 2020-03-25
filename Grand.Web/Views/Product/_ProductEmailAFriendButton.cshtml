@@ -1,8 +1,5 @@
 ﻿@model ProductDetailsModel
-@if (Model.EmailAFriendEnabled)
-{
-        <button type="button" value="@T("Products.EmailAFriend")" class="btn btn-outline-secondary email-a-friend-button d-flex align-items-center mr-1" onclick="setLocation('@Url.RouteUrl("ProductEmailAFriend", new { productId = Model.Id })')" data-toggle="tooltip" data-placement="bottom" title="@T("Products.EmailAFriend")">
-            <span class="mdi mdi-send mr-0"></span>
-            <span class="sr-only">@T("Products.EmailAFriend")</span>
-        </button>
-}
+<button type="button" value="@T("Products.EmailAFriend")" class="btn btn-outline-secondary email-a-friend-button d-flex align-items-center mr-1" onclick="setLocation('@Url.RouteUrl("ProductEmailAFriend", new { productId = Model.Id })')" data-toggle="tooltip" data-placement="bottom" title="@T("Products.EmailAFriend")">
+    <span class="mdi mdi-send mr-0"></span>
+    <span class="sr-only">@T("Products.EmailAFriend")</span>
+</button>

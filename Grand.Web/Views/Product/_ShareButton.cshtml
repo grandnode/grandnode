@@ -1,7 +1,4 @@
 ﻿@model ProductDetailsModel
-@if (!String.IsNullOrWhiteSpace(Model.PageShareCode))
-{
-    <div class="product-share-button">
-        @Html.Raw(Model.PageShareCode)
-    </div>
-}
+<div class="product-share-button">
+    @Html.Raw(Model.PageShareCode)
+</div>
