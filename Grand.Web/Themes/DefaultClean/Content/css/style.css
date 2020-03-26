@@ -4933,6 +4933,7 @@ footer .socicon-pinterest:hover {
 @media screen and (min-width: 1200px) {
     .shopping-cart .subtotal {
         min-width: 165px;
+        text-align: center;
     }
 
     .product-quickview {

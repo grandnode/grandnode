@@ -28,19 +28,13 @@
                     <colgroup>
                         <col span="1">
                         <col span="1">
-                        <col span="1">
                         <col>
+                        <col span="1">
                         <col span="1">
                         <col span="1">
                     </colgroup>
                     <thead>
                         <tr>
-                            @if (Model.IsEditable)
-                            {
-                                <th class="remove-from-cart text-center">
-                                    @T("Remove")
-                                </th>
-                            }
                             @if (Model.ShowProductImages)
                             {
                                 <th class="product-picture text-center">
@@ -59,20 +53,18 @@
                             <th class="subtotal text-center">
                                 @T("ShoppingCart.ItemTotal")
                             </th>
+                            @if (Model.IsEditable)
+                            {
+                                <th class="remove-from-cart text-center">
+                                    @T("Remove")
+                                </th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.Items)
                         {
                             <tr class="item-container">
-                                @if (Model.IsEditable)
-                                {
-                                    <td class="remove-from-cart text-center">
-                                        <button type="button" class="btn btn-link text-danger deleteshoppingcartitem" data-href="@Url.RouteUrl("DeleteCartItem", new { id = item.Id, shoppingcartpage = true })">
-                                            <span class="mdi mdi-close pr-1"></span>
-                                        </button>
-                                    </td>
-                                }
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="product-picture text-center">
@@ -200,6 +192,14 @@
                                     }
 
                                 </td>
+                                @if (Model.IsEditable)
+                                {
+                                    <td class="remove-from-cart text-center">
+                                        <button type="button" class="btn btn-link text-secondary deleteshoppingcartitem" data-href="@Url.RouteUrl("DeleteCartItem", new { id = item.Id, shoppingcartpage = true })">
+                                            <span class="mdi mdi-delete pr-1"></span>
+                                        </button>
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>
