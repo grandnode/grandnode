@@ -122,17 +122,20 @@ namespace Grand.Web.Features.Handlers.Products
                     if (request.Product.GetTotalStockQuantityForCombination(combination, warehouseId: request.Store.DefaultWarehouseId) <= 0)
                         model.DisplayBackInStockSubscription = true;
 
+                if (request.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                {
+                    model.DisplayBackInStockSubscription = request.Product.AllowBackInStockSubscriptions;
+                    attributeXml = "";
+                }
+
                 var subscription = await _backInStockSubscriptionService
                    .FindSubscription(request.Customer.Id,
-                    request.Product.Id, attributeXml, request.Store.Id, request.Product.UseMultipleWarehouses ? request.Store.DefaultWarehouseId : "");
+                    request.Product.Id, attributeXml, request.Store.Id, warehouseId);
 
                 if (subscription != null)
                     model.ButtonTextBackInStockSubscription = _localizationService.GetResource("BackInStockSubscriptions.DeleteNotifyWhenAvailable");
                 else
                     model.ButtonTextBackInStockSubscription = _localizationService.GetResource("BackInStockSubscriptions.NotifyMeWhenAvailable");
-
-                if (request.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                    model.DisplayBackInStockSubscription = request.Product.AllowBackInStockSubscriptions;
 
             }
 
