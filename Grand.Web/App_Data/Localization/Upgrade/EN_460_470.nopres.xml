@@ -218,5 +218,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ReduceRewardPointsAfterCancelOrder.Hint">
     <Value>Points are canceled when the order status is canceled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowOnHoldCart">
+    <Value>Allow on hold cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowOnHoldCart.Hint">
+    <Value>Check this box if you want to allow partial checkout. You can select which items should stay in the shopping cart and which should be purchased.</Value>
+  </LocaleResource>
 </Language>
 

@@ -1145,6 +1145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.MiniShoppingCartProductNumber_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, storeScope);
                 model.AllowCartItemEditing_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope);
                 model.CartsSharedBetweenStores_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeScope);
+                model.AllowOnHoldCart_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.AllowOnHoldCart, storeScope);
             }
             return View(model);
         }
@@ -1174,6 +1175,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await UpdateOverrideForStore(storeScope, model.MiniShoppingCartProductNumber_OverrideForStore, shoppingCartSettings, x => x.MiniShoppingCartProductNumber);
             await UpdateOverrideForStore(storeScope, model.AllowCartItemEditing_OverrideForStore, shoppingCartSettings, x => x.AllowCartItemEditing);
             await UpdateOverrideForStore(storeScope, model.CartsSharedBetweenStores_OverrideForStore, shoppingCartSettings, x => x.CartsSharedBetweenStores);
+            await UpdateOverrideForStore(storeScope, model.AllowOnHoldCart_OverrideForStore, shoppingCartSettings, x => x.AllowOnHoldCart);
 
             //now clear cache
             await ClearCache();
