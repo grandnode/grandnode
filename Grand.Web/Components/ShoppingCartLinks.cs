@@ -5,6 +5,7 @@ using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,13 +38,18 @@ namespace Grand.Web.ViewComponents
 
         private async Task<ShoppingCartLinksModel> PrepareShoppingCartLinks()
         {
+            var shoppingCartTypes = new List<ShoppingCartType>();
+            shoppingCartTypes.Add(ShoppingCartType.ShoppingCart);
+            shoppingCartTypes.Add(ShoppingCartType.Auctions);
+            if (_shoppingCartSettings.AllowOnHoldCart)
+                shoppingCartTypes.Add(ShoppingCartType.OnHoldCart);
+
             var model = new ShoppingCartLinksModel {
                 ShoppingCartEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 WishlistEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 MiniShoppingCartEnabled = _shoppingCartSettings.MiniShoppingCartEnabled,
-                //performance optimization (use "HasShoppingCartItems" property)
                 ShoppingCartItems = _workContext.CurrentCustomer.ShoppingCartItems.Any() ? _workContext.CurrentCustomer.ShoppingCartItems
-                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
+                        .Where(sci => shoppingCartTypes.Contains(sci.ShoppingCartType))
                         .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                         .Sum(x => x.Quantity) : 0,
 

@@ -158,6 +158,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             #region Simple properties
 
             model.IsEditable = request.IsEditable;
+            model.IsAllowOnHold = _shoppingCartSettings.AllowOnHoldCart;
             model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
@@ -165,7 +166,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             model.ShowCheckoutAsGuestButton = model.IsGuest && _orderSettings.AnonymousCheckoutAllowed;
             var checkoutAttributesXml = request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, request.Store.Id);
             model.CheckoutAttributeInfo = await _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, request.Customer);
-            bool minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmount(request.Cart);
+            bool minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmount(request.Cart.Where(x=>x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList());
             if (!minOrderSubtotalAmountOk)
             {
                 decimal minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, request.Currency);
@@ -344,6 +345,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel {
                     Id = sci.Id,
                     Sku = product.FormatSku(sci.AttributesXml, _productAttributeParser),
+                    IsCart = sci.ShoppingCartType == ShoppingCartType.ShoppingCart,
                     ProductId = product.Id,
                     WarehouseId = sci.WarehouseId,
                     ProductName = product.GetLocalized(x => x.Name, request.Language.Id),

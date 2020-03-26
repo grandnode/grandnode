@@ -16,6 +16,10 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Auctions
         /// </summary>
-        Auctions = 3
+        Auctions = 3,
+        /// <summary>
+        /// On hold cart
+        /// </summary>
+        OnHoldCart = 10
     }
 }

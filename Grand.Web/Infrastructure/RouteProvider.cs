@@ -766,6 +766,10 @@ namespace Grand.Web.Infrastructure
                             pattern + "deletecartitem/{id}",
                             new { controller = "ShoppingCart", action = "DeleteCartItem" });
 
+            routeBuilder.MapControllerRoute("ChangeTypeCartItem",
+                pattern + "changetypecartitem/{id}",
+                new { controller = "ShoppingCart", action = "ChangeTypeCartItem" });
+
             //estimate shipping
             routeBuilder.MapControllerRoute("EstimateShipping",
                             $"{pattern}cart/estimateshipping",

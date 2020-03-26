@@ -239,8 +239,14 @@ namespace Grand.Web.Controllers
                         }
 
                         //display notification message and update appropriate blocks
+                        var shoppingCartTypes = new List<ShoppingCartType>();
+                        shoppingCartTypes.Add(ShoppingCartType.ShoppingCart);
+                        shoppingCartTypes.Add(ShoppingCartType.Auctions);
+                        if (_shoppingCartSettings.AllowOnHoldCart)
+                            shoppingCartTypes.Add(ShoppingCartType.OnHoldCart);
+
                         var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
-                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart)
+                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, shoppingCartTypes.ToArray())
                                 .Sum(x => x.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
@@ -567,8 +573,14 @@ namespace Grand.Web.Controllers
                         }
 
                         //display notification message and update appropriate blocks
+                        var shoppingCartTypes = new List<ShoppingCartType>();
+                        shoppingCartTypes.Add(ShoppingCartType.ShoppingCart);
+                        shoppingCartTypes.Add(ShoppingCartType.Auctions);
+                        if (_shoppingCartSettings.AllowOnHoldCart)
+                            shoppingCartTypes.Add(ShoppingCartType.OnHoldCart);
+
                         var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
-                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart)
+                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, shoppingCartTypes.ToArray())
                                 .Sum(x => x.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled

@@ -2407,6 +2407,9 @@ namespace Grand.Services.Orders
             if (cart == null)
                 throw new ArgumentNullException("cart");
 
+            if (!cart.Any())
+                return false;
+
             //min order amount sub-total validation
             if (cart.Any() && _orderSettings.MinOrderSubtotalAmount > decimal.Zero)
             {

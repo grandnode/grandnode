@@ -28,6 +28,7 @@
                     <colgroup>
                         <col span="1">
                         <col span="1">
+                        <col span="1">
                         <col>
                         <col span="1">
                         <col span="1">
@@ -35,6 +36,10 @@
                     </colgroup>
                     <thead>
                         <tr>
+                            @if (Model.IsEditable && Model.IsAllowOnHold)
+                            {
+                                <th class="cart text-center"></th>
+                            }
                             @if (Model.ShowProductImages)
                             {
                                 <th class="product-picture text-center">
@@ -65,6 +70,17 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr class="item-container">
+                                @if (Model.IsEditable && Model.IsAllowOnHold)
+                                {
+                                    <td class="onhold-cart text-center">
+                                        <label class="custom-control custom-checkbox">
+                                            <input id="checkbox_@item.Id" type="checkbox" checked="@item.IsCart" class="custom-control-input changeshoppingcartitem" 
+                                                   data-href="@Url.RouteUrl("ChangeTypeCartItem", new { id = item.Id, status = !item.IsCart })" />
+                                            <input type="hidden" id="checkbox_@item.Id" />
+                                            <span class="custom-control-label"></span>
+                                        </label>
+                                    </td>                                   
+                                }
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="product-picture text-center">
@@ -422,6 +438,21 @@
                     }
                 });
             });
+            $(".changeshoppingcartitem").click(function () {
+                var href = $(this).closest('[data-href]').data('href');
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: href,
+                    success: function (data) {
+                        $('#ordersummarypagecart').replaceWith(data.cart);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Shopping Cart Page.');
+                    }
+                });
+            });
+            changeshoppingcartitem
         });
     </script>
 </div>
