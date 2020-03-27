@@ -166,11 +166,18 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             model.ShowCheckoutAsGuestButton = model.IsGuest && _orderSettings.AnonymousCheckoutAllowed;
             var checkoutAttributesXml = request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, request.Store.Id);
             model.CheckoutAttributeInfo = await _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, request.Customer);
-            bool minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmount(request.Cart.Where(x=>x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList());
-            if (!minOrderSubtotalAmountOk)
+            if (!request.Cart.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList().Any())
             {
-                decimal minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, request.Currency);
-                model.MinOrderSubtotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false));
+                model.MinOrderSubtotalWarning = _localizationService.GetResource("Checkout.MinOrderOneProduct");
+            }
+            else
+            {
+                bool minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmount(request.Cart.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList());
+                if (!minOrderSubtotalAmountOk)
+                {
+                    decimal minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, request.Currency);
+                    model.MinOrderSubtotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false));
+                }
             }
             model.TermsOfServiceOnShoppingCartPage = _orderSettings.TermsOfServiceOnShoppingCartPage;
             model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;

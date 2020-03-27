@@ -17342,8 +17342,11 @@
   <LocaleResource Name="Checkout.MinOrderSubtotalAmount">
     <Value>Minimum order sub-total amount is {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.MinOrderTotalAmount">
-    <Value>Minimum order total amount is {0}</Value>
+  <LocaleResource Name="Checkout.MinOrderSubtotalAmount">
+    <Value>Minimum order sub-total amount is {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.MinOrderOneProduct">
+    <Value>You need to have at least one product marked to checkout</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.NewAddress">
     <Value>New Address</Value>
