@@ -337,7 +337,6 @@ namespace Grand.Services.Orders
             }
 
             var warehouseId = !string.IsNullOrEmpty(shoppingCartItem.WarehouseId) ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
-            //_shoppingCartSettings.AllowToSelectWarehouse ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
 
             if (!string.IsNullOrEmpty(warehouseId))
             {
@@ -381,10 +380,43 @@ namespace Grand.Services.Orders
                                 {
                                     if (p1.BackorderMode == BackorderMode.NoBackorders)
                                     {
-                                        int maximumQuantityCanBeAdded = p1.GetTotalStockQuantity(warehouseId: warehouseId);
-                                        if (maximumQuantityCanBeAdded < _qty)
+                                        if (p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                                         {
-                                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.OutOfStock.BundleProduct"), p1.Name));
+                                            int maximumQuantityCanBeAdded = p1.GetTotalStockQuantity(warehouseId: warehouseId);
+                                            if (maximumQuantityCanBeAdded < _qty)
+                                            {
+                                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.OutOfStock.BundleProduct"), p1.Name));
+                                            }
+                                        }
+                                        if (p1.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+                                        {
+                                            var combination = _productAttributeParser.FindProductAttributeCombination(p1, shoppingCartItem.AttributesXml);
+                                            if (combination != null)
+                                            {
+                                                //combination exists
+                                                //let's check stock level
+                                                var stockquantity = p1.GetTotalStockQuantityForCombination(combination, warehouseId: warehouseId);
+                                                if (!combination.AllowOutOfStockOrders && stockquantity < _qty)
+                                                {
+                                                    int maximumQuantityCanBeAdded = stockquantity;
+                                                    if (maximumQuantityCanBeAdded <= 0)
+                                                    {
+                                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.OutOfStock.BundleProduct"), p1.Name));
+                                                    }
+                                                    else
+                                                    {
+                                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock.BundleProduct"), p1.Name, maximumQuantityCanBeAdded));
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //combination doesn't exist
+                                                if (p1.AllowAddingOnlyExistingAttributeCombinations)
+                                                {
+                                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.Combination.BundleProduct.NotExist"), p1.Name));
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -493,21 +525,28 @@ namespace Grand.Services.Orders
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var attributes1 = _productAttributeParser.ParseProductAttributeMappings(product, attributesXml);
+            var attributes1 = _productAttributeParser.ParseProductAttributeMappings(product, attributesXml).ToList();
+            if (product.ProductType == ProductType.BundledProduct)
+            {
+                foreach (var bundle in product.BundleProducts)
+                {
+                    var p1 = await _productService.GetProductById(bundle.ProductId);
+                    if (p1 != null)
+                    {
+                        var a1 = _productAttributeParser.ParseProductAttributeMappings(p1, attributesXml).ToList();
+                        attributes1.AddRange(a1);
+                    }
+                }
+
+            }
             if (ignoreNonCombinableAttributes)
             {
                 attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
+
             }
             foreach (var attribute in attributes1)
             {
-                if (!String.IsNullOrEmpty(attribute.ProductId))
-                {
-                    if (attribute.ProductId != product.Id)
-                    {
-                        warnings.Add("Attribute error");
-                    }
-                }
-                else
+                if (string.IsNullOrEmpty(attribute.ProductId))
                 {
                     warnings.Add("Attribute error");
                     return warnings;
@@ -515,7 +554,18 @@ namespace Grand.Services.Orders
             }
 
             //validate required product attributes (whether they're chosen/selected/entered)
-            var attributes2 = product.ProductAttributeMappings;
+            var attributes2 = product.ProductAttributeMappings.ToList();
+            if (product.ProductType == ProductType.BundledProduct)
+            {
+                foreach (var bundle in product.BundleProducts)
+                {
+                    var p1 = await _productService.GetProductById(bundle.ProductId);
+                    if (p1 != null && p1.ProductAttributeMappings.Any())
+                    {
+                        attributes2.AddRange(p1.ProductAttributeMappings);
+                    }
+                }
+            }
             if (ignoreNonCombinableAttributes)
             {
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
@@ -563,7 +613,7 @@ namespace Grand.Services.Orders
                 if (a2.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
                 {
                     //customers cannot edit read-only attributes
-                    var allowedReadOnlyValueIds = a2.ProductAttributeValues.Where(x => x.Id == a2.Id) //_productAttributeService.GetProductAttributeValues(a2.Id)
+                    var allowedReadOnlyValueIds = a2.ProductAttributeValues.Where(x => x.Id == a2.Id)
                         .Where(x => x.IsPreSelected)
                         .Select(x => x.Id)
                         .ToArray();
@@ -1048,7 +1098,18 @@ namespace Grand.Services.Orders
                     //attributes
                     var _product = await _productService.GetProductById(sci.ProductId);
                     bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(_product, sci.AttributesXml, attributesXml, false);
-
+                    if (_product.ProductType == ProductType.BundledProduct)
+                    {
+                        foreach (var bundle in _product.BundleProducts)
+                        {
+                            var p1 = await _productService.GetProductById(bundle.ProductId);
+                            if (p1 != null)
+                            {
+                                if (!_productAttributeParser.AreProductAttributesEqual(p1, sci.AttributesXml, attributesXml, false))
+                                    attributesEqual = false;
+                            }
+                        }
+                    }
                     //gift cards
                     bool giftCardInfoSame = true;
                     if (_product.IsGiftCard)
@@ -1305,8 +1366,6 @@ namespace Grand.Services.Orders
                     }
                 }
             }
-
-
             return warnings;
         }
 

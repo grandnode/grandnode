@@ -281,6 +281,11 @@ namespace Grand.Web.Models.Catalog
 
         public partial class ProductBundleModel : BaseGrandModel
         {
+            public ProductBundleModel()
+            {
+                ProductAttributes = new List<ProductAttributeModel>();
+            }
+
             public string ProductId { get; set; }
             public string Name { get; set; }
             public string SeName { get; set; }
@@ -292,6 +297,7 @@ namespace Grand.Web.Models.Catalog
             public string Price { get; set; }
             public decimal PriceValue { get; set; }
             public PictureModel DefaultPictureModel { get; set; }
+            public IList<ProductAttributeModel> ProductAttributes { get; set; }
         }
 
         public partial class ProductWarehouseModel : BaseGrandModel
