@@ -20303,6 +20303,9 @@
   <LocaleResource Name="ReturnRequests.Comments">
     <Value>Comments</Value>
   </LocaleResource>
+  <LocaleResource Name="ReturnRequests.MultiVendorsItems">
+    <Value>Return request can be associated with only one vendor</Value>
+  </LocaleResource>
   <LocaleResource Name="ReturnRequests.NewAddress">
     <Value>New Address</Value>
   </LocaleResource>

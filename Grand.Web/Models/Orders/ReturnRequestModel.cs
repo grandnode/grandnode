@@ -55,6 +55,9 @@ namespace Grand.Web.Models.Orders
 
             public string ProductName { get; set; }
 
+            public string VendorId { get; set; }
+            public string VendorName { get; set; }
+
             public string ProductSeName { get; set; }
 
             public string AttributeInfo { get; set; }

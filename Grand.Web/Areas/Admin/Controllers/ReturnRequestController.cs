@@ -134,6 +134,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "ReturnRequest");
             }
 
+            //a vendor should have access only to his return request
+            if (_workContext.CurrentVendor != null && returnRequest.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "ReturnRequest");
+
             var model = new ReturnRequestModel();
             await _returnRequestViewModelService.PrepareReturnRequestModel(model, returnRequest, false);
             return View(model);
@@ -156,6 +160,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 return RedirectToAction("List", "ReturnRequest");
             }
+
+            //a vendor should have access only to his return request
+            if (_workContext.CurrentVendor != null && returnRequest.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "ReturnRequest");
 
             var customAddressAttributes = string.Empty;
             if (orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
@@ -194,6 +202,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "ReturnRequest");
             }
 
+            //a vendor can't delete return request
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("List", "ReturnRequest");
+
             if (ModelState.IsValid)
             {
                 await _returnRequestViewModelService.DeleteReturnRequest(returnRequest);
@@ -215,14 +227,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (returnRequest == null)
                 throw new ArgumentException("No return request found with the specified id");
 
-            //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
-                return Content("");
-
             if (_workContext.CurrentCustomer.IsStaff() && returnRequest.StoreId != _workContext.CurrentCustomer.StaffStoreId)
             {
                 return Content("");
             }
+            //a vendor should have access only to his return request
+            if (_workContext.CurrentVendor != null && returnRequest.VendorId != _workContext.CurrentVendor.Id)
+                return Content("");
+
             //return request notes
             var returnRequestNoteModels = await _returnRequestViewModelService.PrepareReturnRequestNotes(returnRequest);
             var gridModel = new DataSourceResult {
@@ -242,14 +254,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (order == null)
                 return Json(new { Result = false });
 
-            //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
-                return Json(new { Result = false });
-
             if (_workContext.CurrentCustomer.IsStaff() && returnRequest.StoreId != _workContext.CurrentCustomer.StaffStoreId)
             {
                 return Json(new { Result = false });
             }
+
+            //a vendor should have access only to his return request
+            if (_workContext.CurrentVendor != null && returnRequest.VendorId != _workContext.CurrentVendor.Id)
+                return Json(new { Result = false });
+
             await _returnRequestViewModelService.InsertReturnRequestNote(returnRequest, order, downloadId, displayToCustomer, message);
 
             return Json(new { Result = true });

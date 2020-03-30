@@ -236,5 +236,10 @@
   <LocaleResource Name="Checkout.MinOrderOneProduct">
     <Value>You need to have at least one product marked to checkout</Value>
   </LocaleResource>
+  <LocaleResource Name="ReturnRequests.MultiVendorsItems">
+    <Value>Return request can be associated with only one vendor</Value>
+  </LocaleResource>
+
+  
 </Language>
 
