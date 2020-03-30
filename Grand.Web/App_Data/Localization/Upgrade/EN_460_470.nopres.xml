@@ -224,5 +224,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowOnHoldCart.Hint">
     <Value>Check this box if you want to allow partial checkout. You can select which items should stay in the shopping cart and which should be purchased.</Value>
   </LocaleResource>
+  <LocaleResource Name="search.blog">
+    <Value>Blog</Value>
+  </LocaleResource>
 </Language>
 

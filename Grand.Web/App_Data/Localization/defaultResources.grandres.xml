@@ -20474,6 +20474,9 @@
   <LocaleResource Name="Search.AdvancedSearch">
     <Value>Advanced search</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.Blog">
+    <Value>Blog</Value>
+  </LocaleResource>
   <LocaleResource Name="Search.Button">
     <Value>Search</Value>
   </LocaleResource>
