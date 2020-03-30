@@ -167,7 +167,7 @@
                             }
                         <div class="btn-group product-simple-share my-2 d-inline-flex flex-wrap w-100">
                             <partial name="_AddToCart" model="Model.AddToCart" view-data="dataDictAddToCart" />
-                            @if (Model.ProductType == ProductType.SimpleProduct)
+                            @if (Model.ProductType == ProductType.SimpleProduct || Model.ProductType == ProductType.BundledProduct)
                             {
                                 <partial name="_AddToWishlist" model="Model.AddToCart" view-data="dataDictAddToWishlist" />
                                 <partial name="_CompareProductsButton" model="Model" />

@@ -1074,6 +1074,7 @@ namespace Grand.Web.Features.Handlers.Products
 
                         return pictureModel;
                     });
+                    bundleProduct.ProductAttributes = await PrepareProductAttributeModel(p1, _mediaSettings.ProductBundlePictureSize);
 
                     model.Add(bundleProduct);
                 }

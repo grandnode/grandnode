@@ -1376,14 +1376,15 @@ namespace Grand.Services.Catalog
                     }
                 }
             }
+            
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
             {
                 foreach (var item in product.BundleProducts)
                 {
                     var p1 = await GetProductById(item.ProductId);
-                    if (p1 != null && p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                    if (p1 != null && (p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock || p1.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes))
                     {
-                        await AdjustInventory(p1, quantityToChange * item.Quantity, warehouseId);
+                        await AdjustInventory(p1, quantityToChange * item.Quantity, attributesXml, warehouseId);
                     }
                 }
             }

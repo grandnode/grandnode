@@ -308,6 +308,16 @@ namespace Grand.Web.Controllers
                     message = "Auction products couldn't be added to the wishlist"
                 });
             }
+            //check available date
+            if (product.AvailableEndDateTimeUtc.HasValue && product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = _localizationService.GetResource("ShoppingCart.NotAvailable")
+                });
+            }
+
 
             #region Update existing shopping cart item?
             string updatecartitemid = "";
@@ -451,15 +461,7 @@ namespace Grand.Web.Controllers
             //save item
             var addToCartWarnings = new List<string>();
 
-            if (product.AvailableEndDateTimeUtc.HasValue && product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = _localizationService.GetResource("ShoppingCart.NotAvailable")
-                });
-            }
-
+            
             string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
                 form["WarehouseId"].ToString() :
                 product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId :

@@ -1,4 +1,7 @@
 ﻿@model ProductDetailsModel.AddToCartModel
+@{ 
+    var shoppingCartType = Model.UpdateShoppingCartItemType.HasValue ? Model.UpdateShoppingCartItemType.Value : ShoppingCartType.ShoppingCart;
+}
 @if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId))
 {
     <input asp-for="UpdatedShoppingCartItemId" type="hidden" />
@@ -52,7 +55,7 @@
         }
         {
             var addToCartText = "";
-            if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
+            if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && (Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart || Model.UpdateShoppingCartItemType.Value == ShoppingCartType.OnHoldCart))
             {
                 addToCartText = T("ShoppingCart.AddToCart.Update").Text;
             }
@@ -90,7 +93,7 @@
                     });
                 });
             </script>
-            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn-info add-to-cart-button d-inline-flex" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
+            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn-info add-to-cart-button d-inline-flex" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)shoppingCartType })', '#product-details-form');return false;">
                 <span>@addToCartText</span>
             </button>
         }

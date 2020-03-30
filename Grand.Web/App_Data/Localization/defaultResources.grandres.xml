@@ -20606,6 +20606,9 @@
   <LocaleResource Name="ShoppingCart.ClearCart">
     <Value>Clear cart</Value>
   </LocaleResource>
+    <LocaleResource Name="ShoppingCart.Combination.BundleProduct.NotExist">
+    <Value>For product {0} combination doesn't exist</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.Combination.NotExist">
     <Value>This combination doesn't exist</Value>
   </LocaleResource>
@@ -20791,6 +20794,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.QuantityExceedsStock">
     <Value>Your quantity exceeds stock on hand. The maximum quantity that can be added is {0}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.QuantityExceedsStock.BundleProduct">
+    <Value>For product {0} your quantity exceeds stock on hand. The maximum quantity that can be added is {1}.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.QuantityShouldPositive">
     <Value>Quantity should be positive</Value>
