@@ -15,8 +15,15 @@ namespace Grand.Framework.Security.Authorization
             FallbackPolicyProvider = new DefaultAuthorizationPolicyProvider(options);
         }
 
-        public Task<AuthorizationPolicy> GetDefaultPolicyAsync() => FallbackPolicyProvider.GetDefaultPolicyAsync();
-        public Task<AuthorizationPolicy> GetFallbackPolicyAsync() => FallbackPolicyProvider.GetFallbackPolicyAsync();
+        public Task<AuthorizationPolicy> GetDefaultPolicyAsync()
+        {
+            return FallbackPolicyProvider.GetDefaultPolicyAsync();
+        }
+
+        public Task<AuthorizationPolicy> GetFallbackPolicyAsync()
+        {
+            return FallbackPolicyProvider.GetFallbackPolicyAsync();
+        }
 
         public Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
         {
