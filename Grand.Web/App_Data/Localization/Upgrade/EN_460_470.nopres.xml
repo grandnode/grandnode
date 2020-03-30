@@ -230,6 +230,9 @@
   <LocaleResource Name="ShoppingCart.Combination.BundleProduct.NotExist">
     <Value>For product {0} combination doesn't exist</Value>
   </LocaleResource>
+  <LocaleResource Name="search.blog">
+    <Value>Blog</Value>
+  </LocaleResource>
   <LocaleResource Name="Checkout.MinOrderOneProduct">
     <Value>You need to have at least one product marked to checkout</Value>
   </LocaleResource>
