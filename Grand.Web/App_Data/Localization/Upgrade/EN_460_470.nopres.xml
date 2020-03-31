@@ -242,5 +242,8 @@
   <LocaleResource Name="ShoppingCart.Vendor">
     <Value>Show more info about:</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.VendorAccess">
+    <Value>You don't have access to this operation</Value>
+  </LocaleResource>
 </Language>
 

@@ -14237,6 +14237,9 @@
   <LocaleResource Name="Admin.Orders.Shipments.TrackingNumber.ViewOnline">
     <Value>View tracking info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.VendorAccess">
+    <Value>You don't have access to this operation</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ViewDetails">
     <Value>View shipment details</Value>
   </LocaleResource>
