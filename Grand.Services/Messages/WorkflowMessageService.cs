@@ -1194,11 +1194,11 @@ namespace Grand.Services.Messages
             var toEmail = emailAccount.Email;
             var toName = "";
 
-            if(!string.IsNullOrEmpty(product?.VendorId))
+            if (!string.IsNullOrEmpty(product?.VendorId))
             {
                 var vendorService = _serviceProvider.GetRequiredService<IVendorService>();
                 var vendor = await vendorService.GetVendorById(product.VendorId);
-                if(vendor!=null)
+                if (vendor != null)
                 {
                     toEmail = vendor.Email;
                     toName = vendor.Name;
@@ -1247,6 +1247,19 @@ namespace Grand.Services.Messages
             //event notification
             await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
 
+            if (!string.IsNullOrEmpty(returnRequest.VendorId))
+            {
+                var vendorService = _serviceProvider.GetRequiredService<IVendorService>();
+                var vendor = await vendorService.GetVendorById(returnRequest.VendorId);
+                if (vendor != null)
+                {
+                    var vendorEmail = vendor.Email;
+                    var vendorName = vendor.Name;
+                    await SendNotification(messageTemplate, emailAccount,
+                        languageId, liquidObject,
+                        vendorEmail, vendorName);
+                }
+            }
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return await SendNotification(messageTemplate, emailAccount,

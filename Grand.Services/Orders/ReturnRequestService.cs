@@ -97,6 +97,7 @@ namespace Grand.Services.Orders
         /// <param name="storeId">Store identifier; 0 to load all entries</param>
         /// <param name="customerId">Customer identifier; null to load all entries</param>
         /// <param name="orderItemId">Order item identifier; 0 to load all entries</param>
+        /// <param name="vendorId">Vendor identifier</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="rs">Return request status; null to load all entries</param>
@@ -104,7 +105,7 @@ namespace Grand.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
         public virtual async Task<IPagedList<ReturnRequest>> SearchReturnRequests(string storeId = "", string customerId = "",
-            string orderItemId = "", ReturnRequestStatus? rs = null,
+            string orderItemId = "", string vendorId = "", ReturnRequestStatus? rs = null,
             int pageIndex = 0, int pageSize = int.MaxValue, DateTime? createdFromUtc = null, DateTime? createdToUtc = null)
         {
             var model = new GetReturnRequestQuery() {
@@ -113,6 +114,7 @@ namespace Grand.Services.Orders
                 PageIndex = pageIndex,
                 PageSize = pageSize,
                 CustomerId = customerId,
+                VendorId = vendorId,
                 StoreId = storeId,
                 OrderItemId = orderItemId,
                 Rs = rs,

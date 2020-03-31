@@ -10,6 +10,7 @@ using Grand.Services.Orders;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
+using Grand.Services.Vendors;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.Orders;
 using Grand.Web.Infrastructure.Cache;
@@ -33,6 +34,7 @@ namespace Grand.Web.Features.Handlers.Orders
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICountryService _countryService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IVendorService _vendorService;
         private readonly IMediator _mediator;
         private readonly OrderSettings _orderSettings;
 
@@ -46,6 +48,7 @@ namespace Grand.Web.Features.Handlers.Orders
             IPriceFormatter priceFormatter,
             ICountryService countryService,
             IStoreMappingService storeMappingService,
+            IVendorService vendorService,
             IMediator mediator,
             OrderSettings orderSettings
             )
@@ -59,6 +62,7 @@ namespace Grand.Web.Features.Handlers.Orders
             _priceFormatter = priceFormatter;
             _countryService = countryService;
             _storeMappingService = storeMappingService;
+            _vendorService = vendorService;
             _mediator = mediator;
             _orderSettings = orderSettings;
         }
@@ -146,6 +150,8 @@ namespace Grand.Web.Features.Handlers.Orders
                         ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         ProductSeName = product.GetSeName(_workContext.WorkingLanguage.Id),
                         AttributeInfo = orderItem.AttributeDescription,
+                        VendorId = orderItem.VendorId,
+                        VendorName = string.IsNullOrEmpty(orderItem.VendorId) ? "" : (await _vendorService.GetVendorById(orderItem.VendorId))?.Name,
                         Quantity = qtyDelivery - qtyReturn,
                     };
                     if (orderItemModel.Quantity > 0)

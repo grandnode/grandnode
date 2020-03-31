@@ -1,9 +1,6 @@
 ﻿using Grand.Services.Customers;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -13,12 +10,10 @@ namespace Grand.Framework.Security.Authorization
     {
         private readonly IPermissionService _permissionService;
         private readonly ICustomerService _customerService;
-        private readonly IHttpContextAccessor _contextAccessor;
-        public PermissionAuthorizationHandler(IPermissionService permissionService, ICustomerService customerService, IHttpContextAccessor contextAccessor)
+        public PermissionAuthorizationHandler(IPermissionService permissionService, ICustomerService customerService)
         {
             _permissionService = permissionService;
             _customerService = customerService;
-            _contextAccessor = contextAccessor;
         }
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
@@ -27,14 +22,17 @@ namespace Grand.Framework.Security.Authorization
             var customer = await _customerService.GetCustomerByEmail(email?.Value);
             if (customer != null)
             {
-                if (!await _permissionService.Authorize(requirement.Permission, customer))
+                if (await _permissionService.Authorize(requirement.Permission, customer))
                 {
-                    var redirectContext = context.Resource as AuthorizationFilterContext;
-                    var httpContext = _contextAccessor.HttpContext;
-                    redirectContext.Result = new RedirectToActionResult("AccessDenied", "Security", new { pageUrl = httpContext.Request.Path });
+                    context.Succeed(requirement);
                 }
-                context.Succeed(requirement);
+                else
+                {
+                    //TODO - it should be redirect to Security Controller => AccessDenied action
+                    context.Fail();
+                }
             }
         }
+
     }
 }

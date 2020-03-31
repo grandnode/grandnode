@@ -37,6 +37,11 @@ namespace Grand.Core.Domain.Orders
         public string CustomerId { get; set; }
 
         /// <summary>
+        /// Gets or sets the vendor item identifier
+        /// </summary>
+        public string VendorId { get; set; }
+
+        /// <summary>
         /// Gets or sets the customer comments
         /// </summary>
         public string CustomerComments { get; set; }

@@ -161,6 +161,7 @@ namespace Grand.Web.Areas.Admin.Services
             var returnRequests = await _returnRequestService.SearchReturnRequests(model.StoreId,
                 customerId,
                 "",
+                _workContext.CurrentVendor?.Id,
                 (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null),
                 pageIndex - 1,
                 pageSize,
@@ -249,7 +250,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<IList<ReturnRequestModel.ReturnRequestItemModel>> PrepareReturnRequestItemModel(string returnRequestId)
         {
             var returnRequest = await _returnRequestService.GetReturnRequestById(returnRequestId);
-            List<ReturnRequestModel.ReturnRequestItemModel> items = new List<ReturnRequestModel.ReturnRequestItemModel>();
+            var items = new List<ReturnRequestModel.ReturnRequestItemModel>();
             var order = await _orderService.GetOrderById(returnRequest.OrderId);
 
             foreach (var item in returnRequest.ReturnRequestItems)

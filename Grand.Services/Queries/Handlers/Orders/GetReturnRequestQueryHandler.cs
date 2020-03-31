@@ -27,6 +27,9 @@ namespace Grand.Services.Queries.Handlers.Orders
             if (!string.IsNullOrEmpty(request.CustomerId))
                 query = query.Where(rr => request.CustomerId == rr.CustomerId);
 
+            if (!string.IsNullOrEmpty(request.VendorId))
+                query = query.Where(rr => request.VendorId == rr.VendorId);
+
             if (request.Rs.HasValue)
             {
                 var returnStatusId = (int)request.Rs.Value;

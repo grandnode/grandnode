@@ -17342,8 +17342,11 @@
   <LocaleResource Name="Checkout.MinOrderSubtotalAmount">
     <Value>Minimum order sub-total amount is {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.MinOrderTotalAmount">
-    <Value>Minimum order total amount is {0}</Value>
+  <LocaleResource Name="Checkout.MinOrderSubtotalAmount">
+    <Value>Minimum order sub-total amount is {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.MinOrderOneProduct">
+    <Value>You need to have at least one product marked to checkout</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.NewAddress">
     <Value>New Address</Value>
@@ -20299,6 +20302,9 @@
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.Comments">
     <Value>Comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.MultiVendorsItems">
+    <Value>Return request can be associated with only one vendor</Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.NewAddress">
     <Value>New Address</Value>
