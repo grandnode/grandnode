@@ -239,7 +239,8 @@
   <LocaleResource Name="ReturnRequests.MultiVendorsItems">
     <Value>Return request can be associated with only one vendor</Value>
   </LocaleResource>
-
-  
+  <LocaleResource Name="ShoppingCart.Vendor">
+    <Value>Show more info about:</Value>
+  </LocaleResource>
 </Language>
 

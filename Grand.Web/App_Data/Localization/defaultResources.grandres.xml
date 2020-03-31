@@ -20936,6 +20936,9 @@
   <LocaleResource Name="ShoppingCart.Totals.TaxRateLine">
     <Value>Tax {0}%</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Vendor">
+    <Value>Show more info about:</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.UnitPrice">
     <Value>Price</Value>
   </LocaleResource>

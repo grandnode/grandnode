@@ -19,6 +19,7 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
+using Grand.Services.Vendors;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.ShoppingCart;
 using Grand.Web.Infrastructure.Cache;
@@ -60,6 +61,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IVendorService _vendorService;
         private readonly IMediator _mediator;
 
         private readonly MediaSettings _mediaSettings;
@@ -92,6 +94,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             IProductAttributeFormatter productAttributeFormatter,
             IPriceCalculationService priceCalculationService,
             IDateTimeHelper dateTimeHelper,
+            IVendorService vendorService,
             IMediator mediator,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
@@ -122,6 +125,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _productAttributeFormatter = productAttributeFormatter;
             _priceCalculationService = priceCalculationService;
             _dateTimeHelper = dateTimeHelper;
+            _vendorService = vendorService;
             _mediator = mediator;
             _mediaSettings = mediaSettings;
             _orderSettings = orderSettings;
@@ -380,6 +384,17 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 if (!string.IsNullOrEmpty(cartItemModel.WarehouseId))
                     cartItemModel.WarehouseName = (await _shippingService.GetWarehouseById(cartItemModel.WarehouseId))?.Name;
 
+                //vendor
+                if (!string.IsNullOrEmpty(product.VendorId))
+                {
+                    var vendor = await _vendorService.GetVendorById(product.VendorId);
+                    if (vendor != null)
+                    {
+                        cartItemModel.VendorId = product.VendorId;
+                        cartItemModel.VendorName = vendor.Name;
+                        cartItemModel.VendorSeName = vendor.GetSeName(request.Language.Id);
+                    }
+                }
                 //allowed quantities
                 var allowedQuantities = product.ParseAllowedQuantities();
                 foreach (var qty in allowedQuantities)

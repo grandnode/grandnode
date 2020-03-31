@@ -105,6 +105,13 @@
                                             @Html.Raw(item.WarehouseName)
                                         </div>
                                     }
+                                    @if (!String.IsNullOrEmpty(item.VendorName))
+                                    {
+                                        <div class="attributes small">
+                                            @T("ShoppingCart.Vendor")
+                                            <a href="@Url.RouteUrl("Vendor", new { SeName = item.VendorSeName })"> @item.VendorName</a>
+                                        </div>
+                                    }
                                     @if (!String.IsNullOrEmpty(item.AuctionInfo))
                                     {
                                         <div class="attributes small">
