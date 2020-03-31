@@ -7,8 +7,7 @@
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     <ServerGarbageCollection>false</ServerGarbageCollection>
-    <PreserveCompilationReferences>true</PreserveCompilationReferences>
-    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>    
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Grand.Api\Grand.Api.csproj" />
