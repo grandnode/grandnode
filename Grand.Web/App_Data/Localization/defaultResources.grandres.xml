@@ -15581,6 +15581,9 @@
   <LocaleResource Name="Admin.ReturnRequests.BackToList">
     <Value>back to return request list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Deleted">
     <Value>The return request has been deleted successfully.</Value>
   </LocaleResource>
@@ -20296,6 +20299,9 @@
   </LocaleResource>
   <LocaleResource Name="Remove">
     <Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.Document">
+    <Value>Return request {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.Notes">
     <Value>Note(s)</Value>

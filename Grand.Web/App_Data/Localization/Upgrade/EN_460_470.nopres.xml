@@ -251,5 +251,11 @@
   <LocaleResource Name="Admin.ReturnRequests.Fields.ExternalId.hint">
     <Value>You can add external identifier from other system</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.Document">
+    <Value>Return request {0}</Value>
+  </LocaleResource>
 </Language>
 
