@@ -24,6 +24,9 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public string OrderId { get; set; }
         public int OrderNumber { get; set; }
 
+        [GrandResourceDisplayName("Admin.ReturnRequests.Fields.ExternalId")]
+        public string ExternalId { get; set; }
+
         [GrandResourceDisplayName("Admin.ReturnRequests.Fields.Customer")]
         public string CustomerId { get; set; }
         [GrandResourceDisplayName("Admin.ReturnRequests.Fields.Customer")]

@@ -17,6 +17,11 @@ namespace Grand.Core.Domain.Orders
         public int ReturnNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the ExternalId
+        /// </summary>
+        public string ExternalId { get; set; }
+
+        /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
         public string StoreId { get; set; }

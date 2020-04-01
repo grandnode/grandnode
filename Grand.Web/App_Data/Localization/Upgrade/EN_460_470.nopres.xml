@@ -245,5 +245,11 @@
   <LocaleResource Name="Admin.Orders.Shipments.VendorAccess">
     <Value>You don't have access to this operation</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ExternalId">
+    <Value>External identifier</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ExternalId.hint">
+    <Value>You can add external identifier from other system</Value>
+  </LocaleResource>
 </Language>
 

@@ -54,6 +54,7 @@ namespace Grand.Web.Features.Handlers.Orders
             var model = new ReturnRequestDetailsModel();
             model.Comments = request.ReturnRequest.CustomerComments;
             model.ReturnNumber = request.ReturnRequest.ReturnNumber;
+            model.ExternalId = request.ReturnRequest.ExternalId;
             model.ReturnRequestStatus = request.ReturnRequest.ReturnRequestStatus;
             model.CreatedOnUtc = request.ReturnRequest.CreatedOnUtc;
             model.ShowPickupAddress = _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress;

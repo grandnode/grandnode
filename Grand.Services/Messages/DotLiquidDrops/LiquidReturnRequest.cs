@@ -34,6 +34,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _returnRequest.ReturnNumber; }
         }
 
+        public string ExternalId {
+            get { return _returnRequest.ExternalId; }
+        }
+
         public string OrderId
         {
             get { return _order.OrderNumber.ToString(); }

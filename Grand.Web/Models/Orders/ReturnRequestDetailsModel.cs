@@ -21,6 +21,8 @@ namespace Grand.Web.Models.Orders
 
         public int ReturnNumber { get; set; }
 
+        public string ExternalId { get; set; }
+
         public ReturnRequestStatus ReturnRequestStatus { get; set; }
 
         public DateTime CreatedOnUtc { get; set; }

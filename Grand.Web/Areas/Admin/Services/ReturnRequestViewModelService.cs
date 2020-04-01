@@ -135,6 +135,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var addr = new AddressModel();
                 model.PickupAddress = await PrepareAddressModel(addr, returnRequest.PickupAddress, excludeProperties);
                 model.CustomerComments = returnRequest.CustomerComments;
+                model.ExternalId = returnRequest.ExternalId;
                 model.StaffNotes = returnRequest.StaffNotes;
                 model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
             }
@@ -273,7 +274,9 @@ namespace Grand.Web.Areas.Admin.Services
             returnRequest.CustomerComments = model.CustomerComments;
             returnRequest.StaffNotes = model.StaffNotes;
             returnRequest.ReturnRequestStatusId = model.ReturnRequestStatusId;
+            returnRequest.ExternalId = model.ExternalId;
             returnRequest.UpdatedOnUtc = DateTime.UtcNow;
+
             if (_orderSettings.ReturnRequests_AllowToSpecifyPickupDate)
                 returnRequest.PickupDate = model.PickupDate;
             if (_orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)

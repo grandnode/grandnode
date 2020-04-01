@@ -15605,6 +15605,12 @@
   <LocaleResource Name="Admin.ReturnRequests.Fields.CustomerComments.Hint">
     <Value>Entered customer comments</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ExternalId">
+    <Value>External identifier</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ExternalId.hint">
+    <Value>You can add external identifier from other system</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.ID">
     <Value>ID</Value>
   </LocaleResource>
