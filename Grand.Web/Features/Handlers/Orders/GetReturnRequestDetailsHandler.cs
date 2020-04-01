@@ -60,7 +60,7 @@ namespace Grand.Web.Features.Handlers.Orders
             model.ShowPickupAddress = _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress;
             model.ShowPickupDate = _orderSettings.ReturnRequests_AllowToSpecifyPickupDate;
             model.PickupDate = request.ReturnRequest.PickupDate;
-
+            model.GenericAttributes = request.ReturnRequest.GenericAttributes;
             model.PickupAddress = await _mediator.Send(new GetAddressModel() {
                 Language = request.Language,
                 Address = request.ReturnRequest.PickupAddress,

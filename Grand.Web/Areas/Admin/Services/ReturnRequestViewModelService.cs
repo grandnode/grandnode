@@ -129,6 +129,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.ReturnRequestStatusStr = returnRequest.ReturnRequestStatus.ToString();
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
             model.PickupDate = returnRequest.PickupDate;
+            model.GenericAttributes = returnRequest.GenericAttributes;
 
             if (!excludeProperties)
             {
