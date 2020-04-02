@@ -72,6 +72,11 @@ namespace Grand.Web.Infrastructure.Cache
         public const string VENDOR_NAVIGATION_PATTERN_KEY = "Grand.pres.vendor.navigation";
 
         /// <summary>
+        /// Key for List of VendorModel caching
+        /// </summary>
+        public const string VENDOR_ALL_MODEL_KEY = "Grand.pres.vendor.navigation.all";
+
+        /// <summary>
         /// Key for caching of a value indicating whether a manufacturer has featured products
         /// </summary>
         /// <remarks>
