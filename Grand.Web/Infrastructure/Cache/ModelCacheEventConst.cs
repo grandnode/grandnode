@@ -44,6 +44,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}";
 
+        
         /// <summary>
         /// Key for caching of manufacturer displayed on home page
         /// </summary>
@@ -54,6 +55,15 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-fp-{0}-{1}-{2}";
 
+        /// <summary>
+        /// Key for List of ManufacturerModel caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language id
+        /// {1} : comma separated list of customer roles
+        /// {2} : current store ID
+        /// </remarks>
+        public const string MANUFACTURER_ALL_MODEL_KEY = "Grand.pres.manufacturer.navigation.all-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for VendorNavigationModel caching

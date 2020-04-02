@@ -1,9 +1,12 @@
-﻿using Grand.Core.Domain.Media;
+﻿using Grand.Core.Caching;
+using Grand.Core.Domain.Media;
 using Grand.Services.Catalog;
+using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Catalog;
+using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using MediatR;
@@ -18,20 +21,32 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IManufacturerService _manufacturerService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
+        private readonly ICacheManager _cacheManager;
         private readonly MediaSettings _mediaSettings;
 
         public GetManufacturerAllHandler(IManufacturerService manufacturerService,
             IPictureService pictureService,
             ILocalizationService localizationService,
+            ICacheManager cacheManager,
             MediaSettings mediaSettings)
         {
             _manufacturerService = manufacturerService;
             _pictureService = pictureService;
             _localizationService = localizationService;
+            _cacheManager = cacheManager;
             _mediaSettings = mediaSettings;
         }
 
         public async Task<IList<ManufacturerModel>> Handle(GetManufacturerAll request, CancellationToken cancellationToken)
+        {
+            string cacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_ALL_MODEL_KEY,
+                request.Language.Id,
+                string.Join(",", request.Customer.GetCustomerRoleIds()),
+                request.Store.Id);
+            return await _cacheManager.GetAsync(cacheKey, () => PrepareManufacturerAll(request));            
+        }
+
+        private async Task<List<ManufacturerModel>> PrepareManufacturerAll(GetManufacturerAll request)
         {
             var model = new List<ManufacturerModel>();
             var manufacturers = await _manufacturerService.GetAllManufacturers(storeId: request.Store.Id);

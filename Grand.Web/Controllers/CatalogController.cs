@@ -217,6 +217,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> ManufacturerAll()
         {
             var model = await _mediator.Send(new GetManufacturerAll() {
+                Customer = _workContext.CurrentCustomer,
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore
             });
