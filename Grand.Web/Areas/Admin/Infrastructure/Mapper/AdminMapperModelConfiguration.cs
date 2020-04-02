@@ -974,6 +974,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             //course
             CreateMap<Course, CourseModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
