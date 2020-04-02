@@ -536,10 +536,10 @@ namespace Grand.Web.Areas.Admin.Services
                         {
                             var newsletterSubscription = await _newsLetterSubscriptionService
                                 .GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
-                            if (newsletterSubscription != null)
+                            if (newsletterSubscription != null && newsletterSubscription.Active)
                                 newsletterSubscriptionStoreIds.Add(store.Id);
-                            model.SelectedNewsletterSubscriptionStoreIds = newsletterSubscriptionStoreIds.ToArray();
                         }
+                        model.SelectedNewsletterSubscriptionStoreIds = newsletterSubscriptionStoreIds.ToArray();
                     }
 
 
