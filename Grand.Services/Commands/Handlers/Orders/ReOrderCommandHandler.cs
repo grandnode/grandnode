@@ -50,6 +50,10 @@ namespace Grand.Services.Commands.Handlers.Orders
                             orderItem.Quantity, false));
                     }
                 }
+                else
+                {
+                    warnings.Add("Product is not available");
+                }
             }
 
             return warnings;
