@@ -22,6 +22,7 @@ namespace Grand.Core.Domain.Common
         public bool SitemapIncludeCategories { get; set; }
         public bool SitemapIncludeManufacturers { get; set; }
         public bool SitemapIncludeProducts { get; set; }
+        public bool SitemapIncludeImage { get; set; }
 
         /// <summary>
         /// A list of custom URLs to be added to sitemap.xml (include page names only)
