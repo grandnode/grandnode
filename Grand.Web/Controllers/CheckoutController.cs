@@ -653,6 +653,7 @@ namespace Grand.Web.Controllers
                 ShippingAddress = _workContext.CurrentCustomer.ShippingAddress,
                 Store = _storeContext.CurrentStore
             });
+
             return View(model);
         }
 
@@ -945,8 +946,7 @@ namespace Grand.Web.Controllers
             if (string.IsNullOrEmpty(viewcomponent))
                 return Content("");
 
-            var actionContext = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
-            var component = this.RenderViewComponentToString(viewcomponent, new { shippingOption = shippingOption });
+            var component = RenderViewComponentToString(viewcomponent, new { shippingOption = shippingOption });
             return Content(component);
         }
 

@@ -22,6 +22,7 @@
 <div class="page checkout-page shipping-method-page">
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Shipping })
         <h2 class="generalTitle text-sm-center ">@T("Checkout.SelectShippingMethod")</h2>
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
         <div class="shipping-method">
             <form asp-route="CheckoutShippingMethod" method="post">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_top" })
