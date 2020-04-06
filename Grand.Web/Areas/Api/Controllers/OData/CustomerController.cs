@@ -1,5 +1,4 @@
-﻿using Grand.Api.Controllers;
-using Grand.Api.DTOs.Customers;
+﻿using Grand.Api.DTOs.Customers;
 using Grand.Api.Interfaces;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
