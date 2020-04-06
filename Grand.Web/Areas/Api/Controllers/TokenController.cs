@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers
 {
-    public class TokenController : BaseApiController
+    [ApiController]
+    [Area("Api")]
+    [Route("[area]/[controller]/[action]")]
+    public class TokenController : Controller
     {
         private readonly ITokenService _tokenService;
         public TokenController(ITokenService tokenService)
