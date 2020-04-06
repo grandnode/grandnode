@@ -1,5 +1,8 @@
-﻿using Grand.Api.Interfaces;
+﻿using Grand.Api.DTOs.Common;
+using Grand.Api.Interfaces;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +13,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class CountryController : BaseODataController
     {
-        private readonly ICommonApiService _commonApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public CountryController(ICommonApiService commonApiService, IPermissionService permissionService)
+        public CountryController(IMediator mediator, IPermissionService permissionService)
         {
-            _commonApiService = commonApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -25,11 +28,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Countries))
                 return Forbid();
 
-            var country = _commonApiService.GetCountries().FirstOrDefault(x => x.Id == key);
-            if (country == null)
+            var country = await _mediator.Send(new GetQuery<CountryDto>() { Id = key });
+            if (!country.Any())
                 return NotFound();
 
-            return Ok(country);
+            return Ok(country.FirstOrDefault());
         }
 
         [HttpGet]
@@ -39,7 +42,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Countries))
                 return Forbid();
 
-            return Ok(_commonApiService.GetCountries());
+            return Ok(await _mediator.Send(new GetQuery<CountryDto>()));
         }
     }
 }
