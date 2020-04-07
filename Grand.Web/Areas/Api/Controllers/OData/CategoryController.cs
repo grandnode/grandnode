@@ -66,7 +66,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
 
-            var category = await _mediator.Send(new GetQuery<CategoryDto>() { Id = key });
+            var category = await _mediator.Send(new GetQuery<CategoryDto>() { Id = model.Id });
             if (!category.Any())
             {
                 return NotFound();
