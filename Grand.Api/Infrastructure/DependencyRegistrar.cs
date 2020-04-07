@@ -15,7 +15,6 @@ namespace Grand.Api.Infrastructure
             builder.RegisterType<ProductApiService>().As<IProductApiService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductAttributeApiService>().As<IProductAttributeApiService>().InstancePerLifetimeScope();
             builder.RegisterType<SpecificationAttributeApiService>().As<ISpecificationAttributeApiService>().InstancePerLifetimeScope();
-            builder.RegisterType<ShippingApiService>().As<IShippingApiService>().InstancePerLifetimeScope();
         }
         public int Order => 5;
     }
