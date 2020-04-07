@@ -1,22 +1,22 @@
-﻿using Grand.Api.Infrastructure.Extensions;
-using Grand.Api.Interfaces;
+﻿using Grand.Api.Commands.Models.Common;
+using Grand.Api.Infrastructure.Extensions;
 using Grand.Api.Jwt;
 using Grand.Core.Configuration;
-using System.Collections.Generic;
+using MediatR;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grand.Api.Services
+namespace Grand.Api.Commands.Handlers.Common
 {
-    public partial class TokenService : ITokenService
+    public class GenerateTokenCommandHandler : IRequestHandler<GenerateTokenCommand, string>
     {
         private readonly ApiConfig _apiConfig;
 
-        public TokenService(ApiConfig apiConfig)
+        public GenerateTokenCommandHandler(ApiConfig apiConfig)
         {
             _apiConfig = apiConfig;
         }
-
-        public virtual Task<string> GenerateToken(Dictionary<string, string> claims)
+        public async Task<string> Handle(GenerateTokenCommand request, CancellationToken cancellationToken)
         {
             var token = new JwtTokenBuilder();
             token.AddSecurityKey(JwtSecurityKey.Create(_apiConfig.SecretKey));
@@ -26,11 +26,11 @@ namespace Grand.Api.Services
             if (_apiConfig.ValidateAudience)
                 token.AddAudience(_apiConfig.ValidAudience);
 
-            token.AddClaims(claims);
+            token.AddClaims(request.Claims);
             token.AddExpiry(_apiConfig.ExpiryInMinutes);
             token.Build();
 
-            return Task.FromResult(token.Build().Value);
+            return await Task.FromResult(token.Build().Value);
         }
     }
 }
