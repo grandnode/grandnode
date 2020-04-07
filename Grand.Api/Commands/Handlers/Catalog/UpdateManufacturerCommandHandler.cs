@@ -44,7 +44,7 @@ namespace Grand.Api.Commands.Models.Catalog
         public async Task<ManufacturerDto> Handle(UpdateManufacturerCommand request, CancellationToken cancellationToken)
         {
             var manufacturer = await _manufacturerService.GetManufacturerById(request.Model.Id);
-            string prevPictureId = manufacturer.PictureId;
+            var prevPictureId = manufacturer.PictureId;
             manufacturer = request.Model.ToEntity(manufacturer);
             manufacturer.UpdatedOnUtc = DateTime.UtcNow;
             request.Model.SeName = await manufacturer.ValidateSeName(request.Model.SeName, manufacturer.Name, true, _seoSettings, _urlRecordService, _languageService);
@@ -54,7 +54,7 @@ namespace Grand.Api.Commands.Models.Catalog
             await _urlRecordService.SaveSlug(manufacturer, request.Model.SeName, "");
             await _manufacturerService.UpdateManufacturer(manufacturer);
             //delete an old picture (if deleted or updated)
-            if (!String.IsNullOrEmpty(prevPictureId) && prevPictureId != manufacturer.PictureId)
+            if (!string.IsNullOrEmpty(prevPictureId) && prevPictureId != manufacturer.PictureId)
             {
                 var prevPicture = await _pictureService.GetPictureById(prevPictureId);
                 if (prevPicture != null)
