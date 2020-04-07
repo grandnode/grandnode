@@ -1,20 +1,23 @@
-﻿using Grand.Api.DTOs.Catalog;
-using Grand.Api.Interfaces;
+﻿using Grand.Api.Commands.Models.Catalog;
+using Grand.Api.DTOs.Catalog;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class SpecificationAttributeController : BaseODataController
     {
-        private readonly ISpecificationAttributeApiService _specificationAttributeApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
-        public SpecificationAttributeController(ISpecificationAttributeApiService specificationAttributeApiService, IPermissionService permissionService)
+        public SpecificationAttributeController(IMediator mediator, IPermissionService permissionService)
         {
-            _specificationAttributeApiService = specificationAttributeApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -24,11 +27,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var specificationAttribute = await _specificationAttributeApiService.GetById(key);
-            if (specificationAttribute == null)
+            var specificationAttribute = await _mediator.Send(new GetQuery<SpecificationAttributeDto>() { Id = key });
+            if (!specificationAttribute.Any())
                 return NotFound();
 
-            return Ok(specificationAttribute);
+            return Ok(specificationAttribute.FirstOrDefault());
         }
 
         [HttpGet]
@@ -38,7 +41,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            return Ok(_specificationAttributeApiService.GetSpecificationAttributes());
+            return Ok(await _mediator.Send(new GetQuery<SpecificationAttributeDto>()));
         }
 
         [HttpPost]
@@ -49,7 +52,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                model = await _specificationAttributeApiService.InsertOrUpdateSpecificationAttribute(model);
+                model = await _mediator.Send(new AddSpecificationAttributeCommand() { Model = model });
                 return Created(model);
             }
             return BadRequest(ModelState);
@@ -63,7 +66,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                model = await _specificationAttributeApiService.UpdateSpecificationAttribute(model);
+                model = await _mediator.Send(new UpdateSpecificationAttributeCommand() { Model = model });
                 return Ok(model);
             }
             return BadRequest(ModelState);
@@ -75,20 +78,22 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var entity = await _specificationAttributeApiService.GetById(key);
-            if (entity == null)
+
+            var specification = await _mediator.Send(new GetQuery<SpecificationAttributeDto>() { Id = key });
+            if (!specification.Any())
             {
                 return NotFound();
             }
-
-            model.Patch(entity);
+            var spec = specification.FirstOrDefault();
+            model.Patch(spec);
 
             if (ModelState.IsValid)
             {
-                entity = await _specificationAttributeApiService.UpdateSpecificationAttribute(entity);
-                return Ok(model);
+                await _mediator.Send(new UpdateSpecificationAttributeCommand() { Model = spec });
+                return Ok();
             }
             return BadRequest(ModelState);
+
         }
 
         [HttpDelete]
@@ -97,12 +102,13 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var specificationAttribute = await _specificationAttributeApiService.GetById(key);
-            if (specificationAttribute == null)
+            var specification = await _mediator.Send(new GetQuery<SpecificationAttributeDto>() { Id = key });
+            if (!specification.Any())
             {
                 return NotFound();
             }
-            await _specificationAttributeApiService.DeleteSpecificationAttribute(specificationAttribute);
+            await _mediator.Send(new DeleteSpecificationAttributeCommand() { Model = specification.FirstOrDefault() });
+
             return Ok();
         }
     }
