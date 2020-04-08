@@ -1,5 +1,4 @@
 ﻿using Grand.Api.DTOs.Common;
-using Grand.Api.Interfaces;
 using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
 using MediatR;
