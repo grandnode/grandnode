@@ -17021,6 +17021,9 @@
   <LocaleResource Name="Api.Catalog.ProductAttribute.Fields.Name.Required">
     <Value>Product attribute name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductAttributeMapping.Fields.ProductAttributeId.NotExists">
+    <Value>Product attribute id does not exist</Value>
+  </LocaleResource>
   <LocaleResource Name="Api.Catalog.ProductCategory.Fields.CategoryId.NotExists">
     <Value>Category Id does not exist</Value>
   </LocaleResource>

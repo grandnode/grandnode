@@ -87,7 +87,7 @@ namespace Grand.Services.Catalog
         /// <param name="productAttributeCombinationRepository">Product attribute combination repository</param>
         /// <param name="mediator">Mediator</param>
         public ProductAttributeService(ICacheManager cacheManager,
-            IRepository<ProductAttribute> productAttributeRepository,            
+            IRepository<ProductAttribute> productAttributeRepository,
             IRepository<Product> productRepository,
             IMediator mediator)
         {
@@ -213,7 +213,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productAttributeMapping");
 
             var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.PullFilter(p => p.ProductAttributeMappings, y=>y.Id == productAttributeMapping.Id);
+            var update = updatebuilder.PullFilter(p => p.ProductAttributeMappings, y => y.Id == productAttributeMapping.Id);
             await _productRepository.Collection.UpdateManyAsync(new BsonDocument("_id", productAttributeMapping.ProductId), update);
 
             //cache
@@ -247,14 +247,15 @@ namespace Grand.Services.Catalog
         /// Updates the product attribute mapping
         /// </summary>
         /// <param name="productAttributeMapping">The product attribute mapping</param>
-        public virtual async Task UpdateProductAttributeMapping(ProductAttributeMapping productAttributeMapping)
+        /// <param name="values">Update values</param>
+        public virtual async Task UpdateProductAttributeMapping(ProductAttributeMapping productAttributeMapping, bool values = false)
         {
             if (productAttributeMapping == null)
                 throw new ArgumentNullException("productAttributeMapping");
 
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, productAttributeMapping.ProductId);
-            filter = filter & builder.ElemMatch(x => x.ProductAttributeMappings, y => y.Id == productAttributeMapping.Id);
+            filter &= builder.ElemMatch(x => x.ProductAttributeMappings, y => y.Id == productAttributeMapping.Id);
             var update = Builders<Product>.Update
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).ProductAttributeId, productAttributeMapping.ProductAttributeId)
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).TextPrompt, productAttributeMapping.TextPrompt)
@@ -267,6 +268,11 @@ namespace Grand.Services.Catalog
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).ValidationFileMaximumSize, productAttributeMapping.ValidationFileMaximumSize)
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).DefaultValue, productAttributeMapping.DefaultValue)
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).ConditionAttributeXml, productAttributeMapping.ConditionAttributeXml);
+
+            if (values)
+            {
+                update = update.Set(x => x.ProductAttributeMappings.ElementAt(-1).ProductAttributeValues, productAttributeMapping.ProductAttributeValues);
+            }
 
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
@@ -290,8 +296,8 @@ namespace Grand.Services.Catalog
             if (productAttributeValue == null)
                 throw new ArgumentNullException("productAttributeValue");
 
-           var filter = Builders<Product>.Filter.And(Builders<Product>.Filter.Eq(x => x.Id, productAttributeValue.ProductId),
-           Builders<Product>.Filter.ElemMatch(x => x.ProductAttributeMappings, x => x.Id == productAttributeValue.ProductAttributeMappingId));
+            var filter = Builders<Product>.Filter.And(Builders<Product>.Filter.Eq(x => x.Id, productAttributeValue.ProductId),
+            Builders<Product>.Filter.ElemMatch(x => x.ProductAttributeMappings, x => x.Id == productAttributeValue.ProductAttributeMappingId));
 
             var p = await _productRepository.GetByIdAsync(productAttributeValue.ProductId);
             if (p != null)
@@ -356,13 +362,13 @@ namespace Grand.Services.Catalog
             Builders<Product>.Filter.ElemMatch(x => x.ProductAttributeMappings, x => x.Id == productAttributeValue.ProductAttributeMappingId));
 
             var p = await _productRepository.GetByIdAsync(productAttributeValue.ProductId);
-            if (p!= null)
+            if (p != null)
             {
                 var pavs = p.ProductAttributeMappings.Where(x => x.Id == productAttributeValue.ProductAttributeMappingId).FirstOrDefault();
-                if(pavs!=null)
+                if (pavs != null)
                 {
                     var pav = pavs.ProductAttributeValues.Where(x => x.Id == productAttributeValue.Id).FirstOrDefault();
-                    if(pav!=null)
+                    if (pav != null)
                     {
                         pav.AttributeValueTypeId = productAttributeValue.AttributeValueTypeId;
                         pav.AssociatedProductId = productAttributeValue.AssociatedProductId;
@@ -410,10 +416,10 @@ namespace Grand.Services.Catalog
             var pa = await _productAttributeRepository.Collection
                 .Find(filter).FirstOrDefaultAsync();
 
-            return pa.PredefinedProductAttributeValues.OrderBy(x=>x.DisplayOrder).ToList();
+            return pa.PredefinedProductAttributeValues.OrderBy(x => x.DisplayOrder).ToList();
         }
 
-        
+
         #endregion
 
         #region Product attribute combinations

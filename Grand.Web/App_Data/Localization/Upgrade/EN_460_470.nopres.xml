@@ -257,5 +257,8 @@
   <LocaleResource Name="ReturnRequests.Document">
     <Value>Return request {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductAttributeMapping.Fields.ProductAttributeId.NotExists">
+    <Value>Product attribute id does not exist</Value>
+  </LocaleResource>
 </Language>
 

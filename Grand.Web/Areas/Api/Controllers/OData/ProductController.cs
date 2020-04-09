@@ -15,6 +15,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
+
         public ProductController(
             IMediator mediator,
             IPermissionService permissionService)
@@ -123,7 +124,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
                 return NotFound();
 
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             var warehouseId = parameters.FirstOrDefault(x => x.Key == "WarehouseId").Value;
             var stock = parameters.FirstOrDefault(x => x.Key == "Stock").Value;
@@ -144,7 +145,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> CreateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
         {
             if (productCategory == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -168,7 +169,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> UpdateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
         {
             if (productCategory == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -193,7 +194,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> DeleteProductCategory(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -228,7 +229,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> CreateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
         {
             if (productManufacturer == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -253,7 +254,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> UpdateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
         {
             if (productManufacturer == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -277,7 +278,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> DeleteProductManufacturer(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -311,7 +312,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> CreateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
         {
             if (productPicture == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -336,7 +337,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> UpdateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
         {
             if (productPicture == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -361,7 +362,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> DeleteProductPicture(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -396,7 +397,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> CreateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
         {
             if (productSpecification == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -416,11 +417,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
         [HttpPost]
         public async Task<IActionResult> UpdateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
         {
             if (productSpecification == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -440,11 +442,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
         [HttpPost]
         public async Task<IActionResult> DeleteProductSpecification(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -459,7 +462,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             {
                 var psa = product.FirstOrDefault().SpecificationAttribute.Where(x => x.Id == specificationId.ToString()).FirstOrDefault();
                 if (psa == null)
-                    ModelState.AddModelError("", "No product picture specification found with the specified id");
+                    ModelState.AddModelError("", "No product specification mapping found with the specified id");
 
                 if (ModelState.IsValid)
                 {
@@ -479,7 +482,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> CreateProductTierPrice(string key, [FromBody] ProductTierPriceDto productTierPrice)
         {
             if (productTierPrice == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -503,7 +506,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> UpdateProductTierPrice(string key, [FromBody] ProductTierPriceDto productTierPrice)
         {
             if (productTierPrice == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -527,7 +530,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> DeleteProductTierPrice(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -553,6 +556,90 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return NotFound();
         }
 
+        #endregion
+
+        #region Product attribute mapping
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductAttributeMapping(string key, [FromBody] ProductAttributeMappingDto productAttributeMapping)
+        {
+            if (productAttributeMapping == null)
+                return BadRequest();
+
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
+                return NotFound();
+
+            var pam = product.FirstOrDefault().AttributeMappings.Where(x => x.Id == productAttributeMapping.Id).FirstOrDefault();
+            if (pam != null)
+                ModelState.AddModelError("", "Product attribute mapping found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                var result = await _mediator.Send(new AddProductAttributeMappingCommand() { Product = product.FirstOrDefault(), Model = productAttributeMapping });
+                return Ok(result);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProductAttributeMapping(string key, [FromBody] ProductAttributeMappingDto productAttributeMapping)
+        {
+            if (productAttributeMapping == null)
+                return BadRequest();
+
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
+                return NotFound();
+
+            var pam = product.FirstOrDefault().AttributeMappings.Where(x => x.Id == productAttributeMapping.Id).FirstOrDefault();
+            if (pam == null)
+                ModelState.AddModelError("", "No product attribute mapping found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                var result = await _mediator.Send(new UpdateProductAttributeMappingCommand() { Product = product.FirstOrDefault(), Model = productAttributeMapping });
+                return Ok(result);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteProductAttributeMapping(string key, [FromBody] ODataActionParameters parameters)
+        {
+            if (parameters == null)
+                return BadRequest();
+
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
+                return NotFound();
+
+
+            var attrId = parameters.FirstOrDefault(x => x.Key == "Id").Value;
+            if (attrId != null)
+            {
+                var pam = product.FirstOrDefault().AttributeMappings.Where(x => x.Id == attrId.ToString()).FirstOrDefault();
+                if (pam == null)
+                    ModelState.AddModelError("", "No product attribute mapping found with the specified id");
+
+                if (ModelState.IsValid)
+                {
+                    var result = await _mediator.Send(new DeleteProductAttributeMappingCommand() { Product = product.FirstOrDefault(),  Model = pam });
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
+            }
+            return NotFound();
+        }
         #endregion
     }
 }
