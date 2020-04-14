@@ -191,6 +191,7 @@ namespace Grand.Services.Orders
             if (details.InitialOrder == null)
                 throw new ArgumentException("Initial order is not set for recurring payment");
 
+            details.InitialOrder.Code = await _mediator.Send(new PrepareOrderCodeCommand());
             processPaymentRequest.PaymentMethodSystemName = details.InitialOrder.PaymentMethodSystemName;            
             details.CustomerCurrencyCode = details.InitialOrder.CustomerCurrencyCode;
             details.CustomerCurrencyRate = details.InitialOrder.CurrencyRate;
@@ -217,7 +218,7 @@ namespace Grand.Services.Orders
             details.PaymentAdditionalFeeExclTax = details.InitialOrder.PaymentMethodAdditionalFeeExclTax;
             details.OrderTaxTotal = details.InitialOrder.OrderTax;
             details.TaxRates = details.InitialOrder.TaxRates;
-            details.IsRecurringShoppingCart = true;
+            details.IsRecurringShoppingCart = true;            
             processPaymentRequest.OrderTotal = details.OrderTotal;
 
             return details;
@@ -320,6 +321,7 @@ namespace Grand.Services.Orders
             var order = new Order {
                 StoreId = processPaymentRequest.StoreId,
                 OrderGuid = processPaymentRequest.OrderGuid,
+                Code = processPaymentRequest.OrderCode,
                 CustomerId = details.Customer.Id,
                 OwnerId = string.IsNullOrEmpty(details.Customer.OwnerId) ? details.Customer.Id : details.Customer.OwnerId,
                 CustomerLanguageId = details.CustomerLanguage.Id,
@@ -1294,6 +1296,9 @@ namespace Grand.Services.Orders
             {
                 if (processPaymentRequest.OrderGuid == Guid.Empty)
                     processPaymentRequest.OrderGuid = Guid.NewGuid();
+
+                if (string.IsNullOrEmpty(processPaymentRequest.OrderCode))
+                    processPaymentRequest.OrderCode = await _mediator.Send(new PrepareOrderCodeCommand());
 
                 //prepare order details
                 var details = !processPaymentRequest.IsRecurringPayment ? 

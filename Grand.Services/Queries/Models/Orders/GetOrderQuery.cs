@@ -26,6 +26,7 @@ namespace Grand.Services.Queries.Models.Orders
         public string BillingEmail { get; set; } = null;
         public string BillingLastName { get; set; } = "";
         public string OrderGuid { get; set; } = null;
+        public string OrderCode { get; set; } = null;
         public int PageIndex { get; set; } = 0;
         public int PageSize { get; set; } = int.MaxValue;
     }

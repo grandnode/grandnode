@@ -75,9 +75,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Index() => RedirectToAction("List");
 
         public async Task<IActionResult> List(int? orderStatusId = null,
-            int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null)
+            int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null, string code = null)
         {
-            var model = await _orderViewModelService.PrepareOrderListModel(orderStatusId, paymentStatusId, shippingStatusId, startDate, _workContext.CurrentCustomer.StaffStoreId);
+            var model = await _orderViewModelService.PrepareOrderListModel(orderStatusId, paymentStatusId, shippingStatusId, startDate, _workContext.CurrentCustomer.StaffStoreId, code);
             return View(model);
         }
 
@@ -137,9 +137,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("go-to-order-by-number")]
         public async Task<IActionResult> GoToOrderId(OrderListModel model)
         {
-            var order = await _orderService.GetOrderByNumber(model.GoDirectlyToNumber);
+            Order order = null;
+            int.TryParse(model.GoDirectlyToNumber, out var orderNumber);
+            if (orderNumber > 0)
+            {
+                order = await _orderService.GetOrderByNumber(orderNumber);
+            }
+            var orders = await _orderService.GetOrdersByCode(model.GoDirectlyToNumber);
+            if (orders.Count > 1)
+            {
+                return RedirectToAction("List", new { Code = model.GoDirectlyToNumber });
+            }
+            if (orders.Count == 1)
+            {
+                order = orders.FirstOrDefault();
+            }
             if (order == null)
-                return RedirectToAction("List", "Order");
+                return RedirectToAction("List");
 
             if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
             {
@@ -280,7 +294,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                await  _mediator.Send(new CancelOrderCommand() { Order = order, NotifyCustomer = true });
+                await _mediator.Send(new CancelOrderCommand() { Order = order, NotifyCustomer = true });
                 await _orderViewModelService.LogEditOrder(order.Id);
                 var model = new OrderModel();
                 await _orderViewModelService.PrepareOrderDetailsModel(model, order);

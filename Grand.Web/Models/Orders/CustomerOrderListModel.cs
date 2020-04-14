@@ -31,6 +31,7 @@ namespace Grand.Web.Models.Orders
             public string ShippingStatus { get; set; }
             public DateTime CreatedOn { get; set; }
             public int OrderNumber { get; set; }
+            public string OrderCode { get; set; }
         }
 
         public partial class RecurringOrderModel : BaseGrandEntityModel

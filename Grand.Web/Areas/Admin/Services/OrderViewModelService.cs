@@ -170,7 +170,13 @@ namespace Grand.Web.Areas.Admin.Services
 
         #endregion
 
-        public virtual async Task<OrderListModel> PrepareOrderListModel(int? orderStatusId = null, int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null, string storeId = null)
+        public virtual async Task<OrderListModel> PrepareOrderListModel(
+            int? orderStatusId = null, 
+            int? paymentStatusId = null, 
+            int? shippingStatusId = null, 
+            DateTime? startDate = null, 
+            string storeId = null,
+            string code = null)
         {
             //order statuses
             var model = new OrderListModel {
@@ -239,6 +245,9 @@ namespace Grand.Web.Areas.Admin.Services
             if (startDate.HasValue)
                 model.StartDate = startDate.Value;
 
+            if (!string.IsNullOrEmpty(code))
+                model.GoDirectlyToNumber = code;
+
             return model;
         }
         public virtual async Task<(IEnumerable<OrderModel> orderModels, OrderAggreratorModel aggreratorModel, int totalCount)> PrepareOrderModel(OrderListModel model, int pageIndex, int pageSize)
@@ -273,6 +282,7 @@ namespace Grand.Web.Areas.Admin.Services
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
                 orderGuid: model.OrderGuid,
+                orderCode: model.GoDirectlyToNumber,
                 pageIndex: pageIndex - 1,
                 pageSize: pageSize);
 
@@ -332,6 +342,7 @@ namespace Grand.Web.Areas.Admin.Services
                 items.Add(new OrderModel {
                     Id = x.Id,
                     OrderNumber = x.OrderNumber,
+                    Code = x.Code,
                     StoreName = store != null ? store.Name : "Unknown",
                     OrderTotal = orderTotal,
                     CurrencyCode = x.CustomerCurrencyCode,
@@ -359,6 +370,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             model.Id = order.Id;
             model.OrderNumber = order.OrderNumber;
+            model.Code = order.Code;
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.OrderStatusId = order.OrderStatusId;
             model.OrderGuid = order.OrderGuid;

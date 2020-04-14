@@ -260,5 +260,14 @@
   <LocaleResource Name="Api.Catalog.ProductAttributeMapping.Fields.ProductAttributeId.NotExists">
     <Value>Product attribute id does not exist</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Orders.Code">
+    <Value>Order code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Code">
+    <Value>Code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderCode">
+    <Value>Order Code</Value>
+  </LocaleResource>
 </Language>
 

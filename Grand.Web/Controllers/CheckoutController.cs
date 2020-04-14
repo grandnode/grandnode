@@ -198,6 +198,7 @@ namespace Grand.Web.Controllers
             var model = new CheckoutCompletedModel {
                 OrderId = order.Id,
                 OrderNumber = order.OrderNumber,
+                OrderCode = order.Code,
                 OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled
             };
 

@@ -11,7 +11,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface IOrderViewModelService
     {
-        Task<OrderListModel> PrepareOrderListModel(int? orderStatusId = null, int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null, string storeId = null);
+        Task<OrderListModel> PrepareOrderListModel(int? orderStatusId = null, int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null, string storeId = null, string code = null);
         Task<(IEnumerable<OrderModel> orderModels, OrderAggreratorModel aggreratorModel, int totalCount)> PrepareOrderModel(OrderListModel model, int pageIndex, int pageSize);
         Task PrepareOrderDetailsModel(OrderModel model, Order order);
         Task<OrderModel.AddOrderProductModel> PrepareAddOrderProductModel(Order order);

@@ -49,6 +49,12 @@
         <h5 class="order-number">
             <strong>@T("Order.Order#")@Model.OrderNumber</strong>
         </h5>
+        @if(!string.IsNullOrEmpty(Model.OrderCode))
+        {
+            <div class="order-code">
+                @T("Order.OrderCode"): @Model.OrderCode
+            </div>
+        }
         <div class="order-date">
             @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
         </div>

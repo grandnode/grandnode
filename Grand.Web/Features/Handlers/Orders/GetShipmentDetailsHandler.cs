@@ -151,6 +151,7 @@ namespace Grand.Web.Features.Handlers.Orders
             model.GenericAttributes = order.GenericAttributes;
             model.Id = order.Id;
             model.OrderNumber = order.OrderNumber;
+            model.OrderCode = order.Code;
             model.ShippingMethod = order.ShippingMethod;
             model.PickUpInStore = order.PickUpInStore;
             if (!order.PickUpInStore)

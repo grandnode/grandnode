@@ -12335,6 +12335,9 @@
   <LocaleResource Name="Admin.Customers.Customers.Orders">
     <Value>Orders</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Orders.Code">
+    <Value>Order code</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Orders.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
@@ -13327,6 +13330,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.CardType.Hint">
     <Value>The type of card used in the transaction.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Code">
+    <Value>Code</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.CreatedOn">
     <Value>Created on</Value>
@@ -18991,6 +18997,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.CancelOrder">
     <Value>Cancel Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.OrderCode">
+    <Value>Order Code</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Document">
     <Value>Order number {0}</Value>

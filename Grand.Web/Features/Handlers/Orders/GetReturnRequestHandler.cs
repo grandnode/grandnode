@@ -72,6 +72,7 @@ namespace Grand.Web.Features.Handlers.Orders
             var model = new ReturnRequestModel();
             model.OrderId = request.Order.Id;
             model.OrderNumber = request.Order.OrderNumber;
+            model.OrderCode = request.Order.Code;
             model.ShowPickupAddress = _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress;
             model.ShowPickupDate = _orderSettings.ReturnRequests_AllowToSpecifyPickupDate;
             model.PickupDateRequired = _orderSettings.ReturnRequests_PickupDateRequired;

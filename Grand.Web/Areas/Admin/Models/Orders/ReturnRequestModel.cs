@@ -23,6 +23,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         [GrandResourceDisplayName("Admin.ReturnRequests.Fields.Order")]
         public string OrderId { get; set; }
         public int OrderNumber { get; set; }
+        public string OrderCode { get; set; }
 
         [GrandResourceDisplayName("Admin.ReturnRequests.Fields.ExternalId")]
         public string ExternalId { get; set; }

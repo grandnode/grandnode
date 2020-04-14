@@ -117,6 +117,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.Id = returnRequest.Id;
             model.OrderId = order.Id;
             model.OrderNumber = order.OrderNumber;
+            model.OrderCode = order.Code;
             model.ReturnNumber = returnRequest.ReturnNumber;
             model.CustomerId = returnRequest.CustomerId;
             model.NotifyCustomer = returnRequest.NotifyCustomer;

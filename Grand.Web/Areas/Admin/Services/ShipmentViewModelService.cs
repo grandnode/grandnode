@@ -89,6 +89,7 @@ namespace Grand.Web.Areas.Admin.Services
                 ShipmentNumber = shipment.ShipmentNumber,
                 OrderId = shipment.OrderId,
                 OrderNumber = order != null ? order.OrderNumber : 0,
+                OrderCode = order != null ? order.Code : "",
                 TrackingNumber = shipment.TrackingNumber,
                 TotalWeight = shipment.TotalWeight.HasValue ? string.Format("{0:F2} [{1}]", shipment.TotalWeight, baseWeightIn) : "",
                 ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc) : new DateTime?(),

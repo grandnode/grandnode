@@ -72,7 +72,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 
         [GrandResourceDisplayName("Admin.Orders.List.GoDirectlyToNumber")]
         
-        public int GoDirectlyToNumber { get; set; }
+        public string GoDirectlyToNumber { get; set; }
 
         public bool IsLoggedInAsVendor { get; set; }
 

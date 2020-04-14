@@ -660,6 +660,7 @@ namespace Grand.Web.Areas.Admin.Services
                 items.Add(new OrderModel {
                     Id = x.Id,
                     OrderNumber = x.OrderNumber,
+                    Code = x.Code,
                     StoreName = store != null ? store.Name : "Unknown",
                     OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                     PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),

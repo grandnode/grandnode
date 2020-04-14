@@ -1282,6 +1282,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     Id = order.Id,
                     OrderNumber = order.OrderNumber,
+                    OrderCode = order.Code,
                     OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                     PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                     ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),

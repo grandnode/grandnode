@@ -383,6 +383,7 @@ namespace Grand.Web.Areas.Admin.Services
                     DiscountId = x.DiscountId,
                     OrderId = x.OrderId,
                     OrderNumber = order != null ? order.OrderNumber : 0,
+                    OrderCode = order != null ? order.Code : "",
                     OrderTotal = order != null ? _priceFormatter.FormatPrice(order.OrderTotal, true, false) : "",
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                 };

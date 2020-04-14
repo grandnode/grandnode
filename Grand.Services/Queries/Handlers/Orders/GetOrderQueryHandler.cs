@@ -101,7 +101,10 @@ namespace Grand.Services.Queries.Handlers.Orders
                 if(Guid.TryParse(request.OrderGuid, out Guid orderguid))
                     query = query.Where(o => o.OrderGuid == orderguid); 
             }
-
+            if (!string.IsNullOrEmpty(request.OrderCode))
+            {
+                query = query.Where(o => o.Code == request.OrderCode.ToUpperInvariant());
+            }
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 

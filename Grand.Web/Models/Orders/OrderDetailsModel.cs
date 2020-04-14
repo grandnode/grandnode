@@ -48,6 +48,7 @@ namespace Grand.Web.Models.Orders
 
         public string VatNumber { get; set; }
         public int OrderNumber { get; set; }
+        public string OrderCode { get; set; }
         public string PaymentMethod { get; set; }
         public string PaymentMethodStatus { get; set; }
         public bool CanRePostProcessPayment { get; set; }

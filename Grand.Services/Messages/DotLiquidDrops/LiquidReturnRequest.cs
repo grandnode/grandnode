@@ -43,6 +43,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _order.OrderNumber.ToString(); }
         }
 
+        public string OrderCode {
+            get { return _order.Code; }
+        }
+
         public string CustomerComment
         {
             get { return HtmlHelper.FormatText(_returnRequest.CustomerComments, false, true, false, false, false, false); }

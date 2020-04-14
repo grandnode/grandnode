@@ -138,5 +138,10 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets a value indicating whether customers can add order notes
         /// </summary>
         public bool AllowCustomerToAddOrderNote { get; set; }
+
+        /// <summary>
+        /// Gets or sets a length for order code
+        /// </summary>
+        public int LengthCode { get; set; }
     }
 }

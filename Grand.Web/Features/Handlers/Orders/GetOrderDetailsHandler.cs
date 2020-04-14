@@ -88,6 +88,7 @@ namespace Grand.Web.Features.Handlers.Orders
 
             model.Id = request.Order.Id;
             model.OrderNumber = request.Order.OrderNumber;
+            model.OrderCode = request.Order.Code;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(request.Order.CreatedOnUtc, DateTimeKind.Utc);
             model.OrderStatus = request.Order.OrderStatus.GetLocalizedEnum(_localizationService, request.Language.Id);
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;

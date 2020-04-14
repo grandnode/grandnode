@@ -32,6 +32,11 @@ namespace Grand.Core.Domain.Orders
         public int OrderNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the order code 
+        /// </summary>
+        public string Code { get; set; }
+
+        /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
         public string StoreId { get; set; }

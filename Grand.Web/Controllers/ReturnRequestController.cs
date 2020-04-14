@@ -185,6 +185,7 @@ namespace Grand.Web.Controllers
                 {
                     model.Result = string.Format(_localizationService.GetResource("ReturnRequests.Submitted"), result.rr.ReturnNumber, Url.Link("ReturnRequestDetails", new { returnRequestId = result.rr.Id }));
                     model.OrderNumber = order.OrderNumber;
+                    model.OrderCode = order.Code;
                     return View(result.model);
                 }
 

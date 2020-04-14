@@ -59,6 +59,7 @@ namespace Grand.Web.Features.Handlers.Orders
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel {
                     Id = order.Id,
                     OrderNumber = order.OrderNumber,
+                    OrderCode = order.Code,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                     OrderStatusEnum = order.OrderStatus,
                     OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, request.Language.Id),

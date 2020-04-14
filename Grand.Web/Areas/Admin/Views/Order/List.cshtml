@@ -67,13 +67,13 @@
                             </div>
                         </div>
                         <div class="form-body col-md-6">
-                            <div class="form-group">
+                            <div class="form-group form-inline">
                                 <admin-label asp-for="GoDirectlyToNumber" class="col-xs-4 col-sm-4 col-md-4 control-label" />
                                 <div class="col-xs-8 col-md-8 col-sm-8">
                                     <div class="input-group">
                                         <admin-input asp-for="GoDirectlyToNumber" />
-                                        <input type="submit" name="go-to-order-by-number" id="gotoorderbynumber" class="k-button" value="@T("Admin.Common.Go")" />
                                     </div>
+                                    <input type="submit" name="go-to-order-by-number" id="gotoorderbynumber" class="input-group k-button" value="@T("Admin.Common.Go")" />
                                 </div>
                             </div>
                         </div>
@@ -248,7 +248,7 @@
                                 ShippingStatus: { editable: false, type: "string" },
                                 CustomerEmail: { editable: false, type: "string" },
                                 CustomerFullName: { editable: false, type: "string" },
-                                OrderStatusId: { editable: false, type: "number" }
+                                OrderStatusId: { editable: false, type: "number" },
                             }
                         }
                     },
@@ -506,7 +506,8 @@
                 BillingCountryId: $('#@Html.FieldIdFor(model => model.BillingCountryId)').val(),
                 PaymentMethodSystemName: $('#@Html.FieldIdFor(model => model.PaymentMethodSystemName)').val(),
                 ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
-                OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
+                OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val(),
+                GoDirectlyToNumber: $('#@Html.FieldIdFor(model => model.GoDirectlyToNumber)').val(),
             };
             addAntiForgeryToken(data);
             return data;

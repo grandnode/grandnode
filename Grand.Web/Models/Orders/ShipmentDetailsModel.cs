@@ -56,6 +56,7 @@ namespace Grand.Web.Models.Orders
         public partial class OrderModel : BaseGrandEntityModel
         {
             public int OrderNumber { get; set; }
+            public string OrderCode { get; set; }
             public string ShippingMethod { get; set; }
             public bool PickUpInStore { get; set; }
             public AddressModel PickupAddress { get; set; }
