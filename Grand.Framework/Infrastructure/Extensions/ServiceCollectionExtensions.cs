@@ -232,8 +232,6 @@ namespace Grand.Framework.Infrastructure.Extensions
             foreach (var instance in externalAuthInstances)
                 instance.Configure(authenticationBuilder, configuration);
 
-            services.AddSingleton<IAuthorizationPolicyProvider, PermisionPolicyProvider>();
-            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         }
 
         /// <summary>
