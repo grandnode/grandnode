@@ -309,8 +309,8 @@
                             '# if(OrderStatusId == 30) {#success #} #' +
                             '# if(OrderStatusId == 40) {#danger #} #' +
                             '">#=OrderStatus#</span></a></h4>'
-                    },</text>
-                                }
+                        },</text>
+                    }
                     {
                         field: "PaymentStatus",
                         title: "@T("Admin.Orders.Fields.PaymentStatus")",
@@ -331,11 +331,15 @@
                         field: "CustomerEmail",
                         title: "@T("Admin.Orders.Fields.Customer")",
                         width: 220,
-                        template: function (dataItem) {
-                            return "<a class=\"k-link\" href='@Url.Content("~/Admin/Customer/Edit/")" + dataItem.CustomerId + "'>" + kendo.htmlEncode(dataItem.CustomerFullName)+ " ("+dataItem.CustomerEmail+")</a>";
+                        @if (!Model.IsLoggedInAsVendor)
+                        {
+                            <text>
+                            template: function(dataItem) {
+                                    return "<a class=\"k-link\" href='@Url.Content("~/Admin/Customer/Edit/")" + dataItem.CustomerId + "'>" + kendo.htmlEncode(dataItem.CustomerFullName) + " (" + dataItem.CustomerEmail + ")</a>";
+                            }
+                            </text>
                         }
-
-                    },
+                        },
                     {
                         field: "StoreName",
                         title: "@T("Admin.Orders.Fields.Store")",
@@ -347,7 +351,7 @@
                         width: 180,
                         type: "date",
                         format: "{0:G}",
-                        
+
                     },
                     @if (!Model.IsLoggedInAsVendor)
                     {
