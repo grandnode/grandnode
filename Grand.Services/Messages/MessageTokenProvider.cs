@@ -683,11 +683,11 @@ namespace Grand.Services.Messages
             await _mediator.EntityTokensAdded(product, liquidProduct, liquidObject);
         }
 
-        public async Task AddAttributeCombinationTokens(LiquidObject liquidObject, Customer customer, Product product, ProductAttributeCombination combination)
+        public async Task AddAttributeCombinationTokens(LiquidObject liquidObject, Product product, ProductAttributeCombination combination)
         {
             var liquidAttributeCombination = new LiquidAttributeCombination(combination);
             var productAttributeFormatter = _serviceProvider.GetRequiredService<IProductAttributeFormatter>();
-            liquidAttributeCombination.Formatted = await productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, customer, renderPrices: false);
+            liquidAttributeCombination.Formatted = await productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, null, renderPrices: false);
             liquidAttributeCombination.SKU = product.FormatSku(combination.AttributesXml, _productAttributeParser);
             liquidObject.AttributeCombination = liquidAttributeCombination;
 

@@ -1741,7 +1741,7 @@ namespace Grand.Services.Messages
         /// <param name="product">Product</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual async Task<int> SendQuantityBelowStoreOwnerNotification(Customer customer, Product product, string languageId)
+        public virtual async Task<int> SendQuantityBelowStoreOwnerNotification(Product product, string languageId)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1776,7 +1776,7 @@ namespace Grand.Services.Messages
         /// <param name="combination">Attribute combination</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual async Task<int> SendQuantityBelowStoreOwnerNotification(Customer customer, Product product, ProductAttributeCombination combination, string languageId)
+        public virtual async Task<int> SendQuantityBelowStoreOwnerNotification(Product product, ProductAttributeCombination combination, string languageId)
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");
@@ -1794,7 +1794,7 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             await _messageTokenProvider.AddProductTokens(liquidObject, product, language, store);
-            await _messageTokenProvider.AddAttributeCombinationTokens(liquidObject, customer, product, combination);
+            await _messageTokenProvider.AddAttributeCombinationTokens(liquidObject, product, combination);
 
             //event notification
             await _mediator.MessageTokensAdded(messageTemplate, liquidObject);

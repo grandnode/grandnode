@@ -32,7 +32,7 @@ namespace Grand.Services.Messages
         Task AddArticleCommentTokens(LiquidObject liquidObject, KnowledgebaseArticle article, KnowledgebaseArticleComment articleComment, Store store, Language language);
         Task AddNewsCommentTokens(LiquidObject liquidObject, NewsItem newsItem, NewsComment newsComment, Store store, Language language);
         Task AddProductTokens(LiquidObject liquidObject, Product product, Language language, Store store);
-        Task AddAttributeCombinationTokens(LiquidObject liquidObject, Customer customer, Product product, ProductAttributeCombination combination);
+        Task AddAttributeCombinationTokens(LiquidObject liquidObject, Product product, ProductAttributeCombination combination);
         Task AddForumTokens(LiquidObject liquidObject, Customer customer, Store store, Forum forum, ForumTopic forumTopic = null, ForumPost forumPost = null,
             int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "");
         Task AddPrivateMessageTokens(LiquidObject liquidObject, PrivateMessage privateMessage);

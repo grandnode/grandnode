@@ -98,7 +98,7 @@ namespace Grand.Services.Catalog
             if (_workContext.WorkingLanguage != null)
                 langId = _workContext.WorkingLanguage.Id;
             else
-                langId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
+                langId = customer?.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
 
             if (string.IsNullOrEmpty(langId))
                 langId = "";

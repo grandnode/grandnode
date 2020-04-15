@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using System;
@@ -118,10 +119,11 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Get (visible) product number in certain category
         /// </summary>
+        /// <param name="customer">Customer</param>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; "" to load all records</param>
         /// <returns>Product number</returns>
-        int GetCategoryProductNumber(IList<string> categoryIds = null, string storeId = "");
+        int GetCategoryProductNumber(Customer customer, IList<string> categoryIds = null, string storeId = "");
 
         /// <summary>
         /// Search products

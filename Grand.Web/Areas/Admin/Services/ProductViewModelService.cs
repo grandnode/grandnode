@@ -50,7 +50,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ICategoryService _categoryService;
         private readonly IVendorService _vendorService;
         private readonly ILocalizationService _localizationService;
-        private readonly ICacheManager _cacheManager;
         private readonly IProductTemplateService _productTemplateService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IWorkContext _workContext;
@@ -72,6 +71,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
         private readonly TaxSettings _taxSettings;
+
         public ProductViewModelService(
                IProductService productService,
                IPictureService pictureService,
@@ -84,7 +84,6 @@ namespace Grand.Web.Areas.Admin.Services
                ICategoryService categoryService,
                IVendorService vendorService,
                ILocalizationService localizationService,
-               ICacheManager cacheManager,
                IProductTemplateService productTemplateService,
                ISpecificationAttributeService specificationAttributeService,
                IWorkContext workContext,
@@ -117,7 +116,6 @@ namespace Grand.Web.Areas.Admin.Services
             _categoryService = categoryService;
             _vendorService = vendorService;
             _localizationService = localizationService;
-            _cacheManager = cacheManager;
             _productTemplateService = productTemplateService;
             _specificationAttributeService = specificationAttributeService;
             _workContext = workContext;

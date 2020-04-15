@@ -91,7 +91,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     //include subcategories
                     if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                         categoryIds.AddRange(await _mediator.Send(new GetChildCategoryIds() { Customer = request.Customer, Store = request.Store, ParentCategoryId = category.Id }));
-                    categoryModel.NumberOfProducts = _productService.GetCategoryProductNumber(categoryIds, request.Store.Id);
+                    categoryModel.NumberOfProducts = _productService.GetCategoryProductNumber(request.Customer, categoryIds, request.Store.Id);
                 }
                 if (loadSubCategories)
                 {

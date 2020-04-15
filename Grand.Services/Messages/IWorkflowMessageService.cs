@@ -393,7 +393,7 @@ namespace Grand.Services.Messages
         /// <param name="product">Product</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        Task<int> SendQuantityBelowStoreOwnerNotification(Customer customer, Product product, string languageId);
+        Task<int> SendQuantityBelowStoreOwnerNotification(Product product, string languageId);
 
         /// <summary>
         /// Sends a "quantity below" notification to a store owner
@@ -401,7 +401,7 @@ namespace Grand.Services.Messages
         /// <param name="combination">Attribute combination</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        Task<int> SendQuantityBelowStoreOwnerNotification(Customer customer, Product product, ProductAttributeCombination combination, string languageId);
+        Task<int> SendQuantityBelowStoreOwnerNotification(Product product, ProductAttributeCombination combination, string languageId);
 
         /// <summary>
         /// Sends a "new VAT sumitted" notification to a store owner

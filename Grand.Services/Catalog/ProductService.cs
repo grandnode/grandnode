@@ -545,15 +545,15 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Get (visible) product number in certain category
         /// </summary>
+        /// <param name="customer">Customer</param>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; "" to load all records</param>
         /// <returns>Product number</returns>
-        public virtual int GetCategoryProductNumber(IList<string> categoryIds = null, string storeId = "")
+        public virtual int GetCategoryProductNumber(Customer customer, IList<string> categoryIds = null, string storeId = "")
         {
             //validate "categoryIds" parameter
             if (categoryIds != null && categoryIds.Contains(""))
                 categoryIds.Remove("");
-
 
             var builder = Builders<Product>.Filter;
             var filter = builder.Where(p => p.Published && p.VisibleIndividually);
@@ -566,7 +566,7 @@ namespace Grand.Services.Catalog
             if (!_catalogSettings.IgnoreAcl)
             {
                 //ACL (access control list)
-                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                var allowedCustomerRolesIds = customer.GetCustomerRoleIds();
                 filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
             }
 
@@ -1058,7 +1058,6 @@ namespace Grand.Services.Catalog
                 if (quantityToChange < 0 && product.GetTotalStockQuantity(warehouseId: warehouseId) < product.NotifyAdminForQuantityBelow)
                 {
                     await _mediator.Send(new SendQuantityBelowStoreOwnerNotificationCommand() {
-                        Customer = _workContext.CurrentCustomer,
                         Product = product
                     });
                 }
@@ -1090,7 +1089,6 @@ namespace Grand.Services.Catalog
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
                     {
                         await _mediator.Send(new SendQuantityBelowStoreOwnerNotificationCommand() {
-                            Customer = _workContext.CurrentCustomer,
                             Product = product,
                             ProductAttributeCombination = combination
                         });
