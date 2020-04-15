@@ -180,7 +180,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                        visibleIndividuallyOnly: true,
                        featuredProducts: true)).products;
                 }
-                if (featuredProducts != null)
+                if (featuredProducts != null && featuredProducts.Any())
                 {
                     model.FeaturedProducts = (await _mediator.Send(new GetProductOverview() {
                         Products = featuredProducts,

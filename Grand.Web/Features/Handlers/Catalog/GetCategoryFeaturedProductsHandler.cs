@@ -108,7 +108,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                        visibleIndividuallyOnly: true,
                        featuredProducts: true)).products;
                 }
-                if (featuredProducts != null)
+                if (featuredProducts != null && featuredProducts.Any())
                 {
                     item.FeaturedProducts = (await _mediator.Send(new GetProductOverview() {
                         PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages,
