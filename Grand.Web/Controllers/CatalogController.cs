@@ -251,6 +251,7 @@ namespace Grand.Web.Controllers
                 Command = command,
                 Vendor = vendor,
                 Language = _workContext.WorkingLanguage,
+                Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore,
             });
             //review
@@ -408,6 +409,7 @@ namespace Grand.Web.Controllers
                 Command = command,
                 Language = _workContext.WorkingLanguage,
                 ProductTag = productTag,
+                Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore
             });
             return View(model);
@@ -422,6 +424,7 @@ namespace Grand.Web.Controllers
                 Command = command,
                 Language = _workContext.WorkingLanguage,
                 ProductTag = productTag,
+                Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore
             });
             return View("ProductsByTag", model);

@@ -8,6 +8,7 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
+using Grand.Services.Queries.Models.Catalog;
 using Grand.Services.Vendors;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Products;
@@ -31,7 +32,6 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IManufacturerService _manufacturerService;
         private readonly IVendorService _vendorService;
         private readonly ICurrencyService _currencyService;
-        private readonly IProductService _productService;
         private readonly IMediator _mediator;
         private readonly ISearchTermService _searchTermService;
 
@@ -45,7 +45,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             IManufacturerService manufacturerService,
             IVendorService vendorService,
             ICurrencyService currencyService,
-            IProductService productService,
             IMediator mediator,
             ISearchTermService searchTermService,
             CatalogSettings catalogSettings,
@@ -57,7 +56,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             _manufacturerService = manufacturerService;
             _vendorService = vendorService;
             _currencyService = currencyService;
-            _productService = productService;
             _mediator = mediator;
             _searchTermService = searchTermService;
             _catalogSettings = catalogSettings;
@@ -226,22 +224,24 @@ namespace Grand.Web.Features.Handlers.Catalog
                     var searchInProductTags = searchInDescriptions;
 
                     //products
-                    products = (await _productService.SearchProducts(
-                        categoryIds: categoryIds,
-                        manufacturerId: manufacturerId,
-                        storeId: request.Store.Id,
-                        visibleIndividuallyOnly: true,
-                        priceMin: minPriceConverted,
-                        priceMax: maxPriceConverted,
-                        keywords: searchTerms,
-                        searchDescriptions: searchInDescriptions,
-                        searchSku: searchInDescriptions,
-                        searchProductTags: searchInProductTags,
-                        languageId: request.Language.Id,
-                        orderBy: (ProductSortingEnum)request.Command.OrderBy,
-                        pageIndex: request.Command.PageNumber - 1,
-                        pageSize: request.Command.PageSize,
-                        vendorId: vendorId)).products;
+                    products = (await _mediator.Send(new GetSearchProductsQuery() {
+                        CategoryIds = categoryIds,
+                        ManufacturerId = manufacturerId,
+                        Customer = request.Customer,
+                        StoreId = request.Store.Id,
+                        VisibleIndividuallyOnly = true,
+                        PriceMin = minPriceConverted,
+                        PriceMax = maxPriceConverted,
+                        Keywords = searchTerms,
+                        SearchDescriptions = searchInDescriptions,
+                        SearchSku = searchInDescriptions,
+                        SearchProductTags = searchInProductTags,
+                        LanguageId = request.Language.Id,
+                        OrderBy = (ProductSortingEnum)request.Command.OrderBy,
+                        PageIndex = request.Command.PageNumber - 1,
+                        PageSize = request.Command.PageSize,
+                        VendorId = vendorId
+                    })).products;
 
                     request.Model.Products = (await _mediator.Send(new GetProductOverview() {
                         Products = products,
@@ -271,9 +271,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     }
                 }
             }
-
             request.Model.PagingFilteringContext.LoadPagedList(products);
-
             return request.Model;
         }
     }

@@ -1,9 +1,9 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Vendors;
-using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using Grand.Services.Queries.Models.Catalog;
 using Grand.Services.Seo;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Common;
@@ -22,7 +22,6 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IMediator _mediator;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
-        private readonly IProductService _productService;
 
         private readonly VendorSettings _vendorSettings;
         private readonly MediaSettings _mediaSettings;
@@ -32,7 +31,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             IMediator mediator,
             IPictureService pictureService,
             ILocalizationService localizationService,
-            IProductService productService,
             VendorSettings vendorSettings,
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings)
@@ -40,7 +38,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             _mediator = mediator;
             _pictureService = pictureService;
             _localizationService = localizationService;
-            _productService = productService;
             _vendorSettings = vendorSettings;
             _mediaSettings = mediaSettings;
             _catalogSettings = catalogSettings;
@@ -87,13 +84,15 @@ namespace Grand.Web.Features.Handlers.Catalog
             model.PagingFilteringContext = options.command;
 
             //products
-            var products = (await _productService.SearchProducts(
-                vendorId: request.Vendor.Id,
-                storeId: request.Store.Id,
-                visibleIndividuallyOnly: true,
-                orderBy: (ProductSortingEnum)request.Command.OrderBy,
-                pageIndex: request.Command.PageNumber - 1,
-                pageSize: request.Command.PageSize)).products;
+            var products = (await _mediator.Send(new GetSearchProductsQuery() {
+                Customer = request.Customer,
+                VendorId = request.Vendor.Id,
+                StoreId = request.Store.Id,
+                VisibleIndividuallyOnly = true,
+                OrderBy = (ProductSortingEnum)request.Command.OrderBy,
+                PageIndex = request.Command.PageNumber - 1,
+                PageSize = request.Command.PageSize
+            })).products;
 
             model.Products = (await _mediator.Send(new GetProductOverview() {
                 Products = products,

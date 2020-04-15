@@ -685,7 +685,7 @@ namespace Grand.Services.Messages
 
         public async Task AddAttributeCombinationTokens(LiquidObject liquidObject, Customer customer, Product product, ProductAttributeCombination combination)
         {
-            var liquidAttributeCombination = new LiquidAttributeCombination(customer, product, combination);
+            var liquidAttributeCombination = new LiquidAttributeCombination(combination);
             var productAttributeFormatter = _serviceProvider.GetRequiredService<IProductAttributeFormatter>();
             liquidAttributeCombination.Formatted = await productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, customer, renderPrices: false);
             liquidAttributeCombination.SKU = product.FormatSku(combination.AttributesXml, _productAttributeParser);

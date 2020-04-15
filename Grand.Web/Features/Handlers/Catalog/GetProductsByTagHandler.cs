@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Domain.Catalog;
-using Grand.Services.Catalog;
 using Grand.Services.Localization;
+using Grand.Services.Queries.Models.Catalog;
 using Grand.Services.Seo;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Products;
@@ -16,15 +16,12 @@ namespace Grand.Web.Features.Handlers.Catalog
     {
 
         private readonly IMediator _mediator;
-        private readonly IProductService _productService;
         private readonly CatalogSettings _catalogSettings;
 
         public GetProductsByTagHandler(IMediator mediator,
-            IProductService productService,
             CatalogSettings catalogSettings)
         {
             _mediator = mediator;
-            _productService = productService;
             _catalogSettings = catalogSettings;
         }
 
@@ -48,13 +45,15 @@ namespace Grand.Web.Features.Handlers.Catalog
             model.PagingFilteringContext = options.command;
 
             //products
-            var products = (await _productService.SearchProducts(
-                storeId: request.Store.Id,
-                productTag: request.ProductTag.Name,
-                visibleIndividuallyOnly: true,
-                orderBy: (ProductSortingEnum)request.Command.OrderBy,
-                pageIndex: request.Command.PageNumber - 1,
-                pageSize: request.Command.PageSize)).products;
+            var products = (await _mediator.Send(new GetSearchProductsQuery() {
+                Customer = request.Customer,
+                StoreId = request.Store.Id,
+                ProductTag = request.ProductTag.Name,
+                VisibleIndividuallyOnly = true,
+                OrderBy = (ProductSortingEnum)request.Command.OrderBy,
+                PageIndex = request.Command.PageNumber - 1,
+                PageSize = request.Command.PageSize
+            })).products;
 
             model.Products = (await _mediator.Send(new GetProductOverview() {
                 Products = products,
