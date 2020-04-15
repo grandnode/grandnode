@@ -1,10 +1,10 @@
 <Language>
-  <Localeresource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice">
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice">
     <Value>Customer Product Price</Value>
-  </Localeresource>
-  <Localeresource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice.Hint">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice.Hint">
     <Value>Gets or sets a value indicating whether to use customer product prices. It can significantly improve performance when disable.</Value>
-  </Localeresource>
+  </LocaleResource>
   <LocaleResource Name="Order.Product(s).Picture">
     <Value>Image</Value>
   </LocaleResource>
@@ -268,6 +268,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.OrderCode">
     <Value>Order Code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.NoReturnrequests">
+    <Value>No return requests</Value>
   </LocaleResource>
 </Language>
 

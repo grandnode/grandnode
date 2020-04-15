@@ -294,6 +294,9 @@
   <LocaleResource Name="Account.CustomerReturnRequests.Item">
     <Value>Returned Item:</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.Noreturnrequests">
+    <Value>No return requests</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerReturnRequests.PickupAddress">
     <Value>Pickup address</Value>
   </LocaleResource>
@@ -6177,12 +6180,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CompareProductsEnabled.Hint">
     <Value>Check to allow customers to use the 'Compare Products' option in your store</Value>
   </LocaleResource>
-  <Localeresource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice">
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice">
     <Value>Customer Product Price</Value>
-  </Localeresource>
-  <Localeresource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice.Hint">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice.Hint">
     <Value>Gets or sets a value indicating whether to use customer product prices. It can significantly improve performance when disable.</Value>
-  </Localeresource>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts">
     <Value>Discontinued message for unpublished products</Value>
   </LocaleResource>
