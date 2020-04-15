@@ -10,7 +10,7 @@
     <div class="card pb-3">
         <div class="flex-column flex-md-row d-flex card-header user-info">
             <div class="col-lg-2 col-md-3 col-sm-3 text-center text-md-left forum-media-header">
-                @if (Model.AllowViewingProfiles)
+                @if (Model.AllowViewingProfiles && !string.IsNullOrEmpty(Model.CustomerName))
                 {
                     <strong>
                         @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { id = Model.CustomerId }, new { @class = "username" })

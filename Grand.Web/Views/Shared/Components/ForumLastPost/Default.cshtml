@@ -13,7 +13,7 @@
     }
     <div class="author">
         <span>@T("Forum.By"):</span>
-        @if (Model.AllowViewingProfiles)
+        @if (Model.AllowViewingProfiles && !string.IsNullOrEmpty(Model.CustomerName))
         {
             @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
         }
