@@ -311,6 +311,43 @@ namespace Grand.Services.Messages
                 toEmail, toName);
         }
 
+        /// <summary>
+        /// Send an email token validation message to a customer
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="store">Store instance</param>
+        /// <param name="token">Token</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual async Task<int> SendCustomerEmailTokenValidationMessage(Customer customer, Store store, string token, string languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.EmailTokenValidationMessage", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            LiquidObject liquidObject = new LiquidObject();
+            await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            liquidObject.AdditionalTokens.Add("Token", token);
+
+            //event notification
+            await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
+
+            var toEmail = customer.Email;
+            var toName = customer.GetFullName();
+            return await SendNotification(messageTemplate, emailAccount,
+                languageId, liquidObject,
+                toEmail, toName);
+        }
+
         #endregion
 
         #region Order workflow

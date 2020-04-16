@@ -36,7 +36,8 @@ namespace Grand.Core.Domain.Customers
         public static string AdminAreaStoreScopeConfiguration { get { return "AdminAreaStoreScopeConfiguration"; } }
         public static string TwoFactorEnabled { get { return "TwoFactorEnabled"; } }
         public static string TwoFactorSecretKey { get { return "TwoFactorSecretKey"; } }
-
+        public static string TwoFactorValidCode { get { return "TwoFactorValidCode"; } }
+        public static string TwoFactorCodeValidUntil { get { return "TwoFactorValidCodeUntil"; } }
 
         //depends on store
         public static string CurrencyId { get { return "CurrencyId"; } }

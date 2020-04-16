@@ -168,7 +168,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> TwoFactorAuthorization()
+        public async Task<IActionResult> TwoFactorAuthorization([FromServices] ITwoFactorAuthenticationService twoFactorAuthenticationService)
         {
             if (!_customerSettings.TwoFactorAuthenticationEnabled)
                 return RedirectToRoute("Login");
@@ -183,6 +183,11 @@ namespace Grand.Web.Controllers
 
             if (!customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled))
                 return RedirectToRoute("HomePage");
+
+            if(_customerSettings.TwoFactorAuthenticationType != TwoFactorAuthenticationType.AppVerification)
+            {
+                await twoFactorAuthenticationService.GenerateCodeSetup("", customer, _workContext.WorkingLanguage, _customerSettings.TwoFactorAuthenticationType);
+            }
 
             return View();
         }
@@ -211,7 +216,7 @@ namespace Grand.Web.Controllers
             else
             {
                 var secretKey = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.TwoFactorSecretKey);
-                if (twoFactorAuthenticationService.AuthenticateTwoFactor(secretKey, token))
+                if (await twoFactorAuthenticationService.AuthenticateTwoFactor(secretKey, token, customer, _customerSettings.TwoFactorAuthenticationType))
                 {
                     //remove session
                     HttpContext.Session.Remove("RequiresTwoFactor");
@@ -1191,7 +1196,10 @@ namespace Grand.Web.Controllers
             if (_workContext.CurrentCustomer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled))
                 return RedirectToRoute("CustomerInfo");
 
-            var model = await _mediator.Send(new GetTwoFactorAuthentication());
+            var model = await _mediator.Send(new GetTwoFactorAuthentication() { 
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage
+            });
             return View(model);
         }
 
@@ -1214,7 +1222,7 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                if (twoFactorAuthenticationService.AuthenticateTwoFactor(model.SecretKey, model.Code))
+                if (await twoFactorAuthenticationService.AuthenticateTwoFactor(model.SecretKey, model.Code, _workContext.CurrentCustomer, _customerSettings.TwoFactorAuthenticationType))
                 {
                     await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.TwoFactorEnabled, true);
                     await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.TwoFactorSecretKey, model.SecretKey);

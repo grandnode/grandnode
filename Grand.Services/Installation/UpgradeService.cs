@@ -757,7 +757,7 @@ namespace Grand.Services.Installation
         }
         private async Task From450To460()
         {
-            
+
             #region Install String resources
 
             await InstallStringResources("EN_450_460.nopres.xml");
@@ -860,7 +860,7 @@ namespace Grand.Services.Installation
             IRepository<Topic> _topicRepository = _serviceProvider.GetRequiredService<IRepository<Topic>>();
             foreach (var topic in _topicRepository.Table)
             {
-                topic.Published  = true;
+                topic.Published = true;
                 _topicRepository.Update(topic);
             }
 
@@ -876,7 +876,7 @@ namespace Grand.Services.Installation
             }
 
             #endregion
-            
+
             #region Update product - rename fields
 
             var renameFields = Builders<object>.Update
@@ -888,12 +888,33 @@ namespace Grand.Services.Installation
             #endregion
 
         }
-        
+
         private async Task From460To470()
         {
             #region Install String resources
             await InstallStringResources("EN_460_470.nopres.xml");
             #endregion
+
+            #region MessageTemplates
+
+            var emailAccount = _serviceProvider.GetRequiredService<IRepository<EmailAccount>>().Table.FirstOrDefault();
+            if (emailAccount == null)
+                throw new Exception("Default email account cannot be loaded");
+            var messageTemplates = new List<MessageTemplate>
+            {
+                new MessageTemplate
+                {
+                    Name = "Customer.EmailTokenValidationMessage",
+                    Subject = "{{Store.Name}} - Email Verification Code",
+                    Body = "Hello {{Customer.FullName}}, <br /><br />\r\n Enter this 6 digit code on the sign in page to confirm your identity:<br /><br /> \r\n <b>{{AdditionalTokens[\"Token\"]}}</b><br /><br />\r\n Yours securely, <br /> \r\n Team",
+                    IsActive = true,
+                    EmailAccountId = emailAccount.Id,
+                }
+            };
+
+            await _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().InsertAsync(messageTemplates);
+            #endregion
+
         }
 
         private async Task InstallStringResources(string filenames)

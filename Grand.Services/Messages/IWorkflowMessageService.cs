@@ -7,6 +7,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
+using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Vendors;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -56,6 +57,16 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         Task<int> SendNewCustomerNoteAddedCustomerNotification(CustomerNote customerNote, string languageId);
+
+        /// <summary>
+        /// Send an email token validation message to a customer
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="store">Store instance</param>
+        /// <param name="token">Token</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        Task<int> SendCustomerEmailTokenValidationMessage(Customer customer, Store store, string token, string languageId);
 
         #endregion
 

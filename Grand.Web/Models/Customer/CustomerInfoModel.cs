@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Attributes;
+using Grand.Core.Domain.Customers;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Newsletter;
@@ -160,6 +161,7 @@ namespace Grand.Web.Models.Customer
             {
                 CustomValues = new Dictionary<string, string>();
             }
+            public TwoFactorAuthenticationType TwoFactorAuthenticationType { get; set; }
             public string SecretKey { get; set; }
             public string Code { get; set; }
             public IDictionary<string, string> CustomValues { get; set; }

@@ -4250,6 +4250,14 @@ namespace Grand.Services.Installation
                                        },
                                    new MessageTemplate
                                        {
+                                           Name = "Customer.EmailTokenValidationMessage",
+                                           Subject = "{{Store.Name}} - Email Verification Code",
+                                           Body = "Hello {{Customer.FullName}}, <br /><br />\r\n Enter this 6 digit code on the sign in page to confirm your identity:<br /><br /> \r\n <b>{{AdditionalTokens[\"Token\"]}}</b><br /><br />\r\n Yours securely, <br /> \r\n Team",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
                                            Name = "Customer.EmailValidationMessage",
                                            Subject = "{{Store.Name}}. Email validation",
                                            Body = "<a href=\"{{Store.URL}}\">{{Store.Name}}</a>  <br />\r\n  <br />\r\n  To activate your account <a href=\"{{Customer.AccountActivationURL}}\">click here</a>.     <br />\r\n  <br />\r\n  {{Store.Name}}",
