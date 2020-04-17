@@ -32,7 +32,12 @@ namespace Grand.Framework.Security.Authorization
             if (await permissionService.Authorize(Permission))
                 return;
 
-            context.Result = new RedirectToActionResult("AccessDenied", "Security", new { pageUrl = context.HttpContext.Request.Path });
+            //authorize permission of access to the admin area
+            if (!await permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
+                context.Result = new ChallengeResult();
+            else
+                context.Result = new RedirectToActionResult("AccessDenied", "Security", new { pageUrl = context.HttpContext.Request.Path });
+
             return;
         }
     }
