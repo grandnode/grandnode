@@ -4741,6 +4741,9 @@
   <LocaleResource Name="Admin.Common.ConfigurationNotRequired">
     <Value>Configuration is not required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Content.Saved">
+    <Value>Content is saved</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.CsvFile">
     <Value>CSV file</Value>
   </LocaleResource>
@@ -15938,6 +15941,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.ContactForm.List.Store.hint">
     <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.CustomCss">
+    <Value>Custom Css</Value>
   </LocaleResource>
   <LocaleResource Name="admin.system.developertools">
     <Value>Developer Tools</Value>

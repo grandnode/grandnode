@@ -302,5 +302,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationType.hint">
     <Value>Please select which type of two factory authentication do you want use in your store</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Content.Saved">
+    <Value>Content is saved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.CustomCss">
+    <Value>Custom Css</Value>
+  </LocaleResource>
 </Language>
 
