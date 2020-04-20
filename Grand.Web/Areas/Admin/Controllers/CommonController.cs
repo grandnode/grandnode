@@ -685,7 +685,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> CustomCss()
         {
-            var model = new CssEditor();
+            var model = new Editor();
             var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", "style.css");
             if (System.IO.File.Exists(file))
             {
@@ -698,12 +698,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> CustomJs()
+        {
+            var model = new Editor();
+            var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", "script.js");
+            if (System.IO.File.Exists(file))
+            {
+                model.Content = await System.IO.File.ReadAllTextAsync(file);
+            }
+
+            return View(model);
+        }
+
         [HttpPost]
-        public IActionResult CustomCss(string content = "")
+        public IActionResult SaveEditor(string content = "", bool css = true)
         {
             try
             {
-                var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", "style.css");
+                var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", css ? "style.css" : "script.js");
 
                 if (System.IO.File.Exists(file))
                     System.IO.File.WriteAllText(file, content, Encoding.UTF8);
@@ -722,6 +734,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Json(ex.Message);
             }
         }
+
+
 
         #endregion
     }

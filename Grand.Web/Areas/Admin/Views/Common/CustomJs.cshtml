@@ -1,13 +1,13 @@
 ﻿@model Editor
 @{
     //page title
-    ViewBag.Title = T("Admin.System.CustomCss").Text;
+    ViewBag.Title = T("Admin.System.CustomJs").Text;
 }
 @{
     Html.AddScriptParts("~/content/codemirror/codemirror.js", excludeFromBundle: true);
-    Html.AddScriptParts("~/content/codemirror/mode/css/css.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/content/codemirror/mode/javascript/javascript.js", excludeFromBundle: true);
     Html.AddScriptParts("~/content/codemirror/hint/show-hint.js", excludeFromBundle: true);
-    Html.AddScriptParts("~/content/codemirror/hint/css-hint.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/content/codemirror/hint/javascript-hint.js", excludeFromBundle: true);
     Html.AddScriptParts("~/content/codemirror/edit/matchbrackets.js", excludeFromBundle: true);
     Html.AddCssFileParts("~/content/codemirror/codemirror.css", excludeFromBundle: true);
     Html.AddCssFileParts("~/content/codemirror/hint/show-hint.css", excludeFromBundle: true);
@@ -26,11 +26,11 @@
             <div class="x_title">
                 <div class="caption level-caption">
                     <i class="fa fa-sitemap"></i>
-                    @T("Admin.System.CustomCss")
+                    @T("Admin.System.CustomJs")
                 </div>
             </div>
             <div class="note note-info">
-                <strong>@T("Admin.System.CustomCss.Tip")</strong>
+                <strong>@T("Admin.System.CustomJs.Tip")</strong>
             </div>
             <div class="actions">
                 <div class="util-btn-margin-bottom-5">
@@ -40,7 +40,6 @@
                 </div>
             </div>
             <div class="x_content form">
-
                 <div class="col-12">
                     <textarea id="Content" name="Content">@Model.Content</textarea>
                 </div>
@@ -48,7 +47,7 @@
                     $(document).ready(function () {
                         var editor = CodeMirror.fromTextArea(document.getElementById('Content'), {
                             lineNumbers: true,
-                            mode: "css",
+                            mode: "javascript",
                             matchBrackets: true,
                             extraKeys: { "Ctrl-Space": "autocomplete" }
                         });
@@ -68,7 +67,8 @@
 
                         function additionalData() {
                                 var data = {
-                                    content: editor.getValue()
+                                    content: editor.getValue(),
+                                    css: false
                                 };
                                 addAntiForgeryToken(data);
                                 return data;

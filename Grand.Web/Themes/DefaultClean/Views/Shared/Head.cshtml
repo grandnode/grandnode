@@ -21,6 +21,9 @@
     Html.AppendCssFileParts(ResourceLocation.Head, "~/content/magnific-popup/magnific-popup.css");
     Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/animate.min.css", themeName));
     Html.AppendCssFileParts(ResourceLocation.Head, "~/content/bootstrap/bootstrap.min.css");
+
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/content/custom/script.js");
+
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.magnific-popup.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.actions.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.search.js");
