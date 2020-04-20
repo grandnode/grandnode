@@ -90,11 +90,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             var storeId = string.Empty;
             if (_workContext.CurrentCustomer.IsStaff())
                 storeId = _workContext.CurrentCustomer.StaffStoreId;
-
+            
+            string vendorId = string.Empty;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                vendorId = _workContext.CurrentVendor.Id;
+            }
             //products
             const int productNumber = 15;
             var products = (await productService.SearchProducts(
                 storeId: storeId,
+                vendorId: vendorId,
                 keywords: term,
                 pageSize: productNumber,
                 showHidden: true)).products;
