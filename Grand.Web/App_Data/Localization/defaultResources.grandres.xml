@@ -15945,6 +15945,9 @@
   <LocaleResource Name="Admin.System.CustomCss">
     <Value>Custom Css</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.CustomCss.Tip">
+    <Value>Start typing, when you enter first letters of CSS attribute, press CTRL + space and see hints for your input.</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.system.developertools">
     <Value>Developer Tools</Value>
   </LocaleResource>
