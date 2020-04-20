@@ -909,7 +909,16 @@ namespace Grand.Services.Installation
                     Body = "Hello {{Customer.FullName}}, <br /><br />\r\n Enter this 6 digit code on the sign in page to confirm your identity:<br /><br /> \r\n <b>{{AdditionalTokens[\"Token\"]}}</b><br /><br />\r\n Yours securely, <br /> \r\n Team",
                     IsActive = true,
                     EmailAccountId = emailAccount.Id,
-                }
+                },
+                new MessageTemplate
+                {
+                    Name = "OrderCancelled.VendorNotification",
+                    Subject = "{{Store.Name}}. Order #{{Order.OrderNumber}} cancelled",
+                    Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Order #{{Order.OrderNumber}} has been cancelled. <br /><br />Order Number: {{Order.OrderNumber}}<br />   Date Ordered: {{Order.CreatedOn}} <br /><br /> ",
+                    IsActive = false,
+                    EmailAccountId = emailAccount.Id,
+                },
+
             };
 
             await _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().InsertAsync(messageTemplates);

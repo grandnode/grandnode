@@ -4,6 +4,7 @@ using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Common;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
+using Grand.Services.Vendors;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace Grand.Services.Commands.Handlers.Orders
         private readonly IOrderService _orderService;
         private readonly IPdfService _pdfService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IVendorService _vendorService;
         private readonly IMediator _mediator;
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -25,6 +27,7 @@ namespace Grand.Services.Commands.Handlers.Orders
             IOrderService orderService,
             IPdfService pdfService,
             IWorkflowMessageService workflowMessageService,
+            IVendorService vendorService,
             IMediator mediator,
             OrderSettings orderSettings,
             RewardPointsSettings rewardPointsSettings)
@@ -32,6 +35,7 @@ namespace Grand.Services.Commands.Handlers.Orders
             _orderService = orderService;
             _pdfService = pdfService;
             _workflowMessageService = workflowMessageService;
+            _vendorService = vendorService;
             _mediator = mediator;
             _orderSettings = orderSettings;
             _rewardPointsSettings = rewardPointsSettings;
@@ -100,6 +104,8 @@ namespace Grand.Services.Commands.Handlers.Orders
                         OrderId = request.Order.Id,
                     });
                 }
+                //notification for vendor
+                await VendorNotification(request.Order);
             }
 
             if (prevOrderStatus != OrderStatus.Cancelled &&
@@ -107,7 +113,7 @@ namespace Grand.Services.Commands.Handlers.Orders
                 && request.NotifyStoreOwner)
             {
                 //notification store owner
-                int orderCancelledStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderCancelledStoreOwnerNotification(request.Order, request.Order.CustomerLanguageId);
+                var orderCancelledStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderCancelledStoreOwnerNotification(request.Order, request.Order.CustomerLanguageId);
                 if (orderCancelledStoreOwnerNotificationQueuedEmailId > 0)
                 {
                     await _orderService.InsertOrderNote(new OrderNote {
@@ -117,6 +123,8 @@ namespace Grand.Services.Commands.Handlers.Orders
                         OrderId = request.Order.Id,
                     });
                 }
+                //notification for vendor
+                await VendorNotification(request.Order);
             }
 
             //reward points
@@ -141,6 +149,24 @@ namespace Grand.Services.Commands.Handlers.Orders
                 request.Order.OrderStatus == OrderStatus.Cancelled)
             {
                 await _mediator.Send(new ActivatedValueForPurchasedGiftCardsCommand() { Order = request.Order, Activate = false });
+            }
+
+            return true;
+        }
+
+        private async Task<bool> VendorNotification(Order order)
+        {
+            //notification for vendor
+            foreach (var orderItem in order.OrderItems)
+            {
+                if (!string.IsNullOrEmpty(orderItem.VendorId))
+                {
+                    var vendor = await _vendorService.GetVendorById(orderItem.VendorId);
+                    if (vendor != null && !vendor.Deleted && vendor.Active)
+                    {
+                        await _workflowMessageService.SendOrderCancelledVendorNotification(order, vendor, order.CustomerLanguageId);
+                    }
+                }
             }
 
             return true;
