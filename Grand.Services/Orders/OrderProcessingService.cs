@@ -1186,7 +1186,7 @@ namespace Grand.Services.Orders
             {
                 //find existing
                 var vendor = vendors.FirstOrDefault(v => v.Id == orderItem.VendorId);
-                if (vendor == null)
+                if (vendor == null && !string.IsNullOrEmpty(orderItem.VendorId))
                 {
                     //not found. load by Id
                     vendor = await _vendorService.GetVendorById(orderItem.VendorId);
