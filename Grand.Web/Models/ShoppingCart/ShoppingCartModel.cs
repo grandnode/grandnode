@@ -72,6 +72,7 @@ namespace Grand.Web.Models.ShoppingCart
             public string UnitPrice { get; set; }
             public decimal UnitPriceValue { get; set; }
             public string SubTotal { get; set; }
+            public decimal SubTotalValue { get; set; }
             public string Discount { get; set; }
             public int DiscountedQty { get; set; }
             public List<string> Discounts { get; set; }

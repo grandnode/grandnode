@@ -482,6 +482,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     decimal shoppingCartItemSubTotalWithDiscountBase = (await _taxService.GetProductPrice(product, subtotal.subTotal)).productprice;
                     decimal shoppingCartItemSubTotalWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, request.Currency);
                     cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
+                    cartItemModel.SubTotalValue = shoppingCartItemSubTotalWithDiscount;
 
                     //display an applied discount amount
                     if (shoppingCartItemDiscountBase > decimal.Zero)
