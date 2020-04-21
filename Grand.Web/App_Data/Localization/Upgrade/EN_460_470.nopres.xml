@@ -311,5 +311,15 @@
   <LocaleResource Name="Admin.System.CustomCss.Tip">
     <Value>Start typing, when you enter first letters of CSS attribute, press CTRL + space and see hints for your input.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help6">
+    <Value>
+      6. Enable Google Analytics API in your Google Cloud Platform here - https://console.developers.google.com/apis/api/analyticsreporting.googleapis.com/
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help7">
+    <Value>
+      7. The last step is to add client email to your Google Analytics account.
+    </Value>
+  </LocaleResource>
 </Language>
 
