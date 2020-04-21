@@ -42,7 +42,7 @@ namespace Grand.Web.ViewComponents
             var availableStores = (await _storeService.GetAllStores())
                 .Select(x => new StoreModel {
                     Id = x.Id,
-                    Name = x.Name,
+                    Name = x.Shortcut,
                 }).ToList();
 
             var model = new StoreSelectorModel {

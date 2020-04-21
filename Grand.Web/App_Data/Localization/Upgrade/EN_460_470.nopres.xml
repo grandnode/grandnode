@@ -317,5 +317,14 @@
   <LocaleResource Name="Admin.System.CustomJs.Tip">
     <Value>Start typing, when you enter first letters of JS code, press CTRL + space and see hints.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Shortcut">
+    <Value>Shortcut</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Shortcut.Hint">
+    <Value>Enter the shortcut of your store e.g. Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Shortcut.Required">
+    <Value>Please provide a shortcut.</Value>
+  </LocaleResource>
 </Language>
 

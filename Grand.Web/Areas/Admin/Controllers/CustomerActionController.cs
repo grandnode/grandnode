@@ -572,7 +572,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Stores()
         {
-            var stores = (await _storeService.GetAllStores()).Select(x => new { Id = x.Id, Name = x.Name });
+            var stores = (await _storeService.GetAllStores()).Select(x => new { Id = x.Id, Name = x.Shortcut });
             return Json(stores);
         }
 
@@ -584,7 +584,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var items = new List<(string Id, string Store)>();
             foreach (var item in condition.Stores)
             {
-                var store = (await _storeService.GetStoreById(item))?.Name;
+                var store = (await _storeService.GetStoreById(item))?.Shortcut;
                 items.Add((item, store));
             }
             var gridModel = new DataSourceResult

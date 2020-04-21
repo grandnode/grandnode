@@ -2094,7 +2094,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 else
                 {
                     var store = await _storeService.GetStoreById(x.StoreId);
-                    storeName = store != null ? store.Name : "Unknown";
+                    storeName = store != null ? store.Shortcut : "Unknown";
                 }
                 var settingModel = new SettingModel {
                     Id = x.Id,

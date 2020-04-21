@@ -22,6 +22,7 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
+using Grand.Services.Stores;
 using Grand.Services.Topics;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -924,6 +925,16 @@ namespace Grand.Services.Installation
             await _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().InsertAsync(messageTemplates);
             #endregion
 
+            #region Update store
+
+            var storeService = _serviceProvider.GetRequiredService<IStoreService>();
+            foreach (var store in await storeService.GetAllStores())
+            {
+                store.Shortcut = "Store";
+                await storeService.UpdateStore(store);
+            }
+
+            #endregion
         }
 
         private async Task InstallStringResources(string filenames)

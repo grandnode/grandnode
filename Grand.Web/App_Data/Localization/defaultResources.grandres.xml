@@ -9340,6 +9340,15 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SecureUrl.Hint">
     <Value>The secure URL of your store e.g. https://www.yourstore.com/ or http://sharedssl.yourstore.com/. Leave it empty if you want grandnode to detect secure URL automatically.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Shortcut">
+    <Value>Shortcut</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Shortcut.Hint">
+    <Value>Enter the shortcut of your store e.g. Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Shortcut.Required">
+    <Value>Please provide a shortcut.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled">
     <Value>SSL enabled</Value>
   </LocaleResource>

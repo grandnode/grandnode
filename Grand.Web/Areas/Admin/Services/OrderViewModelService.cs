@@ -216,7 +216,7 @@ namespace Grand.Web.Areas.Admin.Services
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
@@ -343,7 +343,7 @@ namespace Grand.Web.Areas.Admin.Services
                     Id = x.Id,
                     OrderNumber = x.OrderNumber,
                     Code = x.Code,
-                    StoreName = store != null ? store.Name : "Unknown",
+                    StoreName = store != null ? store.Shortcut : "Unknown",
                     OrderTotal = orderTotal,
                     CurrencyCode = x.CustomerCurrencyCode,
                     OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -375,7 +375,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.OrderStatusId = order.OrderStatusId;
             model.OrderGuid = order.OrderGuid;
             var store = await _storeService.GetStoreById(order.StoreId);
-            model.StoreName = store != null ? store.Name : "Unknown";
+            model.StoreName = store != null ? store.Shortcut : "Unknown";
             model.CustomerId = order.CustomerId;
             model.GenericAttributes = order.GenericAttributes;
 

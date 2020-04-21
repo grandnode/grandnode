@@ -100,7 +100,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var sciModel = new ShoppingCartItemModel
                 {
                     Id = sci.Id,
-                    Store = store != null ? store.Name : "Unknown",
+                    Store = store != null ? store.Shortcut : "Unknown",
                     ProductId = sci.ProductId,
                     Quantity = sci.Quantity,
                     ProductName = product.Name,
@@ -156,7 +156,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var sciModel = new ShoppingCartItemModel
                 {
                     Id = sci.Id,
-                    Store = store != null ? store.Name : "Unknown",
+                    Store = store != null ? store.Shortcut : "Unknown",
                     ProductId = sci.ProductId,
                     Quantity = sci.Quantity,
                     ProductName = product.Name,

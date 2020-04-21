@@ -163,7 +163,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 model.AvailableStores.Add(new SelectListItem
                 {
-                    Text = s.Name,
+                    Text = s.Shortcut,
                     Value = s.Id.ToString()
                 });
             }

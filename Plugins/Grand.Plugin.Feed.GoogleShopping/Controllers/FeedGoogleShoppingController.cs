@@ -80,7 +80,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
             model.StoreId = _GoogleShoppingSettings.StoreId;
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
             //currencies
             model.CurrencyId = _GoogleShoppingSettings.CurrencyId;
             foreach (var c in await _currencyService.GetAllCurrencies())
@@ -99,7 +99,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
                 if (System.IO.File.Exists(localFilePath))
                     model.GeneratedFiles.Add(new FeedGoogleShoppingModel.GeneratedFileModel
                     {
-                        StoreName = store.Name,
+                        StoreName = store.Shortcut,
                         FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _GoogleShoppingSettings.StaticFileName)
                     });
             }

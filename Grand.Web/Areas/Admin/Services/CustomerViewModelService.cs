@@ -350,7 +350,7 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var store in stores)
             {
                 model.AvailableStores.Add(new SelectListItem {
-                    Text = store.Name,
+                    Text = store.Shortcut,
                     Value = store.Id.ToString()
                 });
             }
@@ -641,7 +641,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //newsletter subscriptions
             model.AvailableNewsletterSubscriptionStores = allStores
-                .Select(s => new StoreModel() { Id = s.Id, Name = s.Name })
+                .Select(s => new StoreModel() { Id = s.Id, Name = s.Shortcut })
                 .ToList();
 
 
@@ -668,7 +668,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     model.RewardPointsAvailableStores.Add(new SelectListItem
                     {
-                        Text = store.Name,
+                        Text = store.Shortcut,
                         Value = store.Id.ToString(),
                         Selected = (store.Id == _storeContext.CurrentStore.Id)
                     });
@@ -1140,7 +1140,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var store = await _storeService.GetStoreById(rph.StoreId);
                 model.Add(new CustomerModel.RewardPointsHistoryModel
                 {
-                    StoreName = store != null ? store.Name : "Unknown",
+                    StoreName = store != null ? store.Shortcut : "Unknown",
                     Points = rph.Points,
                     PointsBalance = rph.PointsBalance,
                     Message = rph.Message,
@@ -1287,7 +1287,7 @@ namespace Grand.Web.Areas.Admin.Services
                     PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                     ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                     OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
-                    StoreName = store != null ? store.Name : "Unknown",
+                    StoreName = store != null ? store.Shortcut : "Unknown",
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                 };
                 ordersModelList.Add(orderModel);
@@ -1400,7 +1400,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var sciModel = new ShoppingCartItemModel
                 {
                     Id = sci.Id,
-                    Store = store != null ? store.Name : "Unknown",
+                    Store = store != null ? store.Shortcut : "Unknown",
                     ProductId = sci.ProductId,
                     Quantity = sci.Quantity,
                     ProductName = product.Name,
@@ -1474,7 +1474,7 @@ namespace Grand.Web.Areas.Admin.Services
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             foreach (var s in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
@@ -1582,7 +1582,7 @@ namespace Grand.Web.Areas.Admin.Services
                 m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                 m.Enquiry = "";
                 m.Email = m.FullName + " - " + m.Email;
-                m.Store = store != null ? store.Name : "-empty-";
+                m.Store = store != null ? store.Shortcut : "-empty-";
                 items.Add(m);
             }
             return (items, contactform.TotalCount);
@@ -1598,7 +1598,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var m = new CustomerModel.BackInStockSubscriptionModel
                 {
                     Id = x.Id,
-                    StoreName = store != null ? store.Name : "Unknown",
+                    StoreName = store != null ? store.Shortcut : "Unknown",
                     ProductId = x.ProductId,
                     ProductName = product != null ? product.Name : "Unknown",
                     AttributeDescription = string.IsNullOrEmpty(x.AttributeXml) ? "" : await _productAttributeFormatter.FormatAttributes(product, x.AttributeXml),

@@ -42,7 +42,7 @@ namespace Grand.Web.Areas.Admin.Components
                 model.Stores.Add(new Framework.Mvc.Models.StoreModel
                 {
                     Id = s.Id,
-                    Name = s.Name
+                    Name = s.Shortcut
                 });
             }
             model.StoreId = await GetActiveStoreScopeConfiguration(_storeService, _workContext);

@@ -259,6 +259,7 @@ namespace Grand.Services.Installation
                 new Store
                 {
                     Name = "Your store name",
+                    Shortcut = "Store",
                     Url = storeUrl,
                     SslEnabled = false,
                     Hosts = "yourstore.com,www.yourstore.com",

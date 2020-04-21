@@ -120,7 +120,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //stores
                 pluginModel.AvailableStores = (await _storeService
                     .GetAllStores())
-                    .Select(s => new StoreModel() { Id = s.Id, Name = s.Name })
+                    .Select(s => new StoreModel() { Id = s.Id, Name = s.Shortcut })
                     .ToList();
                 pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToArray();
                 pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Count > 0;

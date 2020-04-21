@@ -64,7 +64,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
 
             return View(model);
         }
@@ -91,7 +91,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         .ToList();
                 for (int i = 0; i < stores.Count; i++)
                 {
-                    templateModel.ListOfStores += stores[i].Name;
+                    templateModel.ListOfStores += stores[i].Shortcut;
                     if (i != stores.Count - 1)
                         templateModel.ListOfStores += ", ";
                 }
