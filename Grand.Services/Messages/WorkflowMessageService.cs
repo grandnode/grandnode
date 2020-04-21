@@ -835,6 +835,50 @@ namespace Grand.Services.Messages
                 toEmail, toName);
         }
 
+        /// <summary>
+        /// Sends an order cancel notification to a vendor
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="vendor">Vendor instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual async Task<int> SendOrderCancelledVendorNotification(Order order, Vendor vendor, string languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            if (vendor == null)
+                throw new ArgumentNullException("vendor");
+
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderCancelled.VendorNotification", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
+
+            LiquidObject liquidObject = new LiquidObject();
+            await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendor: vendor);
+            if (customer != null)
+                await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+
+            //event notification
+            await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
+
+            var toEmail = vendor.Email;
+            var toName = vendor.Name;
+            return await SendNotification(messageTemplate, emailAccount,
+                languageId, liquidObject,
+                toEmail, toName);
+        }
+
         /// Sends an order refunded notification to a store owner
         /// </summary>
         /// <param name="order">Order instance</param>

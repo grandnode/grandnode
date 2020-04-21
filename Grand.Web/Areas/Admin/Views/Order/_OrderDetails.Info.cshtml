@@ -100,6 +100,19 @@
                     </div>
                 </div>
             }
+            @if (Model.IsLoggedInAsVendor && Model.OrderStatusId == (int)OrderStatus.Cancelled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="OrderStatus" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-12 col-md-9 col-sm-9">
+                        <label class="control-label text-danger">
+                            <strong>
+                                @Model.OrderStatus
+                            </strong>
+                        </label>
+                    </div>
+                </div>
+            }
             <div class="form-group">
                 <admin-label asp-for="OrderNumber" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
                 <div class="col-xs-9 col-md-9 col-sm-9">

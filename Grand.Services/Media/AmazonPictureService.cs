@@ -8,11 +8,9 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Media;
 using Grand.Services.Configuration;
-using Grand.Services.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -28,6 +26,7 @@ namespace Grand.Services.Media
 
         private readonly GrandConfig _config;
         private readonly string _bucketName;
+        private readonly string _distributionDomainName;
         private bool _bucketExist = false;
         private readonly IAmazonS3 _s3Client;
 
@@ -37,7 +36,7 @@ namespace Grand.Services.Media
 
         public AmazonPictureService(IRepository<Picture> pictureRepository,
             ISettingService settingService,
-            ILogger logger,
+            Grand.Services.Logging.ILogger logger,
             IMediator mediator,
             IWebHostEnvironment hostingEnvironment,
             IStoreContext storeContext,
@@ -73,6 +72,9 @@ namespace Grand.Services.Media
 
             //Bucket guard
             _bucketName = _config.AmazonBucketName;
+
+            //Cloudfront distribution
+            _distributionDomainName = _config.AmazonDistributionDomainName;
 
         }
 
@@ -129,8 +131,7 @@ namespace Grand.Services.Media
         {
             await CheckBucketExists();
 
-            var listObjectsRequest = new ListObjectsV2Request()
-            {
+            var listObjectsRequest = new ListObjectsV2Request() {
                 BucketName = _bucketName,
                 Prefix = picture.Id
             };
@@ -149,8 +150,14 @@ namespace Grand.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected override string GetThumbLocalPath(string thumbFileName)
         {
-            var url = string.Format("https://{0}.s3.amazonAws.com/{1}", _bucketName, thumbFileName);
-            return url;
+            if (string.IsNullOrEmpty(_distributionDomainName))
+            {
+                var url = string.Format("https://{0}.s3.amazonAws.com/{1}", _bucketName, thumbFileName);
+                return url;
+            }
+            else
+                return string.Format("https://{0}/{1}", _distributionDomainName, thumbFileName);
+
         }
 
         /// <summary>
@@ -161,8 +168,15 @@ namespace Grand.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected override string GetThumbUrl(string thumbFileName, string storeLocation = null)
         {
-            var url = string.Format("https://{0}.s3.amazonAws.com/{1}", _bucketName, thumbFileName);
-            return url;
+
+            if (string.IsNullOrEmpty(_distributionDomainName))
+            {
+                var url = string.Format("https://{0}.s3.amazonAws.com/{1}", _bucketName, thumbFileName);
+                return url;
+            }
+            else
+                return string.Format("https://{0}/{1}", _distributionDomainName, thumbFileName);
+
         }
 
         /// <summary>
@@ -202,8 +216,7 @@ namespace Grand.Services.Media
 
             using (Stream stream = new MemoryStream(binary))
             {
-                var putObjectRequest = new PutObjectRequest()
-                {
+                var putObjectRequest = new PutObjectRequest() {
                     BucketName = _bucketName,
                     InputStream = stream,
                     Key = thumbFileName,
@@ -222,8 +235,7 @@ namespace Grand.Services.Media
         {
             await CheckBucketExists();
 
-            var listObjectsRequest = new ListObjectsV2Request()
-            {
+            var listObjectsRequest = new ListObjectsV2Request() {
                 BucketName = _bucketName
             };
             var listObjectsResponse = await _s3Client.ListObjectsV2Async(listObjectsRequest);

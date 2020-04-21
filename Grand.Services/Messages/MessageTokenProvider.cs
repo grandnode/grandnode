@@ -188,7 +188,7 @@ namespace Grand.Services.Messages
             foreach (var item in order.OrderItems.Where(x => x.VendorId == vendor?.Id || vendor == null))
             {
                 var product = await productService.GetProductById(item.ProductId);
-                var vendorItem = await vendorService.GetVendorById(item.VendorId);
+                Vendor vendorItem = string.IsNullOrEmpty(item.VendorId) ? null : await vendorService.GetVendorById(item.VendorId);
                 var liqitem = new LiquidOrderItem(item, product, order, language, currency, store, vendorItem);
 
                 #region Download

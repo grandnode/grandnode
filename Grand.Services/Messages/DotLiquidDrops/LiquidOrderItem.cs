@@ -18,19 +18,17 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private Order _order;
         private Product _product;
         private Language _language;
-        private Currency _currency;
         private Store _store;
         private Vendor _vendor;
 
         public LiquidOrderItem(OrderItem orderItem, Product product, Order order, Language language, Currency currency, Store store, Vendor vendor)
         {
-            this._orderItem = orderItem;
-            this._store = store;
-            this._language = language;
-            this._currency = currency;
-            this._order = order;
-            this._product = product;
-            this._vendor = vendor;
+            _orderItem = orderItem;
+            _store = store;
+            _language = language;
+            _order = order;
+            _product = product;
+            _vendor = vendor;
             AdditionalTokens = new Dictionary<string, string>();
         }
 
@@ -62,7 +60,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get
             {
-                var storeId = _order?.StoreId;
                 string licenseUrl = string.Format("{0}download/getlicense/{1}", (_store.SslEnabled ? _store.SecureUrl : _store.Url), _orderItem.OrderItemGuid);
                 return licenseUrl;
             }

@@ -87,6 +87,11 @@ namespace Grand.Core.Configuration
         public string AmazonBucketName { get; set; }
 
         /// <summary>
+        /// Amazon Domain name for cloudfront distribution
+        /// </summary>
+        public string AmazonDistributionDomainName { get; set; }
+
+        /// <summary>
         /// Amazon Region 
         /// http://docs.amazonwebservices.com/AmazonS3/latest/BucketConfiguration.html#LocationSelection
         /// </summary>

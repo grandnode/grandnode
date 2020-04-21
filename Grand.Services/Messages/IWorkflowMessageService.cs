@@ -175,6 +175,15 @@ namespace Grand.Services.Messages
         Task<int> SendOrderCancelledStoreOwnerNotification(Order order, string languageId);
 
         /// <summary>
+        /// Sends an order cancel notification to a vendor
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="vendor">Vendor instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        Task<int> SendOrderCancelledVendorNotification(Order order, Vendor vendor, string languageId);
+
+        /// <summary>
         /// Sends an order refunded notification to a store owner
         /// </summary>
         /// <param name="order">Order instance</param>

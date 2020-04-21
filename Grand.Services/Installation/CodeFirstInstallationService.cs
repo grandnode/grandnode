@@ -4384,7 +4384,15 @@ namespace Grand.Services.Installation
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
-                                   new MessageTemplate
+                                    new MessageTemplate
+                                       {
+                                           Name = "OrderCancelled.VendorNotification",
+                                           Subject = "{{Store.Name}}. Order #{{Order.OrderNumber}} cancelled",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Order #{{Order.OrderNumber}} has been cancelled. <br /><br />Order Number: {{Order.OrderNumber}} <br />   Date Ordered: {{Order.CreatedOn}} <br /><br /> ",
+                                           IsActive = false,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },                    
+                                    new MessageTemplate
                                        {
                                            Name = "OrderCompleted.CustomerNotification",
                                            Subject = "{{Store.Name}}. Your order completed",
