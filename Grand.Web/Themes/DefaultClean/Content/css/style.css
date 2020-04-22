@@ -3876,6 +3876,25 @@ valid mgs .input-validation-error {
 .filtered-items ul {
     padding-left: 0;
 }
+
+/* back to store */
+
+.back-to-store {
+    display: inline-flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+}
+.back-to-store .mdi {
+    margin: 0 5px;
+}
+.back-to-store:hover {
+    color: #17a2b8;
+}
+
 /* shopping cart */
 
 .shopping-cart {
