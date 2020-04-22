@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "_RootClear";
+    Layout = "_RootClean";
 }
 @if (IsSectionDefined("Breadcrumb"))
 {
@@ -8,7 +8,7 @@
     }
 }
 
-@await Component.InvokeAsync("Widget", new { widgetZone = "main_column_before" })
+@await Component.InvokeAsync("Widget", new { widgetZone = "clean_main_column_before" })
 @RenderBody()
-@await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })
+@await Component.InvokeAsync("Widget", new { widgetZone = "clean_main_column_after" })
 

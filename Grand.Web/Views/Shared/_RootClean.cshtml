@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "_Root.Head";
 }
-@await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
+@await Component.InvokeAsync("Widget", new { widgetZone = "clean_body_start_html_tag_after" })
 <partial name="_Notifications" />
 <partial name="_JavaScriptDisabledWarning" />
 <partial name="_OldInternetExplorerWarning" />
@@ -16,17 +16,17 @@
             </div>
         </div>
         <div class="container page-container">
-            @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "clean_content_before" })
             @if (IsSectionDefined("Breadcrumb"))
             {
                 @RenderSection("Breadcrumb")
             }
             @RenderBody()
-            @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "clean_content_after" })
         </div>
 </main>
 <script asp-location="Footer">
     AjaxCart.init('.cart-qty', '.wishlist-qty', '.flyout-cart');
 </script>
 @await Component.InvokeAsync("EuCookieLaw")
-@await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })
+@await Component.InvokeAsync("Widget", new { widgetZone = "clean_body_end_html_tag_before" })
