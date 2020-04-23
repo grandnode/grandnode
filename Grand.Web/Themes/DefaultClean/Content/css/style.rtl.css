@@ -25,8 +25,18 @@ dl {
 	outline: none;
 	list-style-type: none;
 }
+html {
+    height: 100%;
+}
 body {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto;
     overflow-x: hidden;
+}
+footer {
+    grid-row-start: 2;
+    grid-row-end: 3;
 }
 a {
     color: #17a2b8;
