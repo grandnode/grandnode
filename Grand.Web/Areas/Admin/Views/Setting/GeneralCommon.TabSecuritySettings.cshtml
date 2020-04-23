@@ -10,6 +10,7 @@
         if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
             $('#ssCaptchaShowOnLoginPagepnl').show();
             $('#ssCaptchaShowOnRegistrationPagepnl').show();
+            $('#ssCaptchaShowOnPasswordRecoverPagepnl').show();
             $('#ssCaptchaShowOnContactUsPagepnl').show();
             $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
             $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
@@ -26,6 +27,7 @@
         else {
             $('#ssCaptchaShowOnLoginPagepnl').hide();
             $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+            $('#ssCaptchaShowOnPasswordRecoverPagepnl').hide();
             $('#ssCaptchaShowOnContactUsPagepnl').hide();
             $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
             $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
@@ -73,7 +75,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.EnableXsrfProtectionForAdminArea" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForAdminArea"></span>
             </div>
@@ -85,7 +87,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForPublicStore"></span>
             </div>
@@ -97,7 +99,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.HoneypotEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.HoneypotEnabled"></span>
             </div>
@@ -119,7 +121,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaEnabled"></span>
             </div>
@@ -131,7 +133,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnLoginPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnLoginPage"></span>
             </div>
@@ -143,9 +145,21 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnRegistrationPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnRegistrationPage"></span>
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnPasswordRecoverPagepnl">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnPasswordRecoveryPage" class="control-label" />
+            </div>
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnPasswordRecoveryPage" />
+                    <div class="control__indicator"></div>
+                </label>
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnPasswordRecoveryPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnContactUsPagepnl">
@@ -155,7 +169,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnContactUsPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnContactUsPage"></span>
             </div>
@@ -167,7 +181,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage"></span>
             </div>
@@ -179,7 +193,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnEmailProductToFriendPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnEmailProductToFriendPage"></span>
             </div>
@@ -191,7 +205,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnAskQuestionPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnAskQuestionPage"></span>
             </div>
@@ -203,7 +217,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnBlogCommentPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnBlogCommentPage"></span>
             </div>
@@ -215,7 +229,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnArticleCommentPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnArticleCommentPage"></span>
             </div>
@@ -227,7 +241,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnNewsCommentPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnNewsCommentPage"></span>
             </div>
@@ -239,7 +253,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnProductReviewPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnProductReviewPage"></span>
             </div>
@@ -251,7 +265,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnApplyVendorPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnApplyVendorPage"></span>
             </div>

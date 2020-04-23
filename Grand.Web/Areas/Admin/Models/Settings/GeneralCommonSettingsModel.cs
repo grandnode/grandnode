@@ -209,6 +209,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage")]
             public bool CaptchaShowOnRegistrationPage { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnPasswordRecoveryPage")]
+            public bool CaptchaShowOnPasswordRecoveryPage { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnContactUsPage")]
             public bool CaptchaShowOnContactUsPage { get; set; }
 

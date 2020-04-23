@@ -295,16 +295,24 @@ namespace Grand.Web.Controllers
         public virtual IActionResult PasswordRecovery()
         {
             var model = new PasswordRecoveryModel();
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnPasswordRecoveryPage;
             return View(model);
         }
 
         [HttpPost, ActionName("PasswordRecovery")]
         [AutoValidateAntiforgeryToken]
+        [ValidateCaptcha]
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual async Task<IActionResult> PasswordRecoverySend(PasswordRecoveryModel model)
+        public virtual async Task<IActionResult> PasswordRecoverySend(PasswordRecoveryModel model, bool captchaValid)
         {
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnPasswordRecoveryPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+            }
+
             if (ModelState.IsValid)
             {
                 var customer = await _customerService.GetCustomerByEmail(model.Email);
@@ -312,6 +320,7 @@ namespace Grand.Web.Controllers
                 {
                     await _mediator.Send(new PasswordRecoverySendCommand() { Customer = customer, Language = _workContext.WorkingLanguage, Model = model });
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
+                    model.Send = true;
                 }
                 else
                 {

@@ -336,5 +336,11 @@
       7. The last step is to add client email to your Google Analytics account.
     </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnPasswordRecoveryPage">
+    <Value>Show on password recovery page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnPasswordRecoveryPage.Hint">
+    <Value>Check to show CAPTCHA on password recovery page.</Value>
+  </LocaleResource>
 </Language>
 

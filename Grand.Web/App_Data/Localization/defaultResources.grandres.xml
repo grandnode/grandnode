@@ -7315,6 +7315,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage.Hint">
     <Value>Check to show CAPTCHA on news page when writing a comment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnPasswordRecoveryPage">
+    <Value>Show on password recovery page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnPasswordRecoveryPage.Hint">
+    <Value>Check to show CAPTCHA on password recovery page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage">
     <Value>Show on product reviews page</Value>
   </LocaleResource>
