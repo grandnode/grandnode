@@ -1,4 +1,5 @@
-﻿using Grand.Framework.Kendoui;
+﻿using Grand.Core.Domain.Seo;
+using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
@@ -6,9 +7,11 @@ using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
+using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +27,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly SeoSettings _seoSettings;
 
         #endregion Fields
 
@@ -32,12 +36,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         public SpecificationAttributeController(ISpecificationAttributeService specificationAttributeService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService,
+            SeoSettings seoSettings)
         {
-            this._specificationAttributeService = specificationAttributeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
+            _specificationAttributeService = specificationAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _customerActivityService = customerActivityService;
+            _seoSettings = seoSettings;
         }
 
         #endregion
@@ -78,6 +84,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var specificationAttribute = model.ToEntity();
+                specificationAttribute.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(specificationAttribute.SeName) ? specificationAttribute.Name : specificationAttribute.SeName, _seoSettings);
                 await _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
                 //activity log
                 await _customerActivityService.InsertActivity("AddNewSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name);
@@ -118,6 +125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 specificationAttribute = model.ToEntity(specificationAttribute);
+                specificationAttribute.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(specificationAttribute.SeName) ? specificationAttribute.Name : specificationAttribute.SeName, _seoSettings);
                 await _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
                 //activity log
                 await _customerActivityService.InsertActivity("EditSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name);
@@ -208,6 +216,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var sao = model.ToEntity();
+                sao.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(sao.SeName) ? sao.Name : sao.SeName, _seoSettings);
                 //clear "Color" values if it's disabled
                 if (!model.EnableColorSquaresRgb)
                     sao.ColorSquaresRgb = null;
@@ -254,6 +263,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sao = model.ToEntity(sao);
+                sao.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(sao.SeName) ? sao.Name : sao.SeName, _seoSettings);
+
                 //clear "Color" values if it's disabled
                 if (!model.EnableColorSquaresRgb)
                     sao.ColorSquaresRgb = null;

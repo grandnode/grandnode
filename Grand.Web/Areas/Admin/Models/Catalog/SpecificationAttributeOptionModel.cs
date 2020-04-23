@@ -18,11 +18,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string SpecificationAttributeId { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")]
-        
         public string Name { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.SeName")]
+        public string SeName { get; set; }
+
         [GrandResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb")]
-        
         public string ColorSquaresRgb { get; set; }
         [GrandResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb")]
         public bool EnableColorSquaresRgb { get; set; }

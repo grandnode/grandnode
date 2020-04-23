@@ -5433,89 +5433,104 @@ namespace Grand.Services.Installation
             var sa1 = new SpecificationAttribute {
                 Name = "Screensize",
                 DisplayOrder = 1,
+                SeName = SeoExtensions.GetSeName("Screensize", false, false),
             };
             await _specificationAttributeRepository.InsertAsync(sa1);
 
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
-
                 Name = "13.0''",
                 DisplayOrder = 2,
+                SeName = SeoExtensions.GetSeName("13.0''", false, false),
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "13.3''",
                 DisplayOrder = 3,
+                SeName = SeoExtensions.GetSeName("13.3''", false, false),
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "14.0''",
                 DisplayOrder = 4,
+                SeName = SeoExtensions.GetSeName("14.0''", false, false),
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "15.0''",
                 DisplayOrder = 4,
+                SeName = SeoExtensions.GetSeName("15.0''", false, false),
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "15.6''",
                 DisplayOrder = 5,
+                SeName = SeoExtensions.GetSeName("15.6''", false, false),
             });
             await _specificationAttributeRepository.UpdateAsync(sa1);
 
             var sa2 = new SpecificationAttribute {
                 Name = "CPU Type",
                 DisplayOrder = 2,
+                SeName = SeoExtensions.GetSeName("CPU Type", false, false),
             };
             await _specificationAttributeRepository.InsertAsync(sa2);
 
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "Intel Core i5",
                 DisplayOrder = 1,
+                SeName = SeoExtensions.GetSeName("Intel Core i5", false, false),
             });
 
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "Intel Core i7",
                 DisplayOrder = 2,
+                SeName = SeoExtensions.GetSeName("Intel Core i7", false, false),
             });
             await _specificationAttributeRepository.UpdateAsync(sa2);
 
             var sa3 = new SpecificationAttribute {
                 Name = "Memory",
                 DisplayOrder = 3,
+                SeName = SeoExtensions.GetSeName("Memory", false, false),
             };
             await _specificationAttributeRepository.InsertAsync(sa3);
 
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "4 GB",
                 DisplayOrder = 1,
+                SeName = SeoExtensions.GetSeName("4 GB", false, false),
             });
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "8 GB",
                 DisplayOrder = 2,
+                SeName = SeoExtensions.GetSeName("8 GB", false, false),
             });
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "16 GB",
                 DisplayOrder = 3,
+                SeName = SeoExtensions.GetSeName("16 GB", false, false),
             });
             await _specificationAttributeRepository.UpdateAsync(sa3);
 
             var sa4 = new SpecificationAttribute {
                 Name = "Hardrive",
                 DisplayOrder = 5,
+                SeName = SeoExtensions.GetSeName("Hardrive", false, false),
             };
             await _specificationAttributeRepository.InsertAsync(sa4);
 
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "128 GB",
                 DisplayOrder = 7,
+                SeName = SeoExtensions.GetSeName("128 GB", false, false),
             });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "500 GB",
                 DisplayOrder = 4,
+                SeName = SeoExtensions.GetSeName("500 GB", false, false),
             });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "1 TB",
                 DisplayOrder = 3,
+                SeName = SeoExtensions.GetSeName("1 TB", false, false),
             });
             await _specificationAttributeRepository.UpdateAsync(sa4);
-
         }
 
         protected virtual async Task InstallProductAttributes()

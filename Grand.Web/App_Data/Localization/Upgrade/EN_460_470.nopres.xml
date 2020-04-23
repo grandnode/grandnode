@@ -345,5 +345,17 @@
   <LocaleResource Name="Footer.CompanyName.Title">
     <Value>Company name:</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name. Leave empty to generate it automatically based on the name of the specification.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name. Leave empty to generate it automatically based on the name of the options.</Value>
+  </LocaleResource>
 </Language>
 
