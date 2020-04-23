@@ -18356,6 +18356,9 @@
   <LocaleResource Name="Footer.Address.Title">
     <Value>Address:</Value>
   </LocaleResource>
+  <LocaleResource Name="Footer.CompanyName.Title">
+    <Value>Company name:</Value>
+  </LocaleResource>
   <LocaleResource Name="Footer.CustomerService">
     <Value>Customer service</Value>
   </LocaleResource>

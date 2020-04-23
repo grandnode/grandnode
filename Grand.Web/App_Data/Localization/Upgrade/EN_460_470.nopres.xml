@@ -342,5 +342,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnPasswordRecoveryPage.Hint">
     <Value>Check to show CAPTCHA on password recovery page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Footer.CompanyName.Title">
+    <Value>Company name:</Value>
+  </LocaleResource>
 </Language>
 

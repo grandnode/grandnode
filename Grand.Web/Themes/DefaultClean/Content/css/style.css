@@ -4699,77 +4699,77 @@ footer {
     height: auto;
 }
 
-    footer .footer-lower {
-        margin: 45px 0 0 0;
-        padding: 30px 0;
-    }
+footer .footer-lower {
+    margin: 10px 0 0 0;
+    padding: 30px 0;
+}
 
-    footer .viewBox ul {
-        flex-direction: row;
-        justify-content: center;
-        flex-wrap: wrap;
-        padding-left: 0;
-    }
+footer .viewBox ul {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-left: 0;
+}
 
-    footer .about-us.block {
-        color: #777;
-        font-size: 14px;
-    }
+footer .about-us.block {
+    color: #777;
+    font-size: 14px;
+}
 
-    footer .step-title .card-bodyquote {
-        margin-bottom: 0;
-    }
+footer .step-title .card-bodyquote {
+    margin-bottom: 0;
+}
 
-    footer .newsletter .btn i {
-        margin-right: 0;
-        padding-right: 0;
-    }
+footer .newsletter .btn i {
+    margin-right: 0;
+    padding-right: 0;
+}
 
-    footer .newsletter-container {
-        background: #ececec;
-    }
+footer .newsletter-container {
+    background: #ececec;
+}
 
-    footer .block h2 {
-        border-bottom: 1px solid #ececec;
-    }
+footer .block h2 {
+    border-bottom: 1px solid #ececec;
+}
 
-        footer .block h2 strong {
-            font-weight: 300;
-            text-transform: uppercase;
-        }
+footer .block h2 strong {
+    font-weight: 300;
+    text-transform: uppercase;
+}
 
-    footer .block .list-group-item a,
-    #newsletter-subscribe-block .strong.h3 {
-        font-size: 13px;
-        font-weight: 400;
-        transition: all .3s ease;
-        -webkit-transition: all .3s ease;
-    }
+footer .block .list-group-item a,
+#newsletter-subscribe-block .strong.h3 {
+    font-size: 13px;
+    font-weight: 400;
+    transition: all .3s ease;
+    -webkit-transition: all .3s ease;
+}
 
-    footer .block h2,
-    footer .block a {
-        color: #000;
-    }
+footer .block h2,
+footer .block a {
+    color: #000;
+}
 
-    footer h5 {
-        text-transform: uppercase;
-        font-size: 15px;
-        font-weight: bold;
-    }
+footer h5 {
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: bold;
+}
 
-    footer .color-holder {
-        min-height: 8px;
-        top: 0;
-        width: 100%;
-        margin-bottom: 16px;
-    }
+footer .color-holder {
+    min-height: 8px;
+    top: 0;
+    width: 100%;
+    margin-bottom: 16px;
+}
 
-    footer .list-group .list-group-item {
-        background-color: transparent;
-        padding: 1px;
-        border: 0;
-        margin-right: 15px;
-    }
+footer .list-group .list-group-item {
+    background-color: transparent;
+    padding: 1px;
+    border: 0;
+    margin-right: 15px;
+}
 
 .footer-lower {
     border-top: 1px solid #dfdfdf;
