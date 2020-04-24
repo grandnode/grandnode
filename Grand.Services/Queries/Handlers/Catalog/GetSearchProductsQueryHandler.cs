@@ -18,7 +18,7 @@ namespace Grand.Services.Queries.Handlers.Catalog
 {
     public class GetSearchProductsQueryHandler : IRequestHandler<GetSearchProductsQuery, (IPagedList<Product> products, IList<string> filterableSpecificationAttributeOptionIds)>
     {
-        
+
         private readonly IRepository<Product> _productRepository;
         private readonly ISpecificationAttributeService _specificationAttributeService;
 
@@ -28,17 +28,17 @@ namespace Grand.Services.Queries.Handlers.Catalog
         public GetSearchProductsQueryHandler(
             IRepository<Product> productRepository,
             ISpecificationAttributeService specificationAttributeService,
-            CatalogSettings catalogSettings, 
+            CatalogSettings catalogSettings,
             CommonSettings commonSettings)
         {
             _productRepository = productRepository;
-            _specificationAttributeService = specificationAttributeService; 
-            
+            _specificationAttributeService = specificationAttributeService;
+
             _catalogSettings = catalogSettings;
             _commonSettings = commonSettings;
         }
 
-        public async Task<(IPagedList<Product> products, IList<string> filterableSpecificationAttributeOptionIds)> 
+        public async Task<(IPagedList<Product> products, IList<string> filterableSpecificationAttributeOptionIds)>
             Handle(GetSearchProductsQuery request, CancellationToken cancellationToken)
         {
             var filterableSpecificationAttributeOptionIds = new List<string>();
@@ -63,7 +63,7 @@ namespace Grand.Services.Queries.Handlers.Catalog
 
                 if (request.FeaturedProducts.HasValue)
                 {
-                    filter = filter & builder.Where(x => x.ProductCategories.Any(y => request.CategoryIds.Contains(y.CategoryId) 
+                    filter = filter & builder.Where(x => x.ProductCategories.Any(y => request.CategoryIds.Contains(y.CategoryId)
                         && y.IsFeaturedProduct == request.FeaturedProducts));
                 }
                 else
@@ -76,7 +76,7 @@ namespace Grand.Services.Queries.Handlers.Catalog
             {
                 if (request.FeaturedProducts.HasValue)
                 {
-                    filter = filter & builder.Where(x => x.ProductManufacturers.Any(y => y.ManufacturerId == request.ManufacturerId 
+                    filter = filter & builder.Where(x => x.ProductManufacturers.Any(y => y.ManufacturerId == request.ManufacturerId
                         && y.IsFeaturedProduct == request.FeaturedProducts));
                 }
                 else
@@ -227,7 +227,7 @@ namespace Grand.Services.Queries.Handlers.Catalog
                         {
                             //add
                             dictionary.Add(specification.Id, new List<string>());
-                            filterSpecification = filterSpecification & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeId == specification.Id));
+                            filterSpecification = filterSpecification & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeId == specification.Id && y.AllowFiltering));
                         }
                         dictionary[specification.Id].Add(key);
                     }
@@ -235,7 +235,7 @@ namespace Grand.Services.Queries.Handlers.Catalog
 
                 foreach (var item in dictionary)
                 {
-                    filter = filter & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeId == item.Key
+                    filter = filter & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeId == item.Key && y.AllowFiltering
                     && item.Value.Contains(y.SpecificationAttributeOptionId)));
                 }
             }
