@@ -452,7 +452,7 @@ span.rotate {
 .c-offcanvas-content-wrap {
 	grid-row-start: 1;
 	grid-row-end: 2;
-	overflow-x: hidden;
+	overflow: hidden;
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
 }
