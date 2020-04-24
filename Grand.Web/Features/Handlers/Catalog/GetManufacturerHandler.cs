@@ -11,6 +11,8 @@ using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +26,9 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
         private readonly ICacheManager _cacheManager;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private readonly CatalogSettings _catalogSettings;
 
         public GetManufacturerHandler(
@@ -32,6 +37,8 @@ namespace Grand.Web.Features.Handlers.Catalog
             IPriceFormatter priceFormatter,
             ICurrencyService currencyService,
             ICacheManager cacheManager,
+            ISpecificationAttributeService specificationAttributeService,
+            IHttpContextAccessor httpContextAccessor,
             CatalogSettings catalogSettings)
         {
             _mediator = mediator;
@@ -39,6 +46,8 @@ namespace Grand.Web.Features.Handlers.Catalog
             _priceFormatter = priceFormatter;
             _currencyService = currencyService;
             _cacheManager = cacheManager;
+            _specificationAttributeService = specificationAttributeService;
+            _httpContextAccessor = httpContextAccessor;
             _catalogSettings = catalogSettings;
         }
 
@@ -120,7 +129,12 @@ namespace Grand.Web.Features.Handlers.Catalog
                     })).ToList();
                 }
             }
+
+            IList<string> alreadyFilteredSpecOptionIds = await model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds
+                (_httpContextAccessor, _specificationAttributeService);
+
             var products = (await _mediator.Send(new GetSearchProductsQuery() {
+                LoadFilterableSpecificationAttributeOptionIds = !_catalogSettings.IgnoreFilterableSpecAttributeOption,
                 ManufacturerId = request.Manufacturer.Id,
                 Customer = request.Customer,
                 StoreId = request.Store.Id,
@@ -128,17 +142,23 @@ namespace Grand.Web.Features.Handlers.Catalog
                 FeaturedProducts = _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 PriceMin = minPriceConverted,
                 PriceMax = maxPriceConverted,
+                FilteredSpecs = alreadyFilteredSpecOptionIds,
                 OrderBy = (ProductSortingEnum)request.Command.OrderBy,
                 PageIndex = request.Command.PageNumber - 1,
                 PageSize = request.Command.PageSize
-            })).products;
+            }));
 
             model.Products = (await _mediator.Send(new GetProductOverview() {
-                Products = products,
+                Products = products.products,
                 PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages
             })).ToList();
 
-            model.PagingFilteringContext.LoadPagedList(products);
+            model.PagingFilteringContext.LoadPagedList(products.products);
+
+            //specs
+            await model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+                products.filterableSpecificationAttributeOptionIds,
+                _specificationAttributeService, _webHelper, _cacheManager, request.Language.Id);
 
             return model;
         }
