@@ -51,6 +51,14 @@ namespace Grand.Services.Catalog
         private const string SPECIFICATION_BY_ID_KEY = "Grand.specification.id-{0}";
 
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : specification option ID
+        /// </remarks>
+        private const string SPECIFICATION_BY_OPTIONID_KEY = "Grand.specification.optionid-{0}";
+
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string SPECIFICATION_PATTERN_KEY = "Grand.specification.";
@@ -205,13 +213,16 @@ namespace Grand.Services.Catalog
         public virtual async Task<SpecificationAttribute> GetSpecificationAttributeByOptionId(string specificationAttributeOptionId)
         {
             if (string.IsNullOrEmpty(specificationAttributeOptionId))
-                return null;
+                return await Task.FromResult<SpecificationAttribute>(null);
 
-            var query = from p in _specificationAttributeRepository.Table
-                        where p.SpecificationAttributeOptions.Any(x => x.Id == specificationAttributeOptionId)
-                        select p;
-
-            return await query.FirstOrDefaultAsync();
+            string key = string.Format(SPECIFICATION_BY_OPTIONID_KEY, specificationAttributeOptionId);
+            return await _cacheManager.GetAsync(key, async () =>
+            {
+                var query = from p in _specificationAttributeRepository.Table
+                            where p.SpecificationAttributeOptions.Any(x => x.Id == specificationAttributeOptionId)
+                            select p;
+                return await query.FirstOrDefaultAsync();
+            });
         }
 
         /// <summary>
