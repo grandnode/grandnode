@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;

@@ -16,6 +16,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -34,6 +35,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly CatalogSettings _catalogSettings;
         private readonly MediaSettings _mediaSettings;
 
@@ -47,6 +49,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             IPictureService pictureService,
             ILocalizationService localizationService,
             ISpecificationAttributeService specificationAttributeService,
+            IHttpContextAccessor httpContextAccessor,
             CatalogSettings catalogSettings,
             MediaSettings mediaSettings)
         {
@@ -59,6 +62,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             _pictureService = pictureService;
             _localizationService = localizationService;
             _specificationAttributeService = specificationAttributeService;
+            _httpContextAccessor = httpContextAccessor;
             _catalogSettings = catalogSettings;
             _mediaSettings = mediaSettings;
         }
@@ -199,7 +203,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                 categoryIds.AddRange(await _mediator.Send(new GetChildCategoryIds() { ParentCategoryId = request.Category.Id, Customer = request.Customer, Store = request.Store }));
             }
             //products
-            IList<string> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
+            IList<string> alreadyFilteredSpecOptionIds = await model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_httpContextAccessor, _specificationAttributeService);
             var products = (await _mediator.Send(new GetSearchProductsQuery() {
                 LoadFilterableSpecificationAttributeOptionIds = !_catalogSettings.IgnoreFilterableSpecAttributeOption,
                 CategoryIds = categoryIds,

@@ -19,6 +19,13 @@ namespace Grand.Services.Catalog
         Task<SpecificationAttribute> GetSpecificationAttributeById(string specificationAttributeId);
 
         /// <summary>
+        /// Gets a specification attribute by sename
+        /// </summary>
+        /// <param name="sename">Sename</param>
+        /// <returns>Specification attribute</returns>
+        Task<SpecificationAttribute> GetSpecificationAttributeBySeName(string sename);
+
+        /// <summary>
         /// Gets specification attributes
         /// </summary>
         /// <param name="pageIndex">Page index</param>
