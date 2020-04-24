@@ -15,6 +15,7 @@ using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,9 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly ICurrencyService _currencyService;
         private readonly IMediator _mediator;
         private readonly ISearchTermService _searchTermService;
+        private readonly IWebHelper _webHelper;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
@@ -47,6 +51,9 @@ namespace Grand.Web.Features.Handlers.Catalog
             ICurrencyService currencyService,
             IMediator mediator,
             ISearchTermService searchTermService,
+            IWebHelper webHelper,
+            ISpecificationAttributeService specificationAttributeService,
+            IHttpContextAccessor httpContextAccessor,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings)
         {
@@ -58,6 +65,9 @@ namespace Grand.Web.Features.Handlers.Catalog
             _currencyService = currencyService;
             _mediator = mediator;
             _searchTermService = searchTermService;
+            _webHelper = webHelper;
+            _specificationAttributeService = specificationAttributeService;
+            _httpContextAccessor = httpContextAccessor;
             _catalogSettings = catalogSettings;
             _vendorSettings = vendorSettings;
         }
@@ -223,8 +233,12 @@ namespace Grand.Web.Features.Handlers.Catalog
 
                     var searchInProductTags = searchInDescriptions;
 
+                    IList<string> alreadyFilteredSpecOptionIds = await request.Model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds
+                        (_httpContextAccessor, _specificationAttributeService);
+
                     //products
-                    products = (await _mediator.Send(new GetSearchProductsQuery() {
+                    var searchproducts = (await _mediator.Send(new GetSearchProductsQuery() {
+                        LoadFilterableSpecificationAttributeOptionIds = !_catalogSettings.IgnoreFilterableSpecAttributeOption,
                         CategoryIds = categoryIds,
                         ManufacturerId = manufacturerId,
                         Customer = request.Customer,
@@ -236,17 +250,23 @@ namespace Grand.Web.Features.Handlers.Catalog
                         SearchDescriptions = searchInDescriptions,
                         SearchSku = searchInDescriptions,
                         SearchProductTags = searchInProductTags,
+                        FilteredSpecs = alreadyFilteredSpecOptionIds,
                         LanguageId = request.Language.Id,
                         OrderBy = (ProductSortingEnum)request.Command.OrderBy,
                         PageIndex = request.Command.PageNumber - 1,
                         PageSize = request.Command.PageSize,
                         VendorId = vendorId
-                    })).products;
+                    }));
 
                     request.Model.Products = (await _mediator.Send(new GetProductOverview() {
-                        Products = products,
+                        Products = searchproducts.products,
                         PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages
                     })).ToList();
+
+                    //specs
+                    await request.Model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+                        searchproducts.filterableSpecificationAttributeOptionIds,
+                        _specificationAttributeService, _webHelper, _cacheManager, request.Language.Id);
 
                     request.Model.NoResults = !request.Model.Products.Any();
 
