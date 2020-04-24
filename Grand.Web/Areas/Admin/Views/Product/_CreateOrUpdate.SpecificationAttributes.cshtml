@@ -103,7 +103,7 @@
                                                             success: function (data) {
                                                                 var availableOptions = [];
                                                                 $.each(data, function(id, option) {
-                                                                    availableOptions.push({ Id: option.id, Name: kendo.htmlEncode(option.name) });
+                                                                    availableOptions.push({ Id: option.id, Name: option.name });
                                                                 });
                                                                 dropDownList.setDataSource(availableOptions);
                                                                 dropDownList.select(function(item) {
