@@ -436,6 +436,10 @@ span.rotate {
 
 /* canavs */
 
+.c-offcanvas {
+    display: flex;
+    flex-direction: column;
+}
 .js-offcanvas-trigger .c-button__text {
     display: flex;
     align-items: center;
@@ -443,6 +447,9 @@ span.rotate {
 }
 
 .c-offcanvas-content-wrap {
+    grid-row-start: 1;
+    grid-row-end: 2;
+    overflow-x: hidden;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
