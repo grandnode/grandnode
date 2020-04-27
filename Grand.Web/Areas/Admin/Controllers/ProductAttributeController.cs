@@ -1,4 +1,5 @@
-﻿using Grand.Framework.Kendoui;
+﻿using Grand.Core.Domain.Seo;
+using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
@@ -6,6 +7,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
+using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +26,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly SeoSettings _seoSettings;
+
         #endregion Fields
 
         #region Constructors
@@ -32,13 +36,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             IProductAttributeService productAttributeService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService,
+            SeoSettings seoSettings)
         {
-            this._productService = productService;
-            this._productAttributeService = productAttributeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
+            _productService = productService;
+            _productAttributeService = productAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _customerActivityService = customerActivityService;
+            _seoSettings = seoSettings;
         }
 
         #endregion
@@ -81,6 +87,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var productAttribute = model.ToEntity();
+                productAttribute.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(productAttribute.SeName) ? productAttribute.Name : productAttribute.SeName, _seoSettings);
                 await _productAttributeService.InsertProductAttribute(productAttribute);
 
                 //activity log
@@ -124,6 +131,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 productAttribute = model.ToEntity(productAttribute);
+                productAttribute.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(productAttribute.SeName) ? productAttribute.Name : productAttribute.SeName, _seoSettings);
+
                 await _productAttributeService.UpdateProductAttribute(productAttribute);
 
                 //activity log

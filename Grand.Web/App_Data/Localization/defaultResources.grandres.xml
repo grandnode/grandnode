@@ -2206,6 +2206,12 @@
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Fields.SeName">
+    <Value>Search engine friendly name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Fields.SeName.Hint">
+    <Value>Set a search engine friendly name. Leave empty to generate it automatically based on the name of the attribute.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Info">
     <Value>Info</Value>
   </LocaleResource>

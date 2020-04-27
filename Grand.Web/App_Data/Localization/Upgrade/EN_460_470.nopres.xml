@@ -357,5 +357,11 @@
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name. Leave empty to generate it automatically based on the name of the options.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Fields.SeName">
+    <Value>Search engine friendly name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Fields.SeName.Hint">
+    <Value>Set a search engine friendly name. Leave empty to generate it automatically based on the name of the attribute.</Value>
+  </LocaleResource>
 </Language>
 

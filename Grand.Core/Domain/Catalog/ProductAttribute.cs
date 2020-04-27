@@ -19,6 +19,11 @@ namespace Grand.Core.Domain.Catalog
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the sename
+        /// </summary>
+        public string SeName { get; set; }
+
+        /// <summary>
         /// Gets or sets the description
         /// </summary>
         public string Description { get; set; }

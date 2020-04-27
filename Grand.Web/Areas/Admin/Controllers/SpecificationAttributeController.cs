@@ -11,7 +11,6 @@ using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
-using StackExchange.Redis;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -60,8 +59,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var specificationAttributes = await _specificationAttributeService
                 .GetSpecificationAttributes(command.Page - 1, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = specificationAttributes.Select(x => x.ToModel()),
                 Total = specificationAttributes.TotalCount
             };
@@ -177,8 +175,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> OptionList(string specificationAttributeId, DataSourceRequest command)
         {
             var options = (await _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)).SpecificationAttributeOptions;
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = options.Select(x =>
                     {
                         var model = x.ToModel();
@@ -196,8 +193,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public async Task<IActionResult> OptionCreatePopup(string specificationAttributeId)
         {
-            var model = new SpecificationAttributeOptionModel
-            {
+            var model = new SpecificationAttributeOptionModel {
                 SpecificationAttributeId = specificationAttributeId
             };
             //locales
