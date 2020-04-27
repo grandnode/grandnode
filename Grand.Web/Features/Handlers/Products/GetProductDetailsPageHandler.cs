@@ -27,6 +27,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -61,6 +62,7 @@ namespace Grand.Web.Features.Handlers.Products
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
         private readonly IProductReservationService _productReservationService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMediator _mediator;
 
         private readonly MediaSettings _mediaSettings;
@@ -92,7 +94,8 @@ namespace Grand.Web.Features.Handlers.Products
             IManufacturerService manufacturerService, 
             IDateTimeHelper dateTimeHelper, 
             IDownloadService downloadService, 
-            IProductReservationService productReservationService, 
+            IProductReservationService productReservationService,
+            IHttpContextAccessor httpContextAccessor,
             IMediator mediator, 
             MediaSettings mediaSettings, 
             CatalogSettings catalogSettings, 
@@ -123,6 +126,7 @@ namespace Grand.Web.Features.Handlers.Products
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
             _productReservationService = productReservationService;
+            _httpContextAccessor = httpContextAccessor;
             _mediator = mediator;
             _mediaSettings = mediaSettings;
             _catalogSettings = catalogSettings;
@@ -788,24 +792,30 @@ namespace Grand.Web.Features.Handlers.Products
                     DefaultValue = updatecartitem != null ? null : attribute.DefaultValue,
                     HasCondition = !String.IsNullOrEmpty(attribute.ConditionAttributeXml)
                 };
-                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
                     attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
                 }
 
+                var selectedValues = !string.IsNullOrEmpty(productAttribute.SeName) ? _httpContextAccessor.HttpContext.Request.Query[productAttribute.SeName].ToList() : new List<string>();
+                
                 if (attribute.ShouldHaveValues())
                 {
                     //values
                     var attributeValues = attribute.ProductAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
+                        var preselected = attributeValue.IsPreSelected;
+                        if (selectedValues.Any())
+                            preselected = selectedValues.Contains(attributeValue.Name);
+
                         var valueModel = new ProductDetailsModel.ProductAttributeValueModel {
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb, //used with "Color squares" attribute type
-                            IsPreSelected = attributeValue.IsPreSelected
+                            IsPreSelected = preselected
                         };
                         attributeModel.Values.Add(valueModel);
 
