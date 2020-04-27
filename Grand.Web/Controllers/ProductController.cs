@@ -158,6 +158,7 @@ namespace Grand.Web.Controllers
 
             //prepare the model
             var model = await _mediator.Send(new GetProductDetailsPage() {
+                Store = _storeContext.CurrentStore,
                 Product = product,
                 IsAssociatedProduct = false,
                 UpdateCartItem = updatecartitem
@@ -400,6 +401,7 @@ namespace Grand.Web.Controllers
 
             //prepare the model
             var model = await _mediator.Send(new GetProductDetailsPage() {
+                Store = _storeContext.CurrentStore,
                 Product = product,
                 IsAssociatedProduct = false,
                 UpdateCartItem = null

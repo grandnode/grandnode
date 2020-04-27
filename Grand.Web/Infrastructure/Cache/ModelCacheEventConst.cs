@@ -323,10 +323,9 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized product name)
-        /// {4} : machine name
-        /// {5} : current store ID
+        /// {4} : current store ID
         /// </remarks>
-        public const string PRODUCT_DETAILS_PICTURES_MODEL_KEY = "Grand.pres.product.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string PRODUCT_DETAILS_PICTURES_MODEL_KEY = "Grand.pres.product.picture-{0}-{1}-{2}-{3}-{4}";
         public const string PRODUCT_DETAILS_PICTURES_PATTERN_KEY = "Grand.pres.product.picture-{0}";
 
 

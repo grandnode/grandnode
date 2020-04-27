@@ -5,6 +5,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
+using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Catalog;
@@ -18,7 +19,6 @@ using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
-using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Web.Extensions;
@@ -51,7 +51,6 @@ namespace Grand.Web.Features.Handlers.Products
         private readonly IMeasureService _measureService;
         private readonly ICacheManager _cacheManager;
         private readonly IPictureService _pictureService;
-        private readonly IWebHelper _webHelper;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShippingService _shippingService;
         private readonly IVendorService _vendorService;
@@ -84,7 +83,6 @@ namespace Grand.Web.Features.Handlers.Products
             IMeasureService measureService, 
             ICacheManager cacheManager, 
             IPictureService pictureService, 
-            IWebHelper webHelper, 
             IProductAttributeParser productAttributeParser, 
             IShippingService shippingService, 
             IVendorService vendorService, 
@@ -115,7 +113,6 @@ namespace Grand.Web.Features.Handlers.Products
             _measureService = measureService;
             _cacheManager = cacheManager;
             _pictureService = pictureService;
-            _webHelper = webHelper;
             _productAttributeParser = productAttributeParser;
             _shippingService = shippingService;
             _vendorService = vendorService;
@@ -137,10 +134,10 @@ namespace Grand.Web.Features.Handlers.Products
 
         public async Task<ProductDetailsModel> Handle(GetProductDetailsPage request, CancellationToken cancellationToken)
         {
-            return await PrepareProductDetailsModel(request.Product, request.UpdateCartItem, request.IsAssociatedProduct);
+            return await PrepareProductDetailsModel(request.Store, request.Product, request.UpdateCartItem, request.IsAssociatedProduct);
         }
 
-        private async Task<ProductDetailsModel> PrepareProductDetailsModel(Product product, ShoppingCartItem updateCartItem, bool isAssociatedProduct)
+        private async Task<ProductDetailsModel> PrepareProductDetailsModel(Store store, Product product, ShoppingCartItem updateCartItem, bool isAssociatedProduct)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -163,7 +160,7 @@ namespace Grand.Web.Features.Handlers.Products
             if (_catalogSettings.ShowShareButton && !string.IsNullOrEmpty(_catalogSettings.PageShareCode))
             {
                 var shareCode = _catalogSettings.PageShareCode;
-                if (_webHelper.IsCurrentConnectionSecured())
+                if (store.SslEnabled)
                 {
                     //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
                     shareCode = shareCode.Replace("http://", "https://");
@@ -302,7 +299,7 @@ namespace Grand.Web.Features.Handlers.Products
                 {
                     var associatedProducts = await _productService.GetAssociatedProducts(product.Id, _storeContext.CurrentStore.Id);
                     foreach (var associatedProduct in associatedProducts)
-                        model.AssociatedProducts.Add(await PrepareProductDetailsModel(associatedProduct, null, true));
+                        model.AssociatedProducts.Add(await PrepareProductDetailsModel(store, associatedProduct, null, true));
                 }
             }
 
@@ -533,7 +530,7 @@ namespace Grand.Web.Features.Handlers.Products
         private async Task<(PictureModel defaultPictureModel, List<PictureModel> pictureModels)> PrepareProductPictureModel(Product product, int defaultPictureSize, bool isAssociatedProduct, string name)
         {
             var productPicturesCacheKey = string.Format(ModelCacheEventConst.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize,
-                isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
+                isAssociatedProduct, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(productPicturesCacheKey, async () =>
             {
                 var defaultPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
@@ -1050,7 +1047,7 @@ namespace Grand.Web.Features.Handlers.Products
                     //prepare picture model
                     var productbundlePicturesCacheKey = string.Format(ModelCacheEventConst.PRODUCT_DETAILS_PICTURES_MODEL_KEY,
                         p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id,
-                        _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
+                        _storeContext.CurrentStore.Id);
 
                     bundleProduct.DefaultPictureModel = await _cacheManager.GetAsync(productbundlePicturesCacheKey, async () =>
                     {
