@@ -950,6 +950,17 @@ namespace Grand.Services.Installation
             }
 
             #endregion
+
+            #region Update product attributes - sename field
+
+            var attributes = _serviceProvider.GetRequiredService<IRepository<ProductAttribute>>();
+            foreach (var attribute in attributes.Table.ToList())
+            {
+                attribute.SeName = SeoExtensions.GetSeName(attribute.Name, false, false);
+                await attributes.UpdateAsync(attribute);
+            }
+
+            #endregion
         }
 
         private async Task InstallStringResources(string filenames)
