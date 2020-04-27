@@ -16,8 +16,8 @@
         @RenderBody()
         @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
     </div>
+    @await Component.InvokeAsync("Footer")
 </main>
-@await Component.InvokeAsync("Footer")
 <a class="js-offcanvas-trigger filter-button d-none" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("catalog.selectors.fiters")</span></a>
 <aside class="js-offcanvas mobile-filters d-lg-none d-flex flex-column" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":false}' id="leftSide">
     <div class="user-panel-head d-lg-none d-flex order-1">

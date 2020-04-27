@@ -22,8 +22,8 @@
         @RenderBody()
         @await Component.InvokeAsync("Widget", new { widgetZone = "clean_content_after" })
     </div>
+    @await Component.InvokeAsync("FooterClean")
 </main>
-@await Component.InvokeAsync("FooterClean")
 <script asp-location="Footer">
     AjaxCart.init('.cart-qty', '.wishlist-qty', '.flyout-cart');
 </script>

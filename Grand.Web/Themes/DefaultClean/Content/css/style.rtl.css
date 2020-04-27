@@ -25,18 +25,8 @@ dl {
 	outline: none;
 	list-style-type: none;
 }
-html {
-    height: 100%;
-}
 body {
-    min-height: 100%;
-    display: grid;
-    grid-template-rows: 1fr auto;
     overflow-x: hidden;
-}
-footer {
-    grid-row-start: 2;
-    grid-row-end: 3;
 }
 a {
     color: #17a2b8;
@@ -450,8 +440,6 @@ span.rotate {
 	justify-content: center;
 }
 .c-offcanvas-content-wrap {
-	grid-row-start: 1;
-	grid-row-end: 2;
 	overflow: hidden;
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
@@ -3499,6 +3487,12 @@ valid mgs .input-validation-error {
 }
 .filtered-items ul {
 	padding-left: 0;
+}
+
+/* clean page */
+
+.clean-page > .page-container {
+	min-height: calc(100vh - 229px);
 }
 
 /* back to store */
