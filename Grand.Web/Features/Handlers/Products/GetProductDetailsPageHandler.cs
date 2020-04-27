@@ -799,7 +799,7 @@ namespace Grand.Web.Features.Handlers.Products
                         .ToList();
                 }
 
-                var selectedValues = !string.IsNullOrEmpty(productAttribute.SeName) ? _httpContextAccessor.HttpContext.Request.Query[productAttribute.SeName].ToList() : new List<string>();
+                var urlselectedValues = !string.IsNullOrEmpty(productAttribute.SeName) ? _httpContextAccessor.HttpContext.Request.Query[productAttribute.SeName].ToList() : new List<string>();
                 
                 if (attribute.ShouldHaveValues())
                 {
@@ -808,8 +808,8 @@ namespace Grand.Web.Features.Handlers.Products
                     foreach (var attributeValue in attributeValues)
                     {
                         var preselected = attributeValue.IsPreSelected;
-                        if (selectedValues.Any())
-                            preselected = selectedValues.Contains(attributeValue.Name);
+                        if (urlselectedValues.Any())
+                            preselected = urlselectedValues.Contains(attributeValue.Name);
 
                         var valueModel = new ProductDetailsModel.ProductAttributeValueModel {
                             Id = attributeValue.Id,
