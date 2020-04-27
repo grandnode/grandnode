@@ -4392,7 +4392,7 @@ namespace Grand.Services.Installation
                                            Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Order #{{Order.OrderNumber}} has been cancelled. <br /><br />Order Number: {{Order.OrderNumber}} <br />   Date Ordered: {{Order.CreatedOn}} <br /><br /> ",
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
-                                       },                    
+                                       },
                                     new MessageTemplate
                                        {
                                            Name = "OrderCompleted.CustomerNotification",
@@ -5540,34 +5540,42 @@ namespace Grand.Services.Installation
                 new ProductAttribute
                 {
                     Name = "Color",
+                    SeName = "color"
                 },
                 new ProductAttribute
                 {
                     Name = "Custom Text",
+                    SeName = "custom-text"
                 },
                 new ProductAttribute
                 {
                     Name = "HDD",
+                    SeName = "hdd"
                 },
                 new ProductAttribute
                 {
                     Name = "OS",
+                    SeName = "os"
                 },
                 new ProductAttribute
                 {
                     Name = "Processor",
+                    SeName  = "processor"
                 },
                 new ProductAttribute
                 {
                     Name = "RAM",
+                    SeName = "ram"
                 },
                 new ProductAttribute
                 {
                     Name = "Size",
+                    SeName = "size"
                 },
                 new ProductAttribute
                 {
                     Name = "Software",
+                    SeName = "software"
                 },
             };
             await _productAttributeRepository.InsertAsync(productAttributes);
