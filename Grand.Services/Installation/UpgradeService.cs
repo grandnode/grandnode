@@ -935,6 +935,21 @@ namespace Grand.Services.Installation
             }
 
             #endregion
+
+            #region Update specification - sename field
+
+            var specification = _serviceProvider.GetRequiredService<IRepository<SpecificationAttribute>>();
+
+            foreach (var specificationAttribute in specification.Table.ToList())
+            {
+                specificationAttribute.SeName = SeoExtensions.GetSeName(specificationAttribute.Name, false, false);
+                specificationAttribute.SpecificationAttributeOptions.ToList().ForEach(x=>{ 
+                    x.SeName = SeoExtensions.GetSeName(x.Name, false, false);
+                });
+                await specification.UpdateAsync(specificationAttribute);
+            }
+
+            #endregion
         }
 
         private async Task InstallStringResources(string filenames)
