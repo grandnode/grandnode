@@ -93,6 +93,7 @@ namespace Grand.Web.Models.Catalog
                 Values = new List<ProductAttributeValueModel>();
             }
             public string Name { get; set; }
+            public string SeName { get; set; }
             public string TextPrompt { get; set; }
             public bool IsRequired { get; set; }
             public AttributeControlType AttributeControlType { get; set; }

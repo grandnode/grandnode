@@ -456,6 +456,7 @@ namespace Grand.Web.Features.Handlers.Products
                     {
                         var productAttributeModel = new ProductOverviewModel.ProductAttributeModel();
                         productAttributeModel.Name = pa.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
+                        productAttributeModel.SeName = pa.SeName;
                         productAttributeModel.TextPrompt = attribute.TextPrompt;
                         productAttributeModel.IsRequired = attribute.IsRequired;
                         productAttributeModel.AttributeControlType = attribute.AttributeControlType;
