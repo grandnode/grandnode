@@ -65,24 +65,28 @@ namespace Grand.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">/key</param>
-        Task RemoveAsync(string key);
+        /// <param name="publisher">publisher</param>
+        Task RemoveAsync(string key, bool publisher = true);
 
         /// <summary>
         /// Removes items by pattern
         /// </summary>
         /// <param name="prefix">prefix</param>
-        Task RemoveByPrefix(string prefix);
+        /// <param name="publisher">publisher</param>
+        Task RemoveByPrefix(string prefix, bool publisher = true);
 
         /// <summary>
         /// Removes items by pattern
         /// </summary>
-        /// <param name="pattern">pattern</param>
-        Task RemoveByPrefixAsync(string prefix);
+        /// <param name="prefix">string prefix</param>
+        /// <param name="publisher">publisher</param>
+        Task RemoveByPrefixAsync(string prefix, bool publisher = true);
 
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        Task Clear();
+        /// <param name="publisher">publisher</param>
+        Task Clear(bool publisher = true);
         
     }
 }

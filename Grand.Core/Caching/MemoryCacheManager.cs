@@ -228,10 +228,13 @@ namespace Grand.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
-        public virtual Task RemoveAsync(string key)
+        /// <param name="publisher">publisher</param>
+        public virtual Task RemoveAsync(string key, bool publisher = true)
         {
             _cache.Remove(RemoveKey(key));
-            _mediator.Publish(new EntityCacheEvent(key, CacheEvent.RemoveKey));
+            if (publisher)
+                _mediator.Publish(new EntityCacheEvent(key, CacheEvent.RemoveKey));
+
             return Task.CompletedTask;
         }
 
@@ -240,14 +243,17 @@ namespace Grand.Core.Caching
         /// Removes items by key prefix
         /// </summary>
         /// <param name="prefix">String prefix</param>
-        public virtual Task RemoveByPrefix(string prefix)
+        /// <param name="publisher">publisher</param>
+        public virtual Task RemoveByPrefix(string prefix, bool publisher = true)
         {
             var keysToRemove = _allKeys.Keys.Where(x => x.ToString().StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
             foreach (var key in keysToRemove)
             {
                 _cache.Remove(RemoveKey(key));
             }
-            _mediator.Publish(new EntityCacheEvent(prefix, CacheEvent.RemovePrefix));
+            if (publisher)
+                _mediator.Publish(new EntityCacheEvent(prefix, CacheEvent.RemovePrefix));
+
             return Task.CompletedTask;
         }
 
@@ -255,16 +261,20 @@ namespace Grand.Core.Caching
         /// Removes items by key prefix
         /// </summary>
         /// <param name="prefix">String prefix</param>
-        public virtual Task RemoveByPrefixAsync(string prefix)
+        /// <param name="publisher">publisher</param>
+        public virtual Task RemoveByPrefixAsync(string prefix, bool publisher = true)
         {
-            _mediator.Publish(new EntityCacheEvent(prefix, CacheEvent.RemovePrefix));
-            return RemoveByPrefix(prefix);
+            if (publisher)
+                _mediator.Publish(new EntityCacheEvent(prefix, CacheEvent.RemovePrefix));
+
+            return RemoveByPrefix(prefix, publisher);
         }
-        
+
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        public virtual Task Clear()
+        /// <param name="publisher">publisher</param>
+        public virtual Task Clear(bool publisher = true)
         {
             //send cancellation request
             _cancellationTokenSource.Cancel();

@@ -72,13 +72,13 @@ namespace Grand.Core.Caching.Redis
                 switch (message.MessageType)
                 {
                     case (int)MessageEventType.RemoveKey:
-                        await cache.RemoveAsync(message.Key);
+                        await cache.RemoveAsync(message.Key, false);
                         break;
                     case (int)MessageEventType.RemoveByPrefix:
-                        await cache.RemoveByPrefixAsync(message.Key);
+                        await cache.RemoveByPrefixAsync(message.Key, false);
                         break;
                     case (int)MessageEventType.ClearCache:
-                        await cache.Clear();
+                        await cache.Clear(false);
                         break;
                 }
 

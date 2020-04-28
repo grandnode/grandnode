@@ -147,7 +147,7 @@ namespace Grand.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
-        public virtual Task RemoveAsync(string key)
+        public virtual Task RemoveAsync(string key, bool publisher = true)
         {
             var items = GetItems();
 
@@ -159,7 +159,8 @@ namespace Grand.Core.Caching
         /// Removes items by key prefix
         /// </summary>
         /// <param name="prefix">String prefix</param>
-        public virtual Task RemoveByPrefix(string prefix)
+        /// <param name="publisher">publisher</param>
+        public virtual Task RemoveByPrefix(string prefix, bool publisher = true)
         {
             var items = GetItems();
             if (items == null)
@@ -177,7 +178,9 @@ namespace Grand.Core.Caching
         /// Removes items by key prefix
         /// </summary>
         /// <param name="prefix">String prefix</param>
-        public Task RemoveByPrefixAsync(string prefix)
+        /// <param name="publisher">publisher</param>
+        /// <param name="publisher">publisher</param>
+        public Task RemoveByPrefixAsync(string prefix, bool publisher = true)
         {
             return RemoveByPrefix(prefix);
         }
@@ -185,7 +188,8 @@ namespace Grand.Core.Caching
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        public virtual Task Clear()
+        /// <param name="publisher">publisher</param>
+        public virtual Task Clear(bool publisher = true)
         {
             var items = GetItems();
 
