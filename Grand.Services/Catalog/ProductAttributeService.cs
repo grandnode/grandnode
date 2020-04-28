@@ -260,6 +260,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).ProductAttributeId, productAttributeMapping.ProductAttributeId)
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).TextPrompt, productAttributeMapping.TextPrompt)
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).IsRequired, productAttributeMapping.IsRequired)
+                .Set(x => x.ProductAttributeMappings.ElementAt(-1).ShowOnCatalogPage, productAttributeMapping.ShowOnCatalogPage)
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).AttributeControlTypeId, productAttributeMapping.AttributeControlTypeId)
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).DisplayOrder, productAttributeMapping.DisplayOrder)
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).ValidationMinLength, productAttributeMapping.ValidationMinLength)

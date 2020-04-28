@@ -39,14 +39,14 @@
                                 </div>
                             </div>
                             <div class="form-group" @(attributeControlType != AttributeControlType.FileUpload ? Html.Raw("style='display: none;'") : null)>
-                                <admin-label asp-for="ValidationFileAllowedExtensions" class="col-sm-3 control-label" />)
+                                <admin-label asp-for="ValidationFileAllowedExtensions" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
                                     <admin-input asp-for="ValidationFileAllowedExtensions" />
                                     <span asp-validation-for="ValidationFileAllowedExtensions"></span>
                                 </div>
                             </div>
                             <div class="form-group" @(attributeControlType != AttributeControlType.FileUpload ? Html.Raw("style='display: none;'") : null)>
-                                <admin-label asp-for="ValidationFileMaximumSize" class="col-sm-3 control-label" />)
+                                <admin-label asp-for="ValidationFileMaximumSize" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
                                     <admin-input asp-for="ValidationFileMaximumSize" />
                                     <span asp-validation-for="ValidationFileMaximumSize"></span>

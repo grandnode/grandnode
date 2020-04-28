@@ -965,12 +965,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public IList<SelectListItem> AvailableProductAttribute { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
-            
             public string TextPrompt { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired")]
             public bool IsRequired { get; set; }
-
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.ShowOnCatalogPage")]
+            public bool ShowOnCatalogPage { get; set; }
             public int AttributeControlTypeId { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")]
             public string AttributeControlType { get; set; }

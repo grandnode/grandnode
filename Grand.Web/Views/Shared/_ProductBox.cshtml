@@ -215,6 +215,59 @@
                     </table>
                 </div>
             }
+            @if (Model.ProductAttributeModels.Any())
+            {
+                <div class="attr-container">
+                    <table>
+                        <tbody>
+                            @foreach (var item in Model.ProductAttributeModels)
+                            {
+                                <tr class="attr">
+                                    <td>
+                                        <div class="attr-name">
+                                           @item.Name
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="attr-value">
+                                            @foreach (var spec in item.Values)
+                                            {
+                                                switch (item.AttributeControlType)
+                                                {
+                                                    case AttributeControlType.DropdownList:
+                                                    case AttributeControlType.RadioList:
+                                                    case AttributeControlType.Checkboxes:
+                                                    case AttributeControlType.TextBox:
+                                                    case AttributeControlType.MultilineTextbox:
+                                                    case AttributeControlType.Datepicker:
+                                                    case AttributeControlType.ReadonlyCheckboxes:
+                                                        <span>
+                                                            @Html.Raw(spec.Name)
+                                                        </span>
+                                                        break;
+                                                    case AttributeControlType.ColorSquares:
+                                                        <span class="color-container" title="@spec.Name">
+                                                            <span class="color" style="background-color:@spec.ColorSquaresRgb;">&nbsp;</span>
+                                                        </span>
+                                                        break;
+                                                    case AttributeControlType.ImageSquares:
+                                                        <span>
+                                                            <img src="@spec.ImageSquaresPictureModel?.ImageUrl" />
+                                                        </span>
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                            }
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
             <div class="desc">
                 @Html.Raw(Model.ShortDescription)
             </div>

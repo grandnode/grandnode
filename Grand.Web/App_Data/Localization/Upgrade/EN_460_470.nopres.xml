@@ -363,5 +363,11 @@
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Fields.SeName.Hint">
     <Value>Set a search engine friendly name. Leave empty to generate it automatically based on the name of the attribute.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Fields.ShowOnCatalogPage">
+    <Value>Show attribute on product catalog pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Fields.ShowOnCatalogPage.hint">
+    <Value>Check to show in public store on catalog pages.</Value>
+  </LocaleResource>
 </Language>
 

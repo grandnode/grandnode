@@ -2139,6 +2139,7 @@ namespace Grand.Web.Areas.Admin.Services
                     ProductAttributeId = x.ProductAttributeId,
                     TextPrompt = x.TextPrompt,
                     IsRequired = x.IsRequired,
+                    ShowOnCatalogPage = x.ShowOnCatalogPage,
                     AttributeControlType = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext),
                     AttributeControlTypeId = x.AttributeControlTypeId,
                     DisplayOrder = x.DisplayOrder

@@ -22,6 +22,7 @@ using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Web.Extensions;
+using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
@@ -641,8 +642,9 @@ namespace Grand.Web.Features.Handlers.Products
                             !product.IsFreeShipping;
 
                         //PAngV baseprice (used in Germany)
-                        model.BasePricePAngV = await product.FormatBasePrice(finalPriceWithDiscountBase,
-                            _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+                        if (product.BasepriceEnabled)
+                            model.BasePricePAngV = await _mediator.Send(new GetFormatBasePrice() 
+                            { Currency = _workContext.WorkingCurrency, Product = product, ProductPrice = finalPriceWithDiscountBase });
 
                         //currency code
                         model.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;

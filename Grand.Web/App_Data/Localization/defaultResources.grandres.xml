@@ -4315,6 +4315,12 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt">
     <Value>Text prompt</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Fields.ShowOnCatalogPage">
+    <Value>Show attribute on product catalog pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Fields.ShowOnCatalogPage.hint">
+    <Value>Check to show in public store on catalog pages.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules">
     <Value>Validation rules</Value>
   </LocaleResource>
