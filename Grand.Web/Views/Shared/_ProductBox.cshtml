@@ -237,23 +237,20 @@
                                                     case AttributeControlType.DropdownList:
                                                     case AttributeControlType.RadioList:
                                                     case AttributeControlType.Checkboxes:
-                                                    case AttributeControlType.TextBox:
-                                                    case AttributeControlType.MultilineTextbox:
-                                                    case AttributeControlType.Datepicker:
                                                     case AttributeControlType.ReadonlyCheckboxes:
-                                                        <span>
+                                                        <div class="name">
                                                             @Html.Raw(spec.Name)
-                                                        </span>
+                                                        </div>
                                                         break;
                                                     case AttributeControlType.ColorSquares:
-                                                        <span class="color-container" title="@spec.Name">
+                                                        <div class="name color-container" title="@spec.Name">
                                                             <span class="color" style="background-color:@spec.ColorSquaresRgb;">&nbsp;</span>
-                                                        </span>
+                                                        </div>
                                                         break;
                                                     case AttributeControlType.ImageSquares:
-                                                        <span>
+                                                        <div class="name image-container">
                                                             <img src="@spec.ImageSquaresPictureModel?.ImageUrl" />
-                                                        </span>
+                                                        </div>
                                                         break;
                                                     default:
                                                         break;

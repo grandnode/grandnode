@@ -2739,6 +2739,52 @@ list settings .list__item,
     display: flex;
     justify-content: flex-end;
 }
+.product-box .attr-container table {
+    width: 100%;
+    border: 0;
+}
+.product-box .attr-container {
+    margin: 5px 0;
+}
+.product-box .attr-container tr {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.product-box .attr-container td {
+    width: 100%;
+}
+.product-box .attr-container .attr-name {
+    font-size: 15px;
+    font-weight: 500;
+}
+.product-box .attr-container .attr-value {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin: 5px 0 0 0;
+}
+.product-box .attr-container .name {
+    margin: 0 5px 0 0;
+    padding: 5px;
+    font-size: 15px;
+    font-weight: 400;
+    border: 1px solid #999;
+    cursor: pointer;
+}
+.product-box .attr-container .name.color-container,
+.product-box .attr-container .name.image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 5px 5px 5px 0;
+    border: 0;
+}
+.product-box .attr-container img {
+    position: static;
+    width: 32px;
+    height: auto;
+}
 
 /* product-box list-box */
 
