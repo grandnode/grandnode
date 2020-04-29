@@ -1084,6 +1084,13 @@ namespace Grand.Web.Controllers
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
+            
+            var contentType = uploadedFile?.ContentType;
+            if (string.IsNullOrEmpty(contentType))
+                ModelState.AddModelError("", "Empty content type");
+            else
+                if(!contentType.StartsWith("image"))
+                    ModelState.AddModelError("", "Only image content type is allowed");
 
             if (ModelState.IsValid)
             {
@@ -1105,6 +1112,12 @@ namespace Grand.Web.Controllers
 
             return View(model);
         }
+        private bool ValidContentType(IFormFile uploadedFile)
+        {
+            return true;
+
+        }
+
 
         [HttpPost, ActionName("Avatar")]
         [AutoValidateAntiforgeryToken]
