@@ -2785,6 +2785,7 @@ list settings .list__item,
 .product-box .attr-container .color-container .color {
 	width: 15px;
 	height: 15px;
+    cursor: default;
 }
 .product-box .attr-container img {
     position: static;
@@ -3614,8 +3615,8 @@ table {
 
 .color-container .color {
     display: inline-block;
-    width: 15px !important;
-    height: 15px !important;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.15);
     box-shadow: 0 0 3px rgba(0,0,0,0.15);
@@ -3819,9 +3820,10 @@ table th.latest-post {
     padding: 2px;
 }
 
-    .tooltip-inner img {
-        width: 200px;
-    }
+.tooltip-inner img {
+    width: auto;
+    max-width: 100%;
+}
 /*one page checkout*/
 
 .opc .allow .card-grey {

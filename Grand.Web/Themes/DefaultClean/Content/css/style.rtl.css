@@ -2590,6 +2590,7 @@ list settings .list__item,
 .product-box .attr-container .color-container .color {
 	width: 15px;
 	height: 15px;
+	cursor: default;
 }
 .product-box .attr-container img {
     position: static;
@@ -3444,7 +3445,8 @@ table th.latest-post {
 	padding: 2px;
 }
 .tooltip-inner img {
-	width: 200px;
+	width: auto;
+	max-width: 100%;
 }
 /*one page checkout*/
 
