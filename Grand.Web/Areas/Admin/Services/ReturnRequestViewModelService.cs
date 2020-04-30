@@ -278,6 +278,7 @@ namespace Grand.Web.Areas.Admin.Services
             returnRequest.ReturnRequestStatusId = model.ReturnRequestStatusId;
             returnRequest.ExternalId = model.ExternalId;
             returnRequest.UpdatedOnUtc = DateTime.UtcNow;
+            returnRequest.GenericAttributes = model.GenericAttributes;
 
             if (_orderSettings.ReturnRequests_AllowToSpecifyPickupDate)
                 returnRequest.PickupDate = model.PickupDate;

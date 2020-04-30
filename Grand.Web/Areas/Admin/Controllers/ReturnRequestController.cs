@@ -218,42 +218,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Generic attributes
-
-        [HttpPost, ActionName("Edit")]
-        [FormValueRequired("save-generic-attributes")]
-        public async Task<IActionResult> EditGenericAttributes(string id, ReturnRequestModel model)
-        {
-            var returnrequest = await _returnRequestService.GetReturnRequestById(id);
-            if (returnrequest == null)
-                //No order found with the specified id
-                return RedirectToAction("List");
-
-            //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
-                return RedirectToAction("Edit", new { id = returnrequest.Id });
-
-            if (_workContext.CurrentCustomer.IsStaff() && returnrequest.StoreId != _workContext.CurrentCustomer.StaffStoreId)
-            {
-                return RedirectToAction("Edit", new { id = returnrequest.Id });
-            }
-
-            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != returnrequest.VendorId)
-            {
-                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.VendorAccess"));
-                return RedirectToAction("Edit", new { id = returnrequest.Id });
-            }
-            returnrequest.GenericAttributes = model.GenericAttributes;
-            await _returnRequestService.UpdateReturnRequest(returnrequest);
-
-            //selected tab
-            await SaveSelectedTabIndex(4);
-
-            return RedirectToAction("Edit", new { id = returnrequest.Id });
-        }
-
-        #endregion
-
         #region Return request notes
 
         [HttpPost]
