@@ -148,18 +148,22 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
-            string pictureId = "";
+            string pictureId = string.Empty;
+            string contentType = string.Empty;
+            byte[] vendorPictureBinary = null;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
                 try
                 {
-                    var contentType = uploadedFile.ContentType;
-                    var vendorPictureBinary = uploadedFile.GetPictureBits();
-                    var picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    contentType = uploadedFile.ContentType;
+                    if (string.IsNullOrEmpty(contentType))
+                        ModelState.AddModelError("", "Empty content type");
+                    else
+                        if (!contentType.StartsWith("image"))
+                            ModelState.AddModelError("", "Only image content type is allowed");
 
-                    if (picture != null)
-                        pictureId = picture.Id;
+                    vendorPictureBinary = uploadedFile.GetPictureBits();
                 }
                 catch (Exception)
                 {
@@ -169,6 +173,13 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                if (vendorPictureBinary != null && !string.IsNullOrEmpty(contentType))
+                {
+                    var picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    if (picture != null)
+                        pictureId = picture.Id;
+                }
+
                 var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
                 var address = new Address();
                 //disabled by default
@@ -257,15 +268,22 @@ namespace Grand.Web.Controllers
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
 
-            Picture picture = null;
+            string pictureId = string.Empty;
+            string contentType = string.Empty;
+            byte[] vendorPictureBinary = null;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
                 try
                 {
-                    var contentType = uploadedFile.ContentType;
-                    var vendorPictureBinary = uploadedFile.GetPictureBits();
-                    picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    contentType = uploadedFile.ContentType;
+                    if (string.IsNullOrEmpty(contentType))
+                        ModelState.AddModelError("", "Empty content type");
+                    else
+                        if (!contentType.StartsWith("image"))
+                        ModelState.AddModelError("", "Only image content type is allowed");
+
+                    vendorPictureBinary = uploadedFile.GetPictureBits();
                 }
                 catch (Exception)
                 {
@@ -284,13 +302,14 @@ namespace Grand.Web.Controllers
                 vendor.Email = model.Email;
                 vendor.Description = description;
 
-                if (picture != null)
+                if (vendorPictureBinary != null && !string.IsNullOrEmpty(contentType))
                 {
-                    vendor.PictureId = picture.Id;
-
-                    if (prevPicture != null)
-                        await _pictureService.DeletePicture(prevPicture);
+                    var picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    if (picture != null)
+                        vendor.PictureId = picture.Id;
                 }
+                if (prevPicture != null)
+                    await _pictureService.DeletePicture(prevPicture);
 
                 //update picture seo file name
                 await UpdatePictureSeoNames(vendor);
