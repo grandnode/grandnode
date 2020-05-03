@@ -34,7 +34,7 @@ namespace Grand.Web.Features.Handlers.Blogs
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new List<BlogPostCategoryModel>();
-                var categories = await _blogService.GetAllBlogCategories(_storeContext.CurrentStore.Id);
+                var categories = await _blogService.GetAllBlogCategories(_storeContext.CurrentStore.Id, true);
                 foreach (var item in categories)
                 {
                     model.Add(new BlogPostCategoryModel() {

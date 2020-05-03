@@ -218,7 +218,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CategoryList(DataSourceRequest command)
         {
-            var categories = await _blogService.GetAllBlogCategories(_workContext.CurrentCustomer.StaffStoreId);
+            var categories = await _blogService.GetAllBlogCategories(_workContext.CurrentCustomer.StaffStoreId, false);
             var gridModel = new DataSourceResult {
                 Data = categories,
                 Total = categories.Count

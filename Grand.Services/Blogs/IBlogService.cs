@@ -116,7 +116,7 @@ namespace Grand.Services.Blogs
         /// Get all blog categories
         /// </summary>
         /// <returns></returns>
-        Task<IList<BlogCategory>> GetAllBlogCategories(string storeId = "");
+        Task<IList<BlogCategory>> GetAllBlogCategories(string storeId = "", bool loadOnlyVisiblePosts = true);
 
         /// <summary>
         /// Inserts an blog category
