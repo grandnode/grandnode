@@ -334,75 +334,30 @@ namespace Grand.Services.Blogs
         /// </summary>
         /// <returns></returns>
         public virtual async Task<IList<BlogCategory>> GetAllBlogCategories(string storeId = "", bool loadOnlyVisiblePosts = true)
-        
         {
-            
-            var visibleBlogPost =(from b in _blogPostRepository.Table
-           where (b.EndDateUtc == null || b.EndDateUtc >= DateTime.Now) && (b.StartDateUtc == null || b.StartDateUtc <= DateTime.Now)
-                                                                            select b).ToList();
-
-            var visibleBlogPostQuery = visibleBlogPost.Select(x => x.Id);
-
-            //var query2 = _blogCategoryRepository.Table.SelectMany(c => new { Cat = c.Name, bologcount = c.BlogPosts.Count(x => visibleBlogPostQuery.Contains(x.BlogPostId)) }
-
-            var query1 = _blogCategoryRepository.Table.Select(c => new {Cat = c.Name,  bologcount = c.BlogPosts.Select(x => x.BlogPostId).Where(x => visibleBlogPostQuery.Contains(x)) })
-                .ToList();
-
-            /*
-
-            var query2 = _blogCategoryRepository.Table.SelectMany(b=>b.BlogPosts.AsQueryable().Select(df => new {Category = b.Name, BlogPostId = df.BlogPostId}))
-                //.Where(x => visibleBlogPostQuery.Contains(x.df.BlogPostId))
-                .ToList();
-            */
-
-            //
-
-            /*var query1 =  (from c in _blogCategoryRepository.Table
-                from p in c.BlogPosts.AsQueryable()
-                where (visibleBlogPostQuery.Contains(p.BlogPostId))
-                select p.BlogPostId).ToList();*/
-
-            //var query1 = _blogCategoryRepository.Table.Select(b=>b.BlogPosts.Select(p=>p.BlogPostId))
-            /*
-                        var query1 = from b in _blogPostRepository.Table
-                            join c in _blogCategoryRepository.Table on b.C*/
-
-
-
             var query = from c in _blogCategoryRepository.Table
                 select c;
-
-            var result = await query.OrderBy(x => x.DisplayOrder).ToListAsync();
-
-            foreach (var blogCategory in result)
-            {
-                blogCategory.BlogPosts =
-                    blogCategory.BlogPosts.Where(bp => visibleBlogPostQuery.Contains(bp.BlogPostId)).ToList();
-            }
-
-            return result;
 
             if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
             {
                 query = query.Where(b => b.Stores.Contains(storeId) || !b.LimitedToStores);
             }
 
+            var result = await query.OrderBy(x => x.DisplayOrder).ToListAsync();
+
             if (loadOnlyVisiblePosts)
             {
-                
+                var visibleBlogPosts = await _blogPostRepository.Table
+                    .Where(b => (b.EndDateUtc == null || b.EndDateUtc >= DateTime.Now) &&
+                                (b.StartDateUtc == null || b.StartDateUtc <= DateTime.Now))
+                    .Select(b => b.Id)
+                    .ToListAsync();
 
-                /*
-                query = query.SelectMany(c => c.BlogPosts)
-                    .Where(bp => visibleBlogPostQuery.Contains(bp.BlogPostId));*/
-
-
-                /*query = query.Where(b => _blogPostRepository.Table
-                    .Where(blogPost => blogPost.EndDateUtc >= DateTime.Now && DateTime.Now >= blogPost.StartDateUtc)
-                    .Select(blogPost => blogPost.Id)
-                    .Contains(b.BlogPosts.SelectMany(bp => bp.BlogPostId)));*/
+                result.ForEach(bc=>bc.BlogPosts = bc.BlogPosts.Where(bp => visibleBlogPosts.Contains(bp.BlogPostId)).ToList());
             }
 
-            
+            return result;
+
         }
 
         /// <summary>
