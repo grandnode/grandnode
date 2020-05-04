@@ -21,7 +21,6 @@ using Grand.Services.Orders;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -80,7 +79,7 @@ namespace Grand.Services.Messages
 
         #region Utilities
 
-        protected virtual async Task<MessageTemplate> GetEmailAccountOfMessageTemplate(string messageTemplateName, string storeId)
+        protected virtual async Task<MessageTemplate> GetMessageTemplate(string messageTemplateName, string storeId)
         {
             var messageTemplate = await _messageTemplateService.GetMessageTemplateByName(messageTemplateName, storeId);
 
@@ -149,7 +148,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewCustomer.Notification", store.Id);
+            var messageTemplate = await GetMessageTemplate("NewCustomer.Notification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -184,7 +183,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.WelcomeMessage", store.Id);
+            var messageTemplate = await GetMessageTemplate("Customer.WelcomeMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -219,7 +218,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.EmailValidationMessage", store.Id);
+            var messageTemplate = await GetMessageTemplate("Customer.EmailValidationMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -254,7 +253,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.PasswordRecovery", store.Id);
+            var messageTemplate = await GetMessageTemplate("Customer.PasswordRecovery", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -286,7 +285,7 @@ namespace Grand.Services.Messages
             if (customerNote == null)
                 throw new ArgumentNullException("customerNote");
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.NewCustomerNote", "");
+            var messageTemplate = await GetMessageTemplate("Customer.NewCustomerNote", "");
             if (messageTemplate == null)
                 return 0;
             var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
@@ -326,7 +325,7 @@ namespace Grand.Services.Messages
 
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.EmailTokenValidationMessage", store.Id);
+            var messageTemplate = await GetMessageTemplate("Customer.EmailTokenValidationMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -376,7 +375,7 @@ namespace Grand.Services.Messages
             if (customer != null)
                 await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPlaced.VendorNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderPlaced.VendorNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -411,7 +410,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPlaced.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderPlaced.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -452,7 +451,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPaid.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderPaid.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -497,7 +496,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPaid.CustomerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderPaid.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -545,7 +544,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPaid.VendorNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderPaid.VendorNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -588,7 +587,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPlaced.CustomerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderPlaced.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -635,7 +634,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("ShipmentSent.CustomerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("ShipmentSent.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -680,7 +679,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("ShipmentDelivered.CustomerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("ShipmentDelivered.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -726,7 +725,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderCompleted.CustomerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderCompleted.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -769,7 +768,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderCancelled.CustomerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderCancelled.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -809,7 +808,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderCancelled.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderCancelled.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -853,7 +852,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderCancelled.VendorNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderCancelled.VendorNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -893,7 +892,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderRefunded.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderRefunded.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -933,7 +932,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderRefunded.CustomerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("OrderRefunded.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -975,7 +974,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.NewOrderNote", store.Id);
+            var messageTemplate = await GetMessageTemplate("Customer.NewOrderNote", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1015,7 +1014,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(recurringPayment.InitialOrder.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("RecurringPaymentCancelled.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("RecurringPaymentCancelled.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1062,7 +1061,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(subscription.StoreId);
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewsLetterSubscription.ActivationMessage", store.Id);
+            var messageTemplate = await GetMessageTemplate("NewsLetterSubscription.ActivationMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1098,7 +1097,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(subscription.StoreId);
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewsLetterSubscription.DeactivationMessage", store.Id);
+            var messageTemplate = await GetMessageTemplate("NewsLetterSubscription.DeactivationMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1145,7 +1144,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Service.EmailAFriend", store.Id);
+            var messageTemplate = await GetMessageTemplate("Service.EmailAFriend", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1186,7 +1185,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Wishlist.EmailAFriend", store.Id);
+            var messageTemplate = await GetMessageTemplate("Wishlist.EmailAFriend", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1231,7 +1230,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Service.AskQuestion", store.Id);
+            var messageTemplate = await GetMessageTemplate("Service.AskQuestion", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1308,7 +1307,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewReturnRequest.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("NewReturnRequest.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1362,7 +1361,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("ReturnRequestStatusChanged.CustomerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("ReturnRequestStatusChanged.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1408,7 +1407,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewReturnRequest.CustomerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("NewReturnRequest.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1449,7 +1448,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.NewReturnRequestNote", store.Id);
+            var messageTemplate = await GetMessageTemplate("Customer.NewReturnRequestNote", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1502,7 +1501,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Forums.NewForumTopic", store.Id);
+            var messageTemplate = await GetMessageTemplate("Forums.NewForumTopic", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1544,7 +1543,7 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Forums.NewForumPost", store.Id);
+            var messageTemplate = await GetMessageTemplate("Forums.NewForumPost", store.Id);
             if (messageTemplate == null)
             {
                 return 0;
@@ -1583,7 +1582,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(privateMessage.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.NewPM", store.Id);
+            var messageTemplate = await GetMessageTemplate("Customer.NewPM", store.Id);
             if (messageTemplate == null)
             {
                 return 0;
@@ -1632,7 +1631,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("VendorAccountApply.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("VendorAccountApply.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1668,7 +1667,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("VendorInformationChange.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("VendorInformationChange.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1711,7 +1710,7 @@ namespace Grand.Services.Messages
 
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("GiftCard.Notification", store.Id);
+            var messageTemplate = await GetMessageTemplate("GiftCard.Notification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1746,7 +1745,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Product.ProductReview", store.Id);
+            var messageTemplate = await GetMessageTemplate("Product.ProductReview", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1788,7 +1787,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Vendor.VendorReview", store.Id);
+            var messageTemplate = await GetMessageTemplate("Vendor.VendorReview", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1830,7 +1829,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("QuantityBelow.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("QuantityBelow.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1865,7 +1864,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("QuantityBelow.AttributeCombination.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("QuantityBelow.AttributeCombination.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1904,7 +1903,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewVATSubmitted.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("NewVATSubmitted.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1942,7 +1941,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("CustomerDelete.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetMessageTemplate("CustomerDelete.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1975,7 +1974,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Blog.BlogComment", store.Id);
+            var messageTemplate = await GetMessageTemplate("Blog.BlogComment", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -2014,7 +2013,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Knowledgebase.ArticleComment", store.Id);
+            var messageTemplate = await GetMessageTemplate("Knowledgebase.ArticleComment", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -2053,7 +2052,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("News.NewsComment", store.Id);
+            var messageTemplate = await GetMessageTemplate("News.NewsComment", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -2091,7 +2090,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(subscription.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.BackInStock", store.Id);
+            var messageTemplate = await GetMessageTemplate("Customer.BackInStock", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -2130,7 +2129,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Service.ContactUs", store.Id);
+            var messageTemplate = await GetMessageTemplate("Service.ContactUs", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -2210,7 +2209,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("Service.ContactVendor", store.Id);
+            var messageTemplate = await GetMessageTemplate("Service.ContactVendor", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -2516,7 +2515,7 @@ namespace Grand.Services.Messages
                 var store = await _storeService.GetStoreById(storeId);
                 var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-                var messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionEnded.CustomerNotificationWin", storeId);
+                var messageTemplate = await GetMessageTemplate("AuctionEnded.CustomerNotificationWin", storeId);
                 if (messageTemplate == null)
                     return 0;
 
@@ -2555,7 +2554,7 @@ namespace Grand.Services.Messages
                 }
                 var language = await EnsureLanguageIsActive(languageId, storeId);
 
-                var messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionEnded.CustomerNotificationLost", storeId);
+                var messageTemplate = await GetMessageTemplate("AuctionEnded.CustomerNotificationLost", storeId);
                 if (messageTemplate == null)
                     return 0;
 
@@ -2603,7 +2602,7 @@ namespace Grand.Services.Messages
                 storeId = _storeContext.CurrentStore.Id;
             }
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionEnded.CustomerNotificationBin", storeId);
+            var messageTemplate = await GetMessageTemplate("AuctionEnded.CustomerNotificationBin", storeId);
             if (messageTemplate == null)
                 return 0;
 
@@ -2669,7 +2668,7 @@ namespace Grand.Services.Messages
 
                 var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-                messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionEnded.StoreOwnerNotification", storeId);
+                messageTemplate = await GetMessageTemplate("AuctionEnded.StoreOwnerNotification", storeId);
                 if (messageTemplate == null)
                     return 0;
 
@@ -2682,7 +2681,7 @@ namespace Grand.Services.Messages
             {
                 var store = (await _storeService.GetAllStores()).FirstOrDefault();
                 var language = await EnsureLanguageIsActive(languageId, store.Id);
-                messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionExpired.StoreOwnerNotification", "");
+                messageTemplate = await GetMessageTemplate("AuctionExpired.StoreOwnerNotification", "");
                 if (messageTemplate == null)
                     return 0;
 
@@ -2729,7 +2728,7 @@ namespace Grand.Services.Messages
             var store = await _storeService.GetStoreById(storeId);
             var language = await EnsureLanguageIsActive(languageId, storeId);
 
-            var messageTemplate = await GetEmailAccountOfMessageTemplate("BidUp.CustomerNotification", storeId);
+            var messageTemplate = await GetMessageTemplate("BidUp.CustomerNotification", storeId);
             if (messageTemplate == null)
                 return 0;
 
