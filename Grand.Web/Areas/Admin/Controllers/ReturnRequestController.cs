@@ -85,7 +85,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (model.GoDirectlyToId == null)
                 return RedirectToAction("List", "ReturnRequest");
 
-            int id = int.Parse(model.GoDirectlyToId);
+            int.TryParse(model.GoDirectlyToId, out var id);
 
             //try to load a product entity
             var returnRequest = await _returnRequestService.GetReturnRequestById(id);
