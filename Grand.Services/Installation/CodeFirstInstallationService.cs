@@ -4485,7 +4485,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Service.ContactUs",
                                            Subject = "{{Store.Name}}. Contact us",
-                                           Body = "<p>From {{ContactUs.SenderName}} - {{ContactUs.SenderEmail}}<br /><br />{{ContactUs.Body}}</p><br />",
+                                           Body = "<p>From {{ContactUs.SenderName}} - {{ContactUs.SenderEmail}}<br /><br />{{ContactUs.Body}}<br />{{ContactUs.AttributeDescription}}</p><br />",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
