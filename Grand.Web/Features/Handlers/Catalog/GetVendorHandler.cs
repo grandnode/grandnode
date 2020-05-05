@@ -1,6 +1,9 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Core;
+using Grand.Core.Caching;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Vendors;
+using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Queries.Models.Catalog;
@@ -11,6 +14,8 @@ using Grand.Web.Features.Models.Products;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +27,10 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IMediator _mediator;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICacheManager _cacheManager;
+        private readonly IWebHelper _webHelper;
 
         private readonly VendorSettings _vendorSettings;
         private readonly MediaSettings _mediaSettings;
@@ -33,6 +42,10 @@ namespace Grand.Web.Features.Handlers.Catalog
             ILocalizationService localizationService,
             VendorSettings vendorSettings,
             MediaSettings mediaSettings,
+            ISpecificationAttributeService specificationAttributeService,
+            IHttpContextAccessor httpContextAccessor,
+            ICacheManager cacheManager,
+            IWebHelper webHelper,
             CatalogSettings catalogSettings)
         {
             _mediator = mediator;
@@ -40,6 +53,10 @@ namespace Grand.Web.Features.Handlers.Catalog
             _localizationService = localizationService;
             _vendorSettings = vendorSettings;
             _mediaSettings = mediaSettings;
+            _specificationAttributeService = specificationAttributeService;
+            _httpContextAccessor = httpContextAccessor;
+            _cacheManager = cacheManager;
+            _webHelper = webHelper;
             _catalogSettings = catalogSettings;
         }
 
@@ -83,23 +100,34 @@ namespace Grand.Web.Features.Handlers.Catalog
             });
             model.PagingFilteringContext = options.command;
 
+            IList<string> alreadyFilteredSpecOptionIds = await model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds
+              (_httpContextAccessor, _specificationAttributeService);
+
             //products
             var products = (await _mediator.Send(new GetSearchProductsQuery() {
+                LoadFilterableSpecificationAttributeOptionIds = !_catalogSettings.IgnoreFilterableSpecAttributeOption,
                 Customer = request.Customer,
                 VendorId = request.Vendor.Id,
                 StoreId = request.Store.Id,
+                FilteredSpecs = alreadyFilteredSpecOptionIds,
                 VisibleIndividuallyOnly = true,
                 OrderBy = (ProductSortingEnum)request.Command.OrderBy,
                 PageIndex = request.Command.PageNumber - 1,
                 PageSize = request.Command.PageSize
-            })).products;
+            }));
 
             model.Products = (await _mediator.Send(new GetProductOverview() {
-                Products = products,
+                Products = products.products,
                 PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages
             })).ToList();
 
-            model.PagingFilteringContext.LoadPagedList(products);
+            model.PagingFilteringContext.LoadPagedList(products.products);
+
+            //specs
+            await model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+                products.filterableSpecificationAttributeOptionIds,
+                _specificationAttributeService, _webHelper, _cacheManager, request.Language.Id);
+
             return model;
         }
     }

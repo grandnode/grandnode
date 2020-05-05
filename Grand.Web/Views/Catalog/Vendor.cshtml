@@ -15,164 +15,178 @@
 }
 
 <div class="page vendor-page">
-        <div class="row">
-            <div class="col-sm-4">
-                <img class="card-img-top img-fluid" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
-            </div>
-            <div class="col-sm-8 align-items-center d-flex">
-                <div>
-                    <h2 class="w-100">
-                        @Model.Name
-                    </h2>
-                    @if (Model.AllowCustomersToContactVendors)
-                    {
-                        <input type="button" value="@T("ContactVendor")" class="btn btn-sm btn-info contact-vendor-button float-xs-right" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')" />
-                    }
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_top", additionalData = Model.Id })
-                    @*description*@
-                    @if (!String.IsNullOrWhiteSpace(Model.Description))
-                    {
-                        <article class="text-xs-center generalMarginSupporter vendor-description">
-                            @Html.Raw(Model.Description)
-                        </article>
-                    }
-                    @*review*@
-                    @if (Model.VendorReviewOverview.AllowCustomerReviews)
-                    {
-                        <div>
-                            <partial name="_VendorReviewOverview" model="Model.VendorReviewOverview" />
-                        </div>
-                    }
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <img class="card-img-top img-fluid" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
         </div>
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                @if (Model.Address != null)
+        <div class="col-sm-8 align-items-center d-flex">
+            <div>
+                <h2 class="w-100">
+                    @Model.Name
+                </h2>
+                @if (Model.AllowCustomersToContactVendors)
                 {
-
-                    <ul class="info">
-                        @if (Model.Address.CompanyEnabled && !String.IsNullOrEmpty(Model.Address.Company))
-                        {
-                            <li class="company">
-                                <label class="col-form-label">@T("Address.Fields.Company"):</label>
-                                @Model.Address.Company
-                            </li>
-                        }
-                        @if (Model.Address.StreetAddressEnabled && !String.IsNullOrEmpty(Model.Address.Address1))
-                        {
-                            <li class="address1">
-                                <label class="col-form-label w-100">@T("Address.Fields.Address1"):</label>
-                                @Model.Address.Address1
-                            </li>
-                        }
-                        @if (Model.Address.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.Address.Address2))
-                        {
-                            <li class="address2">
-                                <label class="col-form-label">@T("Address.Fields.Address2"):</label>
-                                @Model.Address.Address2
-                            </li>
-                        }
-                        @if (Model.Address.CityEnabled || Model.Address.StateProvinceEnabled || Model.Address.ZipPostalCodeEnabled)
-                        {
-                            var cityStateZip = "";
-                            if (Model.Address.CityEnabled && !String.IsNullOrEmpty(Model.Address.City))
-                            {
-                                cityStateZip = Model.Address.City;
-                                if (Model.Address.StateProvinceEnabled || Model.Address.ZipPostalCodeEnabled)
-                                {
-                                    cityStateZip += ",";
-                                }
-                            }
-                            if (Model.Address.StateProvinceEnabled)
-                            {
-                                if (!String.IsNullOrEmpty(cityStateZip))
-                                {
-                                    cityStateZip += " ";
-                                }
-                                cityStateZip += Model.Address.StateProvinceName;
-                            }
-                            if (Model.Address.ZipPostalCodeEnabled)
-                            {
-                                if (!String.IsNullOrEmpty(cityStateZip))
-                                {
-                                    cityStateZip += " ";
-                                }
-                                cityStateZip += Model.Address.ZipPostalCode;
-                            }
-                            if (!String.IsNullOrEmpty(cityStateZip))
-                            {
-                                <li class="city-state-zip">
-                                    @cityStateZip
-                                </li>
-                            }
-                        }
-                        @if (Model.Address.CountryEnabled && !String.IsNullOrEmpty(Model.Address.CountryName))
-                        {
-                            <li class="country">
-                                @Model.Address.CountryName
-                            </li>
-                        }
-                        @if (Model.Address.PhoneEnabled && !String.IsNullOrEmpty(Model.Address.PhoneNumber))
-                        {
-                            <li class="phone">
-                                <label class="col-form-label">@T("Address.Fields.PhoneNumber"):</label>
-                                @Model.Address.PhoneNumber
-                            </li>
-                        }
-                        @if (Model.Address.FaxEnabled && !String.IsNullOrEmpty(Model.Address.FaxNumber))
-                        {
-                            <li class="fax">
-                                <label class="col-form-label">@T("Address.Fields.FaxNumber"):</label>
-                                @Model.Address.FaxNumber
-                            </li>
-                        }
-                    </ul>
+                    <input type="button" value="@T("ContactVendor")" class="btn btn-sm btn-info contact-vendor-button float-xs-right" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')" />
+                }
+                @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_top", additionalData = Model.Id })
+                @*description*@
+                @if (!String.IsNullOrWhiteSpace(Model.Description))
+                {
+                    <article class="text-xs-center generalMarginSupporter vendor-description">
+                        @Html.Raw(Model.Description)
+                    </article>
+                }
+                @*review*@
+                @if (Model.VendorReviewOverview.AllowCustomerReviews)
+                {
+                    <div>
+                        <partial name="_VendorReviewOverview" model="Model.VendorReviewOverview" />
+                    </div>
                 }
             </div>
         </div>
-        @*contact vendor*@
-        @if (Model.Products.Any())
-        {
-            <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
-        }
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            @if (Model.Address != null)
+            {
+
+                <ul class="info">
+                    @if (Model.Address.CompanyEnabled && !String.IsNullOrEmpty(Model.Address.Company))
+                    {
+                        <li class="company">
+                            <label class="col-form-label">@T("Address.Fields.Company"):</label>
+                            @Model.Address.Company
+                        </li>
+                    }
+                    @if (Model.Address.StreetAddressEnabled && !String.IsNullOrEmpty(Model.Address.Address1))
+                    {
+                        <li class="address1">
+                            <label class="col-form-label w-100">@T("Address.Fields.Address1"):</label>
+                            @Model.Address.Address1
+                        </li>
+                    }
+                    @if (Model.Address.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.Address.Address2))
+                    {
+                        <li class="address2">
+                            <label class="col-form-label">@T("Address.Fields.Address2"):</label>
+                            @Model.Address.Address2
+                        </li>
+                    }
+                    @if (Model.Address.CityEnabled || Model.Address.StateProvinceEnabled || Model.Address.ZipPostalCodeEnabled)
+                    {
+                        var cityStateZip = "";
+                        if (Model.Address.CityEnabled && !String.IsNullOrEmpty(Model.Address.City))
+                        {
+                            cityStateZip = Model.Address.City;
+                            if (Model.Address.StateProvinceEnabled || Model.Address.ZipPostalCodeEnabled)
+                            {
+                                cityStateZip += ",";
+                            }
+                        }
+                        if (Model.Address.StateProvinceEnabled)
+                        {
+                            if (!String.IsNullOrEmpty(cityStateZip))
+                            {
+                                cityStateZip += " ";
+                            }
+                            cityStateZip += Model.Address.StateProvinceName;
+                        }
+                        if (Model.Address.ZipPostalCodeEnabled)
+                        {
+                            if (!String.IsNullOrEmpty(cityStateZip))
+                            {
+                                cityStateZip += " ";
+                            }
+                            cityStateZip += Model.Address.ZipPostalCode;
+                        }
+                        if (!String.IsNullOrEmpty(cityStateZip))
+                        {
+                            <li class="city-state-zip">
+                                @cityStateZip
+                            </li>
+                        }
+                    }
+                    @if (Model.Address.CountryEnabled && !String.IsNullOrEmpty(Model.Address.CountryName))
+                    {
+                        <li class="country">
+                            @Model.Address.CountryName
+                        </li>
+                    }
+                    @if (Model.Address.PhoneEnabled && !String.IsNullOrEmpty(Model.Address.PhoneNumber))
+                    {
+                        <li class="phone">
+                            <label class="col-form-label">@T("Address.Fields.PhoneNumber"):</label>
+                            @Model.Address.PhoneNumber
+                        </li>
+                    }
+                    @if (Model.Address.FaxEnabled && !String.IsNullOrEmpty(Model.Address.FaxNumber))
+                    {
+                        <li class="fax">
+                            <label class="col-form-label">@T("Address.Fields.FaxNumber"):</label>
+                            @Model.Address.FaxNumber
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+    @*contact vendor*@
+    @if (Model.Products.Any())
+    {
+        <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
+    }
 
     @*product list*@
     @if (Model.Products.Any())
     {
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {
-                <div class="product-grid col-12 px-0">
-                    <div class="form-row flex-grid">
-                        @foreach (var product in Model.Products)
-                        {
-                            <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
-                                <partial name="_ProductBox" model="product" />
-                            </div>
-                        }
-                    </div>
+            <div class="product-grid col-12 px-0">
+                <div class="form-row flex-grid">
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
+                            <partial name="_ProductBox" model="product" />
+                        </div>
+                    }
                 </div>
+            </div>
         }
         else
         {
-                <div class="product-grid col-12">
-                    <div class="row">
-                        @foreach (var product in Model.Products)
-                        {
-                            <partial name="_ProductBoxList" model="product" />
-                        }
-                    </div>
+            <div class="product-grid col-12">
+                <div class="row">
+                    @foreach (var product in Model.Products)
+                    {
+                        <partial name="_ProductBoxList" model="product" />
+                    }
                 </div>
+            </div>
         }
     }
+</div>
+@{
+    var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+}
+@if (!pager.IsEmpty())
+{
+    <div class="pager">
+        @pager
     </div>
-    @{
-        var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-    }
-    @if (!pager.IsEmpty())
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_bottom", additionalData = Model.Id })
+
+@section filters
+{
+    @*filtering*@
+    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
     {
-        <div class="pager">
-            @pager
-        </div>
+        <partial name="_FilterPriceBox" model="Model.PagingFilteringContext.PriceRangeFilter" />
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_bottom", additionalData = Model.Id })
+    @*filtering*@
+    @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
+    {
+        <partial name="_FilterSpecsBox" model="Model.PagingFilteringContext.SpecificationFilter" />
+    }
+}
