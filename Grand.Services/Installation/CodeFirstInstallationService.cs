@@ -4608,6 +4608,14 @@ namespace Grand.Services.Installation
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
+                                    new MessageTemplate
+                                       { 
+                                           Name = "VendorInformationChange.StoreOwnerNotification",
+                                           Subject = "{{Store.Name}}. Vendor {{Vendor.Name}} changed provided information",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Vendor.Name}} changed provided information.</p>",
+                                           IsActive = false,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
                                };
             await _messageTemplateRepository.InsertAsync(messageTemplates);
         }
