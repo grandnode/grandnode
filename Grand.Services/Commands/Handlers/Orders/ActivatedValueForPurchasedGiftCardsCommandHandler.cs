@@ -52,7 +52,7 @@ namespace Grand.Services.Commands.Handlers.Orders
                                     customerLang = (await _languageService.GetAllLanguages()).FirstOrDefault();
                                 if (customerLang == null)
                                     throw new Exception("No languages could be loaded");
-                                int queuedEmailId = await _workflowMessageService.SendGiftCardNotification(gc, customerLang.Id);
+                                int queuedEmailId = await _workflowMessageService.SendGiftCardNotification(gc, request.Order, customerLang.Id);
                                 if (queuedEmailId > 0)
                                     isRecipientNotified = true;
                             }

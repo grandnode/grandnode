@@ -720,6 +720,7 @@ namespace Grand.Web.Controllers
                     Customer = _workContext.CurrentCustomer,
                     Product = product,
                     Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore,
                     Model = model,
                 });
 
@@ -783,6 +784,7 @@ namespace Grand.Web.Controllers
                 await _mediator.Send(new SendProductAskQuestionMessageCommand() {
                     Customer = _workContext.CurrentCustomer,
                     Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore,
                     Model = model,
                     Product = product
                 });
@@ -842,6 +844,7 @@ namespace Grand.Web.Controllers
                 await _mediator.Send(new SendProductAskQuestionMessageCommand() {
                     Customer = _workContext.CurrentCustomer,
                     Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore,
                     Model = productaskqestionmodel,
                     Product = product
                 });

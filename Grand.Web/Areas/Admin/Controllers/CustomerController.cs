@@ -45,6 +45,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly CustomerSettings _customerSettings;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IExportManager _exportManager;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
@@ -67,6 +68,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             CustomerSettings customerSettings,
             IWorkContext workContext,
+            IStoreContext storeContext,
             IExportManager exportManager,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
@@ -85,6 +87,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _localizationService = localizationService;
             _customerSettings = customerSettings;
             _workContext = workContext;
+            _storeContext = storeContext;
             _exportManager = exportManager;
             _customerAttributeParser = customerAttributeParser;
             _customerAttributeService = customerAttributeService;
@@ -500,7 +503,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
-            await _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
+            await _workflowMessageService.SendCustomerWelcomeMessage(customer, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendWelcomeMessage.Success"));
 
@@ -518,7 +521,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //email validation message
             await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
-            await _workflowMessageService.SendCustomerEmailValidationMessage(customer, _workContext.WorkingLanguage.Id);
+            await _workflowMessageService.SendCustomerEmailValidationMessage(customer, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.ReSendActivationMessage.Success"));
 

@@ -341,9 +341,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (displayToCustomer)
             {
                 //email
-                await _workflowMessageService.SendNewReturnRequestNoteAddedCustomerNotification(
-                    returnRequestNote, order, _workContext.WorkingLanguage.Id);
-
+                await _workflowMessageService.SendNewReturnRequestNoteAddedCustomerNotification(returnRequest, returnRequestNote, order);
             }
         }
 

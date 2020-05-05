@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Stores;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
@@ -68,7 +69,7 @@ namespace Grand.Web.Commands.Handler.Common
             {
                 request.Model.ContactAttributeXml = attributeXml;
                 request.Model.ContactAttributeInfo = await _contactAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer);
-                request.Model = await SendContactUs(request.Model);
+                request.Model = await SendContactUs(request.Model, request.Store);
 
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.ContactUs", "", _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
@@ -393,14 +394,14 @@ namespace Grand.Web.Commands.Handler.Common
             return model;
         }
 
-        private async Task<ContactUsModel> SendContactUs(ContactUsModel model)
+        private async Task<ContactUsModel> SendContactUs(ContactUsModel model, Store store)
         {
             string email = model.Email.Trim();
             string fullName = model.FullName;
             string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
             string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
-            await _workflowMessageService.SendContactUsMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body, model.ContactAttributeInfo, model.ContactAttributeXml);
+            await _workflowMessageService.SendContactUsMessage(_workContext.CurrentCustomer, store, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body, model.ContactAttributeInfo, model.ContactAttributeXml);
 
             model.SuccessfullySent = true;
             model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");

@@ -31,7 +31,7 @@ namespace Grand.Web.Commands.Handler.Customers
             await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.PasswordRecoveryTokenDateGenerated, generatedDateTime);
 
             //send email
-            await _workflowMessageService.SendCustomerPasswordRecoveryMessage(request.Customer, request.Language.Id);
+            await _workflowMessageService.SendCustomerPasswordRecoveryMessage(request.Customer, request.Store, request.Language.Id);
 
             return true;
         }

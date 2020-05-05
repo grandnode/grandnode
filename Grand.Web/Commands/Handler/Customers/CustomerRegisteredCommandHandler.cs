@@ -10,6 +10,7 @@ using Grand.Services.Messages;
 using Grand.Services.Tax;
 using Grand.Web.Commands.Models.Customers;
 using MediatR;
+using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -79,7 +80,7 @@ namespace Grand.Web.Commands.Handler.Customers
 
                 //send VAT number admin notification
                 if (!String.IsNullOrEmpty(request.Model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
-                    await _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(request.Customer, request.Model.VatNumber, vat.address, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(request.Customer, request.Store, request.Model.VatNumber, vat.address, _localizationSettings.DefaultAdminLanguageId);
 
             }
 
@@ -196,7 +197,7 @@ namespace Grand.Web.Commands.Handler.Customers
 
             //notifications
             if (_customerSettings.NotifyNewCustomerRegistration)
-                await _workflowMessageService.SendCustomerRegisteredNotificationMessage(request.Customer, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendCustomerRegisteredNotificationMessage(request.Customer, request.Store, _localizationSettings.DefaultAdminLanguageId);
 
             //New customer has a free shipping for the first order
             if (_customerSettings.RegistrationFreeShipping)

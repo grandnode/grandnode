@@ -34,6 +34,7 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -51,7 +52,9 @@ namespace Grand.Web.Controllers
 
         #region Constructors
 
-        public VendorController(IWorkContext workContext,
+        public VendorController(
+            IWorkContext workContext,
+            IStoreContext storeContext,
             ILocalizationService localizationService,
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
@@ -67,6 +70,7 @@ namespace Grand.Web.Controllers
             MediaSettings mediaSettings)
         {
             _workContext = workContext;
+            _storeContext = storeContext;
             _localizationService = localizationService;
             _customerService = customerService;
             _workflowMessageService = workflowMessageService;
@@ -209,7 +213,7 @@ namespace Grand.Web.Controllers
 
                 //notify store owner here (email)
                 await _workflowMessageService.SendNewVendorAccountApplyStoreOwnerNotification(_workContext.CurrentCustomer,
-                    vendor, _localizationSettings.DefaultAdminLanguageId);
+                    vendor, _storeContext.CurrentStore, _localizationSettings.DefaultAdminLanguageId);
 
                 model.DisableFormInput = true;
                 model.Result = _localizationService.GetResource("Vendors.ApplyAccount.Submitted");
@@ -319,7 +323,7 @@ namespace Grand.Web.Controllers
 
                 //notifications
                 if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
-                    await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _storeContext.CurrentStore, _localizationSettings.DefaultAdminLanguageId);
 
                 return RedirectToAction("Info");
             }
@@ -357,7 +361,7 @@ namespace Grand.Web.Controllers
 
             //notifications
             if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
-                await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _storeContext.CurrentStore, _localizationSettings.DefaultAdminLanguageId);
 
             return RedirectToAction("Info");
         }
@@ -406,7 +410,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model = await _mediator.Send(new ContactVendorSendCommand() { Model = model, Vendor = vendor });;
+                model = await _mediator.Send(new ContactVendorSendCommand() { Model = model, Vendor = vendor, Store = _storeContext.CurrentStore });;
                 return View(model);
             }
 

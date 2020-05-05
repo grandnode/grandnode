@@ -992,9 +992,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (displayToCustomer)
             {
                 //email
-                await _workflowMessageService.SendNewOrderNoteAddedCustomerNotification(
-                    orderNote, _workContext.WorkingLanguage.Id);
-
+                await _workflowMessageService.SendNewOrderNoteAddedCustomerNotification(order, orderNote);
             }
         }
 

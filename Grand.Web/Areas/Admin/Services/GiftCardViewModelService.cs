@@ -156,7 +156,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 languageId = _localizationSettings.DefaultAdminLanguageId;
             }
-            int queuedEmailId = await _workflowMessageService.SendGiftCardNotification(giftCard, languageId);
+            int queuedEmailId = await _workflowMessageService.SendGiftCardNotification(giftCard, order, languageId);
             if (queuedEmailId > 0)
             {
                 giftCard.IsRecipientNotified = true;

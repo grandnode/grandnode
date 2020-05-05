@@ -324,7 +324,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var vendorReview = await _mediator.Send(new InsertVendorReviewCommand() { Vendor = vendor, Model = model });
+                var vendorReview = await _mediator.Send(new InsertVendorReviewCommand() { Vendor = vendor, Store = _storeContext.CurrentStore, Model = model });
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.AddVendorReview", vendor.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddVendorReview"), vendor.Name);
 

@@ -962,7 +962,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 //email
-                await workflowMessageService.SendWishlistEmailAFriendMessage(_workContext.CurrentCustomer,
+                await workflowMessageService.SendWishlistEmailAFriendMessage(_workContext.CurrentCustomer, _storeContext.CurrentStore,
                         _workContext.WorkingLanguage.Id, model.YourEmailAddress,
                         model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 

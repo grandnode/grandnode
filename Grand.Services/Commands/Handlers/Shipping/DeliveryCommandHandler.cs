@@ -70,7 +70,7 @@ namespace Grand.Services.Commands.Handlers.Shipping
             if (request.NotifyCustomer)
             {
                 //send email notification
-                int queuedEmailId = await _workflowMessageService.SendShipmentDeliveredCustomerNotification(request.Shipment, order.CustomerLanguageId);
+                int queuedEmailId = await _workflowMessageService.SendShipmentDeliveredCustomerNotification(request.Shipment, order);
                 if (queuedEmailId > 0)
                 {
                     await _orderService.InsertOrderNote(new OrderNote {

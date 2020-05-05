@@ -66,7 +66,7 @@ namespace Grand.Web.Commands.Handler.Vendors
 
             //notify store owner
             if (_vendorSettings.NotifyVendorAboutNewVendorReviews)
-                await _workflowMessageService.SendVendorReviewNotificationMessage(vendorReview, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendVendorReviewNotificationMessage(vendorReview, request.Store, _localizationSettings.DefaultAdminLanguageId);
 
             return vendorReview;
         }

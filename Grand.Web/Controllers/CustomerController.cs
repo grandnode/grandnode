@@ -318,7 +318,8 @@ namespace Grand.Web.Controllers
                 var customer = await _customerService.GetCustomerByEmail(model.Email);
                 if (customer != null && customer.Active && !customer.Deleted)
                 {
-                    await _mediator.Send(new PasswordRecoverySendCommand() { Customer = customer, Language = _workContext.WorkingLanguage, Model = model });
+                    await _mediator.Send(new PasswordRecoverySendCommand() { Customer = customer, Store = _storeContext.CurrentStore, Language = _workContext.WorkingLanguage, Model = model });
+
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
                     model.Send = true;
                 }
@@ -488,7 +489,7 @@ namespace Grand.Web.Controllers
                             {
                                 //email validation message
                                 await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
-                                await _workflowMessageService.SendCustomerEmailValidationMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
+                                await _workflowMessageService.SendCustomerEmailValidationMessage(_workContext.CurrentCustomer, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
                                 //result
                                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
@@ -500,7 +501,7 @@ namespace Grand.Web.Controllers
                         case UserRegistrationType.Standard:
                             {
                                 //send customer welcome message
-                                await _workflowMessageService.SendCustomerWelcomeMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
+                                await _workflowMessageService.SendCustomerWelcomeMessage(_workContext.CurrentCustomer, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
                                 var redirectUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard }, HttpContext.Request.Scheme);
                                 if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -614,7 +615,7 @@ namespace Grand.Web.Controllers
             await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, "");
 
             //send welcome message
-            await _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
+            await _workflowMessageService.SendCustomerWelcomeMessage(customer, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
             var model = new AccountActivationModel();
             model.Result = _localizationService.GetResource("Account.AccountActivation.Activated");
