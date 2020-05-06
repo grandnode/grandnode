@@ -91,7 +91,6 @@ namespace Grand.Framework.Mvc.Routing
                         values["action"] = "InternalRedirect";
                         values["url"] = $"{context.Request.PathBase}/{slugForCurrentLanguage}{context.Request.QueryString}";
                         values["permanentRedirect"] = false;
-                        values["redirectFromGenericPathRoute"] = true;
                         context.Items["grand.RedirectFromGenericPathRoute"] = true;
                         return values;
                     }
