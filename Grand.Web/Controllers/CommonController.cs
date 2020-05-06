@@ -109,7 +109,7 @@ namespace Grand.Web.Controllers
 
         //helper method to redirect users.
         public virtual IActionResult InternalRedirect(string url, bool permanentRedirect)
-        {
+        {           
             //ensure it's invoked from our GenericPathRoute class
             if (HttpContext.Items["grand.RedirectFromGenericPathRoute"] == null ||
                 !Convert.ToBoolean(HttpContext.Items["grand.RedirectFromGenericPathRoute"]))
