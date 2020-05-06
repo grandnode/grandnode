@@ -327,6 +327,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (_workContext.CurrentCustomer.IsStaff())
                 {
                     originalProduct.LimitedToStores = true;
+                    originalProduct.Stores.Clear();
                     originalProduct.Stores.Add(_workContext.CurrentCustomer.StaffStoreId);
                 }
 
