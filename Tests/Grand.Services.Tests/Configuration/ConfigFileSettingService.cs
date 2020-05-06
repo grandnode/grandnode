@@ -21,9 +21,8 @@ namespace Grand.Services.Tests.Configuration
         private readonly ICacheManager _cacheManager;
         public ConfigFileSettingService(ICacheManager cacheManager,
             IMediator eventPublisher,
-            IRepository<Setting> settingRepository,
-            IServiceProvider serviceProvider) :
-            base(cacheManager, eventPublisher, settingRepository, serviceProvider)
+            IRepository<Setting> settingRepository) :
+            base(cacheManager, eventPublisher, settingRepository)
         {
             _cacheManager = cacheManager;
         }
