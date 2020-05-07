@@ -448,7 +448,9 @@ namespace Grand.Web.Features.Handlers.Products
             //prepare second picture model
             if (_catalogSettings.SecondPictureOnCatalogPages)
             {
-                result.Add(await PreparePictureModel(product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault()));
+                var secondPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault();
+                if (secondPicture != null)
+                    result.Add(await PreparePictureModel(secondPicture));
             }
 
             return result;
