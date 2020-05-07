@@ -93,39 +93,49 @@ namespace Grand.Web.Features.Handlers.Products
                 { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat", _workContext.WorkingLanguage.Id) }
             };
 
-            var models = new List<ProductOverviewModel>();
+            var tasks = new List<Task<ProductOverviewModel>>();
 
             foreach (var product in request.Products)
             {
-                var model = PrepareProductOverviewModel(product);
-                //price
-                if (request.PreparePriceModel)
-                {
-                    await PreparePriceModel(model, product, res, request.ForceRedirectionAfterAddingToCart,
-                        enableShoppingCart, displayPrices, enableWishlist, priceIncludesTax);
-                }
-
-                //picture
-                if (request.PreparePictureModel)
-                {
-                    await PreparePictureModel(model, product, res, pictureSize);
-                }
-
-                //specs
-                if (request.PrepareSpecificationAttributes && product.ProductSpecificationAttributes.Any())
-                {
-                    model.SpecificationAttributeModels = await _mediator.Send(new GetProductSpecification() { Language = _workContext.WorkingLanguage, Product = product });
-                }
-
-                //attributes
-                await PrepareAttributesModel(model, product);
-
-                //reviews
-                model.ReviewOverviewModel = await _mediator.Send(new GetProductReviewOverview() { Product = product, Language = _workContext.WorkingLanguage, Store = _storeContext.CurrentStore });
-
-                models.Add(model);
+                tasks.Add(GetProductOverviewModel(product, request, displayPrices, enableShoppingCart, enableWishlist, pictureSize, priceIncludesTax, res));
             }
-            return models;
+            var result = await Task.WhenAll<ProductOverviewModel>(tasks);
+            return result;
+        }
+
+
+        private async Task<ProductOverviewModel> GetProductOverviewModel(Product product, GetProductOverview request,
+            bool displayPrices, bool enableShoppingCart, bool enableWishlist, int pictureSize, bool priceIncludesTax, Dictionary<string, string> res)
+        {
+            var model = PrepareProductOverviewModel(product);
+            //price
+            if (request.PreparePriceModel)
+            {
+                model.ProductPrice = await PreparePriceModel(product, res, request.ForceRedirectionAfterAddingToCart,
+                      enableShoppingCart, displayPrices, enableWishlist, priceIncludesTax);
+            }
+
+            //picture
+            if (request.PreparePictureModel)
+            {
+                var pictureModels = await PreparePictureModel(product, model.Name, res, pictureSize);
+                model.DefaultPictureModel = pictureModels.FirstOrDefault();
+                if (pictureModels.Count > 1) model.SecondPictureModel = pictureModels.ElementAtOrDefault(1);
+            }
+
+            //specs
+            if (request.PrepareSpecificationAttributes && product.ProductSpecificationAttributes.Any())
+            {
+                model.SpecificationAttributeModels = await _mediator.Send(new GetProductSpecification() { Language = _workContext.WorkingLanguage, Product = product });
+            }
+
+            //attributes
+            model.ProductAttributeModels = await PrepareAttributesModel(product);
+
+            //reviews
+            model.ReviewOverviewModel = await _mediator.Send(new GetProductReviewOverview() { Product = product, Language = _workContext.WorkingLanguage, Store = _storeContext.CurrentStore });
+
+            return model;
         }
 
         private ProductOverviewModel PrepareProductOverviewModel(Product product)
@@ -155,7 +165,7 @@ namespace Grand.Web.Features.Handlers.Products
             return model;
         }
 
-        private async Task PreparePriceModel(ProductOverviewModel model, Product product, Dictionary<string, string> res,
+        private async Task<ProductOverviewModel.ProductPriceModel> PreparePriceModel(Product product, Dictionary<string, string> res,
             bool forceRedirectionAfterAddingToCart, bool enableShoppingCart, bool displayPrices, bool enableWishlist,
             bool priceIncludesTax)
         {
@@ -401,15 +411,15 @@ namespace Grand.Web.Features.Handlers.Products
                     break;
             }
 
-            model.ProductPrice = priceModel;
+            return priceModel;
 
             #endregion
         }
 
-        private async Task PreparePictureModel(ProductOverviewModel model, Product product, Dictionary<string, string> res, int pictureSize)
+        private async Task<IList<PictureModel>> PreparePictureModel(Product product, string name, Dictionary<string, string> res, int pictureSize)
         {
             #region Prepare product picture
-
+            var result = new List<PictureModel>();
             async Task<PictureModel> PreparePictureModel(ProductPicture picture)
             {
                 if (picture == null)
@@ -423,30 +433,32 @@ namespace Grand.Web.Features.Handlers.Products
                 //"title" attribute
                 pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
                     picture.TitleAttribute :
-                    string.Format(res["Media.Product.ImageLinkTitleFormat"], model.Name);
+                    string.Format(res["Media.Product.ImageLinkTitleFormat"], name);
                 //"alt" attribute
                 pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
                     picture.AltAttribute :
-                    string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
+                    string.Format(res["Media.Product.ImageAlternateTextFormat"], name);
 
                 return pictureModel;
             };
 
             //prepare picture model
-            model.DefaultPictureModel = await PreparePictureModel(product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault());
+            result.Add(await PreparePictureModel(product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault()));
 
             //prepare second picture model
             if (_catalogSettings.SecondPictureOnCatalogPages)
             {
-                model.SecondPictureModel = await PreparePictureModel(product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault());
+                result.Add(await PreparePictureModel(product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault()));
             }
 
+            return result;
             #endregion
 
         }
 
-        private async Task PrepareAttributesModel(ProductOverviewModel model, Product product)
+        private async Task<IList<ProductOverviewModel.ProductAttributeModel>> PrepareAttributesModel(Product product)
         {
+            var result = new List<ProductOverviewModel.ProductAttributeModel>();
             if (product.ProductAttributeMappings.Any(x => x.ShowOnCatalogPage))
             {
                 foreach (var attribute in product.ProductAttributeMappings.Where(x => x.ShowOnCatalogPage).OrderBy(x => x.DisplayOrder))
@@ -469,11 +481,11 @@ namespace Grand.Web.Features.Handlers.Products
                             if (!string.IsNullOrEmpty(item.ImageSquaresPictureId))
                             {
                                 var pm = new PictureModel();
-                                    pm = new PictureModel {
-                                        Id = item.ImageSquaresPictureId,
-                                        FullSizeImageUrl = await _pictureService.GetPictureUrl(item.ImageSquaresPictureId),
-                                        ImageUrl = await _pictureService.GetPictureUrl(item.ImageSquaresPictureId, _mediaSettings.ImageSquarePictureSize)
-                                    };
+                                pm = new PictureModel {
+                                    Id = item.ImageSquaresPictureId,
+                                    FullSizeImageUrl = await _pictureService.GetPictureUrl(item.ImageSquaresPictureId),
+                                    ImageUrl = await _pictureService.GetPictureUrl(item.ImageSquaresPictureId, _mediaSettings.ImageSquarePictureSize)
+                                };
                                 value.ImageSquaresPictureModel = pm;
                             }
 
@@ -481,19 +493,20 @@ namespace Grand.Web.Features.Handlers.Products
                             if (!string.IsNullOrEmpty(item.PictureId))
                             {
                                 var pm = new PictureModel();
-                                    pm = new PictureModel {
-                                        Id = item.PictureId,
-                                        FullSizeImageUrl = await _pictureService.GetPictureUrl(item.PictureId),
-                                        ImageUrl = await _pictureService.GetPictureUrl(item.PictureId, 50)
-                                    };
+                                pm = new PictureModel {
+                                    Id = item.PictureId,
+                                    FullSizeImageUrl = await _pictureService.GetPictureUrl(item.PictureId),
+                                    ImageUrl = await _pictureService.GetPictureUrl(item.PictureId, 50)
+                                };
                                 value.PictureModel = pm;
                             }
                             productAttributeModel.Values.Add(value);
                         }
-                        model.ProductAttributeModels.Add(productAttributeModel);
+                        result.Add(productAttributeModel);
                     }
                 }
             }
+            return result;
         }
 
     }
