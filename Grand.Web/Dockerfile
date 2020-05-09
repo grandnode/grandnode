@@ -1,42 +1,23 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
-
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 WORKDIR /app
+EXPOSE 80
 
-COPY NuGet.config /root/.config/NuGet/
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+WORKDIR /src
+COPY ["Grand.Web/Grand.Web.csproj", "Grand.Web/"]
+COPY ["Grand.Framework/Grand.Framework.csproj", "Grand.Framework/"]
+COPY ["Grand.Core/Grand.Core.csproj", "Grand.Core/"]
+COPY ["Grand.Services/Grand.Services.csproj", "Grand.Services/"]
+COPY ["Grand.Api/Grand.Api.csproj", "Grand.Api/"]
+RUN dotnet restore "Grand.Web/Grand.Web.csproj"
+COPY . .
+WORKDIR "/src/Grand.Web"
+RUN dotnet build "Grand.Web.csproj" -c Release -o /app/build
 
-COPY GrandNode.sln .
+FROM build AS publish
+RUN dotnet publish "Grand.Web.csproj" -c Release -o /app/publish
 
-COPY . ./
-
-RUN dotnet build Plugins/Grand.Plugin.DiscountRequirements.Standard 
-RUN dotnet build Plugins/Grand.Plugin.ExchangeRate.McExchange
-RUN dotnet build Plugins/Grand.Plugin.ExternalAuth.Facebook
-RUN dotnet build Plugins/Grand.Plugin.ExternalAuth.Google
-RUN dotnet build Plugins/Grand.Plugin.Feed.GoogleShopping
-RUN dotnet build Plugins/Grand.Plugin.Payments.BrainTree
-RUN dotnet build Plugins/Grand.Plugin.Payments.CashOnDelivery
-RUN dotnet build Plugins/Grand.Plugin.Payments.CheckMoneyOrder
-RUN dotnet build Plugins/Grand.Plugin.Payments.PayInStore
-RUN dotnet build Plugins/Grand.Plugin.Payments.PayPalStandard
-RUN dotnet build Plugins/Grand.Plugin.Shipping.ByWeight
-RUN dotnet build Plugins/Grand.Plugin.Shipping.FixedRateShipping
-RUN dotnet build Plugins/Grand.Plugin.Shipping.ShippingPoint
-RUN dotnet build Plugins/Grand.Plugin.Tax.CountryStateZip
-RUN dotnet build Plugins/Grand.Plugin.Tax.FixedRate
-RUN dotnet build Plugins/Grand.Plugin.Widgets.GoogleAnalytics
-RUN dotnet build Plugins/Grand.Plugin.Widgets.FacebookPixel
-RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
-
-# publish project
-RUN dotnet publish Grand.Web -c Release -o out
-
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 
-
+FROM base AS final
 WORKDIR /app
-COPY --from=build-env /app/out/ .
-
-VOLUME /app/App_Data /app/wwwroot /app/Plugins /app/Themes
-
-ENTRYPOINT ["dotnet", "Grand.Web.dll"]
-
+COPY --from=publish /app/publish .
+CMD ["dotnet", "Grand.Web.dll"]

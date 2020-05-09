@@ -10,7 +10,8 @@ namespace Grand.Web.Models.Customer
     {
         [GrandResourceDisplayName("Account.PasswordRecovery.Email")]
         public string Email { get; set; }
-
         public string Result { get; set; }
+        public bool Send { get; set; }
+        public bool DisplayCaptcha { get; set; }
     }
 }

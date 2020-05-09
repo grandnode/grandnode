@@ -1,6 +1,7 @@
-﻿using Grand.Api.Controllers;
-using Grand.Api.Interfaces;
+﻿using Grand.Api.DTOs.Shipping;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class PickupPointController : BaseODataController
     {
-        private readonly IShippingApiService _shippingApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public PickupPointController(IShippingApiService shippingApiService, IPermissionService permissionService)
+        public PickupPointController(IMediator mediator, IPermissionService permissionService)
         {
-            _shippingApiService = shippingApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -26,11 +27,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
                 return Forbid();
 
-            var points = _shippingApiService.GetPickupPoints().FirstOrDefault(x => x.Id == key);
-            if (points == null)
+            var points = await _mediator.Send(new GetQuery<PickupPointDto>() { Id = key });
+            if (!points.Any())
                 return NotFound();
 
-            return Ok(points);
+            return Ok(points.FirstOrDefault());
+
         }
 
         [HttpGet]
@@ -40,7 +42,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
                 return Forbid();
 
-            return Ok(_shippingApiService.GetPickupPoints());
+            return Ok(await _mediator.Send(new GetQuery<PickupPointDto>()));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Grand.Api.DTOs.Catalog;
 using Grand.Api.DTOs.Common;
 using Grand.Api.DTOs.Customers;
@@ -147,7 +148,7 @@ namespace Grand.Api.Infrastructure
 
             #region Product specification
             ActionConfiguration createSpecification = product.Action("CreateProductSpecification");
-            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.Id)).Required();
+            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.Id));
             createSpecification.Parameter<int>(nameof(ProductSpecificationAttributeDto.DisplayOrder));
             createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.CustomValue));
             createSpecification.Parameter<SpecificationAttributeType>(nameof(ProductSpecificationAttributeDto.AttributeType)).Required();
@@ -155,6 +156,8 @@ namespace Grand.Api.Infrastructure
             createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeId));
             createSpecification.Parameter<bool>(nameof(ProductSpecificationAttributeDto.ShowOnProductPage));
             createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeOptionId));
+            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeOptionId));
+
             createSpecification.Returns<bool>();
 
             ActionConfiguration updateSpecification = product.Action("UpdateProductSpecification");
@@ -171,6 +174,44 @@ namespace Grand.Api.Infrastructure
             ActionConfiguration deleteSpecification = product.Action("DeleteProductSpecification");
             deleteSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.Id)).Required();
             deleteSpecification.Returns<bool>();
+            #endregion
+
+            #region Product attribute mapping
+
+            ActionConfiguration createProductAttributeMapping = product.Action("CreateProductAttributeMapping");
+            createProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.Id));
+            createProductAttributeMapping.Parameter<int>(nameof(ProductAttributeMappingDto.DisplayOrder));
+            createProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.ConditionAttributeXml));
+            createProductAttributeMapping.Parameter<AttributeControlType>(nameof(ProductAttributeMappingDto.AttributeControlType)).Required();
+            createProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.DefaultValue));
+            createProductAttributeMapping.Parameter<bool>(nameof(ProductAttributeMappingDto.IsRequired));
+            createProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.TextPrompt));
+            createProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.ValidationFileAllowedExtensions));
+            createProductAttributeMapping.Parameter<int?>(nameof(ProductAttributeMappingDto.ValidationFileMaximumSize));
+            createProductAttributeMapping.Parameter<int?>(nameof(ProductAttributeMappingDto.ValidationMaxLength));
+            createProductAttributeMapping.Parameter<int?>(nameof(ProductAttributeMappingDto.ValidationMinLength));
+            createProductAttributeMapping.Parameter<List<ProductAttributeValueDto>>(nameof(ProductAttributeMappingDto.ProductAttributeValues));
+            createProductAttributeMapping.Returns<ProductAttributeMappingDto>();
+
+            ActionConfiguration updateProductAttributeMapping = product.Action("UpdateProductAttributeMapping");
+            updateProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.Id)).Required();
+            updateProductAttributeMapping.Parameter<int>(nameof(ProductAttributeMappingDto.DisplayOrder));
+            updateProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.ConditionAttributeXml));
+            updateProductAttributeMapping.Parameter<AttributeControlType>(nameof(ProductAttributeMappingDto.AttributeControlType)).Required();
+            updateProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.DefaultValue));
+            updateProductAttributeMapping.Parameter<bool>(nameof(ProductAttributeMappingDto.IsRequired));
+            updateProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.TextPrompt));
+            updateProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.ValidationFileAllowedExtensions));
+            updateProductAttributeMapping.Parameter<int?>(nameof(ProductAttributeMappingDto.ValidationFileMaximumSize));
+            updateProductAttributeMapping.Parameter<int?>(nameof(ProductAttributeMappingDto.ValidationMaxLength));
+            updateProductAttributeMapping.Parameter<int?>(nameof(ProductAttributeMappingDto.ValidationMinLength));
+            updateProductAttributeMapping.Parameter<List<ProductAttributeValueDto>>(nameof(ProductAttributeMappingDto.ProductAttributeValues));
+            updateProductAttributeMapping.Returns<ProductAttributeMappingDto>();
+
+            ActionConfiguration deleteProductAttributeMapping = product.Action("DeleteProductAttributeMapping");
+            deleteProductAttributeMapping.Parameter<string>(nameof(ProductSpecificationAttributeDto.Id)).Required();
+            deleteProductAttributeMapping.Returns<bool>();
+
             #endregion
 
             //insert/update/delete tier price

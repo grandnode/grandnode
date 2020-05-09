@@ -14,13 +14,16 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
     {
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IDownloadService _downloadService;
+        private readonly IProductService _productService;
 
         public GetParseProductAttributesHandler(
             IProductAttributeParser productAttributeParser,
-            IDownloadService downloadService)
+            IDownloadService downloadService,
+            IProductService productService)
         {
             _productAttributeParser = productAttributeParser;
             _downloadService = downloadService;
+            _productService = productService;
         }
 
         public async Task<string> Handle(GetParseProductAttributes request, CancellationToken cancellationToken)
@@ -28,7 +31,18 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             string attributesXml = "";
 
             #region Product attributes
-            var productAttributes = request.Product.ProductAttributeMappings;
+
+            var productAttributes = request.Product.ProductAttributeMappings.ToList();
+            if (request.Product.ProductType == ProductType.BundledProduct)
+            {
+                foreach (var bundle in request.Product.BundleProducts)
+                {
+                    var bp = await _productService.GetProductById(bundle.ProductId);
+                    if (bp.ProductAttributeMappings.Any())
+                        productAttributes.AddRange(bp.ProductAttributeMappings);
+                }
+            }
+
             foreach (var attribute in productAttributes)
             {
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);

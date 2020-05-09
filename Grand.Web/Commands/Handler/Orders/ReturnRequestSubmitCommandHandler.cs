@@ -9,6 +9,7 @@ using Grand.Web.Commands.Models.Orders;
 using Grand.Web.Models.Orders;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Grand.Web.Commands.Handler.Orders
         private readonly ILocalizationService _localizationService;
         private readonly LocalizationSettings _localizationSettings;
 
-        
+
         public ReturnRequestSubmitCommandHandler(IWorkContext workContext,
             IStoreContext storeContext,
             IProductService productService,
@@ -59,7 +60,7 @@ namespace Grand.Web.Commands.Handler.Orders
 
             if (request.Model.PickupDate.HasValue)
                 rr.PickupDate = request.Model.PickupDate.Value;
-
+            var vendors = new List<string>();
             foreach (var orderItem in request.Order.OrderItems)
             {
                 var product = await _productService.GetProductById(orderItem.ProductId);
@@ -97,10 +98,16 @@ namespace Grand.Web.Commands.Handler.Orders
                             Quantity = quantity,
                             OrderItemId = orderItem.Id
                         });
+                        rr.VendorId = orderItem.VendorId;
+                        vendors.Add(orderItem.VendorId);
                     }
                 }
             }
-
+            if (vendors.Distinct().Count() > 1)
+            {
+                request.Model.Error = _localizationService.GetResource("ReturnRequests.MultiVendorsItems");
+                return (request.Model, rr);
+            }
             if (rr.ReturnRequestItems.Any())
             {
                 await _returnRequestService.InsertReturnRequest(rr);

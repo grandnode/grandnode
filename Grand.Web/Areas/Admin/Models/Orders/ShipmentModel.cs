@@ -20,6 +20,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         [GrandResourceDisplayName("Admin.Orders.Shipments.OrderID")]
         public string OrderId { get; set; }
         public int OrderNumber { get; set; }
+        public string OrderCode { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Shipments.TotalWeight")]
         public string TotalWeight { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Shipments.TrackingNumber")]

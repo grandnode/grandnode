@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Orders;
-using Grand.Plugin.Widgets.FacebookPixel;
 using Grand.Services.Orders;
 using Grand.Web.Models.ShoppingCart;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
+namespace Grand.Plugin.Widgets.FacebookPixel.Components
 {
     [ViewComponent(Name = "WidgetsFacebookPixel")]
     public class WidgetsFacebookPixelViewComponent : ViewComponent

@@ -1,6 +1,7 @@
-﻿using Grand.Api.Controllers;
-using Grand.Api.Interfaces;
+﻿using Grand.Api.DTOs.Shipping;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class DeliveryDateController : BaseODataController
     {
-        private readonly IShippingApiService _shippingApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public DeliveryDateController(IShippingApiService shippingApiService, IPermissionService permissionService)
+        public DeliveryDateController(IMediator mediator, IPermissionService permissionService)
         {
-            _shippingApiService = shippingApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -26,11 +27,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
                 return Forbid();
 
-            var deliverydate = _shippingApiService.GetDeliveryDates().FirstOrDefault(x => x.Id == key);
-            if (deliverydate == null)
+            var deliverydate = await _mediator.Send(new GetQuery<DeliveryDateDto>() { Id = key });
+            if (!deliverydate.Any())
                 return NotFound();
 
-            return Ok(deliverydate);
+            return Ok(deliverydate.FirstOrDefault());
         }
 
         [HttpGet]
@@ -40,7 +41,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
                 return Forbid();
 
-            return Ok(_shippingApiService.GetDeliveryDates());
+            return Ok(await _mediator.Send(new GetQuery<DeliveryDateDto>()));
         }
     }
 }

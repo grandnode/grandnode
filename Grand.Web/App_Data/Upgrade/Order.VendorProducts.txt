@@ -1,0 +1,38 @@
+<table style="width: 100%;" border="0">
+<tr style="background-color: #b9babe; text-align: center;"><th>Name</th><th>Price</th><th>Quantity</th><th>Total</th></tr>
+{% for item in Order.OrderItems -%}
+<tr style="background-color: #ebecee; text-align: center;">
+<td style="padding: 0.6em 0.4em; text-align: left;">{{item.ProductName}}
+{% if item.IsDownloadAllowed -%}
+<br />
+<a class="link" href="{{item.DownloadUrl}}">Download</a>
+{% endif %}
+
+{% if item.IsLicenseDownloadAllowed -%}
+<br />
+<a class="link" href="{{item.LicenseUrl}}">Download license</a>
+{% endif %}
+
+{% if item.AttributeDescription != null and item.AttributeDescription != "" %}
+<br />
+{{item.AttributeDescription}}
+{% endif %}
+
+{% if item.ShowSkuOnProductDetailsPage and item.ProductSku != null and item.ProductSku != "" %}
+<br />
+Sku: {{item.ProductSku}}
+{% endif %}
+
+</td>
+<td style="padding: 0.6em 0.4em; text-align: right;">{{item.UnitPrice}}</td>
+<td style="padding: 0.6em 0.4em; text-align: center;">{{item.Quantity}}</td>
+<td style="padding: 0.6em 0.4em; text-align: right;">{{item.TotalPrice}}</td>
+</tr>
+{% endfor -%}
+
+{% if Order.CheckoutAttributeDescription != null and Order.CheckoutAttributeDescription != "" %}
+<tr><td style="text-align:right;" colspan="1">&nbsp;</td><td colspan="3" style="text-align:right">
+{{Order.CheckoutAttributeDescription}}
+</td></tr>
+{% endif %}
+</table>

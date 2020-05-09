@@ -22,8 +22,8 @@ namespace Grand.Core.Domain.Customers
         public static string CustomCustomerAttributes { get { return "CustomCustomerAttributes"; } }
 
         //Other attributes
-        public static string DiscountCouponCode { get { return "DiscountCouponCode"; } }
-        public static string GiftCardCouponCodes { get { return "GiftCardCouponCodes"; } }
+        public static string DiscountCoupons { get { return "DiscountCoupons"; } }
+        public static string GiftCardCoupons { get { return "GiftCardCoupons"; } }
         public static string AvatarPictureId { get { return "AvatarPictureId"; } }
         public static string ForumPostCount { get { return "ForumPostCount"; } }
         public static string Signature { get { return "Signature"; } }
@@ -36,7 +36,8 @@ namespace Grand.Core.Domain.Customers
         public static string AdminAreaStoreScopeConfiguration { get { return "AdminAreaStoreScopeConfiguration"; } }
         public static string TwoFactorEnabled { get { return "TwoFactorEnabled"; } }
         public static string TwoFactorSecretKey { get { return "TwoFactorSecretKey"; } }
-
+        public static string TwoFactorValidCode { get { return "TwoFactorValidCode"; } }
+        public static string TwoFactorCodeValidUntil { get { return "TwoFactorValidCodeUntil"; } }
 
         //depends on store
         public static string CurrencyId { get { return "CurrencyId"; } }

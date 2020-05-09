@@ -18,7 +18,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                 .ForMember(dest => dest.PointsForRegistration_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.PointsForPurchases_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.PointsForPurchases_Awarded_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.PointsForPurchases_Canceled_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.PointsForPurchases_Awarded_OrderStatuses, mo => mo.Ignore())
+                .ForMember(dest => dest.ReduceRewardPointsAfterCancelOrder_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayHowMuchWillBeEarned_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<RewardPointsSettingsModel, RewardPointsSettings>();

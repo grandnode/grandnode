@@ -3,6 +3,7 @@ using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Web.Features.Models.Orders;
 using Grand.Web.Models.Orders;
 using MediatR;
@@ -18,13 +19,18 @@ namespace Grand.Web.Features.Handlers.Orders
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderProcessingService _orderProcessingService;
-
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IMediator _mediator;
 
-        public GetCustomerOrderListHandler(IOrderService orderService, IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, IOrderProcessingService orderProcessingService,
-            ICurrencyService currencyService, IPriceFormatter priceFormatter)
+        public GetCustomerOrderListHandler(
+            IOrderService orderService, 
+            IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService, 
+            IOrderProcessingService orderProcessingService,
+            ICurrencyService currencyService,
+            IMediator mediator,
+            IPriceFormatter priceFormatter)
         {
             _orderService = orderService;
             _dateTimeHelper = dateTimeHelper;
@@ -32,6 +38,7 @@ namespace Grand.Web.Features.Handlers.Orders
             _orderProcessingService = orderProcessingService;
             _currencyService = currencyService;
             _priceFormatter = priceFormatter;
+            _mediator = mediator;
         }
 
         public async Task<CustomerOrderListModel> Handle(GetCustomerOrderList request, CancellationToken cancellationToken)
@@ -52,12 +59,13 @@ namespace Grand.Web.Features.Handlers.Orders
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel {
                     Id = order.Id,
                     OrderNumber = order.OrderNumber,
+                    OrderCode = order.Code,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                     OrderStatusEnum = order.OrderStatus,
                     OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, request.Language.Id),
                     PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, request.Language.Id),
                     ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, request.Language.Id),
-                    IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowed(order)
+                    IsReturnRequestAllowed = await _mediator.Send(new IsReturnRequestAllowedQuery() { Order = order })
                 };
                 var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
                 orderModel.OrderTotal = await _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, request.Language);

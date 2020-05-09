@@ -47,25 +47,7 @@ namespace Grand.Services.Security
         /// </summary>
         /// <param name="permission">Permission</param>
         Task UpdatePermissionRecord(PermissionRecord permission);
-
-        /// <summary>
-        /// Install permissions
-        /// </summary>
-        /// <param name="permissionProvider">Permission provider</param>
-        Task InstallPermissions(IPermissionProvider permissionProvider);
-
-        /// <summary>
-        /// Install missing permissions
-        /// </summary>
-        /// <param name="permissionProvider">Permission provider</param>
-        Task InstallNewPermissions(IPermissionProvider permissionProvider);
-
-        /// <summary>
-        /// Uninstall permissions
-        /// </summary>
-        /// <param name="permissionProvider">Permission provider</param>
-        Task UninstallPermissions(IPermissionProvider permissionProvider);
-
+       
         /// <summary>
         /// Authorize permission
         /// </summary>

@@ -205,7 +205,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
 
             //order statuses
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList();
@@ -437,7 +437,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     Id = x.Id,
                     OrderNumber = x.OrderNumber,
-                    StoreName = store != null ? store.Name : "Unknown",
+                    StoreName = store != null ? store.Shortcut : "Unknown",
                     OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
                     OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                     PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),

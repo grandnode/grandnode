@@ -39,11 +39,11 @@ namespace Grand.Core.Domain.Customers
         /// Points are awarded when the order status is
         /// </summary>
         public OrderStatus PointsForPurchases_Awarded { get; set; }
-
+        
         /// <summary>
-        /// Points are canceled when the order is
+        /// Reward points are canceled when the order is canceled
         /// </summary>
-        public OrderStatus PointsForPurchases_Canceled { get; set; }
+        public bool ReduceRewardPointsAfterCancelOrder { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether "You will earn" message should be displayed

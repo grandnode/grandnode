@@ -180,6 +180,7 @@ namespace Grand.Web.Areas.Admin.Services
                     var orderModel = new AffiliateModel.AffiliatedOrderModel();
                     orderModel.Id = order.Id;
                     orderModel.OrderNumber = order.OrderNumber;
+                    orderModel.OrderCode = order.Code;
                     orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
                     orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
                     orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);

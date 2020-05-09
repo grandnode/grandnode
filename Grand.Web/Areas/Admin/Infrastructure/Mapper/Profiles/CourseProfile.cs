@@ -18,6 +18,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableLevels, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductName, mo => mo.Ignore());
 
             CreateMap<CourseModel, Course>()

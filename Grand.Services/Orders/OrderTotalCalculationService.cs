@@ -259,7 +259,7 @@ namespace Grand.Services.Orders
             if (customer == null)
                 return result;
 
-            string[] couponCodes = customer.ParseAppliedGiftCardCouponCodes();
+            string[] couponCodes = customer.ParseAppliedCouponCodes(SystemCustomerAttributeNames.GiftCardCoupons);
             foreach (var couponCode in couponCodes)
             {
                 var giftCards = await _giftCardService.GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
@@ -1018,28 +1018,6 @@ namespace Grand.Services.Orders
                 return true;
 
             return rewardPoints >= _rewardPointsSettings.MinimumRewardPointsToUse;
-        }
-
-        /// <summary>
-        /// Calculate how much reward points will be earned/reduced based on certain amount spent
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="amount">Amount (in primary store currency)</param>
-        /// <returns>umber of reward points</returns>
-        public virtual int CalculateRewardPoints(Customer customer, decimal amount)
-        {
-            if (!_rewardPointsSettings.Enabled)
-                return 0;
-
-            if (_rewardPointsSettings.PointsForPurchases_Amount <= decimal.Zero)
-                return 0;
-
-            //Ensure that reward points are applied only to registered users
-            if (customer == null || customer.IsGuest())
-                return 0;
-
-            var points = (int)Math.Truncate(amount / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);
-            return points;
         }
 
         #endregion

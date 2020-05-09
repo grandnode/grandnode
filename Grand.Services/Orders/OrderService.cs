@@ -102,6 +102,19 @@ namespace Grand.Services.Orders
             return _orderRepository.Table.FirstOrDefaultAsync(x => x.OrderNumber == orderNumber);
         }
 
+        /// <summary>
+        /// Gets orders by code
+        /// </summary>
+        /// <param name="code">The order code</param>
+        /// <returns>Order</returns>
+        public virtual async Task<IList<Order>> GetOrdersByCode(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+                return new List<Order>();
+
+            return await _orderRepository.Table.Where(x => x.Code == code.ToUpperInvariant()).ToListAsync();
+        }
+
 
         /// <summary>
         /// Get orders by identifiers
@@ -189,9 +202,9 @@ namespace Grand.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var querymodel = new GetOrderQueryModel() {
+            var querymodel = new GetOrderQuery() {
                 AffiliateId = affiliateId,
                 BillingCountryId = billingCountryId,
                 BillingEmail = billingEmail,
@@ -200,6 +213,7 @@ namespace Grand.Services.Orders
                 CreatedToUtc = createdToUtc,
                 CustomerId = customerId,
                 OrderGuid = orderGuid,
+                OrderCode = orderCode,
                 Os = os,
                 PageIndex = pageIndex,
                 PageSize = pageSize,
@@ -226,7 +240,7 @@ namespace Grand.Services.Orders
 
             var orderExists = _orderRepository.Table.OrderByDescending(x => x.OrderNumber).Select(x => x.OrderNumber).FirstOrDefault();
             order.OrderNumber = orderExists != 0 ? orderExists + 1 : 1;
-            
+
             await _orderRepository.InsertAsync(order);
 
             //event notification
@@ -334,7 +348,7 @@ namespace Grand.Services.Orders
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             bool loadDownloableProductsOnly)
         {
-            var querymodel = new GetOrderQueryModel() {
+            var querymodel = new GetOrderQuery() {
                 CreatedFromUtc = createdFromUtc,
                 CreatedToUtc = createdToUtc,
                 CustomerId = customerId,

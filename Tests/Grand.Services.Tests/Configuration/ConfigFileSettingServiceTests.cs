@@ -23,7 +23,7 @@ namespace Grand.Services.Tests.Configuration
         {
             var eventPublisher = new Mock<IMediator>();
             var cacheManager = new MemoryCacheManager(new Mock<IMemoryCache>().Object, eventPublisher.Object);
-            config = new ConfigFileSettingService(cacheManager, null, null, null);
+            config = new ConfigFileSettingService(cacheManager, null, null);
         }
 
         [TestMethod()]

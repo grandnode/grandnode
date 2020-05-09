@@ -10,6 +10,7 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Shipping;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.Orders;
@@ -29,7 +30,6 @@ namespace Grand.Web.Features.Handlers.Orders
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILocalizationService _localizationService;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly IShipmentService _shipmentService;
         private readonly IPaymentService _paymentService;
         private readonly ICurrencyService _currencyService;
@@ -44,18 +44,29 @@ namespace Grand.Web.Features.Handlers.Orders
         private readonly PdfSettings _pdfSettings;
         private readonly TaxSettings _taxSettings;
 
-        public GetOrderDetailsHandler(IDateTimeHelper dateTimeHelper, IProductService productService, IProductAttributeParser productAttributeParser,
+        public GetOrderDetailsHandler(
+            IDateTimeHelper dateTimeHelper, 
+            IProductService productService, 
+            IProductAttributeParser productAttributeParser,
             ILocalizationService localizationService,
-            IOrderProcessingService orderProcessingService, IShipmentService shipmentService, IPaymentService paymentService,
-            ICurrencyService currencyService, IPriceFormatter priceFormatter, IGiftCardService giftCardService, IOrderService orderService,
-            IPictureService pictureService, IDownloadService downloadService, IMediator mediator,
-            CatalogSettings catalogSettings, OrderSettings orderSettings, PdfSettings pdfSettings, TaxSettings taxSettings)
+            IShipmentService shipmentService, 
+            IPaymentService paymentService,
+            ICurrencyService currencyService, 
+            IPriceFormatter priceFormatter, 
+            IGiftCardService giftCardService, 
+            IOrderService orderService,
+            IPictureService pictureService, 
+            IDownloadService downloadService, 
+            IMediator mediator,
+            CatalogSettings catalogSettings, 
+            OrderSettings orderSettings, 
+            PdfSettings pdfSettings, 
+            TaxSettings taxSettings)
         {
             _dateTimeHelper = dateTimeHelper;
             _productService = productService;
             _productAttributeParser = productAttributeParser;
             _localizationService = localizationService;
-            _orderProcessingService = orderProcessingService;
             _shipmentService = shipmentService;
             _paymentService = paymentService;
             _currencyService = currencyService;
@@ -77,10 +88,11 @@ namespace Grand.Web.Features.Handlers.Orders
 
             model.Id = request.Order.Id;
             model.OrderNumber = request.Order.OrderNumber;
+            model.OrderCode = request.Order.Code;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(request.Order.CreatedOnUtc, DateTimeKind.Utc);
             model.OrderStatus = request.Order.OrderStatus.GetLocalizedEnum(_localizationService, request.Language.Id);
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
-            model.IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowed(request.Order);
+            model.IsReturnRequestAllowed = await _mediator.Send(new IsReturnRequestAllowedQuery() { Order = request.Order });
             model.PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && request.Order.OrderStatus == OrderStatus.Pending;
             model.ShowAddOrderNote = _orderSettings.AllowCustomerToAddOrderNote;
 

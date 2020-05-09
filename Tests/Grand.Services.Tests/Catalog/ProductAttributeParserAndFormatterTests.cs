@@ -37,7 +37,7 @@ namespace Grand.Services.Catalog.Tests
         private IWebHelper _webHelper;
         private ShoppingCartSettings _shoppingCartSettings;
         private IProductAttributeFormatter _productAttributeFormatter;
-
+        private IProductService _productService;
         private ProductAttribute pa1, pa2, pa3;
         private ProductAttributeMapping pam1_1, pam2_1, pam3_1;
         private ProductAttributeValue pav1_1, pav1_2, pav2_1, pav2_2;
@@ -166,6 +166,7 @@ namespace Grand.Services.Catalog.Tests
             _downloadService = new Mock<IDownloadService>().Object;
             _webHelper = new Mock<IWebHelper>().Object;
             _shoppingCartSettings = new Mock<ShoppingCartSettings>().Object;
+            _productService = new Mock<IProductService>().Object;
 
             _productAttributeFormatter = new ProductAttributeFormatter(_workContext,
                 _productAttributeService,
@@ -177,6 +178,7 @@ namespace Grand.Services.Catalog.Tests
                 _downloadService,
                 _webHelper,
                 _priceCalculationService,
+                _productService,
                 _shoppingCartSettings);
         }
 

@@ -39,19 +39,7 @@ namespace Grand.Services.Customers
         private const string CUSTOMERROLES_PATTERN_KEY = "Grand.customerrole.";
         private const string CUSTOMERROLESPRODUCTS_PATTERN_KEY = "Grand.product.cr";
 
-        /// <summary>
-        /// Key pattern to clear cache
-        /// {0} customer id
-        /// </summary>
-        private const string CUSTOMER_PRODUCT_KEY = "Grand.product.personal-{0}";
-
-        /// <summary>
-        /// Key for cache 
-        /// {0} - customer id
-        /// {1} - product id
-        /// </summary>
-        private const string CUSTOMER_PRODUCT_PRICE_KEY_ID = "Grand.product.price-{0}-{1}";
-
+       
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -67,8 +55,6 @@ namespace Grand.Services.Customers
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
-        private readonly IRepository<CustomerProductPrice> _customerProductPriceRepository;
-        private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordProductRepository;
         private readonly IRepository<CustomerNote> _customerNoteRepository;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -82,8 +68,6 @@ namespace Grand.Services.Customers
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
-            IRepository<CustomerProduct> customerProductRepository,
-            IRepository<CustomerProductPrice> customerProductPriceRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordProductRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
             IRepository<CustomerNote> customerNoteRepository,
@@ -93,8 +77,6 @@ namespace Grand.Services.Customers
             _cacheManager = cacheManager;
             _customerRepository = customerRepository;
             _customerRoleRepository = customerRoleRepository;
-            _customerProductRepository = customerProductRepository;
-            _customerProductPriceRepository = customerProductPriceRepository;
             _customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
             _customerRoleProductRepository = customerRoleProductRepository;
             _customerNoteRepository = customerNoteRepository;
@@ -707,14 +689,14 @@ namespace Grand.Services.Customers
             //clear entered coupon codes
             if (clearCouponCodes)
             {
-                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.DiscountCouponCode, null);
-                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, null);
+                await _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.DiscountCoupons, null);
+                await _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.GiftCardCoupons, null);
             }
 
             //clear checkout attributes
             if (clearCheckoutAttributes)
             {
-                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.CheckoutAttributes, null, storeId);
+                await _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.CheckoutAttributes, null, storeId);
             }
 
             //clear reward points flag
@@ -1134,9 +1116,6 @@ namespace Grand.Services.Customers
             var update = updatebuilder.Pull(p => p.ShoppingCartItems, shoppingCartItem);
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
-            //event notification
-            await _mediator.EntityDeleted(shoppingCartItem);
-
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
             else
@@ -1166,9 +1145,6 @@ namespace Grand.Services.Customers
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.AddToSet(p => p.ShoppingCartItems, shoppingCartItem);
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
-
-            //event notification
-            await _mediator.EntityInserted(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
@@ -1201,8 +1177,6 @@ namespace Grand.Services.Customers
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).ShoppingCartTypeId, shoppingCartItem.ShoppingCartTypeId);
 
             await _customerRepository.Collection.UpdateManyAsync(filter, update);
-            //event notification
-            await _mediator.EntityUpdated(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
@@ -1213,200 +1187,7 @@ namespace Grand.Services.Customers
 
         #endregion
 
-        #region Customer Product Price
-
-        /// <summary>
-        /// Gets a customer product price
-        /// </summary>
-        /// <param name="Id">Identifier</param>
-        /// <returns>Customer product price</returns>
-        public virtual Task<CustomerProductPrice> GetCustomerProductPriceById(string id)
-        {
-            return _customerProductPriceRepository.GetByIdAsync(id);
-        }
-
-        /// <summary>
-        /// Gets a price
-        /// </summary>
-        /// <param name="customerId">Customer Identifier</param>
-        /// <param name="productId">Product Identifier</param>
-        /// <returns>Customer product price</returns>
-        public virtual async Task<decimal?> GetPriceByCustomerProduct(string customerId, string productId)
-        {
-            var key = string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerId, productId);
-            var productprice = await _cacheManager.GetAsync(key, async () =>
-            {
-                var pp = await _customerProductPriceRepository.Table
-                .Where(x => x.CustomerId == customerId && x.ProductId == productId)
-                .FirstOrDefaultAsync();
-                if (pp == null)
-                    return (null, false);
-                else
-                    return (pp, true);
-            });
-
-            if (!productprice.Item2)
-                return null;
-            else
-                return productprice.pp.Price;
-        }
-
-        /// <summary>
-        /// Inserts a customer product price
-        /// </summary>
-        /// <param name="customerProductPrice">Customer product price</param>
-        public virtual async Task InsertCustomerProductPrice(CustomerProductPrice customerProductPrice)
-        {
-            if (customerProductPrice == null)
-                throw new ArgumentNullException("customerProductPrice");
-
-            await _customerProductPriceRepository.InsertAsync(customerProductPrice);
-
-            //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
-
-            //event notification
-            await _mediator.EntityInserted(customerProductPrice);
-        }
-
-        /// <summary>
-        /// Updates the customer product price
-        /// </summary>
-        /// <param name="customerProductPrice">Customer product price</param>
-        public virtual async Task UpdateCustomerProductPrice(CustomerProductPrice customerProductPrice)
-        {
-            if (customerProductPrice == null)
-                throw new ArgumentNullException("customerProductPrice");
-
-            await _customerProductPriceRepository.UpdateAsync(customerProductPrice);
-
-            //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
-
-            //event notification
-            await _mediator.EntityUpdated(customerProductPrice);
-        }
-
-        /// <summary>
-        /// Delete a customer product price
-        /// </summary>
-        /// <param name="customerProductPrice">Customer product price</param>
-        public virtual async Task DeleteCustomerProductPrice(CustomerProductPrice customerProductPrice)
-        {
-            if (customerProductPrice == null)
-                throw new ArgumentNullException("customerProductPrice");
-
-            await _customerProductPriceRepository.DeleteAsync(customerProductPrice);
-
-            //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
-
-            //event notification
-            await _mediator.EntityDeleted(customerProductPrice);
-        }
-
-        public virtual async Task<IPagedList<CustomerProductPrice>> GetProductsPriceByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
-        {
-            var query = from pp in _customerProductPriceRepository.Table
-                        where pp.CustomerId == customerId
-                        select pp;
-            return await PagedList<CustomerProductPrice>.Create(query, pageIndex, pageSize);
-        }
-
-        #endregion
-
-        #region Personalize products
-
-        /// <summary>
-        /// Gets a customer product 
-        /// </summary>
-        /// <param name="id">Identifier</param>
-        /// <returns>Customer product</returns>
-        public virtual async Task<CustomerProduct> GetCustomerProduct(string id)
-        {
-            return await _customerProductRepository.GetByIdAsync(id);
-        }
-
-        /// <summary>
-        /// Gets a customer product 
-        /// </summary>
-        /// <param name="customerId">Customer Identifier</param>
-        /// <param name="productId">Product Identifier</param>
-        /// <returns>Customer product</returns>
-        public virtual Task<CustomerProduct> GetCustomerProduct(string customerId, string productId)
-        {
-            var query = from pp in _customerProductRepository.Table
-                        where pp.CustomerId == customerId && pp.ProductId == productId
-                        select pp;
-
-            return query.FirstOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// Insert a customer product 
-        /// </summary>
-        /// <param name="customerProduct">Customer product</param>
-        public virtual async Task InsertCustomerProduct(CustomerProduct customerProduct)
-        {
-            if (customerProduct == null)
-                throw new ArgumentNullException("customerProduct");
-
-            await _customerProductRepository.InsertAsync(customerProduct);
-
-            //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
-
-            //event notification
-            await _mediator.EntityInserted(customerProduct);
-        }
-
-        /// <summary>
-        /// Updates the customer product
-        /// </summary>
-        /// <param name="customerProduct">Customer product </param>
-        public virtual async Task UpdateCustomerProduct(CustomerProduct customerProduct)
-        {
-            if (customerProduct == null)
-                throw new ArgumentNullException("customerProduct");
-
-            await _customerProductRepository.UpdateAsync(customerProduct);
-
-            //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
-
-            //event notification
-            await _mediator.EntityUpdated(customerProduct);
-        }
-
-        /// <summary>
-        /// Delete a customer product 
-        /// </summary>
-        /// <param name="customerProduct">Customer product</param>
-        public virtual async Task DeleteCustomerProduct(CustomerProduct customerProduct)
-        {
-            if (customerProduct == null)
-                throw new ArgumentNullException("customerProduct");
-
-            await _customerProductRepository.DeleteAsync(customerProduct);
-
-            //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
-
-            //event notification
-            await _mediator.EntityDeleted(customerProduct);
-        }
-
-        public virtual async Task<IPagedList<CustomerProduct>> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
-        {
-            var query = from pp in _customerProductRepository.Table
-                        where pp.CustomerId == customerId
-                        orderby pp.DisplayOrder
-                        select pp;
-            return await PagedList<CustomerProduct>.Create(query, pageIndex, pageSize);
-        }
-
-        #endregion
-
+       
         #region Customer note
 
         // <summary>

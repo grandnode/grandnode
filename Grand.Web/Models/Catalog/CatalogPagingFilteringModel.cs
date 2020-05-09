@@ -6,6 +6,7 @@ using Grand.Framework.UI.Paging;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Web.Infrastructure.Cache;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -271,19 +272,32 @@ namespace Grand.Web.Models.Catalog
 
             #region Methods
 
-            public virtual List<string> GetAlreadyFilteredSpecOptionIds(IWebHelper webHelper)
+            public virtual async Task<List<string>> GetAlreadyFilteredSpecOptionIds
+                (IHttpContextAccessor httpContextAccessor, ISpecificationAttributeService specificationAttributeService)
             {
                 var result = new List<string>();
 
-                var alreadyFilteredSpecsStr = webHelper.QueryString<string>(QUERYSTRINGPARAM);
-                if (String.IsNullOrWhiteSpace(alreadyFilteredSpecsStr))
-                    return result;
-
-                foreach (var spec in alreadyFilteredSpecsStr.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var item in httpContextAccessor.HttpContext.Request.Query)
                 {
-                    if (!result.Contains(spec))
-                        result.Add(spec);
+                    var spec = await specificationAttributeService.GetSpecificationAttributeBySeName(item.Key);
+                    if (spec != null)
+                    {
+                        foreach (var value in item.Value)
+                        {
+                            foreach (var option in value.Split(","))
+                            {
+                                var opt = spec.SpecificationAttributeOptions.FirstOrDefault(x => x.SeName == option.ToLowerInvariant());
+                                if (opt != null)
+                                {
+                                    if (!result.Contains(opt.Id))
+                                        result.Add(opt.Id);
+                                }
+
+                            }
+                        }
+                    }
                 }
+
                 return result;
             }
 
@@ -305,13 +319,14 @@ namespace Grand.Web.Models.Catalog
                         var sa = await specificationAttributeService.GetSpecificationAttributeByOptionId(sao);
                         if (sa != null)
                         {
-                            _allFilters.Add(new SpecificationAttributeOptionFilter
-                            {
+                            _allFilters.Add(new SpecificationAttributeOptionFilter {
                                 SpecificationAttributeId = sa.Id,
                                 SpecificationAttributeName = sa.GetLocalized(x => x.Name, langId),
+                                SpecificationAttributeSeName = sa.SeName,
                                 SpecificationAttributeDisplayOrder = sa.DisplayOrder,
                                 SpecificationAttributeOptionId = sao,
                                 SpecificationAttributeOptionName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).GetLocalized(x => x.Name, langId),
+                                SpecificationAttributeOptionSeName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).SeName,
                                 SpecificationAttributeOptionDisplayOrder = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).DisplayOrder,
                                 SpecificationAttributeOptionColorRgb = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).ColorSquaresRgb,
                             });
@@ -330,18 +345,27 @@ namespace Grand.Web.Models.Catalog
 
                 //prepare the model properties
                 Enabled = true;
-                var removeFilterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, null);
+                string removeFilterUrl = webHelper.GetThisPageUrl(true);
+                foreach (var item in allFilters.GroupBy(x => x.SpecificationAttributeSeName))
+                {
+                    removeFilterUrl = webHelper.ModifyQueryString(removeFilterUrl, item.Key, null);
+                }
                 RemoveFilterUrl = ExcludeQueryStringParams(removeFilterUrl, webHelper);
 
                 //get already filtered specification options
                 var alreadyFilteredOptions = allFilters.Where(x => alreadyFilteredSpecOptionIds.Contains(x.SpecificationAttributeOptionId));
                 AlreadyFilteredItems = alreadyFilteredOptions.Select(x =>
                 {
-                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFilteredOptions.Where(y => y.SpecificationAttributeOptionId != x.SpecificationAttributeOptionId).Select(z => z.SpecificationAttributeOptionId).ToList()));
-                    return new SpecificationFilterItem
-                    {
+                    var alreadyFiltered = alreadyFilteredOptions.Where(y => y.SpecificationAttributeId == x.SpecificationAttributeId).Select(z => z.SpecificationAttributeOptionSeName)
+                    .Except(new List<string> { x.SpecificationAttributeOptionSeName }).ToList();
+
+                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), x.SpecificationAttributeSeName, GenerateFilteredSpecQueryParam(alreadyFiltered));
+
+                    return new SpecificationFilterItem {
                         SpecificationAttributeName = x.SpecificationAttributeName,
+                        SpecificationAttributeSeName = x.SpecificationAttributeSeName,
                         SpecificationAttributeOptionName = x.SpecificationAttributeOptionName,
+                        SpecificationAttributeOptionSeName = x.SpecificationAttributeOptionSeName,
                         SpecificationAttributeOptionColorRgb = x.SpecificationAttributeOptionColorRgb,
                         FilterUrl = ExcludeQueryStringParams(filterUrl, webHelper)
                     };
@@ -351,12 +375,15 @@ namespace Grand.Web.Models.Catalog
                 NotFilteredItems = allFilters.Except(alreadyFilteredOptions).Select(x =>
                 {
                     //filter URL
-                    var alreadyFiltered = alreadyFilteredSpecOptionIds.Concat(new List<string> { x.SpecificationAttributeOptionId });
-                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFiltered.ToList()));
-                    return new SpecificationFilterItem()
-                    {
+                    var alreadyFiltered = alreadyFilteredOptions.Where(y => y.SpecificationAttributeId == x.SpecificationAttributeId).Select(x => x.SpecificationAttributeOptionSeName)
+                    .Concat(new List<string> { x.SpecificationAttributeOptionSeName });
+
+                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), x.SpecificationAttributeSeName, GenerateFilteredSpecQueryParam(alreadyFiltered.ToList()));
+                    return new SpecificationFilterItem() {
                         SpecificationAttributeName = x.SpecificationAttributeName,
+                        SpecificationAttributeSeName = x.SpecificationAttributeSeName,
                         SpecificationAttributeOptionName = x.SpecificationAttributeOptionName,
+                        SpecificationAttributeOptionSeName = x.SpecificationAttributeOptionSeName,
                         SpecificationAttributeOptionColorRgb = x.SpecificationAttributeOptionColorRgb,
                         FilterUrl = ExcludeQueryStringParams(filterUrl, webHelper)
                     };
@@ -377,7 +404,9 @@ namespace Grand.Web.Models.Catalog
         public partial class SpecificationFilterItem : BaseGrandModel
         {
             public string SpecificationAttributeName { get; set; }
+            public string SpecificationAttributeSeName { get; set; }
             public string SpecificationAttributeOptionName { get; set; }
+            public string SpecificationAttributeOptionSeName { get; set; }
             public string SpecificationAttributeOptionColorRgb { get; set; }
             public string FilterUrl { get; set; }
         }

@@ -766,6 +766,10 @@ namespace Grand.Web.Infrastructure
                             pattern + "deletecartitem/{id}",
                             new { controller = "ShoppingCart", action = "DeleteCartItem" });
 
+            routeBuilder.MapControllerRoute("ChangeTypeCartItem",
+                pattern + "changetypecartitem/{id}",
+                new { controller = "ShoppingCart", action = "ChangeTypeCartItem" });
+
             //estimate shipping
             routeBuilder.MapControllerRoute("EstimateShipping",
                             $"{pattern}cart/estimateshipping",
@@ -805,6 +809,7 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("ShipmentDetails",
                             pattern + "orderdetails/shipment/{shipmentId}",
                             new { controller = "Order", action = "ShipmentDetails" });
+
 
             routeBuilder.MapControllerRoute("ReOrder",
                            pattern + "reorder/{orderId}",
@@ -882,14 +887,21 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Download", action = "GetLicense" });
 
 
-
             routeBuilder.MapControllerRoute("GetOrderNoteFile",
                             pattern + "download/ordernotefile/{ordernoteid}",
                             new { controller = "Download", action = "GetOrderNoteFile" });
 
+            routeBuilder.MapControllerRoute("GetShipmentNoteFile",
+                            pattern + "download/shipmentnotefile/{shipmentnoteid}",
+                            new { controller = "Download", action = "GetShipmentNoteFile" });
+
             routeBuilder.MapControllerRoute("GetCustomerNoteFile",
                             pattern + "download/customernotefile/{customernoteid}",
                             new { controller = "Download", action = "GetCustomerNoteFile" });
+
+            routeBuilder.MapControllerRoute("GetReturnRequestNoteFile",
+                            pattern + "download/returnrequestnotefile/{returnrequestnoteid}",
+                            new { controller = "Download", action = "GetReturnRequestNoteFile" });
 
             routeBuilder.MapControllerRoute("GetDocumentFile",
                             pattern + "download/documentfile/{documentid}",

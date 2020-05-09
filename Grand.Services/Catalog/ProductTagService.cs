@@ -29,6 +29,12 @@ namespace Grand.Services.Catalog
         private const string PRODUCTTAG_COUNT_KEY = "Grand.producttag.count-{0}";
 
         /// <summary>
+        /// Key for all tags
+        /// </summary>
+        private const string PRODUCTTAG_ALL_KEY = "Grand.producttag.all";
+
+
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string PRODUCTTAG_PATTERN_KEY = "Grand.producttag.";
@@ -136,8 +142,11 @@ namespace Grand.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual async Task<IList<ProductTag>> GetAllProductTags()
         {
-            var query = _productTagRepository.Table;
-            return await query.ToListAsync();
+            return await _cacheManager.GetAsync(PRODUCTTAG_ALL_KEY, async () =>
+            {
+                var query = _productTagRepository.Table;
+                return await query.ToListAsync();
+            });
         }
 
         /// <summary>

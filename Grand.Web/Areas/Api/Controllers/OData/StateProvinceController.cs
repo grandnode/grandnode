@@ -1,6 +1,7 @@
-﻿using Grand.Api.Controllers;
-using Grand.Api.Interfaces;
+﻿using Grand.Api.DTOs.Common;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class StateProvinceController : BaseODataController
     {
-        private readonly ICommonApiService _commonApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public StateProvinceController(ICommonApiService commonApiService, IPermissionService permissionService)
+        public StateProvinceController(IMediator mediator, IPermissionService permissionService)
         {
-            _commonApiService = commonApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -26,8 +27,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Countries))
                 return Forbid();
 
-            var states = _commonApiService.GetStates().FirstOrDefault(x => x.Id == key);
-            if (states == null)
+            var states = await _mediator.Send(new GetQuery<StateProvinceDto>() { Id = key });
+            if (!states.Any())
                 return NotFound();
 
             return Ok(states);
@@ -40,7 +41,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Countries))
                 return Forbid();
 
-            return Ok(_commonApiService.GetStates());
+            return Ok(await _mediator.Send(new GetQuery<StateProvinceDto>()));
         }
     }
 }

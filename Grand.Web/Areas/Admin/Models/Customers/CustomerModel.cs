@@ -296,22 +296,18 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public override string Id { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.ID")]
             public int OrderNumber { get; set; }
-
+            [GrandResourceDisplayName("Admin.Customers.Customers.Orders.Code")]
+            public string OrderCode { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.OrderStatus")]
             public string OrderStatus { get; set; }
-
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.PaymentStatus")]
             public string PaymentStatus { get; set; }
-
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.ShippingStatus")]
             public string ShippingStatus { get; set; }
-
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.OrderTotal")]
             public string OrderTotal { get; set; }
-
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.Store")]
             public string StoreName { get; set; }
-
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.CreatedOn")]
             public DateTime CreatedOn { get; set; }
         }

@@ -67,6 +67,7 @@ namespace Grand.Services.Orders.Tests
         private AddressSettings _addressSettings;
         private IVendorService _vendorService;
         private ICustomerService _customerService;
+        private ICustomerProductService _customerProductService;
         private ICurrencyService _currencyService;
         private IServiceProvider _serviceProvider;
         private IStateProvinceService _stateProvinceService;
@@ -108,10 +109,11 @@ namespace Grand.Services.Orders.Tests
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
             _customerService = new Mock<ICustomerService>().Object;
+            _customerProductService = new Mock<ICustomerProductService>().Object;
 
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService,
-                _manufacturerService, _productAttributeParser, _productService, _customerService,
+                _manufacturerService, _productAttributeParser, _productService, _customerProductService,
                 _vendorService, _currencyService,
                 _shoppingCartSettings, _catalogSettings);
 

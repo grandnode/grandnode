@@ -10,8 +10,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -33,17 +32,10 @@ namespace Grand.Services.Customers
         private readonly IRepository<InteractiveForm> _interactiveFormRepository;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IProductService _productService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IWorkContext _workContext;
-        private readonly ICustomerService _customerService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerTagService _customerTagService;
         private readonly ICacheManager _cacheManager;
         private readonly IPopupService _popupService;
-        private readonly IStoreContext _storeContext;
-        private readonly ILocalizationService _localizationService;
+        private readonly IServiceProvider _serviceProvider;
         #endregion
 
         #region Ctor
@@ -55,17 +47,10 @@ namespace Grand.Services.Customers
             IRepository<InteractiveForm> interactiveFormRepository,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
-            IProductService productService,
-            IProductAttributeParser productAttributeParser,
-            IWorkflowMessageService workflowMessageService,
             IWorkContext workContext,
-            ICustomerService customerService,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerTagService customerTagService,
             ICacheManager cacheManager,
             IPopupService popupService,
-            IStoreContext storeContext,
-            ILocalizationService localizationService)
+            IServiceProvider serviceProvider)
         {
             _customerActionRepository = customerActionRepository;
             _customerActionTypeRepository = customerActionTypeRepository;
@@ -74,23 +59,16 @@ namespace Grand.Services.Customers
             _interactiveFormRepository = interactiveFormRepository;
             _activityLogRepository = activityLogRepository;
             _activityLogTypeRepository = activityLogTypeRepository;
-            _productService = productService;
-            _productAttributeParser = productAttributeParser;
-            _workflowMessageService = workflowMessageService;
             _workContext = workContext;
-            _customerService = customerService;
-            _customerAttributeParser = customerAttributeParser;
-            _customerTagService = customerTagService;
             _cacheManager = cacheManager;
             _popupService = popupService;
-            _storeContext = storeContext;
-            _localizationService = localizationService;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
 
         #region Utilities
-        
+
         protected async Task<IList<CustomerActionType>> GetAllCustomerActionType()
         {
             return await _cacheManager.GetAsync(CUSTOMER_ACTION_TYPE, () =>
@@ -260,7 +238,8 @@ namespace Grand.Services.Customers
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.Store)
                 {
-                    cond = ConditionStores(item, _storeContext.CurrentStore.Id);
+                    var storeContext = _serviceProvider.GetRequiredService<IStoreContext>();
+                    cond = ConditionStores(item, storeContext.CurrentStore.Id);
                 }
 
                 if (action.Condition == CustomerActionConditionEnum.OneOfThem && cond)
@@ -354,12 +333,13 @@ namespace Grand.Services.Customers
         protected bool ConditionProductAttribute(CustomerAction.ActionCondition condition, Product product, string AttributesXml)
         {
             bool cond = false;
+            var productAttributeParser = _serviceProvider.GetRequiredService<IProductAttributeParser>();
             if (condition.Condition == CustomerActionConditionEnum.OneOfThem)
             {
-                var attributes = _productAttributeParser.ParseProductAttributeMappings(product, AttributesXml);
+                var attributes = productAttributeParser.ParseProductAttributeMappings(product, AttributesXml);
                 foreach (var attr in attributes)
                 {
-                    var attributeValuesStr = _productAttributeParser.ParseValues(AttributesXml, attr.Id);
+                    var attributeValuesStr = productAttributeParser.ParseValues(AttributesXml, attr.Id);
                     foreach (var attrV in attributeValuesStr)
                     {
                         var attrsv = attr.ProductAttributeValues.Where(x => x.Id == attrV).FirstOrDefault();
@@ -376,13 +356,13 @@ namespace Grand.Services.Customers
                 cond = true;
                 foreach (var itemPA in condition.ProductAttribute)
                 {
-                    var attributes = _productAttributeParser.ParseProductAttributeMappings(product, AttributesXml);
+                    var attributes = productAttributeParser.ParseProductAttributeMappings(product, AttributesXml);
                     if (attributes.Where(x => x.ProductAttributeId == itemPA.ProductAttributeId).Count() > 0)
                     {
                         cond = false;
                         foreach (var attr in attributes.Where(x => x.ProductAttributeId == itemPA.ProductAttributeId))
                         {
-                            var attributeValuesStr = _productAttributeParser.ParseValues(AttributesXml, attr.Id);
+                            var attributeValuesStr = productAttributeParser.ParseValues(AttributesXml, attr.Id);
                             foreach (var attrV in attributeValuesStr)
                             {
                                 var attrsv = attr.ProductAttributeValues.Where(x => x.Id == attrV).FirstOrDefault();
@@ -478,7 +458,7 @@ namespace Grand.Services.Customers
             bool cond = false;
             if (customer != null)
             {
-                var _genericAttributes = (await _customerService.GetCustomerById(customer.Id)).GenericAttributes;
+                var _genericAttributes = customer.GenericAttributes;
                 if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
                 {
                     cond = true;
@@ -497,14 +477,16 @@ namespace Grand.Services.Customers
                     }
                 }
             }
-            return cond;
+            return await Task.FromResult(cond);
         }
         protected async Task<bool> ConditionCustomerAttribute(CustomerAction.ActionCondition condition, Customer customer)
         {
             bool cond = false;
             if (customer != null)
             {
-                var _genericAttributes = (await _customerService.GetCustomerById(customer.Id)).GenericAttributes;
+                var customerAttributeParser = _serviceProvider.GetRequiredService<ICustomerAttributeParser>();
+
+                var _genericAttributes = customer.GenericAttributes;
                 if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
                 {
                     var customCustomerAttributes = _genericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
@@ -512,7 +494,7 @@ namespace Grand.Services.Customers
                     {
                         if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
                         {
-                            var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
+                            var selectedValues = await customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
                             cond = true;
                             foreach (var item in condition.CustomCustomerAttributes)
                             {
@@ -535,7 +517,7 @@ namespace Grand.Services.Customers
                     {
                         if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
                         {
-                            var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
+                            var selectedValues = await customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
                             foreach (var item in condition.CustomCustomerAttributes)
                             {
                                 var _fields = item.RegisterField.Split(':');
@@ -574,23 +556,24 @@ namespace Grand.Services.Customers
 
             if (action.ReactionType == CustomerReactionTypeEnum.Email)
             {
+                var workflowMessageService = _serviceProvider.GetRequiredService<IWorkflowMessageService>();
                 if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id)
                 {
                     if (cartItem != null)
-                        await _workflowMessageService.SendCustomerActionEvent_AddToCart_Notification(action, cartItem,
+                        await workflowMessageService.SendCustomerActionEvent_AddToCart_Notification(action, cartItem,
                             _workContext.WorkingLanguage.Id, customer);
                 }
 
                 if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id)
                 {
                     if (order != null)
-                        await _workflowMessageService.SendCustomerActionEvent_AddToOrder_Notification(action, order, customer,
+                        await workflowMessageService.SendCustomerActionEvent_AddToOrder_Notification(action, order, customer,
                             _workContext.WorkingLanguage.Id);
                 }
 
                 if (action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id && action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id)
                 {
-                    await _workflowMessageService.SendCustomerActionEvent_Notification(action,
+                    await workflowMessageService.SendCustomerActionEvent_Notification(action,
                         _workContext.WorkingLanguage.Id, customer);
                 }
             }
@@ -709,8 +692,7 @@ namespace Grand.Services.Customers
                     body = body.Replace(string.Format("%{0}%", item.SystemName), radio);
                 }
             }
-
-            body = body.Replace("%sendbutton%", "<input type=\"submit\" id=\"send-interactive-form\" class=\"btn btn-success interactive-form-button\" value=\"" + _localizationService.GetResource("PopupInteractiveForm.Send", _workContext.WorkingLanguage.Id) + " \" />");
+            body = body.Replace("%sendbutton%", "<input type=\"submit\" id=\"send-interactive-form\" class=\"btn btn-success interactive-form-button\" value=\"Send\" \" />");
             body = body.Replace("%errormessage%", "<div class=\"message-error\"><div class=\"validation-summary-errors\"><div id=\"errorMessages\"></div></div></div>");
 
             return body;
@@ -720,11 +702,12 @@ namespace Grand.Services.Customers
         {
             if (customer.CustomerRoles.Where(x => x.Id == action.CustomerRoleId).Count() == 0)
             {
-                var customerRole = await _customerService.GetCustomerRoleById(action.CustomerRoleId);
+                var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+                var customerRole = await customerService.GetCustomerRoleById(action.CustomerRoleId);
                 if (customerRole != null)
                 {
                     customerRole.CustomerId = customer.Id;
-                    await _customerService.InsertCustomerRoleInCustomer(customerRole);
+                    await customerService.InsertCustomerRoleInCustomer(customerRole);
                 }
             }
         }
@@ -733,7 +716,8 @@ namespace Grand.Services.Customers
         {
             if (customer.CustomerTags.Where(x => x == action.CustomerTagId).Count() == 0)
             {
-                await _customerTagService.InsertTagToCustomer(action.CustomerTagId, customer.Id);
+                var customerTagService = _serviceProvider.GetRequiredService<ICustomerTagService>();
+                await customerTagService.InsertTagToCustomer(action.CustomerTagId, customer.Id);
             }
         }
 
@@ -784,10 +768,12 @@ namespace Grand.Services.Customers
                 {
                     if (!UsedAction(item.Id, order.CustomerId))
                     {
-                        var customer = await _customerService.GetCustomerById(order.CustomerId);
+                        var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+                        var productService = _serviceProvider.GetRequiredService<IProductService>();
+                        var customer = await customerService.GetCustomerById(order.CustomerId);
                         foreach (var orderItem in order.OrderItems)
                         {
-                            var product = await _productService.GetProductById(orderItem.ProductId);
+                            var product = await productService.GetProductById(orderItem.ProductId);
                             if (await Condition(item, product, orderItem.AttributesXml, customer, null, null))
                             {
                                 await Reaction(item, customer, null, order);

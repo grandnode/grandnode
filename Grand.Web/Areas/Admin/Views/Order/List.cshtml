@@ -17,28 +17,28 @@
                     <div class="actions btn-group btn-group-devided util-btn-margin-bottom-5">
                         @if (!Model.IsLoggedInAsVendor)
                         {
-                        <div class="btn-group btn-group-devided">
-                            <a class="btn default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                <i class="fa fa-download"></i>
-                                @T("Admin.Common.Export")
-                                <i class="fa fa-angle-down"></i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <input type="submit" name="exportxml-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.All")" />
-                                </li>
-                                <li>
-                                    <input type="button" id="exportxml-selected" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.Selected")" />
-                                </li>
-                                <li>
-                                    <input type="submit" name="exportexcel-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.All")" />
-                                </li>
-                                <li>
-                                    <input type="button" id="exportexcel-selected" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.Selected")" />
-                                </li>
-                            </ul>
-                            <vc:admin-widget widget-zone="order_list_buttons" additional-data="null" />
-                        </div>
+                            <div class="btn-group btn-group-devided">
+                                <a class="btn default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    <i class="fa fa-download"></i>
+                                    @T("Admin.Common.Export")
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li>
+                                        <input type="submit" name="exportxml-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.All")" />
+                                    </li>
+                                    <li>
+                                        <input type="button" id="exportxml-selected" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.Selected")" />
+                                    </li>
+                                    <li>
+                                        <input type="submit" name="exportexcel-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.All")" />
+                                    </li>
+                                    <li>
+                                        <input type="button" id="exportexcel-selected" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.Selected")" />
+                                    </li>
+                                </ul>
+                                <vc:admin-widget widget-zone="order_list_buttons" additional-data="null" />
+                            </div>
                         }
                         <button type="submit" name="pdf-invoice-all" class="btn green">
                             <i class="fa fa-file-pdf-o"></i>
@@ -47,6 +47,10 @@
                         <button type="button" id="pdf-invoice-selected" class="btn green">
                             <i class="fa fa-file-pdf-o"></i>
                             @T("Admin.Orders.PdfInvoice.Selected")
+                        </button>
+                        <button type="button" name="delete-selected" id="delete-selected" class="btn red" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); ">
+                            <i class="fa fa-trash-o"></i>
+                            @T("Admin.Common.Delete.Selected")
                         </button>
                     </div>
 
@@ -63,13 +67,13 @@
                             </div>
                         </div>
                         <div class="form-body col-md-6">
-                            <div class="form-group">
+                            <div class="form-group form-inline">
                                 <admin-label asp-for="GoDirectlyToNumber" class="col-xs-4 col-sm-4 col-md-4 control-label" />
                                 <div class="col-xs-8 col-md-8 col-sm-8">
                                     <div class="input-group">
                                         <admin-input asp-for="GoDirectlyToNumber" />
-                                        <input type="submit" name="go-to-order-by-number" id="gotoorderbynumber" class="k-button" value="@T("Admin.Common.Go")" />
                                     </div>
+                                    <input type="submit" name="go-to-order-by-number" id="gotoorderbynumber" class="input-group k-button" value="@T("Admin.Common.Go")" />
                                 </div>
                             </div>
                         </div>
@@ -244,7 +248,7 @@
                                 ShippingStatus: { editable: false, type: "string" },
                                 CustomerEmail: { editable: false, type: "string" },
                                 CustomerFullName: { editable: false, type: "string" },
-                                OrderStatusId: { editable: false, type: "number" }
+                                OrderStatusId: { editable: false, type: "number" },
                             }
                         }
                     },
@@ -305,8 +309,8 @@
                             '# if(OrderStatusId == 30) {#success #} #' +
                             '# if(OrderStatusId == 40) {#danger #} #' +
                             '">#=OrderStatus#</span></a></h4>'
-                    },</text>
-                                }
+                        },</text>
+                    }
                     {
                         field: "PaymentStatus",
                         title: "@T("Admin.Orders.Fields.PaymentStatus")",
@@ -327,11 +331,15 @@
                         field: "CustomerEmail",
                         title: "@T("Admin.Orders.Fields.Customer")",
                         width: 220,
-                        template: function (dataItem) {
-                            return "<a class=\"k-link\" href='@Url.Content("~/Admin/Customer/Edit/")" + dataItem.CustomerId + "'>" + kendo.htmlEncode(dataItem.CustomerFullName)+ " ("+dataItem.CustomerEmail+")</a>";
+                        @if (!Model.IsLoggedInAsVendor)
+                        {
+                            <text>
+                            template: function(dataItem) {
+                                    return "<a class=\"k-link\" href='@Url.Content("~/Admin/Customer/Edit/")" + dataItem.CustomerId + "'>" + kendo.htmlEncode(dataItem.CustomerFullName) + " (" + dataItem.CustomerEmail + ")</a>";
+                            }
+                            </text>
                         }
-
-                    },
+                        },
                     {
                         field: "StoreName",
                         title: "@T("Admin.Orders.Fields.Store")",
@@ -343,7 +351,7 @@
                         width: 180,
                         type: "date",
                         format: "{0:G}",
-                        
+
                     },
                     @if (!Model.IsLoggedInAsVendor)
                     {
@@ -433,6 +441,33 @@
                 }
             });
 
+            $('#delete-selected').click(function(e) {
+
+                e.preventDefault();
+
+                var postData = {
+                    selectedIds: selectedIds
+                };
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("DeleteSelected", "Order"))",
+                    data: postData,
+                    complete: function(data) {
+                        //reload grid
+                        var grid = $('#orders-grid').data('kendoGrid');
+                        grid.dataSource.read();
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
+                    },
+                    traditional: true
+                });
+                return false;
+            });
+
             $('#mastercheckbox').click(function () {
                 $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
             });
@@ -475,7 +510,8 @@
                 BillingCountryId: $('#@Html.FieldIdFor(model => model.BillingCountryId)').val(),
                 PaymentMethodSystemName: $('#@Html.FieldIdFor(model => model.PaymentMethodSystemName)').val(),
                 ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
-                OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
+                OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val(),
+                GoDirectlyToNumber: $('#@Html.FieldIdFor(model => model.GoDirectlyToNumber)').val(),
             };
             addAntiForgeryToken(data);
             return data;

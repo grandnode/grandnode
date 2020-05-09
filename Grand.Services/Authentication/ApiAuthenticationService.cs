@@ -58,6 +58,9 @@ namespace Grand.Services.Authentication
 
         public virtual async Task SignIn()
         {
+            if (string.IsNullOrEmpty(_email))
+                throw new ArgumentNullException(nameof(_email));
+
             await SignIn(_email);
         }
 
@@ -67,7 +70,7 @@ namespace Grand.Services.Authentication
         ///<param name="email">Email</param>
         public virtual async Task SignIn(string email)
         {
-            if (string.IsNullOrEmpty(_email))
+            if (string.IsNullOrEmpty(email))
                 throw new ArgumentNullException(nameof(email));
 
             var customer = await _customerService.GetCustomerByEmail(email);

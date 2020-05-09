@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Grand.Core.Caching;
+﻿using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Media;
@@ -22,6 +17,11 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.ShoppingCart;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.ShoppingCart
 {
@@ -48,23 +48,23 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly MediaSettings _mediaSettings;
 
         public GetMiniShoppingCartHandler(
-            IShoppingCartService shoppingCartService, 
-            IOrderTotalCalculationService orderTotalCalculationService, 
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter, 
-            ITaxService taxService, 
-            ICacheManager cacheManager, 
-            ICheckoutAttributeService checkoutAttributeService, 
-            IOrderProcessingService orderProcessingService, 
-            IProductService productService, 
-            IProductAttributeFormatter productAttributeFormatter, 
-            IProductAttributeParser productAttributeParser, 
-            ILocalizationService localizationService, 
-            IPriceCalculationService priceCalculationService, 
-            IPictureService pictureService, 
-            ShoppingCartSettings shoppingCartSettings, 
-            OrderSettings orderSettings, 
-            TaxSettings taxSettings, 
+            IShoppingCartService shoppingCartService,
+            IOrderTotalCalculationService orderTotalCalculationService,
+            ICurrencyService currencyService,
+            IPriceFormatter priceFormatter,
+            ITaxService taxService,
+            ICacheManager cacheManager,
+            ICheckoutAttributeService checkoutAttributeService,
+            IOrderProcessingService orderProcessingService,
+            IProductService productService,
+            IProductAttributeFormatter productAttributeFormatter,
+            IProductAttributeParser productAttributeParser,
+            ILocalizationService localizationService,
+            IPriceCalculationService priceCalculationService,
+            IPictureService pictureService,
+            ShoppingCartSettings shoppingCartSettings,
+            OrderSettings orderSettings,
+            TaxSettings taxSettings,
             MediaSettings mediaSettings)
         {
             _shoppingCartService = shoppingCartService;
@@ -98,7 +98,13 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
             if (request.Customer.ShoppingCartItems.Any())
             {
-                var cart = _shoppingCartService.GetShoppingCart(request.Store.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+                var shoppingCartTypes = new List<ShoppingCartType>();
+                shoppingCartTypes.Add(ShoppingCartType.ShoppingCart);
+                shoppingCartTypes.Add(ShoppingCartType.Auctions);
+                if (_shoppingCartSettings.AllowOnHoldCart)
+                    shoppingCartTypes.Add(ShoppingCartType.OnHoldCart);
+
+                var cart = _shoppingCartService.GetShoppingCart(request.Store.Id, shoppingCartTypes.ToArray());
                 model.TotalProducts = cart.Sum(x => x.Quantity);
                 if (cart.Any())
                 {
@@ -126,7 +132,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         return checkoutAttributes.Any();
                     });
 
-                    bool minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
+                    bool minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmount(cart.Where
+                        (x => x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList());
                     model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage &&
                         minOrderSubtotalAmountOk &&
                         !checkoutAttributesExist;

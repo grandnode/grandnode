@@ -712,6 +712,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteStartElement("Order");
 
                 xmlWriter.WriteElementString("OrderId", null, order.Id.ToString());
+                xmlWriter.WriteElementString("OrderCode", null, order.Code);
                 xmlWriter.WriteElementString("OrderGuid", null, order.OrderGuid.ToString());
                 xmlWriter.WriteElementString("StoreId", null, order.StoreId.ToString());
                 xmlWriter.WriteElementString("CustomerId", null, order.CustomerId.ToString());
@@ -1205,6 +1206,7 @@ namespace Grand.Services.ExportImport
             var properties = new[]
             {
                     new PropertyByName<Order>("OrderNumber", p=>p.OrderNumber),
+                    new PropertyByName<Order>("OrderCode", p=>p.Code),
                     new PropertyByName<Order>("OrderId", p=>p.Id),
                     new PropertyByName<Order>("StoreId", p=>p.StoreId),
                     new PropertyByName<Order>("OrderGuid",p=>p.OrderGuid),

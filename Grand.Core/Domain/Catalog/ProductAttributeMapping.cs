@@ -35,6 +35,11 @@ namespace Grand.Core.Domain.Catalog
         public bool IsRequired { get; set; }
 
         /// <summary>
+        /// Gets or sets whether the attribute will be shown on the catalog page
+        /// </summary>
+        public bool ShowOnCatalogPage { get; set; }
+
+        /// <summary>
         /// Gets or sets the attribute control type identifier
         /// </summary>
         public int AttributeControlTypeId { get; set; }

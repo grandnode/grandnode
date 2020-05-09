@@ -95,6 +95,25 @@ namespace Grand.Api.Extensions
 
         #endregion
 
+        #region Product attribute mapping
+
+        public static ProductAttributeMappingDto ToModel(this ProductAttributeMapping entity)
+        {
+            return entity.MapTo<ProductAttributeMapping, ProductAttributeMappingDto>();
+        }
+
+        public static ProductAttributeMapping ToEntity(this ProductAttributeMappingDto model)
+        {
+            return model.MapTo<ProductAttributeMappingDto, ProductAttributeMapping>();
+        }
+
+        public static ProductAttributeMapping ToEntity(this ProductAttributeMappingDto model, ProductAttributeMapping destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region Specification attribute
         public static SpecificationAttributeDto ToModel(this SpecificationAttribute entity)
         {

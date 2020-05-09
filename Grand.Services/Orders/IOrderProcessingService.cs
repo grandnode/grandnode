@@ -19,25 +19,11 @@ namespace Grand.Services.Orders
         Task SendNotification(Order order);
 
         /// <summary>
-        /// Checks order status
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <returns>Validated order</returns>
-        Task CheckOrderStatus(Order order);
-
-        /// <summary>
         /// Places an order
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <returns>Place order result</returns>
         Task<PlaceOrderResult> PlaceOrder(ProcessPaymentRequest processPaymentRequest);
-
-        /// <summary>
-        /// Deletes an order
-        /// </summary>
-        /// <param name="order">The order</param>
-        Task DeleteOrder(Order order);
-
 
         /// <summary>
         /// Process next recurring psayment
@@ -60,34 +46,12 @@ namespace Grand.Services.Orders
         Task<bool> CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment);
         
         /// <summary>
-        /// Send a shipment
-        /// </summary>
-        /// <param name="shipment">Shipment</param>
-        /// <param name="notifyCustomer">True to notify customer</param>
-        Task Ship(Shipment shipment, bool notifyCustomer);
-
-        /// <summary>
-        /// Marks a shipment as delivered
-        /// </summary>
-        /// <param name="shipment">Shipment</param>
-        /// <param name="notifyCustomer">True to notify customer</param>
-        Task Deliver(Shipment shipment, bool notifyCustomer);
-
-        /// <summary>
         /// Gets a value indicating whether cancel is allowed
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether cancel is allowed</returns>
         bool CanCancelOrder(Order order);
-
-        /// <summary>
-        /// Cancels order
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <param name="notifyCustomer">True to notify customer</param>
-        /// <param name="notifyStoreOwner">True to notify store owner</param>
-        Task CancelOrder(Order order, bool notifyCustomer, bool notifyStoreOwner = false);
-
+        
         /// <summary>
         /// Gets a value indicating whether order can be marked as authorized
         /// </summary>
@@ -127,8 +91,6 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         Task MarkOrderAsPaid(Order order);
-
-
 
         /// <summary>
         /// Gets a value indicating whether refund from admin panel is allowed
@@ -214,19 +176,6 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         Task VoidOffline(Order order);
-
-        /// <summary>
-        /// Place order items in current user shopping cart.
-        /// </summary>
-        /// <param name="order">The order</param>
-        Task ReOrder(Order order);
-
-        /// <summary>
-        /// Check whether return request is allowed
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <returns>Result</returns>
-        Task<bool> IsReturnRequestAllowed(Order order);
 
         /// <summary>
         /// Valdiate minimum order sub-total amount

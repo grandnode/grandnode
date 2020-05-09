@@ -7,7 +7,6 @@ namespace Grand.Plugin.Tests.ExchangeRate
     [TestClass]
     public class NbpExchangeTest
     {
-
         [TestMethod]
         public async Task SimpleTest()
         {
@@ -17,7 +16,7 @@ namespace Grand.Plugin.Tests.ExchangeRate
                 var result = await exchange.GetCurrencyLiveRates();
                 Assert.IsNotNull(result);
             }
-            catch 
+            catch
             {
                 Assert.IsFalse(false);
             }

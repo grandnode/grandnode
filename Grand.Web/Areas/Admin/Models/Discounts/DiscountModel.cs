@@ -112,6 +112,7 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
             [GrandResourceDisplayName("Admin.Promotions.Discounts.History.Order")]
             public string OrderId { get; set; }
             public int OrderNumber { get; set; }
+            public string OrderCode { get; set; }
 
             [GrandResourceDisplayName("Admin.Promotions.Discounts.History.OrderTotal")]
             public string OrderTotal { get; set; }

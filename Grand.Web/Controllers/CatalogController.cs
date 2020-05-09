@@ -217,6 +217,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> ManufacturerAll()
         {
             var model = await _mediator.Send(new GetManufacturerAll() {
+                Customer = _workContext.CurrentCustomer,
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore
             });
@@ -250,6 +251,7 @@ namespace Grand.Web.Controllers
                 Command = command,
                 Vendor = vendor,
                 Language = _workContext.WorkingLanguage,
+                Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore,
             });
             //review
@@ -312,7 +314,7 @@ namespace Grand.Web.Controllers
 
             //allow reviews only by customer that bought something from this vendor
             if (_vendorSettings.VendorReviewPossibleOnlyAfterPurchasing &&
-                    !(await _mediator.Send(new GetOrderQueryModel() {
+                    !(await _mediator.Send(new GetOrderQuery() {
                         CustomerId = _workContext.CurrentCustomer.Id,
                         VendorId = vendorId,
                         Os = OrderStatus.Complete,
@@ -322,7 +324,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var vendorReview = await _mediator.Send(new InsertVendorReviewCommand() { Vendor = vendor, Model = model });
+                var vendorReview = await _mediator.Send(new InsertVendorReviewCommand() { Vendor = vendor, Store = _storeContext.CurrentStore, Model = model });
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.AddVendorReview", vendor.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddVendorReview"), vendor.Name);
 
@@ -407,6 +409,7 @@ namespace Grand.Web.Controllers
                 Command = command,
                 Language = _workContext.WorkingLanguage,
                 ProductTag = productTag,
+                Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore
             });
             return View(model);
@@ -421,6 +424,7 @@ namespace Grand.Web.Controllers
                 Command = command,
                 Language = _workContext.WorkingLanguage,
                 ProductTag = productTag,
+                Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore
             });
             return View("ProductsByTag", model);

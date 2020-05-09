@@ -4,12 +4,15 @@ using Grand.Core.Domain.Catalog;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
+using Grand.Services.Queries.Models.Catalog;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +26,9 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
         private readonly ICacheManager _cacheManager;
-        private readonly IProductService _productService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private readonly CatalogSettings _catalogSettings;
 
         public GetManufacturerHandler(
@@ -32,7 +37,8 @@ namespace Grand.Web.Features.Handlers.Catalog
             IPriceFormatter priceFormatter,
             ICurrencyService currencyService,
             ICacheManager cacheManager,
-            IProductService productService,
+            ISpecificationAttributeService specificationAttributeService,
+            IHttpContextAccessor httpContextAccessor,
             CatalogSettings catalogSettings)
         {
             _mediator = mediator;
@@ -40,7 +46,8 @@ namespace Grand.Web.Features.Handlers.Catalog
             _priceFormatter = priceFormatter;
             _currencyService = currencyService;
             _cacheManager = cacheManager;
-            _productService = productService;
+            _specificationAttributeService = specificationAttributeService;
+            _httpContextAccessor = httpContextAccessor;
             _catalogSettings = catalogSettings;
         }
 
@@ -91,12 +98,14 @@ namespace Grand.Web.Features.Handlers.Catalog
                 {
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
-                    featuredProducts = (await _productService.SearchProducts(
-                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
-                       manufacturerId: request.Manufacturer.Id,
-                       storeId: request.Store.Id,
-                       visibleIndividuallyOnly: true,
-                       featuredProducts: true)).products;
+                    featuredProducts = (await _mediator.Send(new GetSearchProductsQuery() {
+                        PageSize = _catalogSettings.LimitOfFeaturedProducts,
+                        ManufacturerId = request.Manufacturer.Id,
+                        Customer = request.Customer,
+                        StoreId = request.Store.Id,
+                        VisibleIndividuallyOnly = true,
+                        FeaturedProducts = true
+                    })).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
                     await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, CommonHelper.CacheTimeMinutes);
                 }
@@ -104,37 +113,52 @@ namespace Grand.Web.Features.Handlers.Catalog
                 {
                     //cache indicates that the manufacturer has featured products
                     //let's load them
-                    featuredProducts = (await _productService.SearchProducts(
-                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
-                       manufacturerId: request.Manufacturer.Id,
-                       storeId: request.Store.Id,
-                       visibleIndividuallyOnly: true,
-                       featuredProducts: true)).products;
+                    featuredProducts = (await _mediator.Send(new GetSearchProductsQuery() {
+                        PageSize = _catalogSettings.LimitOfFeaturedProducts,
+                        ManufacturerId = request.Manufacturer.Id,
+                        Customer = request.Customer,
+                        StoreId = request.Store.Id,
+                        VisibleIndividuallyOnly = true,
+                        FeaturedProducts = true
+                    })).products;
                 }
-                if (featuredProducts != null)
+                if (featuredProducts != null && featuredProducts.Any())
                 {
                     model.FeaturedProducts = (await _mediator.Send(new GetProductOverview() {
                         Products = featuredProducts,
                     })).ToList();
                 }
             }
-            var products = (await _productService.SearchProducts(
-                manufacturerId: request.Manufacturer.Id,
-                storeId: request.Store.Id,
-                visibleIndividuallyOnly: true,
-                featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
-                priceMin: minPriceConverted,
-                priceMax: maxPriceConverted,
-                orderBy: (ProductSortingEnum)request.Command.OrderBy,
-                pageIndex: request.Command.PageNumber - 1,
-                pageSize: request.Command.PageSize)).products;
+
+            IList<string> alreadyFilteredSpecOptionIds = await model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds
+                (_httpContextAccessor, _specificationAttributeService);
+
+            var products = (await _mediator.Send(new GetSearchProductsQuery() {
+                LoadFilterableSpecificationAttributeOptionIds = !_catalogSettings.IgnoreFilterableSpecAttributeOption,
+                ManufacturerId = request.Manufacturer.Id,
+                Customer = request.Customer,
+                StoreId = request.Store.Id,
+                VisibleIndividuallyOnly = true,
+                FeaturedProducts = _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
+                PriceMin = minPriceConverted,
+                PriceMax = maxPriceConverted,
+                FilteredSpecs = alreadyFilteredSpecOptionIds,
+                OrderBy = (ProductSortingEnum)request.Command.OrderBy,
+                PageIndex = request.Command.PageNumber - 1,
+                PageSize = request.Command.PageSize
+            }));
 
             model.Products = (await _mediator.Send(new GetProductOverview() {
-                Products = products,
+                Products = products.products,
                 PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages
             })).ToList();
 
-            model.PagingFilteringContext.LoadPagedList(products);
+            model.PagingFilteringContext.LoadPagedList(products.products);
+
+            //specs
+            await model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+                products.filterableSpecificationAttributeOptionIds,
+                _specificationAttributeService, _webHelper, _cacheManager, request.Language.Id);
 
             return model;
         }

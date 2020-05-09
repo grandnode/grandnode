@@ -4,7 +4,7 @@
 @{
     var stores = (await storeService.GetAllStores()).Select(store => new SelectListItem
     {
-        Text = store.Name,
+        Text = store.Shortcut,
         Value = store.Id,
     }).ToList();
     var permission = await permissionService.Authorize(Grand.Services.Security.PermissionSystemName.GenericAttributes);

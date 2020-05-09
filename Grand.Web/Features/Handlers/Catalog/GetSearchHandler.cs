@@ -8,12 +8,14 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
+using Grand.Services.Queries.Models.Catalog;
 using Grand.Services.Vendors;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -31,9 +33,11 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IManufacturerService _manufacturerService;
         private readonly IVendorService _vendorService;
         private readonly ICurrencyService _currencyService;
-        private readonly IProductService _productService;
         private readonly IMediator _mediator;
         private readonly ISearchTermService _searchTermService;
+        private readonly IWebHelper _webHelper;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
@@ -45,9 +49,11 @@ namespace Grand.Web.Features.Handlers.Catalog
             IManufacturerService manufacturerService,
             IVendorService vendorService,
             ICurrencyService currencyService,
-            IProductService productService,
             IMediator mediator,
             ISearchTermService searchTermService,
+            IWebHelper webHelper,
+            ISpecificationAttributeService specificationAttributeService,
+            IHttpContextAccessor httpContextAccessor,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings)
         {
@@ -57,9 +63,11 @@ namespace Grand.Web.Features.Handlers.Catalog
             _manufacturerService = manufacturerService;
             _vendorService = vendorService;
             _currencyService = currencyService;
-            _productService = productService;
             _mediator = mediator;
             _searchTermService = searchTermService;
+            _webHelper = webHelper;
+            _specificationAttributeService = specificationAttributeService;
+            _httpContextAccessor = httpContextAccessor;
             _catalogSettings = catalogSettings;
             _vendorSettings = vendorSettings;
         }
@@ -225,28 +233,40 @@ namespace Grand.Web.Features.Handlers.Catalog
 
                     var searchInProductTags = searchInDescriptions;
 
+                    IList<string> alreadyFilteredSpecOptionIds = await request.Model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds
+                        (_httpContextAccessor, _specificationAttributeService);
+
                     //products
-                    products = (await _productService.SearchProducts(
-                        categoryIds: categoryIds,
-                        manufacturerId: manufacturerId,
-                        storeId: request.Store.Id,
-                        visibleIndividuallyOnly: true,
-                        priceMin: minPriceConverted,
-                        priceMax: maxPriceConverted,
-                        keywords: searchTerms,
-                        searchDescriptions: searchInDescriptions,
-                        searchSku: searchInDescriptions,
-                        searchProductTags: searchInProductTags,
-                        languageId: request.Language.Id,
-                        orderBy: (ProductSortingEnum)request.Command.OrderBy,
-                        pageIndex: request.Command.PageNumber - 1,
-                        pageSize: request.Command.PageSize,
-                        vendorId: vendorId)).products;
+                    var searchproducts = (await _mediator.Send(new GetSearchProductsQuery() {
+                        LoadFilterableSpecificationAttributeOptionIds = !_catalogSettings.IgnoreFilterableSpecAttributeOption,
+                        CategoryIds = categoryIds,
+                        ManufacturerId = manufacturerId,
+                        Customer = request.Customer,
+                        StoreId = request.Store.Id,
+                        VisibleIndividuallyOnly = true,
+                        PriceMin = minPriceConverted,
+                        PriceMax = maxPriceConverted,
+                        Keywords = searchTerms,
+                        SearchDescriptions = searchInDescriptions,
+                        SearchSku = searchInDescriptions,
+                        SearchProductTags = searchInProductTags,
+                        FilteredSpecs = alreadyFilteredSpecOptionIds,
+                        LanguageId = request.Language.Id,
+                        OrderBy = (ProductSortingEnum)request.Command.OrderBy,
+                        PageIndex = request.Command.PageNumber - 1,
+                        PageSize = request.Command.PageSize,
+                        VendorId = vendorId
+                    }));
 
                     request.Model.Products = (await _mediator.Send(new GetProductOverview() {
-                        Products = products,
+                        Products = searchproducts.products,
                         PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages
                     })).ToList();
+
+                    //specs
+                    await request.Model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+                        searchproducts.filterableSpecificationAttributeOptionIds,
+                        _specificationAttributeService, _webHelper, _cacheManager, request.Language.Id);
 
                     request.Model.NoResults = !request.Model.Products.Any();
 
@@ -271,9 +291,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     }
                 }
             }
-
             request.Model.PagingFilteringContext.LoadPagedList(products);
-
             return request.Model;
         }
     }

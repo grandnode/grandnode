@@ -166,7 +166,7 @@
                                                     @if (!String.IsNullOrEmpty(topic.CustomerId))
                                                     {
                                                         <label>@T("Forum.Author"):</label>
-                                                        if (topic.AllowViewingProfiles)
+                                                        if (topic.AllowViewingProfiles && !string.IsNullOrEmpty(topic.CustomerName))
                                                         {
                                                             @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
                                                         }

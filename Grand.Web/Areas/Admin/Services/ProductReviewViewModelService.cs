@@ -51,7 +51,7 @@ namespace Grand.Web.Areas.Admin.Services
             var customer = await _customerService.GetCustomerById(productReview.CustomerId);
             var store = await _storeService.GetStoreById(productReview.StoreId);
             model.Id = productReview.Id;
-            model.StoreName = store != null ? store.Name : "";
+            model.StoreName = store != null ? store.Shortcut : "";
             model.ProductId = productReview.ProductId;
             model.ProductName = product.Name;
             model.CustomerId = productReview.CustomerId;
@@ -81,7 +81,7 @@ namespace Grand.Web.Areas.Admin.Services
             var model = new ProductReviewListModel();
 
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            var stores = (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)).Select(st => new SelectListItem() { Text = st.Name, Value = st.Id.ToString() });
+            var stores = (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)).Select(st => new SelectListItem() { Text = st.Shortcut, Value = st.Id.ToString() });
             foreach (var selectListItem in stores)
                 model.AvailableStores.Add(selectListItem);
             return model;

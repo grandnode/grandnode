@@ -7,14 +7,12 @@ using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Routing;
-using Grand.Framework.Security.Authorization;
 using Grand.Framework.Themes;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
 using Grand.Services.Configuration;
 using Grand.Services.Security;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -232,8 +230,6 @@ namespace Grand.Framework.Infrastructure.Extensions
             foreach (var instance in externalAuthInstances)
                 instance.Configure(authenticationBuilder, configuration);
 
-            services.AddSingleton<IAuthorizationPolicyProvider, PermisionPolicyProvider>();
-            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         }
 
         /// <summary>

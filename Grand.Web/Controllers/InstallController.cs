@@ -4,10 +4,12 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Plugins;
 using Grand.Framework.Security;
+using Grand.Services.Commands.Models.Security;
 using Grand.Services.Installation;
 using Grand.Services.Logging;
 using Grand.Services.Security;
 using Grand.Web.Models.Install;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,17 +30,18 @@ namespace Grand.Web.Controllers
         private readonly GrandConfig _config;
         private readonly ICacheManager _cacheManager;
         private readonly IServiceProvider _serviceProvider;
-
+        private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
 
         public InstallController(GrandConfig config, ICacheManager cacheManager,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider, IMediator mediator)
         {
             _config = config;
             _cacheManager = cacheManager;
             _serviceProvider = serviceProvider;
+            _mediator = mediator;
         }
 
         #endregion
@@ -241,7 +244,7 @@ namespace Grand.Web.Controllers
                     foreach (var providerType in permissionProviders)
                     {
                         var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
-                        await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
+                        await _mediator.Send(new InstallPermissionsCommand() { PermissionProvider = provider });
                     }
 
                     //restart application

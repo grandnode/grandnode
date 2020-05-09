@@ -7,15 +7,15 @@
 <partial name="_OldInternetExplorerWarning" />
 <main class="c-offcanvas-content-wrap">
     <partial name="Header" />
-        <div class="container page-container">
-            @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
-            @if (IsSectionDefined("Breadcrumb"))
-            {
-                @RenderSection("Breadcrumb")
-            }
-            @RenderBody()
-            @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
-        </div>
+    <div class="container page-container">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+    </div>
     @await Component.InvokeAsync("Footer")
 </main>
 <a class="js-offcanvas-trigger filter-button d-none" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("catalog.selectors.fiters")</span></a>

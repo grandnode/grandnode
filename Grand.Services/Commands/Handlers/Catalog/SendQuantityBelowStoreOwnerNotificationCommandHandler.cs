@@ -22,10 +22,10 @@ namespace Grand.Services.Commands.Handlers.Catalog
 
         public async Task<bool> Handle(SendQuantityBelowStoreOwnerNotificationCommand request, CancellationToken cancellationToken)
         {
-            if (request.ProductAttributeCombination != null)
-                await _workflowMessageService.SendQuantityBelowStoreOwnerNotification(request.Customer, request.Product, _localizationSettings.DefaultAdminLanguageId);
+            if (request.ProductAttributeCombination == null)
+                await _workflowMessageService.SendQuantityBelowStoreOwnerNotification(request.Product, _localizationSettings.DefaultAdminLanguageId);
             else
-                await _workflowMessageService.SendQuantityBelowStoreOwnerNotification(request.Customer, request.Product, request.ProductAttributeCombination, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendQuantityBelowStoreOwnerNotification(request.Product, request.ProductAttributeCombination, _localizationSettings.DefaultAdminLanguageId);
 
             return true;
         }

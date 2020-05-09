@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using System;
 
 namespace Grand.Framework.Mvc.Filters
@@ -68,16 +69,19 @@ namespace Grand.Framework.Mvc.Filters
                 if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
                     return;
                 
-                //don't validate on ChangePassword page
-                if (!(controllerName.Equals("Customer", StringComparison.OrdinalIgnoreCase) &&
+                //don't validate on ChangePassword page and store closed
+                if ((!(controllerName.Equals("Customer", StringComparison.OrdinalIgnoreCase) &&
                     actionName.Equals("ChangePassword", StringComparison.OrdinalIgnoreCase)))
+                    &&
+                    !(controllerName.Equals("Common", StringComparison.OrdinalIgnoreCase) &&
+                    actionName.Equals("StoreClosed", StringComparison.OrdinalIgnoreCase))
+                    )
                 {
                     //check password expiration
                     if (_workContext.CurrentCustomer.PasswordIsExpired(_customerSettings))
                     {
                         //redirect to ChangePassword page if expires
-                        var changePasswordUrl = new UrlHelper(context).RouteUrl("CustomerChangePassword");
-                        context.Result = new RedirectResult(changePasswordUrl);
+                        context.Result = new RedirectToRouteResult("CustomerChangePassword", new RouteValueDictionary());
                     }
                 }
             }

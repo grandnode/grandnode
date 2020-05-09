@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Catalog;
@@ -19,6 +14,11 @@ using Grand.Web.Features.Models.ShoppingCart;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.Products
 {
@@ -38,17 +38,17 @@ namespace Grand.Web.Features.Handlers.Products
         private readonly MediaSettings _mediaSettings;
 
         public GetProductDetailsAttributeChangeHandler(
-            IMediator mediator, 
-            IProductAttributeParser productAttributeParser, 
-            IPermissionService permissionService, 
-            IPriceCalculationService priceCalculationService, 
-            IBackInStockSubscriptionService backInStockSubscriptionService, 
-            ITaxService taxService, 
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter, 
-            ILocalizationService localizationService, 
-            IPictureService pictureService, 
-            ShoppingCartSettings shoppingCartSettings, 
+            IMediator mediator,
+            IProductAttributeParser productAttributeParser,
+            IPermissionService permissionService,
+            IPriceCalculationService priceCalculationService,
+            IBackInStockSubscriptionService backInStockSubscriptionService,
+            ITaxService taxService,
+            ICurrencyService currencyService,
+            IPriceFormatter priceFormatter,
+            ILocalizationService localizationService,
+            IPictureService pictureService,
+            ShoppingCartSettings shoppingCartSettings,
             MediaSettings mediaSettings)
         {
             _mediator = mediator;
@@ -111,7 +111,8 @@ namespace Grand.Web.Features.Handlers.Products
             model.StockAvailability = request.Product.FormatStockMessage(warehouseId, attributeXml, _localizationService, _productAttributeParser);
 
             //back in stock subscription
-            if (request.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes &&
+            if ((request.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes
+                || request.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock) &&
                 request.Product.BackorderMode == BackorderMode.NoBackorders &&
                 request.Product.AllowBackInStockSubscriptions)
             {
@@ -121,9 +122,15 @@ namespace Grand.Web.Features.Handlers.Products
                     if (request.Product.GetTotalStockQuantityForCombination(combination, warehouseId: request.Store.DefaultWarehouseId) <= 0)
                         model.DisplayBackInStockSubscription = true;
 
+                if (request.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                {
+                    model.DisplayBackInStockSubscription = request.Product.AllowBackInStockSubscriptions;
+                    attributeXml = "";
+                }
+
                 var subscription = await _backInStockSubscriptionService
                    .FindSubscription(request.Customer.Id,
-                    request.Product.Id, attributeXml, request.Store.Id, request.Product.UseMultipleWarehouses ? request.Store.DefaultWarehouseId : "");
+                    request.Product.Id, attributeXml, request.Store.Id, warehouseId);
 
                 if (subscription != null)
                     model.ButtonTextBackInStockSubscription = _localizationService.GetResource("BackInStockSubscriptions.DeleteNotifyWhenAvailable");
@@ -131,6 +138,7 @@ namespace Grand.Web.Features.Handlers.Products
                     model.ButtonTextBackInStockSubscription = _localizationService.GetResource("BackInStockSubscriptions.NotifyMeWhenAvailable");
 
             }
+
 
             //conditional attributes
             if (request.ValidateAttributeConditions)

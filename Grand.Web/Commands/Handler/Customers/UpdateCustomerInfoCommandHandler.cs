@@ -127,7 +127,7 @@ namespace Grand.Web.Commands.Handler.Customers
 
                 //send VAT number admin notification
                 if (!String.IsNullOrEmpty(request.Model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
-                    await _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(request.Customer, request.Model.VatNumber, vat.address,
+                    await _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(request.Customer, request.Store, request.Model.VatNumber, vat.address,
                         _localizationSettings.DefaultAdminLanguageId);
             }
         }

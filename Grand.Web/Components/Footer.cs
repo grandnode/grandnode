@@ -87,6 +87,7 @@ namespace Grand.Web.ViewComponents
             var currentstore = _storeContext.CurrentStore;
             var model = new FooterModel {
                 StoreName = currentstore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                CompanyName = currentstore.CompanyName,
                 CompanyEmail = currentstore.CompanyEmail,
                 CompanyAddress = currentstore.CompanyAddress,
                 CompanyPhone = currentstore.CompanyPhoneNumber,

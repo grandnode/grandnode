@@ -6,6 +6,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using Grand.Services.Queries.Models.Catalog;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Products;
@@ -23,7 +24,6 @@ namespace Grand.Web.Features.Handlers.Catalog
     public class GetCategoryFeaturedProductsHandler : IRequestHandler<GetCategoryFeaturedProducts, IList<CategoryModel>>
     {
         private readonly ICategoryService _categoryService;
-        private readonly IProductService _productService;
         private readonly ICacheManager _cacheManager;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
@@ -33,7 +33,6 @@ namespace Grand.Web.Features.Handlers.Catalog
 
         public GetCategoryFeaturedProductsHandler(
             ICategoryService categoryService,
-            IProductService productService,
             ICacheManager cacheManager,
             IPictureService pictureService,
             ILocalizationService localizationService,
@@ -42,7 +41,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             CatalogSettings catalogSettings)
         {
             _categoryService = categoryService;
-            _productService = productService;
             _cacheManager = cacheManager;
             _pictureService = pictureService;
             _localizationService = localizationService;
@@ -88,12 +86,15 @@ namespace Grand.Web.Features.Handlers.Catalog
                 {
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
-                    featuredProducts = (await _productService.SearchProducts(
-                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
-                       categoryIds: new List<string> { item.Id },
-                       storeId: request.Store.Id,
-                       visibleIndividuallyOnly: true,
-                       featuredProducts: true)).products;
+                    featuredProducts = (await _mediator.Send(new GetSearchProductsQuery() {
+                        PageSize = _catalogSettings.LimitOfFeaturedProducts,
+                        CategoryIds = new List<string> { item.Id },
+                        Customer = request.Customer,
+                        StoreId = request.Store.Id,
+                        VisibleIndividuallyOnly = true,
+                        FeaturedProducts = true
+                    })).products;
+
                     hasFeaturedProductsCache = featuredProducts.Any();
                     await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, CommonHelper.CacheTimeMinutes);
                 }
@@ -101,14 +102,16 @@ namespace Grand.Web.Features.Handlers.Catalog
                 {
                     //cache indicates that the category has featured products
                     //let's load them
-                    featuredProducts = (await _productService.SearchProducts(
-                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
-                       categoryIds: new List<string> { item.Id },
-                       storeId: request.Store.Id,
-                       visibleIndividuallyOnly: true,
-                       featuredProducts: true)).products;
+                    featuredProducts = (await _mediator.Send(new GetSearchProductsQuery() {
+                        PageSize = _catalogSettings.LimitOfFeaturedProducts,
+                        CategoryIds = new List<string> { item.Id },
+                        Customer = request.Customer,
+                        StoreId = request.Store.Id,
+                        VisibleIndividuallyOnly = true,
+                        FeaturedProducts = true
+                    })).products;
                 }
-                if (featuredProducts != null)
+                if (featuredProducts != null && featuredProducts.Any())
                 {
                     item.FeaturedProducts = (await _mediator.Send(new GetProductOverview() {
                         PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages,

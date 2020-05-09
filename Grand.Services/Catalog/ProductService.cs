@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
@@ -11,6 +10,7 @@ using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Events.Web;
+using Grand.Services.Queries.Models.Catalog;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using MediatR;
@@ -90,13 +90,11 @@ namespace Grand.Services.Catalog
         private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IMediator _mediator;
-        private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -118,12 +116,10 @@ namespace Grand.Services.Catalog
             IRepository<ProductTag> productTagRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
-            ISpecificationAttributeService specificationAttributeService,
             IWorkContext workContext,
             IMediator mediator,
             IAclService aclService,
             IStoreMappingService storeMappingService,
-            CommonSettings commonSettings,
             CatalogSettings catalogSettings
             )
         {
@@ -139,12 +135,10 @@ namespace Grand.Services.Catalog
             _productDeletedRepository = productDeletedRepository;
             _productAttributeService = productAttributeService;
             _productAttributeParser = productAttributeParser;
-            _specificationAttributeService = specificationAttributeService;
             _workContext = workContext;
             _mediator = mediator;
             _aclService = aclService;
             _storeMappingService = storeMappingService;
-            _commonSettings = commonSettings;
             _catalogSettings = catalogSettings;
         }
 
@@ -236,7 +230,7 @@ namespace Grand.Services.Catalog
 
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
-            
+
             //availability dates
             products = products.Where(p => p.IsAvailable()).ToList();
             return products;
@@ -298,7 +292,7 @@ namespace Grand.Services.Catalog
                 if (product != null && (showHidden || (_aclService.Authorize(product) && _storeMappingService.Authorize(product) && (product.IsAvailable()))))
                     sortedProducts.Add(product);
             }
-           
+
             return sortedProducts;
         }
 
@@ -551,15 +545,15 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Get (visible) product number in certain category
         /// </summary>
+        /// <param name="customer">Customer</param>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; "" to load all records</param>
         /// <returns>Product number</returns>
-        public virtual int GetCategoryProductNumber(IList<string> categoryIds = null, string storeId = "")
+        public virtual int GetCategoryProductNumber(Customer customer, IList<string> categoryIds = null, string storeId = "")
         {
             //validate "categoryIds" parameter
             if (categoryIds != null && categoryIds.Contains(""))
                 categoryIds.Remove("");
-
 
             var builder = Builders<Product>.Filter;
             var filter = builder.Where(p => p.Published && p.VisibleIndividually);
@@ -572,7 +566,7 @@ namespace Grand.Services.Catalog
             if (!_catalogSettings.IgnoreAcl)
             {
                 //ACL (access control list)
-                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                var allowedCustomerRolesIds = customer.GetCustomerRoleIds();
                 filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
             }
 
@@ -645,309 +639,36 @@ namespace Grand.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            var filterableSpecificationAttributeOptionIds = new List<string>();
 
-            //validate "categoryIds" parameter
-            if (categoryIds != null && categoryIds.Contains(""))
-                categoryIds.Remove("");
+            var model = await _mediator.Send(new GetSearchProductsQuery() {
+                Customer = _workContext.CurrentCustomer,
+                LoadFilterableSpecificationAttributeOptionIds = loadFilterableSpecificationAttributeOptionIds,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                CategoryIds = categoryIds,
+                ManufacturerId = manufacturerId,
+                StoreId = storeId,
+                VendorId = vendorId,
+                WarehouseId = warehouseId,
+                ProductType = productType,
+                VisibleIndividuallyOnly = visibleIndividuallyOnly,
+                MarkedAsNewOnly = markedAsNewOnly,
+                FeaturedProducts = featuredProducts,
+                PriceMin = priceMin,
+                PriceMax = priceMax,
+                ProductTag = productTag,
+                Keywords = keywords,
+                SearchDescriptions = searchDescriptions,
+                SearchSku = searchSku,
+                SearchProductTags = searchProductTags,
+                LanguageId = languageId,
+                FilteredSpecs = filteredSpecs,
+                OrderBy = orderBy,
+                ShowHidden = showHidden,
+                OverridePublished = overridePublished
+            });
 
-            //Access control list. Allowed customer roles
-            var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-
-            #region Search products
-
-            //products
-            var builder = Builders<Product>.Filter;
-            var filter = FilterDefinition<Product>.Empty;
-            var filterSpecification = FilterDefinition<Product>.Empty;
-
-            //category filtering
-            if (categoryIds != null && categoryIds.Any())
-            {
-
-                if (featuredProducts.HasValue)
-                {
-                    filter = filter & builder.Where(x => x.ProductCategories.Any(y => categoryIds.Contains(y.CategoryId) && y.IsFeaturedProduct == featuredProducts));
-                }
-                else
-                {
-                    filter = filter & builder.Where(x => x.ProductCategories.Any(y => categoryIds.Contains(y.CategoryId)));
-                }
-            }
-            //manufacturer filtering
-            if (!String.IsNullOrEmpty(manufacturerId))
-            {
-                if (featuredProducts.HasValue)
-                {
-                    filter = filter & builder.Where(x => x.ProductManufacturers.Any(y => y.ManufacturerId == manufacturerId && y.IsFeaturedProduct == featuredProducts));
-                }
-                else
-                {
-                    filter = filter & builder.Where(x => x.ProductManufacturers.Any(y => y.ManufacturerId == manufacturerId));
-                }
-
-            }
-
-            if (!overridePublished.HasValue)
-            {
-                //process according to "showHidden"
-                if (!showHidden)
-                {
-                    filter = filter & builder.Where(p => p.Published);
-                }
-            }
-            else if (overridePublished.Value)
-            {
-                //published only
-                filter = filter & builder.Where(p => p.Published);
-            }
-            else if (!overridePublished.Value)
-            {
-                //unpublished only
-                filter = filter & builder.Where(p => !p.Published);
-            }
-            if (visibleIndividuallyOnly)
-            {
-                filter = filter & builder.Where(p => p.VisibleIndividually);
-            }
-            if (productType.HasValue)
-            {
-                var productTypeId = (int)productType.Value;
-                filter = filter & builder.Where(p => p.ProductTypeId == productTypeId);
-            }
-
-            //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
-            //That's why we pass the date value
-            var nowUtc = DateTime.UtcNow;
-            if (priceMin.HasValue)
-            {
-                filter = filter & builder.Where(p => p.Price >= priceMin.Value);
-            }
-            if (priceMax.HasValue)
-            {
-                //max price
-                filter = filter & builder.Where(p => p.Price <= priceMax.Value);
-            }
-            if (!showHidden && !_catalogSettings.IgnoreFilterableAvailableStartEndDateTime)
-            {
-                filter = filter & builder.Where(p =>
-                    (p.AvailableStartDateTimeUtc == null || p.AvailableStartDateTimeUtc < nowUtc) &&
-                    (p.AvailableEndDateTimeUtc == null || p.AvailableEndDateTimeUtc > nowUtc));
-
-
-            }
-
-            if (markedAsNewOnly)
-            {
-                filter = filter & builder.Where(p => p.MarkAsNew);
-                filter = filter & builder.Where(p =>
-                    (!p.MarkAsNewStartDateTimeUtc.HasValue || p.MarkAsNewStartDateTimeUtc.Value < nowUtc) &&
-                    (!p.MarkAsNewEndDateTimeUtc.HasValue || p.MarkAsNewEndDateTimeUtc.Value > nowUtc));
-            }
-
-            //searching by keyword
-            if (!String.IsNullOrWhiteSpace(keywords))
-            {
-                if (_commonSettings.UseFullTextSearch)
-                {
-                    keywords = "\"" + keywords + "\"";
-                    keywords = keywords.Replace("+", "\" \"");
-                    keywords = keywords.Replace(" ", "\" \"");
-                    filter = filter & builder.Text(keywords);
-                }
-                else
-                {
-                    if (!searchDescriptions)
-                        filter = filter & builder.Where(p =>
-                            p.Name.ToLower().Contains(keywords.ToLower())
-                            ||
-                            p.Locales.Any(x => x.LocaleKey == "Name" && x.LocaleValue != null && x.LocaleValue.ToLower().Contains(keywords.ToLower()))
-                            ||
-                            (searchSku && p.Sku.ToLower().Contains(keywords.ToLower()))
-                            );
-                    else
-                    {
-                        filter = filter & builder.Where(p =>
-                                (p.Name != null && p.Name.ToLower().Contains(keywords.ToLower()))
-                                ||
-                                (p.ShortDescription != null && p.ShortDescription.ToLower().Contains(keywords.ToLower()))
-                                ||
-                                (p.FullDescription != null && p.FullDescription.ToLower().Contains(keywords.ToLower()))
-                                ||
-                                (p.Locales.Any(x => x.LocaleValue != null && x.LocaleValue.ToLower().Contains(keywords.ToLower())))
-                                ||
-                                (searchSku && p.Sku.ToLower().Contains(keywords.ToLower()))
-                                );
-                    }
-                }
-
-            }
-
-            if (!showHidden && !_catalogSettings.IgnoreAcl)
-            {
-                filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
-            }
-
-            if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
-            {
-                filter = filter & builder.Where(x => x.Stores.Any(y => y == storeId) || !x.LimitedToStores);
-
-            }
-            //vendor filtering
-            if (!String.IsNullOrEmpty(vendorId))
-            {
-                filter = filter & builder.Where(x => x.VendorId == vendorId);
-            }
-            //warehouse filtering
-            if (!String.IsNullOrEmpty(warehouseId))
-            {
-                filter = filter & (builder.Where(x => x.UseMultipleWarehouses && x.ProductWarehouseInventory.Any(y => y.WarehouseId == warehouseId)) |
-                    builder.Where(x => !x.UseMultipleWarehouses && x.WarehouseId == warehouseId));
-
-            }
-
-            //tag filtering
-            if (!String.IsNullOrEmpty(productTag))
-            {
-                filter = filter & builder.Where(x => x.ProductTags.Any(y => y == productTag));
-            }
-
-            filterSpecification = filter;
-
-            //search by specs
-            if (filteredSpecs != null && filteredSpecs.Any())
-            {
-                var spec = new HashSet<string>();
-                Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
-                foreach (string key in filteredSpecs)
-                {
-                    var specification = await _specificationAttributeService.GetSpecificationAttributeByOptionId(key);
-                    if (specification != null)
-                    {
-                        spec.Add(specification.Id);
-                        if (!dictionary.ContainsKey(specification.Id))
-                        {
-                            //add
-                            dictionary.Add(specification.Id, new List<string>());
-                            filterSpecification = filterSpecification & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeId == specification.Id));
-                        }
-                        dictionary[specification.Id].Add(key);
-                    }
-                }
-
-                foreach (var item in dictionary)
-                {
-                    filter = filter & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeId == item.Key
-                    && item.Value.Contains(y.SpecificationAttributeOptionId)));
-                }
-            }
-
-            var builderSort = Builders<Product>.Sort.Descending(x => x.CreatedOnUtc);
-
-            if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Any())
-            {
-                //category position
-                builderSort = Builders<Product>.Sort.Ascending(x => x.DisplayOrderCategory);
-            }
-            else if (orderBy == ProductSortingEnum.Position && !String.IsNullOrEmpty(manufacturerId))
-            {
-                //manufacturer position
-                builderSort = Builders<Product>.Sort.Ascending(x => x.DisplayOrderManufacturer);
-            }
-            else if (orderBy == ProductSortingEnum.Position)
-            {
-                //otherwise sort by name
-                builderSort = Builders<Product>.Sort.Ascending(x => x.Name);
-            }
-            else if (orderBy == ProductSortingEnum.NameAsc)
-            {
-                //Name: A to Z
-                builderSort = Builders<Product>.Sort.Ascending(x => x.Name);
-            }
-            else if (orderBy == ProductSortingEnum.NameDesc)
-            {
-                //Name: Z to A
-                builderSort = Builders<Product>.Sort.Descending(x => x.Name);
-            }
-            else if (orderBy == ProductSortingEnum.PriceAsc)
-            {
-                //Price: Low to High
-                builderSort = Builders<Product>.Sort.Ascending(x => x.Price);
-            }
-            else if (orderBy == ProductSortingEnum.PriceDesc)
-            {
-                //Price: High to Low
-                builderSort = Builders<Product>.Sort.Descending(x => x.Price);
-            }
-            else if (orderBy == ProductSortingEnum.CreatedOn)
-            {
-                //creation date
-                builderSort = Builders<Product>.Sort.Ascending(x => x.CreatedOnUtc);
-            }
-            else if (orderBy == ProductSortingEnum.OnSale)
-            {
-                //on sale
-                builderSort = Builders<Product>.Sort.Descending(x => x.OnSale);
-            }
-            else if (orderBy == ProductSortingEnum.MostViewed)
-            {
-                //most viewed
-                builderSort = Builders<Product>.Sort.Descending(x => x.Viewed);
-            }
-            else if (orderBy == ProductSortingEnum.BestSellers)
-            {
-                //best seller
-                builderSort = Builders<Product>.Sort.Descending(x => x.Sold);
-            }
-
-            var products = await PagedList<Product>.Create(_productRepository.Collection, filter, builderSort, pageIndex, pageSize);
-
-            if (loadFilterableSpecificationAttributeOptionIds && !_catalogSettings.IgnoreFilterableSpecAttributeOption)
-            {
-                IList<string> specyfication = new List<string>();
-                var filterSpecExists = filterSpecification &
-                    builder.Where(x => x.ProductSpecificationAttributes.Count > 0);
-                var productSpec = _productRepository.Collection.Find(filterSpecExists).Limit(1);
-                if (productSpec != null)
-                {
-                    var qspec = await _productRepository.Collection
-                    .Aggregate()
-                    .Match(filterSpecification)
-                    .Unwind(x => x.ProductSpecificationAttributes)
-                    .Project(new BsonDocument
-                        {
-                        {"AllowFiltering", "$ProductSpecificationAttributes.AllowFiltering"},
-                        {"SpecificationAttributeOptionId", "$ProductSpecificationAttributes.SpecificationAttributeOptionId"}
-                        })
-                    .Match(new BsonDocument("AllowFiltering", true))
-                    .Group(new BsonDocument
-                            {
-                                        {"_id",
-                                            new BsonDocument {
-                                                { "SpecificationAttributeOptionId", "$SpecificationAttributeOptionId" },
-                                            }
-                                        },
-                                        {"count", new BsonDocument
-                                            {
-                                                { "$sum" , 1}
-                                            }
-                                        }
-                            })
-                    .ToListAsync();
-                    foreach (var item in qspec)
-                    {
-                        var so = item["_id"]["SpecificationAttributeOptionId"].ToString();
-                        specyfication.Add(so);
-                    }
-                }
-
-                filterableSpecificationAttributeOptionIds = specyfication.ToList();
-            }
-
-            return (products, filterableSpecificationAttributeOptionIds);
-
-            #endregion
-
+            return model;
         }
 
         /// <summary>
@@ -1337,7 +1058,6 @@ namespace Grand.Services.Catalog
                 if (quantityToChange < 0 && product.GetTotalStockQuantity(warehouseId: warehouseId) < product.NotifyAdminForQuantityBelow)
                 {
                     await _mediator.Send(new SendQuantityBelowStoreOwnerNotificationCommand() {
-                        Customer = _workContext.CurrentCustomer,
                         Product = product
                     });
                 }
@@ -1369,21 +1089,21 @@ namespace Grand.Services.Catalog
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
                     {
                         await _mediator.Send(new SendQuantityBelowStoreOwnerNotificationCommand() {
-                            Customer = _workContext.CurrentCustomer,
                             Product = product,
                             ProductAttributeCombination = combination
                         });
                     }
                 }
             }
+
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
             {
                 foreach (var item in product.BundleProducts)
                 {
                     var p1 = await GetProductById(item.ProductId);
-                    if (p1 != null && p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                    if (p1 != null && (p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock || p1.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes))
                     {
-                        await AdjustInventory(p1, quantityToChange * item.Quantity, warehouseId);
+                        await AdjustInventory(p1, quantityToChange * item.Quantity, attributesXml, warehouseId);
                     }
                 }
             }
@@ -2141,7 +1861,7 @@ namespace Grand.Services.Catalog
             }
             return result;
         }
-        
+
         #endregion
 
         #region Tier prices
@@ -2348,25 +2068,23 @@ namespace Grand.Services.Catalog
         /// <returns>Products</returns>
         public virtual async Task<IList<Product>> GetRecommendedProducts(string[] customerRoleIds)
         {
+            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_ROLE, string.Join(",", customerRoleIds)), async () =>
+            {
+                var query = from cr in _customerRoleProductRepository.Table
+                            where customerRoleIds.Contains(cr.CustomerRoleId)
+                            orderby cr.DisplayOrder
+                            select cr.ProductId;
 
-            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_ROLE, string.Join(",", customerRoleIds)),
-                async () =>
-                {
-                    var query = from cr in _customerRoleProductRepository.Table
-                                where customerRoleIds.Contains(cr.CustomerRoleId)
-                                orderby cr.DisplayOrder
-                                select cr.ProductId;
+                var productIds = await query.ToListAsync();
 
-                    var productIds = await query.ToListAsync();
+                var products = new List<Product>();
+                var ids = await GetProductsByIds(productIds.Distinct().ToArray());
+                foreach (var product in ids)
+                    if (product.Published)
+                        products.Add(product);
 
-                    var products = new List<Product>();
-                    var ids = await GetProductsByIds(productIds.Distinct().ToArray());
-                    foreach (var product in ids)
-                        if (product.Published)
-                            products.Add(product);
-
-                    return products;
-                });
+                return products;
+            });
         }
 
         #endregion
@@ -2380,25 +2098,23 @@ namespace Grand.Services.Catalog
         /// <returns>Products</returns>
         public virtual async Task<IList<Product>> GetSuggestedProducts(string[] customerTagIds)
         {
+            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_TAG, string.Join(",", customerTagIds)), async () =>
+            {
+                var query = from cr in _customerTagProductRepository.Table
+                            where customerTagIds.Contains(cr.CustomerTagId)
+                            orderby cr.DisplayOrder
+                            select cr.ProductId;
 
-            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_TAG, string.Join(",", customerTagIds)),
-                async () =>
-                {
-                    var query = from cr in _customerTagProductRepository.Table
-                                where customerTagIds.Contains(cr.CustomerTagId)
-                                orderby cr.DisplayOrder
-                                select cr.ProductId;
+                var productIds = await query.ToListAsync();
 
-                    var productIds = await query.ToListAsync();
+                var products = new List<Product>();
+                var ids = await GetProductsByIds(productIds.Distinct().ToArray());
+                foreach (var product in ids)
+                    if (product.Published)
+                        products.Add(product);
 
-                    var products = new List<Product>();
-                    var ids = await GetProductsByIds(productIds.Distinct().ToArray());
-                    foreach (var product in ids)
-                        if (product.Published)
-                            products.Add(product);
-
-                    return products;
-                });
+                return products;
+            });
         }
 
         #endregion
@@ -2412,24 +2128,23 @@ namespace Grand.Services.Catalog
         /// <returns>Products</returns>
         public virtual async Task<IList<Product>> GetPersonalizedProducts(string customerId)
         {
-            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_PERSONAL, customerId),
-                async () =>
-                {
-                    var query = from cr in _customerProductRepository.Table
-                                where cr.CustomerId == customerId
-                                orderby cr.DisplayOrder
-                                select cr.ProductId;
+            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_PERSONAL, customerId), async () =>
+            {
+                var query = from cr in _customerProductRepository.Table
+                            where cr.CustomerId == customerId
+                            orderby cr.DisplayOrder
+                            select cr.ProductId;
 
-                    var productIds = await query.Take(_catalogSettings.PersonalizedProductsNumber).ToListAsync();
+                var productIds = await query.Take(_catalogSettings.PersonalizedProductsNumber).ToListAsync();
 
-                    var products = new List<Product>();
-                    var ids = await GetProductsByIds(productIds.Distinct().ToArray());
-                    foreach (var product in ids)
-                        if (product.Published)
-                            products.Add(product);
+                var products = new List<Product>();
+                var ids = await GetProductsByIds(productIds.Distinct().ToArray());
+                foreach (var product in ids)
+                    if (product.Published)
+                        products.Add(product);
 
-                    return products;
-                });
+                return products;
+            });
         }
 
         #endregion
@@ -2591,7 +2306,9 @@ namespace Grand.Services.Catalog
             //event notification
             await _mediator.EntityUpdated(pwi);
         }
+        #endregion
 
+        #region Discount
 
         public virtual async Task DeleteDiscount(string discountId, string productId)
         {
@@ -2608,7 +2325,7 @@ namespace Grand.Services.Catalog
 
         public virtual async Task InsertDiscount(string discountId, string productId)
         {
-            if (String.IsNullOrEmpty(discountId))
+            if (string.IsNullOrEmpty(discountId))
                 throw new ArgumentNullException("discount");
 
             var updatebuilder = Builders<Product>.Update;

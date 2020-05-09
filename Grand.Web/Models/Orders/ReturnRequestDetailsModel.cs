@@ -12,6 +12,7 @@ namespace Grand.Web.Models.Orders
         {
             ReturnRequestItems = new List<ReturnRequestItemModel>();
             PickupAddress = new AddressModel();
+            ReturnRequestNotes = new List<ReturnRequestNote>();
         }
 
         public IList<ReturnRequestItemModel> ReturnRequestItems { get; set; }
@@ -19,6 +20,8 @@ namespace Grand.Web.Models.Orders
         public string Comments { get; set; }
 
         public int ReturnNumber { get; set; }
+
+        public string ExternalId { get; set; }
 
         public ReturnRequestStatus ReturnRequestStatus { get; set; }
 
@@ -31,6 +34,21 @@ namespace Grand.Web.Models.Orders
         public AddressModel PickupAddress { get; set; }
 
         public DateTime PickupDate { get; set; }
+
+        public IList<ReturnRequestNote> ReturnRequestNotes { get; set; }
+
+        public bool ShowAddReturnRequestNote { get; set; }
+
+
+        #region Nested Classes
+
+        public partial class ReturnRequestNote : BaseGrandEntityModel
+        {
+            public bool HasDownload { get; set; }
+            public string Note { get; set; }
+            public DateTime CreatedOn { get; set; }
+            public string ReturnRequestId { get; set; }
+        }
 
         public class ReturnRequestItemModel : BaseGrandModel
         {
@@ -48,5 +66,7 @@ namespace Grand.Web.Models.Orders
 
             public string ProductPrice { get; set; }
         }
+
+        #endregion
     }
 }

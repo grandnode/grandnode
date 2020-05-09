@@ -60,7 +60,8 @@ namespace Grand.Services.Installation
         private readonly IRepository<CampaignHistory> _campaignHistoryRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<ReturnRequest> _returnrequestRepository;
+        private readonly IRepository<ReturnRequest> _returnRequestRepository;
+        private readonly IRepository<ReturnRequestNote> _returnRequestNoteRepository;
         private readonly IRepository<Store> _storeRepository;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
@@ -203,7 +204,8 @@ namespace Grand.Services.Installation
             _manufacturerTemplateRepository = serviceProvider.GetRequiredService<IRepository<ManufacturerTemplate>>();
             _topicTemplateRepository = serviceProvider.GetRequiredService<IRepository<TopicTemplate>>();
             _scheduleTaskRepository = serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
-            _returnrequestRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequest>>();
+            _returnRequestRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequest>>();
+            _returnRequestNoteRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequestNote>>();
             _rewardpointshistoryRepository = serviceProvider.GetRequiredService<IRepository<RewardPointsHistory>>();
             _searchtermRepository = serviceProvider.GetRequiredService<IRepository<SearchTerm>>();
             _settingRepository = serviceProvider.GetRequiredService<IRepository<Setting>>();
@@ -257,6 +259,7 @@ namespace Grand.Services.Installation
                 new Store
                 {
                     Name = "Your store name",
+                    Shortcut = "Store",
                     Url = storeUrl,
                     SslEnabled = false,
                     Hosts = "yourstore.com,www.yourstore.com",
@@ -4161,6 +4164,7 @@ namespace Grand.Services.Installation
                 throw new Exception("Default email account cannot be loaded");
 
             var OrderProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Order.Products.txt"));
+            var OrderVendorProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Order.VendorProducts.txt"));
             var ShipmentProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Shipment.Products.txt"));
 
             var messageTemplates = new List<MessageTemplate>
@@ -4242,6 +4246,14 @@ namespace Grand.Services.Installation
                                            Name = "CustomerDelete.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. Customer has been deleted.",
                                            Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> ,<br />\r\n{{Customer.FullName}} ({{Customer.Email}}) has just deleted from your database. </p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
+                                           Name = "Customer.EmailTokenValidationMessage",
+                                           Subject = "{{Store.Name}} - Email Verification Code",
+                                           Body = "Hello {{Customer.FullName}}, <br /><br />\r\n Enter this 6 digit code on the sign in page to confirm your identity:<br /><br /> \r\n <b>{{AdditionalTokens[\"Token\"]}}</b><br /><br />\r\n Yours securely, <br /> \r\n Team",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4373,7 +4385,15 @@ namespace Grand.Services.Installation
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
-                                   new MessageTemplate
+                                    new MessageTemplate
+                                       {
+                                           Name = "OrderCancelled.VendorNotification",
+                                           Subject = "{{Store.Name}}. Order #{{Order.OrderNumber}} cancelled",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Order #{{Order.OrderNumber}} has been cancelled. <br /><br />Order Number: {{Order.OrderNumber}} <br />   Date Ordered: {{Order.CreatedOn}} <br /><br /> ",
+                                           IsActive = false,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                    new MessageTemplate
                                        {
                                            Name = "OrderCompleted.CustomerNotification",
                                            Subject = "{{Store.Name}}. Your order completed",
@@ -4465,7 +4485,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Service.ContactUs",
                                            Subject = "{{Store.Name}}. Contact us",
-                                           Body = "<p>From {{ContactUs.SenderName}} - {{ContactUs.SenderEmail}}<br /><br />{{ContactUs.Body}}</p><br />",
+                                           Body = "<p>From {{ContactUs.SenderName}} - {{ContactUs.SenderEmail}}<br /><br />{{ContactUs.Body}}<br />{{ContactUs.AttributeDescription}}</p><br />",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4502,6 +4522,14 @@ namespace Grand.Services.Installation
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
+                                     new MessageTemplate
+                                       {
+                                           Name = "Customer.NewReturnRequestNote",
+                                           Subject = "{{Store.Name}}. New return request note has been added",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Customer.FullName}},<br />\r\nYour return request #{{ReturnRequest.ReturnNumber}} has a new note.</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
                                    new MessageTemplate
                                        {
                                            Name = "RecurringPaymentCancelled.StoreOwnerNotification",
@@ -4514,7 +4542,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderPlaced.VendorNotification",
                                            Subject = "{{Store.Name}}. Order placed",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Customer.FullName}} ({{Customer.Email}}) has just placed an order. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n" + OrderProducts + "</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Customer.FullName}} ({{Customer.Email}}) has just placed an order. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n" + OrderVendorProducts + "</p>",
                                            //this template is disabled by default
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
@@ -4541,7 +4569,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderPaid.VendorNotification",
                                            Subject = "{{Store.Name}}. Order #{{Order.OrderNumber}} paid",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nOrder #{{Order.OrderNumber}} has been just paid. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n" + OrderProducts + "</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nOrder #{{Order.OrderNumber}} has been just paid. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n" + OrderVendorProducts + "</p>",
                                            //this template is disabled by default
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
@@ -4578,6 +4606,14 @@ namespace Grand.Services.Installation
                                            Subject = "{{Store.Name}}. New vendor review.",
                                            Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new vendor review has been written.</p>",
                                            IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                    new MessageTemplate
+                                       { 
+                                           Name = "VendorInformationChange.StoreOwnerNotification",
+                                           Subject = "{{Store.Name}}. Vendor {{Vendor.Name}} changed provided information",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Vendor.Name}} changed provided information.</p>",
+                                           IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
                                        },
                                };
@@ -5112,7 +5148,7 @@ namespace Grand.Services.Installation
                 PointsForPurchases_Amount = 10,
                 PointsForPurchases_Points = 1,
                 PointsForPurchases_Awarded = OrderStatus.Complete,
-                PointsForPurchases_Canceled = OrderStatus.Cancelled,
+                ReduceRewardPointsAfterCancelOrder = true,
                 DisplayHowMuchWillBeEarned = true,
                 PointsAccumulatedForAllStores = true,
             });
@@ -5185,6 +5221,7 @@ namespace Grand.Services.Installation
                 DeactivateGiftCardsAfterDeletingOrder = false,
                 CompleteOrderWhenDelivered = true,
                 UserCanCancelUnpaidOrder = false,
+                LengthCode = 8
             });
 
             await _settingService.SaveSetting(new ShippingSettings {
@@ -5404,89 +5441,104 @@ namespace Grand.Services.Installation
             var sa1 = new SpecificationAttribute {
                 Name = "Screensize",
                 DisplayOrder = 1,
+                SeName = SeoExtensions.GetSeName("Screensize", false, false),
             };
             await _specificationAttributeRepository.InsertAsync(sa1);
 
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
-
                 Name = "13.0''",
                 DisplayOrder = 2,
+                SeName = SeoExtensions.GetSeName("13.0''", false, false),
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "13.3''",
                 DisplayOrder = 3,
+                SeName = SeoExtensions.GetSeName("13.3''", false, false),
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "14.0''",
                 DisplayOrder = 4,
+                SeName = SeoExtensions.GetSeName("14.0''", false, false),
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "15.0''",
                 DisplayOrder = 4,
+                SeName = SeoExtensions.GetSeName("15.0''", false, false),
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "15.6''",
                 DisplayOrder = 5,
+                SeName = SeoExtensions.GetSeName("15.6''", false, false),
             });
             await _specificationAttributeRepository.UpdateAsync(sa1);
 
             var sa2 = new SpecificationAttribute {
                 Name = "CPU Type",
                 DisplayOrder = 2,
+                SeName = SeoExtensions.GetSeName("CPU Type", false, false),
             };
             await _specificationAttributeRepository.InsertAsync(sa2);
 
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "Intel Core i5",
                 DisplayOrder = 1,
+                SeName = SeoExtensions.GetSeName("Intel Core i5", false, false),
             });
 
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "Intel Core i7",
                 DisplayOrder = 2,
+                SeName = SeoExtensions.GetSeName("Intel Core i7", false, false),
             });
             await _specificationAttributeRepository.UpdateAsync(sa2);
 
             var sa3 = new SpecificationAttribute {
                 Name = "Memory",
                 DisplayOrder = 3,
+                SeName = SeoExtensions.GetSeName("Memory", false, false),
             };
             await _specificationAttributeRepository.InsertAsync(sa3);
 
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "4 GB",
                 DisplayOrder = 1,
+                SeName = SeoExtensions.GetSeName("4 GB", false, false),
             });
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "8 GB",
                 DisplayOrder = 2,
+                SeName = SeoExtensions.GetSeName("8 GB", false, false),
             });
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "16 GB",
                 DisplayOrder = 3,
+                SeName = SeoExtensions.GetSeName("16 GB", false, false),
             });
             await _specificationAttributeRepository.UpdateAsync(sa3);
 
             var sa4 = new SpecificationAttribute {
                 Name = "Hardrive",
                 DisplayOrder = 5,
+                SeName = SeoExtensions.GetSeName("Hardrive", false, false),
             };
             await _specificationAttributeRepository.InsertAsync(sa4);
 
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "128 GB",
                 DisplayOrder = 7,
+                SeName = SeoExtensions.GetSeName("128 GB", false, false),
             });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "500 GB",
                 DisplayOrder = 4,
+                SeName = SeoExtensions.GetSeName("500 GB", false, false),
             });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "1 TB",
                 DisplayOrder = 3,
+                SeName = SeoExtensions.GetSeName("1 TB", false, false),
             });
             await _specificationAttributeRepository.UpdateAsync(sa4);
-
         }
 
         protected virtual async Task InstallProductAttributes()
@@ -5496,34 +5548,42 @@ namespace Grand.Services.Installation
                 new ProductAttribute
                 {
                     Name = "Color",
+                    SeName = "color"
                 },
                 new ProductAttribute
                 {
                     Name = "Custom Text",
+                    SeName = "custom-text"
                 },
                 new ProductAttribute
                 {
                     Name = "HDD",
+                    SeName = "hdd"
                 },
                 new ProductAttribute
                 {
                     Name = "OS",
+                    SeName = "os"
                 },
                 new ProductAttribute
                 {
                     Name = "Processor",
+                    SeName  = "processor"
                 },
                 new ProductAttribute
                 {
                     Name = "RAM",
+                    SeName = "ram"
                 },
                 new ProductAttribute
                 {
                     Name = "Size",
+                    SeName = "size"
                 },
                 new ProductAttribute
                 {
                     Name = "Software",
+                    SeName = "software"
                 },
             };
             await _productAttributeRepository.InsertAsync(productAttributes);
@@ -10712,6 +10772,7 @@ namespace Grand.Services.Installation
             await _orderRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Order>((Builders<Order>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "CustomerId_1_CreatedOnUtc_-1", Unique = false }));
             await _orderRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Order>((Builders<Order>.IndexKeys.Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "CreatedOnUtc_-1", Unique = false }));
             await _orderRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Order>((Builders<Order>.IndexKeys.Descending(x => x.OrderNumber)), new CreateIndexOptions() { Name = "OrderNumber", Unique = false }));
+            await _orderRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Order>((Builders<Order>.IndexKeys.Ascending(x => x.Code)), new CreateIndexOptions() { Name = "OrderCode", Unique = false }));
             await _orderRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Order>((Builders<Order>.IndexKeys.Ascending("OrderItems.ProductId")), new CreateIndexOptions() { Name = "OrderItemsProductId" }));
             await _orderRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Order>((Builders<Order>.IndexKeys.Ascending("OrderItems._id")), new CreateIndexOptions() { Name = "OrderItemId" }));
 
@@ -10724,7 +10785,8 @@ namespace Grand.Services.Installation
             await _externalAuthenticationRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ExternalAuthenticationRecord>((Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.CustomerId)), new CreateIndexOptions() { Name = "CustomerId" }));
 
             //return request
-            await _returnrequestRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ReturnRequest>((Builders<ReturnRequest>.IndexKeys.Ascending(x => x.ReturnNumber)), new CreateIndexOptions() { Name = "ReturnNumber", Unique = true }));
+            await _returnRequestRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ReturnRequest>((Builders<ReturnRequest>.IndexKeys.Ascending(x => x.ReturnNumber)), new CreateIndexOptions() { Name = "ReturnNumber", Unique = true }));
+            await _returnRequestNoteRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ReturnRequestNote>((Builders<ReturnRequestNote>.IndexKeys.Ascending(x => x.ReturnRequestId).Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "Id", Unique = false, Background = true }));
 
             //contactus
             await _contactUsRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ContactUs>((Builders<ContactUs>.IndexKeys.Ascending(x => x.Email)), new CreateIndexOptions() { Name = "Email", Unique = false }));

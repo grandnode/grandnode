@@ -16,6 +16,11 @@
         public string SpecificationAttributeName { get; set; }
 
         /// <summary>
+        /// Gets or sets the specification attribute sename
+        /// </summary>
+        public string SpecificationAttributeSeName { get; set; }
+
+        /// <summary>
         /// Gets or sets the specification attribute option color (RGB)
         /// </summary>
         public string SpecificationAttributeOptionColorRgb { get; set; }
@@ -34,6 +39,11 @@
         /// Gets or sets the specification attribute option name
         /// </summary>
         public string SpecificationAttributeOptionName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the specification attribute option sename
+        /// </summary>
+        public string SpecificationAttributeOptionSeName { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute option display order

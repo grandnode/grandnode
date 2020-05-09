@@ -1,21 +1,23 @@
-﻿using Grand.Api.Controllers;
-using Grand.Api.Interfaces;
+﻿using Grand.Api.DTOs.Customers;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class VendorController : BaseODataController
     {
-        private readonly ICustomerApiService _customerApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public VendorController(ICustomerApiService customerApiService, IPermissionService permissionService)
+        public VendorController(IMediator mediator, IPermissionService permissionService)
         {
-            _customerApiService = customerApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -25,11 +27,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
                 return Forbid();
 
-            var vendor = await _customerApiService.GetVendorById(key);
-            if (vendor == null)
+            var vendor = await _mediator.Send(new GetQuery<VendorDto>() { Id = key });
+            if (!vendor.Any())
                 return NotFound();
 
-            return Ok(vendor);
+            return Ok(vendor.FirstOrDefault());
+
         }
 
         [HttpGet]
@@ -39,7 +42,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
                 return Forbid();
 
-            return Ok(_customerApiService.GetVendors());
+            return Ok(await _mediator.Send(new GetQuery<VendorDto>()));
         }
     }
 }

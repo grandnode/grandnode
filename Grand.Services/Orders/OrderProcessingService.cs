@@ -13,6 +13,7 @@ using Grand.Core.Domain.Vendors;
 using Grand.Services.Affiliates;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Customers;
+using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -22,7 +23,6 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Payments;
-using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
@@ -60,7 +60,6 @@ namespace Grand.Services.Orders
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         private readonly IShippingService _shippingService;
-        private readonly IShipmentService _shipmentService;
         private readonly ITaxService _taxService;
         private readonly ICustomerService _customerService;
         private readonly IDiscountService _discountService;
@@ -68,8 +67,6 @@ namespace Grand.Services.Orders
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IVendorService _vendorService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerActionEventService _customerActionEventService;
         private readonly ICurrencyService _currencyService;
         private readonly IAffiliateService _affiliateService;
         private readonly IMediator _mediator;
@@ -82,7 +79,6 @@ namespace Grand.Services.Orders
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly PaymentSettings _paymentSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
         private readonly LocalizationSettings _localizationSettings;
@@ -107,7 +103,6 @@ namespace Grand.Services.Orders
             IShoppingCartService shoppingCartService,
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
             IShippingService shippingService,
-            IShipmentService shipmentService,
             ITaxService taxService,
             ICustomerService customerService,
             IDiscountService discountService,
@@ -115,8 +110,6 @@ namespace Grand.Services.Orders
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             IVendorService vendorService,
-            ICustomerActivityService customerActivityService,
-            ICustomerActionEventService customerActionEventService,
             ICurrencyService currencyService,
             IAffiliateService affiliateService,
             IMediator mediator,
@@ -129,7 +122,6 @@ namespace Grand.Services.Orders
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings,
             PaymentSettings paymentSettings,
-            RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
             LocalizationSettings localizationSettings)
@@ -153,13 +145,10 @@ namespace Grand.Services.Orders
             _workflowMessageService = workflowMessageService;
             _vendorService = vendorService;
             _shippingService = shippingService;
-            _shipmentService = shipmentService;
             _taxService = taxService;
             _customerService = customerService;
             _discountService = discountService;
             _encryptionService = encryptionService;
-            _customerActivityService = customerActivityService;
-            _customerActionEventService = customerActionEventService;
             _currencyService = currencyService;
             _affiliateService = affiliateService;
             _mediator = mediator;
@@ -172,7 +161,6 @@ namespace Grand.Services.Orders
             _paymentSettings = paymentSettings;
             _shippingSettings = shippingSettings;
             _shoppingCartSettings = shoppingCartSettings;
-            _rewardPointsSettings = rewardPointsSettings;
             _orderSettings = orderSettings;
             _taxSettings = taxSettings;
             _localizationSettings = localizationSettings;
@@ -203,6 +191,7 @@ namespace Grand.Services.Orders
             if (details.InitialOrder == null)
                 throw new ArgumentException("Initial order is not set for recurring payment");
 
+            details.InitialOrder.Code = await _mediator.Send(new PrepareOrderCodeCommand());
             processPaymentRequest.PaymentMethodSystemName = details.InitialOrder.PaymentMethodSystemName;            
             details.CustomerCurrencyCode = details.InitialOrder.CustomerCurrencyCode;
             details.CustomerCurrencyRate = details.InitialOrder.CurrencyRate;
@@ -229,7 +218,7 @@ namespace Grand.Services.Orders
             details.PaymentAdditionalFeeExclTax = details.InitialOrder.PaymentMethodAdditionalFeeExclTax;
             details.OrderTaxTotal = details.InitialOrder.OrderTax;
             details.TaxRates = details.InitialOrder.TaxRates;
-            details.IsRecurringShoppingCart = true;
+            details.IsRecurringShoppingCart = true;            
             processPaymentRequest.OrderTotal = details.OrderTotal;
 
             return details;
@@ -332,6 +321,7 @@ namespace Grand.Services.Orders
             var order = new Order {
                 StoreId = processPaymentRequest.StoreId,
                 OrderGuid = processPaymentRequest.OrderGuid,
+                Code = processPaymentRequest.OrderCode,
                 CustomerId = details.Customer.Id,
                 OwnerId = string.IsNullOrEmpty(details.Customer.OwnerId) ? details.Customer.Id : details.Customer.OwnerId,
                 CustomerLanguageId = details.CustomerLanguage.Id,
@@ -991,7 +981,6 @@ namespace Grand.Services.Orders
 
             //reset checkout data
             await _customerService.ResetCheckoutData(details.Customer, order.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
-            await _customerActivityService.InsertActivity("PublicStore.PlaceOrder", "", _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id);
 
             return order;
         }
@@ -1083,8 +1072,6 @@ namespace Grand.Services.Orders
             //Update field Last purchase date after added a new order
             await _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);
 
-            //Update field last update cart
-            await _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
         }
 
         protected virtual async Task CreateRecurringPayment(ProcessPaymentRequest processPaymentRequest, Order order)
@@ -1130,50 +1117,7 @@ namespace Grand.Services.Orders
                     break;
             }
         }
-
-        /// <summary>
-        /// Award reward points
-        /// </summary>
-        /// <param name="order">Order</param>
-        protected virtual async Task AwardRewardPoints(Order order)
-        {
-            var customer = await _customerService.GetCustomerById(order.CustomerId);
-
-            int points = _orderTotalCalculationService.CalculateRewardPoints(customer, order.OrderTotal - order.OrderShippingInclTax);
-            if (points <= 0)
-                return;
-
-            //Ensure that reward points were not added before. We should not add reward points if they were already earned for this order
-            if (order.RewardPointsWereAdded)
-                return;
-
-            //add reward points
-            await _rewardPointsService.AddRewardPointsHistory(customer.Id, points, order.StoreId, string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.OrderNumber));
-
-        }
-
-        /// <summary>
-        /// Award reward points
-        /// </summary>
-        /// <param name="order">Order</param>
-        protected virtual async Task ReduceRewardPoints(Order order)
-        {
-            var customer = await _customerService.GetCustomerById(order.CustomerId);
-            int points = _orderTotalCalculationService.CalculateRewardPoints(customer, order.OrderTotal - order.OrderShippingInclTax);
-            if (points <= 0)
-                return;
-
-            //ensure that reward points were already earned for this order before
-            if (!order.RewardPointsWereAdded)
-                return;
-
-            //reduce reward points
-            await _rewardPointsService.AddRewardPointsHistory(customer.Id, -points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.OrderNumber));
-
-            await _orderService.UpdateOrder(order);
-        }
-
+        
         /// <summary>
         /// Return back redeemded reward points to a customer (spent when placing an order)
         /// </summary>
@@ -1188,168 +1132,6 @@ namespace Grand.Services.Orders
             await _rewardPointsService.AddRewardPointsHistory(order.CustomerId, -order.RedeemedRewardPointsEntry.Points, order.StoreId,
                 string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.OrderNumber));
 
-            await _orderService.UpdateOrder(order);
-        }
-
-        /// <summary>
-        /// Set IsActivated value for purchase gift cards for particular order
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <param name="activate">A value indicating whether to activate gift cards; true - activate, false - deactivate</param>
-        protected virtual async Task SetActivatedValueForPurchasedGiftCards(Order order, bool activate)
-        {
-            foreach (var orderItem in order.OrderItems)
-            {
-                var giftCards = await _giftCardService.GetAllGiftCards(purchasedWithOrderItemId: orderItem.Id,
-                    isGiftCardActivated: !activate);
-                foreach (var gc in giftCards)
-                {
-                    if (activate)
-                    {
-                        //activate
-                        bool isRecipientNotified = gc.IsRecipientNotified;
-                        if (gc.GiftCardType == GiftCardType.Virtual)
-                        {
-                            //send email for virtual gift card
-                            if (!String.IsNullOrEmpty(gc.RecipientEmail) &&
-                                !String.IsNullOrEmpty(gc.SenderEmail))
-                            {
-                                var customerLang = await _languageService.GetLanguageById(order.CustomerLanguageId);
-                                if (customerLang == null)
-                                    customerLang = (await _languageService.GetAllLanguages()).FirstOrDefault();
-                                if (customerLang == null)
-                                    throw new Exception("No languages could be loaded");
-                                int queuedEmailId = await _workflowMessageService.SendGiftCardNotification(gc, customerLang.Id);
-                                if (queuedEmailId > 0)
-                                    isRecipientNotified = true;
-                            }
-                        }
-                        gc.IsGiftCardActivated = true;
-                        gc.IsRecipientNotified = isRecipientNotified;
-                        await _giftCardService.UpdateGiftCard(gc);
-                    }
-                    else
-                    {
-                        //deactivate
-                        gc.IsGiftCardActivated = false;
-                        await _giftCardService.UpdateGiftCard(gc);
-                    }
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// Sets an order status
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <param name="os">New order status</param>
-        /// <param name="notifyCustomer">True to notify customer</param>
-        protected virtual async Task SetOrderStatus(Order order, OrderStatus os, bool notifyCustomer, bool notifyStoreOwner)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-
-            OrderStatus prevOrderStatus = order.OrderStatus;
-            if (prevOrderStatus == os)
-                return;
-
-            //set and save new order status
-            order.OrderStatusId = (int)os;
-            await _orderService.UpdateOrder(order);
-
-            //order notes, notifications
-            await _orderService.InsertOrderNote(new OrderNote {
-                Note = string.Format("Order status has been changed to {0}", os.ToString()),
-                DisplayToCustomer = false,
-                OrderId = order.Id,
-                CreatedOnUtc = DateTime.UtcNow
-            });
-
-            if (prevOrderStatus != OrderStatus.Complete &&
-                os == OrderStatus.Complete
-                && notifyCustomer)
-            {
-                //notification
-                var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
-                    await _pdfService.PrintOrderToPdf(order, "") : null;
-                var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
-                    "order.pdf" : null;
-
-                var orderCompletedAttachments = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail && _orderSettings.AttachPdfInvoiceToBinary ?
-                    new List<string> { await _pdfService.SaveOrderToBinary(order, "") } : new List<string>();
-
-                int orderCompletedCustomerNotificationQueuedEmailId = await _workflowMessageService
-                    .SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId, orderCompletedAttachmentFilePath,
-                    orderCompletedAttachmentFileName, orderCompletedAttachments);
-                if (orderCompletedCustomerNotificationQueuedEmailId > 0)
-                {
-                    await _orderService.InsertOrderNote(new OrderNote {
-                        Note = "\"Order completed\" email (to customer) has been queued.",
-                        DisplayToCustomer = false,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        OrderId = order.Id,
-                    });
-                }
-            }
-
-            if (prevOrderStatus != OrderStatus.Cancelled &&
-                os == OrderStatus.Cancelled
-                && notifyCustomer)
-            {
-                //notification customer
-                int orderCancelledCustomerNotificationQueuedEmailId = await _workflowMessageService.SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
-                if (orderCancelledCustomerNotificationQueuedEmailId > 0)
-                {
-                    await _orderService.InsertOrderNote(new OrderNote {
-                        Note = "\"Order cancelled\" email (to customer) has been queued.",
-                        DisplayToCustomer = false,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        OrderId = order.Id,
-                    });
-                }
-            }
-
-            if (prevOrderStatus != OrderStatus.Cancelled &&
-                os == OrderStatus.Cancelled
-                && notifyStoreOwner)
-            {
-                //notification store owner
-                int orderCancelledStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderCancelledStoreOwnerNotification(order, order.CustomerLanguageId);
-                if (orderCancelledStoreOwnerNotificationQueuedEmailId > 0)
-                {
-                    await _orderService.InsertOrderNote(new OrderNote {
-                        Note = "\"Order cancelled\" by customer.",
-                        DisplayToCustomer = true,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        OrderId = order.Id,
-                    });
-                }
-            }
-
-            //reward points
-            if (_rewardPointsSettings.PointsForPurchases_Awarded == order.OrderStatus)
-            {
-                await AwardRewardPoints(order);
-            }
-            if (_rewardPointsSettings.PointsForPurchases_Canceled == order.OrderStatus)
-            {
-                await ReduceRewardPoints(order);
-            }
-
-            //gift cards activation
-            if (_orderSettings.GiftCards_Activated_OrderStatusId > 0 &&
-               _orderSettings.GiftCards_Activated_OrderStatusId == (int)order.OrderStatus)
-            {
-                await SetActivatedValueForPurchasedGiftCards(order, true);
-            }
-
-            //gift cards deactivation
-            if (_orderSettings.DeactivateGiftCardsAfterCancelOrder &&
-                order.OrderStatus == OrderStatus.Cancelled)
-            {
-                await SetActivatedValueForPurchasedGiftCards(order, false);
-            }
         }
 
         /// <summary>
@@ -1363,9 +1145,6 @@ namespace Grand.Services.Orders
 
             //raise event
             await _mediator.Publish(new OrderPaidEvent(order));
-
-            //customer action event service - paid order
-            await _customerActionEventService.AddOrder(order, CustomerActionTypeEnum.PaidOrder);
 
             //order paid email notification
             if (order.OrderTotal != decimal.Zero)
@@ -1407,7 +1186,7 @@ namespace Grand.Services.Orders
             {
                 //find existing
                 var vendor = vendors.FirstOrDefault(v => v.Id == orderItem.VendorId);
-                if (vendor == null)
+                if (vendor == null && !string.IsNullOrEmpty(orderItem.VendorId))
                 {
                     //not found. load by Id
                     vendor = await _vendorService.GetVendorById(orderItem.VendorId);
@@ -1501,68 +1280,6 @@ namespace Grand.Services.Orders
                 }
             }
         }
-        /// <summary>
-        /// Checks order status
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <returns>Validated order</returns>
-        public virtual async Task CheckOrderStatus(Order order)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-
-            if (order.PaymentStatus == PaymentStatus.Paid && !order.PaidDateUtc.HasValue)
-            {
-                //ensure that paid date is set
-                order.PaidDateUtc = DateTime.UtcNow;
-                await _orderService.UpdateOrder(order);
-            }
-
-            if (order.OrderStatus == OrderStatus.Pending)
-            {
-                if (order.PaymentStatus == PaymentStatus.Authorized ||
-                    order.PaymentStatus == PaymentStatus.Paid)
-                {
-                    await SetOrderStatus(order, OrderStatus.Processing, false, false);
-                }
-
-                if (order.ShippingStatus == ShippingStatus.PartiallyShipped ||
-                    order.ShippingStatus == ShippingStatus.Shipped ||
-                    order.ShippingStatus == ShippingStatus.Delivered)
-                {
-                    await SetOrderStatus(order, OrderStatus.Processing, false, false);
-                }
-            }
-
-            if (order.OrderStatus != OrderStatus.Cancelled &&
-                order.OrderStatus != OrderStatus.Complete)
-            {
-                if (order.PaymentStatus == PaymentStatus.Paid)
-                {
-                    var completed = false;
-                    if (order.ShippingStatus == ShippingStatus.ShippingNotRequired)
-                    {
-                        completed = true;
-                    }
-                    else
-                    {
-                        if (_orderSettings.CompleteOrderWhenDelivered)
-                        {
-                            completed = order.ShippingStatus == ShippingStatus.Delivered;
-                        }
-                        else
-                        {
-                            completed = order.ShippingStatus == ShippingStatus.Shipped ||
-                                order.ShippingStatus == ShippingStatus.Delivered;
-                        }
-                    }
-                    if (completed)
-                    {
-                        await SetOrderStatus(order, OrderStatus.Complete, true, false);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Places an order
@@ -1579,6 +1296,9 @@ namespace Grand.Services.Orders
             {
                 if (processPaymentRequest.OrderGuid == Guid.Empty)
                     processPaymentRequest.OrderGuid = Guid.NewGuid();
+
+                if (string.IsNullOrEmpty(processPaymentRequest.OrderCode))
+                    processPaymentRequest.OrderCode = await _mediator.Send(new PrepareOrderCodeCommand());
 
                 //prepare order details
                 var details = !processPaymentRequest.IsRecurringPayment ? 
@@ -1638,7 +1358,7 @@ namespace Grand.Services.Orders
                     await SendNotification(order);
 
                     //check order status
-                    await CheckOrderStatus(order);
+                    await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
 
                     //update customer 
                     await UpdateCustomer(order);
@@ -1646,14 +1366,10 @@ namespace Grand.Services.Orders
                     //raise event       
                     await _mediator.Publish(new OrderPlacedEvent(order));
 
-                    //cutomer action - add order
-                    await _customerActionEventService.AddOrder(order, CustomerActionTypeEnum.AddOrder);
-
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
                         await ProcessOrderPaid(order);
                     }
-
                     #endregion
                 }
                 else
@@ -1688,72 +1404,6 @@ namespace Grand.Services.Orders
             #endregion
 
             return result;
-        }
-
-        /// <summary>
-        /// Deletes an order
-        /// </summary>
-        /// <param name="order">The order</param>
-        public virtual async Task DeleteOrder(Order order)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-
-            //check whether the order wasn't cancelled before
-            //if it already was cancelled, then there's no need to make the following adjustments
-            //(such as reward points, inventory, recurring payments)
-            //they already was done when cancelling the order
-            if (order.OrderStatus != OrderStatus.Cancelled)
-            {
-                //return (add) back redeemded reward points
-                await ReturnBackRedeemedRewardPoints(order);
-                //reduce (cancel) back reward points (previously awarded for this order)
-                await ReduceRewardPoints(order);
-
-                //cancel recurring payments
-                var recurringPayments = await _orderService.SearchRecurringPayments(initialOrderId: order.Id);
-                foreach (var rp in recurringPayments)
-                {
-                    var errors = CancelRecurringPayment(rp);
-                    //use "errors" variable?
-                }
-
-                //Adjust inventory for already shipped shipments
-                //only products with "use multiple warehouses"
-                foreach (var shipment in await _shipmentService.GetShipmentsByOrder(order.Id))
-                {
-                    foreach (var shipmentItem in shipment.ShipmentItems)
-                    {
-                        var product = await _productService.GetProductById(shipmentItem.ProductId);
-                        shipmentItem.ShipmentId = shipment.Id;
-                        if (product != null)
-                            await _productService.ReverseBookedInventory(product, shipment, shipmentItem);
-                    }
-                }
-                //Adjust inventory
-                foreach (var orderItem in order.OrderItems)
-                {
-                    var product = await _productService.GetProductById(orderItem.ProductId);
-                    if (product != null)
-                        await _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
-                }
-
-                //cancel reservations
-                await _productReservationService.CancelReservationsByOrderId(order.Id);
-
-                //cancel bid
-                await _auctionService.CancelBidByOrder(order.Id);
-            }
-            //deactivate gift cards
-            if (_orderSettings.DeactivateGiftCardsAfterDeletingOrder)
-                await SetActivatedValueForPurchasedGiftCards(order, false);
-
-            order.Deleted = true;
-            //now delete an order
-            await _orderService.UpdateOrder(order);
-
-            //cancel discounts 
-            await _discountService.CancelDiscount(order.Id);
         }
 
         /// <summary>
@@ -1940,134 +1590,6 @@ namespace Grand.Services.Orders
         }
 
         /// <summary>
-        /// Send a shipment
-        /// </summary>
-        /// <param name="shipment">Shipment</param>
-        /// <param name="notifyCustomer">True to notify customer</param>
-        public virtual async Task Ship(Shipment shipment, bool notifyCustomer)
-        {
-            if (shipment == null)
-                throw new ArgumentNullException("shipment");
-
-            var order = await _orderService.GetOrderById(shipment.OrderId);
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
-
-            if (shipment.ShippedDateUtc.HasValue)
-                throw new Exception("This shipment is already shipped");
-
-            shipment.ShippedDateUtc = DateTime.UtcNow;
-            await _shipmentService.UpdateShipment(shipment);
-
-            //process products with "Multiple warehouse" support enabled
-            foreach (var item in shipment.ShipmentItems)
-            {
-                var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
-                var product = await _productService.GetProductByIdIncludeArch(orderItem.ProductId);
-                await _productService.BookReservedInventory(product, item.AttributeXML, item.WarehouseId, -item.Quantity);
-            }
-
-            //check whether we have more items to ship
-            if (await order.HasItemsToAddToShipment(_orderService, _shipmentService, _productService) || 
-                await order.HasItemsToShip(_orderService, _shipmentService, _productService))
-                order.ShippingStatusId = (int)ShippingStatus.PartiallyShipped;
-            else
-                order.ShippingStatusId = (int)ShippingStatus.Shipped;
-
-            await _orderService.UpdateOrder(order);
-
-            //add a note
-            await _orderService.InsertOrderNote(new OrderNote {
-                Note = $"Shipment #{shipment.ShipmentNumber} has been sent",
-                DisplayToCustomer = false,
-                CreatedOnUtc = DateTime.UtcNow,
-                OrderId = order.Id,
-            });
-
-            if (notifyCustomer)
-            {
-                //notify customer
-                int queuedEmailId = await _workflowMessageService.SendShipmentSentCustomerNotification(shipment, order.CustomerLanguageId);
-                if (queuedEmailId > 0)
-                {
-                    await _orderService.InsertOrderNote(new OrderNote {
-                        Note = "\"Shipped\" email (to customer) has been queued.",
-                        DisplayToCustomer = false,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        OrderId = order.Id,
-                    });
-                }
-            }
-
-            //event
-            await _mediator.PublishShipmentSent(shipment);
-
-            //check order status
-            await CheckOrderStatus(order);
-        }
-
-        /// <summary>
-        /// Marks a shipment as delivered
-        /// </summary>
-        /// <param name="shipment">Shipment</param>
-        /// <param name="notifyCustomer">True to notify customer</param>
-        public virtual async Task Deliver(Shipment shipment, bool notifyCustomer)
-        {
-            if (shipment == null)
-                throw new ArgumentNullException("shipment");
-
-            var order = await _orderService.GetOrderById(shipment.OrderId);
-            if (order == null)
-                throw new Exception("Order cannot be loaded");
-
-            if (!shipment.ShippedDateUtc.HasValue)
-                throw new Exception("This shipment is not shipped yet");
-
-            if (shipment.DeliveryDateUtc.HasValue)
-                throw new Exception("This shipment is already delivered");
-
-            shipment.DeliveryDateUtc = DateTime.UtcNow;
-            await _shipmentService.UpdateShipment(shipment);
-
-            if (!await order.HasItemsToAddToShipment(_orderService, _shipmentService, _productService) 
-                && !await order.HasItemsToShip(_orderService, _shipmentService, _productService) 
-                && !await order.HasItemsToDeliver(_shipmentService, _productService))
-                order.ShippingStatusId = (int)ShippingStatus.Delivered;
-
-            await _orderService.UpdateOrder(order);
-
-            //add a note
-            await _orderService.InsertOrderNote(new OrderNote {
-                Note = $"Shipment #{shipment.ShipmentNumber} has been delivered",
-                DisplayToCustomer = false,
-                CreatedOnUtc = DateTime.UtcNow,
-                OrderId = order.Id,
-            });
-
-            if (notifyCustomer)
-            {
-                //send email notification
-                int queuedEmailId = await _workflowMessageService.SendShipmentDeliveredCustomerNotification(shipment, order.CustomerLanguageId);
-                if (queuedEmailId > 0)
-                {
-                    await _orderService.InsertOrderNote(new OrderNote {
-                        Note = "\"Delivered\" email (to customer) has been queued.",
-                        DisplayToCustomer = false,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        OrderId = order.Id,
-                    });
-                }
-            }
-
-            //event
-            await _mediator.PublishShipmentDelivered(shipment);
-
-            //check order status
-            await CheckOrderStatus(order);
-        }
-
-
-        /// <summary>
         /// Gets a value indicating whether cancel is allowed
         /// </summary>
         /// <param name="order">Order</param>
@@ -2081,75 +1603,6 @@ namespace Grand.Services.Orders
                 return false;
 
             return true;
-        }
-
-        /// <summary>
-        /// Cancels order
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <param name="notifyCustomer">True to notify customer</param>
-        public virtual async Task CancelOrder(Order order, bool notifyCustomer, bool notifyStoreOwner = false)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-
-            if (!CanCancelOrder(order))
-                throw new GrandException("Cannot do cancel for order.");
-
-            //Cancel order
-            await SetOrderStatus(order, OrderStatus.Cancelled, notifyCustomer, notifyStoreOwner);
-
-            //add a note
-            await _orderService.InsertOrderNote(new OrderNote {
-                Note = "Order has been cancelled",
-                DisplayToCustomer = false,
-                CreatedOnUtc = DateTime.UtcNow,
-                OrderId = order.Id,
-
-            });
-
-            //return (add) back redeemded reward points
-            await ReturnBackRedeemedRewardPoints(order);
-
-            //cancel recurring payments
-            var recurringPayments = await _orderService.SearchRecurringPayments(initialOrderId: order.Id);
-            foreach (var rp in recurringPayments)
-            {
-                var errors = CancelRecurringPayment(rp);
-                //use "errors" variable?
-            }
-
-            //Adjust inventory for already shipped shipments
-            //only products with "use multiple warehouses"
-            var shipments = await _shipmentService.GetShipmentsByOrder(order.Id);
-            foreach (var shipment in shipments)
-            {
-                foreach (var shipmentItem in shipment.ShipmentItems)
-                {
-                    var product = await _productService.GetProductById(shipmentItem.ProductId);
-                    shipmentItem.ShipmentId = shipment.Id;
-                    await _productService.ReverseBookedInventory(product, shipment, shipmentItem);
-                }
-            }
-            //Adjust inventory
-            foreach (var orderItem in order.OrderItems)
-            {
-                var product = await _productService.GetProductById(orderItem.ProductId);
-                await _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
-            }
-
-            //cancel reservations
-            await _productReservationService.CancelReservationsByOrderId(order.Id);
-
-            //cancel bid
-            await _auctionService.CancelBidByOrder(order.Id);
-
-            //cancel discount
-            await _discountService.CancelDiscount(order.Id);
-
-            //event notification
-            await _mediator.Publish(new OrderCancelledEvent(order));
-
         }
 
         /// <summary>
@@ -2195,10 +1648,8 @@ namespace Grand.Services.Orders
             await _mediator.Publish(new OrderMarkAsAuthorizedEvent(order));
 
             //check order status
-            await CheckOrderStatus(order);
+            await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
         }
-
-
 
         /// <summary>
         /// Gets a value indicating whether capture from admin panel is allowed
@@ -2266,8 +1717,7 @@ namespace Grand.Services.Orders
 
                     });
 
-                    await CheckOrderStatus(order);
-
+                    await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
                         await ProcessOrderPaid(order);
@@ -2353,8 +1803,7 @@ namespace Grand.Services.Orders
 
             });
 
-            await CheckOrderStatus(order);
-
+            await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
             if (order.PaymentStatus == PaymentStatus.Paid)
             {
                 await ProcessOrderPaid(order);
@@ -2429,7 +1878,7 @@ namespace Grand.Services.Orders
                     });
 
                     //check order status
-                    await CheckOrderStatus(order);
+                    await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
 
                     //notifications
                     var orderRefundedStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, request.AmountToRefund, _localizationSettings.DefaultAdminLanguageId);
@@ -2552,7 +2001,7 @@ namespace Grand.Services.Orders
             });
 
             //check order status
-            await CheckOrderStatus(order);
+            await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
 
             //notifications
             var orderRefundedStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
@@ -2659,7 +2108,7 @@ namespace Grand.Services.Orders
                     });
 
                     //check order status
-                    await CheckOrderStatus(order);
+                    await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
 
                     //notifications
                     var orderRefundedStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
@@ -2783,7 +2232,7 @@ namespace Grand.Services.Orders
             });
 
             //check order status
-            await CheckOrderStatus(order);
+            await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
 
             //notifications
             var orderRefundedStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
@@ -2810,8 +2259,6 @@ namespace Grand.Services.Orders
             //raise event       
             await _mediator.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
-
-
 
         /// <summary>
         /// Gets a value indicating whether void from admin panel is allowed
@@ -2871,7 +2318,7 @@ namespace Grand.Services.Orders
                     });
 
                     //check order status
-                    await CheckOrderStatus(order);
+                    await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
                 }
             }
             catch (Exception exc)
@@ -2952,80 +2399,7 @@ namespace Grand.Services.Orders
             await _mediator.Publish(new OrderVoidOfflineEvent(order));
 
             //check orer status
-            await CheckOrderStatus(order);
-        }
-
-        /// <summary>
-        /// Place order items in current user shopping cart.
-        /// </summary>
-        /// <param name="order">The order</param>
-        public virtual async Task ReOrder(Order order)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-
-            var customer = await _customerService.GetCustomerById(order.CustomerId);
-
-            foreach (var orderItem in order.OrderItems)
-            {
-                var product = await _productService.GetProductById(orderItem.ProductId);
-                if (product != null)
-                {
-                    if (product.ProductType == ProductType.SimpleProduct)
-                    {
-                        await _shoppingCartService.AddToCart(customer, orderItem.ProductId,
-                            ShoppingCartType.ShoppingCart, order.StoreId, orderItem.WarehouseId,
-                            orderItem.AttributesXml, orderItem.UnitPriceExclTax,
-                            orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
-                            orderItem.Quantity, false);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Check whether return request is allowed
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <returns>Result</returns>
-        public virtual async Task<bool> IsReturnRequestAllowed(Order order)
-        {
-            if (!_orderSettings.ReturnRequestsEnabled)
-                return false;
-
-            if (order == null || order.Deleted)
-                return false;
-
-            var shipments = await _shipmentService.GetShipmentsByOrder(order.Id);
-
-            //validate allowed number of days
-            if (_orderSettings.NumberOfDaysReturnRequestAvailable > 0)
-            {
-                var daysPassed = (DateTime.UtcNow - order.CreatedOnUtc).TotalDays;
-                if (daysPassed >= _orderSettings.NumberOfDaysReturnRequestAvailable)
-                    return false;
-            }
-            foreach (var item in order.OrderItems)
-            {
-                var product = await _productService.GetProductById(item.ProductId);
-                if (product == null)
-                    return false;
-
-                var qtyDelivery = shipments.Where(x => x.DeliveryDateUtc.HasValue).SelectMany(x => x.ShipmentItems).Where(x => x.OrderItemId == item.Id).Sum(x => x.Quantity);
-                var returnRequests = (await _mediator.Send(new GetReturnRequestQueryModel() { CustomerId = order.CustomerId, OrderItemId = item.Id })).ToList();
-                int qtyReturn = 0;
-                foreach (var rr in returnRequests)
-                {
-                    foreach (var rrItem in rr.ReturnRequestItems)
-                    {
-                        qtyReturn += rrItem.Quantity;
-                    }
-                }
-
-                if (!product.NotReturnable && qtyDelivery - qtyReturn > 0)
-                    return true;
-            }
-            return false;
+            await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
         }
 
         /// <summary>
@@ -3037,6 +2411,9 @@ namespace Grand.Services.Orders
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
+
+            if (!cart.Any())
+                return false;
 
             //min order amount sub-total validation
             if (cart.Any() && _orderSettings.MinOrderSubtotalAmount > decimal.Zero)

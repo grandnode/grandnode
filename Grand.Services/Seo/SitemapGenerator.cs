@@ -8,6 +8,7 @@ using Grand.Core.Domain.News;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Helpers;
+using Grand.Services.Media;
 using Grand.Services.Topics;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -44,6 +45,7 @@ namespace Grand.Services.Seo
         private readonly IManufacturerService _manufacturerService;
         private readonly ITopicService _topicService;
         private readonly IBlogService _blogService;
+        private readonly IPictureService _pictureService;
         private readonly IWebHelper _webHelper;
         private readonly CommonSettings _commonSettings;
         private readonly BlogSettings _blogSettings;
@@ -61,6 +63,7 @@ namespace Grand.Services.Seo
             IManufacturerService manufacturerService,
             ITopicService topicService,
             IBlogService blogService,
+            IPictureService pictureService,
             IWebHelper webHelper,
             CommonSettings commonSettings,
             BlogSettings blogSettings,
@@ -74,6 +77,7 @@ namespace Grand.Services.Seo
             _manufacturerService = manufacturerService;
             _topicService = topicService;
             _blogService = blogService;
+            _pictureService = pictureService;
             _webHelper = webHelper;
             _commonSettings = commonSettings;
             _blogSettings = blogSettings;
@@ -91,9 +95,10 @@ namespace Grand.Services.Seo
         /// </summary>
         protected class SitemapUrl
         {
-            public SitemapUrl(string location, UpdateFrequency frequency, DateTime updatedOn)
+            public SitemapUrl(string location, string image, UpdateFrequency frequency, DateTime updatedOn)
             {
                 Location = location;
+                Image = image;
                 UpdateFrequency = frequency;
                 UpdatedOn = updatedOn;
             }
@@ -102,6 +107,11 @@ namespace Grand.Services.Seo
             /// Gets or sets URL of the page
             /// </summary>
             public string Location { get; set; }
+
+            /// <summary>
+            /// Gets or sets URL of the image
+            /// </summary>
+            public string Image { get; set; }
 
             /// <summary>
             /// Gets or sets a value indicating how frequently the page is likely to change
@@ -138,42 +148,42 @@ namespace Grand.Services.Seo
 
             //home page
             var homePageUrl = urlHelper.RouteUrl("HomePage", null, GetHttpProtocol());
-            sitemapUrls.Add(new SitemapUrl(homePageUrl, UpdateFrequency.Weekly, DateTime.UtcNow));
+            sitemapUrls.Add(new SitemapUrl(homePageUrl, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
 
             //search products
             var productSearchUrl = urlHelper.RouteUrl("ProductSearch", null, GetHttpProtocol());
-            sitemapUrls.Add(new SitemapUrl(productSearchUrl, UpdateFrequency.Weekly, DateTime.UtcNow));
+            sitemapUrls.Add(new SitemapUrl(productSearchUrl, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
 
             //contact us
             var contactUsUrl = urlHelper.RouteUrl("ContactUs", null, GetHttpProtocol());
-            sitemapUrls.Add(new SitemapUrl(contactUsUrl, UpdateFrequency.Weekly, DateTime.UtcNow));
+            sitemapUrls.Add(new SitemapUrl(contactUsUrl, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
 
             //news
             if (_newsSettings.Enabled)
             {
                 var url = urlHelper.RouteUrl("NewsArchive", null, GetHttpProtocol());
-                sitemapUrls.Add(new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow));
+                sitemapUrls.Add(new SitemapUrl(url, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
             }
 
             //blog
             if (_blogSettings.Enabled)
             {
                 var url = urlHelper.RouteUrl("Blog", null, GetHttpProtocol());
-                sitemapUrls.Add(new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow));
+                sitemapUrls.Add(new SitemapUrl(url, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
             }
 
             //knowledgebase
             if (_knowledgebaseSettings.Enabled)
             {
                 var url = urlHelper.RouteUrl("Knowledgebase", null, GetHttpProtocol());
-                sitemapUrls.Add(new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow));
+                sitemapUrls.Add(new SitemapUrl(url, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
             }
 
             //forums
             if (_forumSettings.ForumsEnabled)
             {
                 var url = urlHelper.RouteUrl("Boards", null, GetHttpProtocol());
-                sitemapUrls.Add(new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow));
+                sitemapUrls.Add(new SitemapUrl(url, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
             }
 
             //categories
@@ -210,11 +220,19 @@ namespace Grand.Services.Seo
         {
             var allCategoriesByParentCategoryId = await _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId: parentCategoryId);
             var categories = new List<SitemapUrl>();
+            var storeLocation = _webHelper.GetStoreLocation();
             foreach (var category in allCategoriesByParentCategoryId)
             {
-                var sitemapUrls = new List<SitemapUrl>();
                 var url = urlHelper.RouteUrl("Category", new { SeName = category.GetSeName(language) }, GetHttpProtocol());
-                categories.Add(new SitemapUrl(url, UpdateFrequency.Weekly, category.UpdatedOnUtc));
+                var imageurl = string.Empty;
+                if(_commonSettings.SitemapIncludeImage)
+                {
+                    if(!string.IsNullOrEmpty(category.PictureId))
+                    {
+                        imageurl = await _pictureService.GetPictureUrl(category.PictureId, showDefaultPicture: false, storeLocation: storeLocation);
+                    }
+                }
+                categories.Add(new SitemapUrl(url, imageurl, UpdateFrequency.Weekly, category.UpdatedOnUtc));
                 categories.AddRange(await GetCategoryUrls(urlHelper, category.Id, language));
             }
             return categories;
@@ -228,11 +246,22 @@ namespace Grand.Services.Seo
         protected virtual async Task<IEnumerable<SitemapUrl>> GetManufacturerUrls(IUrlHelper urlHelper, string language)
         {
             var manuf = await _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
-            return manuf.Select(manufacturer =>
+            var manufactures = new List<SitemapUrl>();
+            var storeLocation = _webHelper.GetStoreLocation();
+            foreach (var manufacturer in manuf)
             {
                 var url = urlHelper.RouteUrl("Manufacturer", new { SeName = manufacturer.GetSeName(language) }, GetHttpProtocol());
-                return new SitemapUrl(url, UpdateFrequency.Weekly, manufacturer.UpdatedOnUtc);
-            });
+                var imageurl = string.Empty;
+                if (_commonSettings.SitemapIncludeImage)
+                {
+                    if (!string.IsNullOrEmpty(manufacturer.PictureId))
+                    {
+                        imageurl = await _pictureService.GetPictureUrl(manufacturer.PictureId, showDefaultPicture: false, storeLocation: storeLocation);
+                    }
+                }
+                manufactures.Add(new SitemapUrl(url, imageurl, UpdateFrequency.Weekly, manufacturer.UpdatedOnUtc));
+            }
+            return manufactures;
         }
 
         /// <summary>
@@ -244,12 +273,23 @@ namespace Grand.Services.Seo
         {
             var search = await _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn);
-
-            return search.products.Select(product =>
+            var storeLocation = _webHelper.GetStoreLocation();
+            var products = new List<SitemapUrl>();
+            foreach (var product in search.products)
+            {
+                var url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName(language) }, GetHttpProtocol());
+                var imageurl = string.Empty;
+                if (_commonSettings.SitemapIncludeImage)
                 {
-                    var url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName(language) }, GetHttpProtocol());
-                    return new SitemapUrl(url, UpdateFrequency.Weekly, product.UpdatedOnUtc);
-                });
+                    if (!string.IsNullOrEmpty(product.ProductPictures.FirstOrDefault()?.PictureId))
+                    {
+                        imageurl = await _pictureService.GetPictureUrl(product.ProductPictures.FirstOrDefault().PictureId, showDefaultPicture: false, storeLocation: storeLocation);
+                    }
+                }
+                products.Add(new SitemapUrl(url, imageurl, UpdateFrequency.Weekly, product.UpdatedOnUtc));
+            }
+            return products;
+            
         }
 
         /// <summary>
@@ -263,7 +303,7 @@ namespace Grand.Services.Seo
             return topics.Where(t => t.IncludeInSitemap).Select(topic =>
             {
                 var url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName(language) }, GetHttpProtocol());
-                return new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow);
+                return new SitemapUrl(url, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow);
             });
         }
 
@@ -275,11 +315,23 @@ namespace Grand.Services.Seo
         protected virtual async Task<IEnumerable<SitemapUrl>> GetBlogPostsUrls(IUrlHelper urlHelper, string language)
         {
             var blogposts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
-            return blogposts.Select(blogpost =>
+            var blog = new List<SitemapUrl>();
+            var storeLocation = _webHelper.GetStoreLocation();
+            foreach (var blogpost in blogposts)
             {
                 var url = urlHelper.RouteUrl("BlogPost", new { SeName = blogpost.GetSeName(language) }, GetHttpProtocol());
-                return new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow);
-            });
+                var imageurl = string.Empty;
+                if (_commonSettings.SitemapIncludeImage)
+                {
+                    if (!string.IsNullOrEmpty(blogpost.PictureId))
+                    {
+                        imageurl = await _pictureService.GetPictureUrl(blogpost.PictureId, showDefaultPicture: false, storeLocation: storeLocation);
+                    }
+                }
+                blog.Add(new SitemapUrl(url, imageurl, UpdateFrequency.Weekly, DateTime.UtcNow));
+            }
+            
+            return blog;
         }
 
         /// <summary>
@@ -291,7 +343,7 @@ namespace Grand.Services.Seo
             var storeLocation = _webHelper.GetStoreLocation();
 
             return _commonSettings.SitemapCustomUrls.Select(customUrl =>
-                new SitemapUrl(string.Concat(storeLocation, customUrl), UpdateFrequency.Weekly, DateTime.UtcNow));
+                new SitemapUrl(string.Concat(storeLocation, customUrl), string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
         }
 
         /// <summary>
@@ -358,7 +410,10 @@ namespace Grand.Services.Seo
                 await writer.WriteStartDocumentAsync();
                 writer.WriteStartElement("urlset");
                 await writer.WriteAttributeStringAsync("urlset", "xmlns", null, "http://www.sitemaps.org/schemas/sitemap/0.9");
-                await writer.WriteAttributeStringAsync("xmlns", "xsi", null, "http://www.w3.org/2001/XMLSchema-instance");
+
+                if (_commonSettings.SitemapIncludeImage)
+                    await writer.WriteAttributeStringAsync("xmlns", "image", null, "http://www.google.com/schemas/sitemap-image/1.1");
+
                 await writer.WriteAttributeStringAsync("xsi", "schemaLocation", null, "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
 
                 //write URLs from list to the sitemap
@@ -366,8 +421,15 @@ namespace Grand.Services.Seo
                 {
                     writer.WriteStartElement("url");
                     var location = XmlHelper.XmlEncode(url.Location);
-
                     writer.WriteElementString("loc", location);
+
+                    if (_commonSettings.SitemapIncludeImage && !string.IsNullOrEmpty(url.Image))
+                    {
+                        writer.WriteStartElement("image", "image", null);
+                        writer.WriteElementString("image", "loc", null, url.Image);
+                        writer.WriteEndElement();
+                    }
+
                     writer.WriteElementString("changefreq", url.UpdateFrequency.ToString().ToLowerInvariant());
                     writer.WriteElementString("lastmod", url.UpdatedOn.ToString(DateFormat));
                     writer.WriteEndElement();

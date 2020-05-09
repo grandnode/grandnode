@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Services.Queries.Handlers.Orders
 {
-    public class GetGiftCardQueryHandler : IRequestHandler<GetGiftCardQueryModel, IMongoQueryable<GiftCard>>
+    public class GetGiftCardQueryHandler : IRequestHandler<GetGiftCardQuery, IMongoQueryable<GiftCard>>
     {
         private readonly IRepository<GiftCard> _giftCardRepository;
 
@@ -18,7 +18,7 @@ namespace Grand.Services.Queries.Handlers.Orders
             _giftCardRepository = giftCardRepository;
         }
 
-        public Task<IMongoQueryable<GiftCard>> Handle(GetGiftCardQueryModel request, CancellationToken cancellationToken)
+        public Task<IMongoQueryable<GiftCard>> Handle(GetGiftCardQuery request, CancellationToken cancellationToken)
         {
             var query = _giftCardRepository.Table;
 

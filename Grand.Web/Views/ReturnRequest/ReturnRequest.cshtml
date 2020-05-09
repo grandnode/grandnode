@@ -66,6 +66,12 @@
                                                 @Html.Raw(item.AttributeInfo)
                                             </div>
                                         }
+                                        @if (!String.IsNullOrEmpty(item.VendorName))
+                                        {
+                                            <div class="vendor">
+                                                @item.VendorName
+                                            </div>
+                                        }
                                     </td>
                                     <td class="unit-price">
                                         @item.UnitPrice

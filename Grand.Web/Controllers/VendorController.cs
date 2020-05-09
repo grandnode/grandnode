@@ -34,6 +34,7 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -51,7 +52,9 @@ namespace Grand.Web.Controllers
 
         #region Constructors
 
-        public VendorController(IWorkContext workContext,
+        public VendorController(
+            IWorkContext workContext,
+            IStoreContext storeContext,
             ILocalizationService localizationService,
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
@@ -67,6 +70,7 @@ namespace Grand.Web.Controllers
             MediaSettings mediaSettings)
         {
             _workContext = workContext;
+            _storeContext = storeContext;
             _localizationService = localizationService;
             _customerService = customerService;
             _workflowMessageService = workflowMessageService;
@@ -148,18 +152,22 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
-            string pictureId = "";
+            string pictureId = string.Empty;
+            string contentType = string.Empty;
+            byte[] vendorPictureBinary = null;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
                 try
                 {
-                    var contentType = uploadedFile.ContentType;
-                    var vendorPictureBinary = uploadedFile.GetPictureBits();
-                    var picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    contentType = uploadedFile.ContentType;
+                    if (string.IsNullOrEmpty(contentType))
+                        ModelState.AddModelError("", "Empty content type");
+                    else
+                        if (!contentType.StartsWith("image"))
+                            ModelState.AddModelError("", "Only image content type is allowed");
 
-                    if (picture != null)
-                        pictureId = picture.Id;
+                    vendorPictureBinary = uploadedFile.GetPictureBits();
                 }
                 catch (Exception)
                 {
@@ -169,6 +177,13 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                if (vendorPictureBinary != null && !string.IsNullOrEmpty(contentType))
+                {
+                    var picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    if (picture != null)
+                        pictureId = picture.Id;
+                }
+
                 var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
                 var address = new Address();
                 //disabled by default
@@ -198,7 +213,7 @@ namespace Grand.Web.Controllers
 
                 //notify store owner here (email)
                 await _workflowMessageService.SendNewVendorAccountApplyStoreOwnerNotification(_workContext.CurrentCustomer,
-                    vendor, _localizationSettings.DefaultAdminLanguageId);
+                    vendor, _storeContext.CurrentStore, _localizationSettings.DefaultAdminLanguageId);
 
                 model.DisableFormInput = true;
                 model.Result = _localizationService.GetResource("Vendors.ApplyAccount.Submitted");
@@ -257,15 +272,22 @@ namespace Grand.Web.Controllers
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
 
-            Picture picture = null;
+            string pictureId = string.Empty;
+            string contentType = string.Empty;
+            byte[] vendorPictureBinary = null;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
                 try
                 {
-                    var contentType = uploadedFile.ContentType;
-                    var vendorPictureBinary = uploadedFile.GetPictureBits();
-                    picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    contentType = uploadedFile.ContentType;
+                    if (string.IsNullOrEmpty(contentType))
+                        ModelState.AddModelError("", "Empty content type");
+                    else
+                        if (!contentType.StartsWith("image"))
+                        ModelState.AddModelError("", "Only image content type is allowed");
+
+                    vendorPictureBinary = uploadedFile.GetPictureBits();
                 }
                 catch (Exception)
                 {
@@ -284,13 +306,14 @@ namespace Grand.Web.Controllers
                 vendor.Email = model.Email;
                 vendor.Description = description;
 
-                if (picture != null)
+                if (vendorPictureBinary != null && !string.IsNullOrEmpty(contentType))
                 {
-                    vendor.PictureId = picture.Id;
-
-                    if (prevPicture != null)
-                        await _pictureService.DeletePicture(prevPicture);
+                    var picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    if (picture != null)
+                        vendor.PictureId = picture.Id;
                 }
+                if (prevPicture != null)
+                    await _pictureService.DeletePicture(prevPicture);
 
                 //update picture seo file name
                 await UpdatePictureSeoNames(vendor);
@@ -300,7 +323,7 @@ namespace Grand.Web.Controllers
 
                 //notifications
                 if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
-                    await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _storeContext.CurrentStore, _localizationSettings.DefaultAdminLanguageId);
 
                 return RedirectToAction("Info");
             }
@@ -338,7 +361,7 @@ namespace Grand.Web.Controllers
 
             //notifications
             if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
-                await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _storeContext.CurrentStore, _localizationSettings.DefaultAdminLanguageId);
 
             return RedirectToAction("Info");
         }
@@ -387,7 +410,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model = await _mediator.Send(new ContactVendorSendCommand() { Model = model, Vendor = vendor });;
+                model = await _mediator.Send(new ContactVendorSendCommand() { Model = model, Vendor = vendor, Store = _storeContext.CurrentStore });;
                 return View(model);
             }
 

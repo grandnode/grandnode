@@ -43,6 +43,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _order.OrderNumber.ToString(); }
         }
 
+        public string OrderCode {
+            get { return _order.Code; }
+        }
+
         public string CustomerFullName {
             get { return string.Format("{0} {1}", _order.BillingAddress.FirstName, _order.BillingAddress.LastName); }
         }

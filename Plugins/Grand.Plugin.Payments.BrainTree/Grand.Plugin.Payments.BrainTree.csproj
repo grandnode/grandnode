@@ -20,13 +20,13 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="Braintree" Version="4.16.0" />
+    <PackageReference Include="Braintree" Version="4.17.0" />
     <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
   </ItemGroup>
   
   <Target Name="CopyFile" AfterTargets="AfterBuild">
     <ItemGroup>
-      <CopyFiles Include="$(NuGetPackageRoot)\braintree\4.16.0\lib\netstandard2.0\*.*" />
+      <CopyFiles Include="$(NuGetPackageRoot)\braintree\4.17.0\lib\netstandard2.0\*.*" />
       <CopyFiles Include="$(NuGetPackageRoot)\system.xml.xpath.xmldocument\4.3.0\lib\netstandard1.3\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(CopyFiles)" DestinationFolder="..\..\Grand.Web\Plugins\Payments.BrainTree\" />

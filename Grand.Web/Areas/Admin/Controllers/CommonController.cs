@@ -26,6 +26,7 @@ using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Commands.Model.Common;
 using Grand.Web.Areas.Admin.Models.Common;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -35,9 +36,11 @@ using MongoDB.Driver.Core.Operations;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -674,6 +677,64 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(new { Result = true });
         }
+
+
+        #endregion
+
+        #region Custom css/js
+
+        public async Task<IActionResult> CustomCss()
+        {
+            var model = new Editor();
+            var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", "style.css");
+            if (System.IO.File.Exists(file))
+            {
+                model.Content = await System.IO.File.ReadAllTextAsync(file);
+            }
+
+            if (string.IsNullOrEmpty(model.Content))
+                model.Content = "/* my custom style */";
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> CustomJs()
+        {
+            var model = new Editor();
+            var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", "script.js");
+            if (System.IO.File.Exists(file))
+            {
+                model.Content = await System.IO.File.ReadAllTextAsync(file);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult SaveEditor(string content = "", bool css = true)
+        {
+            try
+            {
+                var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", css ? "style.css" : "script.js");
+
+                if (System.IO.File.Exists(file))
+                    System.IO.File.WriteAllText(file, content, Encoding.UTF8);
+                else
+                {
+                    if (!Directory.Exists(Path.GetDirectoryName(file)))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(file));
+                    }
+                    System.IO.File.WriteAllText(file, content, Encoding.UTF8);
+                }
+                return Json(_localizationService.GetResource("Admin.Common.Content.Saved"));
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+        }
+
 
 
         #endregion

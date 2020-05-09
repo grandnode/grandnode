@@ -24,6 +24,7 @@ namespace Grand.Services.Orders
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
+        private readonly IRepository<ReturnRequestNote> _returnRequestNoteRepository;
         private readonly IMediator _mediator;
 
         #endregion
@@ -36,15 +37,18 @@ namespace Grand.Services.Orders
         /// <param name="returnRequestRepository">Return request repository</param>
         /// <param name="returnRequestActionRepository">Return request action repository</param>
         /// <param name="returnRequestReasonRepository">Return request reason repository</param>
+        /// <param name="returnRequestNoteRepository">Return request note repository</param>
         /// <param name="mediator">Mediator</param>
         public ReturnRequestService(IRepository<ReturnRequest> returnRequestRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
             IRepository<ReturnRequestReason> returnRequestReasonRepository,
+            IRepository<ReturnRequestNote> returnRequestNoteRepository,
             IMediator mediator)
         {
             _returnRequestRepository = returnRequestRepository;
             _returnRequestActionRepository = returnRequestActionRepository;
             _returnRequestReasonRepository = returnRequestReasonRepository;
+            _returnRequestNoteRepository = returnRequestNoteRepository;
             _mediator = mediator;
         }
 
@@ -93,6 +97,7 @@ namespace Grand.Services.Orders
         /// <param name="storeId">Store identifier; 0 to load all entries</param>
         /// <param name="customerId">Customer identifier; null to load all entries</param>
         /// <param name="orderItemId">Order item identifier; 0 to load all entries</param>
+        /// <param name="vendorId">Vendor identifier</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="rs">Return request status; null to load all entries</param>
@@ -100,15 +105,16 @@ namespace Grand.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
         public virtual async Task<IPagedList<ReturnRequest>> SearchReturnRequests(string storeId = "", string customerId = "",
-            string orderItemId = "", ReturnRequestStatus? rs = null,
+            string orderItemId = "", string vendorId = "", ReturnRequestStatus? rs = null,
             int pageIndex = 0, int pageSize = int.MaxValue, DateTime? createdFromUtc = null, DateTime? createdToUtc = null)
         {
-            var model = new GetReturnRequestQueryModel() {
+            var model = new GetReturnRequestQuery() {
                 CreatedFromUtc = createdFromUtc,
                 CreatedToUtc = createdToUtc,
                 PageIndex = pageIndex,
                 PageSize = pageSize,
                 CustomerId = customerId,
+                VendorId = vendorId,
                 StoreId = storeId,
                 OrderItemId = orderItemId,
                 Rs = rs,
@@ -289,6 +295,66 @@ namespace Grand.Services.Orders
             //event notification
             await _mediator.EntityUpdated(returnRequest);
         }
+
+        #region Return request notes
+
+        /// <summary>
+        /// Deletes a return request note
+        /// </summary>
+        /// <param name="returnRequestNote">The return request note</param>
+        public virtual async Task DeleteReturnRequestNote(ReturnRequestNote returnRequestNote)
+        {
+            if (returnRequestNote == null)
+                throw new ArgumentNullException("returnRequestNote");
+
+            await _returnRequestNoteRepository.DeleteAsync(returnRequestNote);
+
+            //event notification
+            await _mediator.EntityDeleted(returnRequestNote);
+        }
+
+        /// <summary>
+        /// Inserts a return request note
+        /// </summary>
+        /// <param name="returnRequestNote">The return request note</param>
+        public virtual async Task InsertReturnRequestNote(ReturnRequestNote returnRequestNote)
+        {
+            if (returnRequestNote == null)
+                throw new ArgumentNullException("returnRequestNote");
+
+            await _returnRequestNoteRepository.InsertAsync(returnRequestNote);
+
+            //event notification
+            await _mediator.EntityInserted(returnRequestNote);
+        }
+
+        /// <summary>
+        /// Get notes related to return request
+        /// </summary>
+        /// <param name="returnRequestId">The return request identifier</param>
+        /// <returns>List of return request notes</returns>
+        public virtual async Task<IList<ReturnRequestNote>> GetReturnRequestNotes(string returnRequestId)
+        {
+            var query = from returnRequestNote in _returnRequestNoteRepository.Table
+                        where returnRequestNote.ReturnRequestId == returnRequestId
+                        orderby returnRequestNote.CreatedOnUtc descending
+                        select returnRequestNote;
+
+            return await query.ToListAsync();
+        }
+
+        /// <summary>
+        /// Get return request note by id
+        /// </summary>
+        /// <param name="returnRequestNoteId">The return request note identifier</param>
+        /// <returns>ReturnRequestNote</returns>
+        public virtual Task<ReturnRequestNote> GetReturnRequestNote(string returnRequestNoteId)
+        {
+            return _returnRequestNoteRepository.Table.Where(x => x.Id == returnRequestNoteId).FirstOrDefaultAsync();
+        }
+
+        #endregion
+
         #endregion
     }
 }

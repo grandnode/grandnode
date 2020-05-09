@@ -134,7 +134,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectStore"), Value = "" });
             foreach (var c in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = c.Shortcut, Value = c.Id.ToString() });
 
             model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectWarehouse"), Value = "" });
             foreach (var c in await _shippingService.GetAllWarehouses())

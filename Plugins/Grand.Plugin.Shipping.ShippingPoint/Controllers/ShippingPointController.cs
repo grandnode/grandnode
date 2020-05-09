@@ -75,7 +75,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
                     Id = shippingPoint.Id,
                     OpeningHours = shippingPoint.OpeningHours,
                     PickupFee = shippingPoint.PickupFee,
-                    StoreName = storeName != null ? storeName.Name : _localizationService.GetResource("Admin.Configuration.Settings.StoreScope.AllStores"),
+                    StoreName = storeName != null ? storeName.Shortcut : _localizationService.GetResource("Admin.Configuration.Settings.StoreScope.AllStores"),
 
                 });
             }
@@ -94,7 +94,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
                 model.AvailableCountries.Add(new SelectListItem { Text = country.Name, Value = country.Id.ToString() });
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Settings.StoreScope.AllStores"), Value = string.Empty });
             foreach (var store in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = store.Shortcut, Value = store.Id.ToString() });
             return model;
         }
 

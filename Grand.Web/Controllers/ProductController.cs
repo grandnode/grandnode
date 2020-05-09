@@ -158,6 +158,7 @@ namespace Grand.Web.Controllers
 
             //prepare the model
             var model = await _mediator.Send(new GetProductDetailsPage() {
+                Store = _storeContext.CurrentStore,
                 Product = product,
                 IsAssociatedProduct = false,
                 UpdateCartItem = updatecartitem
@@ -179,7 +180,7 @@ namespace Grand.Web.Controllers
                     DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = "Admin" }));
                 }
             }
-
+            
             //activity log
             await _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
             await _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
@@ -400,6 +401,7 @@ namespace Grand.Web.Controllers
 
             //prepare the model
             var model = await _mediator.Send(new GetProductDetailsPage() {
+                Store = _storeContext.CurrentStore,
                 Product = product,
                 IsAssociatedProduct = false,
                 UpdateCartItem = null
@@ -718,6 +720,7 @@ namespace Grand.Web.Controllers
                     Customer = _workContext.CurrentCustomer,
                     Product = product,
                     Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore,
                     Model = model,
                 });
 
@@ -781,6 +784,7 @@ namespace Grand.Web.Controllers
                 await _mediator.Send(new SendProductAskQuestionMessageCommand() {
                     Customer = _workContext.CurrentCustomer,
                     Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore,
                     Model = model,
                     Product = product
                 });
@@ -840,6 +844,7 @@ namespace Grand.Web.Controllers
                 await _mediator.Send(new SendProductAskQuestionMessageCommand() {
                     Customer = _workContext.CurrentCustomer,
                     Language = _workContext.WorkingLanguage,
+                    Store = _storeContext.CurrentStore,
                     Model = productaskqestionmodel,
                     Product = product
                 });

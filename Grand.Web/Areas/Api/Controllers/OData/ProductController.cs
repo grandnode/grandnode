@@ -1,7 +1,8 @@
-﻿using Grand.Api.Controllers;
+﻿using Grand.Api.Commands.Models.Catalog;
 using Grand.Api.DTOs.Catalog;
-using Grand.Api.Interfaces;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,14 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class ProductController : BaseODataController
     {
-        private readonly IProductApiService _productApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
-        public ProductController(IProductApiService productApiService, IPermissionService permissionService)
+
+        public ProductController(
+            IMediator mediator,
+            IPermissionService permissionService)
         {
-            _productApiService = productApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -26,11 +30,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
 
-            return Ok(product);
+            return Ok(product.FirstOrDefault());
         }
 
         [HttpGet]
@@ -40,7 +44,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            return Ok(_productApiService.GetProducts());
+            return Ok(await _mediator.Send(new GetQuery<ProductDto>()));
         }
 
         [HttpPost]
@@ -51,7 +55,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                model = await _productApiService.InsertOrUpdateProduct(model);
+                model = await _mediator.Send(new AddProductCommand() { Model = model });
                 return Created(model);
             }
             return BadRequest(ModelState);
@@ -65,7 +69,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                model = await _productApiService.UpdateProduct(model);
+                await _mediator.Send(new UpdateProductCommand() { Model = model });
                 return Ok();
             }
             return BadRequest(ModelState);
@@ -77,16 +81,16 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var entity = await _productApiService.GetById(key);
-            if (entity == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
-            model.Patch(entity);
+
+            var pr = product.FirstOrDefault();
+            model.Patch(pr);
 
             if (ModelState.IsValid)
             {
-                entity = await _productApiService.UpdateProduct(entity);
+                await _mediator.Send(new UpdateProductCommand() { Model = pr });
                 return Ok();
             }
             return BadRequest(ModelState);
@@ -98,12 +102,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
-            await _productApiService.DeleteProduct(product);
+
+            await _mediator.Send(new DeleteProductCommand() { Model = product.FirstOrDefault() });
 
             return Ok();
         }
@@ -116,14 +119,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             var warehouseId = parameters.FirstOrDefault(x => x.Key == "WarehouseId").Value;
             var stock = parameters.FirstOrDefault(x => x.Key == "Stock").Value;
@@ -131,7 +132,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             {
                 if (int.TryParse(stock.ToString(), out int stockqty))
                 {
-                    await _productApiService.UpdateStock(product, warehouseId?.ToString(), stockqty);
+                    await _mediator.Send(new UpdateProductStockCommand() { Product = product.FirstOrDefault(), WarehouseId = warehouseId?.ToString(), Stock = stockqty });
                     return Ok(true);
                 }
             }
@@ -144,25 +145,23 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> CreateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
         {
             if (productCategory == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
-            var pc = product.Categories.Where(x => x.CategoryId == productCategory.CategoryId).FirstOrDefault();
+            var pc = product.FirstOrDefault().Categories.Where(x => x.CategoryId == productCategory.CategoryId).FirstOrDefault();
             if (pc != null)
                 ModelState.AddModelError("", "Product category mapping found with the specified categoryid");
 
             if (ModelState.IsValid)
             {
-                await _productApiService.InsertProductCategory(product, productCategory);
-                return Ok(true);
+                var result = await _mediator.Send(new AddProductCategoryCommand() { Product = product.FirstOrDefault(), Model = productCategory });
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
@@ -170,26 +169,24 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> UpdateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
         {
             if (productCategory == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
-            var pc = product.Categories.Where(x => x.CategoryId == productCategory.CategoryId).FirstOrDefault();
+
+            var pc = product.FirstOrDefault().Categories.Where(x => x.CategoryId == productCategory.CategoryId).FirstOrDefault();
             if (pc == null)
                 ModelState.AddModelError("", "No product category mapping found with the specified id");
 
             if (ModelState.IsValid)
             {
-                await _productApiService.UpdateProductCategory(product, productCategory);
-
-                return Ok(true);
+                var result = await _mediator.Send(new UpdateProductCategoryCommand() { Product = product.FirstOrDefault(), Model = productCategory });
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
@@ -197,27 +194,26 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> DeleteProductCategory(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
+
 
             var categoryId = parameters.FirstOrDefault(x => x.Key == "CategoryId").Value;
             if (categoryId != null)
             {
-                var pc = product.Categories.Where(x => x.CategoryId == categoryId.ToString()).FirstOrDefault();
+                var pc = product.FirstOrDefault().Categories.Where(x => x.CategoryId == categoryId.ToString()).FirstOrDefault();
                 if (pc == null)
                     ModelState.AddModelError("", "No product category mapping found with the specified id");
 
                 if (ModelState.IsValid)
                 {
-                    await _productApiService.DeleteProductCategory(product, categoryId.ToString());
+                    var result = await _mediator.Send(new DeleteProductCategoryCommand() { Product = product.FirstOrDefault(), CategoryId = categoryId.ToString() });
                     return Ok(true);
                 }
                 return BadRequest(ModelState);
@@ -233,25 +229,24 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> CreateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
         {
             if (productManufacturer == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
-            var pm = product.Manufacturers.Where(x => x.ManufacturerId == productManufacturer.ManufacturerId).FirstOrDefault();
+
+            var pm = product.FirstOrDefault().Manufacturers.Where(x => x.ManufacturerId == productManufacturer.ManufacturerId).FirstOrDefault();
             if (pm != null)
                 ModelState.AddModelError("", "Product manufacturer mapping found with the specified manufacturerid");
 
             if (ModelState.IsValid)
             {
-                await _productApiService.InsertProductManufacturer(product, productManufacturer);
-                return Ok(true);
+                var result = await _mediator.Send(new AddProductManufacturerCommand() { Product = product.FirstOrDefault(), Model = productManufacturer });
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
@@ -259,26 +254,23 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> UpdateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
         {
             if (productManufacturer == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
-            var pm = product.Manufacturers.Where(x => x.ManufacturerId == productManufacturer.ManufacturerId).FirstOrDefault();
+            var pm = product.FirstOrDefault().Manufacturers.Where(x => x.ManufacturerId == productManufacturer.ManufacturerId).FirstOrDefault();
             if (pm == null)
                 ModelState.AddModelError("", "No product manufacturer mapping found with the specified id");
 
             if (ModelState.IsValid)
             {
-                await _productApiService.UpdateProductManufacturer(product, productManufacturer);
-
-                return Ok(true);
+                var result = await _mediator.Send(new UpdateProductManufacturerCommand() { Product = product.FirstOrDefault(), Model = productManufacturer });
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
@@ -286,27 +278,25 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> DeleteProductManufacturer(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
             var manufacturerId = parameters.FirstOrDefault(x => x.Key == "ManufacturerId").Value;
             if (manufacturerId != null)
             {
-                var pm = product.Manufacturers.Where(x => x.ManufacturerId == manufacturerId.ToString()).FirstOrDefault();
+                var pm = product.FirstOrDefault().Manufacturers.Where(x => x.ManufacturerId == manufacturerId.ToString()).FirstOrDefault();
                 if (pm == null)
                     ModelState.AddModelError("", "No product manufacturer mapping found with the specified id");
 
                 if (ModelState.IsValid)
                 {
-                    await _productApiService.DeleteProductManufacturer(product, manufacturerId.ToString());
+                    var result = await _mediator.Send(new DeleteProductManufacturerCommand() { Product = product.FirstOrDefault(), ManufacturerId = manufacturerId.ToString() });
                     return Ok(true);
                 }
                 return BadRequest(ModelState);
@@ -322,25 +312,24 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> CreateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
         {
             if (productPicture == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
-            var pp = product.Pictures.Where(x => x.PictureId == productPicture.PictureId).FirstOrDefault();
+
+            var pp = product.FirstOrDefault().Pictures.Where(x => x.PictureId == productPicture.PictureId).FirstOrDefault();
             if (pp != null)
                 ModelState.AddModelError("", "Product picture mapping found with the specified pictureid");
 
             if (ModelState.IsValid)
             {
-                await _productApiService.InsertProductPicture(product, productPicture);
-                return Ok(true);
+                var result = await _mediator.Send(new AddProductPictureCommand() { Product = product.FirstOrDefault(), Model = productPicture });
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
@@ -348,25 +337,24 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> UpdateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
         {
             if (productPicture == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
-            var pp = product.Pictures.Where(x => x.PictureId == productPicture.PictureId).FirstOrDefault();
+
+            var pp = product.FirstOrDefault().Pictures.Where(x => x.PictureId == productPicture.PictureId).FirstOrDefault();
             if (pp == null)
                 ModelState.AddModelError("", "No product picture mapping found with the specified id");
 
             if (ModelState.IsValid)
             {
-                await _productApiService.UpdateProductPicture(product, productPicture);
-                return Ok(true);
+                var result = await _mediator.Send(new UpdateProductPictureCommand() { Product = product.FirstOrDefault(), Model = productPicture });
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
@@ -374,28 +362,27 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> DeleteProductPicture(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
+
 
             var pictureId = parameters.FirstOrDefault(x => x.Key == "PictureId").Value;
             if (pictureId != null)
             {
-                var pp = product.Pictures.Where(x => x.PictureId == pictureId.ToString()).FirstOrDefault();
+                var pp = product.FirstOrDefault().Pictures.Where(x => x.PictureId == pictureId.ToString()).FirstOrDefault();
                 if (pp == null)
                     ModelState.AddModelError("", "No product picture mapping found with the specified id");
 
                 if (ModelState.IsValid)
                 {
-                    await _productApiService.DeleteProductPicture(product, pictureId.ToString());
-                    return Ok(true);
+                    var result = await _mediator.Send(new DeleteProductPictureCommand() { Product = product.FirstOrDefault(), PictureId = pictureId.ToString() });
+                    return Ok(result);
                 }
                 return BadRequest(ModelState);
             }
@@ -410,80 +397,77 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> CreateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
         {
             if (productSpecification == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
-            var psa = product.SpecificationAttribute.Where(x => x.Id == productSpecification.Id).FirstOrDefault();
+            var psa = product.FirstOrDefault().SpecificationAttribute.Where(x => x.Id == productSpecification.Id).FirstOrDefault();
             if (psa != null)
                 ModelState.AddModelError("", "Product specification mapping found with the specified id");
 
             if (ModelState.IsValid)
             {
-                await _productApiService.InsertProductSpecification(product, productSpecification);
-                return Ok(true);
+                var result = await _mediator.Send(new AddProductSpecificationCommand() { Product = product.FirstOrDefault(), Model = productSpecification });
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
+
         [HttpPost]
         public async Task<IActionResult> UpdateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
         {
             if (productSpecification == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
-            var psa = product.SpecificationAttribute.Where(x => x.Id == productSpecification.Id).FirstOrDefault();
+            var psa = product.FirstOrDefault().SpecificationAttribute.Where(x => x.Id == productSpecification.Id).FirstOrDefault();
             if (psa == null)
                 ModelState.AddModelError("", "No product specification mapping found with the specified id");
 
             if (ModelState.IsValid)
             {
-                await _productApiService.UpdateProductSpecification(product, productSpecification);
-                return Ok(true);
+                var result = await _mediator.Send(new UpdateProductSpecificationCommand() { Product = product.FirstOrDefault(), Model = productSpecification });
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
+
         [HttpPost]
         public async Task<IActionResult> DeleteProductSpecification(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
+
 
             var specificationId = parameters.FirstOrDefault(x => x.Key == "Id").Value;
             if (specificationId != null)
             {
-                var psa = product.SpecificationAttribute.Where(x => x.Id == specificationId.ToString()).FirstOrDefault();
+                var psa = product.FirstOrDefault().SpecificationAttribute.Where(x => x.Id == specificationId.ToString()).FirstOrDefault();
                 if (psa == null)
-                    ModelState.AddModelError("", "No product picture specification found with the specified id");
+                    ModelState.AddModelError("", "No product specification mapping found with the specified id");
 
                 if (ModelState.IsValid)
                 {
-                    await _productApiService.DeleteProductSpecification(product, specificationId.ToString());
-                    return Ok(true);
+                    var result = await _mediator.Send(new DeleteProductSpecificationCommand() { Product = product.FirstOrDefault(), Id = specificationId.ToString() });
+                    return Ok(result);
                 }
                 return BadRequest(ModelState);
             }
@@ -498,25 +482,23 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> CreateProductTierPrice(string key, [FromBody] ProductTierPriceDto productTierPrice)
         {
             if (productTierPrice == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
-            var pt = product.TierPrices.Where(x => x.Id == productTierPrice.Id).FirstOrDefault();
+            var pt = product.FirstOrDefault().TierPrices.Where(x => x.Id == productTierPrice.Id).FirstOrDefault();
             if (pt != null)
                 ModelState.AddModelError("", "Product tier price mapping found with the specified id");
 
             if (ModelState.IsValid)
             {
-                await _productApiService.InsertProductTierPrice(product, productTierPrice);
-                return Ok(true);
+                var result = await _mediator.Send(new AddProductTierPriceCommand() { Product = product.FirstOrDefault(), Model = productTierPrice });
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
@@ -524,25 +506,23 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> UpdateProductTierPrice(string key, [FromBody] ProductTierPriceDto productTierPrice)
         {
             if (productTierPrice == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
-            var pt = product.TierPrices.Where(x => x.Id == productTierPrice.Id).FirstOrDefault();
+            var pt = product.FirstOrDefault().TierPrices.Where(x => x.Id == productTierPrice.Id).FirstOrDefault();
             if (pt == null)
                 ModelState.AddModelError("", "No product tier price mapping found with the specified id");
 
             if (ModelState.IsValid)
             {
-                await _productApiService.UpdateProductTierPrice(product, productTierPrice);
-                return Ok(true);
+                var result = await _mediator.Send(new UpdateProductTierPriceCommand() { Product = product.FirstOrDefault(), Model = productTierPrice });
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
@@ -550,34 +530,116 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         public async Task<IActionResult> DeleteProductTierPrice(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
-                return NotFound();
+                return BadRequest();
 
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = await _productApiService.GetById(key);
-            if (product == null)
-            {
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
                 return NotFound();
-            }
 
             var tierPriceId = parameters.FirstOrDefault(x => x.Key == "Id").Value;
             if (tierPriceId != null)
             {
-                var pt = product.TierPrices.Where(x => x.Id == tierPriceId.ToString()).FirstOrDefault();
+                var pt = product.FirstOrDefault().TierPrices.Where(x => x.Id == tierPriceId.ToString()).FirstOrDefault();
                 if (pt == null)
                     ModelState.AddModelError("", "No product tier price mapping found with the specified id");
 
                 if (ModelState.IsValid)
                 {
-                    await _productApiService.DeleteProductTierPrice(product, tierPriceId.ToString());
-                    return Ok(true);
+                    var result = await _mediator.Send(new DeleteProductTierPriceCommand() { Product = product.FirstOrDefault(), Id = tierPriceId.ToString() });
+                    return Ok(result);
                 }
                 return BadRequest(ModelState);
             }
             return NotFound();
         }
 
+        #endregion
+
+        #region Product attribute mapping
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductAttributeMapping(string key, [FromBody] ProductAttributeMappingDto productAttributeMapping)
+        {
+            if (productAttributeMapping == null)
+                return BadRequest();
+
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
+                return NotFound();
+
+            var pam = product.FirstOrDefault().AttributeMappings.Where(x => x.Id == productAttributeMapping.Id).FirstOrDefault();
+            if (pam != null)
+                ModelState.AddModelError("", "Product attribute mapping found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                var result = await _mediator.Send(new AddProductAttributeMappingCommand() { Product = product.FirstOrDefault(), Model = productAttributeMapping });
+                return Ok(result);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProductAttributeMapping(string key, [FromBody] ProductAttributeMappingDto productAttributeMapping)
+        {
+            if (productAttributeMapping == null)
+                return BadRequest();
+
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
+                return NotFound();
+
+            var pam = product.FirstOrDefault().AttributeMappings.Where(x => x.Id == productAttributeMapping.Id).FirstOrDefault();
+            if (pam == null)
+                ModelState.AddModelError("", "No product attribute mapping found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                var result = await _mediator.Send(new UpdateProductAttributeMappingCommand() { Product = product.FirstOrDefault(), Model = productAttributeMapping });
+                return Ok(result);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteProductAttributeMapping(string key, [FromBody] ODataActionParameters parameters)
+        {
+            if (parameters == null)
+                return BadRequest();
+
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = await _mediator.Send(new GetQuery<ProductDto>() { Id = key });
+            if (!product.Any())
+                return NotFound();
+
+
+            var attrId = parameters.FirstOrDefault(x => x.Key == "Id").Value;
+            if (attrId != null)
+            {
+                var pam = product.FirstOrDefault().AttributeMappings.Where(x => x.Id == attrId.ToString()).FirstOrDefault();
+                if (pam == null)
+                    ModelState.AddModelError("", "No product attribute mapping found with the specified id");
+
+                if (ModelState.IsValid)
+                {
+                    var result = await _mediator.Send(new DeleteProductAttributeMappingCommand() { Product = product.FirstOrDefault(),  Model = pam });
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
+            }
+            return NotFound();
+        }
         #endregion
     }
 }

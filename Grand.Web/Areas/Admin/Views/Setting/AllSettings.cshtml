@@ -175,7 +175,7 @@
             <text>
             , {
                 Id: "@(store.Id)",
-                Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(store.Name)))"
+                Name: "@(Html.Raw(store.Shortcut))"
             }
             </text>
         }

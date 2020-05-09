@@ -239,8 +239,14 @@ namespace Grand.Web.Controllers
                         }
 
                         //display notification message and update appropriate blocks
+                        var shoppingCartTypes = new List<ShoppingCartType>();
+                        shoppingCartTypes.Add(ShoppingCartType.ShoppingCart);
+                        shoppingCartTypes.Add(ShoppingCartType.Auctions);
+                        if (_shoppingCartSettings.AllowOnHoldCart)
+                            shoppingCartTypes.Add(ShoppingCartType.OnHoldCart);
+
                         var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
-                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart)
+                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, shoppingCartTypes.ToArray())
                                 .Sum(x => x.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
@@ -302,6 +308,16 @@ namespace Grand.Web.Controllers
                     message = "Auction products couldn't be added to the wishlist"
                 });
             }
+            //check available date
+            if (product.AvailableEndDateTimeUtc.HasValue && product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = _localizationService.GetResource("ShoppingCart.NotAvailable")
+                });
+            }
+
 
             #region Update existing shopping cart item?
             string updatecartitemid = "";
@@ -445,15 +461,7 @@ namespace Grand.Web.Controllers
             //save item
             var addToCartWarnings = new List<string>();
 
-            if (product.AvailableEndDateTimeUtc.HasValue && product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = _localizationService.GetResource("ShoppingCart.NotAvailable")
-                });
-            }
-
+            
             string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
                 form["WarehouseId"].ToString() :
                 product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId :
@@ -567,8 +575,14 @@ namespace Grand.Web.Controllers
                         }
 
                         //display notification message and update appropriate blocks
+                        var shoppingCartTypes = new List<ShoppingCartType>();
+                        shoppingCartTypes.Add(ShoppingCartType.ShoppingCart);
+                        shoppingCartTypes.Add(ShoppingCartType.Auctions);
+                        if (_shoppingCartSettings.AllowOnHoldCart)
+                            shoppingCartTypes.Add(ShoppingCartType.OnHoldCart);
+
                         var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
-                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart)
+                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, shoppingCartTypes.ToArray())
                                 .Sum(x => x.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled

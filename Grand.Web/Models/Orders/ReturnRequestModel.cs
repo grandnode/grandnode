@@ -19,7 +19,7 @@ namespace Grand.Web.Models.Orders
 
         public string OrderId { get; set; }
         public int OrderNumber { get; set; }
-
+        public string OrderCode { get; set; }
         public IList<OrderItemModel> Items { get; set; }
         
         public IList<ReturnRequestReasonModel> AvailableReturnReasons { get; set; }
@@ -54,6 +54,9 @@ namespace Grand.Web.Models.Orders
             public string ProductId { get; set; }
 
             public string ProductName { get; set; }
+
+            public string VendorId { get; set; }
+            public string VendorName { get; set; }
 
             public string ProductSeName { get; set; }
 

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Services.Queries.Handlers.Orders
 {
-    public class GetOrderQueryHandler : IRequestHandler<GetOrderQueryModel, IMongoQueryable<Order>>
+    public class GetOrderQueryHandler : IRequestHandler<GetOrderQuery, IMongoQueryable<Order>>
     {
         private readonly IRepository<Order> _orderRepository;
 
@@ -20,7 +20,7 @@ namespace Grand.Services.Queries.Handlers.Orders
             _orderRepository = orderRepository;
         }
 
-        public Task<IMongoQueryable<Order>> Handle(GetOrderQueryModel request, CancellationToken cancellationToken)
+        public Task<IMongoQueryable<Order>> Handle(GetOrderQuery request, CancellationToken cancellationToken)
         {
             int? orderStatusId = null;
 
@@ -101,7 +101,10 @@ namespace Grand.Services.Queries.Handlers.Orders
                 if(Guid.TryParse(request.OrderGuid, out Guid orderguid))
                     query = query.Where(o => o.OrderGuid == orderguid); 
             }
-
+            if (!string.IsNullOrEmpty(request.OrderCode))
+            {
+                query = query.Where(o => o.Code == request.OrderCode.ToUpperInvariant());
+            }
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 

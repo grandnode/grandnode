@@ -99,7 +99,7 @@
                             </div>
                             <div class="inputs reversed">
                                 <label for="sid" class="custom-control custom-checkbox">
-                                    <input asp-for="sid" class="custom-control-input"/>
+                                    <input asp-for="sid" class="custom-control-input" />
                                     <span class="custom-control-label"></span>
                                     <span class="custom-control-description">@T("search.searchindescriptions")</span>
                                 </label>
@@ -116,7 +116,7 @@
 
         @if (Model.Products.Any())
         {
-                <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
+            <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
         @if (!String.IsNullOrEmpty(Model.Warning))
@@ -171,3 +171,12 @@
     </div>
 </div>
 @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_after_results" })
+
+@section filters
+{
+    @*filtering*@
+    @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
+    {
+        <partial name="_FilterSpecsBox" model="Model.PagingFilteringContext.SpecificationFilter" />
+    }
+}

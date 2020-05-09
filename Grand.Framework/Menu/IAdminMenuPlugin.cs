@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Plugins;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.Menu
 {
@@ -11,6 +12,6 @@ namespace Grand.Framework.Menu
         /// Manage sitemap. You can use "SystemName" of menu items to manage existing sitemap or add a new menu item.
         /// </summary>
         /// <param name="rootNode">Root node of the sitemap.</param>
-        void ManageSiteMap(SiteMapNode rootNode);
+        Task ManageSiteMap(SiteMapNode rootNode);
     }
 }

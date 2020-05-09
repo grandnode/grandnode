@@ -32,7 +32,7 @@ namespace Grand.Web.Commands.Handler.Vendors
             var subject = _commonSettings.SubjectFieldOnContactUsForm ? request.Model.Subject : null;
             var body = Core.Html.HtmlHelper.FormatText(request.Model.Enquiry, false, true, false, false, false, false);
 
-            await _workflowMessageService.SendContactVendorMessage(_workContext.CurrentCustomer, request.Vendor, _workContext.WorkingLanguage.Id,
+            await _workflowMessageService.SendContactVendorMessage(_workContext.CurrentCustomer, request.Store, request.Vendor, _workContext.WorkingLanguage.Id,
                 request.Model.Email.Trim(), request.Model.FullName, subject, body);
 
             request.Model.SuccessfullySent = true;

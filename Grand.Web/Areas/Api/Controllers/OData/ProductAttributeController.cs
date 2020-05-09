@@ -1,21 +1,26 @@
-﻿using Grand.Api.Controllers;
+﻿using Grand.Api.Commands.Models.Catalog;
 using Grand.Api.DTOs.Catalog;
-using Grand.Api.Interfaces;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class ProductAttributeController : BaseODataController
     {
-        private readonly IProductAttributeApiService _productAttributeApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
-        public ProductAttributeController(IProductAttributeApiService productAttributeApiService, IPermissionService permissionService)
+
+        public ProductAttributeController(
+            IMediator mediator,
+            IPermissionService permissionService)
         {
-            _productAttributeApiService = productAttributeApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -25,11 +30,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var productAttribute = await _productAttributeApiService.GetById(key);
-            if (productAttribute == null)
+            var productAttribute = await _mediator.Send(new GetQuery<ProductAttributeDto>() { Id = key });
+            if (!productAttribute.Any())
                 return NotFound();
 
-            return Ok(productAttribute);
+            return Ok(productAttribute.FirstOrDefault());
         }
 
         [HttpGet]
@@ -39,7 +44,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            return Ok(_productAttributeApiService.GetProductAttributes());
+            return Ok(await _mediator.Send(new GetQuery<ProductAttributeDto>()));
         }
 
         [HttpPost]
@@ -50,7 +55,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                model = await _productAttributeApiService.InsertOrUpdateProductAttribute(model);
+                model = await _mediator.Send(new AddProductAttributeCommand() { Model = model });
                 return Created(model);
             }
             return BadRequest(ModelState);
@@ -64,30 +69,29 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                model = await _productAttributeApiService.UpdateProductAttribute(model);
+                model = await _mediator.Send(new UpdateProductAttributeCommand() { Model = model });
                 return Ok(model);
             }
             return BadRequest(ModelState);
         }
 
         [HttpPatch]
-        public async Task<IActionResult> Patch([FromODataUri] string key,Delta<ProductAttributeDto> model)
+        public async Task<IActionResult> Patch([FromODataUri] string key, Delta<ProductAttributeDto> model)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var entity = await _productAttributeApiService.GetById(key);
-            if (entity == null)
-            {
+            var productAttribute = await _mediator.Send(new GetQuery<ProductAttributeDto>() { Id = key });
+            if (!productAttribute.Any())
                 return NotFound();
-            }
 
-            model.Patch(entity);
+            var pa = productAttribute.FirstOrDefault();
+            model.Patch(pa);
 
             if (ModelState.IsValid)
             {
-                entity = await _productAttributeApiService.UpdateProductAttribute(entity);
-                return Ok(model);
+                pa = await _mediator.Send(new UpdateProductAttributeCommand() { Model = pa });
+                return Ok(pa);
             }
             return BadRequest(ModelState);
         }
@@ -98,12 +102,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var productAttribute = await _productAttributeApiService.GetById(key);
-            if (productAttribute == null)
-            {
+            var productAttribute = await _mediator.Send(new GetQuery<ProductAttributeDto>() { Id = key });
+            if (!productAttribute.Any())
                 return NotFound();
-            }
-            await _productAttributeApiService.DeleteProductAttribute(productAttribute);
+
+            await _mediator.Send(new DeleteProductAttributeCommand() { Model = productAttribute.FirstOrDefault() });
             return Ok();
         }
     }

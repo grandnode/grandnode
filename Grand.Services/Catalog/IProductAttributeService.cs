@@ -65,7 +65,8 @@ namespace Grand.Services.Catalog
         /// Updates the product attribute mapping
         /// </summary>
         /// <param name="productAttributeMapping">The product attribute mapping</param>
-        Task UpdateProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
+        /// <param name="values">Update values</param>
+        Task UpdateProductAttributeMapping(ProductAttributeMapping productAttributeMapping, bool values = false);
 
         #endregion
 

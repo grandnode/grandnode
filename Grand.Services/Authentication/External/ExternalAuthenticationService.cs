@@ -184,7 +184,7 @@ namespace Grand.Services.Authentication.External
 
             //store owner notifications
             if (_customerSettings.NotifyNewCustomerRegistration)
-                await _workflowMessageService.SendCustomerRegisteredNotificationMessage(_workContext.CurrentCustomer, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendCustomerRegisteredNotificationMessage(_workContext.CurrentCustomer, _storeContext.CurrentStore, _localizationSettings.DefaultAdminLanguageId);
 
             //associate external account with registered user
             await AssociateExternalAccountWithUser(_workContext.CurrentCustomer, parameters);
@@ -193,7 +193,7 @@ namespace Grand.Services.Authentication.External
             if (registrationIsApproved)
             {
                 await _authenticationService.SignIn(_workContext.CurrentCustomer, false);
-                await _workflowMessageService.SendCustomerWelcomeMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
+                await _workflowMessageService.SendCustomerWelcomeMessage(_workContext.CurrentCustomer, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
             }
@@ -203,7 +203,7 @@ namespace Grand.Services.Authentication.External
             {
                 //email validation message
                 await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
-                await _workflowMessageService.SendCustomerEmailValidationMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
+                await _workflowMessageService.SendCustomerEmailValidationMessage(_workContext.CurrentCustomer, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
             }

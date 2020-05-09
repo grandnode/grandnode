@@ -55,7 +55,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
             model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "" });
             var stores = await _storeService.GetAllStores();
             foreach (var s in stores)
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
             //tax categories
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString() });
@@ -96,7 +96,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
                 };
                 //store
                 var store = await _storeService.GetStoreById(x.StoreId);
-                m.StoreName = (store != null) ? store.Name : "*";
+                m.StoreName = (store != null) ? store.Shortcut : "*";
                 //tax category
                 var tc = await _taxCategoryService.GetTaxCategoryById(x.TaxCategoryId);
                 m.TaxCategoryName = (tc != null) ? tc.Name : "";

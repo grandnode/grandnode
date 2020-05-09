@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
@@ -14,6 +9,7 @@ using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using Grand.Services.Queries.Models.Catalog;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
@@ -21,12 +17,16 @@ using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Features.Models.Products;
 using Grand.Web.Models.Catalog;
 using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.Catalog
 {
     public class GetSearchAutoCompleteHandler : IRequestHandler<GetSearchAutoComplete, IList<SearchAutoCompleteModel>>
     {
-        private readonly IProductService _productService;
         private readonly IWebHelper _webHelper;
         private readonly IPictureService _pictureService;
         private readonly IManufacturerService _manufacturerService;
@@ -46,25 +46,23 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly BlogSettings _blogSettings;
 
         public GetSearchAutoCompleteHandler(
-            IProductService productService, 
-            IWebHelper webHelper, 
-            IPictureService pictureService, 
-            IManufacturerService manufacturerService, 
-            ICategoryService categoryService, 
-            IAclService aclService, 
-            IStoreMappingService storeMappingService, 
-            ISearchTermService searchTermService, 
+            IWebHelper webHelper,
+            IPictureService pictureService,
+            IManufacturerService manufacturerService,
+            ICategoryService categoryService,
+            IAclService aclService,
+            IStoreMappingService storeMappingService,
+            ISearchTermService searchTermService,
             IBlogService blogService,
             IPriceCalculationService priceCalculationService,
             ITaxService taxService,
             ICurrencyService currencyService,
             IPriceFormatter priceFormatter,
-            IMediator mediator, 
-            CatalogSettings catalogSettings, 
-            MediaSettings mediaSettings, 
+            IMediator mediator,
+            CatalogSettings catalogSettings,
+            MediaSettings mediaSettings,
             BlogSettings blogSettings)
         {
-            _productService = productService;
             _webHelper = webHelper;
             _pictureService = pictureService;
             _manufacturerService = manufacturerService;
@@ -100,15 +98,17 @@ namespace Grand.Web.Features.Handlers.Catalog
                 }
             }
 
-            var products = (await _productService.SearchProducts(
-                storeId: storeId,
-                keywords: request.Term,
-                categoryIds: categoryIds,
-                searchSku: _catalogSettings.SearchBySku,
-                searchDescriptions: _catalogSettings.SearchByDescription,
-                languageId: request.Language.Id,
-                visibleIndividuallyOnly: true,
-                pageSize: productNumber)).products;
+            var products = (await _mediator.Send(new GetSearchProductsQuery() {
+                Customer = request.Customer,
+                StoreId = storeId,
+                Keywords = request.Term,
+                CategoryIds = categoryIds,
+                SearchSku = _catalogSettings.SearchBySku,
+                SearchDescriptions = _catalogSettings.SearchByDescription,
+                LanguageId = request.Language.Id,
+                VisibleIndividuallyOnly = true,
+                PageSize = productNumber
+            })).products;
 
             var categories = new List<string>();
             var manufacturers = new List<string>();
@@ -124,7 +124,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     if (picture != null)
                         pictureUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.AutoCompleteSearchThumbPictureSize);
                 }
-                var rating = await _mediator.Send(new GetProductReviewOverview() { 
+                var rating = await _mediator.Send(new GetProductReviewOverview() {
                     Language = request.Language,
                     Product = item,
                     Store = request.Store
@@ -249,8 +249,8 @@ namespace Grand.Web.Features.Handlers.Catalog
         {
             string price, priceWithDiscount;
 
-            decimal finalPriceWithoutDiscountBase = 
-                (await (_taxService.GetProductPrice(product, 
+            decimal finalPriceWithoutDiscountBase =
+                (await (_taxService.GetProductPrice(product,
                 (await _priceCalculationService.GetFinalPrice(product, request.Customer, includeDiscounts: false)).finalPrice))).productprice;
 
             var appliedPrice = (await _priceCalculationService.GetFinalPrice(product, request.Customer, includeDiscounts: true));

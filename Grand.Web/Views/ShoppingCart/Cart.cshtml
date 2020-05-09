@@ -1,6 +1,6 @@
 ﻿@model ShoppingCartModel
 @{
-    Layout = "_ColumnsOne";
+    Layout = "_ColumnsOneClean";
 
     //title
     Html.AddTitleParts(T("PageTitle.ShoppingCart").Text);
@@ -10,7 +10,7 @@
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Cart })
 }
 <div class="page shopping-cart-page">
-        <h2 class="generalTitle text-center mt-3">@T("ShoppingCart")</h2>
+    <h2 class="generalTitle text-center mt-3">@T("ShoppingCart")</h2>
     <div class="page-body">
         @await Component.InvokeAsync("OrderSummary", new { overriddenModel = Model })
     </div>

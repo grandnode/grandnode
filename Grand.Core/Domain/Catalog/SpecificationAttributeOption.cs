@@ -18,6 +18,11 @@ namespace Grand.Core.Domain.Catalog
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the sename
+        /// </summary>
+        public string SeName { get; set; }
+
         // <summary>
         /// Gets or sets the color RGB value (used when you want to display "Color squares" instead of text)
         /// </summary>

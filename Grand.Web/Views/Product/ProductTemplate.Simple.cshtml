@@ -67,7 +67,10 @@
                         @Model.Name
                     </h2>
                     <!--product reviews-->
-                    <partial name="_ProductReviewOverview" model="Model.ProductReviewOverview" />
+                    @if (Model.ProductReviewOverview.AllowCustomerReviews)
+                    {
+                        <partial name="_ProductReviewOverview" model="Model.ProductReviewOverview" />
+                    }
                     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })
                     @if (!String.IsNullOrEmpty(Model.ShortDescription))
                     {
@@ -76,22 +79,41 @@
                         </div>
                     }
                     <!--manufacturers-->
-                    <partial name="_ProductManufacturers" model="Model.ProductManufacturers" />
+                    @if (Model.ProductManufacturers.Any())
+                    { 
+                        <partial name="_ProductManufacturers" model="Model.ProductManufacturers" />
+                    }
                     <!--availability-->
-                    <partial name="_Availability" model="Model" />
+                    @if (!String.IsNullOrWhiteSpace(Model.StockAvailability) || Model.DisplayBackInStockSubscription)
+                    {
+                        <partial name="_Availability" model="Model" />
+                    }
                     <!--SKU, MAN, GTIN, vendor-->
                     <partial name="_SKU_Man_GTIN_Ven" model="Model" />
                     <!--delivery-->
-                    <partial name="_DeliveryInfo" model="Model" />
+                    @if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !string.IsNullOrWhiteSpace(Model.DeliveryDate)
+                     || Model.NotReturnable || Model.AdditionalShippingCharge > 0)
+                    {
+                        <partial name="_DeliveryInfo" model="Model" />
+                    }
                     <!--sample download-->
-                    <partial name="_DownloadSample" model="Model" />
+                    @if (Model.HasSampleDownload)
+                    {
+                        <partial name="_DownloadSample" model="Model" />
+                    }
                     <!--product bundles-->
-                    <partial name="_ProductBundles" model="Model" />
+                    @if (Model.ProductBundleModels.Any())
+                    {
+                        <partial name="_ProductBundles" model="Model" />
+                    }
                     <!--attributes-->
                     @{
-                        var dataDictAttributes = new ViewDataDictionary(ViewData);
-                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
-                        <partial name="_ProductAttributes" model="Model.ProductAttributes" view-data="dataDictAttributes" />
+                        if (Model.ProductAttributes.Any())
+                        {
+                            var dataDictAttributes = new ViewDataDictionary(ViewData);
+                            dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
+                            <partial name="_ProductAttributes" model="Model.ProductAttributes" view-data="dataDictAttributes" />
+                        }
                     }
                     <!--warehouses-->
                     @if (Model.AllowToSelectWarehouse)
@@ -100,9 +122,12 @@
                     }
                     <!--gift card-->
                     @{
-                        var dataDictGiftCard = new ViewDataDictionary(ViewData);
-                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
-                        <partial name="_GiftCardInfo" model="Model.GiftCard" view-data="dataDictGiftCard" />
+                        if (Model.GiftCard.IsGiftCard)
+                        {
+                            var dataDictGiftCard = new ViewDataDictionary(ViewData);
+                            dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+                            <partial name="_GiftCardInfo" model="Model.GiftCard" view-data="dataDictGiftCard" />
+                        }
                     }
                     <!--reservation info-->
                     @if (Model.ProductType == ProductType.Reservation)
@@ -113,15 +138,18 @@
                     }
                     <!--price & add to cart-->
                     <div class="overview-buttons generalMarginSupporter">
+                        @if (Model.TierPrices.Any() &&  !(Model.TierPrices.Count == 1))
+                        {
+                            <div class="col-lg-12 px-0">
+                                    <partial name="_ProductTierPrices" model="Model.TierPrices" />
+                            </div>
+                        }
                         <div class="col-lg-12 px-0">
                             @{
                                 var dataDictPrice = new ViewDataDictionary(ViewData);
                                 dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
-                                <partial name="_ProductTierPrices" model="Model.TierPrices" />
+                                <partial name="_ProductPrice" model="Model.ProductPrice" view-data="dataDictPrice" />
                             }
-                        </div>
-                        <div class="col-lg-12 px-0">
-                            <partial name="_ProductPrice" model="Model.ProductPrice" view-data="dataDictPrice" />
                         </div>
                         <div class="col-lg-12 generalAdToCart px-0 my-3">
                             <!--auction-->
@@ -137,21 +165,30 @@
                                 var dataDictAddToCart = new ViewDataDictionary(ViewData);
                                 dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
                             }
-                            <div class="btn-group product-simple-share my-2 d-inline-flex flex-wrap w-100">
-                                <partial name="_AddToCart" model="Model.AddToCart" view-data="dataDictAddToCart" />
-                                @if (Model.ProductType == ProductType.SimpleProduct)
-                                {
-                                    <partial name="_AddToWishlist" model="Model.AddToCart" view-data="dataDictAddToWishlist" />
-                                    <partial name="_CompareProductsButton" model="Model" />
-                                }
+                        <div class="btn-group product-simple-share my-2 d-inline-flex flex-wrap w-100">
+                            <partial name="_AddToCart" model="Model.AddToCart" view-data="dataDictAddToCart" />
+                            @if (Model.ProductType == ProductType.SimpleProduct || Model.ProductType == ProductType.BundledProduct)
+                            {
+                                <partial name="_AddToWishlist" model="Model.AddToCart" view-data="dataDictAddToWishlist" />
+                                <partial name="_CompareProductsButton" model="Model" />
+                            }
+                            @if (Model.EmailAFriendEnabled)
+                            {
                                 <partial name="_ProductEmailAFriendButton" model="Model" />
+                            }
+                            @if (Model.AskQuestionEnabled)
+                            {
                                 <partial name="_ProductAskQuestionButton" model="Model" />
-                            </div>
+                            }
+                        </div>
                         </div>
                     </div>
-                    <div class="col-12 product-share px-0">
-                        <partial name="_ShareButton" model="Model" />
-                    </div>
+                    @if (!String.IsNullOrWhiteSpace(Model.PageShareCode))
+                    {
+                        <div class="col-12 product-share px-0">
+                            <partial name="_ShareButton" model="Model" />
+                        </div>
+                    }
                     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_bottom", additionalData = Model.Id })
                 </div>
 

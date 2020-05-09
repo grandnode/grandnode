@@ -288,6 +288,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<CustomerActionService>().As<ICustomerActionService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerActionEventService>().As<ICustomerActionEventService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerReminderService>().As<ICustomerReminderService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerProductService>().As<ICustomerProductService>().InstancePerLifetimeScope();
             builder.RegisterType<UserApiService>().As<IUserApiService>().InstancePerLifetimeScope();
 
         }

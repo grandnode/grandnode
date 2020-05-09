@@ -909,6 +909,8 @@ namespace Grand.Services.Shipping
                     var request = new GetShippingOptionRequest();
                     //store
                     request.StoreId = store?.Id;
+                    //customer
+                    request.Customer = customer;
                     //add item
                     request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
                     //ship to

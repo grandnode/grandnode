@@ -168,7 +168,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> TwoFactorAuthorization()
+        public async Task<IActionResult> TwoFactorAuthorization([FromServices] ITwoFactorAuthenticationService twoFactorAuthenticationService)
         {
             if (!_customerSettings.TwoFactorAuthenticationEnabled)
                 return RedirectToRoute("Login");
@@ -183,6 +183,11 @@ namespace Grand.Web.Controllers
 
             if (!customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled))
                 return RedirectToRoute("HomePage");
+
+            if(_customerSettings.TwoFactorAuthenticationType != TwoFactorAuthenticationType.AppVerification)
+            {
+                await twoFactorAuthenticationService.GenerateCodeSetup("", customer, _workContext.WorkingLanguage, _customerSettings.TwoFactorAuthenticationType);
+            }
 
             return View();
         }
@@ -211,7 +216,7 @@ namespace Grand.Web.Controllers
             else
             {
                 var secretKey = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.TwoFactorSecretKey);
-                if (twoFactorAuthenticationService.AuthenticateTwoFactor(secretKey, token))
+                if (await twoFactorAuthenticationService.AuthenticateTwoFactor(secretKey, token, customer, _customerSettings.TwoFactorAuthenticationType))
                 {
                     //remove session
                     HttpContext.Session.Remove("RequiresTwoFactor");
@@ -290,23 +295,33 @@ namespace Grand.Web.Controllers
         public virtual IActionResult PasswordRecovery()
         {
             var model = new PasswordRecoveryModel();
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnPasswordRecoveryPage;
             return View(model);
         }
 
         [HttpPost, ActionName("PasswordRecovery")]
         [AutoValidateAntiforgeryToken]
+        [ValidateCaptcha]
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual async Task<IActionResult> PasswordRecoverySend(PasswordRecoveryModel model)
+        public virtual async Task<IActionResult> PasswordRecoverySend(PasswordRecoveryModel model, bool captchaValid)
         {
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnPasswordRecoveryPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+            }
+
             if (ModelState.IsValid)
             {
                 var customer = await _customerService.GetCustomerByEmail(model.Email);
                 if (customer != null && customer.Active && !customer.Deleted)
                 {
-                    await _mediator.Send(new PasswordRecoverySendCommand() { Customer = customer, Language = _workContext.WorkingLanguage, Model = model });
+                    await _mediator.Send(new PasswordRecoverySendCommand() { Customer = customer, Store = _storeContext.CurrentStore, Language = _workContext.WorkingLanguage, Model = model });
+
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
+                    model.Send = true;
                 }
                 else
                 {
@@ -474,7 +489,7 @@ namespace Grand.Web.Controllers
                             {
                                 //email validation message
                                 await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
-                                await _workflowMessageService.SendCustomerEmailValidationMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
+                                await _workflowMessageService.SendCustomerEmailValidationMessage(_workContext.CurrentCustomer, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
                                 //result
                                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
@@ -486,7 +501,7 @@ namespace Grand.Web.Controllers
                         case UserRegistrationType.Standard:
                             {
                                 //send customer welcome message
-                                await _workflowMessageService.SendCustomerWelcomeMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
+                                await _workflowMessageService.SendCustomerWelcomeMessage(_workContext.CurrentCustomer, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
                                 var redirectUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard }, HttpContext.Request.Scheme);
                                 if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -600,7 +615,7 @@ namespace Grand.Web.Controllers
             await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, "");
 
             //send welcome message
-            await _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
+            await _workflowMessageService.SendCustomerWelcomeMessage(customer, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
             var model = new AccountActivationModel();
             model.Result = _localizationService.GetResource("Account.AccountActivation.Activated");
@@ -1070,6 +1085,13 @@ namespace Grand.Web.Controllers
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
+            
+            var contentType = uploadedFile?.ContentType;
+            if (string.IsNullOrEmpty(contentType))
+                ModelState.AddModelError("", "Empty content type");
+            else
+                if(!contentType.StartsWith("image"))
+                    ModelState.AddModelError("", "Only image content type is allowed");
 
             if (ModelState.IsValid)
             {
@@ -1091,6 +1113,12 @@ namespace Grand.Web.Controllers
 
             return View(model);
         }
+        private bool ValidContentType(IFormFile uploadedFile)
+        {
+            return true;
+
+        }
+
 
         [HttpPost, ActionName("Avatar")]
         [AutoValidateAntiforgeryToken]
@@ -1191,7 +1219,10 @@ namespace Grand.Web.Controllers
             if (_workContext.CurrentCustomer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled))
                 return RedirectToRoute("CustomerInfo");
 
-            var model = await _mediator.Send(new GetTwoFactorAuthentication());
+            var model = await _mediator.Send(new GetTwoFactorAuthentication() { 
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage
+            });
             return View(model);
         }
 
@@ -1214,7 +1245,7 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                if (twoFactorAuthenticationService.AuthenticateTwoFactor(model.SecretKey, model.Code))
+                if (await twoFactorAuthenticationService.AuthenticateTwoFactor(model.SecretKey, model.Code, _workContext.CurrentCustomer, _customerSettings.TwoFactorAuthenticationType))
                 {
                     await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.TwoFactorEnabled, true);
                     await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.TwoFactorSecretKey, model.SecretKey);

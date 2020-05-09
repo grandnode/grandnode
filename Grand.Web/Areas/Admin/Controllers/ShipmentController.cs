@@ -8,6 +8,7 @@ using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Shipping;
 using Grand.Services.Common;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -17,6 +18,7 @@ using Grand.Services.Shipping;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Orders;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -33,35 +35,36 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Fields
         private readonly IShipmentViewModelService _shipmentViewModelService;
         private readonly IOrderService _orderService;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
         private readonly IProductService _productService;
         private readonly IShipmentService _shipmentService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IMediator _mediator;
+
         #endregion
 
         public ShipmentController(
             IShipmentViewModelService shipmentViewModelService,
             IOrderService orderService,
-            IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             IWorkContext workContext,
             IPdfService pdfService,
             IProductService productService,
             IShipmentService shipmentService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            IMediator mediator)
         {
             _shipmentViewModelService = shipmentViewModelService;
             _orderService = orderService;
-            _orderProcessingService = orderProcessingService;
             _localizationService = localizationService;
             _workContext = workContext;
             _pdfService = pdfService;
             _productService = productService;
             _shipmentService = shipmentService;
             _dateTimeHelper = dateTimeHelper;
+            _mediator = mediator;
         }
 
         #region Shipments
@@ -281,6 +284,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
             }
 
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.VendorAccess"));
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+
             var orderId = shipment.OrderId;
             var order = await _orderService.GetOrderById(orderId);
             if (order == null)
@@ -328,6 +337,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 return RedirectToAction("List");
             }
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.VendorAccess"));
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
 
             var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
@@ -356,6 +370,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
             {
                 return RedirectToAction("List");
+            }
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.VendorAccess"));
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
 
             var order = await _orderService.GetOrderById(shipment.OrderId);
@@ -386,6 +405,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 return RedirectToAction("List");
             }
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.VendorAccess"));
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
 
             var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
@@ -398,7 +422,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                await _orderProcessingService.Ship(shipment, true);
+                await _mediator.Send(new ShipCommand() { Shipment = shipment, NotifyCustomer = true });
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
             catch (Exception exc)
@@ -421,6 +445,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
             {
                 return RedirectToAction("List");
+            }
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.VendorAccess"));
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
 
             var order = await _orderService.GetOrderById(shipment.OrderId);
@@ -463,6 +492,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 return RedirectToAction("List");
             }
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.VendorAccess"));
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
 
             var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
@@ -475,7 +509,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                await _orderProcessingService.Deliver(shipment, true);
+                await _mediator.Send(new DeliveryCommand() { Shipment = shipment, NotifyCustomer = true });
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
             catch (Exception exc)
@@ -499,6 +533,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
             {
                 return RedirectToAction("List");
+            }
+
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.VendorAccess"));
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
 
             var order = await _orderService.GetOrderById(shipment.OrderId);
@@ -547,6 +587,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
 
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.VendorAccess"));
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
             shipment.GenericAttributes = model.GenericAttributes;
             await _shipmentService.UpdateShipment(shipment);
 
@@ -638,8 +683,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 foreach (var item in shipments)
                 {
-                    var order = await _orderService.GetOrderById(item.OrderId);
-                    var hasaccess = _workContext.HasAccessToShipment(order, item);
+                    var hasaccess = item.VendorId == _workContext.CurrentVendor.Id;
                     if (hasaccess)
                         shipments_access.Add(item);
                 }
@@ -683,8 +727,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 foreach (var item in shipments)
                 {
-                    var order = await _orderService.GetOrderById(item.OrderId);
-                    var hasaccess = _workContext.HasAccessToShipment(order, item);
+                    var hasaccess = item.VendorId == _workContext.CurrentVendor.Id;
                     if (hasaccess)
                         shipments_access.Add(item);
                 }
@@ -703,7 +746,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    await _orderProcessingService.Ship(shipment, true);
+                    await _mediator.Send(new ShipCommand() { Shipment = shipment, NotifyCustomer = true });
                 }
                 catch
                 {
@@ -728,8 +771,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 foreach (var item in shipments)
                 {
-                    var order = await _orderService.GetOrderById(item.OrderId);
-                    var hasaccess = _workContext.HasAccessToShipment(order, item);
+                    var hasaccess = item.VendorId == _workContext.CurrentVendor.Id;
                     if (hasaccess)
                         shipments_access.Add(item);
                 }
@@ -748,7 +790,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    await _orderProcessingService.Deliver(shipment, true);
+                    await _mediator.Send(new DeliveryCommand() { Shipment = shipment, NotifyCustomer = true });
                 }
                 catch
                 {
@@ -768,9 +810,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (shipment == null)
                 throw new ArgumentException("No shipment found with the specified id");
 
-            //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
-                return Content("");
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
+                return Json(new DataSourceResult());
 
             if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
             {
@@ -791,8 +832,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (shipment == null)
                 return Json(new { Result = false });
 
-            //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
                 return Json(new { Result = false });
 
             if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
@@ -811,8 +851,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (shipment == null)
                 throw new ArgumentException("No shipment found with the specified id");
 
-            //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+            if (_workContext.CurrentVendor != null && _workContext.CurrentVendor.Id != shipment.VendorId)
                 return Json(new { Result = false });
 
             if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)

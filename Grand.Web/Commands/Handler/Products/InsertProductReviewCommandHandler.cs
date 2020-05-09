@@ -66,7 +66,7 @@ namespace Grand.Web.Commands.Handler.Products
 
             //notify store owner
             if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
-                await _workflowMessageService.SendProductReviewNotificationMessage(request.Product, productReview, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendProductReviewNotificationMessage(request.Product, productReview, request.Store, _localizationSettings.DefaultAdminLanguageId);
 
             return productReview;
         }

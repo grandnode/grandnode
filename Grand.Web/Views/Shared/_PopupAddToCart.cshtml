@@ -19,7 +19,7 @@
     <div class="modal-content rounded-0 p-2 p-xl-3">
         <div class="modal-header bg-info rounded-0">
             <h5 class="text-center text-white w-100 mb-0">
-                @if (Model.CartType == ShoppingCartType.ShoppingCart)
+                @if (Model.CartType == ShoppingCartType.ShoppingCart || Model.CartType == ShoppingCartType.OnHoldCart)
                 {
                     @T("AddToCart.ShoppingCart")
                 }
@@ -151,7 +151,7 @@
                     {
                         <button type="button" class="btn btn-outline-info w-100 text-uppercase mr-1 d-flex justify-content-center" data-dismiss="modal">@T("AddToCart.Continue")</button>
                     }
-                    @if (Model.CartType == ShoppingCartType.ShoppingCart)
+                    @if (Model.CartType == ShoppingCartType.ShoppingCart || Model.CartType == ShoppingCartType.OnHoldCart)
                     {
                         <button type="button" class="btn btn-info w-100 d-flex justify-content-center text-uppercase ml-0 border-left-0" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')">@T("AddToCart.ViewCart")</button>
                     }

@@ -45,6 +45,7 @@ namespace Grand.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
         private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly IMediator _mediator;
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -70,6 +71,7 @@ namespace Grand.Web.Controllers
             IOrderService orderService,
             IWebHelper webHelper,
             IAddressAttributeParser addressAttributeParser,
+            ICustomerActivityService customerActivityService,
             IMediator mediator,
             OrderSettings orderSettings,
             RewardPointsSettings rewardPointsSettings,
@@ -90,6 +92,7 @@ namespace Grand.Web.Controllers
             _orderService = orderService;
             _webHelper = webHelper;
             _addressAttributeParser = addressAttributeParser;
+            _customerActivityService = customerActivityService;
             _mediator = mediator;
             _orderSettings = orderSettings;
             _rewardPointsSettings = rewardPointsSettings;
@@ -195,6 +198,7 @@ namespace Grand.Web.Controllers
             var model = new CheckoutCompletedModel {
                 OrderId = order.Id,
                 OrderNumber = order.OrderNumber,
+                OrderCode = order.Code,
                 OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled
             };
 
@@ -650,6 +654,7 @@ namespace Grand.Web.Controllers
                 ShippingAddress = _workContext.CurrentCustomer.ShippingAddress,
                 Store = _storeContext.CurrentStore
             });
+
             return View(model);
         }
 
@@ -906,7 +911,9 @@ namespace Grand.Web.Controllers
                 var placeOrderResult = await orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
-                    this.HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
+                    await _customerActivityService.InsertActivity("PublicStore.PlaceOrder", "", _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), placeOrderResult.PlacedOrder.Id);
+
+                    HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
                     var postProcessPaymentRequest = new PostProcessPaymentRequest {
                         Order = placeOrderResult.PlacedOrder
                     };
@@ -940,8 +947,7 @@ namespace Grand.Web.Controllers
             if (string.IsNullOrEmpty(viewcomponent))
                 return Content("");
 
-            var actionContext = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
-            var component = this.RenderViewComponentToString(viewcomponent, new { shippingOption = shippingOption });
+            var component = RenderViewComponentToString(viewcomponent, new { shippingOption = shippingOption });
             return Content(component);
         }
 
@@ -1649,7 +1655,9 @@ namespace Grand.Web.Controllers
                 var placeOrderResult = await orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
-                    this.HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
+                    await _customerActivityService.InsertActivity("PublicStore.PlaceOrder", "", _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), placeOrderResult.PlacedOrder.Id);
+
+                    HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
                     var postProcessPaymentRequest = new PostProcessPaymentRequest {
                         Order = placeOrderResult.PlacedOrder
                     };

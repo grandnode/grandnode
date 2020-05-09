@@ -16,6 +16,11 @@ namespace Grand.Services.Payments
         }
 
         /// <summary>
+        /// Gets or sets a order identifier
+        /// </summary>
+        public string OrderCode { get; set; }
+
+        /// <summary>
         /// Gets or sets a store identifier
         /// </summary>
         public string StoreId { get; set; }

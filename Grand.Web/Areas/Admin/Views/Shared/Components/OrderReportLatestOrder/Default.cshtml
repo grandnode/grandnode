@@ -1,4 +1,6 @@
-﻿<div id="latest-orders-grid"></div>
+﻿@model bool
+
+<div id="latest-orders-grid"></div>
 
 <script>
     $(document).ready(function () {
@@ -56,7 +58,12 @@
                         field: "CustomerEmail",
                         title: "@T("Admin.Orders.Fields.Customer")",
                         width: 300,
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#=CustomerFullName# (#=CustomerEmail#)</a>'
+                        @if (!Model)
+                        {
+                            <text>
+                                template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#=CustomerFullName# (#=CustomerEmail#)</a>'
+                            </text>
+                        }
                     },
                     {
                         field: "StoreName",
@@ -72,13 +79,18 @@
                         headerAttributes: { style: "text-align:center" },
                         attributes: { style: "text-align:center" },
                     },
+
+                    @if (!Model)
                     {
+                        //a vendor does not have access to this functionality
+                        <text>{
                         field: "OrderTotal",
                         title: "@T("Admin.Orders.Fields.OrderTotal")",
                         width: 200,
                         headerAttributes: { style: "text-align:center" },
-                        attributes: { style: "text-align:center" },
-                    },
+                        attributes: { style: "text-align:center" }
+                        },</text>
+                    }
                     {
                         field: "CreatedOn",
                         title: "@T("Admin.Orders.Fields.CreatedOn")",

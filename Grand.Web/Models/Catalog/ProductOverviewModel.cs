@@ -16,6 +16,7 @@ namespace Grand.Web.Models.Catalog
             DefaultPictureModel = new PictureModel();
             SecondPictureModel = new PictureModel();
             SpecificationAttributeModels = new List<ProductSpecificationModel>();
+            ProductAttributeModels = new List<ProductAttributeModel>();
             ReviewOverviewModel = new ProductReviewOverviewModel();
         }
         public string Name { get; set; }
@@ -44,6 +45,10 @@ namespace Grand.Web.Models.Catalog
 
         //specification attributes
         public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
+
+        //product attributes 
+        public IList<ProductAttributeModel> ProductAttributeModels { get; set; }
+        
         //price
         public ProductReviewOverviewModel ReviewOverviewModel { get; set; }
 
@@ -79,6 +84,34 @@ namespace Grand.Web.Models.Catalog
             public List<AppliedDiscount> AppliedDiscounts { get; set; }
             public TierPrice PreferredTierPrice { get; set; }
 
+        }
+        
+        public partial class ProductAttributeModel : BaseGrandModel
+        {
+            public ProductAttributeModel()
+            {
+                Values = new List<ProductAttributeValueModel>();
+            }
+            public string Name { get; set; }
+            public string SeName { get; set; }
+            public string TextPrompt { get; set; }
+            public bool IsRequired { get; set; }
+            public AttributeControlType AttributeControlType { get; set; }
+            public IList<ProductAttributeValueModel> Values { get; set; }
+        }
+
+        public partial class ProductAttributeValueModel : BaseGrandModel
+        {
+            public ProductAttributeValueModel()
+            {
+                ImageSquaresPictureModel = new PictureModel();
+                PictureModel = new PictureModel();
+            }
+            public string Name { get; set; }
+            public string ColorSquaresRgb { get; set; }
+            //picture model is used with "image square" attribute type
+            public PictureModel ImageSquaresPictureModel { get; set; }            
+            public PictureModel PictureModel { get; set; }
         }
         #endregion
     }

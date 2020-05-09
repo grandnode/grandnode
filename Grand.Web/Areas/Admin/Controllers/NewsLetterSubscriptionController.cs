@@ -80,7 +80,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             foreach (var s in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
 
             //active
             model.ActiveList.Add(new SelectListItem {
@@ -118,7 +118,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var m = x.ToModel();
                 var store = await _storeService.GetStoreById(x.StoreId);
-                m.StoreName = store != null ? store.Name : "Unknown store";
+                m.StoreName = store != null ? store.Shortcut : "Unknown store";
                 m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
                 m.Categories = await GetCategoryNames(x.Categories.ToList());
                 items.Add(m);

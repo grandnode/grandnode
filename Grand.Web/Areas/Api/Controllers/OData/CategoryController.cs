@@ -1,21 +1,25 @@
-﻿using Grand.Api.Controllers;
+﻿using Grand.Api.Commands.Models.Catalog;
 using Grand.Api.DTOs.Catalog;
-using Grand.Api.Interfaces;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class CategoryController : BaseODataController
     {
-        private readonly ICategoryApiService _categoryApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
-        public CategoryController(ICategoryApiService categoryApiService, IPermissionService permissionService)
+        public CategoryController(
+            IMediator mediator,
+            IPermissionService permissionService)
         {
-            _categoryApiService = categoryApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -25,11 +29,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
 
-            var category = await _categoryApiService.GetById(key);
-            if (category == null)
+            var category = await _mediator.Send(new GetQuery<CategoryDto>() { Id = key });
+            if (!category.Any())
                 return NotFound();
 
-            return Ok(category);
+            return Ok(category.FirstOrDefault());
         }
 
         [HttpGet]
@@ -39,7 +43,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
 
-            return Ok(_categoryApiService.GetCategories());
+            return Ok(await _mediator.Send(new GetQuery<CategoryDto>()));
         }
 
         [HttpPost]
@@ -50,7 +54,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                model = await _categoryApiService.InsertOrUpdateCategory(model);
+                model = await _mediator.Send(new AddCategoryCommand() { Model = model });
                 return Created(model);
             }
             return BadRequest(ModelState);
@@ -62,9 +66,15 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
 
+            var category = await _mediator.Send(new GetQuery<CategoryDto>() { Id = model.Id });
+            if (!category.Any())
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                model = await _categoryApiService.UpdateCategory(model);
+                model = await _mediator.Send(new UpdateCategoryCommand() { Model = model });
                 return Ok(model);
             }
             return BadRequest(ModelState);
@@ -76,17 +86,17 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
 
-            var entity = await _categoryApiService.GetById(key);
-            if (entity == null)
+            var category = await _mediator.Send(new GetQuery<CategoryDto>() { Id = key });
+            if (!category.Any())
             {
                 return NotFound();
             }
-
-            model.Patch(entity);
+            var cat = category.FirstOrDefault();
+            model.Patch(cat);
 
             if (ModelState.IsValid)
             {
-                entity = await _categoryApiService.UpdateCategory(entity);
+                await _mediator.Send(new UpdateCategoryCommand() { Model = cat });
                 return Ok();
             }
             return BadRequest(ModelState);
@@ -98,12 +108,14 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
 
-            var category = await _categoryApiService.GetById(key);
-            if (category == null)
+            var category = await _mediator.Send(new GetQuery<CategoryDto>() { Id = key });
+            if (!category.Any())
             {
                 return NotFound();
             }
-            await _categoryApiService.DeleteCategory(category);
+
+            await _mediator.Send(new DeleteCategoryCommand() { Model = category.FirstOrDefault() });
+
             return Ok();
         }
     }

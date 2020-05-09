@@ -2,7 +2,6 @@
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
-using Grand.Plugin.Widgets.FacebookPixel;
 using Grand.Plugin.Widgets.FacebookPixel.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
@@ -12,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
+namespace Grand.Plugin.Widgets.FacebookPixel.Controllers
 {
     [Area("Admin")]
     [AuthorizeAdmin]

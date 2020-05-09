@@ -27,6 +27,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _store.GetLocalized(x => x.Name, _language.Id); }
         }
 
+        public string Shortcut {
+            get { return _store.GetLocalized(x => x.Shortcut, _language.Id); }
+        }
+
         public string URL
         {
             get { return _store.SslEnabled ? _store.SecureUrl : _store.Url; }

@@ -6,6 +6,7 @@ using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Web.Commands.Models.Orders;
 using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Common;
@@ -30,7 +31,6 @@ namespace Grand.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly ILocalizationService _localizationService;
         private readonly IMediator _mediator;
 
@@ -44,7 +44,6 @@ namespace Grand.Web.Controllers
             IOrderService orderService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             IMediator mediator,
             OrderSettings orderSettings)
@@ -53,7 +52,6 @@ namespace Grand.Web.Controllers
             _orderService = orderService;
             _workContext = workContext;
             _storeContext = storeContext;
-            _orderProcessingService = orderProcessingService;
             _localizationService = localizationService;
             _mediator = mediator;
             _orderSettings = orderSettings;
@@ -129,7 +127,7 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            if (!await _orderProcessingService.IsReturnRequestAllowed(order))
+            if (!await _mediator.Send(new IsReturnRequestAllowedQuery() { Order = order }))
                 return RedirectToRoute("HomePage");
 
             //var model = new ReturnRequestModel();
@@ -150,7 +148,7 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            if (!await _orderProcessingService.IsReturnRequestAllowed(order))
+            if (!await _mediator.Send(new IsReturnRequestAllowedQuery() { Order = order }))
                 return RedirectToRoute("HomePage");
 
             ModelState.Clear();
@@ -187,6 +185,7 @@ namespace Grand.Web.Controllers
                 {
                     model.Result = string.Format(_localizationService.GetResource("ReturnRequests.Submitted"), result.rr.ReturnNumber, Url.Link("ReturnRequestDetails", new { returnRequestId = result.rr.Id }));
                     model.OrderNumber = order.OrderNumber;
+                    model.OrderCode = order.Code;
                     return View(result.model);
                 }
 

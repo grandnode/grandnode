@@ -30,6 +30,8 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 
         [GrandResourceDisplayName("Admin.Orders.Fields.ID")]
         public int OrderNumber { get; set; }
+        [GrandResourceDisplayName("Admin.Orders.Fields.Code")]
+        public string Code { get; set; }
 
         [GrandResourceDisplayName("Admin.Orders.Fields.OrderGuid")]
         public Guid OrderGuid { get; set; }

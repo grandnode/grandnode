@@ -1,6 +1,7 @@
-﻿using Grand.Api.Controllers;
-using Grand.Api.Interfaces;
+﻿using Grand.Api.DTOs.Common;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class CurrencyController : BaseODataController
     {
-        private readonly ICommonApiService _commonApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public CurrencyController(ICommonApiService commonApiService, IPermissionService permissionService)
+        public CurrencyController(IMediator mediator, IPermissionService permissionService)
         {
-            _commonApiService = commonApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -26,11 +27,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Currencies))
                 return Forbid();
 
-            var currency = _commonApiService.GetCurrencies().FirstOrDefault(x => x.Id == key);
-            if (currency == null)
+            var currency = await _mediator.Send(new GetQuery<CurrencyDto>() { Id = key });
+            if (!currency.Any())
                 return NotFound();
 
-            return Ok(currency);
+            return Ok(currency.FirstOrDefault());
         }
 
         [HttpGet]
@@ -40,7 +41,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Currencies))
                 return Forbid();
 
-            return Ok(_commonApiService.GetCurrencies());
+            return Ok(await _mediator.Send(new GetQuery<CurrencyDto>()));
         }
     }
 }

@@ -1,10 +1,14 @@
-﻿namespace Grand.Services.Authentication
+﻿using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Localization;
+using System.Threading.Tasks;
+
+namespace Grand.Services.Authentication
 {
     public interface ITwoFactorAuthenticationService
     {
-        bool AuthenticateTwoFactor(string secretKey, string token);
+        Task<bool> AuthenticateTwoFactor(string secretKey, string token, Customer customer, TwoFactorAuthenticationType twoFactorAuthenticationType);
 
-        TwoFactorCodeSetup GenerateCodeSetup(string secretKey, string email);
+        Task<TwoFactorCodeSetup> GenerateCodeSetup(string secretKey, Customer customer, Language language, TwoFactorAuthenticationType twoFactorAuthenticationType);
         
     }
 }

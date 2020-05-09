@@ -207,7 +207,7 @@ namespace Grand.Services.Catalog
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 Locales = product.Locales,
-                CustomerRoles = product.CustomerRoles,
+                CustomerRoles = product.CustomerRoles,                
                 Stores = product.Stores
             };
 

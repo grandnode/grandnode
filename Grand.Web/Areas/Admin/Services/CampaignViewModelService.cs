@@ -74,7 +74,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 model.AvailableStores.Add(new SelectListItem
                 {
-                    Text = store.Name,
+                    Text = store.Shortcut,
                     Value = store.Id.ToString()
                 });
             }

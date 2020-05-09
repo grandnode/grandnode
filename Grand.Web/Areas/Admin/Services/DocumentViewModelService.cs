@@ -24,13 +24,14 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly IShipmentService _shipmentService;
+        private readonly IReturnRequestService _returnRequestService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IVendorService _vendorService;
 
         public DocumentViewModelService(IDocumentService documentService, IDocumentTypeService documentTypeService, ICustomerService customerService,
             IOrderService orderService, ILocalizationService localizationService, IProductService productService, IShipmentService shipmentService,
-            ICategoryService categoryService, IManufacturerService manufacturerService, IVendorService vendorService)
+            IReturnRequestService returnRequestService, ICategoryService categoryService, IManufacturerService manufacturerService, IVendorService vendorService)
         {
             _documentService = documentService;
             _documentTypeService = documentTypeService;
@@ -39,6 +40,7 @@ namespace Grand.Web.Areas.Admin.Services
             _localizationService = localizationService;
             _productService = productService;
             _shipmentService = shipmentService;
+            _returnRequestService = returnRequestService;
             _categoryService = categoryService;
             _manufacturerService = manufacturerService;
             _vendorService = vendorService;
@@ -132,6 +134,21 @@ namespace Grand.Web.Areas.Admin.Services
                                     model.Number = shipment.ShipmentNumber.ToString();
                                     model.Name = string.Format(_localizationService.GetResource("Shipment.Document"), shipment.ShipmentNumber);
                                     var sorder = await _orderService.GetOrderById(shipment.OrderId);
+                                    if (sorder != null)
+                                    {
+                                        model.CustomerId = sorder.CustomerId;
+                                        model.CustomerEmail = sorder.CustomerEmail;
+                                    }
+                                }
+                                break;
+                            case (int)Reference.ReturnRequest:
+                                var returnrequest = await _returnRequestService.GetReturnRequestById(simpleModel.ObjectId);
+                                if (returnrequest != null)
+                                {
+                                    model.DocDate = returnrequest.CreatedOnUtc;
+                                    model.Number = returnrequest.ReturnNumber.ToString();
+                                    model.Name = string.Format(_localizationService.GetResource("ReturnRequests.Document"), returnrequest.ReturnNumber);
+                                    var sorder = await _orderService.GetOrderById(returnrequest.OrderId);
                                     if (sorder != null)
                                     {
                                         model.CustomerId = sorder.CustomerId;

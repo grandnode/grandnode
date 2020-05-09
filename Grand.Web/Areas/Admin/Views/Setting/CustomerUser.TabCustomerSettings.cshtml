@@ -396,5 +396,14 @@
                 <span asp-validation-for="CustomerSettings.TwoFactorAuthenticationEnabled"></span>
             </div>
         </div>
+        <div class="form-group">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                <admin-label asp-for="CustomerSettings.TwoFactorAuthenticationType" class="control-label" />
+            </div>
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <admin-select asp-for="CustomerSettings.TwoFactorAuthenticationType" asp-items="((TwoFactorAuthenticationType)Model.CustomerSettings.TwoFactorAuthenticationType).ToSelectList(Context)" />
+                <span asp-validation-for="CustomerSettings.TwoFactorAuthenticationType"></span>
+            </div>
+        </div>
     </div>
 </div>

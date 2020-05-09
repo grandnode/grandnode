@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Services.Queries.Handlers.Orders
 {
-    public class GetReturnRequestQueryHandler : IRequestHandler<GetReturnRequestQueryModel, IMongoQueryable<ReturnRequest>>
+    public class GetReturnRequestQueryHandler : IRequestHandler<GetReturnRequestQuery, IMongoQueryable<ReturnRequest>>
     {
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
 
@@ -18,7 +18,7 @@ namespace Grand.Services.Queries.Handlers.Orders
             _returnRequestRepository = returnRequestRepository;
         }
 
-        public Task<IMongoQueryable<ReturnRequest>> Handle(GetReturnRequestQueryModel request, CancellationToken cancellationToken)
+        public Task<IMongoQueryable<ReturnRequest>> Handle(GetReturnRequestQuery request, CancellationToken cancellationToken)
         {
             var query = _returnRequestRepository.Table;
             if (!string.IsNullOrEmpty(request.StoreId))
@@ -26,6 +26,9 @@ namespace Grand.Services.Queries.Handlers.Orders
 
             if (!string.IsNullOrEmpty(request.CustomerId))
                 query = query.Where(rr => request.CustomerId == rr.CustomerId);
+
+            if (!string.IsNullOrEmpty(request.VendorId))
+                query = query.Where(rr => request.VendorId == rr.VendorId);
 
             if (request.Rs.HasValue)
             {

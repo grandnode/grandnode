@@ -32,8 +32,7 @@ namespace Grand.Web.Commands.Handler.Orders
             await _orderService.InsertOrderNote(orderNote);
 
             //email
-            await _workflowMessageService.SendNewOrderNoteAddedCustomerNotification(
-                orderNote, request.Language.Id);
+            await _workflowMessageService.SendNewOrderNoteAddedCustomerNotification(request.Order, orderNote);
 
             return orderNote;
         }

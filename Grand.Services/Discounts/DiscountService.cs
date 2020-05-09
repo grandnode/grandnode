@@ -515,7 +515,7 @@ namespace Grand.Services.Discounts
 
             string[] couponCodesToValidate = null;
             if (customer != null)
-                couponCodesToValidate = customer.ParseAppliedDiscountCouponCodes();
+                couponCodesToValidate = customer.ParseAppliedCouponCodes(SystemCustomerAttributeNames.DiscountCoupons);
 
             return await ValidateDiscount(discount, customer, couponCodesToValidate);
         }

@@ -25,6 +25,7 @@ namespace Grand.Web.Models.ShoppingCart
         public bool ShowSku { get; set; }
         public bool ShowProductImages { get; set; }
         public bool IsEditable { get; set; }
+        public bool IsAllowOnHold { get; set; }
         public bool TermsOfServicePopup { get; set; }
         public IList<ShoppingCartItemModel> Items { get; set; }
 
@@ -56,17 +57,22 @@ namespace Grand.Web.Models.ShoppingCart
                 Warnings = new List<string>();
             }
             public string Sku { get; set; }
+            public bool IsCart { get; set; }
             public PictureModel Picture {get;set;}
             public string ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
             public string WarehouseId { get; set; }
             public string WarehouseName { get; set; }
+            public string VendorId { get; set; }
+            public string VendorName { get; set; }
+            public string VendorSeName { get; set; }
             public string UnitPriceWithoutDiscount { get; set; }
             public decimal UnitPriceWithoutDiscountValue { get; set; }
             public string UnitPrice { get; set; }
             public decimal UnitPriceValue { get; set; }
             public string SubTotal { get; set; }
+            public decimal SubTotalValue { get; set; }
             public string Discount { get; set; }
             public int DiscountedQty { get; set; }
             public List<string> Discounts { get; set; }

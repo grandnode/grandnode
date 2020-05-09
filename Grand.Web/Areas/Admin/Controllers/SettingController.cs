@@ -941,12 +941,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.PointsForPurchases_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeScope) ||
                     _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope);
                 model.PointsForPurchases_Awarded_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Awarded, storeScope);
-                model.PointsForPurchases_Canceled_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Canceled, storeScope);
+                model.ReduceRewardPointsAfterCancelOrder_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.ReduceRewardPointsAfterCancelOrder, storeScope);
                 model.DisplayHowMuchWillBeEarned_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope);
                 model.PointsForRegistration_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
             }
             var currencySettings = _settingService.LoadSetting<CurrencySettings>(storeScope);
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+
+            //order statuses
+            model.PointsForPurchases_Awarded_OrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false, new int[] { 10, 40 }).ToList();
 
             return View(model);
         }
@@ -977,7 +980,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
 
                 await UpdateOverrideForStore(storeScope, model.PointsForPurchases_Awarded_OverrideForStore, rewardPointsSettings, x => x.PointsForPurchases_Awarded);
-                await UpdateOverrideForStore(storeScope, model.PointsForPurchases_Canceled_OverrideForStore, rewardPointsSettings, x => x.PointsForPurchases_Canceled);
+                await UpdateOverrideForStore(storeScope, model.ReduceRewardPointsAfterCancelOrder_OverrideForStore, rewardPointsSettings, x => x.ReduceRewardPointsAfterCancelOrder);
                 await UpdateOverrideForStore(storeScope, model.DisplayHowMuchWillBeEarned_OverrideForStore, rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned);
 
                 await _settingService.SaveSetting(rewardPointsSettings, x => x.PointsAccumulatedForAllStores, "", false);
@@ -1142,6 +1145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.MiniShoppingCartProductNumber_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, storeScope);
                 model.AllowCartItemEditing_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope);
                 model.CartsSharedBetweenStores_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeScope);
+                model.AllowOnHoldCart_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.AllowOnHoldCart, storeScope);
             }
             return View(model);
         }
@@ -1171,6 +1175,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await UpdateOverrideForStore(storeScope, model.MiniShoppingCartProductNumber_OverrideForStore, shoppingCartSettings, x => x.MiniShoppingCartProductNumber);
             await UpdateOverrideForStore(storeScope, model.AllowCartItemEditing_OverrideForStore, shoppingCartSettings, x => x.AllowCartItemEditing);
             await UpdateOverrideForStore(storeScope, model.CartsSharedBetweenStores_OverrideForStore, shoppingCartSettings, x => x.CartsSharedBetweenStores);
+            await UpdateOverrideForStore(storeScope, model.AllowOnHoldCart_OverrideForStore, shoppingCartSettings, x => x.AllowOnHoldCart);
 
             //now clear cache
             await ClearCache();
@@ -1658,6 +1663,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SecuritySettings.CaptchaEnabled = captchaSettings.Enabled;
             model.SecuritySettings.CaptchaShowOnLoginPage = captchaSettings.ShowOnLoginPage;
             model.SecuritySettings.CaptchaShowOnRegistrationPage = captchaSettings.ShowOnRegistrationPage;
+            model.SecuritySettings.CaptchaShowOnPasswordRecoveryPage = captchaSettings.ShowOnPasswordRecoveryPage;
             model.SecuritySettings.CaptchaShowOnContactUsPage = captchaSettings.ShowOnContactUsPage;
             model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage = captchaSettings.ShowOnEmailWishlistToFriendPage;
             model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage = captchaSettings.ShowOnEmailProductToFriendPage;
@@ -1839,6 +1845,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             captchaSettings.Enabled = model.SecuritySettings.CaptchaEnabled;
             captchaSettings.ShowOnLoginPage = model.SecuritySettings.CaptchaShowOnLoginPage;
             captchaSettings.ShowOnRegistrationPage = model.SecuritySettings.CaptchaShowOnRegistrationPage;
+            captchaSettings.ShowOnPasswordRecoveryPage = model.SecuritySettings.CaptchaShowOnPasswordRecoveryPage;
             captchaSettings.ShowOnContactUsPage = model.SecuritySettings.CaptchaShowOnContactUsPage;
             captchaSettings.ShowOnEmailWishlistToFriendPage = model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage;
             captchaSettings.ShowOnAskQuestionPage = model.SecuritySettings.CaptchaShowOnAskQuestionPage;
@@ -2089,7 +2096,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 else
                 {
                     var store = await _storeService.GetStoreById(x.StoreId);
-                    storeName = store != null ? store.Name : "Unknown";
+                    storeName = store != null ? store.Shortcut : "Unknown";
                 }
                 var settingModel = new SettingModel {
                     Id = x.Id,

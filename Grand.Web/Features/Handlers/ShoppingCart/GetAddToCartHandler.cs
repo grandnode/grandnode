@@ -38,6 +38,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IAuctionService _auctionService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly TaxSettings _taxSettings;
         private readonly MediaSettings _mediaSettings;
@@ -54,7 +55,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             IOrderTotalCalculationService orderTotalCalculationService, 
             IPictureService pictureService, 
             IProductService productService, 
-            IProductAttributeParser productAttributeParser, 
+            IProductAttributeParser productAttributeParser,
+            IAuctionService auctionService,
             ShoppingCartSettings shoppingCartSettings, 
             TaxSettings taxSettings, 
             MediaSettings mediaSettings)
@@ -71,6 +73,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _pictureService = pictureService;
             _productService = productService;
             _productAttributeParser = productAttributeParser;
+            _auctionService = auctionService;
             _shoppingCartSettings = shoppingCartSettings;
             _taxSettings = taxSettings;
             _mediaSettings = mediaSettings;
@@ -140,8 +143,24 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
             var cart = _shoppingCartService.GetShoppingCart(request.Store.Id, request.CartType);
 
-            model.TotalItems = cart.Sum(x => x.Quantity);
-            
+            if (request.CartType != ShoppingCartType.Auctions)
+            {
+                model.TotalItems = cart.Sum(x => x.Quantity);
+            }
+            else
+            {
+                model.TotalItems = 0;
+                var grouped = (await _auctionService.GetBidsByCustomerId(request.Customer.Id)).GroupBy(x => x.ProductId);
+                foreach (var item in grouped)
+                {
+                    var p = await _productService.GetProductById(item.Key);
+                    if (p != null && p.AvailableEndDateTimeUtc > DateTime.UtcNow)
+                    {
+                        model.TotalItems++;
+                    }
+                }
+            }
+
 
             if (request.CartType == ShoppingCartType.ShoppingCart)
             {

@@ -50,11 +50,7 @@
         <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_filters", additionalData = Model.Id })
-    @*filtering*@
-    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
-    {
-        <partial name="_FilterPriceBox" model="Model.PagingFilteringContext.PriceRangeFilter" />
-    }
+    
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_product_list", additionalData = Model.Id })
     @if (Model.Products.Any())
     {
@@ -88,12 +84,24 @@
     }
     @if (!pager.IsEmpty())
     {
-            <nav aria-label="Page navigation">
-                @pager
-            </nav>
+        <nav aria-label="Page navigation">
+            @pager
+        </nav>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_bottom", additionalData = Model.Id })
 </div>
 
-
+@section filters
+    {
+    @*filtering*@
+    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
+    {
+        <partial name="_FilterPriceBox" model="Model.PagingFilteringContext.PriceRangeFilter" />
+    }
+    @*filtering*@
+    @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
+    {
+        <partial name="_FilterSpecsBox" model="Model.PagingFilteringContext.SpecificationFilter" />
+    }
+}
 

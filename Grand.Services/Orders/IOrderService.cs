@@ -37,6 +37,13 @@ namespace Grand.Services.Orders
         Task<Order> GetOrderByNumber(int orderNumber);
 
         /// <summary>
+        /// Gets orders by code
+        /// </summary>
+        /// <param name="code">The order code</param>
+        /// <returns>Order</returns>
+        Task<IList<Order>> GetOrdersByCode(string code);
+
+        /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
@@ -73,8 +80,8 @@ namespace Grand.Services.Orders
         /// <param name="ps">Order payment status; null to load all orders</param>
         /// <param name="ss">Order shipment status; null to load all orders</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
-        /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all records.</param>
+        /// <param name="orderCode">Search by order code.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Orders</returns>
@@ -85,7 +92,7 @@ namespace Grand.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
-            int pageIndex = 0, int pageSize = int.MaxValue);
+            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue);
         
         /// <summary>
         /// Inserts an order

@@ -21,7 +21,7 @@ namespace Grand.Web.ViewComponents
                 return Content("");
 
             var model = await _mediator.Send(new GetPollBySystemName() { SystemName = systemKeyword });
-            if (model == null)
+            if (model == null || string.IsNullOrWhiteSpace(model.Id))
                 return Content("");
 
             return View(model);

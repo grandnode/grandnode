@@ -11,6 +11,7 @@ namespace Grand.Web.Models.Orders
         {
             ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
             Items = new List<ShipmentItemModel>();
+            ShipmentNotes = new List<ShipmentNote>();
         }
         public int ShipmentNumber { get; set; }
         public string TrackingNumber { get; set; }
@@ -20,7 +21,7 @@ namespace Grand.Web.Models.Orders
         public IList<ShipmentStatusEventModel> ShipmentStatusEvents { get; set; }
         public bool ShowSku { get; set; }
         public IList<ShipmentItemModel> Items { get; set; }
-
+        public IList<ShipmentNote> ShipmentNotes { get; set; }
         public OrderModel Order { get; set; }
 
 		#region Nested Classes
@@ -45,10 +46,17 @@ namespace Grand.Web.Models.Orders
             public string Country { get; set; }
             public DateTime? Date { get; set; }
         }
-
+        public partial class ShipmentNote : BaseGrandEntityModel
+        {
+            public bool HasDownload { get; set; }
+            public string Note { get; set; }
+            public DateTime CreatedOn { get; set; }
+            public string ShipmentId { get; set; }
+        }
         public partial class OrderModel : BaseGrandEntityModel
         {
             public int OrderNumber { get; set; }
+            public string OrderCode { get; set; }
             public string ShippingMethod { get; set; }
             public bool PickUpInStore { get; set; }
             public AddressModel PickupAddress { get; set; }

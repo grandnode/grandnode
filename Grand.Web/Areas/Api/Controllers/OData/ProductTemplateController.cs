@@ -1,6 +1,6 @@
-﻿using Grand.Api.Controllers;
-using Grand.Api.Interfaces;
+﻿using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +11,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class ProductTemplateController : BaseODataController
     {
-        private readonly ICommonApiService _commonApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public ProductTemplateController(ICommonApiService commonApiService, IPermissionService permissionService)
+        public ProductTemplateController(IMediator mediator, IPermissionService permissionService)
         {
-            _commonApiService = commonApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -26,11 +26,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Maintenance))
                 return Forbid();
 
-            var store = _commonApiService.GetProductMessageTemplate().FirstOrDefault(x => x.Id == key);
-            if (store == null)
+            var template = await _mediator.Send(new GetMessageTemplateQuery() { Id = key, TemplateName = typeof(Core.Domain.Catalog.ProductTemplate).Name });
+            if (!template.Any())
                 return NotFound();
 
-            return Ok(store);
+            return Ok(template.FirstOrDefault());
+
         }
 
         [HttpGet]
@@ -40,7 +41,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Maintenance))
                 return Forbid();
 
-            return Ok(_commonApiService.GetProductMessageTemplate());
+            return Ok(await _mediator.Send(new GetMessageTemplateQuery() { TemplateName = typeof(Core.Domain.Catalog.ProductTemplate).Name }));
         }
     }
 }

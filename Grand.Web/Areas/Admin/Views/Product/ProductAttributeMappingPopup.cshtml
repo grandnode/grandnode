@@ -54,9 +54,19 @@
                                 <div class="col-md-9 col-sm-9">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="IsRequired" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="IsRequired"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="ShowOnCatalogPage" class="col-sm-3 control-label" />
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                                        <admin-input asp-for="ShowOnCatalogPage" />
+                                        <div class="control__indicator"></div>
+                                    </label>
+                                    <span asp-validation-for="ShowOnCatalogPage"></span>
                                 </div>
                             </div>
                             <div class="form-group">

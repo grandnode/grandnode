@@ -115,7 +115,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
                 m.ShippingMethodName = (shippingMethod != null) ? shippingMethod.Name : "Unavailable";
                 //store
                 var store = await _storeService.GetStoreById(x.StoreId);
-                m.StoreName = (store != null) ? store.Name : "*";
+                m.StoreName = (store != null) ? store.Shortcut : "*";
                 //warehouse
                 var warehouse = await _shippingService.GetWarehouseById(x.WarehouseId);
                 m.WarehouseName = (warehouse != null) ? warehouse.Name : "*";
@@ -180,7 +180,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = "*", Value = " " });
             foreach (var store in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = store.Shortcut, Value = store.Id.ToString() });
             //warehouses
             model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = " " });
             foreach (var warehouses in await _shippingService.GetAllWarehouses())
@@ -262,7 +262,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "" });
             foreach (var store in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString(), Selected = (selectedStore != null && store.Id == selectedStore.Id) });
+                model.AvailableStores.Add(new SelectListItem { Text = store.Shortcut, Value = store.Id.ToString(), Selected = (selectedStore != null && store.Id == selectedStore.Id) });
             //warehouses
             model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = "" });
             foreach (var warehouse in await _shippingService.GetAllWarehouses())

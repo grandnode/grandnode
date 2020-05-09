@@ -209,6 +209,11 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public bool TwoFactorAuthenticationEnabled { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value for two factor authentication type
+        /// </summary>
+        public TwoFactorAuthenticationType TwoFactorAuthenticationType { get; set; }
+
         #region Form fields
 
         /// <summary>

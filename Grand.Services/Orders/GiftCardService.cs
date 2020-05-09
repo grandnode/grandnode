@@ -85,7 +85,7 @@ namespace Grand.Services.Orders
             string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var model = new GetGiftCardQueryModel() {
+            var model = new GetGiftCardQuery() {
                 CreatedFromUtc = createdFromUtc,
                 CreatedToUtc = createdToUtc,
                 GiftCardCouponCode = giftCardCouponCode,

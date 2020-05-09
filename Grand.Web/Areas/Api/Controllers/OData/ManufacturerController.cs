@@ -1,21 +1,23 @@
-﻿using Grand.Api.Controllers;
+﻿using Grand.Api.Commands.Models.Catalog;
 using Grand.Api.DTOs.Catalog;
-using Grand.Api.Interfaces;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class ManufacturerController : BaseODataController
     {
-        private readonly IManufacturerApiService _manufacturerApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
-        public ManufacturerController(IManufacturerApiService manufacturerApiService, IPermissionService permissionService)
+        public ManufacturerController(IMediator mediator, IPermissionService permissionService)
         {
-            _manufacturerApiService = manufacturerApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -25,8 +27,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
-            var manufacturer = await _manufacturerApiService.GetById(key);
-            if (manufacturer == null)
+            var manufacturer = await _mediator.Send(new GetQuery<ManufacturerDto>() { Id = key });
+            if (!manufacturer.Any())
                 return NotFound();
 
             return Ok(manufacturer);
@@ -39,7 +41,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
-            return Ok(_manufacturerApiService.GetManufacturers());
+            return Ok(await _mediator.Send(new GetQuery<ManufacturerDto>()));
         }
 
         [HttpPost]
@@ -50,7 +52,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                model = await _manufacturerApiService.InsertOrUpdateManufacturer(model);
+                model = await _mediator.Send(new AddManufacturerCommand() { Model = model });
                 return Created(model);
             }
             return BadRequest(ModelState);
@@ -62,11 +64,19 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
+
+            var manufacturer = await _mediator.Send(new GetQuery<ManufacturerDto>() { Id = model.Id });
+            if (!manufacturer.Any())
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                model = await _manufacturerApiService.UpdateManufacturer(model);
+                model = await _mediator.Send(new UpdateManufacturerCommand() { Model = model });
                 return Ok(model);
             }
+
             return BadRequest(ModelState);
         }
 
@@ -76,19 +86,20 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
-            var entity = await _manufacturerApiService.GetById(key);
-            if (entity == null)
+            var manufacturer = await _mediator.Send(new GetQuery<ManufacturerDto>() { Id = key });
+            if (!manufacturer.Any())
             {
                 return NotFound();
             }
-
-            model.Patch(entity);
+            var man = manufacturer.FirstOrDefault();
+            model.Patch(man);
 
             if (ModelState.IsValid)
             {
-                entity = await _manufacturerApiService.UpdateManufacturer(entity);
+                await _mediator.Send(new UpdateManufacturerCommand() { Model = man });
                 return Ok();
             }
+
             return BadRequest(ModelState);
         }
 
@@ -98,12 +109,14 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
-            var manufacturer = await _manufacturerApiService.GetById(key);
-            if (manufacturer == null)
+            var manufacturer = await _mediator.Send(new GetQuery<ManufacturerDto>() { Id = key });
+            if (!manufacturer.Any())
             {
                 return NotFound();
             }
-            await _manufacturerApiService.DeleteManufacturer(manufacturer);
+
+            await _mediator.Send(new DeleteManufacturerCommand() { Model = manufacturer.FirstOrDefault() });
+
             return Ok();
         }
     }

@@ -1,21 +1,24 @@
-﻿using Grand.Api.Controllers;
+﻿using Grand.Api.Commands.Models.Customers;
 using Grand.Api.DTOs.Customers;
-using Grand.Api.Interfaces;
+using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
     public partial class CustomerRoleController : BaseODataController
     {
-        private readonly ICustomerRoleApiService _customerRoleApiService;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
-        public CustomerRoleController(ICustomerRoleApiService customerRoleApiService, IPermissionService permissionService)
+
+        public CustomerRoleController(IMediator mediator, IPermissionService permissionService)
         {
-            _customerRoleApiService = customerRoleApiService;
+            _mediator = mediator;
             _permissionService = permissionService;
         }
 
@@ -25,11 +28,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
-            var customerRole = await _customerRoleApiService.GetById(key);
-            if (customerRole == null)
+            var customerRole = await _mediator.Send(new GetQuery<CustomerRoleDto>() { Id = key });
+            if (!customerRole.Any())
                 return NotFound();
 
-            return Ok(customerRole);
+            return Ok(customerRole.FirstOrDefault());
         }
 
         [HttpGet]
@@ -39,7 +42,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
-            return Ok(_customerRoleApiService.GetCustomerRoles());
+            return Ok(await _mediator.Send(new GetQuery<CustomerRoleDto>()));
         }
 
         [HttpPost]
@@ -50,7 +53,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                model = await _customerRoleApiService.InsertOrUpdateCustomerRole(model);
+                model = await _mediator.Send(new AddCustomerRoleCommand() { Model = model });
                 return Created(model);
             }
             return BadRequest(ModelState);
@@ -62,9 +65,15 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
+            var customerRole = await _mediator.Send(new GetQuery<CustomerRoleDto>() { Id = model.Id });
+            if (!customerRole.Any())
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid && !model.IsSystemRole)
             {
-                model = await _customerRoleApiService.UpdateCustomerRole(model);
+                model = await _mediator.Send(new UpdateCustomerRoleCommand() { Model = model });
                 return Ok(model);
             }
             return BadRequest(ModelState);
@@ -76,18 +85,20 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
-            var entity = await _customerRoleApiService.GetById(key);
-            if (entity == null)
+            var customerRole = await _mediator.Send(new GetQuery<CustomerRoleDto>() { Id = key });
+            if (!customerRole.Any())
             {
                 return NotFound();
             }
-            model.Patch(entity);
+            var cr = customerRole.FirstOrDefault();
+            model.Patch(cr);
 
-            if (ModelState.IsValid && !entity.IsSystemRole)
+            if (ModelState.IsValid && !cr.IsSystemRole)
             {
-                entity = await _customerRoleApiService.UpdateCustomerRole(entity);
-                return Ok(entity);
+                await _mediator.Send(new UpdateCustomerRoleCommand() { Model = cr });
+                return Ok();
             }
+
             return BadRequest(ModelState);
         }
 
@@ -97,16 +108,18 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
-            var customerRole = await _customerRoleApiService.GetById(key);
-            if (customerRole == null)
+            var customerRole = await _mediator.Send(new GetQuery<CustomerRoleDto>() { Id = key });
+            if (!customerRole.Any())
             {
                 return NotFound();
             }
-            if (customerRole.IsSystemRole)
+
+            if (customerRole.FirstOrDefault().IsSystemRole)
             {
                 return Forbid();
             }
-            await _customerRoleApiService.DeleteCustomerRole(customerRole);
+            await _mediator.Send(new DeleteCustomerRoleCommand() { Model = customerRole.FirstOrDefault() });
+
             return Ok();
         }
     }

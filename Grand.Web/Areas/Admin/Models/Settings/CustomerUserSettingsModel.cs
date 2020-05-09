@@ -181,6 +181,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationEnabled")]
             public bool TwoFactorAuthenticationEnabled { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationType")]
+            public int TwoFactorAuthenticationType { get; set; }
+
         }
 
         public partial class AddressSettingsModel : BaseGrandModel

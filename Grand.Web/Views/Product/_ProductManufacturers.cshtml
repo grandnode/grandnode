@@ -1,25 +1,22 @@
 ﻿@model IList<ManufacturerModel>
-@if (Model.Any())
-{
-    <div class="manufacturers generalMarginSupporter">
-        @if (Model.Count == 1)
+<div class="manufacturers generalMarginSupporter">
+    @if (Model.Count == 1)
+    {
+        <span class="label">@T("Products.Manufacturer"):</span>
+    }
+    else
+    {
+        <strong class="label">@T("Products.Manufacturers"):</strong>
+    }
+    <span class="value">
+        @for (int i = 0; i < Model.Count; i++)
         {
-            <span class="label">@T("Products.Manufacturer"):</span>
-        }
-        else
-        {
-            <strong class="label">@T("Products.Manufacturers"):</strong>
-        }
-        <span class="value">
-            @for (int i = 0; i < Model.Count; i++)
+            var item = Model[i];
+            <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })">@item.Name</a>
+            if (i != Model.Count - 1)
             {
-                var item = Model[i];
-                <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })">@item.Name</a>
-                if (i != Model.Count - 1)
-                {
                 <span class="separator">,</span>
-                }
             }
-        </span>
-    </div>
-}
+        }
+    </span>
+</div>
