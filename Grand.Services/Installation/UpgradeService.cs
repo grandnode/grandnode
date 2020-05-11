@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.AdminSearch;
+using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
@@ -958,6 +959,18 @@ namespace Grand.Services.Installation
             {
                 attribute.SeName = SeoExtensions.GetSeName(attribute.Name, false, false);
                 await attributes.UpdateAsync(attribute);
+            }
+
+            #endregion
+
+            #region Update blog category - sename field
+
+            var blogcategories = _serviceProvider.GetRequiredService<IRepository<BlogCategory>>();
+
+            foreach (var category in blogcategories.Table.ToList())
+            {
+                category.SeName = SeoExtensions.GetSeName(category.Name, false, false);
+                await blogcategories.UpdateAsync(category);
             }
 
             #endregion

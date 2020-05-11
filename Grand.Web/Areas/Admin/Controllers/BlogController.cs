@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Grand.Core;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Seo;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -33,13 +34,20 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
+        private readonly SeoSettings _seoSettings;
 
         #endregion
 
         #region Constructors
 
-        public BlogController(IBlogService blogService, IBlogViewModelService blogViewModelService, ILanguageService languageService, ILocalizationService localizationService,
-            IStoreService storeService, IWorkContext workContext)
+        public BlogController(
+            IBlogService blogService, 
+            IBlogViewModelService blogViewModelService, 
+            ILanguageService languageService, 
+            ILocalizationService localizationService,
+            IStoreService storeService, 
+            IWorkContext workContext, 
+            SeoSettings seoSettings)
         {
             _blogService = blogService;
             _blogViewModelService = blogViewModelService;
@@ -47,6 +55,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _localizationService = localizationService;
             _storeService = storeService;
             _workContext = workContext;
+            _seoSettings = seoSettings;
         }
 
         #endregion
@@ -250,6 +259,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
 
                 var blogCategory = model.ToEntity();
+                blogCategory.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(blogCategory.SeName) ? blogCategory.Name : blogCategory.SeName, _seoSettings);
+
                 await _blogService.InsertBlogCategory(blogCategory);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogCategory.Added"));
                 return continueEditing ? RedirectToAction("CategoryEdit", new { id = blogCategory.Id }) : RedirectToAction("CategoryList");
@@ -318,6 +329,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
 
                 blogCategory = model.ToEntity(blogCategory);
+                blogCategory.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(blogCategory.SeName) ? blogCategory.Name : blogCategory.SeName, _seoSettings);
                 await _blogService.UpdateBlogCategory(blogCategory);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogCategory.Updated"));
                 if (continueEditing)

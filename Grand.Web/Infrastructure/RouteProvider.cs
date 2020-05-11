@@ -689,7 +689,7 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Blog", action = "BlogByMonth" });
 
             routeBuilder.MapControllerRoute("BlogByCategory",
-                            pattern + "blog/category/{categoryid}",
+                            pattern + "blog/category/{categorySeName}",
                             new { controller = "Blog", action = "BlogByCategory" });
 
             routeBuilder.MapControllerRoute("BlogByKeyword",

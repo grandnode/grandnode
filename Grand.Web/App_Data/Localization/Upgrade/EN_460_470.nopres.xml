@@ -369,5 +369,11 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Fields.ShowOnCatalogPage.hint">
     <Value>Check to show in public store on catalog pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogCategory.Fields.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogCategory.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name. Leave empty to generate it automatically based on the name of the category blog.</Value>
+  </LocaleResource>
 </Language>
 

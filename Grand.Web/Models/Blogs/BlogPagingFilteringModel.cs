@@ -39,11 +39,8 @@ namespace Grand.Web.Models.Blogs
         #region Properties
 
         public string Month { get; set; }
-
         public string Tag { get; set; }
-        
-        public string CategoryId { get; set; }
-        
+        public string CategorySeName { get; set; }
         public string SearchKeyword { get; set; }
 
         #endregion

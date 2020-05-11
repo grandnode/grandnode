@@ -40,6 +40,7 @@ namespace Grand.Web.Features.Handlers.Blogs
                     model.Add(new BlogPostCategoryModel() {
                         Id = item.Id,
                         Name = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                        SeName = item.SeName,
                         BlogPostCount = item.BlogPosts.Count
                     });
                 }

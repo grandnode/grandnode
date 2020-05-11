@@ -9498,6 +9498,12 @@
   <LocaleResource Name="admin.contentmanagement.blog.blogcategory.fields.post">
     <Value>Blog posts</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogCategory.Fields.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogCategory.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name. Leave empty to generate it automatically based on the name of the category blog.</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.contentmanagement.blog.blogcategory.info">
     <Value>Info</Value>
   </LocaleResource>

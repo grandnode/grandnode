@@ -113,6 +113,13 @@ namespace Grand.Services.Blogs
         Task<BlogCategory> GetBlogCategoryById(string blogCategoryId);
 
         /// <summary>
+        /// Get category by sename
+        /// </summary>
+        /// <param name="blogCategorySeName">Blog category sename</param>
+        /// <returns></returns>
+        Task<BlogCategory> GetBlogCategoryBySeName(string blogCategorySeName);
+
+        /// <summary>
         /// Get all blog categories
         /// </summary>
         /// <returns></returns>
