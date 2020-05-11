@@ -1,5 +1,4 @@
 using Grand.Core;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Plugins;
@@ -34,9 +33,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
@@ -53,9 +50,8 @@ namespace Grand.Plugin.Payments.PayPalStandard
 
         #region Ctor
 
-        public PayPalStandardPaymentProcessor(CurrencySettings currencySettings,
+        public PayPalStandardPaymentProcessor(
             ICheckoutAttributeParser checkoutAttributeParser,
-            ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
@@ -68,9 +64,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
             IServiceProvider serviceProvider,
             PayPalStandardPaymentSettings paypalStandardPaymentSettings)
         {
-            _currencySettings = currencySettings;
             _checkoutAttributeParser = checkoutAttributeParser;
-            _currencyService = currencyService;
             _genericAttributeService = genericAttributeService;
             _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
