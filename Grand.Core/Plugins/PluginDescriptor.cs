@@ -97,7 +97,7 @@ namespace Grand.Core.Plugins
             }
             catch
             {
-                throw new GrandException("Plugin has not been registered getRequiredService - dependency");
+                throw new GrandException($"Plugin has not been registered getRequiredService - dependency - {PluginType.FullName}");
             }
             var typedInstance = instance as T;
             if (typedInstance != null)
