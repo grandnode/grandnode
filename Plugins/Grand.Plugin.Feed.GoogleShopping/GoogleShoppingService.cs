@@ -45,8 +45,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
         private readonly ISettingService _settingService;
         private readonly IWorkContext _workContext;
         private readonly IMeasureService _measureService;
-        private readonly IServiceProvider _serviceProvider;
-
+        private readonly ILocalizationService _localizationService;
         private readonly MeasureSettings _measureSettings;
         private readonly GoogleShoppingSettings _googleShoppingSettings;
         private readonly CurrencySettings _currencySettings;
@@ -68,7 +67,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
             ISettingService settingService,
             IWorkContext workContext,
             IMeasureService measureService,
-            IServiceProvider serviceProvider,
+            ILocalizationService localizationService,
             MeasureSettings measureSettings,
             GoogleShoppingSettings googleShoppingSettings,
             CurrencySettings currencySettings,
@@ -88,7 +87,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
             _settingService = settingService;
             _workContext = workContext;
             _measureService = measureService;
-            _serviceProvider = serviceProvider;
+            _localizationService = localizationService;
             _measureSettings = measureSettings;
             _googleShoppingSettings = googleShoppingSettings;
             _currencySettings = currencySettings;
@@ -568,33 +567,33 @@ namespace Grand.Plugin.Feed.GoogleShopping
             await _settingService.SaveSetting(settings);
 
             //locales
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Store", "Store");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Store.Hint", "Select the store that will be used to generate the feed.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Currency", "Currency");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Currency.Hint", "Select the default currency that will be used to generate the feed.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.DefaultGoogleCategory", "Default Google category");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.DefaultGoogleCategory.Hint", "The default Google category to use if one is not specified.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.General", "General");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Generate", "Generate feed");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Override", "Override product settings");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PassShippingInfoWeight", "Pass shipping info (weight)");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PassShippingInfoWeight.Hint", "Check if you want to include shipping information (weight) in generated XML file.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PassShippingInfoDimensions", "Pass shipping info (dimensions)");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PassShippingInfoDimensions.Hint", "Check if you want to include shipping information (dimensions) in generated XML file.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PricesConsiderPromotions", "Prices consider promotions");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PricesConsiderPromotions.Hint", "Check if you want prices to be calculated with promotions (tier prices, discounts, special prices, tax, etc). But please note that it can significantly reduce time required to generate the feed file.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.ProductPictureSize", "Product thumbnail image size");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.ProductPictureSize.Hint", "The default size (pixels) for product thumbnail images.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.ProductName", "Product");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.GoogleCategory", "Google Category");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.Gender", "Gender");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.AgeGroup", "Age group");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.Color", "Color");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.Size", "Size");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.CustomGoods", "Custom goods (no identifier exists)");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.SuccessResult", "GoogleShopping feed has been successfully generated.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.StaticFilePath", "Generated file path (static)");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.StaticFilePath.Hint", "A file path of the generated GoogleShopping file. It's static for your store and can be shared with the GoogleShopping service.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Store", "Store");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Store.Hint", "Select the store that will be used to generate the feed.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Currency", "Currency");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Currency.Hint", "Select the default currency that will be used to generate the feed.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.DefaultGoogleCategory", "Default Google category");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.DefaultGoogleCategory.Hint", "The default Google category to use if one is not specified.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.General", "General");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Generate", "Generate feed");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Override", "Override product settings");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PassShippingInfoWeight", "Pass shipping info (weight)");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PassShippingInfoWeight.Hint", "Check if you want to include shipping information (weight) in generated XML file.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PassShippingInfoDimensions", "Pass shipping info (dimensions)");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PassShippingInfoDimensions.Hint", "Check if you want to include shipping information (dimensions) in generated XML file.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PricesConsiderPromotions", "Prices consider promotions");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PricesConsiderPromotions.Hint", "Check if you want prices to be calculated with promotions (tier prices, discounts, special prices, tax, etc). But please note that it can significantly reduce time required to generate the feed file.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.ProductPictureSize", "Product thumbnail image size");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.ProductPictureSize.Hint", "The default size (pixels) for product thumbnail images.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.ProductName", "Product");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.GoogleCategory", "Google Category");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.Gender", "Gender");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.AgeGroup", "Age group");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.Color", "Color");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.Size", "Size");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.CustomGoods", "Custom goods (no identifier exists)");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.SuccessResult", "GoogleShopping feed has been successfully generated.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.StaticFilePath", "Generated file path (static)");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.StaticFilePath.Hint", "A file path of the generated GoogleShopping file. It's static for your store and can be shared with the GoogleShopping service.");
 
             await base.Install();
         }
@@ -608,33 +607,33 @@ namespace Grand.Plugin.Feed.GoogleShopping
             await _settingService.DeleteSetting<GoogleShoppingSettings>();
 
             //locales
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Store");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Store.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Currency");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Currency.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.DefaultGoogleCategory");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.DefaultGoogleCategory.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.General");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Generate");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Override");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PassShippingInfoWeight");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PassShippingInfoWeight.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PassShippingInfoDimensions");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PassShippingInfoDimensions.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PricesConsiderPromotions");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.PricesConsiderPromotions.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.ProductPictureSize");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.ProductPictureSize.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.ProductName");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.GoogleCategory");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.Gender");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.AgeGroup");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.Color");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.Size");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.Products.CustomGoods");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.SuccessResult");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.StaticFilePath");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Feed.GoogleShopping.StaticFilePath.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Store");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Store.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Currency");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Currency.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.DefaultGoogleCategory");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.DefaultGoogleCategory.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.General");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Generate");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Override");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PassShippingInfoWeight");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PassShippingInfoWeight.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PassShippingInfoDimensions");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PassShippingInfoDimensions.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PricesConsiderPromotions");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.PricesConsiderPromotions.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.ProductPictureSize");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.ProductPictureSize.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.ProductName");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.GoogleCategory");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.Gender");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.AgeGroup");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.Color");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.Size");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.Products.CustomGoods");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.SuccessResult");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.StaticFilePath");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Feed.GoogleShopping.StaticFilePath.Hint");
 
             await base.Uninstall();
         }
