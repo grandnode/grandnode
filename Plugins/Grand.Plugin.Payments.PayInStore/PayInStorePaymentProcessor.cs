@@ -24,21 +24,21 @@ namespace Grand.Plugin.Payments.PayInStore
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILanguageService _languageService;
         #endregion
 
         #region Ctor
 
         public PayInStorePaymentProcessor(PayInStorePaymentSettings payInStorePaymentSettings,
             ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService,
-            ILocalizationService localizationService, IWebHelper webHelper, IServiceProvider serviceProvider)
+            ILocalizationService localizationService, IWebHelper webHelper, ILanguageService languageService)
         {
             _payInStorePaymentSettings = payInStorePaymentSettings;
             _settingService = settingService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _localizationService = localizationService;
             _webHelper = webHelper;
-            _serviceProvider = serviceProvider;
+            _languageService = languageService;
         }
 
         #endregion
@@ -183,13 +183,13 @@ namespace Grand.Plugin.Payments.PayInStore
             };
             await _settingService.SaveSetting(settings);
 
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.DescriptionText", "Description");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.PaymentMethodDescription", "Pay In Store");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFee", "Additional fee");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFee.Hint", "The additional fee.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFeePercentage", "Additional fee. Use percentage");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.DescriptionText", "Description");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.PaymentMethodDescription", "Pay In Store");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.AdditionalFee", "Additional fee");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.AdditionalFee.Hint", "The additional fee.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.AdditionalFeePercentage", "Additional fee. Use percentage");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
 
 
             await base.Install();
@@ -201,13 +201,13 @@ namespace Grand.Plugin.Payments.PayInStore
             await _settingService.DeleteSetting<PayInStorePaymentSettings>();
 
             //locales
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFee");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFee.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFeePercentage");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.DescriptionText");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.DescriptionText.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.PaymentMethodDescription");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.AdditionalFee");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.AdditionalFee.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.AdditionalFeePercentage");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.DescriptionText");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.DescriptionText.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.PayInStore.PaymentMethodDescription");
 
             await base.Uninstall();
         }
