@@ -1,39 +1,54 @@
 using Grand.Core.Plugins;
-using Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount;
+using Grand.Plugin.DiscountRequirements.CustomerRoles;
 using Grand.Plugin.DiscountRequirements.HasAllProducts;
 using Grand.Plugin.DiscountRequirements.HasOneProduct;
+using Grand.Plugin.DiscountRequirements.ShoppingCart;
+using Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount;
 using Grand.Services.Discounts;
 using Grand.Services.Localization;
 using System.Collections.Generic;
-using Grand.Plugin.DiscountRequirements.ShoppingCart;
-using Grand.Plugin.DiscountRequirements.CustomerRoles;
 using System.Threading.Tasks;
-using System;
 
 namespace Grand.Plugin.DiscountRequirements.Standard
 {
     public partial class DiscountRequirementsPlugin : BasePlugin, IDiscount
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
 
-        public DiscountRequirementsPlugin(IServiceProvider serviceProvider, ILocalizationService localizationService, ILanguageService languageService)
+        private readonly CustomerRoleDiscountRequirementRule _customerRoleDiscountRequirementRule;
+        private readonly HadSpentAmountDiscountRequirementRule _hadSpentAmountDiscountRequirementRule;
+        private readonly HasAllProductsDiscountRequirementRule _hasAllProductsDiscountRequirementRule;
+        private readonly HasOneProductDiscountRequirementRule _hasOneProductDiscountRequirementRule;
+        private readonly ShoppingCartDiscountRequirementRule _shoppingCartDiscountRequirementRule;
+
+        public DiscountRequirementsPlugin(
+            ILocalizationService localizationService,
+            ILanguageService languageService,
+            CustomerRoleDiscountRequirementRule customerRoleDiscountRequirementRule,
+            HadSpentAmountDiscountRequirementRule hadSpentAmountDiscountRequirementRule,
+            HasAllProductsDiscountRequirementRule hasAllProductsDiscountRequirementRule,
+            HasOneProductDiscountRequirementRule hasOneProductDiscountRequirementRule,
+            ShoppingCartDiscountRequirementRule shoppingCartDiscountRequirementRule)
         {
-            _serviceProvider = serviceProvider;
             _localizationService = localizationService;
             _languageService = languageService;
+            _customerRoleDiscountRequirementRule = customerRoleDiscountRequirementRule;
+            _hadSpentAmountDiscountRequirementRule = hadSpentAmountDiscountRequirementRule;
+            _hasAllProductsDiscountRequirementRule = hasAllProductsDiscountRequirementRule;
+            _hasOneProductDiscountRequirementRule = hasOneProductDiscountRequirementRule;
+            _shoppingCartDiscountRequirementRule = shoppingCartDiscountRequirementRule;
         }
 
         public IList<IDiscountRequirementRule> GetRequirementRules()
         {
             var rules = new List<IDiscountRequirementRule>
             {
-                new CustomerRoleDiscountRequirementRule(_serviceProvider),
-                new HadSpentAmountDiscountRequirementRule(_serviceProvider),
-                new HasAllProductsDiscountRequirementRule(_serviceProvider),
-                new HasOneProductDiscountRequirementRule(_serviceProvider),
-                new ShoppingCartDiscountRequirementRule(_serviceProvider)
+                _customerRoleDiscountRequirementRule,
+                _hadSpentAmountDiscountRequirementRule,
+                _hasAllProductsDiscountRequirementRule,
+                _hasOneProductDiscountRequirementRule,
+                _shoppingCartDiscountRequirementRule
             };
             return rules;
         }
@@ -88,6 +103,7 @@ namespace Grand.Plugin.DiscountRequirements.Standard
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Hint");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products.AddNew");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Choose");
+
             await base.Uninstall();
         }
     }
