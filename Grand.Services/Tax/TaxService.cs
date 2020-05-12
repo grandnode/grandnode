@@ -9,8 +9,6 @@ using Grand.Core.Plugins;
 using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Logging;
-using Grand.Services.Orders;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,12 +26,11 @@ namespace Grand.Services.Tax
 
         private readonly IAddressService _addressService;
         private readonly IWorkContext _workContext;
-        private readonly TaxSettings _taxSettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ICountryService _countryService;
-        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger _logger;
+        private readonly TaxSettings _taxSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly AddressSettings _addressSettings;
 
@@ -46,21 +43,20 @@ namespace Grand.Services.Tax
         /// </summary>
         /// <param name="addressService">Address service</param>
         /// <param name="workContext">Work context</param>
-        /// <param name="taxSettings">Tax settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="geoLookupService">GEO lookup service</param>
         /// <param name="countryService">Country service</param>
         /// <param name="logger">Logger service</param>
+        /// <param name="taxSettings">Tax settings</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="addressSettings">Address settings</param>
         public TaxService(IAddressService addressService,
             IWorkContext workContext,
-            TaxSettings taxSettings,
             IPluginFinder pluginFinder,
             IGeoLookupService geoLookupService,
             ICountryService countryService,
-            IServiceProvider serviceProvider,
             ILogger logger,
+            TaxSettings taxSettings,
             CustomerSettings customerSettings,
             AddressSettings addressSettings)
         {
@@ -69,7 +65,6 @@ namespace Grand.Services.Tax
             _taxSettings = taxSettings;
             _pluginFinder = pluginFinder;
             _geoLookupService = geoLookupService;
-            _serviceProvider = serviceProvider;
             _logger = logger;
             _countryService = countryService;
             _customerSettings = customerSettings;
@@ -317,11 +312,7 @@ namespace Grand.Services.Tax
         /// <returns>Found tax provider</returns>
         public virtual ITaxProvider LoadTaxProviderBySystemName(string systemName)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
-            if (descriptor != null)
-                return _serviceProvider.GetRequiredService(descriptor.PluginType) as ITaxProvider;
-
-            return null;
+            return _pluginFinder.GetPluginBySystemName<ITaxProvider>(systemName);
         }
 
         /// <summary>
@@ -607,48 +598,53 @@ namespace Grand.Services.Tax
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <returns>Price</returns>
-        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttributeValue cav)
+        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav)
         {
             var customer = _workContext.CurrentCustomer;
-            return await GetCheckoutAttributePrice(cav, customer);
+            return await GetCheckoutAttributePrice(ca, cav, customer);
         }
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttributeValue cav, Customer customer)
+        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav, Customer customer)
         {
             bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return await GetCheckoutAttributePrice(cav, includingTax, customer);
+            return await GetCheckoutAttributePrice(ca, cav, includingTax, customer);
         }
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttributeValue cav, bool includingTax, Customer customer)
+        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav, bool includingTax, Customer customer)
         {
+            if (ca == null)
+                throw new ArgumentNullException("ca");
+
             if (cav == null)
                 throw new ArgumentNullException("cav");
 
-            var checkoutAttribute = await _serviceProvider.GetRequiredService<ICheckoutAttributeService>().GetCheckoutAttributeById(cav.CheckoutAttributeId);
             decimal price = cav.PriceAdjustment;
-            if (checkoutAttribute.IsTaxExempt)
+            if (ca.IsTaxExempt)
             {
                 return (price, 0);
             }
 
             bool priceIncludesTax = _taxSettings.PricesIncludeTax;
-            string taxClassId = checkoutAttribute.TaxCategoryId;
+            string taxClassId = ca.TaxCategoryId;
             var prices = await GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax);
 

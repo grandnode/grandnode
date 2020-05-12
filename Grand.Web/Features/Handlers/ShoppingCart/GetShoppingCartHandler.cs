@@ -253,7 +253,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         //display price if allowed
                         if (await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
-                            decimal priceAdjustmentBase = (await _taxService.GetCheckoutAttributePrice(attributeValue)).checkoutPrice;
+                            decimal priceAdjustmentBase = (await _taxService.GetCheckoutAttributePrice(attribute, attributeValue)).checkoutPrice;
                             decimal priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, request.Currency);
                             if (priceAdjustmentBase > decimal.Zero)
                                 attributeValueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment);

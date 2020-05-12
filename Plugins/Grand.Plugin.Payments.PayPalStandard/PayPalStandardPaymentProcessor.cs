@@ -288,20 +288,18 @@ namespace Grand.Plugin.Payments.PayPalStandard
             }
 
             //add checkout attributes as order items
-            var checkoutAttributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(postProcessPaymentRequest.Order.CheckoutAttributesXml);
+            var checkoutAttributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValue(postProcessPaymentRequest.Order.CheckoutAttributesXml);
             var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(postProcessPaymentRequest.Order.CustomerId);
             foreach (var attributeValue in checkoutAttributeValues)
             {
-                var attributePrice = await _taxService.GetCheckoutAttributePrice(attributeValue, false, customer);
+                var attributePrice = await _taxService.GetCheckoutAttributePrice(attributeValue.ca, attributeValue.cav, false, customer);
                 if (attributePrice.checkoutPrice > 0)
                 {
                     var roundedAttributePrice = Math.Round(attributePrice.checkoutPrice * rate, 2);
-
                     //add query parameters
-                    var attribute = await _serviceProvider.GetRequiredService<ICheckoutAttributeService>().GetCheckoutAttributeById(attributeValue.CheckoutAttributeId);
-                    if (attribute != null)
+                    if (attributeValue.ca != null)
                     {
-                        parameters.Add($"item_name_{itemCount}", attribute.Name);
+                        parameters.Add($"item_name_{itemCount}", attributeValue.ca.Name);
                         parameters.Add($"amount_{itemCount}", roundedAttributePrice.ToString("0.00", CultureInfo.InvariantCulture));
                         parameters.Add($"quantity_{itemCount}", "1");
 

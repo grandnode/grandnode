@@ -107,6 +107,37 @@ namespace Grand.Services.Orders
         }
 
         /// <summary>
+        /// Get checkout attribute values with checkout attribute 
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>Checkout attribute values with checkout attribute </returns>
+        public virtual async Task<IList<(CheckoutAttribute ca, CheckoutAttributeValue cav)>> ParseCheckoutAttributeValue(string attributesXml)
+        {
+            var values = new List<(CheckoutAttribute ca, CheckoutAttributeValue cav)>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return values;
+
+            var attributes = await ParseCheckoutAttributes(attributesXml);
+            foreach (var attribute in attributes)
+            {
+                if (!attribute.ShouldHaveValues())
+                    continue;
+
+                var valuesStr = ParseValues(attributesXml, attribute.Id);
+                foreach (string valueStr in valuesStr)
+                {
+                    if (!String.IsNullOrEmpty(valueStr))
+                    {
+                        var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault();
+                        if (value != null)
+                            values.Add((attribute, value));
+                    }
+                }
+            }
+            return values;
+        }
+
+        /// <summary>
         /// Gets selected checkout attribute value
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>

@@ -73,6 +73,16 @@ namespace Grand.Core.Plugins
             where T : class, IPlugin;
 
         /// <summary>
+        /// Get a plugin by its system name
+        /// </summary>
+        /// <typeparam name="T">The type of plugin to get.</typeparam>
+        /// <param name="systemName">Plugin system name</param>
+        /// <param name="loadMode">Load plugins mode</param>
+        /// <returns>>Plugin</returns>
+        T GetPluginBySystemName<T>(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
+            where T : class, IPlugin;
+
+        /// <summary>
         /// Get service provider
         /// </summary>
         IServiceProvider ServiceProvider { get; }
