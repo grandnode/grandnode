@@ -1470,11 +1470,12 @@ namespace Grand.Services.Messages
         /// Sends a forum subscription message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
+        /// <param name="topicauthor">Topic author</param>
         /// <param name="forumTopic">Forum Topic</param>
         /// <param name="forum">Forum</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual async Task<int> SendNewForumTopicMessage(Customer customer,
+        public virtual async Task<int> SendNewForumTopicMessage(Customer customer, Customer topicauthor,
             ForumTopic forumTopic, Forum forum, string languageId)
         {
             if (customer == null)
@@ -1495,7 +1496,7 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             await _messageTokenProvider.AddForumTokens(liquidObject, customer, store, forum, forumTopic);
-            await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            await _messageTokenProvider.AddCustomerTokens(liquidObject, topicauthor, store, language);
 
             //event notification
             await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1510,6 +1511,7 @@ namespace Grand.Services.Messages
         /// Sends a forum subscription message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
+        /// <param name="customer">Post author</param>
         /// <param name="forumPost">Forum post</param>
         /// <param name="forumTopic">Forum Topic</param>
         /// <param name="forum">Forum</param>
@@ -1517,6 +1519,7 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         public virtual async Task<int> SendNewForumPostMessage(Customer customer,
+            Customer postauthor,
             ForumPost forumPost, ForumTopic forumTopic,
             Forum forum, int friendlyForumTopicPageIndex, string languageId)
         {
@@ -1539,7 +1542,7 @@ namespace Grand.Services.Messages
 
             LiquidObject liquidObject = new LiquidObject();
             await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
-            await _messageTokenProvider.AddForumTokens(liquidObject, customer, store, forum, forumTopic, forumPost, friendlyForumTopicPageIndex);
+            await _messageTokenProvider.AddForumTokens(liquidObject, postauthor, store, forum, forumTopic, forumPost, friendlyForumTopicPageIndex);
             await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
