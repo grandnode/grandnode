@@ -274,6 +274,7 @@ namespace Grand.Web.Models.Catalog
             public PictureModel ImageSquaresPictureModel { get; set; }
             public string PriceAdjustment { get; set; }
             public decimal PriceAdjustmentValue { get; set; }
+            public string StockAvailability { get; set; }
             public bool IsPreSelected { get; set; }
             //picture model is used when we want to override a default product picture when some attribute is selected
             public PictureModel PictureModel { get; set; }
