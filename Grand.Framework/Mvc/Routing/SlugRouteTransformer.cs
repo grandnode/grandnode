@@ -1,10 +1,11 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Localization;
+﻿using Grand.Core.Domain.Localization;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -165,10 +166,9 @@ namespace Grand.Framework.Mvc.Routing
                     break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
-                    //await context.HttpContext.RequestServices.GetRequiredService<IMediator>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
+                    await context.RequestServices.GetRequiredService<IMediator>().Publish(new CustomUrlRecordEntityName(values, urlRecord));
                     break;
             }
-            //context.RouteData = currentRouteData;
             return values;
         }
     }
