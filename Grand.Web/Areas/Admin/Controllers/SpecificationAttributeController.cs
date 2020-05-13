@@ -174,7 +174,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> OptionList(string specificationAttributeId, DataSourceRequest command)
         {
-            var options = (await _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)).SpecificationAttributeOptions;
+            var options = (await _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)).SpecificationAttributeOptions.OrderBy(x => x.DisplayOrder);
             var gridModel = new DataSourceResult {
                 Data = options.Select(x =>
                     {

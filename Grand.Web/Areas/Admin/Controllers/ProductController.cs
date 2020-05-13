@@ -66,7 +66,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IImportManager importManager,
             IStoreService storeService,
             IProductReservationService productReservationService,
-            IAuctionService auctionService, 
+            IAuctionService auctionService,
             IDateTimeHelper dateTimeHelper)
         {
             _productViewModelService = productViewModelService;
@@ -408,7 +408,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var permission = CheckAccessToProduct(product);
             if (!permission.allow)
                 return ErrorForKendoGridJson(permission.message);
-                
+
             var productCategoriesModel = await _productViewModelService.PrepareProductCategoryModel(product);
             var gridModel = new DataSourceResult {
                 Data = productCategoriesModel,
@@ -872,7 +872,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No cross-sell product found with the specified id");
 
             if (ModelState.IsValid)
-            {                
+            {
                 await _productViewModelService.DeleteCrossSellProduct(product.Id, crossSellProduct);
                 return new NullJsonResult();
             }
@@ -968,7 +968,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var associatedProduct = await _productService.GetProductById(model.Id);
                 if (associatedProduct == null)
                     throw new ArgumentException("No associated product found with the specified id");
-                
+
                 associatedProduct.DisplayOrder = model.DisplayOrder;
                 await _productService.UpdateAssociatedProduct(associatedProduct);
 
@@ -1107,7 +1107,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (String.IsNullOrEmpty(attributeId))
                 throw new ArgumentNullException("attributeId");
 
-            var options = (await specificationAttributeService.GetSpecificationAttributeById(attributeId)).SpecificationAttributeOptions;
+            var options = (await specificationAttributeService.GetSpecificationAttributeById(attributeId)).SpecificationAttributeOptions.OrderBy(x => x.DisplayOrder);
             var result = (from o in options
                           select new { id = o.Id, name = o.Name }).ToList();
             return Json(result);
@@ -1176,7 +1176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var psa = product.ProductSpecificationAttributes.Where(x => x.Id == model.Id && x.SpecificationAttributeId == model.ProductSpecificationId).FirstOrDefault();
                 if (psa == null)
                     throw new ArgumentException("No specification attribute found with the specified id");
-                
+
                 await _productViewModelService.DeleteProductSpecificationAttribute(product, psa);
                 return new NullJsonResult();
             }
@@ -1639,7 +1639,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (productAttributeMapping == null)
                 return Content("No attribute value found with the specified id");
 
-           
+
             var model = await _productViewModelService.PrepareProductAttributeMappingModel(productAttributeMapping);
             return View(model);
         }
@@ -1827,7 +1827,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (productAttributeMapping == null)
                 //No product attribute found with the specified id
                 return RedirectToAction("List", "Product");
-           
+
             if (productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
@@ -1892,7 +1892,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (pav == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
-           
+
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.ProductAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
             {
