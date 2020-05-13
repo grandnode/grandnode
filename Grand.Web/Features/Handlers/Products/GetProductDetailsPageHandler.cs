@@ -807,7 +807,7 @@ namespace Grand.Web.Features.Handlers.Products
                 {
                     //values
                     var attributeValues = attribute.ProductAttributeValues;
-                    foreach (var attributeValue in attributeValues)
+                    foreach (var attributeValue in attributeValues.OrderBy(x=>x.DisplayOrder))
                     {
                         var preselected = attributeValue.IsPreSelected;
                         if (urlselectedValues.Any())
