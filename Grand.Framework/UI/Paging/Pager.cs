@@ -132,7 +132,7 @@ namespace Grand.Framework.UI.Paging
                     //first page
                     if ((model.PageIndex >= 3) && (model.TotalPages > individualPagesDisplayedCount))
                     {
-                        links.Append(CreatePageLink(1, localizationService.GetResource("Pager.First"), "first-page"));
+                        links.Append(CreatePageLink(1, localizationService.GetResource("Pager.First"), "first-page page-item"));
                     }
                 }
                 if (showPrevious)
