@@ -10,12 +10,18 @@ namespace Grand.Web.Models.Blogs
         public virtual DateTime? GetParsedMonth()
         {
             DateTime? result = null;
-            if (!String.IsNullOrEmpty(this.Month))
+            if (!String.IsNullOrEmpty(Month))
             {
-                string[] tempDate = this.Month.Split(new [] { '-' });
+                string[] tempDate = Month.Split(new [] { '-' });
                 if (tempDate.Length == 2)
                 {
-                    result = new DateTime(Convert.ToInt32(tempDate[0]), Convert.ToInt32(tempDate[1]), 1);
+                    int.TryParse(tempDate[0], out var year);
+                    int.TryParse(tempDate[1], out var month);
+                    try
+                    {
+                        result = new DateTime(year, month, 1);
+                    }
+                    catch { }
                 }
             }
             return result;
