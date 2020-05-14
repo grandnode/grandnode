@@ -474,6 +474,7 @@ namespace Grand.Web.Features.Handlers.Products
                         productAttributeModel.TextPrompt = attribute.TextPrompt;
                         productAttributeModel.IsRequired = attribute.IsRequired;
                         productAttributeModel.AttributeControlType = attribute.AttributeControlType;
+                        productAttributeModel.GenericAttributes = pa.GenericAttributes;
                         foreach (var item in attribute.ProductAttributeValues)
                         {
                             var value = new ProductOverviewModel.ProductAttributeValueModel();
