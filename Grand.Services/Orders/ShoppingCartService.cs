@@ -993,7 +993,8 @@ namespace Grand.Services.Orders
                 var attributes2 = await _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !shoppingCart.RequiresShipping());
                 foreach (var a2 in attributes2)
                 {
-                    if (a2.IsRequired)
+                    var conditionMet = await _checkoutAttributeParser.IsConditionMet(a2, checkoutAttributesXml);
+                    if (a2.IsRequired && ((conditionMet.HasValue && conditionMet.Value) || !conditionMet.HasValue))
                     {
                         bool found = false;
                         //selected checkout attributes
