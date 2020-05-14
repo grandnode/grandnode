@@ -133,6 +133,10 @@ namespace Grand.Services.Orders
                                 select p; 
                     }
                 }
+                if (excludeShippableAttributes)
+                {
+                    query = query.Where(x => !x.ShippableProductRequired);
+                }
                 return query.ToListAsync();
 
             });
