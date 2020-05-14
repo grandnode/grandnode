@@ -408,7 +408,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.MetaTitle, product.MetaTitle)
                 .Set(x => x.MinimumCustomerEnteredPrice, product.MinimumCustomerEnteredPrice)
                 .Set(x => x.MinStockQuantity, product.MinStockQuantity)
-                .Set(x => x.LowStock, ((product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity) || product.StockQuantity < 0))
+                .Set(x => x.LowStock, ((product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity) || product.StockQuantity <= 0))
                 .Set(x => x.Name, product.Name)
                 .Set(x => x.NotApprovedRatingSum, product.NotApprovedRatingSum)
                 .Set(x => x.NotApprovedTotalReviews, product.NotApprovedTotalReviews)
@@ -752,18 +752,21 @@ namespace Grand.Services.Catalog
             out IList<ProductAttributeCombination> combinations)
         {
             //Track inventory for product
-
-            var query_products = from p in _productRepository.Table
-                                 where p.LowStock && p.ProductTypeId == 5 && p.ManageInventoryMethodId != 0
+            //simple products
+            var query_simple_products = from p in _productRepository.Table
+                                 where p.LowStock && 
+                                 ((p.ProductTypeId == (int)ProductType.SimpleProduct && p.ManageInventoryMethodId != (int)ManageInventoryMethod.DontManageStock)
+                                 ||
+                                 (p.ProductTypeId == (int)ProductType.BundledProduct && p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock))
                                  select p;
 
             if (!string.IsNullOrEmpty(vendorId))
-                query_products = query_products.Where(x => x.VendorId == vendorId);
+                query_simple_products = query_simple_products.Where(x => x.VendorId == vendorId);
 
             if (!string.IsNullOrEmpty(storeId))
-                query_products = query_products.Where(x => x.Stores.Contains(storeId));
+                query_simple_products = query_simple_products.Where(x => x.Stores.Contains(storeId));
 
-            products = query_products.ToList();
+            products = query_simple_products.ToList();
 
             //Track inventory for product by product attributes
             var query2_1 = from p in _productRepository.Table
