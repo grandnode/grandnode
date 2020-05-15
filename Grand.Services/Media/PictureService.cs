@@ -263,7 +263,7 @@ namespace Grand.Services.Media
         /// <param name="binary">Picture binary</param>
         protected virtual Task SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
-            File.WriteAllBytes(thumbFilePath, binary);
+            File.WriteAllBytes(thumbFilePath, binary ?? new byte[0]);
             return Task.CompletedTask;
         }
 
@@ -463,9 +463,12 @@ namespace Grand.Services.Media
                 using (var mutex = new Mutex(false, thumbFileName))
                 {
                     mutex.WaitOne();
-                    using (var image = SKBitmap.Decode(pictureBinary))
+                    if (pictureBinary != null)
                     {
-                        pictureBinary = ApplyResize(image, EncodedImageFormat(picture.MimeType), targetSize);
+                        using (var image = SKBitmap.Decode(pictureBinary))
+                        {
+                            pictureBinary = ApplyResize(image, EncodedImageFormat(picture.MimeType), targetSize);
+                        }
                     }
                     await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
 
