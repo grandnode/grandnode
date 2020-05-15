@@ -207,7 +207,7 @@ namespace Grand.Services.Catalog
 
             if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)))
             {
-                if (!_catalogSettings.IgnoreAcl)
+                if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
@@ -255,7 +255,7 @@ namespace Grand.Services.Catalog
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
                 {
-                    if (!_catalogSettings.IgnoreAcl)
+                    if (!showHidden && !_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
                         var allowedCustomerRolesIds = customer.GetCustomerRoleIds();

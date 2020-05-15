@@ -79,7 +79,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInCategories)
                 {
-                    var categories = await _categoryService.GetAllCategories(searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count(), showHidden: true);
+                    var categories = await _categoryService.GetAllCategories(searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count(), showHidden: _workContext.CurrentCustomer.IsAdmin());
                     foreach (var category in categories)
                     {
                         result.Add(new Tuple<object, int>(new

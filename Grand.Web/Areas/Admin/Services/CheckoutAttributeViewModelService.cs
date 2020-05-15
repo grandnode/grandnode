@@ -89,7 +89,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.ConditionModel = new ConditionModel() {
                 EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml),
                 SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : "",
-                ConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributes())
+                ConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributes(ignorAcl: false))
                     //ignore this attribute and non-combinable attributes
                     .Where(x => x.Id != checkoutAttribute.Id && x.CanBeUsedAsCondition())
                     .Select(x =>
@@ -162,7 +162,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task<IEnumerable<CheckoutAttributeModel>> PrepareCheckoutAttributeListModel()
         {
-            var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes();
+            var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes(ignorAcl: true);
             return checkoutAttributes.Select(x =>
                 {
                     var attributeModel = x.ToModel();
