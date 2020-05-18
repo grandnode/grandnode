@@ -123,6 +123,12 @@ namespace Grand.Core.Configuration
         public bool DisplayMiniProfilerInPublicStore { get; set; }
 
         /// <summary>
+        /// A value indicating whether SEO friendly URLs with multiple languages are enabled
+        /// </summary>
+        public bool SeoFriendlyUrlsForLanguagesEnabled { get; set; }
+        public string SeoFriendlyUrlsDefaultCode { get; set; } = "en";
+
+        /// <summary>
         /// Enable minimal Progressive Web App.
         /// </summary>
         public bool EnableProgressiveWebApp { get; set; }

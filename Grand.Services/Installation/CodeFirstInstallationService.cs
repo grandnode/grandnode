@@ -5039,7 +5039,6 @@ namespace Grand.Services.Installation
             await _settingService.SaveSetting(new LocalizationSettings {
                 DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.Name == "English").Id,
                 UseImagesForLanguageSelection = false,
-                SeoFriendlyUrlsForLanguagesEnabled = false,
                 AutomaticallyDetectLanguage = false,
                 LoadAllLocaleRecordsOnStartup = true,
                 LoadAllLocalizedPropertiesOnStartup = true,

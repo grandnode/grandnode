@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
 using Grand.Framework.Localization;
@@ -34,7 +35,7 @@ namespace Grand.Framework.Mvc.Filters
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
             private readonly ILanguageService _languageService;
-            private readonly LocalizationSettings _localizationSettings;
+            private readonly GrandConfig _config;
 
             #endregion
 
@@ -42,12 +43,12 @@ namespace Grand.Framework.Mvc.Filters
 
             public CheckLanguageSeoCodeFilter(IWebHelper webHelper,
                 IWorkContext workContext, ILanguageService languageService,
-                LocalizationSettings localizationSettings)
+                GrandConfig config)
             {
                 _webHelper = webHelper;
                 _workContext = workContext;
                 _languageService = languageService;
-                _localizationSettings = localizationSettings;
+                _config = config;
             }
 
             #endregion
@@ -80,7 +81,7 @@ namespace Grand.Framework.Mvc.Filters
                 }
 
                 //whether SEO friendly URLs are enabled
-                if (!_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                if (!_config.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     await next();
                     return;

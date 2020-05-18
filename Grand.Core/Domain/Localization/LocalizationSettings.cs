@@ -15,16 +15,6 @@ namespace Grand.Core.Domain.Localization
         public bool UseImagesForLanguageSelection { get; set; }
 
         /// <summary>
-        /// A value indicating whether SEO friendly URLs with multiple languages are enabled
-        /// </summary>
-        public bool SeoFriendlyUrlsForLanguagesEnabled { get; set; }
-
-        /// <summary>
-        /// A value indicating whether SEO friendly URLs for path are enabled
-        /// </summary>
-        public bool SeoFriendlyUrlsForPathEnabled { get; set; }
-
-        /// <summary>
         /// A value indicating whether we should detect the current language by a customer region (browser settings)
         /// </summary>
         public bool AutomaticallyDetectLanguage { get; set; }

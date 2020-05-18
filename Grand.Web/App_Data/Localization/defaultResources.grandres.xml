@@ -7728,15 +7728,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoCharConversion.Note">
     <Value>NOTE: If you want to use SEO Char Conversion, don't forget to restart application to apply changes.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled">
-    <Value>SEO friendly URLs with multiple languages enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Hint">
-    <Value>When enabled, your URLs will be http://www.yourStore.com/en/ or http://www.yourStore.com/ru/ (SEO friendly)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Note">
-    <Value>NOTE: If you want to use SEO friendly URLs with multiple languages prefixes, don't forget to restart application to apply changes.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SEOSettings">
     <Value>SEO settings</Value>
   </LocaleResource>

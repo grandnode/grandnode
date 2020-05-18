@@ -1,4 +1,5 @@
-﻿using Grand.Core.Data;
+﻿using Grand.Core.Configuration;
+using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
 using Grand.Framework.Mvc.Routing;
 using Grand.Services.Localization;
@@ -16,13 +17,12 @@ namespace Grand.Web.Infrastructure
             var pattern = "{SeName}";
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                var localizationSettings = routeBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
-                if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                var config = routeBuilder.ServiceProvider.GetRequiredService<GrandConfig>();
+                if (config.SeoFriendlyUrlsForLanguagesEnabled)
                 {
-                    var langservice = routeBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
-                    var languages = langservice.GetAllLanguages().GetAwaiter().GetResult();
-                    pattern = "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + "}/{SeName}";
+                    pattern = $"{{language:lang={config.SeoFriendlyUrlsDefaultCode}}}/{{SeName}}";
                 }
+
             }
             routeBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(pattern);
 
