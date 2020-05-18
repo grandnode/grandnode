@@ -39,5 +39,10 @@ namespace Grand.Core.Domain.Media
 
         public string AllowedFileTypes { get; set; }
         public string StoreLocation { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the images should be stored in data base.
+        /// </summary>
+        public bool StoreInDb { get; set; } = true;
     }
 }

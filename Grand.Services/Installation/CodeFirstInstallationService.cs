@@ -4870,7 +4870,8 @@ namespace Grand.Services.Installation
                 DefaultPictureZoomEnabled = true,
                 DefaultImageQuality = 80,
                 MultipleThumbDirectories = false,
-                StoreLocation = "/"
+                StoreLocation = "/",
+                StoreInDb = true
             });
 
             await _settingService.SaveSetting(new SeoSettings {

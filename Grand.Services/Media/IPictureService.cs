@@ -168,9 +168,5 @@ namespace Grand.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         byte[] ValidatePicture(byte[] pictureBinary, string mimeType);
 
-        /// <summary>
-        /// Gets a value indicating whether the images should be stored in data base.
-        /// </summary>
-        bool StoreInDb { get; }
     }
 }

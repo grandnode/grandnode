@@ -974,6 +974,14 @@ namespace Grand.Services.Installation
             }
 
             #endregion
+
+            #region Update media settings
+
+            var settingsService = _serviceProvider.GetRequiredService<ISettingService>();
+            var storeInDB = settingsService.GetSettingByKey("Media.Images.StoreInDB", true);
+            await settingsService.SetSetting("MediaSettings.StoreInDb", storeInDB);
+
+            #endregion
         }
 
         private async Task InstallStringResources(string filenames)

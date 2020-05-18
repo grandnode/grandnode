@@ -1405,7 +1405,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.DefaultImageQuality_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.DefaultImageQuality, storeScope);
 
             }
-            model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
+            var mediaStoreSetting = _settingService.LoadSetting<MediaSettings>("");
+            model.PicturesStoredIntoDatabase = mediaStoreSetting.StoreInDb;
             return View(model);
         }
         [HttpPost]
@@ -1445,12 +1446,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         [HttpPost, ActionName("Media")]
         [FormValueRequired("change-picture-storage")]
-        public async Task<IActionResult> ChangePictureStorage([FromServices] IRepository<Picture> pictureRepository)
+        public async Task<IActionResult> ChangePictureStorage([FromServices] IRepository<Picture> pictureRepository, [FromServices] MediaSettings mediaSettings)
         {
-            var storeIdDb = !_pictureService.StoreInDb;
+            var storeIdDb = !mediaSettings.StoreInDb;
 
             //save the new setting value
-            await _settingService.SetSetting("Media.Images.StoreInDB", storeIdDb);
+            await _settingService.SetSetting("MediaSettings.StoreInDb", storeIdDb, "");
 
             int pageIndex = 0;
             const int pageSize = 400;

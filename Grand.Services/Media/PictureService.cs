@@ -279,7 +279,7 @@ namespace Grand.Services.Media
         /// <returns>Picture binary</returns>
         public virtual async Task<byte[]> LoadPictureBinary(Picture picture)
         {
-            return await LoadPictureBinary(picture, StoreInDb);
+            return await LoadPictureBinary(picture, _mediaSettings.StoreInDb);
         }
 
         /// <summary>
@@ -465,10 +465,14 @@ namespace Grand.Services.Media
                     mutex.WaitOne();
                     if (pictureBinary != null)
                     {
-                        using (var image = SKBitmap.Decode(pictureBinary))
+                        try
                         {
-                            pictureBinary = ApplyResize(image, EncodedImageFormat(picture.MimeType), targetSize);
+                            using (var image = SKBitmap.Decode(pictureBinary))
+                            {
+                                pictureBinary = ApplyResize(image, EncodedImageFormat(picture.MimeType), targetSize);
+                            }
                         }
+                        catch { }
                     }
                     await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
 
@@ -524,7 +528,7 @@ namespace Grand.Services.Media
             await DeletePictureThumbs(picture);
 
             //delete from file system
-            if (!StoreInDb)
+            if (!_mediaSettings.StoreInDb)
                 DeletePictureOnFileSystem(picture);
 
             //delete from database
@@ -618,7 +622,7 @@ namespace Grand.Services.Media
                 pictureBinary = ValidatePicture(pictureBinary, mimeType);
 
             var picture = new Picture {
-                PictureBinary = this.StoreInDb ? pictureBinary : new byte[0],
+                PictureBinary = _mediaSettings.StoreInDb ? pictureBinary : new byte[0],
                 MimeType = mimeType,
                 SeoFilename = seoFilename,
                 AltAttribute = altAttribute,
@@ -627,7 +631,7 @@ namespace Grand.Services.Media
             };
             await _pictureRepository.InsertAsync(picture);
 
-            if (!StoreInDb)
+            if (!_mediaSettings.StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
@@ -668,7 +672,7 @@ namespace Grand.Services.Media
             if (seoFilename != picture.SeoFilename)
                 await DeletePictureThumbs(picture);
 
-            picture.PictureBinary = StoreInDb ? pictureBinary : new byte[0];
+            picture.PictureBinary = _mediaSettings.StoreInDb ? pictureBinary : new byte[0];
             picture.MimeType = mimeType;
             picture.SeoFilename = seoFilename;
             picture.AltAttribute = altAttribute;
@@ -677,7 +681,7 @@ namespace Grand.Services.Media
 
             await _pictureRepository.UpdateAsync(picture);
 
-            if (!StoreInDb)
+            if (!_mediaSettings.StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
@@ -843,17 +847,5 @@ namespace Grand.Services.Media
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the images should be stored in data base.
-        /// </summary>
-        public virtual bool StoreInDb {
-            get {
-                return _settingService.GetSettingByKey("Media.Images.StoreInDB", true);
-            }
-        }
-
-        #endregion
     }
 }
