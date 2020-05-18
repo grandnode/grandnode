@@ -1,6 +1,5 @@
 ﻿using Grand.Core.Data;
 using Grand.Core.Domain.Configuration;
-using Grand.Core.Infrastructure;
 using Grand.Services.Authentication.External;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
@@ -26,19 +25,21 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure
         {
             builder.AddFacebook(FacebookDefaults.AuthenticationScheme, options =>
             {
-                var fbSettings = new MongoDBRepository<Setting>(DataSettingsHelper.ConnectionString()).Table.Where(x=>x.Name.StartsWith("facebookexternalauthsettings"));
                 var settings = new FacebookExternalAuthSettings();
-                settings.ClientKeyIdentifier = fbSettings.FirstOrDefault(x => x.Name == "facebookexternalauthsettings.clientkeyidentifier")?.Value;
-                settings.ClientSecret = fbSettings.FirstOrDefault(x => x.Name == "facebookexternalauthsettings.clientsecret")?.Value;
+                try
+                {
+                    var fbSettings = new MongoDBRepository<Setting>(DataSettingsHelper.ConnectionString()).Table.Where(x => x.Name.StartsWith("facebookexternalauthsettings"));
+                    settings.ClientKeyIdentifier = fbSettings.FirstOrDefault(x => x.Name == "facebookexternalauthsettings.clientkeyidentifier")?.Value;
+                    settings.ClientSecret = fbSettings.FirstOrDefault(x => x.Name == "facebookexternalauthsettings.clientsecret")?.Value;
+                }
+                catch { };
 
                 //no empty values allowed. otherwise, an exception could be thrown on application startup
                 options.AppId = !string.IsNullOrWhiteSpace(settings.ClientKeyIdentifier) ? settings.ClientKeyIdentifier : "000";
                 options.AppSecret = !string.IsNullOrWhiteSpace(settings.ClientSecret) ? settings.ClientSecret : "000";
                 options.SaveTokens = true;
-
                 //handles exception thrown by external auth provider
-                options.Events = new OAuthEvents()
-                {
+                options.Events = new OAuthEvents() {
                     OnRemoteFailure = ctx =>
                     {
                         ctx.HandleResponse();
@@ -58,8 +59,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure
         /// <summary>
         /// Gets order of this registrar implementation
         /// </summary>
-        public int Order
-        {
+        public int Order {
             get { return 501; }
         }
     }
