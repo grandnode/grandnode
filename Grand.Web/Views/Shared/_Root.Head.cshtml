@@ -1,8 +1,8 @@
 ﻿@inject CommonSettings commonSettings
 @inject SeoSettings seoSettings
-@inject StoreInformationSettings storeInformationSettings
+@inject Grand.Core.Configuration.GrandConfig config
 @{
-    var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore;
+    var displayMiniProfiler = config.DisplayMiniProfilerInPublicStore;
     //X-UA-Compatible tag
     if (commonSettings.RenderXuaCompatible)
     {

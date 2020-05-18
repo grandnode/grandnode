@@ -118,6 +118,11 @@ namespace Grand.Core.Configuration
         public int CookieAuthExpires { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether mini profiler should be displayed in public store (used for debugging)
+        /// </summary>
+        public bool DisplayMiniProfilerInPublicStore { get; set; }
+
+        /// <summary>
         /// Enable minimal Progressive Web App.
         /// </summary>
         public bool EnableProgressiveWebApp { get; set; }

@@ -231,9 +231,9 @@ namespace Grand.Framework.Infrastructure.Extensions
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            var serviceProvider = application.ApplicationServices;
+            var grandConfig = application.ApplicationServices.GetRequiredService<GrandConfig>();
             //whether MiniProfiler should be displayed
-            if (serviceProvider.GetRequiredService<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+            if (grandConfig.DisplayMiniProfilerInPublicStore)
             {
                 application.UseMiniProfiler();
             }

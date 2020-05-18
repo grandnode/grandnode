@@ -24,11 +24,6 @@ namespace Grand.Core.Domain
         public bool AllowCustomerToSelectTheme { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether mini profiler should be displayed in public store (used for debugging)
-        /// </summary>
-        public bool DisplayMiniProfilerInPublicStore { get; set; }
-
-        /// <summary>
         /// Gets or sets a picture identifier of the logo. If 0, then the default one will be used
         /// </summary>
         public string LogoPictureId { get; set; }

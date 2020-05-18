@@ -5126,7 +5126,6 @@ namespace Grand.Services.Installation
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
                 AllowCustomerToSelectTheme = false,
-                DisplayMiniProfilerInPublicStore = false,
                 DisplayEuCookieLawWarning = false,
                 FacebookLink = "https://www.facebook.com/grandnodecom",
                 TwitterLink = "https://twitter.com/grandnode",
