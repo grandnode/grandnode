@@ -5226,7 +5226,7 @@ namespace Grand.Services.Installation
             });
 
             await _settingService.SaveSetting(new ShippingSettings {
-                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.ByWeight" },
+                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
                 ShipToSameAddress = false,
                 AllowPickUpInStore = true,
                 UseWarehouseLocation = false,
