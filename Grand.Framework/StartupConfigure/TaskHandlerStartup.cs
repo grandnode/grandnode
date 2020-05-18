@@ -1,12 +1,10 @@
 ﻿using Grand.Core.Data;
-using Grand.Core.Domain.Tasks;
 using Grand.Core.Infrastructure;
 using Grand.Services.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 
 namespace Grand.Framework.StartupConfigure
 {
@@ -34,30 +32,17 @@ namespace Grand.Framework.StartupConfigure
             //database is already installed, so start scheduled tasks
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                try
+                var typeFinder = new WebAppTypeFinder();
+                var scheduleTasks = typeFinder.FindClassesOfType<IScheduleTask>();
+                foreach (var task in scheduleTasks)
                 {
-                    var machineName = Environment.MachineName;
-                    var tasks = new MongoDBRepository<ScheduleTask>(DataSettingsHelper.ConnectionString()).Table;
-                    foreach (var task in tasks)
+                    var assemblyName = task.Assembly.GetName().Name;
+                    services.AddSingleton<IHostedService, BackgroundServiceTask>(sp =>
                     {
-                        if (task.Enabled)
-                        {
-                            if (string.IsNullOrEmpty(task.LeasedByMachineName) || (machineName == task.LeasedByMachineName))
-                            {
-                                services.AddSingleton<IHostedService, BackgroundServiceTask>(sp =>
-                                {
-                                    return new BackgroundServiceTask(task, sp);
-                                });
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message);
+                        return new BackgroundServiceTask($"{task.FullName}, {assemblyName}", sp);
+                    });
                 }
             }
-
         }
 
         /// <summary>
