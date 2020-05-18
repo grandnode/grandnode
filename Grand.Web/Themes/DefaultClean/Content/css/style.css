@@ -3987,7 +3987,7 @@ valid mgs .input-validation-error {
         background: #fff;
         border-bottom: 1px solid rgba(0, 0, 0, .2);
         border-right: 1px solid rgba(0, 0, 0, .2);
-        min-width: 60px;
+        min-width: 90px;
         padding: 20px;
     }
 
@@ -5327,7 +5327,7 @@ footer .socicon-pinterest:hover {
 
     .shopping-cart .quantity {
         left: 0;
-        width: 45%;
+        width: 40%;
         padding: 10px 0 10px 10px !important;
         color: #909090;
         text-transform: none;
