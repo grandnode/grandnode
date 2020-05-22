@@ -2123,6 +2123,7 @@ list settings .list__item,
 	width: 100%;
 	position: relative;
 	z-index: 100;
+	overflow: hidden;
 	-webkit-transition: transform .2s ease,-webkit-transform .2s ease;
 	-moz-transition: transform .2s ease,-webkit-transform .2s ease;
 	-o-transition: transform .2s ease,-webkit-transform .2s ease;
@@ -2132,6 +2133,7 @@ list settings .list__item,
     -webkit-transform: translateY(-5px);
     transform: translateY(-5px);
     z-index: 101;
+	overflow: visible;
 }
 .product-box .picture-container {
     position: relative;
@@ -2204,7 +2206,6 @@ list settings .list__item,
 	margin: 0 0 -150px 0;
 	background-color: #fff;
 	border-radius: 3px;
-	z-index: -1;
 	border: 1px solid rgba(0,0,0,.2);
 	box-shadow: 0 0 10px rgba(0,0,0,.2);
 	-webkit-transition: opacity .2s ease,visibility 0s ease,transform .2s ease,-webkit-transform .2s ease;
