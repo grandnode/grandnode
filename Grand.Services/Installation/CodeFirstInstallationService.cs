@@ -5070,7 +5070,7 @@ namespace Grand.Services.Installation
                 HideAuctionsTab = true,
                 HideNotesTab = true,
                 HideDocumentsTab = true,
-                DownloadableProductsValidateUser = false,
+                DownloadableProductsValidateUser = true,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
                 GenderEnabled = false,
                 DateOfBirthEnabled = false,
