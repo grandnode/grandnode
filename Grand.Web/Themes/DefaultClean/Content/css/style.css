@@ -4582,7 +4582,7 @@ span.product-quantity {
     font-weight: 700;
 }
 
-.generalAdToCart input {
+.generalAdToCart input, .generalAdToCart select {
     max-width: 75px;
     height: 50px;
     display: inline;
@@ -4590,11 +4590,6 @@ span.product-quantity {
     margin-right: 5px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-}
-
-.generalAdToCart select {
-    width: auto;
-    max-width: 75px;
 }
 
 .enter-price-input {
