@@ -24,7 +24,7 @@
     <div class="container">
         @if (!Model.Installed)
         {
-            <form asp-action="Index" asp-controller="Install" id="installation-form" method="post">
+            <form asp-action="Index" asp-controller="Install" id="installation-form" method="post" autocomplete="off">
                 <script>
                 $(document).ready(function () {
                     $('#installation').click(function (e) {
