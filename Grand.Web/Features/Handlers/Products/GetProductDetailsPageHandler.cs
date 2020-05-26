@@ -366,12 +366,26 @@ namespace Grand.Web.Features.Handlers.Products
                 StockAvailability = product.FormatStockMessage(warehouseId, "", _localizationService, _productAttributeParser),
                 GenericAttributes = product.GenericAttributes,
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
+                HasSizeChartPicture = product.HasSizeChartPicture,
                 DisplayDiscontinuedMessage =
                     (!product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts) ||
                     (product.ProductType == ProductType.Auction && product.AuctionEnded) ||
                     (product.AvailableEndDateTimeUtc.HasValue && product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
 
             };
+
+            if (product.HasSizeChartPicture)
+            {
+                var sizePicture = await _pictureService.GetPictureById(product.SizeChartPictureId);
+                if (sizePicture != null)
+                {
+                    model.SizeChartPicture = new PictureModel {
+                        Id = sizePicture.Id,
+                        ImageUrl = await _pictureService.GetPictureUrl(product.SizeChartPictureId, _mediaSettings.ProductThumbPictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(product.SizeChartPictureId)
+                    };
+                }
+            }
 
             //automatically generate product description?
             if (_seoSettings.GenerateProductMetaDescription && String.IsNullOrEmpty(model.MetaDescription))
