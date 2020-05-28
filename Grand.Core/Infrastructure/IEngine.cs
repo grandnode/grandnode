@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,7 +33,8 @@ namespace Grand.Core.Infrastructure
         /// Configure HTTP request pipeline
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        void ConfigureRequestPipeline(IApplicationBuilder application);
+        /// <param name="webHostEnvironment">WebHostEnvironment</param>
+        void ConfigureRequestPipeline(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment);
 
         /// <summary>
         /// ConfigureContainer is where you can register things directly

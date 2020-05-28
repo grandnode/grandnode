@@ -169,7 +169,8 @@ namespace Grand.Core.Infrastructure
         /// Configure HTTP request pipeline
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public void ConfigureRequestPipeline(IApplicationBuilder application)
+        /// <param name="webHostEnvironment">WebHostEnvironment</param>
+        public void ConfigureRequestPipeline(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
@@ -183,7 +184,7 @@ namespace Grand.Core.Infrastructure
 
             //configure request pipeline
             foreach (var instance in instances)
-                instance.Configure(application);
+                instance.Configure(application, webHostEnvironment);
         }
 
         /// <summary>
