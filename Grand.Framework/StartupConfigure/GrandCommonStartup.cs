@@ -3,6 +3,7 @@ using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Grand.Framework.Mvc.Routing;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Configuration;
@@ -62,7 +63,8 @@ namespace Grand.Framework.StartupConfigure
         /// Configure the using of added middleware
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public void Configure(IApplicationBuilder application)
+        /// <param name="webHostEnvironment">WebHostEnvironment</param>
+        public void Configure(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
             var serviceProvider = application.ApplicationServices;
             var grandConfig = serviceProvider.GetRequiredService<GrandConfig>();

@@ -4,7 +4,6 @@ using Grand.Services.Configuration;
 using Grand.Services.Discounts;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,11 +16,11 @@ namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
 
-        public HadSpentAmountDiscountRequirementRule(IServiceProvider serviceProvider)
+        public HadSpentAmountDiscountRequirementRule(ISettingService settingService, IOrderService orderService, ILocalizationService localizationService)
         {
-            _settingService = serviceProvider.GetRequiredService<ISettingService>();
-            _orderService = serviceProvider.GetRequiredService<IOrderService>();
-            _localizationService = serviceProvider.GetRequiredService<ILocalizationService>();
+            _settingService = settingService;
+            _orderService = orderService;
+            _localizationService = localizationService;
         }
 
         /// <summary>

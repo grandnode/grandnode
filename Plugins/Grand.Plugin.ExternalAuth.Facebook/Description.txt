@@ -1,7 +1,7 @@
 ﻿Group: ExternalAuth methods
 FriendlyName: Facebook authentication
 SystemName: ExternalAuth.Facebook
-Version: 1.45
+Version: 1.46
 SupportedVersions: 4.70
 Author: grandnode team
 DisplayOrder: 5

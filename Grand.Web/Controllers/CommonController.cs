@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Configuration;
 using Grand.Core.Domain;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
@@ -75,7 +76,7 @@ namespace Grand.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> SetLanguage(
             [FromServices] ILanguageService languageService,
-            [FromServices] LocalizationSettings localizationSettings,
+            [FromServices] GrandConfig config,
             string langid, string returnUrl = "")
         {
 
@@ -92,7 +93,7 @@ namespace Grand.Web.Controllers
                 returnUrl = Url.RouteUrl("HomePage");
 
             //language part in URL
-            if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            if (config.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
                 if (await returnUrl.IsLocalizedUrlAsync(languageService, this.Request.PathBase, true))

@@ -151,7 +151,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<List<TreeNode>> PrepareCategoryNodeListModel(string storeId)
         {
-            var categories = await _categoryService.GetAllCategories(storeId: storeId);
+            var categories = await _categoryService.GetAllCategories(storeId: storeId, showHidden: true);
             var nodeList = new List<TreeNode>();
             var list = new List<ITreeNode>();
             list.AddRange(categories);

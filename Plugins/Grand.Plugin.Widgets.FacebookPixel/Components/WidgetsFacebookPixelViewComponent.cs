@@ -1,12 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Orders;
 using Grand.Services.Orders;
 using Grand.Web.Models.ShoppingCart;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Plugin.Widgets.FacebookPixel.Components
@@ -15,19 +11,17 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Components
     public class WidgetsFacebookPixelViewComponent : ViewComponent
     {
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IOrderService _orderService;
         private readonly FacebookPixelSettings _facebookPixelSettings;
 
-        public WidgetsFacebookPixelViewComponent(IWorkContext workContext,
-            IStoreContext storeContext,
-            IServiceProvider serviceProvider,
+        public WidgetsFacebookPixelViewComponent(
+            IWorkContext workContext,
+            IOrderService orderService,
             FacebookPixelSettings facebookPixelSettings
             )
         {
             _workContext = workContext;
-            _storeContext = storeContext;
-            _serviceProvider = serviceProvider;
+            _orderService = orderService;
             _facebookPixelSettings = facebookPixelSettings;
         }
 
@@ -60,14 +54,6 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Components
             return Content("");
         }
 
-        private async Task<Order> GetLastOrder()
-        {
-            var orderService = _serviceProvider.GetRequiredService<IOrderService>();
-            var order = (await orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                customerId: _workContext.CurrentCustomer.Id, pageSize: 1)).FirstOrDefault();
-            return order;
-        }
-
         private string GetTrackingScript()
         {
             var trackingScript = _facebookPixelSettings.PixelScript + "\n";
@@ -89,8 +75,7 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Components
         private async Task<string> GetOrderScript(string orderId)
         {
             var trackingScript = _facebookPixelSettings.DetailsOrderScript + "\n";
-            var orderService = _serviceProvider.GetRequiredService<IOrderService>();
-            var order = await orderService.GetOrderById(orderId);
+            var order = await _orderService.GetOrderById(orderId);
             if (order != null)
             {
                 trackingScript = trackingScript.Replace("{AMOUNT}", order.OrderTotal.ToString("F2", CultureInfo.InvariantCulture));

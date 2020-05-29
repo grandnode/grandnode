@@ -24,6 +24,13 @@ namespace Grand.Services.Orders
         Task<IList<CheckoutAttributeValue>> ParseCheckoutAttributeValues(string attributesXml);
 
         /// <summary>
+        /// Get checkout attribute values with checkout attribute 
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>Checkout attribute values with checkout attribute </returns>
+        Task<IList<(CheckoutAttribute ca, CheckoutAttributeValue cav)>> ParseCheckoutAttributeValue(string attributesXml);
+
+        /// <summary>
         /// Gets selected checkout attribute value
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>

@@ -318,7 +318,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.IgnoredPaths.Add("/.well-known/acme-challenge");
                 //determine who can access the MiniProfiler results
                 options.ResultsAuthorize = request =>
-                    !request.HttpContext.RequestServices.GetRequiredService<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
+                    !request.HttpContext.RequestServices.GetRequiredService<GrandConfig>().DisplayMiniProfilerInPublicStore ||
                     request.HttpContext.RequestServices.GetRequiredService<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel).Result;
             });
         }

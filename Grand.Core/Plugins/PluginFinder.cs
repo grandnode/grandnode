@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -190,6 +191,23 @@ namespace Grand.Core.Plugins
         {
             return GetPluginDescriptors<T>(loadMode)
                 .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// Get a plugin by its system name
+        /// </summary>
+        /// <typeparam name="T">The type of plugin to get.</typeparam>
+        /// <param name="systemName">Plugin system name</param>
+        /// <param name="loadMode">Load plugins mode</param>
+        /// <returns>Plugin</returns>
+        public virtual T GetPluginBySystemName<T>(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
+            where T : class, IPlugin
+        {
+            var plugin = GetPluginDescriptorBySystemName<T>(systemName, loadMode);
+            if (plugin != null)
+                return _serviceProvider.GetRequiredService(plugin.PluginType) as T;
+
+            return null;
         }
 
         /// <summary>

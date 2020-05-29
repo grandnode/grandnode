@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Configuration;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;
@@ -47,6 +48,7 @@ namespace Grand.Framework
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly GrandConfig _config;
 
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
@@ -70,7 +72,8 @@ namespace Grand.Framework
             IStoreMappingService storeMappingService,
             IVendorService vendorService,
             LocalizationSettings localizationSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            GrandConfig config)
         {
             _httpContextAccessor = httpContextAccessor;
             _authenticationService = authenticationService;
@@ -84,6 +87,7 @@ namespace Grand.Framework
             _vendorService = vendorService;
             _localizationSettings = localizationSettings;
             _taxSettings = taxSettings;
+            _config = config;
         }
 
         #endregion
@@ -352,7 +356,7 @@ namespace Grand.Framework
             var allStoreLanguages = await _languageService.GetAllLanguages();
 
             //localized URLs are enabled, so try to get language from the requested page URL
-            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            if (_config.SeoFriendlyUrlsForLanguagesEnabled)
                 detectedLanguage = await GetLanguageFromUrl(allStoreLanguages);
 
             //whether we should detect the language from the request

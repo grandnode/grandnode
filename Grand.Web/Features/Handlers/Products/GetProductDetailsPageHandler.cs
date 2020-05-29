@@ -807,17 +807,27 @@ namespace Grand.Web.Features.Handlers.Products
                 {
                     //values
                     var attributeValues = attribute.ProductAttributeValues;
-                    foreach (var attributeValue in attributeValues)
+                    foreach (var attributeValue in attributeValues.OrderBy(x=>x.DisplayOrder))
                     {
                         var preselected = attributeValue.IsPreSelected;
                         if (urlselectedValues.Any())
                             preselected = urlselectedValues.Contains(attributeValue.Name);
 
+                        //Product Attribute Value - stock availability - support only for some conditions to show 
+                        var stockAvailability = string.Empty;
+                        if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes 
+                            && product.ProductAttributeCombinations.Any() 
+                            && product.ProductAttributeMappings.Count == 1)
+                        {
+                            var attributesXml = _productAttributeParser.AddProductAttribute(string.Empty, attribute, attributeValue.Id);
+                            stockAvailability = product.FormatStockMessage(string.Empty, attributesXml, _localizationService, _productAttributeParser);
+                        }
                         var valueModel = new ProductDetailsModel.ProductAttributeValueModel {
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb, //used with "Color squares" attribute type
-                            IsPreSelected = preselected
+                            IsPreSelected = preselected,
+                            StockAvailability = stockAvailability,
                         };
                         attributeModel.Values.Add(valueModel);
 

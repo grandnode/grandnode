@@ -19,6 +19,11 @@ namespace Grand.Core.Domain.Blogs
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the blog category sename
+        /// </summary>
+        public string SeName { get; set; }
+
+        /// <summary>
         /// Gets or sets display order
         /// </summary>
         public int DisplayOrder { get; set; }

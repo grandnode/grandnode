@@ -54,7 +54,7 @@ namespace Grand.Web.Features.Handlers.Blogs
             var model = new BlogPostListModel();
             model.PagingFilteringContext.Tag = request.Command.Tag;
             model.PagingFilteringContext.Month = request.Command.Month;
-            model.PagingFilteringContext.CategoryId = request.Command.CategoryId;
+            model.PagingFilteringContext.CategorySeName = request.Command.CategorySeName;
             model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
             model.SearchKeyword = request.Command.SearchKeyword;
 
@@ -65,7 +65,7 @@ namespace Grand.Web.Features.Handlers.Blogs
             DateTime? dateTo = request.Command.GetToMonth();
 
             IPagedList<BlogPost> blogPosts;
-            if (string.IsNullOrEmpty(request.Command.CategoryId))
+            if (string.IsNullOrEmpty(request.Command.CategorySeName))
             {
                 if (string.IsNullOrEmpty(request.Command.Tag))
                 {
@@ -80,8 +80,10 @@ namespace Grand.Web.Features.Handlers.Blogs
             }
             else
             {
+                var categoryblog = await _blogService.GetBlogCategoryBySeName(request.Command.CategorySeName);
+                var categoryId = categoryblog != null ? categoryblog.Id : "";
                 blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
-                        dateFrom, dateTo, request.Command.PageNumber - 1, request.Command.PageSize, categoryId: request.Command.CategoryId, blogPostName: model.SearchKeyword);
+                        dateFrom, dateTo, request.Command.PageNumber - 1, request.Command.PageSize, categoryId: categoryId, blogPostName: model.SearchKeyword);
             }
             model.PagingFilteringContext.LoadPagedList(blogPosts);
 

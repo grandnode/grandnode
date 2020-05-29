@@ -4870,7 +4870,8 @@ namespace Grand.Services.Installation
                 DefaultPictureZoomEnabled = true,
                 DefaultImageQuality = 80,
                 MultipleThumbDirectories = false,
-                StoreLocation = "/"
+                StoreLocation = "/",
+                StoreInDb = true
             });
 
             await _settingService.SaveSetting(new SeoSettings {
@@ -5038,7 +5039,6 @@ namespace Grand.Services.Installation
             await _settingService.SaveSetting(new LocalizationSettings {
                 DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.Name == "English").Id,
                 UseImagesForLanguageSelection = false,
-                SeoFriendlyUrlsForLanguagesEnabled = false,
                 AutomaticallyDetectLanguage = false,
                 LoadAllLocaleRecordsOnStartup = true,
                 LoadAllLocalizedPropertiesOnStartup = true,
@@ -5070,7 +5070,7 @@ namespace Grand.Services.Installation
                 HideAuctionsTab = true,
                 HideNotesTab = true,
                 HideDocumentsTab = true,
-                DownloadableProductsValidateUser = false,
+                DownloadableProductsValidateUser = true,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
                 GenderEnabled = false,
                 DateOfBirthEnabled = false,
@@ -5125,7 +5125,6 @@ namespace Grand.Services.Installation
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
                 AllowCustomerToSelectTheme = false,
-                DisplayMiniProfilerInPublicStore = false,
                 DisplayEuCookieLawWarning = false,
                 FacebookLink = "https://www.facebook.com/grandnodecom",
                 TwitterLink = "https://twitter.com/grandnode",
@@ -5225,7 +5224,7 @@ namespace Grand.Services.Installation
             });
 
             await _settingService.SaveSetting(new ShippingSettings {
-                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.ByWeight" },
+                ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
                 ShipToSameAddress = false,
                 AllowPickUpInStore = true,
                 UseWarehouseLocation = false,

@@ -29,13 +29,13 @@ namespace Grand.Services.Messages.DotLiquidDrops
             int? friendlyForumTopicPageIndex = null,
             string appendedPostIdentifierAnchor = "")
         {
-            this._forumTopic = forumTopic;
-            this._forumPost = forumPost;
-            this._forum = forum;
-            this._friendlyForumTopicPageIndex = friendlyForumTopicPageIndex;
-            this._appendedPostIdentifierAnchor = appendedPostIdentifierAnchor;
-            this._customer = customer;
-            this._store = store;
+            _forumTopic = forumTopic;
+            _forumPost = forumPost;
+            _forum = forum;
+            _friendlyForumTopicPageIndex = friendlyForumTopicPageIndex;
+            _appendedPostIdentifierAnchor = appendedPostIdentifierAnchor;
+            _customer = customer;
+            _store = store;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

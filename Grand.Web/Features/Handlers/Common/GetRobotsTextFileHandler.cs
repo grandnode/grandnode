@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Configuration;
 using Grand.Core.Domain.Localization;
 using Grand.Services.Localization;
 using Grand.Web.Features.Models.Common;
@@ -17,17 +18,17 @@ namespace Grand.Web.Features.Handlers.Common
         private readonly ILanguageService _languageService;
         private readonly IWebHelper _webHelper;
 
-        private readonly LocalizationSettings _localizationSettings;
+        private readonly GrandConfig _config;
 
         public GetRobotsTextFileHandler(IStoreContext storeContext,
             ILanguageService languageService,
             IWebHelper webHelper,
-            LocalizationSettings localizationSettings)
+            GrandConfig config)
         {
             _storeContext = storeContext;
             _languageService = languageService;
             _webHelper = webHelper;
-            _localizationSettings = localizationSettings;
+            _config = config;
         }
 
         public async Task<string> Handle(GetRobotsTextFile request, CancellationToken cancellationToken)
@@ -132,7 +133,7 @@ namespace Grand.Web.Features.Handlers.Common
                 sb.Append("User-agent: *");
                 sb.Append(newLine);
                 //sitemaps
-                if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                if (_config.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     //URLs are localizable. Append SEO code
                     foreach (var language in await _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
@@ -163,7 +164,7 @@ namespace Grand.Web.Features.Handlers.Common
                     sb.AppendFormat("Disallow: {0}", path);
                     sb.Append(newLine);
                 }
-                if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                if (_config.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     //URLs are localizable. Append SEO code
                     foreach (var language in await _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))

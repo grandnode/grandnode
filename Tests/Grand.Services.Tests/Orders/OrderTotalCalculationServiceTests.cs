@@ -173,8 +173,7 @@ namespace Grand.Services.Orders.Tests
                 _addressService = tempAddressService.Object;
             }
 
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _serviceProvider, _logger, _customerSettings, _addressSettings);
+            _taxService = new TaxService(_addressService, _workContext, pluginFinder, _geoLookupService, _countryService, _logger, _taxSettings, _customerSettings, _addressSettings);
 
             _rewardPointsSettings = new RewardPointsSettings();
 

@@ -30,6 +30,13 @@
                             </div>
             ))
         <div class="form-group">
+            <admin-label asp-for="SeName" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="SeName" />
+                <span asp-validation-for="SeName"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <admin-label asp-for="DisplayOrder" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="DisplayOrder" />

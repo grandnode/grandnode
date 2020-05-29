@@ -339,24 +339,26 @@ namespace Grand.Services.Messages
         /// Sends a forum subscription message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
+        /// <param name="topicauthor">Topic author</param>
         /// <param name="forumTopic">Forum Topic</param>
         /// <param name="forum">Forum</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        Task<int> SendNewForumTopicMessage(Customer customer, 
+        Task<int> SendNewForumTopicMessage(Customer customer, Customer topicauthor,
             ForumTopic forumTopic, Forum forum, string languageId);
 
         /// <summary>
         /// Sends a forum subscription message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
+        /// <param name="customer">Post author</param>
         /// <param name="forumPost">Forum post</param>
         /// <param name="forumTopic">Forum Topic</param>
         /// <param name="forum">Forum</param>
         /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        Task<int> SendNewForumPostMessage(Customer customer, 
+        Task<int> SendNewForumPostMessage(Customer customer, Customer postauthor,
             ForumPost forumPost, ForumTopic forumTopic,
             Forum forum, int friendlyForumTopicPageIndex,
             string languageId);

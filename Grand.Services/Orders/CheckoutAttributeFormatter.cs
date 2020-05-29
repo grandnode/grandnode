@@ -148,7 +148,7 @@ namespace Grand.Services.Orders
                                 formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                                 if (renderPrices)
                                 {
-                                    decimal priceAdjustmentBase = (await _taxService.GetCheckoutAttributePrice(attributeValue, customer)).checkoutPrice;
+                                    decimal priceAdjustmentBase = (await _taxService.GetCheckoutAttributePrice(attribute, attributeValue, customer)).checkoutPrice;
                                     decimal priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {

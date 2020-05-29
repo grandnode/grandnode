@@ -19,8 +19,13 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         }
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogCategory.Fields.Name")]
         public string Name { get; set; }
+        
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogCategory.Fields.SeName")]
+        public string SeName { get; set; }
+
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogCategory.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
+
         public IList<BlogCategoryLocalizedModel> Locales { get; set; }
         //Store mapping
         public bool LimitedToStores { get; set; }

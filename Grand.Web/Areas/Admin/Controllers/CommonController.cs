@@ -447,7 +447,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var model = new MaintenanceModel();
             model.ConvertedPictureModel.NumberOfConvertItems = 0;
-            if (pictureService.StoreInDb)
+            if (mediaSettings.StoreInDb)
             {
                 var pictures = pictureService.GetPictures();
                 foreach (var picture in pictures)

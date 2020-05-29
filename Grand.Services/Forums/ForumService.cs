@@ -673,7 +673,7 @@ namespace Grand.Services.Forums
                 var forum = await _forumRepository.GetByIdAsync(forumTopic.ForumId);
                 var subscriptions = await GetAllSubscriptions(forumId: forum.Id);
                 var languageId = _workContext.WorkingLanguage.Id;
-
+                var author = await _customerService.GetCustomerById(forumTopic.CustomerId);
                 foreach (var subscription in subscriptions)
                 {
                     if (subscription.CustomerId == forumTopic.CustomerId)
@@ -684,7 +684,7 @@ namespace Grand.Services.Forums
                     if (subscription.CustomerId!="")
                     {
                         var customer = await _customerService.GetCustomerById(subscription.CustomerId);
-                        await _workflowMessageService.SendNewForumTopicMessage(customer, forumTopic,
+                        await _workflowMessageService.SendNewForumTopicMessage(customer, author, forumTopic,
                             forum, languageId);
                     }
                 }
@@ -902,6 +902,7 @@ namespace Grand.Services.Forums
                     _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10, 
                     forumPost.Id) + 1;
 
+                var postauthor = await _customerService.GetCustomerById(forumPost.CustomerId);
                 foreach (ForumSubscription subscription in subscriptions)
                 {
                     if (subscription.CustomerId == forumPost.CustomerId)
@@ -912,7 +913,7 @@ namespace Grand.Services.Forums
                     if ((subscription.CustomerId!=""))
                     {
                         var customer = await _customerService.GetCustomerById(subscription.CustomerId);
-                        await _workflowMessageService.SendNewForumPostMessage(customer, forumPost,
+                        await _workflowMessageService.SendNewForumPostMessage(customer, postauthor, forumPost,
                             forumTopic, forum, friendlyTopicPageIndex, languageId);
                     }
                 }

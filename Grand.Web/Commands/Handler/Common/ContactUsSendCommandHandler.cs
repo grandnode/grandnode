@@ -201,7 +201,8 @@ namespace Grand.Web.Commands.Handler.Common
             var attributes2 = await _contactAttributeService.GetAllContactAttributes(storeId);
             foreach (var a2 in attributes2)
             {
-                if (a2.IsRequired)
+                var conditionMet = await _contactAttributeParser.IsConditionMet(a2, contactAttributesXml);
+                if (a2.IsRequired && ((conditionMet.HasValue && conditionMet.Value) || !conditionMet.HasValue))
                 {
                     bool found = false;
                     //selected checkout attributes

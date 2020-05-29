@@ -342,16 +342,14 @@ namespace Grand.Services.Orders
             if (customer != null)
             {
                 var checkoutAttributesXml = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
-                var attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
-                if (attributeValues != null)
-                {
+                var attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValue(checkoutAttributesXml);
                     foreach (var attributeValue in attributeValues)
                     {
                         decimal taxRate;
-                        var checkoutAttributePriceExclTax = await _taxService.GetCheckoutAttributePrice(attributeValue, false, customer);
+                        var checkoutAttributePriceExclTax = await _taxService.GetCheckoutAttributePrice(attributeValue.ca, attributeValue.cav, false, customer);
                         decimal caExclTax = checkoutAttributePriceExclTax.checkoutPrice;
 
-                        var checkoutAttributePriceInclTax = await _taxService.GetCheckoutAttributePrice(attributeValue, true, customer);
+                        var checkoutAttributePriceInclTax = await _taxService.GetCheckoutAttributePrice(attributeValue.ca, attributeValue.cav, true, customer);
                         decimal caInclTax = checkoutAttributePriceInclTax.checkoutPrice;
 
                         taxRate = checkoutAttributePriceInclTax.taxRate;
@@ -373,7 +371,6 @@ namespace Grand.Services.Orders
                             }
                         }
                     }
-                }
             }
 
             //subtotal without discount

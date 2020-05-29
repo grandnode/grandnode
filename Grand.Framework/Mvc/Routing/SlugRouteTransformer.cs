@@ -1,10 +1,12 @@
-﻿using Grand.Core;
+﻿using Grand.Core.Configuration;
 using Grand.Core.Domain.Localization;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,16 +17,16 @@ namespace Grand.Framework.Mvc.Routing
     {
         private readonly IUrlRecordService _urlRecordService;
         private readonly ILanguageService _languageService;
-        private readonly LocalizationSettings _localizationSettings;
+        private readonly GrandConfig _config;
 
         public SlugRouteTransformer(
             IUrlRecordService urlRecordService,
             ILanguageService languageService,
-            LocalizationSettings localizationSettings)
+            GrandConfig config)
         {
             _urlRecordService = urlRecordService;
             _languageService = languageService;
-            _localizationSettings = localizationSettings;
+            _config = config;
         }
 
         protected async ValueTask<string> GetSeName(string entityId, string entityName, string languageId)
@@ -75,7 +77,7 @@ namespace Grand.Framework.Mvc.Routing
 
             //ensure that the slug is the same for the current language, 
             //otherwise it can cause some issues when customers choose a new language but a slug stays the same
-            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            if (_config.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 var urllanguage = values["language"];
                 if (urllanguage != null && !string.IsNullOrEmpty(urllanguage.ToString()))
@@ -165,10 +167,9 @@ namespace Grand.Framework.Mvc.Routing
                     break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
-                    //await context.HttpContext.RequestServices.GetRequiredService<IMediator>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
+                    await context.RequestServices.GetRequiredService<IMediator>().Publish(new CustomUrlRecordEntityName(values, urlRecord));
                     break;
             }
-            //context.RouteData = currentRouteData;
             return values;
         }
     }

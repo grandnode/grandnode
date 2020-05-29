@@ -118,6 +118,17 @@ namespace Grand.Core.Configuration
         public int CookieAuthExpires { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether mini profiler should be displayed in public store (used for debugging)
+        /// </summary>
+        public bool DisplayMiniProfilerInPublicStore { get; set; }
+
+        /// <summary>
+        /// A value indicating whether SEO friendly URLs with multiple languages are enabled
+        /// </summary>
+        public bool SeoFriendlyUrlsForLanguagesEnabled { get; set; }
+        public string SeoFriendlyUrlsDefaultCode { get; set; } = "en";
+
+        /// <summary>
         /// Enable minimal Progressive Web App.
         /// </summary>
         public bool EnableProgressiveWebApp { get; set; }

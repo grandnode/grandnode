@@ -328,6 +328,19 @@ namespace Grand.Services.Blogs
         }
 
         /// <summary>
+        /// Get category by sename
+        /// </summary>
+        /// <param name="blogCategorySeName">Blog category sename</param>
+        /// <returns></returns>
+        public virtual async Task<BlogCategory> GetBlogCategoryBySeName(string blogCategorySeName)
+        {
+            if (string.IsNullOrEmpty(blogCategorySeName))
+                throw new ArgumentNullException("blogCategorySeName");
+
+            return await _blogCategoryRepository.Table.Where(x => x.SeName == blogCategorySeName.ToLowerInvariant()).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// Get all blog categories
         /// </summary>
         /// <returns></returns>

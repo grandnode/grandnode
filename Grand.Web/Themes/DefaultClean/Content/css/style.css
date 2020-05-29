@@ -2344,6 +2344,7 @@ list settings .list__item,
     width: 100%;
     position: relative;
     z-index: 100;
+    overflow: hidden;
     -webkit-transition: transform .2s ease,-webkit-transform .2s ease;
     -moz-transition: transform .2s ease,-webkit-transform .2s ease;
     -o-transition: transform .2s ease,-webkit-transform .2s ease;
@@ -2354,6 +2355,7 @@ list settings .list__item,
         -webkit-transform: translateY(-5px);
         transform: translateY(-5px);
         z-index: 101;
+        overflow: visible;
     }
 
 .product-box .picture-container {
@@ -2429,7 +2431,6 @@ list settings .list__item,
     left: 0;
     visibility: hidden;
     opacity: 0;
-    z-index: -1;
     margin: 0 0 -150px 0;
     background-color: #fff;
     border-radius: 3px;
@@ -3987,7 +3988,7 @@ valid mgs .input-validation-error {
         background: #fff;
         border-bottom: 1px solid rgba(0, 0, 0, .2);
         border-right: 1px solid rgba(0, 0, 0, .2);
-        min-width: 60px;
+        min-width: 90px;
         padding: 20px;
     }
 
@@ -4582,7 +4583,7 @@ span.product-quantity {
     font-weight: 700;
 }
 
-.generalAdToCart input {
+.generalAdToCart input, .generalAdToCart select {
     max-width: 75px;
     height: 50px;
     display: inline;
@@ -4590,11 +4591,6 @@ span.product-quantity {
     margin-right: 5px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-}
-
-.generalAdToCart select {
-    width: auto;
-    max-width: 75px;
 }
 
 .enter-price-input {
@@ -5327,7 +5323,7 @@ footer .socicon-pinterest:hover {
 
     .shopping-cart .quantity {
         left: 0;
-        width: 45%;
+        width: 40%;
         padding: 10px 0 10px 10px !important;
         color: #909090;
         text-transform: none;

@@ -1,8 +1,8 @@
 ﻿@inject CommonSettings commonSettings
 @inject SeoSettings seoSettings
-@inject StoreInformationSettings storeInformationSettings
+@inject Grand.Core.Configuration.GrandConfig config
 @{
-    var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore;
+    var displayMiniProfiler = config.DisplayMiniProfilerInPublicStore;
     //X-UA-Compatible tag
     if (commonSettings.RenderXuaCompatible)
     {
@@ -29,7 +29,6 @@
     <partial name="Head" />
     @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag" })
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
-    @Html.GrandScripts(this.Url, ResourceLocation.Head)
     @Html.GrandCanonicalUrls()
     @await Component.InvokeAsync("NewsRssHeaderLink")
     @await Component.InvokeAsync("BlogRssHeaderLink")
@@ -39,6 +38,7 @@
     {
         <mini-profiler />
     }
+    @Html.GrandScripts(this.Url, ResourceLocation.Head)
 </head>
 <body>
     <resources asp-type="ScriptHeader" />

@@ -278,24 +278,6 @@ namespace Grand.Services.Localization
             }
         }
 
-
-
-        /// <summary>
-        /// Delete a locale resource
-        /// </summary>
-        /// <param name="plugin">Plugin</param>
-        /// <param name="resourceName">Resource name</param>
-        public static async Task DeletePluginLocaleResource(this BasePlugin plugin, IServiceProvider serviceProvider,
-            string resourceName)
-        {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
-                var languageService = scope.ServiceProvider.GetRequiredService<ILanguageService>();
-                await DeletePluginLocaleResource(plugin, localizationService,
-                languageService, resourceName.ToLowerInvariant());
-            }
-        }
         /// <summary>
         /// Delete a locale resource
         /// </summary>
@@ -323,25 +305,7 @@ namespace Grand.Services.Localization
                     await localizationService.DeleteLocaleStringResource(lsr);
             }
         }
-        /// <summary>
-        /// Add a locale resource (if new) or update an existing one
-        /// </summary>
-        /// <param name="plugin">Plugin</param>
-        /// <param name="resourceName">Resource name</param>
-        /// <param name="resourceValue">Resource value</param>
-        /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        public static async Task AddOrUpdatePluginLocaleResource(this BasePlugin plugin, IServiceProvider serviceProvider,
-        string resourceName, string resourceValue, string languageCulture = null)
-        {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
-                var languageService = scope.ServiceProvider.GetRequiredService<ILanguageService>();
-                await AddOrUpdatePluginLocaleResource(plugin, localizationService,
-                     languageService, resourceName, resourceValue, languageCulture);
-            }
 
-        }
         /// <summary>
         /// Add a locale resource (if new) or update an existing one
         /// </summary>

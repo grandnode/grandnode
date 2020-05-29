@@ -248,7 +248,7 @@ namespace Grand.Web.Controllers
             model.Description = vendor.Description;
             model.Email = vendor.Email;
             model.Name = vendor.Name;
-
+            model.GenericAttributes = vendor.GenericAttributes;
             model.PictureUrl = await _pictureService.GetPictureUrl(vendor.PictureId, _mediaSettings.AvatarPictureSize, false);
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
             model.Address = await _mediator.Send(new GetVendorAddress() {

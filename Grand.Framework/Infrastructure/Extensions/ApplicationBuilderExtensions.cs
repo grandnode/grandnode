@@ -2,7 +2,6 @@
 using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Domain;
 using Grand.Core.Domain.Common;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Middleware;
@@ -33,9 +32,10 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Configure the application HTTP request pipeline
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
+        /// <param name="webHostEnvironment">Web Host Environment</param>
         public static void ConfigureRequestPipeline(this IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
-            EngineContext.Current.ConfigureRequestPipeline(application);
+            EngineContext.Current.ConfigureRequestPipeline(application, webHostEnvironment);
         }
 
         /// <summary>
@@ -231,9 +231,9 @@ namespace Grand.Framework.Infrastructure.Extensions
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            var serviceProvider = application.ApplicationServices;
+            var grandConfig = application.ApplicationServices.GetRequiredService<GrandConfig>();
             //whether MiniProfiler should be displayed
-            if (serviceProvider.GetRequiredService<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+            if (grandConfig.DisplayMiniProfilerInPublicStore)
             {
                 application.UseMiniProfiler();
             }

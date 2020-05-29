@@ -50,9 +50,9 @@ namespace Grand.Services.Tax.Tests
             _addressSettings = new AddressSettings();
             _logger = new NullLogger();
             
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                _pluginFinder, _geoLookupService, _countryService, _serviceProvider, _logger,
-                _customerSettings, _addressSettings);
+            _taxService = new TaxService(_addressService, _workContext, 
+                _pluginFinder, _geoLookupService, _countryService, _logger,
+                _taxSettings, _customerSettings, _addressSettings);
         }
 
         //TO DO

@@ -1,6 +1,5 @@
 using Grand.Services.Configuration;
 using Grand.Services.Discounts;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,9 +10,9 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles
     {
         private readonly ISettingService _settingService;
 
-        public CustomerRoleDiscountRequirementRule(IServiceProvider serviceProvider)
+        public CustomerRoleDiscountRequirementRule(ISettingService settingService)
         {
-            this._settingService = serviceProvider.GetRequiredService<ISettingService>();
+            _settingService = settingService;
         }
 
         /// <summary>
