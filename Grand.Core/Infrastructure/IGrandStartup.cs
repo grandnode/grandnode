@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +18,8 @@ namespace Grand.Core.Infrastructure
         /// Configure the using of added middleware
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        void Configure(IApplicationBuilder application);
+        /// <param name="webHostEnvironment">WebHostEnvironment</param>
+        void Configure(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment);
 
         /// <summary>
         /// Gets order of this startup configuration implementation

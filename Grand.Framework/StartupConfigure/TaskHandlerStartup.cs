@@ -2,6 +2,7 @@
 using Grand.Core.Infrastructure;
 using Grand.Services.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,12 +18,13 @@ namespace Grand.Framework.StartupConfigure
         /// Configure the using of added middleware
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        /// <summary>
-        public void Configure(IApplicationBuilder application)
+        /// <param name="webHostEnvironment">WebHostEnvironment</param>
+        public void Configure(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
 
         }
 
+        /// <summary>
         /// Add and configure any of the middleware
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
