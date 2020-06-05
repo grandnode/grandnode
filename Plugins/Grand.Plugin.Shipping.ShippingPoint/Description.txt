@@ -2,7 +2,7 @@
 FriendlyName: Shipping Point
 SystemName: Shipping.ShippingPoint
 Version: 1.02
-SupportedVersions: 4.70
+SupportedVersions: 4.80
 Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.Shipping.ShippingPoint.dll
