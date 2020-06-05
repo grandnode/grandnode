@@ -115,17 +115,22 @@
                 </div>
 
             </div>
-            <div class="col-3 col-sm-2 col-lg-1 ml-auto text-center px-0" id="@String.Format("post-vote-{0}", Model.Id)">
-                <span class="col vote up @if (Model.VoteIsUp.HasValue && (bool) Model.VoteIsUp){<text>selected</text>}"
-                      title="This post/answer is useful">
-                    <i class="mdi mdi-chevron-up" aria-hidden="true"></i>
-                </span>
-                <div class="col vote-count-post btn btn-sm btn-block btn-secondary"> @Model.VoteCount </div>
-                <span class="col vote down @if (Model.VoteIsUp.HasValue && (bool)!Model.VoteIsUp) { <text>selected</text> }"
-                      title="This post/answer is not useful">
-                    <i class="mdi mdi-chevron-down" aria-hidden="true"></i>
-                </span>
-            </div>
+            @if (Model.AllowPostVoting)
+            {
+                <div class="col-3 col-sm-2 col-lg-1 ml-auto text-center px-0" id="@String.Format("post-vote-{0}", Model.Id)">
+                    <span class="col vote up @if (Model.VoteIsUp.HasValue && (bool)Model.VoteIsUp)
+                    {<text>selected</text>}"
+                          title="This post/answer is useful">
+                        <i class="mdi mdi-chevron-up" aria-hidden="true"></i>
+                    </span>
+                    <div class="col vote-count-post btn btn-sm btn-block btn-secondary"> @Model.VoteCount </div>
+                    <span class="col vote down @if (Model.VoteIsUp.HasValue && (bool)!Model.VoteIsUp)
+                    { <text>selected</text> }"
+                          title="This post/answer is not useful">
+                        <i class="mdi mdi-chevron-down" aria-hidden="true"></i>
+                    </span>
+                </div>
+            }
         </div>
         @if (Model.SignaturesEnabled & !String.IsNullOrEmpty(Model.FormattedSignature))
         {
