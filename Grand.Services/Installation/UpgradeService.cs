@@ -53,6 +53,8 @@ namespace Grand.Services.Installation
         private const string version_450 = "4.50";
         private const string version_460 = "4.60";
         private const string version_470 = "4.70";
+        private const string version_480 = "4.80";
+
         #endregion
 
         #region Ctor
@@ -111,6 +113,11 @@ namespace Grand.Services.Installation
                 await From460To470();
                 fromversion = version_470;
             }
+            if (fromversion == version_470)
+            {
+                fromversion = version_480;
+            }
+
             if (fromversion == toversion)
             {
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
