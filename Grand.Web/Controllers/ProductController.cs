@@ -18,6 +18,7 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Commands.Models.Products;
+using Grand.Web.Events;
 using Grand.Web.Features.Models.Products;
 using Grand.Web.Models.Catalog;
 using MediatR;
@@ -562,6 +563,9 @@ namespace Grand.Web.Controllers
                     Model = model,
                     Product = product
                 });
+
+                //notification
+                await _mediator.Publish(new ProductReviewEvent(product, model.AddProductReview));
 
                 await _customerActivityService.InsertActivity("PublicStore.AddProductReview", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name);
 
