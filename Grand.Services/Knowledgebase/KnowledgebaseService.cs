@@ -33,8 +33,10 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <remarks>
         /// {0} : category ID
+        /// {1} : customer roles
+        /// {2} : store id
         /// </remarks>
-        private const string CATEGORY_BY_ID = "Knowledgebase.category.id-{0}";
+        private const string CATEGORY_BY_ID = "Knowledgebase.category.id-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for caching
