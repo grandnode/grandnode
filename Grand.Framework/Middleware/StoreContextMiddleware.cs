@@ -9,7 +9,7 @@ namespace Grand.Framework.Middleware
         #region Fields
 
         private readonly RequestDelegate _next;
-        //private readonly IStoreContext _storeContext;
+
         #endregion
 
         #region Ctor
