@@ -3,7 +3,6 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
 using Grand.Services.Configuration;
 using Grand.Services.Events;
-using Grand.Services.Stores;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -45,7 +44,6 @@ namespace Grand.Services.Localization
         #region Fields
 
         private readonly IRepository<Language> _languageRepository;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly ICacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly LocalizationSettings _localizationSettings;
@@ -60,27 +58,24 @@ namespace Grand.Services.Localization
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="languageRepository">Language repository</param>
-        /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="mediator">Mediator</param>
         public LanguageService(ICacheManager cacheManager,
             IRepository<Language> languageRepository,
-            IStoreMappingService storeMappingService,
             ISettingService settingService,
             LocalizationSettings localizationSettings,
             IMediator mediator)
         {
             _cacheManager = cacheManager;
             _languageRepository = languageRepository;
-            _storeMappingService = storeMappingService;
             _settingService = settingService;
             _localizationSettings = localizationSettings;
             _mediator = mediator;
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -91,7 +86,7 @@ namespace Grand.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException("language");
-            
+
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
             {
@@ -105,7 +100,7 @@ namespace Grand.Services.Localization
                     }
                 }
             }
-            
+
             await _languageRepository.DeleteAsync(language);
 
             //cache
@@ -138,7 +133,7 @@ namespace Grand.Services.Localization
             if (!string.IsNullOrWhiteSpace(storeId))
             {
                 languages = languages
-                    .Where(l => _storeMappingService.Authorize(l, storeId))
+                    .Where(l => l.Stores.Contains(storeId))
                     .ToList();
             }
             return languages;
@@ -181,7 +176,7 @@ namespace Grand.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException("language");
-            
+
             //update language
             await _languageRepository.UpdateAsync(language);
 
