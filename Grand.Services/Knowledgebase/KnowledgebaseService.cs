@@ -244,9 +244,29 @@ namespace Grand.Services.Knowledgebase
         /// Gets knowledgebase articles
         /// </summary>
         /// <returns>List of knowledgebase articles</returns>
-        public virtual Task<List<KnowledgebaseArticle>> GetKnowledgebaseArticles()
+        /// <param name="storeId">Store ident</param>
+        public virtual Task<List<KnowledgebaseArticle>> GetKnowledgebaseArticles(string storeId = "")
         {
-            return _knowledgebaseArticleRepository.Table.OrderBy(x => x.DisplayOrder).ToListAsync();
+            var builder = Builders<KnowledgebaseArticle>.Filter;
+            var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
+            filter &= builder.Where(x => x.Published);
+
+            if (!_catalogSettings.IgnoreAcl)
+            {
+                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                filter &= (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+            }
+
+            if (!_catalogSettings.IgnoreStoreLimitations && !string.IsNullOrEmpty(storeId))
+            {
+                //Store mapping
+                var currentStoreId = new List<string> { storeId };
+                filter &= (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
+            }
+
+            var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
+            var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
+            return toReturn.ToListAsync();
         }
 
         /// <summary>
