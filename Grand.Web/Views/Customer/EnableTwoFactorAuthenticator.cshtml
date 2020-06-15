@@ -1,6 +1,6 @@
 @model CustomerInfoModel.TwoFactorAuthenticationModel
 @using Grand.Web.Models.Customer;
-@using System.Net
+
 @inject IWebHelper webHelper
 @{
     Layout = "_ColumnsTwo";
@@ -12,7 +12,7 @@
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Courses })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
 }
 
     <div class="page login-page">

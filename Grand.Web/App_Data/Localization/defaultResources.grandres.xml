@@ -21098,6 +21098,9 @@
   <LocaleResource Name="Sitemap.General">
     <Value>General</Value>
   </LocaleResource>
+  <LocaleResource Name="Sitemap.KnowledgebaseArticles">
+    <Value>Knowledgebase Articles</Value>
+  </LocaleResource>
   <LocaleResource Name="Sitemap.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>

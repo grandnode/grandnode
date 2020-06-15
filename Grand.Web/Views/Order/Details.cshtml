@@ -35,7 +35,7 @@
 
             @if (Model.ShowAddOrderNote)
             {
-                <a href="@Url.RouteUrl("AddOrderNote", new { orderId = Model.Id })" class="btn btn-outline-secondary">Add order note</a>
+                <a href="@Url.RouteUrl("AddOrderNote", new { orderId = Model.Id })" class="btn btn-outline-secondary">@T("Order.AddOrderNote")</a>
             }
         </div>
     }

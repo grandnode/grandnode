@@ -8,6 +8,7 @@ using Grand.Core.Domain.News;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Helpers;
+using Grand.Services.Knowledgebase;
 using Grand.Services.Media;
 using Grand.Services.Topics;
 using Microsoft.AspNetCore.Mvc;
@@ -45,12 +46,13 @@ namespace Grand.Services.Seo
         private readonly IManufacturerService _manufacturerService;
         private readonly ITopicService _topicService;
         private readonly IBlogService _blogService;
+        private readonly IKnowledgebaseService _knowledgebaseService;
         private readonly IPictureService _pictureService;
         private readonly IWebHelper _webHelper;
         private readonly CommonSettings _commonSettings;
-        private readonly BlogSettings _blogSettings;
         private readonly KnowledgebaseSettings _knowledgebaseSettings;
         private readonly NewsSettings _newsSettings;
+        private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
 
         #endregion
@@ -64,6 +66,7 @@ namespace Grand.Services.Seo
             ITopicService topicService,
             IBlogService blogService,
             IPictureService pictureService,
+            IKnowledgebaseService knowledgebaseService,
             IWebHelper webHelper,
             CommonSettings commonSettings,
             BlogSettings blogSettings,
@@ -80,10 +83,11 @@ namespace Grand.Services.Seo
             _pictureService = pictureService;
             _webHelper = webHelper;
             _commonSettings = commonSettings;
-            _blogSettings = blogSettings;
+            _knowledgebaseService = knowledgebaseService;
             _knowledgebaseSettings = knowledgebaseSettings;
             _newsSettings = newsSettings;
             _forumSettings = forumSettings;
+            _blogSettings = blogSettings;
         }
 
         #endregion
@@ -197,12 +201,15 @@ namespace Grand.Services.Seo
             //products
             if (_commonSettings.SitemapIncludeProducts)
                 sitemapUrls.AddRange(await GetProductUrls(urlHelper, language));
-
+            
             //topics
             sitemapUrls.AddRange(await GetTopicUrls(urlHelper, language));
 
             //blog posts
             sitemapUrls.AddRange(await GetBlogPostsUrls(urlHelper, language));
+
+            //knowledgebase articles
+            sitemapUrls.AddRange(await GetKnowledgebaseUrls(urlHelper, language));
 
             //custom URLs
             sitemapUrls.AddRange(GetCustomUrls());
@@ -332,6 +339,24 @@ namespace Grand.Services.Seo
             }
             
             return blog;
+        }
+
+        /// <summary>
+        /// Get knowledgebase articles URLs for the sitemap
+        /// </summary>
+        /// <param name="urlHelper">URL helper</param>
+        /// <returns>Collection of sitemap URLs</returns>
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetKnowledgebaseUrls(IUrlHelper urlHelper, string language)
+        {
+            var knowledgebasearticles = await _knowledgebaseService.GetPublicKnowledgebaseArticles();
+            var knowledgebase = new List<SitemapUrl>();
+            foreach (var knowledgebasearticle in knowledgebasearticles)
+            {
+                var url = urlHelper.RouteUrl("KnowledgebaseArticle", new { SeName = knowledgebasearticle.GetSeName(language) }, GetHttpProtocol());
+                knowledgebase.Add(new SitemapUrl(url, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
+            }
+
+            return knowledgebase;
         }
 
         /// <summary>
