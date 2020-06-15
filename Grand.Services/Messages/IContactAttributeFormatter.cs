@@ -12,13 +12,6 @@ namespace Grand.Services.Messages
         /// Formats attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Attributes</returns>
-        Task<string> FormatAttributes(string attributesXml);
-
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customer">Customer</param>
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
