@@ -44,6 +44,10 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")]
         public int Comments { get; set; }
 
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreateDate")]
+        [UIHint("DateTime")]
+        public DateTime CreateDate { get; set; }
+
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? StartDate { get; set; }

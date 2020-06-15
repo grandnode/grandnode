@@ -4,3 +4,11 @@
   </LocaleResource>
 </Language>
 
+<Language>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.CreateDate">
+    <Value>Create date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.CreateDate.Hint">
+    <Value>Allow user to change create date for the blog post.</Value>
+  </LocaleResource>
+</Language>

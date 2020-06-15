@@ -115,6 +115,7 @@ namespace Grand.Services.Installation
             }
             if (fromversion == version_470)
             {
+                await From470To480();
                 fromversion = version_480;
             }
 
@@ -987,6 +988,15 @@ namespace Grand.Services.Installation
             var settingsService = _serviceProvider.GetRequiredService<ISettingService>();
             var storeInDB = settingsService.GetSettingByKey("Media.Images.StoreInDB", true);
             await settingsService.SetSetting("MediaSettings.StoreInDb", storeInDB);
+
+            #endregion
+        }
+
+        private async Task From470To480()
+        {
+            #region Install String resources
+            
+            await InstallStringResources("EN_470_480.nopres.xml");
 
             #endregion
         }
