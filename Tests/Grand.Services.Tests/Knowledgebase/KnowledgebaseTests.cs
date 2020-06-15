@@ -292,9 +292,9 @@ namespace Grand.Services.Tests.Knowledgebase
         {
             ClearArticleRepository();
 
-            var article1 = new KnowledgebaseArticle();
-            var article2 = new KnowledgebaseArticle();
-            var article3 = new KnowledgebaseArticle();
+            var article1 = new KnowledgebaseArticle() { Published = true };
+            var article2 = new KnowledgebaseArticle() { Published = true };
+            var article3 = new KnowledgebaseArticle() { Published = true };
 
             await _knowledgebaseService.InsertKnowledgebaseArticle(article1);
             await _knowledgebaseService.InsertKnowledgebaseArticle(article2);

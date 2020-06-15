@@ -247,7 +247,7 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <returns>List of knowledgebase articles</returns>
         /// <param name="storeId">Store ident</param>
-        public virtual Task<List<KnowledgebaseArticle>> GetKnowledgebaseArticles(string storeId = "")
+        public virtual async Task<List<KnowledgebaseArticle>> GetKnowledgebaseArticles(string storeId = "")
         {
             var builder = Builders<KnowledgebaseArticle>.Filter;
             var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -268,7 +268,7 @@ namespace Grand.Services.Knowledgebase
 
             var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
             var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
-            return toReturn.ToListAsync();
+            return await toReturn.ToListAsync();
         }
 
         /// <summary>
