@@ -68,7 +68,7 @@ namespace Grand.Web.Controllers
 
             var locService = _serviceProvider.GetRequiredService<IInstallationLocalizationService>();
 
-            var installed = await _cacheManager.GetAsync<bool>("Installed");
+            var installed = await _cacheManager.GetAsync("Installed", async () => { return await Task.FromResult(false); });
             if (installed)
                 return View(new InstallModel() { Installed = true });
 
