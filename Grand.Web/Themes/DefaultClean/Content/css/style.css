@@ -2847,6 +2847,9 @@ list settings .list__item,
     max-height: 100%;
     flex: 2;
 }
+.product-info .title h3 {
+    line-height: 0.5;
+}
 
 .product-box.list-box .bottom {
     display: flex;

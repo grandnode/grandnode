@@ -16,7 +16,7 @@
 }
 
 <div class="page manufacturer-page">
-    <h2 class="generalTitle mt-3 mb-0">@Model.Name</h2>
+    <h1 class="generalTitle mt-3 mb-0">@Model.Name</h1>
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_top", additionalData = Model.Id })
     @*description*@
     @if (!String.IsNullOrWhiteSpace(Model.Description))
