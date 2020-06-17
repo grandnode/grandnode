@@ -1,4 +1,5 @@
-﻿using Grand.Core.Caching;
+﻿using Grand.Core;
+using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Plugins;
@@ -31,6 +32,8 @@ namespace Grand.Services.Directory.Tests
         public void TestInitialize() {
             //plugin initialization
             new Grand.Services.Tests.ServiceTest().PluginInitializator();
+            
+            CommonHelper.CacheTimeMinutes = 10;
 
             currencyUSD = new Currency {
                 Id = "1",

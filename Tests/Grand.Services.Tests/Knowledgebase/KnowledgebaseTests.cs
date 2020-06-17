@@ -7,9 +7,11 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Stores;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Events;
 using Grand.Services.Knowledgebase;
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -64,8 +66,8 @@ namespace Grand.Services.Tests.Knowledgebase
             var commonSettings = new Mock<CommonSettings>();
             _commonSettings = commonSettings.Object;
 
-            var cacheManager = new Mock<ICacheManager>();
-            _cacheManager = cacheManager.Object;
+            var _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
+            
 
             _knowledgebaseService = new KnowledgebaseService(_categoryRepository, _articleRepository, _eventPublisher, _commonSettings, _catalogSettings,
                 _workContext, _cacheManager, _storeContext, _articleCommentRepository);
