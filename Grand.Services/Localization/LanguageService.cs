@@ -133,7 +133,7 @@ namespace Grand.Services.Localization
             if (!string.IsNullOrWhiteSpace(storeId))
             {
                 languages = languages
-                    .Where(l => l.Stores.Contains(storeId))
+                    .Where(l => l.Stores.Contains(storeId) || !l.LimitedToStores)
                     .ToList();
             }
             return languages;
