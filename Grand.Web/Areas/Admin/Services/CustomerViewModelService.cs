@@ -1646,8 +1646,8 @@ namespace Grand.Web.Areas.Admin.Services
             if (displayToCustomer)
             {
                 //email
-                await _workflowMessageService.SendNewCustomerNoteAddedCustomerNotification(
-                    customerNote, _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
+                await _workflowMessageService.SendNewCustomerNoteAddedCustomerNotification(customerNote,
+                    await _customerService.GetCustomerById(customerId), _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
             }
             return customerNote;

@@ -916,7 +916,7 @@ namespace Grand.Services.Installation
                 {
                     Name = "Customer.EmailTokenValidationMessage",
                     Subject = "{{Store.Name}} - Email Verification Code",
-                    Body = "Hello {{Customer.FullName}}, <br /><br />\r\n Enter this 6 digit code on the sign in page to confirm your identity:<br /><br /> \r\n <b>{{AdditionalTokens[\"Token\"]}}</b><br /><br />\r\n Yours securely, <br /> \r\n Team",
+                    Body = "Hello {{Customer.FullName}}, <br /><br />\r\n Enter this 6 digit code on the sign in page to confirm your identity:<br /><br /> \r\n <b>{{Customer.Token}}</b><br /><br />\r\n Yours securely, <br /> \r\n Team",
                     IsActive = true,
                     EmailAccountId = emailAccount.Id,
                 },

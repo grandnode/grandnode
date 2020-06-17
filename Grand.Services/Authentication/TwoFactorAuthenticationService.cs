@@ -72,7 +72,7 @@ namespace Grand.Services.Authentication
                     await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TwoFactorValidCode, token);
                     await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TwoFactorCodeValidUntil, DateTime.UtcNow.AddMinutes(30));
                     model.CustomValues.Add("Token", token);
-                    await _workflowMessageService.SendCustomerEmailTokenValidationMessage(customer, _storeContext.CurrentStore, token, language.Id);
+                    await _workflowMessageService.SendCustomerEmailTokenValidationMessage(customer, _storeContext.CurrentStore, language.Id);
                     break;
 
                 case TwoFactorAuthenticationType.SMSVerification:

@@ -156,11 +156,12 @@ namespace Grand.Services.Messages
 
         public async Task AddCustomerTokens(LiquidObject liquidObject, Customer customer, Store store, Language language, CustomerNote customerNote = null)
         {
-            var liquidCustomer = new LiquidCustomer(customer, store, language, customerNote);
+            var liquidCustomer = new LiquidCustomer(customer, store, customerNote);
             liquidObject.Customer = liquidCustomer;
 
             await _mediator.EntityTokensAdded(customer, liquidCustomer, liquidObject);
-            await _mediator.EntityTokensAdded(customerNote, liquidCustomer, liquidObject);
+            if (customerNote != null)
+                await _mediator.EntityTokensAdded(customerNote, liquidCustomer, liquidObject);
         }
 
         public async Task AddShoppingCartTokens(LiquidObject liquidObject, Customer customer, Store store, Language language,
@@ -268,7 +269,7 @@ namespace Grand.Services.Messages
 
         public async Task AddAuctionTokens(LiquidObject liquidObject, Product product, Bid bid)
         {
-            var liquidAuctions = await _mediator.Send(new GetAuctionTokensCommand(){ Product = product, Bid = bid });
+            var liquidAuctions = await _mediator.Send(new GetAuctionTokensCommand() { Product = product, Bid = bid });
             liquidObject.Auctions = liquidAuctions;
             await _mediator.EntityTokensAdded(bid, liquidAuctions, liquidObject);
         }
