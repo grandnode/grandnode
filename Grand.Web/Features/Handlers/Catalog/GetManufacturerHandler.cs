@@ -93,12 +93,9 @@ namespace Grand.Web.Features.Handlers.Catalog
                     request.Manufacturer.Id,
                     string.Join(",", request.Customer.GetCustomerRoleIds()),
                     request.Store.Id);
-                var hasFeaturedProductsCache = await _cacheManager.GetAsync<bool?>(cacheKey);
-                if (!hasFeaturedProductsCache.HasValue)
-                {
-                    //no value in the cache yet
-                    //let's load products and cache the result (true/false)
-                    featuredProducts = (await _mediator.Send(new GetSearchProductsQuery() {
+                var hasFeaturedProductsCache = await _cacheManager.GetAsync<bool?>(cacheKey, async () =>
+                { 
+                    var featuredProducts = (await _mediator.Send(new GetSearchProductsQuery() {
                         PageSize = _catalogSettings.LimitOfFeaturedProducts,
                         ManufacturerId = request.Manufacturer.Id,
                         Customer = request.Customer,
@@ -106,9 +103,8 @@ namespace Grand.Web.Features.Handlers.Catalog
                         VisibleIndividuallyOnly = true,
                         FeaturedProducts = true
                     })).products;
-                    hasFeaturedProductsCache = featuredProducts.Any();
-                    await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, CommonHelper.CacheTimeMinutes);
-                }
+                    return featuredProducts.Any();
+                });
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
                     //cache indicates that the manufacturer has featured products

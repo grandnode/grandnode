@@ -1,7 +1,5 @@
 ﻿using Grand.Core;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -13,7 +11,7 @@ namespace Grand.Framework.Middleware
         #region Fields
 
         private readonly RequestDelegate _next;
-        //private readonly IStoreContext _storeContext;
+
         #endregion
 
         #region Ctor

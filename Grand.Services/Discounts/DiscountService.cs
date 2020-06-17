@@ -84,7 +84,6 @@ namespace Grand.Services.Discounts
         private readonly IStoreContext _storeContext;
         private readonly IPluginFinder _pluginFinder;
         private readonly IMediator _mediator;
-        private readonly PerRequestCacheManager _perRequestCache;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
 
@@ -107,7 +106,6 @@ namespace Grand.Services.Discounts
             IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Vendor> vendorRepository,
-            PerRequestCacheManager perRequestCache,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings
             )
@@ -124,7 +122,6 @@ namespace Grand.Services.Discounts
             _categoryRepository = categoryRepository;
             _manufacturerRepository = manufacturerRepository;
             _vendorRepository = vendorRepository;
-            _perRequestCache = perRequestCache;
             _shoppingCartSettings = shoppingCartSettings;
             _catalogSettings = catalogSettings;
         }
@@ -555,9 +552,9 @@ namespace Grand.Services.Discounts
 
             //invalid by default
 
-            string key = $"DiscountValidationResult_{customer.Id}_{discount.Id}_{string.Join("_", couponCodesToValidate)}";
-            var validationResult = await _perRequestCache.GetAsync(key, async () =>
-            {
+            //string key = $"DiscountValidationResult_{customer.Id}_{discount.Id}_{string.Join("_", couponCodesToValidate)}";
+            //var validationResult = await _perRequestCache.GetAsync(key, async () =>
+            //{
                 var result = new DiscountValidationResult();
 
                 //check is enabled
@@ -702,9 +699,10 @@ namespace Grand.Services.Discounts
 
                 result.IsValid = true;
                 return result;
-            });
 
-            return validationResult;
+           // });
+
+            //return validationResult;
         }
         /// <summary>
         /// Gets a discount usage history record

@@ -2,9 +2,6 @@
   <LocaleResource Name="Sitemap.KnowledgebaseArticles">
     <Value>Knowledgebase Articles</Value>
   </LocaleResource>
-</Language>
-
-<Language>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.CreateDate">
     <Value>Create date</Value>
   </LocaleResource>

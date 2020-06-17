@@ -90,7 +90,7 @@ namespace Grand.Services.Discounts.Tests
 
             _discountService = new DiscountService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher), _discountRepo, _discountCouponRepo,
                 _discountUsageHistoryRepo, _localizationService, _storeContext,
-                new PluginFinder(_serviceProvider), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, new PerRequestCacheManager(null),
+                new PluginFinder(_serviceProvider), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo,
                 _shoppingCartSettings, _catalogSettings);
         }
 

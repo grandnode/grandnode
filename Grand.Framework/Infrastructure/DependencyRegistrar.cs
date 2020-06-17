@@ -186,7 +186,6 @@ namespace Grand.Framework.Infrastructure
 
         private void RegisterCache(ContainerBuilder builder, GrandConfig config)
         {
-            builder.RegisterType<PerRequestCacheManager>().InstancePerLifetimeScope();
             builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
             if (config.RedisPubSubEnabled)
             {
