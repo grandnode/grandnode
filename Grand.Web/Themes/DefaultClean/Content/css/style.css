@@ -593,6 +593,12 @@ body:not(.is-ready) .search-box-button {
     .advanced-search .col-form-label {
         font-weight: 400;
     }
+
+.mobile-search-trigger {
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+}
 /*autocomplete*/
 
 .advanced-search-results {
@@ -1961,6 +1967,7 @@ pagination .pagination a:not([href]) {
     display: flex;
     border-radius: 0;
     justify-content: center;
+    align-items: center;
 }
 
 #searchModal .search-box-select {
