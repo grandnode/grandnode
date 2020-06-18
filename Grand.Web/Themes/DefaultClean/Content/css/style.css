@@ -4587,11 +4587,12 @@ span.product-quantity {
 }
 
 .generalAdToCart input, .generalAdToCart select {
-    max-width: 75px;
+    max-width: 72px;
     height: 50px;
     display: inline;
     position: relative;
     margin-right: 5px;
+    margin-bottom: 4px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }

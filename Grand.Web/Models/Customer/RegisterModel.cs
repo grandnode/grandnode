@@ -21,7 +21,7 @@ namespace Grand.Web.Models.Customer
             CustomerAttributes = new List<CustomerAttributeModel>();
             NewsletterCategories = new List<NewsletterSimpleCategory>();
         }
-
+        [DataType(DataType.EmailAddress)]
         [GrandResourceDisplayName("Account.Fields.Email")]
         public string Email { get; set; }
 
@@ -112,11 +112,13 @@ namespace Grand.Web.Models.Customer
 
         public bool PhoneEnabled { get; set; }
         public bool PhoneRequired { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [GrandResourceDisplayName("Account.Fields.Phone")]
         public string Phone { get; set; }
 
         public bool FaxEnabled { get; set; }
         public bool FaxRequired { get; set; }
+
         [GrandResourceDisplayName("Account.Fields.Fax")]
         public string Fax { get; set; }
         
