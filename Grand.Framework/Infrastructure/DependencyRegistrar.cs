@@ -56,6 +56,7 @@ using StackExchange.Redis;
 using System;
 using System.Linq;
 using System.Reflection;
+using Grand.Services.Logging.ActivityLogComment;
 
 namespace Grand.Framework.Infrastructure
 {
@@ -366,6 +367,9 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>().InstancePerLifetimeScope();
             builder.RegisterType<ActivityKeywordsProvider>().As<IActivityKeywordsProvider>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerLifetimeScope();
+            builder.RegisterType<LinkedCommentFormatter>().As<ILinkedCommentFormatter>().InstancePerLifetimeScope();
+            builder.RegisterType<LinkedCommentCreator>().As<ILinkedCommentCreator>().InstancePerLifetimeScope();
+            builder.RegisterType<ActivityEntityKeywordsProvider>().As<IActivityEntityKeywordsProvider>().InstancePerLifetimeScope();
 
         }
         private void RegisterMessageService(ContainerBuilder builder)

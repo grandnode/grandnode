@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Grand.Services.Logging.ActivityLogComment;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -71,6 +72,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly ILinkedCommentFormatter _linkedCommentFormatter;
 
         public ProductViewModelService(
                IProductService productService,
@@ -103,7 +105,7 @@ namespace Grand.Web.Areas.Admin.Services
                IServiceProvider serviceProvider,
                CurrencySettings currencySettings,
                MeasureSettings measureSettings,
-               TaxSettings taxSettings)
+               TaxSettings taxSettings, ILinkedCommentFormatter linkedCommentFormatter)
         {
             _productService = productService;
             _pictureService = pictureService;
@@ -136,6 +138,7 @@ namespace Grand.Web.Areas.Admin.Services
             _currencySettings = currencySettings;
             _measureSettings = measureSettings;
             _taxSettings = taxSettings;
+            _linkedCommentFormatter = linkedCommentFormatter;
         }
         protected virtual async Task UpdatePictureSeoNames(Product product)
         {
@@ -2081,7 +2084,7 @@ namespace Grand.Web.Areas.Admin.Services
                 new ProductModel.ActivityLogModel {
                     Id = x.Id,
                     ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId))?.Name,
-                    Comment = x.Comment,
+                    Comment = await _linkedCommentFormatter.AddLinkToPlainComment(x),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
                     CustomerId = x.CustomerId,
                     CustomerEmail = customer != null ? customer.Email : "null"

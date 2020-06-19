@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Logging.ActivityLogComment;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -41,11 +42,12 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ILanguageService _languageService;
         private readonly CatalogSettings _catalogSettings;
         private readonly SeoSettings _seoSettings;
+        private readonly ILinkedCommentFormatter _linkedCommentFormatter;
 
         public CategoryViewModelService(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService, IDiscountService discountService,
             ILocalizationService localizationService, IStoreService storeService, ICustomerService customerService, IPictureService pictureService,
             IUrlRecordService urlRecordService, ICustomerActivityService customerActivityService, IProductService productService, IManufacturerService manufacturerService,
-            IVendorService vendorService, IDateTimeHelper dateTimeHelper, ILanguageService languageService, CatalogSettings catalogSettings, SeoSettings seoSettings)
+            IVendorService vendorService, IDateTimeHelper dateTimeHelper, ILanguageService languageService, CatalogSettings catalogSettings, SeoSettings seoSettings, ILinkedCommentFormatter linkedCommentFormatter)
         {
             _categoryService = categoryService;
             _categoryTemplateService = categoryTemplateService;
@@ -63,6 +65,7 @@ namespace Grand.Web.Areas.Admin.Services
             _catalogSettings = catalogSettings;
             _dateTimeHelper = dateTimeHelper;
             _seoSettings = seoSettings;
+            _linkedCommentFormatter = linkedCommentFormatter;
         }
 
         protected virtual async Task PrepareAllCategoriesModel(CategoryModel model, string storeId)
@@ -413,7 +416,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var m = new CategoryModel.ActivityLogModel {
                     Id = item.Id,
                     ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(item.ActivityLogTypeId))?.Name,
-                    Comment = item.Comment,
+                    Comment =  await _linkedCommentFormatter.AddLinkToPlainComment(item),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(item.CreatedOnUtc, DateTimeKind.Utc),
                     CustomerId = item.CustomerId,
                     CustomerEmail = customer != null ? customer.Email : "null"

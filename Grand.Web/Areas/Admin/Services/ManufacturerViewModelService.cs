@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Logging.ActivityLogComment;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -44,6 +45,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ILanguageService _languageService;
         private readonly IWorkContext _workContext;
         private readonly SeoSettings _seoSettings;
+        private readonly ILinkedCommentFormatter _linkedCommentFormatter;
 
         #endregion
 
@@ -64,7 +66,7 @@ namespace Grand.Web.Areas.Admin.Services
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             IWorkContext workContext,
-            SeoSettings seoSettings)
+            SeoSettings seoSettings, ILinkedCommentFormatter linkedCommentFormatter)
         {
             _categoryService = categoryService;
             _manufacturerTemplateService = manufacturerTemplateService;
@@ -82,6 +84,7 @@ namespace Grand.Web.Areas.Admin.Services
             _languageService = languageService;
             _workContext = workContext;
             _seoSettings = seoSettings;
+            _linkedCommentFormatter = linkedCommentFormatter;
         }
 
         #endregion
@@ -327,7 +330,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     Id = x.Id,
                     ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId))?.Name,
-                    Comment = x.Comment,
+                    Comment = await _linkedCommentFormatter.AddLinkToPlainComment(x),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
                     CustomerId = x.CustomerId,
                     CustomerEmail = customer != null ? customer.Email : "null"
