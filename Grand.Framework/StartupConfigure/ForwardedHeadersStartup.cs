@@ -46,7 +46,7 @@ namespace Grand.Framework.StartupConfigure
         public int Order
         {
             //ForwardedHeadersStartup should be loaded before authentication 
-            get { return 0; }
+            get { return -20; }
         }
     }
 }

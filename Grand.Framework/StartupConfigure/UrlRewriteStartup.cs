@@ -64,7 +64,7 @@ namespace Grand.Framework.StartupConfigure
         /// </summary>
         public int Order
         {
-            get { return 0; }
+            get { return -50; }
         }
     }
 }
