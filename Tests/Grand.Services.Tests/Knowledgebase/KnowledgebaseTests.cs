@@ -31,7 +31,6 @@ namespace Grand.Services.Tests.Knowledgebase
         private IMediator _eventPublisher;
         private IWorkContext _workContext;
         private IStoreContext _storeContext;
-        private ICacheManager _cacheManager;
         private CommonSettings _commonSettings;
         private CatalogSettings _catalogSettings;
 
