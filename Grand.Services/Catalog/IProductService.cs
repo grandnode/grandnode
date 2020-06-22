@@ -29,25 +29,6 @@ namespace Grand.Services.Catalog
         Task<IList<Product>> GetAllProductsDisplayedOnHomePage();
 
         /// <summary>
-        /// Gets recommended products for customer roles
-        /// </summary>
-        /// <returns>Products</returns>
-        Task<IList<Product>> GetRecommendedProducts(string[] customerRoleIds);
-
-        /// <summary>
-        /// Gets recommended products for customer roles
-        /// </summary>
-        /// <returns>Products</returns>
-        Task<IList<Product>> GetSuggestedProducts(string[] customerTagIds);
-
-        /// <summary>
-        /// Gets personalized products for customer 
-        /// </summary>
-        /// <param name="customerId">Customer Id</param>
-        /// <returns>Products</returns>
-        Task<IList<Product>> GetPersonalizedProducts(string customerId);
-
-        /// <summary>
         /// Gets product
         /// </summary>
         /// <param name="productId">Product identifier</param>
@@ -215,18 +196,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         Task UpdateAssociatedProduct(Product product);
-        /// <summary>
-        /// Update product review 
-        /// </summary>
-        /// <param name="product">Product</param>
-        Task UpdateProductReview(ProductReview productreview);
-
-        /// <summary>
-        /// Insert product review 
-        /// </summary>
-        /// <param name="product">Product</param>
-        Task InsertProductReview(ProductReview productreview);
-
+       
         /// <summary>
         /// Get low stock products
         /// </summary>
@@ -411,24 +381,7 @@ namespace Grand.Services.Catalog
         Task UpdateTierPrice(TierPrice tierPrice);
 
         #endregion
-
-        #region Product Tags
-
-        /// <summary>
-        /// Inserts a product tags
-        /// </summary>
-        /// <param name="productTag">Product Tag</param>
-        Task InsertProductTag(ProductTag productTag);
-
-        /// <summary>
-        /// Delete a product tags
-        /// </summary>
-        /// <param name="productTag">Product Tag</param>
-        Task DeleteProductTag(ProductTag productTag);
-
-        #endregion
-
-
+        
         #region Product pictures
 
         /// <summary>
@@ -452,6 +405,18 @@ namespace Grand.Services.Catalog
         #endregion
 
         #region Product reviews
+
+        /// <summary>
+        /// Insert product review 
+        /// </summary>
+        /// <param name="product">Product</param>
+        Task InsertProductReview(ProductReview productreview);
+
+        /// <summary>
+        /// Update product review 
+        /// </summary>
+        /// <param name="product">Product</param>
+        Task UpdateProductReview(ProductReview productreview);
 
         /// <summary>
         /// Gets all product reviews
