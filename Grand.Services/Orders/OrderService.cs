@@ -163,12 +163,12 @@ namespace Grand.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var filters = Builders<ProductAlsoPurchased>.Filter;
-            var filter = filters.Where(x => x.OrderId == order.Id);
             order.Deleted = true;
             await UpdateOrder(order);
 
             //delete product also purchased
+            var filters = Builders<ProductAlsoPurchased>.Filter;
+            var filter = filters.Where(x => x.OrderId == order.Id);
             await _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
 
         }
