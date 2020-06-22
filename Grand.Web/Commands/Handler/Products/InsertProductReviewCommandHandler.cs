@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Localization;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Messages;
 using Grand.Web.Commands.Models.Products;
@@ -13,23 +14,26 @@ namespace Grand.Web.Commands.Handler.Products
 {
     public class InsertProductReviewCommandHandler : IRequestHandler<InsertProductReviewCommand, ProductReview>
     {
-        private readonly IProductService _productService;
+        private readonly IProductReviewService _productReviewService;
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IMediator _mediator;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly LocalizationSettings _localizationSettings;
 
         public InsertProductReviewCommandHandler(
-            IProductService productService,
+            IProductReviewService productReviewService,
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
+            IMediator mediator,
             CatalogSettings catalogSettings,
             LocalizationSettings localizationSettings)
         {
-            _productService = productService;
+            _productReviewService = productReviewService;
             _customerService = customerService;
             _workflowMessageService = workflowMessageService;
+            _mediator = mediator;
             _catalogSettings = catalogSettings;
             _localizationSettings = localizationSettings;
         }
@@ -54,7 +58,7 @@ namespace Grand.Web.Commands.Handler.Products
                 IsApproved = isApproved,
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            await _productService.InsertProductReview(productReview);
+            await _productReviewService.InsertProductReview(productReview);
 
             if (!request.Customer.HasContributions)
             {
@@ -62,7 +66,7 @@ namespace Grand.Web.Commands.Handler.Products
             }
 
             //update product totals
-            await _productService.UpdateProductReviewTotals(request.Product);
+            await _mediator.Send(new UpdateProductReviewTotalsCommand() { Product = request.Product });
 
             //notify store owner
             if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)

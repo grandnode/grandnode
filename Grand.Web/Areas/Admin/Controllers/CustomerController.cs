@@ -37,6 +37,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         private readonly ICustomerService _customerService;
         private readonly IProductService _productService;
+        private readonly IProductReviewService _productReviewService;
         private readonly IProductReviewViewModelService _productReviewViewModelService;
         private readonly IProductViewModelService _productViewModelService;
         private readonly ICustomerViewModelService _customerViewModelService;
@@ -60,6 +61,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public CustomerController(ICustomerService customerService,
             IProductService productService,
+            IProductReviewService productReviewService,
             IProductReviewViewModelService productReviewViewModelService,
             IProductViewModelService productViewModelService,
             ICustomerViewModelService customerViewModelService,
@@ -79,6 +81,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             _customerService = customerService;
             _productService = productService;
+            _productReviewService = productReviewService;
             _productReviewViewModelService = productReviewViewModelService;
             _productViewModelService = productViewModelService;
             _customerViewModelService = customerViewModelService;
@@ -776,7 +779,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ReviewList(string customerId, DataSourceRequest command)
         {
-            var productReviews = await _productService.GetAllProductReviews(customerId, null,
+            var productReviews = await _productReviewService.GetAllProductReviews(customerId, null,
                 null, null, "", null, "", command.Page - 1, command.PageSize);
             var items = new List<ProductReviewModel>();
             foreach (var x in productReviews)
@@ -796,7 +799,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ReviewDelete(string id)
         {
-            var productReview = await _productService.GetProductReviewById(id);
+            var productReview = await _productReviewService.GetProductReviewById(id);
             if (productReview == null)
                 throw new ArgumentException("No review found with the specified id", "id");
 

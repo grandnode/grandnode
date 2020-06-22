@@ -1210,7 +1210,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Reviews
 
         [HttpPost]
-        public async Task<IActionResult> Reviews(DataSourceRequest command, string productId)
+        public async Task<IActionResult> Reviews(DataSourceRequest command, string productId, [FromServices] IProductReviewService productReviewService)
         {
             var product = await _productService.GetProductById(productId);
 
@@ -1222,7 +1222,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentCustomer.IsStaff())
                 storeId = _workContext.CurrentCustomer.StaffStoreId;
 
-            var productReviews = await _productService.GetAllProductReviews("", null,
+            var productReviews = await productReviewService.GetAllProductReviews("", null,
                 null, null, "", storeId, productId);
 
             var items = new List<ProductReviewModel>();

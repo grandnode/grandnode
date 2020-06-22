@@ -610,10 +610,11 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> SetProductReviewHelpfulness(string productReviewId, string productId, bool washelpful, [FromServices] ICustomerService customerService)
+        public virtual async Task<IActionResult> SetProductReviewHelpfulness(string productReviewId, string productId, bool washelpful, 
+            [FromServices] ICustomerService customerService, [FromServices] IProductReviewService productReviewService)
         {
             var product = await _productService.GetProductById(productId);
-            var productReview = await _productService.GetProductReviewById(productReviewId);
+            var productReview = await productReviewService.GetProductReviewById(productReviewId);
             if (productReview == null)
                 throw new ArgumentException("No product review found with the specified id");
 
@@ -655,7 +656,7 @@ namespace Grand.Web.Controllers
                     WasHelpful = washelpful,
                 };
                 productReview.ProductReviewHelpfulnessEntries.Add(prh);
-                await _productService.UpdateProductReview(productReview);
+                await productReviewService.UpdateProductReview(productReview);
                 if (!_workContext.CurrentCustomer.HasContributions)
                 {
                     await customerService.UpdateContributions(_workContext.CurrentCustomer);
@@ -666,7 +667,7 @@ namespace Grand.Web.Controllers
             //new totals
             productReview.HelpfulYesTotal = productReview.ProductReviewHelpfulnessEntries.Count(x => x.WasHelpful);
             productReview.HelpfulNoTotal = productReview.ProductReviewHelpfulnessEntries.Count(x => !x.WasHelpful);
-            await _productService.UpdateProductReview(productReview);
+            await productReviewService.UpdateProductReview(productReview);
 
             return Json(new
             {
