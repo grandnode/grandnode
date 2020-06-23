@@ -11,7 +11,6 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
-using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Web.Commands.Models.Customers;
@@ -40,7 +39,6 @@ namespace Grand.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICountryService _countryService;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly IMediator _mediator;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly CustomerSettings _customerSettings;
@@ -59,7 +57,6 @@ namespace Grand.Web.Controllers
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
             ICountryService countryService,
-            ICustomerActivityService customerActivityService,
             IMediator mediator,
             IWorkflowMessageService workflowMessageService,
             CaptchaSettings captchaSettings,
@@ -74,7 +71,6 @@ namespace Grand.Web.Controllers
             _customerRegistrationService = customerRegistrationService;
             _customerSettings = customerSettings;
             _countryService = countryService;
-            _customerActivityService = customerActivityService;
             _workflowMessageService = workflowMessageService;
             _captchaSettings = captchaSettings;
             _mediator = mediator;
@@ -239,10 +235,7 @@ namespace Grand.Web.Controllers
             await _authenticationService.SignIn(customer, true);
 
             //raise event       
-            await _mediator.Publish(new CustomerLoggedinEvent(customer));
-
-            //activity log
-            await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
+            await _mediator.Publish(new CustomerLoggedInEvent(customer));
 
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
                 return RedirectToRoute("HomePage");
@@ -267,10 +260,11 @@ namespace Grand.Web.Controllers
 
             }
 
-            //activity log
-            await _customerActivityService.InsertActivity("PublicStore.Logout", "", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
             //standard logout 
             await _authenticationService.SignOut();
+
+            //raise event       
+            await _mediator.Publish(new CustomerLoggedOutEvent(_workContext.CurrentCustomer));
 
             //EU Cookie
             if (storeInformationSettings.DisplayEuCookieLawWarning)
@@ -1021,9 +1015,6 @@ namespace Grand.Web.Controllers
                 {
                     case CustomerLoginResults.Successful:
                         {
-                            //activity log
-                            await _customerActivityService.InsertActivity("PublicStore.DeleteAccount", "", _localizationService.GetResource("ActivityLog.DeleteAccount"));
-
                             //delete account 
                             await _mediator.Send(new DeleteAccountCommand() { Customer = customer, Store = _storeContext.CurrentStore });
 
