@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Logging.ActivityLogComment;
 
 namespace Grand.Services.Logging
 {
@@ -41,9 +42,11 @@ namespace Grand.Services.Logging
         private readonly IWorkContext _workContext;
         private readonly IWebHelper _webHelper;
         private readonly IActivityKeywordsProvider _activityKeywordsProvider;
+        private readonly ILinkedCommentCreator _linkedCommentCreator;
         #endregion
 
         #region Ctor
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -53,13 +56,15 @@ namespace Grand.Services.Logging
         /// <param name="workContext">Work context</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="activityKeywordsProvider">Activity Keywords provider</param>
+        /// <param name="linkedCommentCreator"></param>
         public CustomerActivityService(
             ICacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IWorkContext workContext,
             IWebHelper webHelper,
-            IActivityKeywordsProvider activityKeywordsProvider)
+            IActivityKeywordsProvider activityKeywordsProvider,
+            ILinkedCommentCreator linkedCommentCreator)
         {
             _cacheManager = cacheManager;
             _activityLogRepository = activityLogRepository;
@@ -67,6 +72,7 @@ namespace Grand.Services.Logging
             _workContext = workContext;
             _webHelper = webHelper;
             _activityKeywordsProvider = activityKeywordsProvider;
+            _linkedCommentCreator = linkedCommentCreator;
         }
 
         #endregion
@@ -211,7 +217,7 @@ namespace Grand.Services.Logging
                 return null;
 
             comment = CommonHelper.EnsureNotNull(comment);
-            comment = string.Format(comment, commentParams);
+            comment = _linkedCommentCreator.CreateLinkedComment(systemKeyword, entityKeyId, comment, commentParams);
             comment = CommonHelper.EnsureMaximumLength(comment, 4000);
 
             var activity = new ActivityLog();

@@ -42,6 +42,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Grand.Services.Logging.ActivityLogComment;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -94,6 +95,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IManufacturerService _manufacturerService;
         private readonly IDownloadService _downloadService;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILinkedCommentFormatter _linkedCommentFormatter;
 
         public CustomerViewModelService(
             ICustomerService customerService,
@@ -142,7 +144,7 @@ namespace Grand.Web.Areas.Admin.Services
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IDownloadService downloadService,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider, ILinkedCommentFormatter linkedCommentFormatter)
         {
             _customerService = customerService;
             _customerProductService = customerProductService;
@@ -191,6 +193,7 @@ namespace Grand.Web.Areas.Admin.Services
             _manufacturerService = manufacturerService;
             _downloadService = downloadService;
             _serviceProvider = serviceProvider;
+            _linkedCommentFormatter = linkedCommentFormatter;
         }
 
 
@@ -1563,7 +1566,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     Id = x.Id,
                     ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId))?.Name,
-                    Comment = x.Comment,
+                    Comment = await _linkedCommentFormatter.AddLinkToPlainComment(x),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
                     IpAddress = x.IpAddress
                 };

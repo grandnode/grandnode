@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Logging.ActivityLogComment;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -23,11 +24,12 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IManufacturerService _manufacturerService;
         private readonly IKnowledgebaseService _knowledgebaseService;
         private readonly IProductService _productService;
+        private readonly ILinkedCommentFormatter _linkedCommentFormatter;
 
         public ActivityLogViewModelService(ICustomerActivityService customerActivityService,
             IDateTimeHelper dateTimeHelper, ICustomerService customerService,
             ICategoryService categoryService, IManufacturerService manufacturerService,
-            IProductService productService, IKnowledgebaseService knowledgebaseService)
+            IProductService productService, IKnowledgebaseService knowledgebaseService, ILinkedCommentFormatter linkedCommentFormatter)
         {
             _customerActivityService = customerActivityService;
             _dateTimeHelper = dateTimeHelper;
@@ -36,6 +38,7 @@ namespace Grand.Web.Areas.Admin.Services
             _manufacturerService = manufacturerService;
             _productService = productService;
             _knowledgebaseService = knowledgebaseService;
+            _linkedCommentFormatter = linkedCommentFormatter;
         }
         public virtual async Task<IList<ActivityLogTypeModel>> PrepareActivityLogTypeModels()
         {
@@ -87,11 +90,13 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 var customer = await _customerService.GetCustomerById(item.CustomerId);
                 var cas = await _customerActivityService.GetActivityTypeById(item.ActivityLogTypeId);
+                var comment = await _linkedCommentFormatter.AddLinkToPlainComment(item);
 
                 var m = item.ToModel();
                 m.CreatedOn = _dateTimeHelper.ConvertToUserTime(item.CreatedOnUtc, DateTimeKind.Utc);
                 m.ActivityLogTypeName = cas?.Name;
                 m.CustomerEmail = customer != null ? customer.Email : "NULL";
+                m.Comment = comment;
                 activityLogModel.Add(m);
             }
             return (activityLogModel, activityLog.TotalCount);
