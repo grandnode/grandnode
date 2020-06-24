@@ -40,7 +40,6 @@ namespace Grand.Services.Seo
 
         #region Fields
 
-        private readonly IStoreContext _storeContext;
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
         private readonly IManufacturerService _manufacturerService;
@@ -59,7 +58,7 @@ namespace Grand.Services.Seo
 
         #region Ctor
 
-        public SitemapGenerator(IStoreContext storeContext,
+        public SitemapGenerator(
             ICategoryService categoryService,
             IProductService productService,
             IManufacturerService manufacturerService,
@@ -74,7 +73,6 @@ namespace Grand.Services.Seo
             NewsSettings newsSettings,
             ForumSettings forumSettings)
         {
-            _storeContext = storeContext;
             _categoryService = categoryService;
             _productService = productService;
             _manufacturerService = manufacturerService;
@@ -146,7 +144,7 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
         /// <returns>List of URL for the sitemap</returns>
-        protected virtual async Task<IList<SitemapUrl>> GenerateUrls(IUrlHelper urlHelper, string language)
+        protected virtual async Task<IList<SitemapUrl>> GenerateUrls(IUrlHelper urlHelper, string language, string store)
         {
             var sitemapUrls = new List<SitemapUrl>();
 
@@ -196,17 +194,17 @@ namespace Grand.Services.Seo
 
             //manufacturers
             if (_commonSettings.SitemapIncludeManufacturers)
-                sitemapUrls.AddRange(await GetManufacturerUrls(urlHelper, language));
+                sitemapUrls.AddRange(await GetManufacturerUrls(urlHelper, language, store));
 
             //products
             if (_commonSettings.SitemapIncludeProducts)
-                sitemapUrls.AddRange(await GetProductUrls(urlHelper, language));
+                sitemapUrls.AddRange(await GetProductUrls(urlHelper, language, store));
             
             //topics
-            sitemapUrls.AddRange(await GetTopicUrls(urlHelper, language));
+            sitemapUrls.AddRange(await GetTopicUrls(urlHelper, language, store));
 
             //blog posts
-            sitemapUrls.AddRange(await GetBlogPostsUrls(urlHelper, language));
+            sitemapUrls.AddRange(await GetBlogPostsUrls(urlHelper, language, store));
 
             //knowledgebase articles
             sitemapUrls.AddRange(await GetKnowledgebaseUrls(urlHelper, language));
@@ -250,9 +248,9 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
         /// <returns>Collection of sitemap URLs</returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetManufacturerUrls(IUrlHelper urlHelper, string language)
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetManufacturerUrls(IUrlHelper urlHelper, string language, string store)
         {
-            var manuf = await _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
+            var manuf = await _manufacturerService.GetAllManufacturers(storeId: store);
             var manufactures = new List<SitemapUrl>();
             var storeLocation = _webHelper.GetStoreLocation();
             foreach (var manufacturer in manuf)
@@ -276,9 +274,9 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
         /// <returns>Collection of sitemap URLs</returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetProductUrls(IUrlHelper urlHelper, string language)
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetProductUrls(IUrlHelper urlHelper, string language, string store)
         {
-            var search = await _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id,
+            var search = await _productService.SearchProducts(storeId: store,
                 visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn);
             var storeLocation = _webHelper.GetStoreLocation();
             var products = new List<SitemapUrl>();
@@ -304,9 +302,9 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
         /// <returns>Collection of sitemap URLs</returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetTopicUrls(IUrlHelper urlHelper, string language)
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetTopicUrls(IUrlHelper urlHelper, string language, string store)
         {
-            var topics = await _topicService.GetAllTopics(_storeContext.CurrentStore.Id);
+            var topics = await _topicService.GetAllTopics(storeId: store);
             return topics.Where(t => t.IncludeInSitemap).Select(topic =>
             {
                 var url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName(language) }, GetHttpProtocol());
@@ -319,9 +317,9 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
         /// <returns>Collection of sitemap URLs</returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetBlogPostsUrls(IUrlHelper urlHelper, string language)
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetBlogPostsUrls(IUrlHelper urlHelper, string language, string store)
         {
-            var blogposts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
+            var blogposts = await _blogService.GetAllBlogPosts(storeId: store);
             var blog = new List<SitemapUrl>();
             var storeLocation = _webHelper.GetStoreLocation();
             foreach (var blogpost in blogposts)
@@ -475,12 +473,14 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
         /// <param name="id">Sitemap identifier</param>
+        /// <param name="language">Lang ident</param>
+        /// <param name="store">Store ident</param>
         /// <returns>Sitemap.xml as string</returns>
-        public virtual async Task<string> Generate(IUrlHelper urlHelper, int? id, string language)
+        public virtual async Task<string> Generate(IUrlHelper urlHelper, int? id, string language, string store)
         {
             using (var stream = new MemoryStream())
             {
-                await Generate(urlHelper, stream, id, language);
+                await Generate(urlHelper, stream, id, language, store);
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
         }
@@ -490,12 +490,14 @@ namespace Grand.Services.Seo
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
-        /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
-        public virtual async Task Generate(IUrlHelper urlHelper, Stream stream, int? id, string language)
+        /// <param name="id">Sitemap identifier</param>
+        /// <param name="language">Lang ident</param>
+        /// <param name="store">Store ident</param>
+        public virtual async Task Generate(IUrlHelper urlHelper, Stream stream, int? id, string language, string store)
         {
             //generate all URLs for the sitemap
-            var sitemapUrls = await GenerateUrls(urlHelper, language);
+            var sitemapUrls = await GenerateUrls(urlHelper, language, store);
 
             //split URLs into separate lists based on the max size 
             var sitemaps = sitemapUrls.Select((url, index) => new { Index = index, Value = url })

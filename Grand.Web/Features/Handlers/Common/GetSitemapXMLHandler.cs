@@ -4,7 +4,6 @@ using Grand.Services.Seo;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Infrastructure.Cache;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,7 +26,7 @@ namespace Grand.Web.Features.Handlers.Common
                 request.Language.Id,
                 string.Join(",", request.Customer.GetCustomerRoleIds()),
                 request.Store.Id);
-            var siteMap = await _cacheManager.GetAsync(cacheKey, () => _sitemapGenerator.Generate(request.UrlHelper, request.Id, request.Language.Id));
+            var siteMap = await _cacheManager.GetAsync(cacheKey, () => _sitemapGenerator.Generate(request.UrlHelper, request.Id, request.Language.Id, request.Store.Id));
             return siteMap;
         }
     }
