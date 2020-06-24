@@ -5,7 +5,6 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Vendors;
 using Grand.Core.Plugins;
 using Grand.Services.Customers;
 using Grand.Services.Discounts.Cache;
@@ -13,7 +12,6 @@ using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using MediatR;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -51,22 +49,6 @@ namespace Grand.Services.Discounts
         /// Key pattern to clear cache
         /// </summary>
         private const string DISCOUNTS_PATTERN_KEY = "Grand.discount.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string MANUFACTURERS_PATTERN_KEY = "Grand.manufacturer.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CATEGORIES_PATTERN_KEY = "Grand.category.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string VENDORS_PATTERN_KEY = "Grand.vendor.";
 
         #endregion
 
@@ -74,17 +56,12 @@ namespace Grand.Services.Discounts
 
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountCoupon> _discountCouponRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
-        private readonly IRepository<Vendor> _vendorRepository;
         private readonly ILocalizationService _localizationService;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IPluginFinder _pluginFinder;
         private readonly IMediator _mediator;
-        private readonly PerRequestCacheManager _perRequestCache;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
 
@@ -103,11 +80,6 @@ namespace Grand.Services.Discounts
             IStoreContext storeContext,
             IPluginFinder pluginFinder,
             IMediator mediator,
-            IRepository<Product> productRepository,
-            IRepository<Category> categoryRepository,
-            IRepository<Manufacturer> manufacturerRepository,
-            IRepository<Vendor> vendorRepository,
-            PerRequestCacheManager perRequestCache,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings
             )
@@ -120,11 +92,6 @@ namespace Grand.Services.Discounts
             _storeContext = storeContext;
             _pluginFinder = pluginFinder;
             _mediator = mediator;
-            _productRepository = productRepository;
-            _categoryRepository = categoryRepository;
-            _manufacturerRepository = manufacturerRepository;
-            _vendorRepository = vendorRepository;
-            _perRequestCache = perRequestCache;
             _shoppingCartSettings = shoppingCartSettings;
             _catalogSettings = catalogSettings;
         }
@@ -146,43 +113,6 @@ namespace Grand.Services.Discounts
             if (usagehistory.Count > 0)
                 throw new ArgumentNullException("discount has a history");
 
-            var builder = Builders<BsonDocument>.Filter;
-            if (discount.DiscountType == DiscountType.AssignedToSkus)
-            {
-                var builderproduct = Builders<Product>.Update;
-                var updatefilter = builderproduct.Pull(x => x.AppliedDiscounts, discount.Id);
-                await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
-            }
-
-            if (discount.DiscountType == DiscountType.AssignedToCategories)
-            {
-                var buildercategory = Builders<Category>.Update;
-                var updatefilter = buildercategory.Pull(x => x.AppliedDiscounts, discount.Id);
-                await _categoryRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
-            }
-
-            if (discount.DiscountType == DiscountType.AssignedToManufacturers)
-            {
-                var buildermanufacturer = Builders<Manufacturer>.Update;
-                var updatefilter = buildermanufacturer.Pull(x => x.AppliedDiscounts, discount.Id);
-                await _manufacturerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
-            }
-            if (discount.DiscountType == DiscountType.AssignedToVendors)
-            {
-                var buildervendor = Builders<Vendor>.Update;
-                var updatefilter = buildervendor.Pull(x => x.AppliedDiscounts, discount.Id);
-                await _vendorRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(VENDORS_PATTERN_KEY);
-            }
-
-            //remove coupon codes
-            var filtersCoupon = Builders<DiscountCoupon>.Filter;
-            var filterCrp = filtersCoupon.Eq(x => x.DiscountId, discount.Id);
-
-            await _discountCouponRepository.Collection.DeleteManyAsync(filterCrp);
             await _discountRepository.DeleteAsync(discount);
 
             await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
@@ -555,156 +485,157 @@ namespace Grand.Services.Discounts
 
             //invalid by default
 
-            string key = $"DiscountValidationResult_{customer.Id}_{discount.Id}_{string.Join("_", couponCodesToValidate)}";
-            var validationResult = await _perRequestCache.GetAsync(key, async () =>
-            {
-                var result = new DiscountValidationResult();
+            //string key = $"DiscountValidationResult_{customer.Id}_{discount.Id}_{string.Join("_", couponCodesToValidate)}";
+            //var validationResult = await _perRequestCache.GetAsync(key, async () =>
+            //{
+            var result = new DiscountValidationResult();
 
-                //check is enabled
-                if (!discount.IsEnabled)
-                    return result;
-
-                //do not allow use discount in the current store
-                if (discount.LimitedToStores && !discount.Stores.Any(x => _storeContext.CurrentStore.Id == x))
-                {
-                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedInStore");
-                    return result;
-                }
-
-                //check coupon code
-                if (discount.RequiresCouponCode)
-                {
-                    if (couponCodesToValidate == null || !couponCodesToValidate.Any())
-                        return result;
-                    var exists = false;
-                    foreach (var item in couponCodesToValidate)
-                    {
-                        if (discount.Reused)
-                        {
-                            if (await ExistsCodeInDiscount(item, discount.Id, null))
-                            {
-                                result.CouponCode = item;
-                                exists = true;
-                            }
-                        }
-                        else
-                        {
-                            if (await ExistsCodeInDiscount(item, discount.Id, false))
-                            {
-                                result.CouponCode = item;
-                                exists = true;
-                            }
-                        }
-                    }
-                    if (!exists)
-                        return result;
-                }
-
-                //Do not allow discounts applied to order subtotal or total when a customer has gift cards in the cart.
-                //Otherwise, this customer can purchase gift cards with discount and get more than paid ("free money").
-                if (discount.DiscountType == DiscountType.AssignedToOrderSubTotal ||
-                    discount.DiscountType == DiscountType.AssignedToOrderTotal)
-                {
-                    var cart = customer.ShoppingCartItems
-                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                        .ToList();
-
-                    var hasGiftCards = cart.Any(x => x.IsGiftCard);
-                    if (hasGiftCards)
-                    {
-                        result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithGiftCards");
-                        return result;
-                    }
-                }
-
-                //check date range
-                DateTime now = DateTime.UtcNow;
-                if (discount.StartDateUtc.HasValue)
-                {
-                    DateTime startDate = DateTime.SpecifyKind(discount.StartDateUtc.Value, DateTimeKind.Utc);
-                    if (startDate.CompareTo(now) > 0)
-                    {
-                        result.UserError = _localizationService.GetResource("ShoppingCart.Discount.NotStartedYet");
-                        return result;
-                    }
-                }
-                if (discount.EndDateUtc.HasValue)
-                {
-                    DateTime endDate = DateTime.SpecifyKind(discount.EndDateUtc.Value, DateTimeKind.Utc);
-                    if (endDate.CompareTo(now) < 0)
-                    {
-                        result.UserError = _localizationService.GetResource("ShoppingCart.Discount.Expired");
-                        return result;
-                    }
-                }
-
-                //discount limitation
-                switch (discount.DiscountLimitation)
-                {
-                    case DiscountLimitationType.NTimesOnly:
-                        {
-                            var usedTimes = await GetAllDiscountUsageHistory(discount.Id, null, null, false, 0, 1);
-                            if (usedTimes.TotalCount >= discount.LimitationTimes)
-                                return result;
-                        }
-                        break;
-                    case DiscountLimitationType.NTimesPerCustomer:
-                        {
-                            if (customer.IsRegistered())
-                            {
-                                var usedTimes = await GetAllDiscountUsageHistory(discount.Id, customer.Id, null, false, 0, 1);
-                                if (usedTimes.TotalCount >= discount.LimitationTimes)
-                                {
-                                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedAnymore");
-                                    return result;
-                                }
-                            }
-                        }
-                        break;
-                    case DiscountLimitationType.Unlimited:
-                    default:
-                        break;
-                }
-
-                //discount requirements
-                string keyReq = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
-                var requirements = await _cacheManager.GetAsync(keyReq, async () =>
-                {
-                    return await Task.FromResult(discount.DiscountRequirements.ToList());
-                });
-                foreach (var req in requirements)
-                {
-                    //load a plugin
-                    var discountRequirementPlugin = LoadDiscountPluginBySystemName(req.DiscountRequirementRuleSystemName);
-
-                    if (discountRequirementPlugin == null)
-                        continue;
-
-                    if (!_pluginFinder.AuthenticateStore(discountRequirementPlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
-                        continue;
-
-                    var ruleRequest = new DiscountRequirementValidationRequest {
-                        DiscountRequirementId = req.Id,
-                        DiscountId = req.DiscountId,
-                        Customer = customer,
-                        Store = _storeContext.CurrentStore
-                    };
-
-                    var singleRequirementRule = discountRequirementPlugin.GetRequirementRules().Single(x => x.SystemName == req.DiscountRequirementRuleSystemName);
-                    var ruleResult = await singleRequirementRule.CheckRequirement(ruleRequest);
-                    if (!ruleResult.IsValid)
-                    {
-                        result.UserError = ruleResult.UserError;
-                        return result;
-                    }
-                }
-
-                result.IsValid = true;
+            //check is enabled
+            if (!discount.IsEnabled)
                 return result;
-            });
 
-            return validationResult;
+            //do not allow use discount in the current store
+            if (discount.LimitedToStores && !discount.Stores.Any(x => _storeContext.CurrentStore.Id == x))
+            {
+                result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedInStore");
+                return result;
+            }
+
+            //check coupon code
+            if (discount.RequiresCouponCode)
+            {
+                if (couponCodesToValidate == null || !couponCodesToValidate.Any())
+                    return result;
+                var exists = false;
+                foreach (var item in couponCodesToValidate)
+                {
+                    if (discount.Reused)
+                    {
+                        if (await ExistsCodeInDiscount(item, discount.Id, null))
+                        {
+                            result.CouponCode = item;
+                            exists = true;
+                        }
+                    }
+                    else
+                    {
+                        if (await ExistsCodeInDiscount(item, discount.Id, false))
+                        {
+                            result.CouponCode = item;
+                            exists = true;
+                        }
+                    }
+                }
+                if (!exists)
+                    return result;
+            }
+
+            //Do not allow discounts applied to order subtotal or total when a customer has gift cards in the cart.
+            //Otherwise, this customer can purchase gift cards with discount and get more than paid ("free money").
+            if (discount.DiscountType == DiscountType.AssignedToOrderSubTotal ||
+                discount.DiscountType == DiscountType.AssignedToOrderTotal)
+            {
+                var cart = customer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
+                    .ToList();
+
+                var hasGiftCards = cart.Any(x => x.IsGiftCard);
+                if (hasGiftCards)
+                {
+                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithGiftCards");
+                    return result;
+                }
+            }
+
+            //check date range
+            DateTime now = DateTime.UtcNow;
+            if (discount.StartDateUtc.HasValue)
+            {
+                DateTime startDate = DateTime.SpecifyKind(discount.StartDateUtc.Value, DateTimeKind.Utc);
+                if (startDate.CompareTo(now) > 0)
+                {
+                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.NotStartedYet");
+                    return result;
+                }
+            }
+            if (discount.EndDateUtc.HasValue)
+            {
+                DateTime endDate = DateTime.SpecifyKind(discount.EndDateUtc.Value, DateTimeKind.Utc);
+                if (endDate.CompareTo(now) < 0)
+                {
+                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.Expired");
+                    return result;
+                }
+            }
+
+            //discount limitation
+            switch (discount.DiscountLimitation)
+            {
+                case DiscountLimitationType.NTimesOnly:
+                    {
+                        var usedTimes = await GetAllDiscountUsageHistory(discount.Id, null, null, false, 0, 1);
+                        if (usedTimes.TotalCount >= discount.LimitationTimes)
+                            return result;
+                    }
+                    break;
+                case DiscountLimitationType.NTimesPerCustomer:
+                    {
+                        if (customer.IsRegistered())
+                        {
+                            var usedTimes = await GetAllDiscountUsageHistory(discount.Id, customer.Id, null, false, 0, 1);
+                            if (usedTimes.TotalCount >= discount.LimitationTimes)
+                            {
+                                result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedAnymore");
+                                return result;
+                            }
+                        }
+                    }
+                    break;
+                case DiscountLimitationType.Unlimited:
+                default:
+                    break;
+            }
+
+            //discount requirements
+            string keyReq = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
+            var requirements = await _cacheManager.GetAsync(keyReq, async () =>
+            {
+                return await Task.FromResult(discount.DiscountRequirements.ToList());
+            });
+            foreach (var req in requirements)
+            {
+                //load a plugin
+                var discountRequirementPlugin = LoadDiscountPluginBySystemName(req.DiscountRequirementRuleSystemName);
+
+                if (discountRequirementPlugin == null)
+                    continue;
+
+                if (!_pluginFinder.AuthenticateStore(discountRequirementPlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
+                    continue;
+
+                var ruleRequest = new DiscountRequirementValidationRequest {
+                    DiscountRequirementId = req.Id,
+                    DiscountId = req.DiscountId,
+                    Customer = customer,
+                    Store = _storeContext.CurrentStore
+                };
+
+                var singleRequirementRule = discountRequirementPlugin.GetRequirementRules().Single(x => x.SystemName == req.DiscountRequirementRuleSystemName);
+                var ruleResult = await singleRequirementRule.CheckRequirement(ruleRequest);
+                if (!ruleResult.IsValid)
+                {
+                    result.UserError = ruleResult.UserError;
+                    return result;
+                }
+            }
+
+            result.IsValid = true;
+            return result;
+
+            // });
+
+            //return validationResult;
         }
         /// <summary>
         /// Gets a discount usage history record

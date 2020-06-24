@@ -20,7 +20,7 @@ namespace Grand.Core.Caching.Tests
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }), eventPublisher.Object);
 
             await memoryCacheManager.SetAsync(key, data, cacheTime);
-            Assert.AreEqual(await memoryCacheManager.GetAsync<byte>(key), data);
+            Assert.AreEqual(await memoryCacheManager.GetAsync<byte>(key, async () => { return await Task.FromResult(new byte()); }),data);
         }
 
         [TestMethod()]

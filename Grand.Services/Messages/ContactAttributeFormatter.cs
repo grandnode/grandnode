@@ -32,18 +32,7 @@ namespace Grand.Services.Messages
             _downloadService = downloadService;
             _webHelper = webHelper;
         }
-
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Attributes</returns>
-        public virtual async Task<string> FormatAttributes(string attributesXml)
-        {
-            var customer = _workContext.CurrentCustomer;
-            return await FormatAttributes(attributesXml, customer);
-        }
-
+       
         /// <summary>
         /// Formats attributes
         /// </summary>

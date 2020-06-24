@@ -16,12 +16,18 @@ namespace Grand.Web.Features.Handlers.Customers
     {
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
+        private readonly IProductReviewService _productReviewService;
         private readonly IDateTimeHelper _dateTimeHelper;
 
-        public GetReviewsHandler(ILocalizationService localizationService, IProductService productService, IDateTimeHelper dateTimeHelper)
+        public GetReviewsHandler(
+            ILocalizationService localizationService,
+            IProductService productService,
+            IProductReviewService productReviewService,
+            IDateTimeHelper dateTimeHelper)
         {
             _localizationService = localizationService;
             _productService = productService;
+            _productReviewService = productReviewService;
             _dateTimeHelper = dateTimeHelper;
         }
 
@@ -32,7 +38,7 @@ namespace Grand.Web.Features.Handlers.Customers
             reviewsModel.CustomerId = request.Customer.Id;
             reviewsModel.CustomerInfo = request.Customer != null ? request.Customer.IsRegistered() ? request.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest") : "";
 
-            var productReviews = await _productService.GetAllProductReviews(request.Customer.Id);
+            var productReviews = await _productReviewService.GetAllProductReviews(request.Customer.Id);
             foreach (var productReview in productReviews)
             {
                 var product = await _productService.GetProductById(productReview.ProductId);

@@ -110,7 +110,7 @@ namespace Grand.Web.Controllers
 
         //helper method to redirect users.
         public virtual IActionResult InternalRedirect(string url, bool permanentRedirect)
-        {           
+        {
             //ensure it's invoked from our GenericPathRoute class
             if (HttpContext.Items["grand.RedirectFromGenericPathRoute"] == null ||
                 !Convert.ToBoolean(HttpContext.Items["grand.RedirectFromGenericPathRoute"]))
@@ -286,16 +286,24 @@ namespace Grand.Web.Controllers
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual async Task<IActionResult> SitemapXml(int? id, 
+        public virtual async Task<IActionResult> SitemapXml(int? id, string seocode,
+            [FromServices] ILanguageService languageService,
             [FromServices] CommonSettings commonSettings)
         {
             if (!commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
+            var lang = _workContext.WorkingLanguage;
+            if (!string.IsNullOrEmpty(seocode))
+            {
+                var seolang = (await languageService.GetAllLanguages()).FirstOrDefault(x => x.UniqueSeoCode.ToLowerInvariant() == seocode.ToLowerInvariant());
+                if (seolang != null)
+                    lang = seolang;
+            }
             var siteMap = await _mediator.Send(new GetSitemapXml() {
                 Id = id,
                 Customer = _workContext.CurrentCustomer,
-                Language = _workContext.WorkingLanguage,
+                Language = lang,
                 Store = _storeContext.CurrentStore,
                 UrlHelper = Url,
             });

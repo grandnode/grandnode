@@ -443,11 +443,16 @@ namespace Grand.Web.Controllers
 
         #region Searching
 
-        public virtual async Task<IActionResult> Search(SearchModel model, CatalogPagingFilteringModel command)
+        public virtual async Task<IActionResult> Search(SearchModel model, CatalogPagingFilteringModel command, string searchCategoryId)
         {
             //'Continue shopping' URL
             await SaveLastContinueShoppingPage(_workContext.CurrentCustomer);
-
+            if (model != null && !string.IsNullOrEmpty(searchCategoryId))
+            {
+                model.cid = searchCategoryId;
+                model.adv = true;
+                model.isc = true;
+            }
             //Prepare model
             var isSearchTermSpecified = HttpContext?.Request?.Query.ContainsKey("q");
             var searchmodel = await _mediator.Send(new GetSearch() {

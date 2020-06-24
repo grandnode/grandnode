@@ -13,6 +13,7 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Commands.Models.News;
+using Grand.Web.Events;
 using Grand.Web.Features.Models.News;
 using Grand.Web.Models.News;
 using MediatR;
@@ -154,11 +155,13 @@ namespace Grand.Web.Controllers
             {
                 await _mediator.Send(new InsertNewsCommentCommand() { NewsItem = newsItem, Model = model });
 
+                //notification
+                await _mediator.Publish(new NewsCommentEvent(newsItem, model.AddNewComment));
+
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.AddNewsComment", newsItem.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));
 
                 //The text boxes should be cleared after a comment has been posted
-                //That' why we reload the page
                 TempData["Grand.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
                 return RedirectToRoute("NewsItem", new { SeName = newsItem.GetSeName(_workContext.WorkingLanguage.Id) });
             }

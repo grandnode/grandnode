@@ -18,22 +18,22 @@ namespace Grand.Web.Features.Handlers.Products
     public class GetProductReviewsHandler : IRequestHandler<GetProductReviews, ProductReviewsModel>
     {
         private readonly ICustomerService _customerService;
-        private readonly IProductService _productService;
+        private readonly IProductReviewService _productReviewService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
 
         public GetProductReviewsHandler(
-            ICustomerService customerService, 
-            IProductService productService, 
-            IDateTimeHelper dateTimeHelper, 
-            CatalogSettings catalogSettings, 
-            CustomerSettings customerSettings, 
+            ICustomerService customerService,
+            IProductReviewService productReviewService,
+            IDateTimeHelper dateTimeHelper,
+            CatalogSettings catalogSettings,
+            CustomerSettings customerSettings,
             CaptchaSettings captchaSettings)
         {
             _customerService = customerService;
-            _productService = productService;
+            _productReviewService = productReviewService;
             _dateTimeHelper = dateTimeHelper;
             _catalogSettings = catalogSettings;
             _customerSettings = customerSettings;
@@ -50,7 +50,7 @@ namespace Grand.Web.Features.Handlers.Products
             model.ProductId = request.Product.Id;
             model.ProductName = request.Product.GetLocalized(x => x.Name, request.Language.Id);
             model.ProductSeName = request.Product.GetSeName(request.Language.Id);
-            var productReviews = await _productService.GetAllProductReviews("", true, null, null, "", _catalogSettings.ShowProductReviewsPerStore ? request.Store.Id : "", request.Product.Id, request.Size);
+            var productReviews = await _productReviewService.GetAllProductReviews("", true, null, null, "", _catalogSettings.ShowProductReviewsPerStore ? request.Store.Id : "", request.Product.Id, request.Size);
             foreach (var pr in productReviews)
             {
                 var customer = await _customerService.GetCustomerById(pr.CustomerId);

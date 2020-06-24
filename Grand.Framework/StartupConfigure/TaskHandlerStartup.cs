@@ -1,11 +1,15 @@
 ﻿using Grand.Core.Data;
+using Grand.Core.Extensions;
 using Grand.Core.Infrastructure;
+using Grand.Core.Plugins;
 using Grand.Services.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Linq;
 
 namespace Grand.Framework.StartupConfigure
 {
@@ -36,7 +40,11 @@ namespace Grand.Framework.StartupConfigure
             {
                 var typeFinder = new WebAppTypeFinder();
                 var scheduleTasks = typeFinder.FindClassesOfType<IScheduleTask>();
-                foreach (var task in scheduleTasks)
+
+                var scheduleTasksInstalled = scheduleTasks
+                .Where(t => PluginManager.FindPlugin(t).Return(plugin => plugin.Installed, true)); //ignore not installed plugins
+
+                foreach (var task in scheduleTasksInstalled)
                 {
                     var assemblyName = task.Assembly.GetName().Name;
                     services.AddSingleton<IHostedService, BackgroundServiceTask>(sp =>

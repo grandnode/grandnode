@@ -57,21 +57,21 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Sends a new customer note added notification to a customer
         /// </summary>
+        /// <param name="customer">Customer instance</param>
         /// <param name="customerNote">Customer note</param>
         /// <param name="store">Store</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        Task<int> SendNewCustomerNoteAddedCustomerNotification(CustomerNote customerNote, Store store, string languageId);
+        Task<int> SendNewCustomerNoteAddedCustomerNotification(CustomerNote customerNote, Customer customer, Store store, string languageId);
 
         /// <summary>
         /// Send an email token validation message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="store">Store instance</param>
-        /// <param name="token">Token</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        Task<int> SendCustomerEmailTokenValidationMessage(Customer customer, Store store, string token, string languageId);
+        Task<int> SendCustomerEmailTokenValidationMessage(Customer customer, Store store, string languageId);
 
         #endregion
 

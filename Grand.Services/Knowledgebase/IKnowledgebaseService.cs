@@ -69,7 +69,8 @@ namespace Grand.Services.Knowledgebase
         /// Gets knowledgebase articles
         /// </summary>
         /// <returns>List of knowledgebase articles</returns>
-        Task<List<KnowledgebaseArticle>> GetKnowledgebaseArticles();
+        /// <param name="storeId">Store ident</param>
+        Task<List<KnowledgebaseArticle>> GetKnowledgebaseArticles(string storeId = "");
 
         /// <summary>
         /// Gets public(published etc) knowledgebase articles

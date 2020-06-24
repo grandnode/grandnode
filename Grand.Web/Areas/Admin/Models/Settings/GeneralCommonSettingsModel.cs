@@ -293,9 +293,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.LoadAllLocalizedPropertiesOnStartup")]
             public bool LoadAllLocalizedPropertiesOnStartup { get; set; }
-
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.LoadAllUrlRecordsOnStartup")]
-            public bool LoadAllUrlRecordsOnStartup { get; set; }
+            
         }
 
         public partial class FullTextSettingsModel : BaseGrandModel

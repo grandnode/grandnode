@@ -10,6 +10,7 @@ using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
 using Grand.Web.Commands.Models.Orders;
+using Grand.Web.Events;
 using Grand.Web.Features.Models.Orders;
 using Grand.Web.Models.Orders;
 using MediatR;
@@ -227,6 +228,9 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             await _mediator.Send(new InsertOrderNoteCommand() { Order = order, OrderNote = model, Language = _workContext.WorkingLanguage });
+
+            //notification
+            await _mediator.Publish(new OrderNoteEvent(order, model));
 
             AddNotification(Framework.UI.NotifyType.Success, _localizationService.GetResource("OrderNote.Added"), true);
             return RedirectToRoute("OrderDetails", new { orderId = model.OrderId });

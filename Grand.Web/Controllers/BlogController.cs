@@ -12,6 +12,7 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Commands.Models.Blogs;
+using Grand.Web.Events;
 using Grand.Web.Features.Models.Blogs;
 using Grand.Web.Models.Blogs;
 using MediatR;
@@ -179,8 +180,11 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _mediator.Send(new InsertBlogCommentCommand() { Model = model, BlogPost = blogPost });
+
+                //notification
+                await _mediator.Publish(new BlogCommentEvent(blogPost, model.AddNewComment));
+
                 //The text boxes should be cleared after a comment has been posted
-                //That' why we reload the page
                 TempData["Grand.blog.addcomment.result"] = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");
                 return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName(_workContext.WorkingLanguage.Id) });
             }

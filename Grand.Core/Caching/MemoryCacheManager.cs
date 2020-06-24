@@ -144,10 +144,16 @@ namespace Grand.Core.Caching
         /// </summary>
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Key of cached item</param>
+        /// <param name="acquire">Function to load</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public virtual Task<T> GetAsync<T>(string key)
+        public virtual async Task<T> GetAsync<T>(string key, Func<Task<T>> acquire)
         {
-            return Task.FromResult(_cache.Get<T>(key));
+            return await _cache.GetOrCreateAsync(key, entry => 
+            {
+                AddKey(key);
+                entry.SetOptions(GetMemoryCacheEntryOptions(CommonHelper.CacheTimeMinutes));
+                return acquire();
+            });
         }
 
         /// <summary>
@@ -155,35 +161,19 @@ namespace Grand.Core.Caching
         /// </summary>
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Key of cached item</param>
+        /// <param name="acquire">Function to load</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public T Get<T>(string key)
+        public T Get<T>(string key, Func<T> acquire)
         {
-            return _cache.Get<T>(key);
-        }
-
-        /// <summary>
-        /// Gets or sets the value associated with the specified key.
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>The cached value associated with the specified key</returns>
-        public virtual (T, bool) TryGetValue<T>(string key)
-        {
-            if (_cache.TryGetValue(key, out T value))
+            return _cache.GetOrCreate(key, entry =>
             {
-                return (value, true);
-            }
-            return (default(T), false);
+                AddKey(key);
+                entry.SetOptions(GetMemoryCacheEntryOptions(CommonHelper.CacheTimeMinutes));
+                return acquire();
+            });
         }
 
-        /// <summary>
-        /// Gets or sets the value associated with the specified key.
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>The cached value associated with the specified key</returns>
-        public Task<(T Result, bool FromCache)> TryGetValueAsync<T>(string key)
-        {
-            return Task.FromResult(TryGetValue<T>(key));
-        }
+        
 
         /// <summary>
         /// Adds the specified key and object to the cache

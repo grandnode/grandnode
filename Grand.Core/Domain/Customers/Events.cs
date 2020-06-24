@@ -5,11 +5,11 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Customer logged-in event
     /// </summary>
-    public class CustomerLoggedinEvent : INotification
+    public class CustomerLoggedInEvent : INotification
     {
-        public CustomerLoggedinEvent(Customer customer)
+        public CustomerLoggedInEvent(Customer customer)
         {
-            this.Customer = customer;
+            Customer = customer;
         }
 
         /// <summary>
@@ -17,6 +17,24 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public Customer Customer
         {
+            get; private set;
+        }
+    }
+
+    /// <summary>
+    /// Customer logged-in event
+    /// </summary>
+    public class CustomerLoggedOutEvent : INotification
+    {
+        public CustomerLoggedOutEvent(Customer customer)
+        {
+            Customer = customer;
+        }
+
+        /// <summary>
+        /// Customer
+        /// </summary>
+        public Customer Customer {
             get; private set;
         }
     }

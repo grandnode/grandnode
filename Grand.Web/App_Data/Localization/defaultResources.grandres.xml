@@ -7644,12 +7644,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocalizedPropertiesOnStartup.Hint">
     <Value>When enabled, all localized properties (such as localized product properties) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. It's used only when you have two or more languages enabled. Not recommended to enable when you have a large catalog (several thousand localized entities).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllUrlRecordsOnStartup">
-    <Value>Load all search engine friendly names on startup</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllUrlRecordsOnStartup.Hint">
-    <Value>When enabled, all slugs (search engine friendly names) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. Not recommended to enable when you have a large catalog (several thousand entities).</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LocalizationSettings">
     <Value>Localization settings</Value>
   </LocaleResource>
@@ -9575,6 +9569,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Comments">
     <Value>View comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.CreateDate">
+    <Value>Create date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.CreateDate.Hint">
+    <Value>Allow user to change create date for the blog post.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn">
     <Value>Created on</Value>
@@ -21091,6 +21091,9 @@
   </LocaleResource>
   <LocaleResource Name="Sitemap.General">
     <Value>General</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sitemap.KnowledgebaseArticles">
+    <Value>Knowledgebase Articles</Value>
   </LocaleResource>
   <LocaleResource Name="Sitemap.Manufacturers">
     <Value>Manufacturers</Value>

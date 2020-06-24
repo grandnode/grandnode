@@ -263,6 +263,8 @@ namespace Grand.Web.Features.Handlers.Catalog
                         PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages
                     })).ToList();
 
+                    request.Model.PagingFilteringContext.LoadPagedList(searchproducts.products);
+
                     //specs
                     await request.Model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
                         searchproducts.filterableSpecificationAttributeOptionIds,
@@ -291,7 +293,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     }
                 }
             }
-            request.Model.PagingFilteringContext.LoadPagedList(products);
+
             return request.Model;
         }
     }

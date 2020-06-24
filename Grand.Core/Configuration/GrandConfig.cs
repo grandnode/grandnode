@@ -127,6 +127,11 @@ namespace Grand.Core.Configuration
         /// </summary>
         public bool SeoFriendlyUrlsForLanguagesEnabled { get; set; }
         public string SeoFriendlyUrlsDefaultCode { get; set; } = "en";
+        
+        /// <summary>
+        /// A value indicating whether to load all search engine friendly names (slugs) on application startup
+        /// </summary>
+        public bool LoadAllUrlRecordsOnStartup { get; set; }
 
         /// <summary>
         /// Enable minimal Progressive Web App.

@@ -81,11 +81,9 @@ namespace Grand.Web.Features.Handlers.Catalog
                 IPagedList<Product> featuredProducts = null;
                 string cacheKey = string.Format(ModelCacheEventConst.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, item.Id,
                     string.Join(",", request.Customer.GetCustomerRoleIds()), request.Store.Id);
-                var hasFeaturedProductsCache = await _cacheManager.GetAsync<bool?>(cacheKey);
-                if (!hasFeaturedProductsCache.HasValue)
+
+                var hasFeaturedProductsCache = await _cacheManager.GetAsync<bool?>(cacheKey, async () =>
                 {
-                    //no value in the cache yet
-                    //let's load products and cache the result (true/false)
                     featuredProducts = (await _mediator.Send(new GetSearchProductsQuery() {
                         PageSize = _catalogSettings.LimitOfFeaturedProducts,
                         CategoryIds = new List<string> { item.Id },
@@ -94,10 +92,9 @@ namespace Grand.Web.Features.Handlers.Catalog
                         VisibleIndividuallyOnly = true,
                         FeaturedProducts = true
                     })).products;
+                    return featuredProducts.Any();
+                });
 
-                    hasFeaturedProductsCache = featuredProducts.Any();
-                    await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, CommonHelper.CacheTimeMinutes);
-                }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
                     //cache indicates that the category has featured products

@@ -3,7 +3,6 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -27,25 +26,6 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <returns>Products</returns>
         Task<IList<Product>> GetAllProductsDisplayedOnHomePage();
-
-        /// <summary>
-        /// Gets recommended products for customer roles
-        /// </summary>
-        /// <returns>Products</returns>
-        Task<IList<Product>> GetRecommendedProducts(string[] customerRoleIds);
-
-        /// <summary>
-        /// Gets recommended products for customer roles
-        /// </summary>
-        /// <returns>Products</returns>
-        Task<IList<Product>> GetSuggestedProducts(string[] customerTagIds);
-
-        /// <summary>
-        /// Gets personalized products for customer 
-        /// </summary>
-        /// <param name="customerId">Customer Id</param>
-        /// <returns>Products</returns>
-        Task<IList<Product>> GetPersonalizedProducts(string customerId);
 
         /// <summary>
         /// Gets product
@@ -176,9 +156,9 @@ namespace Grand.Services.Catalog
             string keywords = null,
             bool searchDescriptions = false,
             bool searchSku = true,
-            bool searchProductTags = false, 
+            bool searchProductTags = false,
             string languageId = "",
-            IList<string> filteredSpecs = null, 
+            IList<string> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
             bool? overridePublished = null);
@@ -205,27 +185,10 @@ namespace Grand.Services.Catalog
             string storeId = "", string vendorId = "", bool showHidden = false);
 
         /// <summary>
-        /// Update product review totals
-        /// </summary>
-        /// <param name="product">Product</param>
-        Task UpdateProductReviewTotals(Product product);
-
-        /// <summary>
         /// Update product associated 
         /// </summary>
         /// <param name="product">Product</param>
         Task UpdateAssociatedProduct(Product product);
-        /// <summary>
-        /// Update product review 
-        /// </summary>
-        /// <param name="product">Product</param>
-        Task UpdateProductReview(ProductReview productreview);
-
-        /// <summary>
-        /// Insert product review 
-        /// </summary>
-        /// <param name="product">Product</param>
-        Task InsertProductReview(ProductReview productreview);
 
         /// <summary>
         /// Get low stock products
@@ -251,7 +214,7 @@ namespace Grand.Services.Catalog
         /// <param name="Interval">Interval</param>
         /// <param name="IntervalUnit">Interval unit</param>
         /// <param name="includeBothDates">Include both dates</param>
-        Task UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit, bool  includeBothDates);
+        Task UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit, bool includeBothDates);
 
 
         #endregion
@@ -412,23 +375,6 @@ namespace Grand.Services.Catalog
 
         #endregion
 
-        #region Product Tags
-
-        /// <summary>
-        /// Inserts a product tags
-        /// </summary>
-        /// <param name="productTag">Product Tag</param>
-        Task InsertProductTag(ProductTag productTag);
-
-        /// <summary>
-        /// Delete a product tags
-        /// </summary>
-        /// <param name="productTag">Product Tag</param>
-        Task DeleteProductTag(ProductTag productTag);
-
-        #endregion
-
-
         #region Product pictures
 
         /// <summary>
@@ -448,54 +394,6 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="productPicture">Product picture</param>
         Task UpdateProductPicture(ProductPicture productPicture);
-
-        #endregion
-
-        #region Product reviews
-
-        /// <summary>
-        /// Gets all product reviews
-        /// </summary>
-        /// <param name="customerId">Customer identifier; "" to load all records</param>
-        /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
-        /// <param name="fromUtc">Item creation from; null to load all records</param>
-        /// <param name="toUtc">Item item creation to; null to load all records</param>
-        /// <param name="message">Search title or review text; null to load all records</param>
-        /// <param name="storeId">Store identifier; "" to load all records</param>
-        /// <param name="productId">Product identifier; "" to load all records</param>
-        /// <returns>Reviews</returns>
-        Task<IPagedList<ProductReview>> GetAllProductReviews(string customerId, bool? approved = null,
-            DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, string storeId = "", string productId = "", int pageIndex = 0, int pageSize = int.MaxValue);
-
-        /// <summary>
-        /// Get rating sum for product
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier, "" to load all records</param> 
-        /// <returns>Sum</returns>
-        Task<int> RatingSumProduct(string productId, string storeId);
-
-        /// <summary>
-        /// Total reviews for product
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier, "" to load all records</param> 
-        /// <returns>Sum</returns>
-        Task<int> TotalReviewsProduct(string productId, string storeId);
-
-        /// <summary>
-        /// Gets product review
-        /// </summary>
-        /// <param name="productReviewId">Product review identifier</param>
-        /// <returns>Product review</returns>
-        Task<ProductReview> GetProductReviewById(string productReviewId);
-
-        /// <summary>
-        /// Deletes a product review
-        /// </summary>
-        /// <param name="productReview">Product review</param>
-        Task DeleteProductReview(ProductReview productReview);
 
         #endregion
 

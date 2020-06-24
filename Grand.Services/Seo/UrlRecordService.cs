@@ -1,7 +1,7 @@
 using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Seo;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -50,7 +50,7 @@ namespace Grand.Services.Seo
 
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly LocalizationSettings _localizationSettings;
+        private readonly GrandConfig _config;
 
         #endregion
 
@@ -64,11 +64,11 @@ namespace Grand.Services.Seo
         /// <param name="localizationSettings">Localization settings</param>
         public UrlRecordService(ICacheManager cacheManager,
             IRepository<UrlRecord> urlRecordRepository,
-            LocalizationSettings localizationSettings)
+            GrandConfig config)
         {
             _cacheManager = cacheManager;
             _urlRecordRepository = urlRecordRepository;
-            _localizationSettings = localizationSettings;
+            _config = config;
         }
 
         #endregion
@@ -80,8 +80,7 @@ namespace Grand.Services.Seo
             if (record == null)
                 throw new ArgumentNullException("record");
 
-            var urlRecordForCaching = new UrlRecordForCaching
-            {
+            var urlRecordForCaching = new UrlRecordForCaching {
                 Id = record.Id,
                 EntityId = record.EntityId,
                 EntityName = record.EntityName,
@@ -221,7 +220,7 @@ namespace Grand.Services.Seo
 
             slug = slug.ToLowerInvariant();
 
-            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            if (_config.LoadAllUrlRecordsOnStartup)
             {
                 //load all records (we know they are cached)
                 var source = await GetAllUrlRecordsCached();
@@ -273,7 +272,7 @@ namespace Grand.Services.Seo
         /// <returns>Found slug</returns>
         public virtual async Task<string> GetActiveSlug(string entityId, string entityName, string languageId)
         {
-            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            if (_config.LoadAllUrlRecordsOnStartup)
             {
                 string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
                 return await _cacheManager.GetAsync(key, async () =>
@@ -357,8 +356,7 @@ namespace Grand.Services.Seo
                 else
                 {
                     //new record
-                    var urlRecord = new UrlRecord
-                    {
+                    var urlRecord = new UrlRecord {
                         EntityId = entityId,
                         EntityName = entityName,
                         Slug = slug,
@@ -399,8 +397,7 @@ namespace Grand.Services.Seo
                         //insert new record
                         //we do not update the existing record because we should track all previously entered slugs
                         //to ensure that URLs will work fine
-                        var urlRecord = new UrlRecord
-                        {
+                        var urlRecord = new UrlRecord {
                             EntityId = entityId,
                             EntityName = entityName,
                             Slug = slug,

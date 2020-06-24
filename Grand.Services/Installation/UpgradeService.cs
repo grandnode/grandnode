@@ -53,6 +53,8 @@ namespace Grand.Services.Installation
         private const string version_450 = "4.50";
         private const string version_460 = "4.60";
         private const string version_470 = "4.70";
+        private const string version_480 = "4.80";
+
         #endregion
 
         #region Ctor
@@ -111,6 +113,12 @@ namespace Grand.Services.Installation
                 await From460To470();
                 fromversion = version_470;
             }
+            if (fromversion == version_470)
+            {
+                await From470To480();
+                fromversion = version_480;
+            }
+
             if (fromversion == toversion)
             {
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
@@ -908,7 +916,7 @@ namespace Grand.Services.Installation
                 {
                     Name = "Customer.EmailTokenValidationMessage",
                     Subject = "{{Store.Name}} - Email Verification Code",
-                    Body = "Hello {{Customer.FullName}}, <br /><br />\r\n Enter this 6 digit code on the sign in page to confirm your identity:<br /><br /> \r\n <b>{{AdditionalTokens[\"Token\"]}}</b><br /><br />\r\n Yours securely, <br /> \r\n Team",
+                    Body = "Hello {{Customer.FullName}}, <br /><br />\r\n Enter this 6 digit code on the sign in page to confirm your identity:<br /><br /> \r\n <b>{{Customer.Token}}</b><br /><br />\r\n Yours securely, <br /> \r\n Team",
                     IsActive = true,
                     EmailAccountId = emailAccount.Id,
                 },
@@ -980,6 +988,15 @@ namespace Grand.Services.Installation
             var settingsService = _serviceProvider.GetRequiredService<ISettingService>();
             var storeInDB = settingsService.GetSettingByKey("Media.Images.StoreInDB", true);
             await settingsService.SetSetting("MediaSettings.StoreInDb", storeInDB);
+
+            #endregion
+        }
+
+        private async Task From470To480()
+        {
+            #region Install String resources
+            
+            await InstallStringResources("EN_470_480.nopres.xml");
 
             #endregion
         }

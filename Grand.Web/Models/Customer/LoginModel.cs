@@ -11,6 +11,7 @@ namespace Grand.Web.Models.Customer
     {
         public bool CheckoutAsGuest { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [GrandResourceDisplayName("Account.Login.Fields.Email")]
         public string Email { get; set; }
 

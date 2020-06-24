@@ -186,7 +186,6 @@ namespace Grand.Framework.Infrastructure
 
         private void RegisterCache(ContainerBuilder builder, GrandConfig config)
         {
-            builder.RegisterType<PerRequestCacheManager>().InstancePerLifetimeScope();
             builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
             if (config.RedisPubSubEnabled)
             {
@@ -254,6 +253,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerLifetimeScope();
             builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductReviewService>().As<IProductReviewService>().InstancePerLifetimeScope();
             builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductReservationService>().As<IProductReservationService>().InstancePerLifetimeScope();
             builder.RegisterType<AuctionService>().As<IAuctionService>().InstancePerLifetimeScope();

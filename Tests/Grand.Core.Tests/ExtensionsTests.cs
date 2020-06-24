@@ -46,8 +46,8 @@ namespace Grand.Core.Tests
 
             await icacheManager.RemoveByPrefix(pattern);
 
-            Assert.IsNotNull(icacheManager.GetAsync<int>("key1202"));
-            Assert.IsNotNull(icacheManager.GetAsync<int>("key1204"));
+            Assert.IsNotNull(icacheManager.GetAsync<int>("key1202", async () => { return await Task.FromResult(0); }));
+            Assert.IsNotNull(icacheManager.GetAsync<int>("key1204", async () => { return await Task.FromResult(0); }));
         }
     }
 }

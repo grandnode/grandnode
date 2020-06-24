@@ -44,7 +44,7 @@ namespace Grand.Framework.StartupConfigure
         public int Order
         {
             //error handlers should be loaded first
-            get { return 0; }
+            get { return -10; }
         }
     }
 }

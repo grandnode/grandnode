@@ -168,11 +168,9 @@ namespace Grand.Services.Orders.Tests
             _countryService,
             _stateProvinceService,
             pluginFinder,
-            _storeContext,
             _eventPublisher,
             _currencyService,
             cacheManager,
-            null,
             _shoppingCartSettings,
             _shippingSettings);
             _shipmentService = new Mock<IShipmentService>().Object;

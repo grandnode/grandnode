@@ -56,16 +56,14 @@
     }
 }
 <div class="page category-page">
-    <h2 class="generalTitle">@Model.Name</h2>
+    <h1 class="generalTitle">@Model.Name</h1>
     @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_top", additionalData = Model.Id })
     @*description*@
     @if (!String.IsNullOrWhiteSpace(Model.Description))
     {
         <div class="card category-description">
-            <div class="card-body">
-                <h2 class="card-title m-0">
-                    @Html.Raw(Model.Description)
-                </h2>
+            <div class="card-body py-0">
+                @Html.Raw(Model.Description)
             </div>
         </div>
     }
@@ -85,11 +83,11 @@
                                 </a>
                             </div>
                             <div class="list-title mt-3">
-                                <h3 class="h6 card-title m-0 p-0">
-                                    <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })">
+                                <h2>
+                                    <a class="h6 card-title m-0 p-0" href="@Url.RouteUrl("Category", new { SeName = item.SeName })">
                                         @item.Name
                                     </a>
-                                </h3>
+                                </h2>
                             </div>
                         </div>
                     </div>

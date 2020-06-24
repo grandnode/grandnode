@@ -4,7 +4,6 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Customers;
@@ -51,28 +50,17 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Key for caching
         /// </summary>
-        /// <remarks>
-        /// {0} : customer ID
-        /// </remarks>
-        private const string PRODUCTS_CUSTOMER_ROLE = "Grand.product.cr-{0}";
         private const string PRODUCTS_CUSTOMER_ROLE_PATTERN = "Grand.product.cr";
 
         /// <summary>
         /// Key for caching
         /// </summary>
-        /// <remarks>
-        /// {0} : customer ID
-        /// </remarks>
-        private const string PRODUCTS_CUSTOMER_TAG = "Grand.product.ct-{0}";
         private const string PRODUCTS_CUSTOMER_TAG_PATTERN = "Grand.product.ct";
 
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : customer ID
-        /// </remarks>
-        private const string PRODUCTS_CUSTOMER_PERSONAL = "Grand.product.personal-{0}";
         private const string PRODUCTS_CUSTOMER_PERSONAL_PATTERN = "Grand.product.personal";
 
         #endregion
@@ -81,13 +69,7 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<ProductTag> _productTagRepository;
-        private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
-        private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<ProductDeleted> _productDeletedRepository;
-        private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICacheManager _cacheManager;
@@ -107,13 +89,7 @@ namespace Grand.Services.Catalog
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductReview> productReviewRepository,
-            IRepository<UrlRecord> urlRecordRepository,
-            IRepository<Customer> customerRepository,
-            IRepository<CustomerRoleProduct> customerRoleProductRepository,
-            IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<ProductDeleted> productDeletedRepository,
-            IRepository<CustomerProduct> customerProductRepository,
-            IRepository<ProductTag> productTagRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             IWorkContext workContext,
@@ -126,12 +102,6 @@ namespace Grand.Services.Catalog
             _cacheManager = cacheManager;
             _productRepository = productRepository;
             _productReviewRepository = productReviewRepository;
-            _urlRecordRepository = urlRecordRepository;
-            _customerRepository = customerRepository;
-            _customerRoleProductRepository = customerRoleProductRepository;
-            _customerTagProductRepository = customerTagProductRepository;
-            _productTagRepository = productTagRepository;
-            _customerProductRepository = customerProductRepository;
             _productDeletedRepository = productDeletedRepository;
             _productAttributeService = productAttributeService;
             _productAttributeParser = productAttributeParser;
@@ -156,50 +126,6 @@ namespace Grand.Services.Catalog
         {
             if (product == null)
                 throw new ArgumentNullException("product");
-
-            //delete from shopping cart
-            var builder = Builders<Customer>.Update;
-            var updatefilter = builder.PullFilter(x => x.ShoppingCartItems, y => y.ProductId == product.Id);
-            await _customerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-
-            //delete related product
-            var builderRelated = Builders<Product>.Update;
-            var updatefilterRelated = builderRelated.PullFilter(x => x.RelatedProducts, y => y.ProductId2 == product.Id);
-            await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterRelated);
-
-            //delete similar product
-            var builderSimilar = Builders<Product>.Update;
-            var updatefilterSimilar = builderSimilar.PullFilter(x => x.SimilarProducts, y => y.ProductId2 == product.Id);
-            await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterSimilar);
-
-            //delete cross sales product
-            var builderCross = Builders<Product>.Update;
-            var updatefilterCross = builderCross.Pull(x => x.CrossSellProduct, product.Id);
-            await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterCross);
-
-            //delete customer role product
-            var filtersCrp = Builders<CustomerRoleProduct>.Filter;
-            var filterCrp = filtersCrp.Eq(x => x.ProductId, product.Id);
-            await _customerRoleProductRepository.Collection.DeleteManyAsync(filterCrp);
-
-            //delete review
-            var filtersProductReview = Builders<ProductReview>.Filter;
-            var filterProdReview = filtersProductReview.Eq(x => x.ProductId, product.Id);
-            await _productReviewRepository.Collection.DeleteManyAsync(filterProdReview);
-
-            //delete url
-            var filters = Builders<UrlRecord>.Filter;
-            var filter = filters.Eq(x => x.EntityId, product.Id);
-            filter = filter & filters.Eq(x => x.EntityName, "Product");
-            await _urlRecordRepository.Collection.DeleteManyAsync(filter);
-
-            //delete product tags
-            var existingProductTags = _productTagRepository.Table.Where(x => product.ProductTags.ToList().Contains(x.Name)).ToList();
-            foreach (var tag in existingProductTags)
-            {
-                tag.ProductId = product.Id;
-                await DeleteProductTag(tag);
-            }
 
             //deleted product
             await _productRepository.DeleteAsync(product);
@@ -464,28 +390,8 @@ namespace Grand.Services.Catalog
                 oldProduct.IsRecurring != product.IsRecurring
                 )
             {
-
-                var builderCustomer = Builders<Customer>.Filter;
-                var filterCustomer = builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y.ProductId == product.Id);
-                await _customerRepository.Collection.Find(filterCustomer).ForEachAsync(async (cs) =>
-                {
-                    foreach (var item in cs.ShoppingCartItems.Where(x => x.ProductId == product.Id))
-                    {
-                        var updateCustomer = Builders<Customer>.Update
-                            .Set(x => x.ShoppingCartItems.ElementAt(-1).AdditionalShippingChargeProduct, product.AdditionalShippingCharge)
-                            .Set(x => x.ShoppingCartItems.ElementAt(-1).IsFreeShipping, product.IsFreeShipping)
-                            .Set(x => x.ShoppingCartItems.ElementAt(-1).IsGiftCard, product.IsGiftCard)
-                            .Set(x => x.ShoppingCartItems.ElementAt(-1).IsShipEnabled, product.IsShipEnabled)
-                            .Set(x => x.ShoppingCartItems.ElementAt(-1).IsTaxExempt, product.IsTaxExempt)
-                            .Set(x => x.ShoppingCartItems.ElementAt(-1).IsRecurring, product.IsRecurring);
-
-                        var _builderCustomer = Builders<Customer>.Filter;
-                        var _filterCustomer = _builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y.Id == item.Id);
-                        await _customerRepository.Collection.UpdateManyAsync(_filterCustomer, updateCustomer);
-                    }
-                }
-                );
-
+                
+                await _mediator.Publish(new UpdateProductOnCartEvent(product));
             }
 
             //cache
@@ -754,11 +660,11 @@ namespace Grand.Services.Catalog
             //Track inventory for product
             //simple products
             var query_simple_products = from p in _productRepository.Table
-                                 where p.LowStock && 
-                                 ((p.ProductTypeId == (int)ProductType.SimpleProduct && p.ManageInventoryMethodId != (int)ManageInventoryMethod.DontManageStock)
-                                 ||
-                                 (p.ProductTypeId == (int)ProductType.BundledProduct && p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock))
-                                 select p;
+                                        where p.LowStock &&
+                                        ((p.ProductTypeId == (int)ProductType.SimpleProduct && p.ManageInventoryMethodId != (int)ManageInventoryMethod.DontManageStock)
+                                        ||
+                                        (p.ProductTypeId == (int)ProductType.BundledProduct && p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock))
+                                        select p;
 
             if (!string.IsNullOrEmpty(vendorId))
                 query_simple_products = query_simple_products.Where(x => x.VendorId == vendorId);
@@ -809,79 +715,6 @@ namespace Grand.Services.Catalog
             sku = sku.Trim();
             var filter = Builders<Product>.Filter.Eq(x => x.Sku, sku);
             return await _productRepository.Collection.Find(filter).FirstOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// Update product review totals
-        /// </summary>
-        /// <param name="product">Product</param>
-        public virtual async Task UpdateProductReviewTotals(Product product)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            int approvedRatingSum = 0;
-            int notApprovedRatingSum = 0;
-            int approvedTotalReviews = 0;
-            int notApprovedTotalReviews = 0;
-            var reviews = await _productReviewRepository.Collection.Find(new BsonDocument("ProductId", product.Id)).ToListAsync();
-            foreach (var pr in reviews)
-            {
-                if (pr.IsApproved)
-                {
-                    approvedRatingSum += pr.Rating;
-                    approvedTotalReviews++;
-                }
-                else
-                {
-                    notApprovedRatingSum += pr.Rating;
-                    notApprovedTotalReviews++;
-                }
-            }
-
-            product.ApprovedRatingSum = approvedRatingSum;
-            product.NotApprovedRatingSum = notApprovedRatingSum;
-            product.ApprovedTotalReviews = approvedTotalReviews;
-            product.NotApprovedTotalReviews = notApprovedTotalReviews;
-
-            var filter = Builders<Product>.Filter.Eq("Id", product.Id);
-            var update = Builders<Product>.Update
-                    .Set(x => x.ApprovedRatingSum, product.ApprovedRatingSum)
-                    .Set(x => x.NotApprovedRatingSum, product.NotApprovedRatingSum)
-                    .Set(x => x.ApprovedTotalReviews, product.ApprovedTotalReviews)
-                    .Set(x => x.NotApprovedTotalReviews, product.NotApprovedTotalReviews);
-
-            await _productRepository.Collection.UpdateOneAsync(filter, update);
-
-            //cache
-            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
-
-            //event notification
-            await _mediator.EntityUpdated(product);
-        }
-
-        public virtual async Task UpdateProductReview(ProductReview productreview)
-        {
-            if (productreview == null)
-                throw new ArgumentNullException("productreview");
-
-            var builder = Builders<ProductReview>.Filter;
-            var filter = builder.Eq(x => x.Id, productreview.Id);
-            var update = Builders<ProductReview>.Update
-                .Set(x => x.Title, productreview.Title)
-                .Set(x => x.ReviewText, productreview.ReviewText)
-                .Set(x => x.ReplyText, productreview.ReplyText)
-                .Set(x => x.Signature, productreview.Signature)
-                .Set(x => x.UpdatedOnUtc, DateTime.UtcNow)
-                .Set(x => x.IsApproved, productreview.IsApproved)
-                .Set(x => x.HelpfulNoTotal, productreview.HelpfulNoTotal)
-                .Set(x => x.HelpfulYesTotal, productreview.HelpfulYesTotal)
-                .Set(x => x.ProductReviewHelpfulnessEntries, productreview.ProductReviewHelpfulnessEntries);
-
-            await _productReviewRepository.Collection.UpdateManyAsync(filter, update);
-
-            //event notification
-            await _mediator.EntityUpdated(productreview);
         }
 
         public virtual async Task UpdateAssociatedProduct(Product product)
@@ -1985,54 +1818,6 @@ namespace Grand.Services.Catalog
         }
 
         /// <summary>
-        /// Inserts a product tag
-        /// </summary>
-        /// <param name="productPicture">Product picture</param>
-        public virtual async Task InsertProductTag(ProductTag productTag)
-        {
-            if (productTag == null)
-                throw new ArgumentNullException("productTag");
-
-            var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.AddToSet(p => p.ProductTags, productTag.Name);
-            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
-
-            var builder = Builders<ProductTag>.Filter;
-            var filter = builder.Eq(x => x.Id, productTag.Id);
-            var updateTag = Builders<ProductTag>.Update
-                .Inc(x => x.Count, 1);
-            await _productTagRepository.Collection.UpdateManyAsync(filter, updateTag);
-
-            //cache
-            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productTag.ProductId));
-
-            //event notification
-            await _mediator.EntityInserted(productTag);
-        }
-
-        public virtual async Task DeleteProductTag(ProductTag productTag)
-        {
-            if (productTag == null)
-                throw new ArgumentNullException("productTag");
-
-            var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.Pull(p => p.ProductTags, productTag.Name);
-            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
-
-            var builder = Builders<ProductTag>.Filter;
-            var filter = builder.Eq(x => x.Id, productTag.Id);
-            var updateTag = Builders<ProductTag>.Update
-                .Inc(x => x.Count, -1);
-            await _productTagRepository.Collection.UpdateManyAsync(filter, updateTag);
-
-            //cache
-            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productTag.ProductId));
-
-            //event notification
-            await _mediator.EntityDeleted(productTag);
-        }
-
-        /// <summary>
         /// Updates a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
@@ -2062,197 +1847,7 @@ namespace Grand.Services.Catalog
 
         #endregion
 
-        #region Recommended products
-
-        /// <summary>
-        /// Gets recommended products for customer roles
-        /// </summary>
-        /// <param name="customerRoleIds">Customer role ids</param>
-        /// <returns>Products</returns>
-        public virtual async Task<IList<Product>> GetRecommendedProducts(string[] customerRoleIds)
-        {
-            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_ROLE, string.Join(",", customerRoleIds)), async () =>
-            {
-                var query = from cr in _customerRoleProductRepository.Table
-                            where customerRoleIds.Contains(cr.CustomerRoleId)
-                            orderby cr.DisplayOrder
-                            select cr.ProductId;
-
-                var productIds = await query.ToListAsync();
-
-                var products = new List<Product>();
-                var ids = await GetProductsByIds(productIds.Distinct().ToArray());
-                foreach (var product in ids)
-                    if (product.Published)
-                        products.Add(product);
-
-                return products;
-            });
-        }
-
-        #endregion
-
-        #region Suggested products
-
-        /// <summary>
-        /// Gets suggested products for customer tags
-        /// </summary>
-        /// <param name="customerTagIds">Customer role ids</param>
-        /// <returns>Products</returns>
-        public virtual async Task<IList<Product>> GetSuggestedProducts(string[] customerTagIds)
-        {
-            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_TAG, string.Join(",", customerTagIds)), async () =>
-            {
-                var query = from cr in _customerTagProductRepository.Table
-                            where customerTagIds.Contains(cr.CustomerTagId)
-                            orderby cr.DisplayOrder
-                            select cr.ProductId;
-
-                var productIds = await query.ToListAsync();
-
-                var products = new List<Product>();
-                var ids = await GetProductsByIds(productIds.Distinct().ToArray());
-                foreach (var product in ids)
-                    if (product.Published)
-                        products.Add(product);
-
-                return products;
-            });
-        }
-
-        #endregion
-
-        #region Personalized products
-
-        /// <summary>
-        /// Gets personalized products for customer 
-        /// </summary>
-        /// <param name="customerId">Customer Id</param>
-        /// <returns>Products</returns>
-        public virtual async Task<IList<Product>> GetPersonalizedProducts(string customerId)
-        {
-            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_PERSONAL, customerId), async () =>
-            {
-                var query = from cr in _customerProductRepository.Table
-                            where cr.CustomerId == customerId
-                            orderby cr.DisplayOrder
-                            select cr.ProductId;
-
-                var productIds = await query.Take(_catalogSettings.PersonalizedProductsNumber).ToListAsync();
-
-                var products = new List<Product>();
-                var ids = await GetProductsByIds(productIds.Distinct().ToArray());
-                foreach (var product in ids)
-                    if (product.Published)
-                        products.Add(product);
-
-                return products;
-            });
-        }
-
-        #endregion
-
-        #region Product reviews
-
-        /// <summary>
-        /// Gets all product reviews
-        /// </summary>
-        /// <param name="customerId">Customer identifier; "" to load all records</param>
-        /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
-        /// <param name="fromUtc">Item creation from; null to load all records</param>
-        /// <param name="toUtc">Item item creation to; null to load all records</param>
-        /// <param name="message">Search title or review text; null to load all records</param>
-        /// <returns>Reviews</returns>
-        public virtual async Task<IPagedList<ProductReview>> GetAllProductReviews(string customerId, bool? approved,
-            DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, string storeId = "", string productId = "", int pageIndex = 0, int pageSize = int.MaxValue)
-        {
-            var query = from p in _productReviewRepository.Table
-                        select p;
-
-            if (approved.HasValue)
-                query = query.Where(c => c.IsApproved == approved.Value);
-            if (!String.IsNullOrEmpty(customerId))
-                query = query.Where(c => c.CustomerId == customerId);
-            if (fromUtc.HasValue)
-                query = query.Where(c => fromUtc.Value <= c.CreatedOnUtc);
-            if (toUtc.HasValue)
-                query = query.Where(c => toUtc.Value >= c.CreatedOnUtc);
-            if (!String.IsNullOrEmpty(message))
-                query = query.Where(c => c.Title.Contains(message) || c.ReviewText.Contains(message));
-            if (!String.IsNullOrEmpty(storeId))
-                query = query.Where(c => c.StoreId == storeId || c.StoreId == "");
-            if (!String.IsNullOrEmpty(productId))
-                query = query.Where(c => c.ProductId == productId);
-
-            query = query.OrderByDescending(c => c.CreatedOnUtc);
-
-            return await PagedList<ProductReview>.Create(query, pageIndex, pageSize);
-        }
-
-        public virtual async Task<int> RatingSumProduct(string productId, string storeId)
-        {
-            var query = from p in _productReviewRepository.Table
-                        where p.ProductId == productId && p.IsApproved && (p.StoreId == storeId || p.StoreId == "")
-                        group p by true into g
-                        select new { Sum = g.Sum(x => x.Rating) };
-            var content = await query.ToListAsync();
-            return content.Count > 0 ? content.FirstOrDefault().Sum : 0;
-        }
-
-        public virtual async Task<int> TotalReviewsProduct(string productId, string storeId)
-        {
-            var query = from p in _productReviewRepository.Table
-                        where p.ProductId == productId && p.IsApproved && (p.StoreId == storeId || p.StoreId == "")
-                        group p by true into g
-                        select new { Count = g.Count() };
-            var content = await query.ToListAsync();
-            return content.Count > 0 ? content.FirstOrDefault().Count : 0;
-        }
-
-
-        /// <summary>
-        /// Inserts a product review
-        /// </summary>
-        /// <param name="productPicture">Product picture</param>
-        public virtual async Task InsertProductReview(ProductReview productReview)
-        {
-            if (productReview == null)
-                throw new ArgumentNullException("productPicture");
-
-            await _productReviewRepository.InsertAsync(productReview);
-
-            //event notification
-            await _mediator.EntityInserted(productReview);
-        }
-
-
-        /// <summary>
-        /// Deletes a product review
-        /// </summary>
-        /// <param name="productReview">Product review</param>
-        public virtual async Task DeleteProductReview(ProductReview productReview)
-        {
-            if (productReview == null)
-                throw new ArgumentNullException("productReview");
-
-            await _productReviewRepository.DeleteAsync(productReview);
-
-            //event notification
-            await _mediator.EntityDeleted(productReview);
-        }
-
-        /// <summary>
-        /// Gets product review
-        /// </summary>
-        /// <param name="productReviewId">Product review identifier</param>
-        /// <returns>Product review</returns>
-        public virtual Task<ProductReview> GetProductReviewById(string productReviewId)
-        {
-            return _productReviewRepository.GetByIdAsync(productReviewId);
-        }
-
-        #endregion
+        
 
         #region Product warehouse inventory
 

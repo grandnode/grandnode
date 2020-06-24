@@ -231,7 +231,7 @@ namespace Grand.Services.Authentication.External
             await _authenticationService.SignIn(user, false);
 
             //raise event       
-            await _mediator.Publish(new CustomerLoggedinEvent(user));
+            await _mediator.Publish(new CustomerLoggedInEvent(user));
 
             // activity log
             await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);

@@ -15,6 +15,7 @@ namespace Grand.Web.Models.Install
             AvailableLanguages = new List<SelectListItem>();
             AvailableCollation = new List<SelectListItem>();
         }
+        [DataType(DataType.EmailAddress)]
         public string AdminEmail { get; set; }
         [DataType(DataType.Password)]
         public string AdminPassword { get; set; }

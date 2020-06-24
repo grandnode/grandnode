@@ -196,7 +196,7 @@ namespace Grand.Web.Areas.Admin.Services
                 if (productTag != null)
                 {
                     productTag.ProductId = product.Id;
-                    await _productService.DeleteProductTag(productTag);
+                    await _productTagService.DetachProductTag(productTag);
                 }
             }
             foreach (var productTagName in productTags)
@@ -220,7 +220,7 @@ namespace Grand.Web.Areas.Admin.Services
                 if (!product.ProductTagExists(productTag.Name))
                 {
                     productTag.ProductId = product.Id;
-                    await _productService.InsertProductTag(productTag);
+                    await _productTagService.AttachProductTag(productTag);
                 }
             }
         }

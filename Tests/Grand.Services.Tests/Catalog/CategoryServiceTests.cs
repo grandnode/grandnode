@@ -86,16 +86,6 @@ namespace Grand.Services.Tests.Catalog
         }
 
         [TestMethod()]
-        public async Task GetCategoryById_ValidArgument_InvokeRepositoryAndCache()
-        {
-            var categoryId = "id";
-            var cacheKey = string.Format("Grand.category.id-{0}", categoryId);
-            await _categoryService.GetCategoryById(categoryId);
-            _casheManagerMock.Verify(c => c.TryGetValueAsync<Category>( cacheKey), Times.Once);
-            _categoryRepositoryMock.Verify(c => c.GetByIdAsync("id"), Times.Once);
-        }
-
-        [TestMethod()]
         public void GetCategoryBreadCrumb_ShouldReturnEmptyList()
         {
             var allCategory = GetMockCategoryList();

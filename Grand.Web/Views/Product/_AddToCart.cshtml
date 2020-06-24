@@ -44,7 +44,7 @@
 
             var addId = "addtocart_" + @Model.ProductId + "_EnteredQuantity";
             <label for="@addId" class="sr-only">@T("ShoppingCart.AddToCart")</label>
-            <input asp-for="EnteredQuantity" class="form-control qty-input text-center" />
+            <input asp-for="EnteredQuantity" class="form-control qty-input text-center" type="number" inputmode="numeric" />
             if (!String.IsNullOrEmpty(Model.MeasureUnit))
             {
                 <span class="qty-unit d-flex align-items-center mr-2">

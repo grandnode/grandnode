@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Customers;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -21,17 +22,24 @@ namespace Grand.Web.Areas.Admin.Services
     public partial class ProductReviewViewModelService : IProductReviewViewModelService
     {
         private readonly IProductService _productService;
+        private readonly IProductReviewService _productReviewService;
         private readonly ICustomerService _customerService;
         private readonly IStoreService _storeService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IMediator _mediator;
 
-        public ProductReviewViewModelService(IProductService productService, ICustomerService customerService,
-            IStoreService storeService, IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, IMediator mediator)
+        public ProductReviewViewModelService(
+            IProductService productService,
+            IProductReviewService productReviewService,
+            ICustomerService customerService,
+            IStoreService storeService, 
+            IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService, 
+            IMediator mediator)
         {
             _productService = productService;
+            _productReviewService = productReviewService;
             _customerService = customerService;
             _storeService = storeService;
             _dateTimeHelper = dateTimeHelper;
@@ -95,7 +103,7 @@ namespace Grand.Web.Areas.Admin.Services
             DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var productReviews = await _productService.GetAllProductReviews("", null,
+            var productReviews = await _productReviewService.GetAllProductReviews("", null,
                 createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId, model.SearchProductId);
 
             var items = new List<ProductReviewModel>();
@@ -111,21 +119,24 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<ProductReview> UpdateProductReview(ProductReview productReview, ProductReviewModel model)
         {
             productReview = model.ToEntity(productReview);
-            await _productService.UpdateProductReview(productReview);
+            await _productReviewService.UpdateProductReview(productReview);
 
             //update product totals
             var product = await _productService.GetProductById(productReview.ProductId);
-            await _productService.UpdateProductReviewTotals(product);
+
+            //update product totals
+            await _mediator.Send(new UpdateProductReviewTotalsCommand() { Product = product });
+
             return productReview;
         }
 
         public virtual async Task DeleteProductReview(ProductReview productReview)
         {
-            await _productService.DeleteProductReview(productReview);
+            await _productReviewService.DeleteProductReview(productReview);
 
             var product = await _productService.GetProductById(productReview.ProductId);
             //update product totals
-            await _productService.UpdateProductReviewTotals(product);
+            await _mediator.Send(new UpdateProductReviewTotalsCommand() { Product = product });
         }
 
         public virtual async Task ApproveSelected(IList<string> selectedIds, string storeId)
@@ -135,13 +146,15 @@ namespace Grand.Web.Areas.Admin.Services
                 string idReview = id.Split(':').First().ToString();
                 string idProduct = id.Split(':').Last().ToString();
                 var product = await _productService.GetProductById(idProduct);
-                var productReview = await _productService.GetProductReviewById(idReview);
+                var productReview = await _productReviewService.GetProductReviewById(idReview);
                 if (productReview != null && (string.IsNullOrEmpty(storeId) || productReview.StoreId == storeId))
                 {
                     var previousIsApproved = productReview.IsApproved;
                     productReview.IsApproved = true;
-                    await _productService.UpdateProductReview(productReview);
-                    await _productService.UpdateProductReviewTotals(product);
+                    await _productReviewService.UpdateProductReview(productReview);
+                    //update product totals
+                    await _mediator.Send(new UpdateProductReviewTotalsCommand() { Product = product });
+
 
                     //raise event (only if it wasn't approved before)
                     if (!previousIsApproved)
@@ -158,13 +171,13 @@ namespace Grand.Web.Areas.Admin.Services
                 string idProduct = id.Split(':').Last().ToString();
 
                 var product = await _productService.GetProductById(idProduct);
-                var productReview = await _productService.GetProductReviewById(idReview);
+                var productReview = await _productReviewService.GetProductReviewById(idReview);
                 if (productReview != null && (string.IsNullOrEmpty(storeId) || productReview.StoreId == storeId))
                 {
                     productReview.IsApproved = false;
-                    await _productService.UpdateProductReview(productReview);
+                    await _productReviewService.UpdateProductReview(productReview);
                     //update product totals
-                    await _productService.UpdateProductReviewTotals(product);
+                    await _mediator.Send(new UpdateProductReviewTotalsCommand() { Product = product });
                 }
             }
         }
