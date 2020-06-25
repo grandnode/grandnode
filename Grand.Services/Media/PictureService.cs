@@ -691,6 +691,24 @@ namespace Grand.Services.Media
         }
 
         /// <summary>
+        /// Updates the picture
+        /// </summary>
+        /// <param name="picture">Picture</param>
+        /// <returns>Picture</returns>
+        public virtual async Task<Picture> UpdatePicture(Picture picture)
+        {
+            if (picture == null)
+                throw new ArgumentNullException("picture");
+
+            await _pictureRepository.UpdateAsync(picture);
+
+            //event notification
+            await _mediator.EntityUpdated(picture);
+
+            return picture;
+        }
+
+        /// <summary>
         /// Save picture on file system
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>

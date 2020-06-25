@@ -153,6 +153,13 @@ namespace Grand.Services.Media
             bool isNew = true, bool validateBinary = true);
 
         /// <summary>
+        /// Updates the picture
+        /// </summary>
+        /// <param name="picture">Picture</param>
+        /// <returns>Picture</returns>
+        Task<Picture> UpdatePicture(Picture picture);
+
+        /// <summary>
         /// Updates a SEO filename of a picture
         /// </summary>
         /// <param name="pictureId">The picture identifier</param>

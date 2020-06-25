@@ -9,7 +9,7 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
-using Grand.Web.Areas.Admin.Features.Model.Common;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Web.Areas.Admin.Models.Home;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -74,7 +74,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             model.LowStockProducts = products.Count + combinations.Count;
 
-            model.ReturnRequests = await _mediator.Send(new GetReturnRequest() { RequestStatusId = 0, StoreId = storeId });
+            model.ReturnRequests = await _mediator.Send(new GetReturnRequestCountQuery() { RequestStatusId = 0, StoreId = storeId });
             model.TodayRegisteredCustomers = (await _customerService.GetAllCustomers(storeId: storeId, customerRoleIds: new string[] { (await _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered)).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1)).TotalCount;
             return model;
 
