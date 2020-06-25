@@ -1960,7 +1960,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.SecuritySettings.EncryptionKey = model.SecuritySettings.EncryptionKey.Trim();
 
                 var newEncryptionPrivateKey = model.SecuritySettings.EncryptionKey;
-                if (String.IsNullOrEmpty(newEncryptionPrivateKey) || newEncryptionPrivateKey.Length != 16)
+                if (String.IsNullOrEmpty(newEncryptionPrivateKey) || newEncryptionPrivateKey.Length != 24)
                     throw new GrandException(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort"));
 
                 string oldEncryptionPrivateKey = securitySettings.EncryptionKey;

@@ -8,4 +8,7 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.CreateDate.Hint">
     <Value>Allow user to change create date for the blog post.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort">
+    <Value>Encryption private key must be 24 characters long</Value>
+  </LocaleResource>
 </Language>

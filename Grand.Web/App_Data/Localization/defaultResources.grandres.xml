@@ -7484,7 +7484,7 @@
     <Value>The new encryption key is the same as the old one</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort">
-    <Value>Encryption private key must be 16 characters long</Value>
+    <Value>Encryption private key must be 24 characters long</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FacebookLink">
     <Value>Facebook page URL</Value>
