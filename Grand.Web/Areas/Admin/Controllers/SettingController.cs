@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
-using Grand.Core.Data;
 using Grand.Core.Domain;
 using Grand.Core.Domain.AdminSearch;
 using Grand.Core.Domain.Blogs;
@@ -1434,7 +1433,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         [HttpPost, ActionName("Media")]
         [FormValueRequired("change-picture-storage")]
-        public async Task<IActionResult> ChangePictureStorage([FromServices] IRepository<Picture> pictureRepository, [FromServices] MediaSettings mediaSettings)
+        public async Task<IActionResult> ChangePictureStorage([FromServices] MediaSettings mediaSettings)
         {
             var storeIdDb = !mediaSettings.StoreInDb;
 
@@ -1442,7 +1441,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _settingService.SetSetting("MediaSettings.StoreInDb", storeIdDb, "");
 
             int pageIndex = 0;
-            const int pageSize = 400;
+            const int pageSize = 100;
             try
             {
                 while (true)
@@ -1462,9 +1461,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                             _pictureService.SavePictureInFile(picture.Id, pictureBinary, picture.MimeType);
                         picture.PictureBinary = storeIdDb ? pictureBinary : new byte[0];
                         picture.IsNew = true;
+
+                        await _pictureService.UpdatePicture(picture);
                     }
-                    //save all at once
-                    pictureRepository.Update(pictures);
                 }
             }
             finally
