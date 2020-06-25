@@ -54,6 +54,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Grand.Core.Configuration;
+using Grand.Services.Commands.Models.Common;
+using MediatR;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -79,7 +81,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IRepository<Product> _productRepository;
+        private readonly IMediator _mediator;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ILanguageService _languageService;
         private readonly ICacheManager _cacheManager;
@@ -106,7 +108,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IWorkContext workContext,
             IGenericAttributeService genericAttributeService,
-            IRepository<Product> productRepository,
+            IMediator mediator,
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
             ICacheManager cacheManager,
@@ -129,7 +131,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _storeService = storeService;
             _workContext = workContext;
             _genericAttributeService = genericAttributeService;
-            _productRepository = productRepository;
+            _mediator = mediator;
             _returnRequestService = returnRequestService;
             _languageService = languageService;
             _cacheManager = cacheManager;
@@ -2047,16 +2049,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (commonSettings.UseFullTextSearch)
                 {
-                    _productRepository.Collection.Indexes.DropOne("ProductText");
+                    await _mediator.Send(new UseFullTextSearchCommand() { UseFullTextSearch = false });
                     commonSettings.UseFullTextSearch = false;
                     await _settingService.SaveSetting(commonSettings);
                     SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disabled"));
                 }
                 else
                 {
-                    var indexOption = new CreateIndexOptions() { Name = "ProductText" };
-                    indexOption.Collation = new Collation("simple");
-                    _productRepository.Collection.Indexes.CreateOne(new CreateIndexModel<Product>((Builders<Product>.IndexKeys.Text("$**")), indexOption));
+                    await _mediator.Send(new UseFullTextSearchCommand() { UseFullTextSearch = true });
                     commonSettings.UseFullTextSearch = true;
                     await _settingService.SaveSetting(commonSettings);
                     SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enabled"));
