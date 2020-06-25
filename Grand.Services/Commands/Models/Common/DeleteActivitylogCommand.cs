@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Grand.Web.Areas.Admin.Commands.Model.Common
+namespace Grand.Services.Commands.Models.Common
 {
     public class DeleteActivitylogCommand : IRequest<bool>
     {

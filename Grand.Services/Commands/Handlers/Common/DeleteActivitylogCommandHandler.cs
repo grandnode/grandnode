@@ -1,12 +1,12 @@
 ﻿using Grand.Core.Data;
 using Grand.Core.Domain.Logging;
-using Grand.Web.Areas.Admin.Commands.Model.Common;
+using Grand.Services.Commands.Models.Common;
 using MediatR;
 using MongoDB.Bson;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Admin.Commands.Handler.Common
+namespace Grand.Services.Commands.Handlers.Common
 {
     public class DeleteActivitylogCommandHandler : IRequestHandler<DeleteActivitylogCommand, bool>
     {

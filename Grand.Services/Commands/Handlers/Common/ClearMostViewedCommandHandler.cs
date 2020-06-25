@@ -1,12 +1,12 @@
 ﻿using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Grand.Web.Areas.Admin.Commands.Model.Common;
+using Grand.Services.Commands.Models.Common;
 using MediatR;
 using MongoDB.Driver;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Admin.Commands.Handler.Common
+namespace Grand.Services.Commands.Handlers.Common
 {
     public class ClearMostViewedCommandHandler : IRequestHandler<ClearMostViewedCommand, bool>
     {
