@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain;
 using Grand.Core.Domain.AdminSearch;
@@ -28,6 +29,8 @@ using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Framework.Security.Captcha;
 using Grand.Framework.Themes;
+using Grand.Services.Commands.Models.Common;
+using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
@@ -44,19 +47,15 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Web.Areas.Admin.Models.PushNotifications;
 using Grand.Web.Areas.Admin.Models.Settings;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Grand.Core.Configuration;
-using Grand.Services.Commands.Models.Common;
-using MediatR;
-using Grand.Services.Commands.Models.Orders;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -86,7 +85,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IReturnRequestService _returnRequestService;
         private readonly ILanguageService _languageService;
         private readonly ICacheManager _cacheManager;
-        private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
@@ -112,8 +110,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IMediator mediator,
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
-            ICacheManager cacheManager,
-            IServiceProvider serviceProvider)
+            ICacheManager cacheManager)
         {
             _settingService = settingService;
             _countryService = countryService;
@@ -136,7 +133,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             _returnRequestService = returnRequestService;
             _languageService = languageService;
             _cacheManager = cacheManager;
-            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -1804,7 +1800,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             seoSettings.TwitterMetaTags = model.SeoSettings.TwitterMetaTags;
             seoSettings.OpenGraphMetaTags = model.SeoSettings.OpenGraphMetaTags;
 
-            
+
             await UpdateOverrideForStore(storeScope, model.SeoSettings.PageTitleSeparator_OverrideForStore, seoSettings, x => x.PageTitleSeparator);
             await UpdateOverrideForStore(storeScope, model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, seoSettings, x => x.PageTitleSeoAdjustment);
             await UpdateOverrideForStore(storeScope, model.SeoSettings.DefaultTitle_OverrideForStore, seoSettings, x => x.DefaultTitle);
@@ -1864,7 +1860,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             pdfSettings.DisablePdfInvoicesForPendingOrders = model.PdfSettings.DisablePdfInvoicesForPendingOrders;
             pdfSettings.InvoiceFooterTextColumn1 = model.PdfSettings.InvoiceFooterTextColumn1;
             pdfSettings.InvoiceFooterTextColumn2 = model.PdfSettings.InvoiceFooterTextColumn2;
-           
+
             await UpdateOverrideForStore(storeScope, model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, pdfSettings, x => x.LetterPageSizeEnabled);
             await UpdateOverrideForStore(storeScope, model.PdfSettings.LogoPictureId_OverrideForStore, pdfSettings, x => x.LogoPictureId);
             await UpdateOverrideForStore(storeScope, model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, pdfSettings, x => x.DisablePdfInvoicesForPendingOrders);
