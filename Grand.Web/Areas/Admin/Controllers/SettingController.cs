@@ -56,6 +56,7 @@ using System.Threading.Tasks;
 using Grand.Core.Configuration;
 using Grand.Services.Commands.Models.Common;
 using MediatR;
+using Grand.Services.Commands.Models.Orders;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -1041,11 +1042,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.GiftCards_Activated_OrderStatuses.Insert(0, new SelectListItem { Text = "---", Value = "0" });
 
             //order ident
-            var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
-            int maxOrderNumber = 0;
-            if (orderRepository.Table.Count() > 0)
-                maxOrderNumber = orderRepository.Table.Max(x => x.OrderNumber);
-            model.OrderIdent = maxOrderNumber;
+            model.OrderIdent = await _mediator.Send(new MaxOrderNumberCommand());
 
             return View(model);
         }
@@ -1089,16 +1086,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await ClearCache();
 
                 //order ident
-                if (model.OrderIdent > 0)
+                if (model.OrderIdent.HasValue && model.OrderIdent.Value > 0)
                 {
-                    var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
-                    int maxOrderNumber = 0;
-                    if (orderRepository.Table.Count() > 0)
-                        maxOrderNumber = orderRepository.Table.Max(x => x.OrderNumber);
-                    if (model.OrderIdent > maxOrderNumber)
-                    {
-                        orderRepository.Insert(new Order() { OrderNumber = model.OrderIdent.Value, Deleted = true, CreatedOnUtc = DateTime.UtcNow });
-                    }
+                    model.OrderIdent = await _mediator.Send(new MaxOrderNumberCommand() { OrderNumber = model.OrderIdent });
                 }
 
                 //activity log
