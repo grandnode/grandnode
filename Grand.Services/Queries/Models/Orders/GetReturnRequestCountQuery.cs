@@ -1,7 +1,7 @@
 ﻿using MediatR;
-namespace Grand.Web.Areas.Admin.Features.Model.Common
+namespace Grand.Services.Queries.Models.Orders
 {
-    public class GetReturnRequest : IRequest<int>
+    public class GetReturnRequestCountQuery : IRequest<int>
     {
         public int RequestStatusId { get; set; }
         public string StoreId { get; set; }
