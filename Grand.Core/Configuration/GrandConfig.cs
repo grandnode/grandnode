@@ -98,6 +98,11 @@ namespace Grand.Core.Configuration
         public string AmazonRegion { get; set; }
 
         /// <summary>
+        /// Amazon directory at bucket
+        /// </summary>
+        public string AmazonBucketDirectory { get; set; }
+
+        /// <summary>
         /// A list of plugins ignored during installation
         /// </summary>
         public string PluginsIgnoredDuringInstallation { get; set; }

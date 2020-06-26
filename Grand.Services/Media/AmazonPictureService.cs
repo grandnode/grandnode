@@ -26,6 +26,7 @@ namespace Grand.Services.Media
 
         private readonly GrandConfig _config;
         private readonly string _bucketName;
+        private readonly string _bucketDirectory;
         private readonly string _distributionDomainName;
         private bool _bucketExist = false;
         private readonly IAmazonS3 _s3Client;
@@ -73,9 +74,13 @@ namespace Grand.Services.Media
             //Bucket guard
             _bucketName = _config.AmazonBucketName;
 
+            if (!string.IsNullOrEmpty(_config.AmazonBucketDirectory))
+            {
+                _bucketDirectory = $"{_config.AmazonBucketDirectory}/";
+            }
+
             //Cloudfront distribution
             _distributionDomainName = _config.AmazonDistributionDomainName;
-
         }
 
         #endregion
@@ -98,7 +103,6 @@ namespace Grand.Services.Media
                     try
                     {
                         EnsureValidResponse(await _s3Client.PutBucketAsync(putBucketRequest), HttpStatusCode.OK);
-
                     }
                     catch (AmazonS3Exception ex)
                     {
@@ -133,7 +137,7 @@ namespace Grand.Services.Media
 
             var listObjectsRequest = new ListObjectsV2Request() {
                 BucketName = _bucketName,
-                Prefix = picture.Id
+                Prefix = $"{_bucketDirectory}{picture.Id}"
             };
             var listObjectsResponse = await _s3Client.ListObjectsV2Async(listObjectsRequest);
 
@@ -152,12 +156,11 @@ namespace Grand.Services.Media
         {
             if (string.IsNullOrEmpty(_distributionDomainName))
             {
-                var url = string.Format("https://{0}.s3.amazonAws.com/{1}", _bucketName, thumbFileName);
+                var url = string.Format("https://{0}.s3.amazonaws.com/{1}", _bucketName, $"{_bucketDirectory}{thumbFileName}");
                 return url;
             }
-            else
-                return string.Format("https://{0}/{1}", _distributionDomainName, thumbFileName);
-
+            
+            return string.Format("https://{0}/{1}", _distributionDomainName, $"{_bucketDirectory}{thumbFileName}");
         }
 
         /// <summary>
@@ -171,12 +174,11 @@ namespace Grand.Services.Media
 
             if (string.IsNullOrEmpty(_distributionDomainName))
             {
-                var url = string.Format("https://{0}.s3.amazonAws.com/{1}", _bucketName, thumbFileName);
+                var url = string.Format("https://{0}.s3.amazonaws.com/{1}", _bucketName, $"{_bucketDirectory}{thumbFileName}");
                 return url;
             }
-            else
-                return string.Format("https://{0}/{1}", _distributionDomainName, thumbFileName);
-
+            
+            return string.Format("https://{0}/{1}", _distributionDomainName, $"{_bucketDirectory}{thumbFileName}");
         }
 
         /// <summary>
@@ -190,10 +192,10 @@ namespace Grand.Services.Media
             try
             {
                 await CheckBucketExists();
-                var getObjectResponse = await _s3Client.GetObjectAsync(_bucketName, thumbFileName);
+                var getObjectResponse = await _s3Client.GetObjectAsync(_bucketName, $"{_bucketDirectory}{thumbFileName}");
                 EnsureValidResponse(getObjectResponse, HttpStatusCode.OK);
 
-                if (getObjectResponse.BucketName != _bucketName && getObjectResponse.Key != thumbFileName)
+                if (getObjectResponse.BucketName != _bucketName && getObjectResponse.Key != $"{_bucketDirectory}{thumbFileName}")
                     return false;
 
                 return true;
@@ -219,12 +221,12 @@ namespace Grand.Services.Media
                 var putObjectRequest = new PutObjectRequest() {
                     BucketName = _bucketName,
                     InputStream = stream,
-                    Key = thumbFileName,
+                    Key = $"{_bucketDirectory}{thumbFileName}",
                     StorageClass = S3StorageClass.Standard,
                 };
                 _s3Client.PutObjectAsync(putObjectRequest).Wait();
             }
-            _s3Client.MakeObjectPublicAsync(_bucketName, thumbFileName, true).Wait();
+            _s3Client.MakeObjectPublicAsync(_bucketName, $"{_bucketDirectory}{thumbFileName}", true).Wait();
             return Task.CompletedTask;
         }
 
