@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,6 +50,7 @@ namespace Grand.Core.Plugins
         /// <summary>
         /// Initialize
         /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Initialize(IMvcCoreBuilder mvcCoreBuilder, GrandConfig config)
         {
             if (mvcCoreBuilder == null)
