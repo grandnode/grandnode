@@ -85,6 +85,40 @@ namespace Grand.Services.Localization
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Returns a LocaleResource Name-Value List from xml string
+        /// </summary>
+        /// <param name="xml">String content of xml file</param>
+        /// <returns>Name-Value HashSet</returns>
+        protected virtual HashSet<(string name, string value)> LoadLocaleResourcesFromXml(string xml)
+        {
+            var result = new HashSet<(string name, string value)>();
+
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xml);
+
+            var nodes = xmlDoc.SelectNodes(@"//Language/LocaleResource");
+            foreach (XmlNode node in nodes)
+            {
+                string name = node.Attributes["Name"].InnerText.Trim();
+                string value = "";
+                var valueNode = node.SelectSingleNode("Value");
+                if (valueNode != null)
+                    value = valueNode.InnerText;
+
+                if (String.IsNullOrEmpty(name))
+                    continue;
+
+                result.Add((name, value));
+            }
+
+            return result;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -332,47 +366,36 @@ namespace Grand.Services.Localization
             if (String.IsNullOrEmpty(xml))
                 return;
 
-            //stored procedures aren't supported
-            var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xml);
+            var localeResources = await (from lsr in _lsrRepository.Table
+                                         where lsr.LanguageId == language.Id
+                                         select lsr).ToListAsync();
 
-            var nodes = xmlDoc.SelectNodes(@"//Language/LocaleResource");
-            foreach (XmlNode node in nodes)
+            var lsNamesDict = localeResources.GroupBy(
+                lsr => lsr.ResourceName,
+                (key, groupedLsr) => groupedLsr.Last())
+                .ToDictionary(lsr => lsr.ResourceName, lsr => lsr);
+
+            var lsrToUpdate = new List<LocaleStringResource>();
+            // Using dictionary to avoid duplicates
+            var lsrToInsert = new Dictionary<string, LocaleStringResource>();
+
+            foreach (var (name, value) in LoadLocaleResourcesFromXml(xml))
             {
-                string name = node.Attributes["Name"].InnerText.Trim();
-                string value = "";
-                var valueNode = node.SelectSingleNode("Value");
-                if (valueNode != null)
-                    value = valueNode.InnerText;
-
-                if (String.IsNullOrEmpty(name))
-                    continue;
-
-                //do not use "Insert"/"Update" methods because they clear cache
-                //let's bulk insert
-                var resource = await (from l in _lsrRepository.Table
-                                where l.ResourceName.ToLowerInvariant() == name.ToLowerInvariant() && l.LanguageId == language.Id
-                                select l).FirstOrDefaultAsync();
-
-                if (resource != null)
+                LocaleStringResource current;
+                if (lsNamesDict.TryGetValue(name, out current))
                 {
-                    resource.ResourceName = resource.ResourceName.ToLowerInvariant();
-                    resource.ResourceValue = value;
-                    await _lsrRepository.UpdateAsync(resource);
+                    current.ResourceValue = value;
+                    lsrToUpdate.Add(current);
                 }
                 else
                 {
-
-                    var lsr = (
-                        new LocaleStringResource
-                        {
-                            LanguageId = language.Id,
-                            ResourceName = name.ToLowerInvariant(),
-                            ResourceValue = value
-                        });
-                    await _lsrRepository.InsertAsync(lsr);
+                    current = new LocaleStringResource { LanguageId = language.Id, ResourceName = name, ResourceValue = value };
+                    lsrToInsert[name] = current;
                 }
             }
+
+            await _lsrRepository.InsertAsync(lsrToInsert.Values);
+            await _lsrRepository.UpdateAsync(lsrToUpdate);
 
             //clear cache
             await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
@@ -391,30 +414,15 @@ namespace Grand.Services.Localization
             if (String.IsNullOrEmpty(xml))
                 return;
 
-            var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xml);
+            var lsrToInsert = new List<LocaleStringResource>();
 
-            var nodes = xmlDoc.SelectNodes(@"//Language/LocaleResource");
-            foreach (XmlNode node in nodes)
+            foreach (var (name, value) in LoadLocaleResourcesFromXml(xml))
             {
-                string name = node.Attributes["Name"].InnerText.Trim();
-                string value = "";
-                var valueNode = node.SelectSingleNode("Value");
-                if (valueNode != null)
-                    value = valueNode.InnerText;
-
-                if (string.IsNullOrEmpty(name))
-                    continue;
-
-                var lsr = (
-                    new LocaleStringResource
-                    {
-                        LanguageId = language.Id,
-                        ResourceName = name.ToLowerInvariant(),
-                        ResourceValue = value
-                    });
-                await _lsrRepository.InsertAsync(lsr);
+                LocaleStringResource current = new LocaleStringResource { LanguageId = language.Id, ResourceName = name, ResourceValue = value };
+                lsrToInsert.Add(current);
             }
+
+            await _lsrRepository.InsertAsync(lsrToInsert);
 
             //clear cache
             await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
