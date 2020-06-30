@@ -103,18 +103,4 @@
             });
         });
     </script>
-
-    <input type="submit" id="btnRefresh" style="display: none" />
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#btnRefresh').click(function () {
-                //refresh grid
-                var grid = $("#product-tags-grid").data('kendoGrid');
-                grid.dataSource.read();
-
-                //return false to don't reload a page
-                return false;
-            });
-        });
-    </script>
 </form>
