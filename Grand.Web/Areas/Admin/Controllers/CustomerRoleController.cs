@@ -1,5 +1,4 @@
-﻿using Grand.Api.Extensions;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -8,6 +7,7 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
+using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
@@ -33,9 +33,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             ILocalizationService localizationService)
         {
-            this._customerRoleViewModelService = customerRoleViewModelService;
-            this._customerService = customerService;
-            this._localizationService = localizationService;
+            _customerRoleViewModelService = customerRoleViewModelService;
+            _customerService = customerService;
+            _localizationService = localizationService;
         }
 
         #endregion
