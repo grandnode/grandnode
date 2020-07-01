@@ -156,7 +156,6 @@ namespace Grand.Api.Infrastructure
             createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeId));
             createSpecification.Parameter<bool>(nameof(ProductSpecificationAttributeDto.ShowOnProductPage));
             createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeOptionId));
-            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeOptionId));
 
             createSpecification.Returns<bool>();
 
