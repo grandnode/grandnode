@@ -22,7 +22,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [HttpGet]
+        [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))

@@ -24,7 +24,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [HttpGet]
+        [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
@@ -113,6 +113,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         //odata/Product(id)/UpdateStock
         //body: { "Stock": 10 }
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> UpdateStock(string key, [FromBody] ODataActionParameters parameters)
         {
@@ -141,6 +142,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         #region Product category
 
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> CreateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
         {
@@ -165,6 +167,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> UpdateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
         {
@@ -190,6 +194,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> DeleteProductCategory(string key, [FromBody] ODataActionParameters parameters)
         {
@@ -225,6 +231,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         #region Product manufacturer
 
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> CreateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
         {
@@ -250,6 +257,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> UpdateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
         {
@@ -274,6 +283,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> DeleteProductManufacturer(string key, [FromBody] ODataActionParameters parameters)
         {
@@ -308,6 +319,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         #region Product picture
 
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> CreateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
         {
@@ -333,6 +345,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> UpdateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
         {
@@ -358,6 +372,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> DeleteProductPicture(string key, [FromBody] ODataActionParameters parameters)
         {
@@ -393,6 +409,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         #region Product specification
 
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> CreateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
         {
@@ -418,6 +435,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> UpdateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
         {
@@ -443,6 +461,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> DeleteProductSpecification(string key, [FromBody] ODataActionParameters parameters)
         {
@@ -478,6 +497,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         #region Product tierprice
 
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> CreateProductTierPrice(string key, [FromBody] ProductTierPriceDto productTierPrice)
         {
@@ -502,6 +522,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> UpdateProductTierPrice(string key, [FromBody] ProductTierPriceDto productTierPrice)
         {
@@ -526,6 +548,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> DeleteProductTierPrice(string key, [FromBody] ODataActionParameters parameters)
         {
@@ -560,6 +584,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         #region Product attribute mapping
 
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> CreateProductAttributeMapping(string key, [FromBody] ProductAttributeMappingDto productAttributeMapping)
         {
@@ -585,6 +610,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> UpdateProductAttributeMapping(string key, [FromBody] ProductAttributeMappingDto productAttributeMapping)
         {
@@ -610,6 +636,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> DeleteProductAttributeMapping(string key, [FromBody] ODataActionParameters parameters)
         {
@@ -633,7 +660,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
                 if (ModelState.IsValid)
                 {
-                    var result = await _mediator.Send(new DeleteProductAttributeMappingCommand() { Product = product.FirstOrDefault(),  Model = pam });
+                    var result = await _mediator.Send(new DeleteProductAttributeMappingCommand() { Product = product.FirstOrDefault(), Model = pam });
                     return Ok(result);
                 }
                 return BadRequest(ModelState);

@@ -11,6 +11,7 @@ namespace Grand.Web.Areas.Api.Controllers
     [ApiController]
     [Area("Api")]
     [Route("[area]/[controller]/[action]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     public class TokenController : Controller
     {
         private readonly IMediator _mediator;

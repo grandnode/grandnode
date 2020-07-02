@@ -32,7 +32,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [HttpGet]
+        [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
@@ -71,6 +71,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
@@ -87,7 +88,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             return Ok();
         }
-        //odata/Customer(email)/AddAddress
+
+        //odata/Customer/AddAddress/(email)
+        [Route("[action]/({key}")]
         [HttpPost]
         public async Task<IActionResult> AddAddress(string key, [FromBody] AddressDto address)
         {
@@ -105,7 +108,8 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return Ok(address);
         }
 
-        //odata/Customer(email)/UpdateAddress
+        //odata/Customer/UpdateAddress/(email)
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> UpdateAddress(string key, [FromBody] AddressDto address)
         {
@@ -124,8 +128,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return Ok(address);
         }
 
-        //odata/Customer(email)/DeleteAddress
+        //odata/Customer/DeleteAddress/(email)
         //body: { "addressId": "xxx" }
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> DeleteAddress(string key, [FromBody] ODataActionParameters parameters)
         {
@@ -150,8 +155,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
 
-        //odata/Customer(email)/SetPassword
+        //odata/Customer/SetPassword/(email)
         //body: { "password": "123456" }
+        [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> SetPassword(string key, [FromBody] ODataActionParameters parameters)
         {
@@ -169,7 +175,6 @@ namespace Grand.Web.Areas.Api.Controllers.OData
                 return BadRequest(string.Join(',', changePassResult.Errors));
             }
             return Ok(true);
-
         }
     }
 }
