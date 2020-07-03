@@ -1,4 +1,5 @@
-﻿using Grand.Core.Configuration;
+﻿using Grand.Api.Extensions;
+using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Builder;
@@ -54,6 +55,7 @@ namespace Grand.Api.Infrastructure
                             new List<string>()
                         }
                     });
+                    c.OperationFilter<AddParamOperationFilter>();
                 });
 
                 SetOutputFormatters(services);
