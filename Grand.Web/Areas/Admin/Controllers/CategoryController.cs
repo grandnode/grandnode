@@ -55,15 +55,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             IImportManager importManager)
         {
-            this._categoryService = categoryService;
-            this._categoryViewModelService = categoryViewModelService;
-            this._customerService = customerService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
-            this._exportManager = exportManager;
-            this._workContext = workContext;
-            this._importManager = importManager;
+            _categoryService = categoryService;
+            _categoryViewModelService = categoryViewModelService;
+            _customerService = customerService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _exportManager = exportManager;
+            _workContext = workContext;
+            _importManager = importManager;
         }
 
         #endregion

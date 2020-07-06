@@ -17,7 +17,7 @@ namespace Grand.Services.Messages
 
         public ContactAttributeParser(IContactAttributeService contactAttributeService)
         {
-            this._contactAttributeService = contactAttributeService;
+            _contactAttributeService = contactAttributeService;
         }
 
         /// <summary>

@@ -26,10 +26,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly SeoSettings _seoSettings;
         public ProductTagsController(IProductTagService productTagService, IProductService productService, ILanguageService languageService, SeoSettings seoSettings)
         {
-            this._productTagService = productTagService;
-            this._productService = productService;
-            this._languageService = languageService;
-            this._seoSettings = seoSettings;
+            _productTagService = productTagService;
+            _productService = productService;
+            _languageService = languageService;
+            _seoSettings = seoSettings;
         }
 
         public IActionResult Index() => RedirectToAction("List");

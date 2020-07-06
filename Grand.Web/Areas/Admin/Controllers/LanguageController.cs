@@ -36,10 +36,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             IStoreService storeService)
         {
-            this._languageViewModelService = languageViewModelService;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._storeService = storeService;
+            _languageViewModelService = languageViewModelService;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _storeService = storeService;
         }
 
         #endregion

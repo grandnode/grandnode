@@ -17,7 +17,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public DownloadController(IDownloadService downloadService)
         {
-            this._downloadService = downloadService;
+            _downloadService = downloadService;
         }
 
         public async Task<IActionResult> DownloadFile(Guid downloadGuid)

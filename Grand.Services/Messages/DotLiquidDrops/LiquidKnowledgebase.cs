@@ -16,10 +16,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidKnowledgebase(KnowledgebaseArticle article, KnowledgebaseArticleComment articleComment, Store store, Language language)
         {
-            this._article = article;
-            this._articleComment = articleComment;
-            this._store = store;
-            this._language = language;
+            _article = article;
+            _articleComment = articleComment;
+            _store = store;
+            _language = language;
             AdditionalTokens = new Dictionary<string, string>();
         }
 

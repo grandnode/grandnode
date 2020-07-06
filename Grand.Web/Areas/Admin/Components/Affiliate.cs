@@ -21,8 +21,8 @@ namespace Grand.Web.Areas.Admin.Components
 
         public AffiliateViewComponent(ILocalizationService localizationService, IPermissionService permissionService)
         {
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string affiliateId)//original Action name: AffiliatedOrderList

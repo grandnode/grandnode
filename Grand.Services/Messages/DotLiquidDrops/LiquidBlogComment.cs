@@ -15,10 +15,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly Language _language;
         public LiquidBlogComment(BlogComment blogComment, BlogPost blogPost, Store store, Language language)
         {
-            this._blogComment = blogComment;
-            this._blogPost = blogPost;
-            this._store = store;
-            this._language = language;
+            _blogComment = blogComment;
+            _blogPost = blogPost;
+            _store = store;
+            _language = language;
             AdditionalTokens = new Dictionary<string, string>();
         }
 

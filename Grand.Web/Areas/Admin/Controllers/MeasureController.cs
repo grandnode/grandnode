@@ -34,10 +34,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             MeasureSettings measureSettings)
         {
-            this._measureService = measureService;
-            this._settingService = settingService;
-            this._localizationService = localizationService;
-            this._measureSettings = measureSettings;
+            _measureService = measureService;
+            _settingService = settingService;
+            _localizationService = localizationService;
+            _measureSettings = measureSettings;
         }
 
         #endregion

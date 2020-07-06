@@ -21,8 +21,8 @@ namespace Grand.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public ValidateVendorAttribute(bool ignore = false) : base(typeof(ValidateVendorFilter))
         {
-            this._ignoreFilter = ignore;
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
 
         public bool IgnoreFilter => _ignoreFilter;

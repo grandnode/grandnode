@@ -13,7 +13,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public GoogleAnalyticsController(
             IGoogleAnalyticsService googleAnalyticsService)
         {
-            this._googleAnalyticsService = googleAnalyticsService;
+            _googleAnalyticsService = googleAnalyticsService;
         }
        
         public async Task<IActionResult> DashboardGeneralData(DateTime? startDate = null, DateTime? endDate = null)

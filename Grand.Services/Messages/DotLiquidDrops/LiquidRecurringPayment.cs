@@ -10,8 +10,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidRecurringPayment(RecurringPayment recurringPayment)
         {
-            this._recurringPayment = recurringPayment;
-
+            _recurringPayment = recurringPayment;
             AdditionalTokens = new Dictionary<string, string>();
         }
 

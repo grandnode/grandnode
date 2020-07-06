@@ -10,8 +10,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private Vendor _vendor;
         public LiquidVendorReview(Vendor vendor, VendorReview vendorReview)
         {
-            this._vendorReview = vendorReview;
-            this._vendor = vendor;
+            _vendorReview = vendorReview;
+            _vendor = vendor;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

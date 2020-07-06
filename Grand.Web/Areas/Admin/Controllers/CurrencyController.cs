@@ -49,14 +49,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             IStoreService storeService)
         {
-            this._currencyService = currencyService;
-            this._currencyViewModelService = currencyViewModelService;
-            this._currencySettings = currencySettings;
-            this._settingService = settingService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._storeService = storeService;
+            _currencyService = currencyService;
+            _currencyViewModelService = currencyViewModelService;
+            _currencySettings = currencySettings;
+            _settingService = settingService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _storeService = storeService;
         }
         
         #endregion

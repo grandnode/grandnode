@@ -28,10 +28,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService)
         {
-            this._storeViewModelService = storeViewModelService;
-            this._storeService = storeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
+            _storeViewModelService = storeViewModelService;
+            _storeService = storeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
         }
 
         public IActionResult List() => View();

@@ -59,9 +59,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             IWorkContext workContext)
         {
-            this._hostingEnvironment = hostingEnvironment;
-            this._permissionService = permissionService;
-            this._workContext = workContext;
+            _hostingEnvironment = hostingEnvironment;
+            _permissionService = permissionService;
+            _workContext = workContext;
         }
 
         #endregion

@@ -78,21 +78,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             ExternalAuthenticationSettings externalAuthenticationSettings,
             WidgetSettings widgetSettings)
         {
-            this._pluginFinder = pluginFinder;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._languageService = languageService;
-            this._settingService = settingService;
-            this._customerActivityService = customerActivityService;
-            this._storeService = storeService;
-            this._themeProvider = themeProvider;
-            this._mediator = mediator;
-            this._cacheManager = cacheManager;
-            this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._widgetSettings = widgetSettings;
+            _pluginFinder = pluginFinder;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _languageService = languageService;
+            _settingService = settingService;
+            _customerActivityService = customerActivityService;
+            _storeService = storeService;
+            _themeProvider = themeProvider;
+            _mediator = mediator;
+            _cacheManager = cacheManager;
+            _paymentSettings = paymentSettings;
+            _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _widgetSettings = widgetSettings;
         }
 
         #endregion

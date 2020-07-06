@@ -16,7 +16,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public PictureController(IPictureService pictureService)
         {
-            this._pictureService = pictureService;
+            _pictureService = pictureService;
         }
 
         [HttpPost]

@@ -12,7 +12,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidGiftCard(GiftCard giftCard)
         {
-            this._giftCard = giftCard;
+            _giftCard = giftCard;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

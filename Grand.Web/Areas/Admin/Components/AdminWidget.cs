@@ -19,7 +19,7 @@ namespace Grand.Web.Areas.Admin.Components
 
         public AdminWidgetViewComponent(IWidgetService widgetService)
         {
-            this._widgetService = widgetService;
+            _widgetService = widgetService;
         }
 
         #endregion

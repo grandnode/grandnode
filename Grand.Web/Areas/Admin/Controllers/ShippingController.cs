@@ -63,18 +63,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             ICustomerService customerService)
         {
-            this._shippingService = shippingService;
-            this._shippingSettings = shippingSettings;
-            this._settingService = settingService;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._pluginFinder = pluginFinder;
-            this._webHelper = webHelper;
-            this._storeService = storeService;
-            this._customerService = customerService;
+            _shippingService = shippingService;
+            _shippingSettings = shippingSettings;
+            _settingService = settingService;
+            _addressService = addressService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _pluginFinder = pluginFinder;
+            _webHelper = webHelper;
+            _storeService = storeService;
+            _customerService = customerService;
         }
 
         #endregion

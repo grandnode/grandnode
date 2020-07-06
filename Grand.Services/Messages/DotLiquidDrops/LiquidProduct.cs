@@ -17,9 +17,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidProduct(Product product, Language language, Store store)
         {
-            this._product = product;
-            this._language = language;
-            this._store = store;
+            _product = product;
+            _language = language;
+            _store = store;
             AdditionalTokens = new Dictionary<string, string>();
         }
 

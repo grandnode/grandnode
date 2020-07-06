@@ -30,12 +30,12 @@ namespace Grand.Web.Areas.Admin.Services
             IStoreService storeService,
             IEmailAccountService emailAccountService)
         {
-            this._contactUsService = contactUsService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeService = storeService;
-            this._emailAccountService = emailAccountService;
+            _contactUsService = contactUsService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _storeService = storeService;
+            _emailAccountService = emailAccountService;
         }
 
         public virtual async Task<ContactFormListModel> PrepareContactFormListModel()

@@ -43,13 +43,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             EmailAccountSettings emailAccountSettings)
         {
-            this._messageTemplateService = messageTemplateService;
-            this._emailAccountService = emailAccountService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._messageTokenProvider = messageTokenProvider;
-            this._storeService = storeService;
-            this._emailAccountSettings = emailAccountSettings;
+            _messageTemplateService = messageTemplateService;
+            _emailAccountService = emailAccountService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _messageTokenProvider = messageTokenProvider;
+            _storeService = storeService;
+            _emailAccountSettings = emailAccountSettings;
         }
 
         #endregion

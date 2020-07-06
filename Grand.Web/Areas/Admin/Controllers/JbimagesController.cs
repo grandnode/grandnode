@@ -22,8 +22,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public JbimagesController(IPermissionService permissionService, MediaSettings mediaSettings)
         {
-            this._permissionService = permissionService;
-            this._mediaSettings = mediaSettings;
+            _permissionService = permissionService;
+            _mediaSettings = mediaSettings;
         }
 
         [NonAction]

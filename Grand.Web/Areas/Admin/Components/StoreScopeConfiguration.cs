@@ -22,8 +22,8 @@ namespace Grand.Web.Areas.Admin.Components
 
         public StoreScopeConfigurationViewComponent(IStoreService storeService, IWorkContext workContext)
         {
-            this._storeService = storeService;
-            this._workContext = workContext;
+            _storeService = storeService;
+            _workContext = workContext;
         }
 
         #endregion

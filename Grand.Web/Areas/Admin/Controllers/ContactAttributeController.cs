@@ -41,12 +41,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             ICustomerService customerService)
         {
-            this._contactAttributeViewModelService = contactAttributeViewModelService;
-            this._contactAttributeService = contactAttributeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
-            this._customerService = customerService;
+            _contactAttributeViewModelService = contactAttributeViewModelService;
+            _contactAttributeService = contactAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _customerService = customerService;
         }
 
         #endregion

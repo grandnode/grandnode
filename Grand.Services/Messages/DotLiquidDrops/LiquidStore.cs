@@ -15,9 +15,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidStore(Store store, Language language, EmailAccount emailAccount = null)
         {
-            this._store = store;
-            this._language = language;
-            this._emailAccount = emailAccount;
+            _store = store;
+            _language = language;
+            _emailAccount = emailAccount;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

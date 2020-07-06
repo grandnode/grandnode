@@ -34,11 +34,11 @@ namespace Grand.Services.Catalog
             TaxSettings taxSettings,
             CurrencySettings currencySettings)
         {
-            this._workContext = workContext;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._taxSettings = taxSettings;
-            this._currencySettings = currencySettings;
+            _workContext = workContext;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _taxSettings = taxSettings;
+            _currencySettings = currencySettings;
         }
 
         #endregion

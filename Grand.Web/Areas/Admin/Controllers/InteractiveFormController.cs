@@ -33,11 +33,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             IEmailAccountService emailAccountService)
         {
-            this._interactiveFormService = interactiveFormService;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._customerActivityService = customerActivityService;
-            this._emailAccountService = emailAccountService;
+            _interactiveFormService = interactiveFormService;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _customerActivityService = customerActivityService;
+            _emailAccountService = emailAccountService;
         }
 
         #region Utilities

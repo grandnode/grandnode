@@ -17,7 +17,7 @@ namespace Grand.Services.Orders
 
         public CheckoutAttributeParser(ICheckoutAttributeService checkoutAttributeService)
         {
-            this._checkoutAttributeService = checkoutAttributeService;
+            _checkoutAttributeService = checkoutAttributeService;
         }
 
         /// <summary>

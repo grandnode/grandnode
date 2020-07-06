@@ -10,7 +10,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidVendor(Vendor vendor)
         {
-            this._vendor = vendor;
+            _vendor = vendor;
             AdditionalTokens = new Dictionary<string, string>();
         }
 

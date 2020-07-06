@@ -17,10 +17,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidBackInStockSubscription(Product product, BackInStockSubscription backInStockSubscription, Store store, Language language)
         {
-            this._backInStockSubscription = backInStockSubscription;
-            this._product = product;
-            this._store = store;
-            this._language = language;
+            _backInStockSubscription = backInStockSubscription;
+            _product = product;
+            _store = store;
+            _language = language;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

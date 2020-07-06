@@ -41,13 +41,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkContext workContext, IDateTimeHelper dateTimeHelper, IPaymentService paymentService,
             ICustomerService customerService)
         {
-            this._orderService = orderService;
-            this._orderProcessingService = orderProcessingService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._dateTimeHelper = dateTimeHelper;
-            this._paymentService = paymentService;
-            this._customerService = customerService;
+            _orderService = orderService;
+            _orderProcessingService = orderProcessingService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _dateTimeHelper = dateTimeHelper;
+            _paymentService = paymentService;
+            _customerService = customerService;
         }
 
         #endregion

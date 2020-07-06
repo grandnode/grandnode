@@ -43,7 +43,7 @@ namespace Grand.Framework.Controllers
             {
                 try
                 {
-                    switch (this._requirement)
+                    switch (_requirement)
                     {
                         case FormValueRequirement.Equal:
                             {

@@ -18,11 +18,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
         public LiquidShoppingCart(Customer customer, Store store, Language language,
             string personalMessage = "", string customerEmail = "")
         {
-            this._customer = customer;
-            this._language = language;
-            this._store = store;
-            this._personalMessage = personalMessage;
-            this._customerEmail = customerEmail;
+            _customer = customer;
+            _language = language;
+            _store = store;
+            _personalMessage = personalMessage;
+            _customerEmail = customerEmail;
 
             AdditionalTokens = new Dictionary<string, string>();
         }
