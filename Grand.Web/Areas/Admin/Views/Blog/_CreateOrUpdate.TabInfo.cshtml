@@ -1,7 +1,7 @@
 ﻿@model BlogPostModel
 @inject  IBlogService blogService
 
-<script type="text/javascript">
+<script>
         @{
         var blogTags = await blogService.GetAllBlogPostTags("", true);
         var blogTagsSb = new StringBuilder();

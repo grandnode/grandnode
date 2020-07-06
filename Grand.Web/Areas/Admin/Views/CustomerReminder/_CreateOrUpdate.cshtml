@@ -2,7 +2,7 @@
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.AllowRenew)").change(toggleAllowRenew);
         toggleAllowRenew();

@@ -7,7 +7,7 @@
     
     <div asp-validation-summary="All"></div>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.AllowPostVoting)").click(toggleAllowVoting);
             toggleAllowVoting();

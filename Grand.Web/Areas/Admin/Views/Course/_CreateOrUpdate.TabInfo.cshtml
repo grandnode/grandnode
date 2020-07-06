@@ -1,5 +1,5 @@
 ﻿@model CourseModel
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         toggleRemoveButton();
     });
@@ -122,7 +122,7 @@
                                     @T("Admin.Courses.Course.Fields.PurchasedWithProduct.Remove")
                                 </button>
                                 <input type="button" id="btnRefreshPurchasedWithProduct" style="display: none" />
-                                <script type="text/javascript">
+                                <script>
                                 $(document).ready(function () {
                                     $('#purchased-with-product-name-remove').click(function () {
                                         $('#purchased-with-product-name').text('');

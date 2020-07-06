@@ -1,7 +1,7 @@
 ﻿@model CustomerUserSettingsModel
 @using Grand.Core.Domain.Customers;
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
 
         $("#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
@@ -309,7 +309,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="CustomerSettings.FailedPasswordAllowedAttempts" />
                 <span asp-validation-for="CustomerSettings.FailedPasswordAllowedAttempts"></span>
-                <script type="text/javascript">
+                <script>
 	                $(document).ready(function () {
 	                    $("#@Html.FieldIdFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)").blur(toggleFailedPasswordAllowedAttempts);
 			                toggleFailedPasswordAllowedAttempts();

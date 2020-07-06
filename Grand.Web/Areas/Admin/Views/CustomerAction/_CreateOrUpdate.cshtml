@@ -8,7 +8,7 @@
         <div class="message-error">@validationSummary</div>
     }
 }
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.ReactionTypeId)").change(toggleReaction);
         toggleReaction();

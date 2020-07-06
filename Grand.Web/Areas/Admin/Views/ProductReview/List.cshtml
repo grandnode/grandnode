@@ -48,7 +48,7 @@
                                 <span id="search-product-friendly-name"></span>
                                 <input type="button" id="search-product-clear" class="k-button" style="display: none;" value="@T("Admin.Common.Clear")" />
                                 <admin-textarea asp-for="SearchProductId" autocomplete="off" style="display: none;"></admin-textarea>
-                                <script type="text/javascript">
+                                <script>
                                     $(document).ready(function() {
                                         $('#search-product-name').autocomplete({
                                             delay: 500,
@@ -99,7 +99,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
 $(document).ready(function () {
     $("#productreviews-grid").kendoGrid({
         dataSource: {
@@ -178,7 +178,7 @@ $(document).ready(function () {
     });
 });
 </script>
-<script type="text/javascript">
+<script>
 
     var selectedIds = [];
 

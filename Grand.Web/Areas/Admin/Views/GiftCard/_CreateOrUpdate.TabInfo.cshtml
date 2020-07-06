@@ -1,5 +1,5 @@
 ﻿@model GiftCardModel
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
         toggleGiftCardType();
@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <span asp-validation-for="GiftCardCouponCode"></span>
-                <script type="text/javascript">
+                <script>
                         $(document).ready(function () {
                             $('#generateCouponCode').click(function () {
 

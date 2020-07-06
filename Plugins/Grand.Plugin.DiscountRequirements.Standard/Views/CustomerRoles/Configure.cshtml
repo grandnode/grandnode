@@ -3,7 +3,7 @@
 }
 @model Grand.Plugin.DiscountRequirements.CustomerRoles.Models.RequirementModel
 @using Grand.Framework;
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#savecustomerrolesrequirement@(Model.RequirementId)').click(function () {
             var customerRoleId = $("#@Html.FieldIdFor(model => model.CustomerRoleId)").val();

@@ -1,6 +1,6 @@
 ﻿@model CustomerReminderModel.ConditionModel
 
-<script type="text/javascript">
+<script>
             $(document).ready(function () {
                 $("#@Html.FieldIdFor(model => model.ConditionTypeId)").change(toggleConditionType);
                 toggleConditionType();

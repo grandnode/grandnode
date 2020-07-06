@@ -6,7 +6,7 @@
 <form asp-controller="Setting" asp-action="Tax" method="post">
     
     <div asp-validation-summary="All"></div>
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
 
             $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);

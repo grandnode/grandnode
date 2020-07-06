@@ -200,7 +200,7 @@
                        onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product",
                                                        new { btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds" }))', 800, 800, true); return false;" class="k-button" />
                 <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#btnRefreshRequiredProducts').click(function () {
                             loadRequiredProductFriendlyNames();

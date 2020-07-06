@@ -113,7 +113,7 @@
                                     <span id="search-product-friendly-name"></span>
                                     <input type="button" id="search-product-clear" class="k-button" style="display:none;" value="@T("Admin.Common.Clear")" />
                                     @Html.TextBoxFor(model => model.ProductId, new { autocomplete = "off", style = "display:none;" })
-                                    <script type="text/javascript">
+                                    <script>
                                             $(document).ready(function() {
                                                 $('#search-product-name').autocomplete({
                                                     delay: 500,
@@ -375,7 +375,7 @@
         });
     </script>
 
-    <script type="text/javascript">
+    <script>
 
         var selectedIds = [];
         var reportAggregates = "";
@@ -554,7 +554,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
 
     $(document).ready(function () {
         $('#exportxml-selected').click(function (e) {
@@ -573,7 +573,7 @@
     
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
-<script type="text/javascript">
+<script>
 
     $(document).ready(function () {
         $('#exportexcel-selected').click(function (e) {
@@ -593,7 +593,7 @@
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
 
     $(document).ready(function () {
         $('#pdf-invoice-selected').click(function (e) {

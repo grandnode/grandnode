@@ -84,15 +84,15 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
-    try {
-            window.opener.document.getElementById('@(Context.Request.Query["productIdInput"])').value = '@(ViewBag.productId)';
-            window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
-            window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
-    }
-    catch (e){}
-    window.close();
-    </script>
+        <script>
+            try {
+                    window.opener.document.getElementById('@(Context.Request.Query["productIdInput"])').value = '@(ViewBag.productId)';
+                    window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
+                    window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
+            }
+            catch (e){}
+            window.close();
+        </script>
     }
 
     <input asp-for="AssociatedToProductId" type="hidden" />
@@ -163,7 +163,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#search-products').click(function () {
                 var grid = $('#products-grid').data('kendoGrid');
