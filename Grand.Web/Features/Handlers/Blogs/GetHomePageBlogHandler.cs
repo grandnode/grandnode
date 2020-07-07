@@ -58,8 +58,9 @@ namespace Grand.Web.Features.Handlers.Blogs
 
         public async Task<HomePageBlogItemsModel> Handle(GetHomePageBlog request, CancellationToken cancellationToken)
         {
-            var cacheKey = string.Format(ModelCacheEventConst.BLOG_HOMEPAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, 
-                _storeContext.CurrentStore.Id, _webHelper.GetMachineName());
+            var cacheKey = string.Format(ModelCacheEventConst.BLOG_HOMEPAGE_MODEL_KEY, 
+                _workContext.WorkingLanguage.Id, 
+                _storeContext.CurrentStore.Id);
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new HomePageBlogItemsModel();

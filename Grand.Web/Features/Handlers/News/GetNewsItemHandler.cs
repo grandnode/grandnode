@@ -112,7 +112,7 @@ namespace Grand.Web.Features.Handlers.News
             if (!string.IsNullOrEmpty(newsItem.PictureId))
             {
                 var categoryPictureCacheKey = string.Format(ModelCacheEventConst.NEWS_PICTURE_MODEL_KEY, newsItem.Id, _mediaSettings.NewsThumbPictureSize,
-                    true, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
+                    true, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
                 model.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
                 {
                     var pictureModel = new PictureModel {
