@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Configuration;
 
-namespace Grand.Core.Domain
+namespace Grand.Core.Domain.Stores
 {
     public class StoreInformationSettings : ISettings
     {

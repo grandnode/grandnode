@@ -1,12 +1,11 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain;
+using Grand.Core.Domain.Stores;
 using Grand.Services.Security;
 using Grand.Services.Topics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.Linq;
@@ -138,7 +137,7 @@ namespace Grand.Framework.Mvc.Filters
                     await next();
                     return;
                 }
-                
+
                 //store is closed and no access, so redirect to 'StoreClosed' page
                 context.Result = new RedirectToRouteResult("StoreClosed", new RouteValueDictionary());
             }

@@ -1,11 +1,10 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Stores;
 using Grand.Framework.Components;
 using Grand.Services.Common;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {

@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Stores;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
@@ -181,7 +181,7 @@ namespace Grand.Web.Controllers
             if (!customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled))
                 return RedirectToRoute("HomePage");
 
-            if(_customerSettings.TwoFactorAuthenticationType != TwoFactorAuthenticationType.AppVerification)
+            if (_customerSettings.TwoFactorAuthenticationType != TwoFactorAuthenticationType.AppVerification)
             {
                 await twoFactorAuthenticationService.GenerateCodeSetup("", customer, _workContext.WorkingLanguage, _customerSettings.TwoFactorAuthenticationType);
             }
@@ -734,8 +734,8 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            var model = await _mediator.Send(new GetAddressList() { 
-                Customer = _workContext.CurrentCustomer, 
+            var model = await _mediator.Send(new GetAddressList() {
+                Customer = _workContext.CurrentCustomer,
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore
             });
@@ -859,7 +859,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, string addressId, IFormCollection form, 
+        public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, string addressId, IFormCollection form,
             [FromServices] IAddressAttributeParser addressAttributeParser)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1077,13 +1077,13 @@ namespace Grand.Web.Controllers
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
-            
+
             var contentType = uploadedFile?.ContentType;
             if (string.IsNullOrEmpty(contentType))
                 ModelState.AddModelError("", "Empty content type");
             else
-                if(!contentType.StartsWith("image"))
-                    ModelState.AddModelError("", "Only image content type is allowed");
+                if (!contentType.StartsWith("image"))
+                ModelState.AddModelError("", "Only image content type is allowed");
 
             if (ModelState.IsValid)
             {
@@ -1211,7 +1211,7 @@ namespace Grand.Web.Controllers
             if (_workContext.CurrentCustomer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled))
                 return RedirectToRoute("CustomerInfo");
 
-            var model = await _mediator.Send(new GetTwoFactorAuthentication() { 
+            var model = await _mediator.Send(new GetTwoFactorAuthentication() {
                 Customer = _workContext.CurrentCustomer,
                 Language = _workContext.WorkingLanguage
             });

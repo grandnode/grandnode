@@ -1,11 +1,10 @@
 ﻿using Grand.Core;
 using Grand.Core.Configuration;
-using Grand.Core.Domain;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
+using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Filters;

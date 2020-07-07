@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
-using Grand.Core.Domain;
 using Grand.Core.Domain.AdminSearch;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
@@ -18,6 +17,7 @@ using Grand.Core.Domain.PushNotifications;
 using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Shipping;
+using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Controllers;
