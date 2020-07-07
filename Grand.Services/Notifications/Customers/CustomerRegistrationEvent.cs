@@ -1,7 +1,7 @@
 ﻿using Grand.Services.Customers;
 using MediatR;
 
-namespace Grand.Services.Events.Web
+namespace Grand.Services.Notifications.Customers
 {
     public class CustomerRegistrationEvent<C, R> : INotification where C : CustomerRegistrationResult where R : CustomerRegistrationRequest
     {

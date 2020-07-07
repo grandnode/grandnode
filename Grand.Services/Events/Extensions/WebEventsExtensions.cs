@@ -2,13 +2,16 @@
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Customers;
+using Grand.Services.Notifications.Customers;
+using Grand.Services.Notifications.Orders;
+using Grand.Services.Notifications.ShoppingCart;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Grand.Services.Events.Web
+namespace Grand.Services.Events.Extensions
 {
     public static class WebEventsExtensions
     {

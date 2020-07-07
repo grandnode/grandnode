@@ -1,5 +1,5 @@
 ﻿using Grand.Services.Customers;
-using Grand.Services.Events.Web;
+using Grand.Services.Notifications.ShoppingCart;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

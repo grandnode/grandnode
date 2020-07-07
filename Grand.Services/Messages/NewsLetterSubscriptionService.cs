@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Common;
 using Grand.Services.Events;
+using Grand.Services.Events.Extensions;
 using MediatR;
 using MongoDB.Driver.Linq;
 using System;

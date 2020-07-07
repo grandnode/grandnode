@@ -3,7 +3,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using MediatR;
 
-namespace Grand.Services.Events.Web
+namespace Grand.Services.Notifications.ShoppingCart
 {
     public class AddToCartEvent : INotification
     {

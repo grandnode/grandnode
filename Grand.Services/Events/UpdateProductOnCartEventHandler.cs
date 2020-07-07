@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
-using Grand.Services.Events.Web;
+using Grand.Services.Notifications.Catalog;
 using MediatR;
 using MongoDB.Driver;
 using System.Linq;

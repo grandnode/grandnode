@@ -12,6 +12,7 @@ using Grand.Services.Directory;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
+using Grand.Services.Notifications.Customers;
 using Grand.Services.Orders;
 using Grand.Web.Commands.Models.Customers;
 using Grand.Web.Extensions;

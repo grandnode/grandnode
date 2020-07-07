@@ -1,7 +1,7 @@
 ﻿using Grand.Services.Orders;
 using MediatR;
 
-namespace Grand.Services.Events.Web
+namespace Grand.Services.Notifications.Orders
 {
     public class PlaceOrderDetailsEvent<R, O> : INotification where R : PlaceOrderResult where O : PlaceOrderContainter
     {

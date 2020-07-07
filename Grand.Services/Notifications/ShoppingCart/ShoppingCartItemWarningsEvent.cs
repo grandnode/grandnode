@@ -4,7 +4,7 @@ using Grand.Core.Domain.Orders;
 using MediatR;
 using System.Collections.Generic;
 
-namespace Grand.Services.Events.Web
+namespace Grand.Services.Notifications.ShoppingCart
 {
     public class ShoppingCartItemWarningsEvent<C, S, P> : INotification where C : Customer where S : ShoppingCartItem where P : Product
     {

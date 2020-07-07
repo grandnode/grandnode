@@ -11,6 +11,7 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Services.Notifications.Vendors;
 using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;

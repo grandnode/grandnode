@@ -1,12 +1,13 @@
 ﻿using DotLiquid;
 using Grand.Core;
 using Grand.Core.Domain.Messages;
+using Grand.Services.Notifications.Messages;
 using MediatR;
 using System.Threading.Tasks;
 
-namespace Grand.Services.Messages
+namespace Grand.Services.Events.Extensions
 {
-    public static class EventPublisherExtensions
+    public static class MessagesEventPublisherExtensions
     {
         /// <summary>
         /// Publishes the newsletter subscribe event.

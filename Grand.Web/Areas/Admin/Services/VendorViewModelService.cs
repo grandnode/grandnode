@@ -10,6 +10,7 @@ using Grand.Services.Discounts;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using Grand.Services.Notifications.Vendors;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;

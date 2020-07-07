@@ -11,6 +11,7 @@ using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Vendors;
 using Grand.Services.Commands.Models.Messages;
+using Grand.Services.Events.Extensions;
 using Grand.Services.Messages.DotLiquidDrops;
 using MediatR;
 using System.Threading.Tasks;

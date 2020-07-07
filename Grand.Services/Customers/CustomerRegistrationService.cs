@@ -1,7 +1,7 @@
 using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Common;
-using Grand.Services.Events.Web;
+using Grand.Services.Events.Extensions;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Orders;

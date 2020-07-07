@@ -1,6 +1,7 @@
+﻿using Grand.Core.Domain.Vendors;
 using MediatR;
 
-namespace Grand.Core.Domain.Vendors
+namespace Grand.Services.Notifications.Vendors
 {
     /// <summary>
     /// Vendor review approved event
@@ -9,7 +10,7 @@ namespace Grand.Core.Domain.Vendors
     {
         public VendorReviewApprovedEvent(VendorReview vendorReview)
         {
-            this.VendorReview = vendorReview;
+            VendorReview = vendorReview;
         }
 
         /// <summary>
@@ -17,5 +18,4 @@ namespace Grand.Core.Domain.Vendors
         /// </summary>
         public VendorReview VendorReview { get; private set; }
     }
-
 }

@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
 using Grand.Services.Customers;
+using Grand.Services.Notifications.Orders;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

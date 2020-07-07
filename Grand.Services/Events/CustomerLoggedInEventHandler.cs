@@ -1,6 +1,6 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Services.Localization;
+﻿using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Services.Notifications.Customers;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

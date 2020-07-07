@@ -1,11 +1,11 @@
 ﻿using Grand.Core.Domain.Shipping;
-using Grand.Services.Events;
+using Grand.Services.Notifications.Shipping;
 using MediatR;
 using System.Threading.Tasks;
 
-namespace Grand.Services.Shipping
+namespace Grand.Services.Events.Extensions
 {
-    public static class EventPublisherExtensions
+    public static class ShippingEventPublisherExtensions
     {
         /// <summary>
         /// Publishes the shipment sent event.

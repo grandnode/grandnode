@@ -13,6 +13,7 @@ using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
+using Grand.Services.Notifications.Catalog;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Seo;

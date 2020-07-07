@@ -8,7 +8,7 @@ using Grand.Core.Domain.Shipping;
 using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Events;
-using Grand.Services.Events.Web;
+using Grand.Services.Notifications.Catalog;
 using Grand.Services.Queries.Models.Catalog;
 using Grand.Services.Security;
 using Grand.Services.Stores;

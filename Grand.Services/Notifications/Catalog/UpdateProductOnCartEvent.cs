@@ -1,7 +1,7 @@
 ﻿using Grand.Core.Domain.Catalog;
 using MediatR;
 
-namespace Grand.Services.Events.Web
+namespace Grand.Services.Notifications.Catalog
 {
     public class UpdateProductOnCartEvent : INotification
     {

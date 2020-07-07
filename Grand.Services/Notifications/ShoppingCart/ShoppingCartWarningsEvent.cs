@@ -2,7 +2,7 @@
 using MediatR;
 using System.Collections.Generic;
 
-namespace Grand.Services.Events.Web
+namespace Grand.Services.Notifications.ShoppingCart
 {
     public class ShoppingCartWarningsEvent<T, U> : INotification where U : ShoppingCartItem
     {

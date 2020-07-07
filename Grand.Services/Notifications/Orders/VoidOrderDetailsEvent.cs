@@ -1,14 +1,14 @@
 ﻿using Grand.Services.Payments;
 using MediatR;
 
-namespace Grand.Services.Events.Web
+namespace Grand.Services.Notifications.Orders
 {
-    public class CaptureOrderDetailsEvent<R, C> : INotification where R : CapturePaymentResult where C : CapturePaymentRequest
+    public class VoidOrderDetailsEvent<R, C> : INotification where R : VoidPaymentResult where C : VoidPaymentRequest
     {
         private readonly R _result;
         private readonly C _containter;
 
-        public CaptureOrderDetailsEvent(R result, C containter)
+        public VoidOrderDetailsEvent(R result, C containter)
         {
             _result = result;
             _containter = containter;

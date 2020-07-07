@@ -9,6 +9,8 @@ using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
+using Grand.Services.Notifications.Authentication;
+using Grand.Services.Notifications.Customers;
 using Grand.Services.Orders;
 using MediatR;
 using Microsoft.AspNetCore.Http;

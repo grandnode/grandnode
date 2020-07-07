@@ -1,6 +1,7 @@
+using Grand.Core.Domain.Catalog;
 using MediatR;
 
-namespace Grand.Core.Domain.Catalog
+namespace Grand.Services.Notifications.Catalog
 {
     /// <summary>
     /// Product review approved event
@@ -9,7 +10,7 @@ namespace Grand.Core.Domain.Catalog
     {
         public ProductReviewApprovedEvent(ProductReview productReview)
         {
-            this.ProductReview = productReview;
+            ProductReview = productReview;
         }
 
         /// <summary>
