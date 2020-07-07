@@ -1,12 +1,12 @@
 ﻿using Grand.Api.Commands.Models.Common;
-using Grand.Web.Areas.Api.Models.Common;
+using Grand.Api.Models.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Api.Controllers
+namespace Grand.Api.Controllers
 {
     [ApiController]
     [Area("Api")]

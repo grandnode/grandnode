@@ -9,16 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Api.Controllers.OData
+namespace Grand.Api.Controllers.OData
 {
-    public partial class ProductAttributeController : BaseODataController
+    public partial class SpecificationAttributeController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
-
-        public ProductAttributeController(
-            IMediator mediator,
-            IPermissionService permissionService)
+        public SpecificationAttributeController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
@@ -30,11 +27,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var productAttribute = await _mediator.Send(new GetQuery<ProductAttributeDto>() { Id = key });
-            if (!productAttribute.Any())
+            var specificationAttribute = await _mediator.Send(new GetQuery<SpecificationAttributeDto>() { Id = key });
+            if (!specificationAttribute.Any())
                 return NotFound();
 
-            return Ok(productAttribute.FirstOrDefault());
+            return Ok(specificationAttribute.FirstOrDefault());
         }
 
         [HttpGet]
@@ -44,56 +41,59 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetQuery<ProductAttributeDto>()));
+            return Ok(await _mediator.Send(new GetQuery<SpecificationAttributeDto>()));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ProductAttributeDto model)
+        public async Task<IActionResult> Post([FromBody] SpecificationAttributeDto model)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
             if (ModelState.IsValid)
             {
-                model = await _mediator.Send(new AddProductAttributeCommand() { Model = model });
+                model = await _mediator.Send(new AddSpecificationAttributeCommand() { Model = model });
                 return Created(model);
             }
             return BadRequest(ModelState);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] ProductAttributeDto model)
+        public async Task<IActionResult> Put([FromBody] SpecificationAttributeDto model)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
             if (ModelState.IsValid)
             {
-                model = await _mediator.Send(new UpdateProductAttributeCommand() { Model = model });
+                model = await _mediator.Send(new UpdateSpecificationAttributeCommand() { Model = model });
                 return Ok(model);
             }
             return BadRequest(ModelState);
         }
 
         [HttpPatch]
-        public async Task<IActionResult> Patch([FromODataUri] string key, Delta<ProductAttributeDto> model)
+        public async Task<IActionResult> Patch([FromODataUri] string key, Delta<SpecificationAttributeDto> model)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var productAttribute = await _mediator.Send(new GetQuery<ProductAttributeDto>() { Id = key });
-            if (!productAttribute.Any())
-                return NotFound();
 
-            var pa = productAttribute.FirstOrDefault();
-            model.Patch(pa);
+            var specification = await _mediator.Send(new GetQuery<SpecificationAttributeDto>() { Id = key });
+            if (!specification.Any())
+            {
+                return NotFound();
+            }
+            var spec = specification.FirstOrDefault();
+            model.Patch(spec);
 
             if (ModelState.IsValid)
             {
-                pa = await _mediator.Send(new UpdateProductAttributeCommand() { Model = pa });
-                return Ok(pa);
+                await _mediator.Send(new UpdateSpecificationAttributeCommand() { Model = spec });
+                return Ok();
             }
             return BadRequest(ModelState);
+
         }
 
         [HttpDelete]
@@ -102,11 +102,13 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var productAttribute = await _mediator.Send(new GetQuery<ProductAttributeDto>() { Id = key });
-            if (!productAttribute.Any())
+            var specification = await _mediator.Send(new GetQuery<SpecificationAttributeDto>() { Id = key });
+            if (!specification.Any())
+            {
                 return NotFound();
+            }
+            await _mediator.Send(new DeleteSpecificationAttributeCommand() { Model = specification.FirstOrDefault() });
 
-            await _mediator.Send(new DeleteProductAttributeCommand() { Model = productAttribute.FirstOrDefault() });
             return Ok();
         }
     }

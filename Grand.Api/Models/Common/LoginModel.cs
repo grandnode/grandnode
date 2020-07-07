@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Attributes;
-using Grand.Web.Areas.Api.Validators.Common;
+using Grand.Api.Validators.Common;
 
-namespace Grand.Web.Areas.Api.Models.Common
+namespace Grand.Api.Models.Common
 {
     [Validator(typeof(LoginValidator))]
     public class LoginModel

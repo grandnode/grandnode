@@ -1,4 +1,4 @@
-﻿using Grand.Api.DTOs.Shipping;
+﻿using Grand.Api.DTOs.Common;
 using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
 using MediatR;
@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Api.Controllers.OData
+namespace Grand.Api.Controllers.OData
 {
-    public partial class WarehouseController : BaseODataController
+    public partial class StateProvinceController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public WarehouseController(IMediator mediator, IPermissionService permissionService)
+        public StateProvinceController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
@@ -24,24 +24,24 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
+            if (!await _permissionService.Authorize(PermissionSystemName.Countries))
                 return Forbid();
 
-            var warehouse = await _mediator.Send(new GetQuery<WarehouseDto>() { Id = key });
-            if (!warehouse.Any())
+            var states = await _mediator.Send(new GetQuery<StateProvinceDto>() { Id = key });
+            if (!states.Any())
                 return NotFound();
 
-            return Ok(warehouse.FirstOrDefault());
+            return Ok(states);
         }
 
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
+            if (!await _permissionService.Authorize(PermissionSystemName.Countries))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetQuery<WarehouseDto>()));
+            return Ok(await _mediator.Send(new GetQuery<StateProvinceDto>()));
         }
     }
 }

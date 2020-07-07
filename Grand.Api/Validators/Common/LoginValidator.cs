@@ -3,10 +3,10 @@ using Grand.Core.Configuration;
 using Grand.Framework.Validators;
 using Grand.Services.Customers;
 using Grand.Services.Security;
-using Grand.Web.Areas.Api.Models.Common;
+using Grand.Api.Models.Common;
 using System.Collections.Generic;
 
-namespace Grand.Web.Areas.Api.Validators.Common
+namespace Grand.Api.Validators.Common
 {
     public class LoginValidator : BaseGrandValidator<LoginModel>
     {

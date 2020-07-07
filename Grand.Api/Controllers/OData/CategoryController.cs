@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Api.Controllers.OData
+namespace Grand.Api.Controllers.OData
 {
     public partial class CategoryController : BaseODataController
     {

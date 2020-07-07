@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Api.Controllers.OData
+namespace Grand.Api.Controllers.OData
 {
     public partial class PictureController : BaseODataController
     {

@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Api.Controllers.OData
+namespace Grand.Api.Controllers.OData
 {
-    public partial class StateProvinceController : BaseODataController
+    public partial class LanguageController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public StateProvinceController(IMediator mediator, IPermissionService permissionService)
+        public LanguageController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
@@ -24,24 +24,24 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Countries))
+            if (!await _permissionService.Authorize(PermissionSystemName.Languages))
                 return Forbid();
 
-            var states = await _mediator.Send(new GetQuery<StateProvinceDto>() { Id = key });
-            if (!states.Any())
+            var language = await _mediator.Send(new GetQuery<LanguageDto>() { Id = key });
+            if (!language.Any())
                 return NotFound();
 
-            return Ok(states);
+            return Ok(language.FirstOrDefault());
         }
 
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Countries))
+            if (!await _permissionService.Authorize(PermissionSystemName.Languages))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetQuery<StateProvinceDto>()));
+            return Ok(await _mediator.Send(new GetQuery<LanguageDto>()));
         }
     }
 }

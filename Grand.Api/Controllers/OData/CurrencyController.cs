@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Api.Controllers.OData
+namespace Grand.Api.Controllers.OData
 {
-    public partial class LanguageController : BaseODataController
+    public partial class CurrencyController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public LanguageController(IMediator mediator, IPermissionService permissionService)
+        public CurrencyController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
@@ -24,24 +24,24 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Languages))
+            if (!await _permissionService.Authorize(PermissionSystemName.Currencies))
                 return Forbid();
 
-            var language = await _mediator.Send(new GetQuery<LanguageDto>() { Id = key });
-            if (!language.Any())
+            var currency = await _mediator.Send(new GetQuery<CurrencyDto>() { Id = key });
+            if (!currency.Any())
                 return NotFound();
 
-            return Ok(language.FirstOrDefault());
+            return Ok(currency.FirstOrDefault());
         }
 
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Languages))
+            if (!await _permissionService.Authorize(PermissionSystemName.Currencies))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetQuery<LanguageDto>()));
+            return Ok(await _mediator.Send(new GetQuery<CurrencyDto>()));
         }
     }
 }

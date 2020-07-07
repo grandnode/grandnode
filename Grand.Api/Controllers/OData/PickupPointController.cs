@@ -1,4 +1,4 @@
-﻿using Grand.Api.DTOs.Customers;
+﻿using Grand.Api.DTOs.Shipping;
 using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
 using MediatR;
@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Api.Controllers.OData
+namespace Grand.Api.Controllers.OData
 {
-    public partial class VendorController : BaseODataController
+    public partial class PickupPointController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public VendorController(IMediator mediator, IPermissionService permissionService)
+        public PickupPointController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
@@ -24,14 +24,14 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
+            if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
                 return Forbid();
 
-            var vendor = await _mediator.Send(new GetQuery<VendorDto>() { Id = key });
-            if (!vendor.Any())
+            var points = await _mediator.Send(new GetQuery<PickupPointDto>() { Id = key });
+            if (!points.Any())
                 return NotFound();
 
-            return Ok(vendor.FirstOrDefault());
+            return Ok(points.FirstOrDefault());
 
         }
 
@@ -39,10 +39,10 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
+            if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetQuery<VendorDto>()));
+            return Ok(await _mediator.Send(new GetQuery<PickupPointDto>()));
         }
     }
 }

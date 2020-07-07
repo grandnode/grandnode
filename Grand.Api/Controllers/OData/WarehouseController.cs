@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Areas.Api.Controllers.OData
+namespace Grand.Api.Controllers.OData
 {
-    public partial class PickupPointController : BaseODataController
+    public partial class WarehouseController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public PickupPointController(IMediator mediator, IPermissionService permissionService)
+        public WarehouseController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
@@ -27,12 +27,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
                 return Forbid();
 
-            var points = await _mediator.Send(new GetQuery<PickupPointDto>() { Id = key });
-            if (!points.Any())
+            var warehouse = await _mediator.Send(new GetQuery<WarehouseDto>() { Id = key });
+            if (!warehouse.Any())
                 return NotFound();
 
-            return Ok(points.FirstOrDefault());
-
+            return Ok(warehouse.FirstOrDefault());
         }
 
         [HttpGet]
@@ -42,7 +41,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetQuery<PickupPointDto>()));
+            return Ok(await _mediator.Send(new GetQuery<WarehouseDto>()));
         }
     }
 }
