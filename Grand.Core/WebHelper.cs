@@ -12,7 +12,6 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 
@@ -31,7 +30,7 @@ namespace Grand.Core
         private readonly HostingConfig _hostingConfig;
         private readonly IHostApplicationLifetime _applicationLifetime;
         private readonly IMachineNameProvider _machineNameProvider;
-        private readonly IServiceProvider _serviceProvider;
+
         #endregion
 
         #region Constructor
@@ -40,17 +39,14 @@ namespace Grand.Core
         /// Ctor
         /// </summary>        
         public WebHelper(
-            IHttpContextAccessor httpContextAccessor, 
-            HostingConfig hostingConfig, 
+            IHttpContextAccessor httpContextAccessor,
+            HostingConfig hostingConfig,
             IHostApplicationLifetime applicationLifetime,
-            IMachineNameProvider machineNameProvider,
-            IServiceProvider serviceProvider
-            )
+            IMachineNameProvider machineNameProvider)
         {
             _hostingConfig = hostingConfig;
             _httpContextAccessor = httpContextAccessor;
             _applicationLifetime = applicationLifetime;
-            _serviceProvider = serviceProvider;
             _machineNameProvider = machineNameProvider;
         }
 
@@ -252,7 +248,7 @@ namespace Grand.Core
             //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
             if (string.IsNullOrEmpty(storeHost) && DataSettingsHelper.DatabaseIsInstalled())
             {
-                var currentStore = _serviceProvider.GetRequiredService<IStoreContext>().CurrentStore;
+                var currentStore = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<IStoreContext>().CurrentStore;
                 if (currentStore != null)
                     storeLocation = !currentStore.SslEnabled ? currentStore.Url : currentStore.SecureUrl;
                 else
