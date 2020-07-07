@@ -6,11 +6,13 @@ using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
+    
     public partial class CategoryController : BaseODataController
     {
         private readonly IMediator _mediator;
@@ -23,6 +25,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
+        [SwaggerOperation(summary: "Get entity from Category by key")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -36,6 +39,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(category.FirstOrDefault());
         }
 
+        [SwaggerOperation(summary: "Get entities from Category")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
@@ -46,6 +50,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(await _mediator.Send(new GetQuery<CategoryDto>()));
         }
 
+        [SwaggerOperation(summary: "Add new entity to Category")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CategoryDto model)
         {
@@ -60,6 +65,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Update entity in Category")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] CategoryDto model)
         {
@@ -79,7 +85,7 @@ namespace Grand.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
-
+        [SwaggerOperation(summary: "Update entity in Category (delta)")]
         [HttpPatch]
         public async Task<IActionResult> Patch([FromODataUri] string key, Delta<CategoryDto> model)
         {
@@ -101,7 +107,7 @@ namespace Grand.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
-
+        [SwaggerOperation(summary: "Delete entity from Category")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
