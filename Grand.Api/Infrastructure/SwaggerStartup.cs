@@ -56,6 +56,8 @@ namespace Grand.Api.Infrastructure
                         }
                     });
                     c.OperationFilter<AddParamOperationFilter>();
+                    c.SchemaFilter<ExcludeSchemaFilter>();
+                    c.EnableAnnotations();
                 });
 
                 SetOutputFormatters(services);
