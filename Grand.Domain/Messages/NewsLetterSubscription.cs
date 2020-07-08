@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Grand.Domain.History;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Domain.Messages
