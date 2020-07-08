@@ -1,8 +1,7 @@
 ﻿//Contribution: Orchard project (http://www.orchardproject.net/)
-
 using System;
 
-namespace Grand.Core.Infrastructure
+namespace Grand.Services.MachineNameProvider
 {
     /// <summary>
     /// Azure websites machine name provider

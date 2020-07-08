@@ -1,5 +1,5 @@
 ﻿//Contribution: Orchard project (http://www.orchardproject.net/)
-namespace Grand.Core.Infrastructure
+namespace Grand.Services.MachineNameProvider
 {
     /// <summary>
     /// Default machine name provider
