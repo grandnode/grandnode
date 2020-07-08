@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Blogs;
+using Grand.Domain.Localization;
 using Grand.Services.Blogs;
 using Grand.Services.Customers;
 using Grand.Services.Localization;

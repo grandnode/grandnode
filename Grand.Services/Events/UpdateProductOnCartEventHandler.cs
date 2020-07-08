@@ -1,5 +1,5 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Customers;
 using Grand.Services.Notifications.Catalog;
 using MediatR;
 using MongoDB.Driver;

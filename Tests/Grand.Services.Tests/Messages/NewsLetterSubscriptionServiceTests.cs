@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Data;
+using Grand.Domain.Messages;
 using Grand.Core.Events;
 using Grand.Services.Common;
 using Grand.Services.Notifications.Messages;
@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading;
 using System.Threading.Tasks;
+using Grand.Domain;
 
 namespace Grand.Services.Messages.Tests
 {

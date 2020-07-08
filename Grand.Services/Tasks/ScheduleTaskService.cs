@@ -1,5 +1,5 @@
-using Grand.Core.Data;
-using Grand.Core.Domain.Tasks;
+using Grand.Domain.Data;
+using Grand.Domain.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;

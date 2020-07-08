@@ -18,8 +18,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Seo;
+using Grand.Domain.Customers;
+using Grand.Domain.Seo;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -477,7 +477,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         {
                             if (blogCategory.BlogPosts.Where(x => x.BlogPostId == id).Count() == 0)
                             {
-                                blogCategory.BlogPosts.Add(new Core.Domain.Blogs.BlogCategoryPost() { BlogPostId = id });
+                                blogCategory.BlogPosts.Add(new Domain.Blogs.BlogCategoryPost() { BlogPostId = id });
                                 await _blogService.UpdateBlogCategory(blogCategory);
                             }
                         }

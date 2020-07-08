@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using Grand.Core;
-using Grand.Core.Caching;
-using Grand.Core.Data;
+﻿using Grand.Core.Caching;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Plugin.Shipping.ShippingPoint.Domain;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using Grand.Plugin.Shipping.ShippingPoint.Domain;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.ShippingPoint.Services
@@ -70,8 +70,8 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
         public virtual Task<ShippingPoints> GetStoreShippingPointByPointName(string pointName)
         {
             return (from shippingOoint in _shippingPointRepository.Table
-                         where shippingOoint.ShippingPointName == pointName
-                         select shippingOoint).FirstOrDefaultAsync();
+                    where shippingOoint.ShippingPointName == pointName
+                    select shippingOoint).FirstOrDefaultAsync();
         }
 
         /// <summary>

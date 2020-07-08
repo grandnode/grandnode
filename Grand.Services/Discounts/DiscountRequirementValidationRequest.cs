@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.Stores;
 
 namespace Grand.Services.Discounts
 {

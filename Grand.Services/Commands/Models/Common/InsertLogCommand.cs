@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Logging;
+﻿using Grand.Domain.Logging;
 using MediatR;
 
 namespace Grand.Services.Commands.Models.Common

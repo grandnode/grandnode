@@ -26,7 +26,7 @@ namespace Grand.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Maintenance))
                 return Forbid();
 
-            var template = await _mediator.Send(new GetMessageTemplateQuery() { Id = key, TemplateName = typeof(Core.Domain.Catalog.ManufacturerTemplate).Name });
+            var template = await _mediator.Send(new GetMessageTemplateQuery() { Id = key, TemplateName = typeof(Domain.Catalog.ManufacturerTemplate).Name });
             if (!template.Any())
                 return NotFound();
 
@@ -40,7 +40,7 @@ namespace Grand.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Maintenance))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetMessageTemplateQuery() { TemplateName = typeof(Core.Domain.Catalog.ManufacturerTemplate).Name }));
+            return Ok(await _mediator.Send(new GetMessageTemplateQuery() { TemplateName = typeof(Domain.Catalog.ManufacturerTemplate).Name }));
         }
     }
 }

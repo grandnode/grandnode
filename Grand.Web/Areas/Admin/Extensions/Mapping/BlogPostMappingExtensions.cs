@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Blogs;
+﻿using Grand.Domain.Blogs;
 using Grand.Services.Helpers;
 using Grand.Web.Areas.Admin.Models.Blogs;
 

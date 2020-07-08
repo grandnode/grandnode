@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Grand.Core.Domain.Blogs;
+using Grand.Domain.Blogs;
 using Grand.Core.Events;
 using Grand.Services.Seo;
 using MediatR;

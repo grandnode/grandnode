@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Stores;
 using Grand.Framework.Components;
 using Grand.Framework.Themes;
 using Grand.Web.Models.Common;

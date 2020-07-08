@@ -1,7 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Catalog;
+using Grand.Domain.Localization;
+using Grand.Domain.Stores;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using System.Collections.Generic;

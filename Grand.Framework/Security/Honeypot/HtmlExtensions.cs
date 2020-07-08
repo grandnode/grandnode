@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Security;
+﻿using Grand.Domain.Security;
 using Grand.Core.Infrastructure;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;

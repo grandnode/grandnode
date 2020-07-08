@@ -1,14 +1,15 @@
-using Grand.Core;
+using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Core.Configuration;
-using Grand.Core.Data;
-using Grand.Core.Domain.Seo;
+using Grand.Domain.Configuration;
+using Grand.Domain.Data;
+using Grand.Domain.Seo;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Configuration;
 
 namespace Grand.Services.Seo
 {

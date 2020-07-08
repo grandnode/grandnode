@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Stores;
+using Grand.Domain;
+using Grand.Domain.Stores;
 
 namespace Grand.Services.Stores
 {

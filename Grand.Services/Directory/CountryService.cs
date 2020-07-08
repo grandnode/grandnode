@@ -1,8 +1,8 @@
 using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Directory;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using MediatR;

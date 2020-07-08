@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Catalog;
+using Grand.Domain.Stores;
 using Grand.Services.Stores;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Messages;
+﻿using Grand.Domain.Messages;
 using MediatR;
 
 namespace Grand.Services.Notifications.Messages

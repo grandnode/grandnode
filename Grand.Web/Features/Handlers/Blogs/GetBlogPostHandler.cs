@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Media;
+using Grand.Domain.Blogs;
+using Grand.Domain.Customers;
+using Grand.Domain.Media;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Blogs;
 using Grand.Services.Common;

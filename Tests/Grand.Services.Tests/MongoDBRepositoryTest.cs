@@ -1,11 +1,12 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
+﻿using Grand.Core.Data;
+using Grand.Domain;
+using Grand.Domain.Data;
 
 namespace Grand.Services.Tests
 {
-    public partial class MongoDBRepositoryTest<T> : MongoDBRepository<T>, IRepository<T> where T : BaseEntity
+    public partial class MongoDBRepositoryTest<T> : Repository<T>, IRepository<T> where T : BaseEntity
     {
-        public MongoDBRepositoryTest()
+        public MongoDBRepositoryTest(): base(new MongoDBDataProvider())
         {
             var client = DriverTestConfiguration.Client;
             _database = client.GetDatabase(DriverTestConfiguration.DatabaseNamespace.DatabaseName);

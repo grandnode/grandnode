@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Grand.Core.Domain.Logging;
+using Grand.Domain.Logging;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Web.Areas.Admin.Models.Logging;
 

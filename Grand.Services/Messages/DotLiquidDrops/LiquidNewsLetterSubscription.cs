@@ -1,6 +1,6 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Messages;
+using Grand.Domain.Stores;
 using System;
 using System.Collections.Generic;
 

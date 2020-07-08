@@ -1,6 +1,6 @@
 ﻿using DotLiquid;
-using Grand.Core;
-using Grand.Core.Domain.Messages;
+using Grand.Domain;
+using Grand.Domain.Messages;
 using MediatR;
 
 namespace Grand.Services.Notifications.Messages

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
+﻿using Grand.Domain.Localization;
 using Grand.Web.Models.Catalog;
 using MediatR;
 using System.Collections.Generic;

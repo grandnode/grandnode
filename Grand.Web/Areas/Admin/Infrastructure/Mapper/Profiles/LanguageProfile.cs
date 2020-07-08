@@ -10,13 +10,13 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
     {
         public LanguageProfile()
         {
-            CreateMap<Core.Domain.Localization.Language, LanguageModel>()
+            CreateMap<Domain.Localization.Language, LanguageModel>()
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCurrencies, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.FlagFileNames, mo => mo.Ignore());
 
-            CreateMap<LanguageModel, Core.Domain.Localization.Language>()
+            CreateMap<LanguageModel, Domain.Localization.Language>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
         }

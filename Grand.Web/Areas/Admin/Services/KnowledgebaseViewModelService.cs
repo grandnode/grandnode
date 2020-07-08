@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Knowledgebase;
-using Grand.Core.Domain.Seo;
+﻿using Grand.Domain.Knowledgebase;
+using Grand.Domain.Seo;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Knowledgebase;

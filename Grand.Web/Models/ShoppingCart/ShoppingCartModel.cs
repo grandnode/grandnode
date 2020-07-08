@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;

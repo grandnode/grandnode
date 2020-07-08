@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Vendors;
 using Grand.Framework.Components;
 using Grand.Web.Features.Models.Catalog;
 using MediatR;

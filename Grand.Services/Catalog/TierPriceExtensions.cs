@@ -1,5 +1,5 @@
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

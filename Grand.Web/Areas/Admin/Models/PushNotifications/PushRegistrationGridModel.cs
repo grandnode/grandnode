@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Domain;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.PushNotifications

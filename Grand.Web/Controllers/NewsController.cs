@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.News;
+using Grand.Domain.Customers;
+using Grand.Domain.News;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Customers;
 using Grand.Services.Common;
 using Grand.Services.Messages;
 using Grand.Web.Commands.Models.Customers;

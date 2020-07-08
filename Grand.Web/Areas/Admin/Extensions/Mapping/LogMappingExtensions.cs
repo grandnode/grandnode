@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Logging;
+﻿using Grand.Domain.Logging;
 using Grand.Web.Areas.Admin.Models.Logging;
 
 namespace Grand.Web.Areas.Admin.Extensions

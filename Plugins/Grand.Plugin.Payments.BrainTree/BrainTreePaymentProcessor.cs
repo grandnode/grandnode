@@ -1,7 +1,7 @@
 ﻿using Braintree;
 using Grand.Core;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
 using Grand.Core.Plugins;
 using Grand.Plugin.Payments.BrainTree.Models;
 using Grand.Plugin.Payments.BrainTree.Validators;

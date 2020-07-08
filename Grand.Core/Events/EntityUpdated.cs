@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Grand.Domain;
+using MediatR;
 
 namespace Grand.Core.Events
 {

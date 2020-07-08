@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Messages;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Web.Commands.Models.Newsletter;

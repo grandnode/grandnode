@@ -1,8 +1,8 @@
-﻿using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Tax;
+﻿using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
+using Grand.Domain.Messages;
+using Grand.Domain.Tax;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;

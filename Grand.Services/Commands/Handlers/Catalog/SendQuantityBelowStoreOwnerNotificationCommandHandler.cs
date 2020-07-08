@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
+﻿using Grand.Domain.Localization;
 using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Messages;
 using MediatR;

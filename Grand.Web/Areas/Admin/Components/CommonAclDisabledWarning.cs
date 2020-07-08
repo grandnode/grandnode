@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Framework.Components;
 using Grand.Services.Configuration;
 using Grand.Services.Stores;

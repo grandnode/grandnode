@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.Orders;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Vendors;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Services.Vendors;

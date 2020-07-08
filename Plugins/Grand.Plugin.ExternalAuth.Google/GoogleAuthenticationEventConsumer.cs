@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Customers;
 using Grand.Services.Common;
 using Grand.Services.Notifications.Authentication;
 using MediatR;

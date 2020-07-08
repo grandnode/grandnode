@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Web.Areas.Admin.Models.Common;

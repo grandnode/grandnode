@@ -1,21 +1,22 @@
 ﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Media;
+using Grand.Core.Caching;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Media;
 using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Logging;
 using Grand.Services.Seo;
-using SkiaSharp;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using SkiaSharp;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using Grand.Core.Caching;
 
 namespace Grand.Services.Media
 {

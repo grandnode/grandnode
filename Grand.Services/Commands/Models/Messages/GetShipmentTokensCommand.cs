@@ -1,7 +1,7 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Localization;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
+using Grand.Domain.Stores;
 using Grand.Services.Messages.DotLiquidDrops;
 using MediatR;
 

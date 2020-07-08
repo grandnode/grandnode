@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Polls;
+using Grand.Domain.Customers;
+using Grand.Domain.Polls;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Polls;

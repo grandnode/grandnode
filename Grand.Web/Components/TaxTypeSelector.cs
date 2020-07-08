@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Tax;
 using Grand.Framework.Components;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Mvc;

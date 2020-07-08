@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;

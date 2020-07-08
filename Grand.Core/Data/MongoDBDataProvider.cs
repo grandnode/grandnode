@@ -5,7 +5,6 @@ namespace Grand.Core.Data
     {
         #region Methods
 
-
         /// <summary>
         /// Initialize database
         /// </summary>
@@ -15,5 +14,8 @@ namespace Grand.Core.Data
         }
 
         #endregion
+
+        public string ConnectionString => DataSettingsHelper.ConnectionString();
+
     }
 }

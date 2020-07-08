@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Core.Plugins;
 using Grand.Plugin.Shipping.ShippingPoint.Services;
 using Grand.Services.Common;

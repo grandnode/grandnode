@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Common;
+using Grand.Domain.Common;
 using Grand.Framework.Components;
 using Grand.Services.Stores;
 using Grand.Web.Models.Common;

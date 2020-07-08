@@ -1,5 +1,5 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops

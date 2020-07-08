@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.Localization;
 using Grand.Web.Models.Customer;
 using MediatR;
 

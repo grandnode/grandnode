@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Models;
 using Grand.Services.Commands.Models.Security;

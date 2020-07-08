@@ -1,6 +1,6 @@
-using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
+using Grand.Domain;
+using Grand.Domain.Data;
 using Grand.Plugin.Tax.CountryStateZip.Domain;
 using Grand.Services.Events;
 using MediatR;
@@ -89,7 +89,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// <returns>Tax rate</returns>
         public virtual Task<TaxRate> GetTaxRateById(string taxRateId)
         {
-           return _taxRateRepository.GetByIdAsync(taxRateId);
+            return _taxRateRepository.GetByIdAsync(taxRateId);
         }
 
         /// <summary>

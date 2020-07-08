@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Grand.Core.Domain.Topics;
+using Grand.Domain.Topics;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Models.Topics;

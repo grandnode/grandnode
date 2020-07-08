@@ -1,7 +1,7 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Discounts;
+﻿using Grand.Domain;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Discounts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

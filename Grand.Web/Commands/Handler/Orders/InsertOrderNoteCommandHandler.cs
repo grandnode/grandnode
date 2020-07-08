@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Orders;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Web.Commands.Models.Orders;

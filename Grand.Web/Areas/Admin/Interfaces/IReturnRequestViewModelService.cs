@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Common;
+using Grand.Domain.Orders;
 using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Web.Areas.Admin.Models.Orders;
 using System.Collections.Generic;

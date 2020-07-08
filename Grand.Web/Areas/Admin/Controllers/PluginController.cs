@@ -1,10 +1,10 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Cms;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Payments;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Cms;
+using Grand.Domain.Customers;
+using Grand.Domain.Payments;
+using Grand.Domain.Shipping;
+using Grand.Domain.Tax;
 using Grand.Core.Plugins;
 using Grand.Framework.Controllers;
 using Grand.Framework.Extensions;

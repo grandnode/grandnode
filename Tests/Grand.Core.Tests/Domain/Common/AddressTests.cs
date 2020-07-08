@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace Grand.Core.Domain.Common.Tests
+namespace Grand.Domain.Common.Tests
 {
     [TestClass()]
     public class AddressTests {

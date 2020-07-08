@@ -1,10 +1,10 @@
 using Grand.Core;
-using Grand.Core.Configuration;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Security;
+using Grand.Domain;
+using Grand.Domain.Configuration;
+using Grand.Domain.Localization;
+using Grand.Domain.Security;
 using Grand.Core.Plugins;
 using Grand.Services.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Linq.Expressions;

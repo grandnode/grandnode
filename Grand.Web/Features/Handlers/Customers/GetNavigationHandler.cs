@@ -1,7 +1,7 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Vendors;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.Forums;
+using Grand.Domain.Orders;
+using Grand.Domain.Vendors;
 using Grand.Web.Features.Models.Customers;
 using Grand.Web.Models.Customer;
 using MediatR;

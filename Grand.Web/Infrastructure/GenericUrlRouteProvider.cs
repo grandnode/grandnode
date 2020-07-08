@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Localization;
 using Grand.Framework.Mvc.Routing;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Builder;

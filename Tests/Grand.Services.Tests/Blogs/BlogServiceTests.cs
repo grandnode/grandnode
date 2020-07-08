@@ -1,6 +1,6 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Blogs;
+using Grand.Domain.Catalog;
 using Grand.Core.Events;
 using Grand.Services.Blogs;
 using MediatR;

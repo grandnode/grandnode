@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Framework.Components;
 using Grand.Services.Catalog;
 using Grand.Web.Features.Models.Products;

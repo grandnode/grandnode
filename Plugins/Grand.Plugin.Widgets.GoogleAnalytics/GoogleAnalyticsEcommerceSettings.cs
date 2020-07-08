@@ -1,5 +1,4 @@
-﻿
-using Grand.Core.Configuration;
+﻿using Grand.Domain.Configuration;
 
 namespace Grand.Plugin.Widgets.GoogleAnalytics
 {

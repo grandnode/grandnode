@@ -24,11 +24,11 @@ namespace Grand.Api.Queries.Handlers.Common
                 return Task.FromResult(
                     _mongoDBContext.Database()
                     .GetCollection<ManufacturerDto>
-                    (typeof(Core.Domain.Catalog.Manufacturer).Name)
+                    (typeof(Domain.Catalog.Manufacturer).Name)
                     .AsQueryable());
             else
                 return Task.FromResult(_mongoDBContext.Database()
-                    .GetCollection<ManufacturerDto>(typeof(Core.Domain.Catalog.Manufacturer).Name)
+                    .GetCollection<ManufacturerDto>(typeof(Domain.Catalog.Manufacturer).Name)
                     .AsQueryable()
                     .Where(x => x.Id == request.Id));
         }

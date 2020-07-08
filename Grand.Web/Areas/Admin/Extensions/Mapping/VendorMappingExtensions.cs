@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Vendors;
+﻿using Grand.Domain.Vendors;
 using Grand.Web.Areas.Admin.Models.Vendors;
 
 namespace Grand.Web.Areas.Admin.Extensions

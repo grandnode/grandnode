@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Directory;
+using Grand.Domain.Localization;
 using Grand.Core.Html;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Orders;

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Grand.Core.Domain.Discounts;
+using Grand.Domain.Discounts;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using System.Collections.Generic;

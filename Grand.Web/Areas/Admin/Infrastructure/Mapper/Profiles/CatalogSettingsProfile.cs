@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Web.Areas.Admin.Models.Settings;
 

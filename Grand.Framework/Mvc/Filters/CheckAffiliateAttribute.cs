@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain.Affiliates;
+using Grand.Domain.Affiliates;
 using Grand.Services.Affiliates;
 using Grand.Services.Customers;
 using Microsoft.AspNetCore.Mvc;

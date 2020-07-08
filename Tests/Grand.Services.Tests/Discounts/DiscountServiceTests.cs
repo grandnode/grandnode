@@ -1,11 +1,11 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Discounts;
+using Grand.Domain.Orders;
+using Grand.Domain.Stores;
+using Grand.Domain.Vendors;
 using Grand.Core.Plugins;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Common;

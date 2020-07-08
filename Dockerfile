@@ -5,6 +5,7 @@ WORKDIR /app
 COPY NuGet.config /root/.config/NuGet/
 
 COPY GrandNode.sln .
+COPY Grand.Domain/Grand.Domain.csproj Grand.Domain/Grand.Domain.csproj
 COPY Grand.Core/Grand.Core.csproj Grand.Core/Grand.Core.csproj
 COPY Grand.Framework/Grand.Framework.csproj Grand.Framework/Grand.Framework.csproj
 COPY Grand.Services/Grand.Services.csproj Grand.Services/Grand.Services.csproj

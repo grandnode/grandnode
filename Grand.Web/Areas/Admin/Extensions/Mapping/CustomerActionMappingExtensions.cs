@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Customers;
 using Grand.Services.Helpers;
 using Grand.Web.Areas.Admin.Models.Customers;
 

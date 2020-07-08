@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Settings;

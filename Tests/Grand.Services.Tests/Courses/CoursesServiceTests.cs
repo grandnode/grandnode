@@ -1,8 +1,8 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Courses;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Courses;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
 using Grand.Core.Events;
 using Grand.Services.Courses;
 using MediatR;

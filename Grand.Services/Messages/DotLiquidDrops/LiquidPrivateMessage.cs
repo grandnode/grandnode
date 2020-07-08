@@ -1,5 +1,5 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Forums;
+using Grand.Domain.Forums;
 using Grand.Services.Forums;
 using System.Collections.Generic;
 

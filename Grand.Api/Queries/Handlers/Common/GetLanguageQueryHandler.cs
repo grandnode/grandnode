@@ -20,9 +20,9 @@ namespace Grand.Api.Queries.Handlers.Common
         public Task<IMongoQueryable<LanguageDto>> Handle(GetQuery<LanguageDto> request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request.Id))
-                return Task.FromResult(_mongoDBContext.Database().GetCollection<LanguageDto>(typeof(Core.Domain.Localization.Language).Name).AsQueryable());
+                return Task.FromResult(_mongoDBContext.Database().GetCollection<LanguageDto>(typeof(Domain.Localization.Language).Name).AsQueryable());
             else
-                return Task.FromResult(_mongoDBContext.Database().GetCollection<LanguageDto>(typeof(Core.Domain.Localization.Language).Name).AsQueryable().Where(x => x.Id == request.Id));
+                return Task.FromResult(_mongoDBContext.Database().GetCollection<LanguageDto>(typeof(Domain.Localization.Language).Name).AsQueryable().Where(x => x.Id == request.Id));
         }
     }
 }

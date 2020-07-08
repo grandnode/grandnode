@@ -1,6 +1,6 @@
-using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain;
+using Grand.Domain.Catalog;
+using Grand.Domain.Shipping;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

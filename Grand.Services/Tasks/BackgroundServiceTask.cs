@@ -64,21 +64,21 @@ namespace Grand.Services.Tasks
                             {
                                 task.LastNonSuccessEndUtc = DateTime.UtcNow;
                                 task.Enabled = !task.StopOnError;
-                                await logger.InsertLog(Core.Domain.Logging.LogLevel.Error, $"Error while running the '{task.ScheduleTaskName}' schedule task", exc.Message);
+                                await logger.InsertLog(Domain.Logging.LogLevel.Error, $"Error while running the '{task.ScheduleTaskName}' schedule task", exc.Message);
                             }
                         }
                         else
                         {
                             task.Enabled = !task.StopOnError;
                             task.LastNonSuccessEndUtc = DateTime.UtcNow;
-                            await logger.InsertLog(Core.Domain.Logging.LogLevel.Error, $"Type {_taskType} is not registered");
+                            await logger.InsertLog(Domain.Logging.LogLevel.Error, $"Type {_taskType} is not registered");
                         }
                     }
                     else
                     {
                         task.Enabled = !task.StopOnError;
                         task.LastNonSuccessEndUtc = DateTime.UtcNow;
-                        await logger.InsertLog(Core.Domain.Logging.LogLevel.Error, $"Type {_taskType} is null (type not exists)");
+                        await logger.InsertLog(Domain.Logging.LogLevel.Error, $"Type {_taskType} is null (type not exists)");
                     }
                     await scheduleTaskService.UpdateTask(task);
                     await Task.Delay(TimeSpan.FromMinutes(timeInterval), stoppingToken);

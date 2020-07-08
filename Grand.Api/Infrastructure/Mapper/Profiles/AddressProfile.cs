@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Customers;
-using Grand.Core.Domain.Common;
+using Grand.Domain.Common;
 using Grand.Core.Infrastructure.Mapper;
 
 namespace Grand.Api.Infrastructure.Mapper

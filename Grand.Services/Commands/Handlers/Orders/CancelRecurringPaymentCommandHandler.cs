@@ -1,6 +1,6 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Logging;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Localization;
+using Grand.Domain.Logging;
+using Grand.Domain.Orders;
 using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Logging;
 using Grand.Services.Messages;

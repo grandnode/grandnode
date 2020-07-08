@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Braintree;
 using Grand.Core;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Plugin.Payments.BrainTree;
 using Grand.Plugin.Payments.BrainTree.Models;
 using Grand.Services.Orders;

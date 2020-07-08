@@ -1,6 +1,6 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Orders;
+using Grand.Domain.Stores;
 using Grand.Core.Html;
 using Grand.Services.Orders;
 using System.Collections.Generic;

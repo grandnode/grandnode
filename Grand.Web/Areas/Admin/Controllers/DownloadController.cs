@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Media;
+﻿using Grand.Domain.Media;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Media;
 using Grand.Services.Security;

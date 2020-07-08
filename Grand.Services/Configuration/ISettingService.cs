@@ -1,5 +1,4 @@
-using Grand.Core.Configuration;
-using Grand.Core.Domain.Configuration;
+using Grand.Domain.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

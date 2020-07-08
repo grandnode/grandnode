@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Forums;
+﻿using Grand.Domain.Forums;
 
 namespace Grand.Web.Models.Boards
 {

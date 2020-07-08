@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Blogs;
+using Grand.Domain.Blogs;
 using Grand.Services.Blogs;
 using Grand.Web.Features.Models.Blogs;
 using Grand.Web.Infrastructure.Cache;

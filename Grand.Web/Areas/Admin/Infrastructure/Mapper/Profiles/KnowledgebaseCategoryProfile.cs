@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Grand.Core.Domain.Knowledgebase;
+using Grand.Domain.Knowledgebase;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
 using System.Collections.Generic;

@@ -1,8 +1,7 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Logging;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Logging;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Customers;
 using Grand.Services.Customers;
@@ -14,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Grand.Core;
 
 namespace Grand.Services.Commands.Handlers.Customers
 {

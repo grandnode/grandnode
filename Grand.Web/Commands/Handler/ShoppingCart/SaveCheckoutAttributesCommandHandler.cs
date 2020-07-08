@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
 using Grand.Services.Common;
 using Grand.Services.Media;
 using Grand.Services.Orders;

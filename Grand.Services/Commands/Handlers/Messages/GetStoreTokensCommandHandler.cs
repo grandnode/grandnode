@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Stores;
 using Grand.Services.Commands.Models.Messages;
 using Grand.Services.Messages.DotLiquidDrops;
 using MediatR;

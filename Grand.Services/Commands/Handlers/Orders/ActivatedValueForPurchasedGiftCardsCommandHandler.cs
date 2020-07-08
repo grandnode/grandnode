@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Localization;
 using Grand.Services.Messages;

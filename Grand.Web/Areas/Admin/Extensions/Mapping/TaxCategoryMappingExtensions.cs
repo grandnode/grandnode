@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Tax;
+﻿using Grand.Domain.Tax;
 using Grand.Web.Areas.Admin.Models.Tax;
 
 namespace Grand.Web.Areas.Admin.Extensions

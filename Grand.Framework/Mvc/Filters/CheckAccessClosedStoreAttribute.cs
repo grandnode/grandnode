@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Stores;
 using Grand.Services.Security;
 using Grand.Services.Topics;
 using Microsoft.AspNetCore.Mvc;

@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
-using Grand.Core.Data;
-using Grand.Core.Domain.Media;
+using Grand.Domain.Data;
+using Grand.Domain.Media;
 using Grand.Services.Configuration;
 using Grand.Services.Logging;
 using MediatR;
@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 

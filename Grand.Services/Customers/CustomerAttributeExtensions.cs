@@ -1,5 +1,5 @@
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
 
 namespace Grand.Services.Customers
 {

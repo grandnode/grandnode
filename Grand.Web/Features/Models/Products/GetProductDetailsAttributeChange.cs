@@ -1,7 +1,7 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Directory;
+using Grand.Domain.Stores;
 using Grand.Web.Models.Catalog;
 using MediatR;
 using Microsoft.AspNetCore.Http;

@@ -22,6 +22,9 @@
   </Target>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Grand.Domain\Grand.Domain.csproj">
+      <Private>false</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\Grand.Api\Grand.Api.csproj">
       <Private>false</Private>
     </ProjectReference>

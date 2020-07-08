@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Data;
-using Grand.Core.Domain.Configuration;
+using Grand.Domain.Configuration;
+using Grand.Domain.Data;
 using Grand.Services.Authentication.External;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -28,7 +29,7 @@ namespace Grand.Plugin.ExternalAuth.Google.Infrastructure
                 var settings = new GoogleExternalAuthSettings();
                 try
                 {
-                    var goSettings = new MongoDBRepository<Setting>(DataSettingsHelper.ConnectionString()).Table.Where(x => x.Name.StartsWith("googleexternalauthsettings"));
+                    var goSettings = new Repository<Setting>(DataSettingsHelper.ConnectionString()).Table.Where(x => x.Name.StartsWith("googleexternalauthsettings"));
                     settings.ClientKeyIdentifier = goSettings.FirstOrDefault(x => x.Name == "googleexternalauthsettings.clientkeyidentifier")?.Value;
                     settings.ClientSecret = goSettings.FirstOrDefault(x => x.Name == "googleexternalauthsettings.clientsecret")?.Value;
                 }

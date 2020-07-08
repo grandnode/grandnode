@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Common;
+using Grand.Domain.Shipping;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;

@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Stores;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

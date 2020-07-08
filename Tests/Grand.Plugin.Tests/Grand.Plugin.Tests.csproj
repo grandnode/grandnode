@@ -17,6 +17,7 @@
     <PackageReference Include="NUnit" Version="3.12.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Grand.Domain\Grand.Domain.csproj" />
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj" />
     <ProjectReference Include="..\..\Grand.Framework\Grand.Framework.csproj" />
     <ProjectReference Include="..\..\Grand.Services\Grand.Services.csproj" />

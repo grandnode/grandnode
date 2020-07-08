@@ -1,7 +1,8 @@
 using Grand.Core;
+using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Localization;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Blogs;
+﻿using Grand.Domain.Blogs;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Extensions

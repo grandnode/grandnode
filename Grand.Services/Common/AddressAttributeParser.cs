@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Common;
+using Grand.Domain.Common;
 using Grand.Services.Localization;
 using System;
 using System.Collections.Generic;

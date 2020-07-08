@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Common;
+using Grand.Domain.Customers;
 using Grand.Services.Customers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

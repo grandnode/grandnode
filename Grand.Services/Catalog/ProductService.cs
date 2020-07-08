@@ -1,10 +1,11 @@
 using Grand.Core;
+using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Events;

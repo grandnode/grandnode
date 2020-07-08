@@ -1,6 +1,7 @@
 using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Common;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Common;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;

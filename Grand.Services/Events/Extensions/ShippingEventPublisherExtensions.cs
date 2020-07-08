@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Shipping;
 using Grand.Services.Notifications.Shipping;
 using MediatR;
 using System.Threading.Tasks;

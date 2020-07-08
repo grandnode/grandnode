@@ -23,7 +23,7 @@
             <li><b>@T($"Account.TwoFactorAuth.{Model.TwoFactorAuthenticationType}.ThirdLine")</b></li>
             <li>@T($"Account.TwoFactorAuth.{Model.TwoFactorAuthenticationType}.FourthLine")</li>
         </ul>
-        @if (Model.TwoFactorAuthenticationType == Grand.Core.Domain.Customers.TwoFactorAuthenticationType.AppVerification)
+        @if (Model.TwoFactorAuthenticationType == Grand.Domain.Customers.TwoFactorAuthenticationType.AppVerification)
         {
             @await Component.InvokeAsync("Widget", new { widgetZone = "Enable.TwoFactorAuthentication.AppVerification" })
             <div class="mb-2">
@@ -71,7 +71,7 @@
                 </div>
             </div>
         }
-        @if (Model.TwoFactorAuthenticationType == Grand.Core.Domain.Customers.TwoFactorAuthenticationType.EmailVerification)
+        @if (Model.TwoFactorAuthenticationType == Grand.Domain.Customers.TwoFactorAuthenticationType.EmailVerification)
         {
             @await Component.InvokeAsync("Widget", new { widgetZone = "Enable.TwoFactorAuthentication.EmailVerification" })
             <div class="mb-2">
@@ -108,7 +108,7 @@
                 </div>
             </div>
         }
-        @if (Model.TwoFactorAuthenticationType == Grand.Core.Domain.Customers.TwoFactorAuthenticationType.SMSVerification)
+        @if (Model.TwoFactorAuthenticationType == Grand.Domain.Customers.TwoFactorAuthenticationType.SMSVerification)
         {
             @await Component.InvokeAsync("Widget", new { widgetZone = "Enable.TwoFactorAuthentication.SMSVerification" })
             <div class="mb-2">

@@ -1,5 +1,5 @@
 ﻿using BundlerMinifier;
-using Grand.Core.Domain.Seo;
+using Grand.Domain.Seo;
 using Grand.Services.Seo;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

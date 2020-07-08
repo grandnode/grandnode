@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Framework.Components;
 using Grand.Services.Catalog;
 using Grand.Services.Orders;
@@ -61,7 +61,7 @@ namespace Grand.Web.Components
             var report = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id), async () =>
                                 await _orderReportService.BestSellersReport(
                                     createdFromUtc: fromdate,
-                                    ps: Core.Domain.Payments.PaymentStatus.Paid,
+                                    ps: Domain.Payments.PaymentStatus.Paid,
                                     storeId: _storeContext.CurrentStore.Id,
                                     pageSize: _catalogSettings.NumberOfBestsellersOnHomepage));
 

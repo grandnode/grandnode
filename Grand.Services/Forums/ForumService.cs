@@ -1,8 +1,9 @@
 ﻿using Grand.Core;
+using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
+using Grand.Domain.Data;
+using Grand.Domain.Customers;
+using Grand.Domain.Forums;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;

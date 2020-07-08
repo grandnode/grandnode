@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Localization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

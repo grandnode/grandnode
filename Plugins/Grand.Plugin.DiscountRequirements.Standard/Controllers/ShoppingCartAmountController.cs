@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Discounts;
+﻿using Grand.Domain.Discounts;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Plugin.DiscountRules.ShoppingCart.Models;

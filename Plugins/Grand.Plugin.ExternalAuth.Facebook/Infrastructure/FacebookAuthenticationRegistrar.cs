@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Data;
-using Grand.Core.Domain.Configuration;
+using Grand.Domain.Configuration;
+using Grand.Domain.Data;
 using Grand.Services.Authentication.External;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
@@ -28,7 +29,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure
                 var settings = new FacebookExternalAuthSettings();
                 try
                 {
-                    var fbSettings = new MongoDBRepository<Setting>(DataSettingsHelper.ConnectionString()).Table.Where(x => x.Name.StartsWith("facebookexternalauthsettings"));
+                    var fbSettings = new Repository<Setting>(DataSettingsHelper.ConnectionString()).Table.Where(x => x.Name.StartsWith("facebookexternalauthsettings"));
                     settings.ClientKeyIdentifier = fbSettings.FirstOrDefault(x => x.Name == "facebookexternalauthsettings.clientkeyidentifier")?.Value;
                     settings.ClientSecret = fbSettings.FirstOrDefault(x => x.Name == "facebookexternalauthsettings.clientsecret")?.Value;
                 }

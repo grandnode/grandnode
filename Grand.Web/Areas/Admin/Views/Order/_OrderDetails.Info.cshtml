@@ -1,6 +1,6 @@
 ﻿@model OrderModel
-@using Grand.Core.Domain.Tax;
-@using Grand.Core.Domain.Orders;
+@using Grand.Domain.Tax;
+@using Grand.Domain.Orders;
 
 @if (!Model.IsLoggedInAsVendor)
 {
@@ -584,22 +584,22 @@
                     var labelStatus = "";
                     switch (@Model.PaymentStatusEnum)
                     {
-                        case Grand.Core.Domain.Payments.PaymentStatus.Paid:
+                        case Grand.Domain.Payments.PaymentStatus.Paid:
                             labelStatus = "success";
                             break;
-                        case Grand.Core.Domain.Payments.PaymentStatus.Pending:
+                        case Grand.Domain.Payments.PaymentStatus.Pending:
                             labelStatus = "default";
                             break;
-                        case Grand.Core.Domain.Payments.PaymentStatus.Authorized:
+                        case Grand.Domain.Payments.PaymentStatus.Authorized:
                             labelStatus = "info";
                             break;
-                        case Grand.Core.Domain.Payments.PaymentStatus.PartiallyRefunded:
+                        case Grand.Domain.Payments.PaymentStatus.PartiallyRefunded:
                             labelStatus = "info";
                             break;
-                        case Grand.Core.Domain.Payments.PaymentStatus.Refunded:
+                        case Grand.Domain.Payments.PaymentStatus.Refunded:
                             labelStatus = "warning";
                             break;
-                        case Grand.Core.Domain.Payments.PaymentStatus.Voided:
+                        case Grand.Domain.Payments.PaymentStatus.Voided:
                             labelStatus = "danger";
                             break;
                     }

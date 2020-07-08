@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Extensions;

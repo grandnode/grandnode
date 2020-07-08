@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Localization;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Localization;
 using MediatR;
 
 namespace Grand.Services.Commands.Models.Catalog

@@ -1,7 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.News;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Localization;
+using Grand.Domain.News;
+using Grand.Domain.Stores;
 using Grand.Services.Seo;
 using System.Collections.Generic;
 

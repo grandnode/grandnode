@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Media;
+using Grand.Domain.Blogs;
+using Grand.Domain.Media;
 using Grand.Services.Blogs;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;

@@ -1,7 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Customers;
+using Grand.Domain.Forums;
+using Grand.Domain.Stores;
 using Grand.Services.Customers;
 using Grand.Services.Forums;
 using Grand.Services.Seo;

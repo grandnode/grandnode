@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Courses;
+﻿using Grand.Domain.Courses;
 using Grand.Services.Courses;
 using Grand.Web.Commands.Models.Courses;
 using MediatR;

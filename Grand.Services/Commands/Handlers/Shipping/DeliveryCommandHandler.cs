@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Commands.Models.Shipping;

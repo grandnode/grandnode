@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Tax;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Tax;
 using Grand.Framework.Mvc.Models;
 using Grand.Services.Discounts;
 using Grand.Web.Models.Media;

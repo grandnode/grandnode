@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using MediatR;
 
 namespace Grand.Services.Commands.Models.Catalog

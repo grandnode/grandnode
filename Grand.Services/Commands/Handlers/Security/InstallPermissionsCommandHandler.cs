@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Security;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.Security;
 using Grand.Services.Commands.Models.Security;
 using Grand.Services.Customers;
 using Grand.Services.Localization;

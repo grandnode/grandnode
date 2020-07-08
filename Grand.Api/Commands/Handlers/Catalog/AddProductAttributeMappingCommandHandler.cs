@@ -1,6 +1,6 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using Grand.Api.Extensions;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Services.Catalog;
 using MediatR;
 using System.Threading;

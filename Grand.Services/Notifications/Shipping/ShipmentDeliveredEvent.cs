@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Shipping;
 using MediatR;
 
 namespace Grand.Services.Notifications.Shipping

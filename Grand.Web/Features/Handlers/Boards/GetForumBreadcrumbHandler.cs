@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Forums;
+﻿using Grand.Domain.Forums;
 using Grand.Services.Forums;
 using Grand.Services.Seo;
 using Grand.Web.Features.Models.Boards;

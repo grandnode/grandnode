@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Web.Commands.Models.Common;

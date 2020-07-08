@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Services.Configuration;
 using Grand.Services.Discounts;
 using Grand.Services.Orders;

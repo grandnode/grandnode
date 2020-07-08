@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Media;
+using Grand.Domain.Orders;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;

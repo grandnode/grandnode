@@ -1,7 +1,8 @@
 using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Polls;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Polls;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using MediatR;

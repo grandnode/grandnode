@@ -20,9 +20,9 @@ namespace Grand.Api.Queries.Handlers.Common
         public Task<IMongoQueryable<CountryDto>> Handle(GetQuery<CountryDto> request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request.Id))
-                return Task.FromResult(_mongoDBContext.Database().GetCollection<CountryDto>(typeof(Core.Domain.Directory.Country).Name).AsQueryable());
+                return Task.FromResult(_mongoDBContext.Database().GetCollection<CountryDto>(typeof(Domain.Directory.Country).Name).AsQueryable());
             else
-                return Task.FromResult(_mongoDBContext.Database().GetCollection<CountryDto>(typeof(Core.Domain.Directory.Country).Name).AsQueryable().Where(x => x.Id == request.Id));
+                return Task.FromResult(_mongoDBContext.Database().GetCollection<CountryDto>(typeof(Domain.Directory.Country).Name).AsQueryable().Where(x => x.Id == request.Id));
         }
     }
 }

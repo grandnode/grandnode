@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Common;
+using Grand.Domain.Orders;
 using Grand.Web.Models.Orders;
 using MediatR;
 using Microsoft.AspNetCore.Http;

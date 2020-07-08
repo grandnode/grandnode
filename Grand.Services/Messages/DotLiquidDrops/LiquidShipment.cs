@@ -1,8 +1,8 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Localization;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
+using Grand.Domain.Stores;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops

@@ -2,17 +2,15 @@
 using System;
 using System.Collections.Generic;
 using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
+using Grand.Domain.Shipping;
+using Grand.Domain.Stores;
+using Grand.Domain.Tax;
 using Grand.Core.Plugins;
 using Grand.Services.Affiliates;
 using Grand.Services.Catalog;
@@ -33,6 +31,7 @@ using Grand.Core.Tests.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
 using MediatR;
+using Grand.Domain.Data;
 
 namespace Grand.Services.Orders.Tests
 {

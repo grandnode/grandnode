@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Services.Common;
 using Microsoft.AspNetCore.Http;
 using System;

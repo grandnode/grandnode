@@ -1,10 +1,11 @@
 ﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
+using Grand.Domain.Messages;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Events;
@@ -218,15 +219,15 @@ namespace Grand.Services.Customers
             {
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Category)
                 {
-                    cond = await ConditionCategory(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == Core.Domain.Orders.ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
+                    cond = await ConditionCategory(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Product)
                 {
-                    cond = ConditionProducts(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == Core.Domain.Orders.ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
+                    cond = ConditionProducts(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Manufacturer)
                 {
-                    cond = await ConditionManufacturer(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == Core.Domain.Orders.ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
+                    cond = await ConditionManufacturer(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.CustomerTag)
                 {

@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.News;
+using Grand.Domain.Customers;
+using Grand.Domain.Media;
+using Grand.Domain.News;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Common;
 using Grand.Services.Customers;

@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.News;
+using Grand.Domain;
+using Grand.Domain.News;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -1,9 +1,9 @@
 ﻿using Grand.Core.Caching;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Media;
+using Grand.Domain.Orders;
+using Grand.Domain.Tax;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;

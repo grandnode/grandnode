@@ -1,6 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Caching;
-using Grand.Core.Data;
+﻿using Grand.Core.Caching;
+using Grand.Domain;
+using Grand.Domain.Data;
 using Grand.Plugin.Shipping.ByWeight.Domain;
 using System;
 using System.Collections.Generic;

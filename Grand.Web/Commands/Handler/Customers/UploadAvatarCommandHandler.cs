@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Services.Common;
 using Grand.Services.Localization;
 using Grand.Services.Media;

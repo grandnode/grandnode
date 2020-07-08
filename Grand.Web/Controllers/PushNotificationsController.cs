@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.PushNotifications;
+using Grand.Domain.PushNotifications;
 using Grand.Framework.Mvc;
 using Grand.Services.PushNotifications;
 using Microsoft.AspNetCore.Mvc;

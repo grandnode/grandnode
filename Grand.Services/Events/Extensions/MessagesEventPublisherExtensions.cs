@@ -1,6 +1,6 @@
 ﻿using DotLiquid;
-using Grand.Core;
-using Grand.Core.Domain.Messages;
+using Grand.Domain;
+using Grand.Domain.Messages;
 using Grand.Services.Notifications.Messages;
 using MediatR;
 using System.Threading.Tasks;

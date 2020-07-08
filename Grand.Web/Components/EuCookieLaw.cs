@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Customers;
+using Grand.Domain.Stores;
 using Grand.Framework.Components;
 using Grand.Services.Common;
 using Microsoft.AspNetCore.Mvc;

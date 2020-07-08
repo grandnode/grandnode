@@ -1,7 +1,7 @@
 using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Data;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
 using Grand.Core.Plugins;
 using Grand.Services.Common;
 using Grand.Services.Customers;

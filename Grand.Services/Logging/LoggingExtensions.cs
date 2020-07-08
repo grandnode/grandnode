@@ -1,5 +1,5 @@
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Logging;
+using Grand.Domain.Customers;
+using Grand.Domain.Logging;
 using System;
 
 namespace Grand.Services.Logging

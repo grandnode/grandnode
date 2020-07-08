@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Grand.Core;
-using Grand.Core.Domain.Forums;
+using Grand.Domain.Forums;
 using Grand.Services.Forums;
 using Grand.Services.Localization;
 using Grand.Web.Features.Models.Boards;

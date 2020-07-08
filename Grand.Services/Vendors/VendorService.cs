@@ -1,6 +1,6 @@
-using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Vendors;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Bson;

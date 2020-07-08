@@ -1,10 +1,10 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Seo;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
+using Grand.Domain.Media;
+using Grand.Domain.Seo;
+using Grand.Domain.Vendors;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;

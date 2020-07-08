@@ -1,6 +1,6 @@
-﻿using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
-using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Orders;
+using Grand.Domain.Payments;
+using Grand.Domain.Shipping;
 using Grand.Framework.Components;
 using Grand.Framework.Extensions;
 using Grand.Services.Localization;

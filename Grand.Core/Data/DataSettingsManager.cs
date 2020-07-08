@@ -1,10 +1,9 @@
 ﻿using Grand.Core.Infrastructure;
+using Grand.Domain.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Grand.Core.Data
 {
@@ -69,7 +68,7 @@ namespace Grand.Core.Data
                         shellSettings.DataConnectionString = value;
                         break;
                     default:
-                        shellSettings.RawDataSettings.Add(key,value);
+                        shellSettings.RawDataSettings.Add(key, value);
                         break;
                 }
             }
@@ -101,7 +100,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
         {
-           
+
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
 
@@ -128,7 +127,7 @@ namespace Grand.Core.Data
 
             Singleton<DataSettings>.Instance = settings;
 
-            string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename); 
+            string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))
             {
                 using (File.Create(filePath))
@@ -136,7 +135,7 @@ namespace Grand.Core.Data
                     //we use 'using' to close the file after it's created
                 }
             }
-            
+
             var text = ComposeSettings(settings);
             File.WriteAllText(filePath, text);
         }

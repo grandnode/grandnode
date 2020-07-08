@@ -1,5 +1,5 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Documents;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Documents;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver;

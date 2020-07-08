@@ -1,11 +1,11 @@
 ﻿using Grand.Core;
 using Grand.Core.Configuration;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Media;
+using Grand.Domain.Stores;
+using Grand.Domain.Tax;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;

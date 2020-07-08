@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.PushNotifications;
+using Grand.Domain.PushNotifications;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;

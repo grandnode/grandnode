@@ -1,6 +1,6 @@
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Common;
+using Grand.Domain.Data;
+using Grand.Domain.Common;
 using Grand.Services.Directory;
 using Grand.Services.Events;
 using System;

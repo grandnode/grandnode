@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Vendors;
+﻿using Grand.Domain.Vendors;
 using MediatR;
 namespace Grand.Services.Queries.Models.Customers
 {

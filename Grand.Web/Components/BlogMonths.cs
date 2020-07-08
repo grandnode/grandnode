@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Blogs;
+﻿using Grand.Domain.Blogs;
 using Grand.Framework.Components;
 using Grand.Web.Features.Models.Blogs;
 using MediatR;

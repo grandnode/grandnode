@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Services.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

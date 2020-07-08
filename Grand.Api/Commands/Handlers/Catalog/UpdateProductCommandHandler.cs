@@ -1,6 +1,6 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using Grand.Api.Extensions;
-using Grand.Core.Domain.Seo;
+using Grand.Domain.Seo;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Logging;

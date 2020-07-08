@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Shipping;
 using Grand.Services.Catalog;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;

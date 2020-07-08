@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Blogs;
+using Grand.Domain;
+using Grand.Domain.Blogs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

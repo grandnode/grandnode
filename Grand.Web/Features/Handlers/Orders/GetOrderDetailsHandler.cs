@@ -1,8 +1,8 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Tax;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
+using Grand.Domain.Tax;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
@@ -140,7 +140,7 @@ namespace Grand.Web.Features.Handlers.Orders
             //allow cancel order
             if (_orderSettings.UserCanCancelUnpaidOrder)
             {
-                if (request.Order.OrderStatus == OrderStatus.Pending && request.Order.PaymentStatus == Core.Domain.Payments.PaymentStatus.Pending
+                if (request.Order.OrderStatus == OrderStatus.Pending && request.Order.PaymentStatus == Domain.Payments.PaymentStatus.Pending
                     && (request.Order.ShippingStatus == ShippingStatus.ShippingNotRequired || request.Order.ShippingStatus == ShippingStatus.NotYetShipped))
                     model.UserCanCancelUnpaidOrder = true;
             }

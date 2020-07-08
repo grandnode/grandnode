@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Blogs;
+﻿using Grand.Domain.Blogs;
 using Grand.Services.Blogs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

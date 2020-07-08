@@ -1,5 +1,5 @@
 ﻿using DotLiquid.Util;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Services.Catalog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

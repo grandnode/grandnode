@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Data;
+using Grand.Domain.Messages;
 using Grand.Services.Events;
 using System;
 using System.Collections.Generic;

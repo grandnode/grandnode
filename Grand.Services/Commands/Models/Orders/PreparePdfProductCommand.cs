@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Localization;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Localization;
 using iTextSharp.text.pdf;
 using MediatR;
 

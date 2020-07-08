@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Core.Plugins;
 using Grand.Services.Shipping.Tracking;
 using Microsoft.AspNetCore.Http;

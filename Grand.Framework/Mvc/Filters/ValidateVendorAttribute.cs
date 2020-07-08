@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;

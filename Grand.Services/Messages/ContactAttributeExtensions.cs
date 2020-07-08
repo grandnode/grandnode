@@ -1,5 +1,5 @@
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Catalog;
+using Grand.Domain.Messages;
 
 namespace Grand.Services.Messages
 {

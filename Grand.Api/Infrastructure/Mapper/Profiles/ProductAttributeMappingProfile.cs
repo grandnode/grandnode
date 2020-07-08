@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Catalog;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Core.Infrastructure.Mapper;
 
 namespace Grand.Api.Infrastructure.Mapper

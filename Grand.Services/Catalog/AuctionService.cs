@@ -1,10 +1,10 @@
-﻿using Grand.Core;
+﻿using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
+using Grand.Domain.Stores;
 using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Events;
 using MediatR;

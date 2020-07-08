@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Forums;
+using Grand.Domain;
+using Grand.Domain.Forums;
 using Grand.Services.Forums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

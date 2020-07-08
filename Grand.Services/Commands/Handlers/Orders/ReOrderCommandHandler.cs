@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Customers;

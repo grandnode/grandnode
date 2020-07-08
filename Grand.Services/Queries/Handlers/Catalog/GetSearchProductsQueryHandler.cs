@@ -1,7 +1,7 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
+﻿using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Queries.Models.Catalog;

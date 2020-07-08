@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Forums;
+﻿using Grand.Domain.Forums;
 using Grand.Services.Localization;
 using Grand.Web.Features.Models.Boards;
 using MediatR;

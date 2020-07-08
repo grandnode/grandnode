@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Media;
+using Grand.Domain.Blogs;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Media;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Common;

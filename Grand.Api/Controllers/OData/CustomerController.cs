@@ -1,7 +1,7 @@
 ﻿using Grand.Api.Commands.Models.Customers;
 using Grand.Api.DTOs.Customers;
 using Grand.Api.Queries.Models.Customers;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Services.Customers;
 using Grand.Services.Security;
 using MediatR;

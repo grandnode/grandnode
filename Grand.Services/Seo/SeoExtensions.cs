@@ -1,12 +1,12 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Seo;
+using Grand.Domain;
+using Grand.Domain.Catalog;
+using Grand.Domain.Forums;
+using Grand.Domain.Localization;
+using Grand.Domain.Seo;
 using Grand.Services.Localization;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;

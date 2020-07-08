@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Orders;
 using Grand.Services.Commands.Models.Orders;
 using MediatR;
 using System;

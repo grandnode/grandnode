@@ -1,6 +1,6 @@
 ﻿@model ProductModel
 @inject AdminAreaSettings adminAreaSettings
-@using Grand.Core.Domain.Catalog;
+@using Grand.Domain.Catalog;
 @if (!String.IsNullOrEmpty(Model.Id))
 {
     <input type="hidden" asp-for="CalendarModel.ProductId" />

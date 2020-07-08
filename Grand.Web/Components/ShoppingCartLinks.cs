@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Framework.Components;
 using Grand.Services.Orders;
 using Grand.Services.Security;

@@ -1,5 +1,6 @@
 using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain;
+using Grand.Domain.Customers;
 using Grand.Services.Common;
 using Grand.Services.Events.Extensions;
 using Grand.Services.Localization;

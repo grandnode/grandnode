@@ -20,9 +20,9 @@ namespace Grand.Api.Queries.Handlers.Common
         public Task<IMongoQueryable<StateProvinceDto>> Handle(GetQuery<StateProvinceDto> request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request.Id))
-                return Task.FromResult(_mongoDBContext.Database().GetCollection<StateProvinceDto>(typeof(Core.Domain.Directory.StateProvince).Name).AsQueryable());
+                return Task.FromResult(_mongoDBContext.Database().GetCollection<StateProvinceDto>(typeof(Domain.Directory.StateProvince).Name).AsQueryable());
             else
-                return Task.FromResult(_mongoDBContext.Database().GetCollection<StateProvinceDto>(typeof(Core.Domain.Directory.StateProvince).Name).AsQueryable().Where(x => x.Id == request.Id));
+                return Task.FromResult(_mongoDBContext.Database().GetCollection<StateProvinceDto>(typeof(Domain.Directory.StateProvince).Name).AsQueryable().Where(x => x.Id == request.Id));
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Core.Html;
 using System;
 using System.Collections.Generic;

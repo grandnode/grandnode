@@ -1,9 +1,9 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
+using Grand.Domain.Shipping;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security.Authorization;

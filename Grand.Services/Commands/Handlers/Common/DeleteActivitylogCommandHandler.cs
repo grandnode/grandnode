@@ -1,5 +1,5 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Logging;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Logging;
 using Grand.Services.Commands.Models.Common;
 using MediatR;
 using MongoDB.Bson;

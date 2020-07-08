@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Customers;
 using Grand.Services.Customers;
 using Grand.Services.Notifications.Orders;
 using MediatR;

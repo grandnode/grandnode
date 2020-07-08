@@ -1,35 +1,35 @@
 using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain;
-using Grand.Core.Domain.AdminSearch;
-using Grand.Core.Domain.Affiliates;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Cms;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Configuration;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Knowledgebase;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Logging;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.News;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
-using Grand.Core.Domain.Polls;
-using Grand.Core.Domain.PushNotifications;
-using Grand.Core.Domain.Security;
-using Grand.Core.Domain.Seo;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Tasks;
-using Grand.Core.Domain.Tax;
-using Grand.Core.Domain.Topics;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.AdminSearch;
+using Grand.Domain.Affiliates;
+using Grand.Domain.Blogs;
+using Grand.Domain.Catalog;
+using Grand.Domain.Cms;
+using Grand.Domain.Common;
+using Grand.Domain.Configuration;
+using Grand.Domain.Customers;
+using Grand.Domain.Directory;
+using Grand.Domain.Discounts;
+using Grand.Domain.Forums;
+using Grand.Domain.Knowledgebase;
+using Grand.Domain.Localization;
+using Grand.Domain.Logging;
+using Grand.Domain.Media;
+using Grand.Domain.Messages;
+using Grand.Domain.News;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
+using Grand.Domain.Polls;
+using Grand.Domain.PushNotifications;
+using Grand.Domain.Security;
+using Grand.Domain.Seo;
+using Grand.Domain.Shipping;
+using Grand.Domain.Stores;
+using Grand.Domain.Tasks;
+using Grand.Domain.Tax;
+using Grand.Domain.Topics;
+using Grand.Domain.Vendors;
 using Grand.Core.Infrastructure;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Data;
 
 namespace Grand.Services.Installation
 {
@@ -10817,7 +10818,7 @@ namespace Grand.Services.Installation
                 var mongoDBContext = new MongoDBContext(connectionString);
                 var typeFinder = _serviceProvider.GetRequiredService<ITypeFinder>();
                 var q = typeFinder.GetAssemblies().FirstOrDefault(x => x.GetName().Name == "Grand.Core");
-                foreach (var item in q.GetTypes().Where(x => x.Namespace != null && x.Namespace.StartsWith("Grand.Core.Domain")))
+                foreach (var item in q.GetTypes().Where(x => x.Namespace != null && x.Namespace.StartsWith("Grand.Domain")))
                 {
                     if (item.BaseType != null && item.IsClass && item.BaseType == typeof(BaseEntity))
                         await mongoDBContext.Database().CreateCollectionAsync(item.Name, options);

@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Orders;
+using Grand.Domain;
+using Grand.Domain.Orders;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,6 +1,6 @@
-using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Security;
+using Grand.Domain;
+using Grand.Domain.Customers;
+using Grand.Domain.Security;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Security

@@ -5,7 +5,7 @@
         <label asp-for="RecipientName" class="col-form-label">@T("Products.GiftCard.RecipientName"):</label>
         <input asp-for="RecipientName" class="form-control recipient-name" />
     </fieldset>
-    @if (Model.GiftCardType == Grand.Core.Domain.Catalog.GiftCardType.Virtual)
+    @if (Model.GiftCardType == Grand.Domain.Catalog.GiftCardType.Virtual)
     {
         <fieldset>
             <legend class="sr-only">@T("Products.GiftCard.RecipientEmail")</legend>
@@ -18,7 +18,7 @@
         <label asp-for="SenderName" class="col-form-label">@T("Products.GiftCard.SenderName"):</label>
         <input asp-for="SenderName" class="form-control sender-name" />
     </fieldset>
-    @if (Model.GiftCardType == Grand.Core.Domain.Catalog.GiftCardType.Virtual)
+    @if (Model.GiftCardType == Grand.Domain.Catalog.GiftCardType.Virtual)
     {
         <fieldset>
             <legend class="sr-only">@T("Products.GiftCard.SenderEmail")</legend>

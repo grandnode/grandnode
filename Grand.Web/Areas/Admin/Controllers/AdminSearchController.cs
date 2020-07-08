@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.AdminSearch;
-using Grand.Core.Domain.Customers;
+using Grand.Domain;
+using Grand.Domain.AdminSearch;
+using Grand.Domain.Customers;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;

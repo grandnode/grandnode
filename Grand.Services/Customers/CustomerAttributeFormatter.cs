@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Core.Html;
 using Grand.Services.Localization;
 using System;

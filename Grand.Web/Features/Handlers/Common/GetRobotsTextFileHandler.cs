@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Configuration;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Localization;
 using Grand.Services.Localization;
 using Grand.Web.Features.Models.Common;
 using MediatR;

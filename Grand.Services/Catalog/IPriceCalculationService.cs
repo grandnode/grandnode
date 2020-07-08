@@ -1,6 +1,6 @@
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
 using Grand.Services.Discounts;
 using System;
 using System.Collections.Generic;

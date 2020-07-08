@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Shipping;
 using Grand.Web.Areas.Admin.Models.Shipping;
 
 namespace Grand.Web.Areas.Admin.Extensions

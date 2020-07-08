@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.Stores;
 using MediatR;
 
 namespace Grand.Web.Commands.Models.Customers

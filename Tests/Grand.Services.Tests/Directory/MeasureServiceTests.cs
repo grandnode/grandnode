@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Directory;
+using Grand.Domain.Data;
+using Grand.Domain.Directory;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Events;
 using MediatR;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Services.Localization;
 using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Models.Catalog;

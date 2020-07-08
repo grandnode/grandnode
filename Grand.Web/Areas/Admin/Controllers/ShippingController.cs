@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Directory;
+using Grand.Domain.Shipping;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -502,7 +502,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var address = await _addressService.GetAddressByIdSettings(warehouse.AddressId) ??
-                    new Core.Domain.Common.Address
+                    new Domain.Common.Address
                     {
                         CreatedOnUtc = DateTime.UtcNow,
                     };
@@ -612,7 +612,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var address = new Core.Domain.Common.Address { CreatedOnUtc = DateTime.UtcNow };
+                var address = new Domain.Common.Address { CreatedOnUtc = DateTime.UtcNow };
                 address = model.Address.ToEntity(address);
                 pickupPoint = model.ToEntity(pickupPoint);
                 pickupPoint.Address = address;
