@@ -4,7 +4,7 @@
     ViewBag.Title = T("Admin.Customers.CustomerReminder.EditLevel").Text;
 }
 
-<form asp-controller="CustomerReminder" 
+<form asp-area="Admin" asp-controller="CustomerReminder" 
       asp-action="EditLevel" 
       asp-route-CustomerReminderId="@Context.Request.Query["CustomerReminderId"]"
       asp-route-cid="@Context.Request.Query["cid"]"

@@ -8,7 +8,7 @@
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew").Text;
 }
 
-<form asp-controller="Discount" asp-action="ManufacturerAddPopup" method="post"
+<form asp-area="Admin" asp-controller="Discount" asp-action="ManufacturerAddPopup" method="post"
       asp-route-DiscountId="@Context.Request.Query["DiscountId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

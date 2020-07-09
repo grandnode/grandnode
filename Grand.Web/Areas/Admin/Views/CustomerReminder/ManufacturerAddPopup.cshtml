@@ -6,7 +6,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerReminder.Condition.Manufacturers.AddNew").Text;
 }
-<form asp-controller="CustomerReminder" asp-action="ManufacturerAddPopup" method="post"
+<form asp-area="Admin" asp-controller="CustomerReminder" asp-action="ManufacturerAddPopup" method="post"
       asp-route-CustomerReminderId="@Context.Request.Query["CustomerReminderId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

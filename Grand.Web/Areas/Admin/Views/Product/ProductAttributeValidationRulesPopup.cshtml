@@ -7,7 +7,7 @@
 
     var attributeControlType = (AttributeControlType)Model.AttributeControlTypeId;
 }
-<form asp-controller="Product" asp-action="ProductAttributeValidationRulesPopup" enctype="multipart/form-data" method="post"
+<form asp-area="Admin" asp-controller="Product" asp-action="ProductAttributeValidationRulesPopup" enctype="multipart/form-data" method="post"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

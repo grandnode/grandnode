@@ -5,7 +5,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Details").Text;
 }
-<form asp-controller="Product" asp-action="ProductAttributeMappingPopup" enctype="multipart/form-data" method="post"
+<form asp-area="Admin" asp-controller="Product" asp-action="ProductAttributeMappingPopup" enctype="multipart/form-data" method="post"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-productAttributeMappingId="@Context.Request.Query["ProductAttributeMappingId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"

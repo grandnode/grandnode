@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.System.QueuedEmails").Text;
 }
-<form asp-controller="QueuedEmail" asp-action="List" method="post">
+<form asp-area="Admin" asp-controller="QueuedEmail" asp-action="List" method="post">
     
     <div class="row">
         <div class="col-md-12">

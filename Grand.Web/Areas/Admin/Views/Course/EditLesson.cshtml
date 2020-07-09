@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Courses.Course.Lesson.Edit").Text;
 }
-<form asp-controller="Course" asp-action="EditLesson" method="post" id="course-lesson-form">
+<form asp-area="Admin" asp-controller="Course" asp-action="EditLesson" method="post" id="course-lesson-form">
     <input asp-for="CourseId" type="hidden" />
     
     <div class="row">

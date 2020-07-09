@@ -6,7 +6,7 @@
     ViewBag.Title = T("Admin.Catalog.Products.SimilarProducts.AddNew").Text;
 }
 
-<form asp-controller="Product" asp-action="SimilarProductAddPopup"
+<form asp-area="Admin" asp-controller="Product" asp-action="SimilarProductAddPopup"
       asp-route-productId="@Context.Request.Query["productId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

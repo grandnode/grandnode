@@ -7,7 +7,7 @@
 }
 
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-<form asp-controller="Product" asp-action="ProductAttributeConditionPopup" enctype="multipart/form-data" method="post"
+<form asp-area="Admin" asp-controller="Product" asp-action="ProductAttributeConditionPopup" enctype="multipart/form-data" method="post"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-productAttributeMappingId="@Context.Request.Query["ProductAttributeMappingId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
