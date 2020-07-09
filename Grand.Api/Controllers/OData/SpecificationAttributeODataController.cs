@@ -6,21 +6,23 @@ using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class SpecificationAttributeController : BaseODataController
+    public partial class SpecificationAttributeODataController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
-        public SpecificationAttributeController(IMediator mediator, IPermissionService permissionService)
+        public SpecificationAttributeODataController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
         }
 
+        [SwaggerOperation(summary: "Get entity from SpecificationAttribute")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -34,6 +36,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(specificationAttribute.FirstOrDefault());
         }
 
+        [SwaggerOperation(summary: "Get entities from SpecificationAttribute")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
@@ -44,6 +47,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(await _mediator.Send(new GetQuery<SpecificationAttributeDto>()));
         }
 
+        [SwaggerOperation(summary: "Add new entity to SpecificationAttribute")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] SpecificationAttributeDto model)
         {
@@ -58,6 +62,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Update entity in SpecificationAttribute")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] SpecificationAttributeDto model)
         {
@@ -72,6 +77,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Partially update entity in SpecificationAttribute")]
         [HttpPatch]
         public async Task<IActionResult> Patch([FromODataUri] string key, Delta<SpecificationAttributeDto> model)
         {
@@ -96,6 +102,7 @@ namespace Grand.Api.Controllers.OData
 
         }
 
+        [SwaggerOperation(summary: "Delete entity in SpecificationAttribute")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
