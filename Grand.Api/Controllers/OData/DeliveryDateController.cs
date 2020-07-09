@@ -22,7 +22,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Delivery Date")]
+        [SwaggerOperation(summary: "Get entity from Delivery Date by key")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {

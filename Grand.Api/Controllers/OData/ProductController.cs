@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class ProductODataController : BaseODataController
+    public partial class ProductController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public ProductODataController(
+        public ProductController(
             IMediator mediator,
             IPermissionService permissionService)
         {
@@ -25,7 +25,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Product")]
+        [SwaggerOperation(summary: "Get entity from Product by key")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {

@@ -1,4 +1,4 @@
-﻿using Grand.Api.DTOs.Shipping;
+﻿using Grand.Api.DTOs.Customers;
 using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
 using MediatR;
@@ -11,40 +11,41 @@ using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class ShippingMethodODataController : BaseODataController
+    public partial class VendorController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public ShippingMethodODataController(IMediator mediator, IPermissionService permissionService)
+        public VendorController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from ShippingMethod")]
+        [SwaggerOperation(summary: "Get entity from Vendor by key")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
+            if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
                 return Forbid();
 
-            var shipping = await _mediator.Send(new GetQuery<ShippingMethodDto>() { Id = key });
-            if (!shipping.Any())
+            var vendor = await _mediator.Send(new GetQuery<VendorDto>() { Id = key });
+            if (!vendor.Any())
                 return NotFound();
 
-            return Ok(shipping.FirstOrDefault());
+            return Ok(vendor.FirstOrDefault());
+
         }
 
-        [SwaggerOperation(summary: "Get entities from ShippingMethod")]
+        [SwaggerOperation(summary: "Get entities from Vendor")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
+            if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetQuery<ShippingMethodDto>()));
+            return Ok(await _mediator.Send(new GetQuery<VendorDto>()));
         }
     }
 }

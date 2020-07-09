@@ -20,7 +20,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entities from Picture")]
+        [SwaggerOperation(summary: "Get entities from Picture by key")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {

@@ -23,7 +23,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from CategoryTemplate")]
+        [SwaggerOperation(summary: "Get entity from CategoryTemplate by key")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {

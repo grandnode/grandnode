@@ -12,17 +12,17 @@ using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class SpecificationAttributeODataController : BaseODataController
+    public partial class SpecificationAttributeController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
-        public SpecificationAttributeODataController(IMediator mediator, IPermissionService permissionService)
+        public SpecificationAttributeController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from SpecificationAttribute")]
+        [SwaggerOperation(summary: "Get entity from SpecificationAttribute by key")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {

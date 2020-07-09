@@ -1,4 +1,4 @@
-﻿using Grand.Api.DTOs.Customers;
+﻿using Grand.Api.DTOs.Common;
 using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
 using MediatR;
@@ -11,41 +11,40 @@ using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class VendorODataController : BaseODataController
+    public partial class StateProvinceController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public VendorODataController(IMediator mediator, IPermissionService permissionService)
+        public StateProvinceController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Vendor")]
+        [SwaggerOperation(summary: "Get entity from StateProvince by key")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
+            if (!await _permissionService.Authorize(PermissionSystemName.Countries))
                 return Forbid();
 
-            var vendor = await _mediator.Send(new GetQuery<VendorDto>() { Id = key });
-            if (!vendor.Any())
+            var states = await _mediator.Send(new GetQuery<StateProvinceDto>() { Id = key });
+            if (!states.Any())
                 return NotFound();
 
-            return Ok(vendor.FirstOrDefault());
-
+            return Ok(states);
         }
 
-        [SwaggerOperation(summary: "Get entities from Vendor")]
+        [SwaggerOperation(summary: "Get entities from StateProvince")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
+            if (!await _permissionService.Authorize(PermissionSystemName.Countries))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetQuery<VendorDto>()));
+            return Ok(await _mediator.Send(new GetQuery<StateProvinceDto>()));
         }
     }
 }

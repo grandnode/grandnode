@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class ProductTemplateODataController : BaseODataController
+    public partial class ProductTemplateController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public ProductTemplateODataController(IMediator mediator, IPermissionService permissionService)
+        public ProductTemplateController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from ProductTemplate")]
+        [SwaggerOperation(summary: "Get entity from ProductTemplate by key")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {

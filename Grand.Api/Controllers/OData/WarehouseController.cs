@@ -1,4 +1,4 @@
-﻿using Grand.Api.DTOs.Common;
+﻿using Grand.Api.DTOs.Shipping;
 using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
 using MediatR;
@@ -11,40 +11,40 @@ using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class StateProvinceODataController : BaseODataController
+    public partial class WarehouseController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public StateProvinceODataController(IMediator mediator, IPermissionService permissionService)
+        public WarehouseController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from StateProvince")]
+        [SwaggerOperation(summary: "Get entity from Warehouse by key")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Countries))
+            if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
                 return Forbid();
 
-            var states = await _mediator.Send(new GetQuery<StateProvinceDto>() { Id = key });
-            if (!states.Any())
+            var warehouse = await _mediator.Send(new GetQuery<WarehouseDto>() { Id = key });
+            if (!warehouse.Any())
                 return NotFound();
 
-            return Ok(states);
+            return Ok(warehouse.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from StateProvince")]
+        [SwaggerOperation(summary: "Get entities from Warehouse")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Countries))
+            if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetQuery<StateProvinceDto>()));
+            return Ok(await _mediator.Send(new GetQuery<WarehouseDto>()));
         }
     }
 }
