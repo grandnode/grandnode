@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
+        [SwaggerOperation(summary: "Get entity from Manufacturers")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -34,6 +36,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(manufacturer);
         }
 
+        [SwaggerOperation(summary: "Get entities from Manufacturer")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
@@ -44,6 +47,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(await _mediator.Send(new GetQuery<ManufacturerDto>()));
         }
 
+        [SwaggerOperation(summary: "Add new entity to Manufacturer")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ManufacturerDto model)
         {
@@ -58,6 +62,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Update entity in Manufacturer")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] ManufacturerDto model)
         {
@@ -80,6 +85,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Partially update entity in Manufacturer")]
         [HttpPatch]
         public async Task<IActionResult> Patch([FromODataUri] string key, Delta<ManufacturerDto> model)
         {
@@ -103,6 +109,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Delete entity in Manufacturer")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
