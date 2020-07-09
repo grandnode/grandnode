@@ -5,7 +5,7 @@
     ViewBag.Title = T("Admin.Configuration.Countries.States.AddNew").Text;
 }
 
-<form asp-controller="Country" asp-action="StateCreatePopup"
+<form asp-area="Admin" asp-controller="Country" asp-action="StateCreatePopup"
       asp-route-countryId="@Context.Request.Query["countryId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

@@ -6,7 +6,7 @@
 }
 @inject AdminAreaSettings adminAreaSettings
 
-<form asp-controller="CustomerTag" asp-action="ProductAddPopup" method="post"
+<form asp-area="Admin" asp-controller="CustomerTag" asp-action="ProductAddPopup" method="post"
       asp-route-CustomerTagId="@Context.Request.Query["CustomerTagId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

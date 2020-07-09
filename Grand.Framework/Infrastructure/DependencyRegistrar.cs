@@ -36,6 +36,7 @@ using Grand.Services.Installation;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Services.MachineNameProvider;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.News;

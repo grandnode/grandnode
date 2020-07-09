@@ -145,6 +145,9 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         .ToList())
                     {
                         var product = await _productService.GetProductById(sci.ProductId);
+                        if (product == null)
+                            continue;
+
                         var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel {
                             Id = sci.Id,
                             ProductId = product.Id,

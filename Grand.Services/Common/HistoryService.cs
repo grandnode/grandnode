@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using Grand.Domain.History;
 
 namespace Grand.Services.Common
 {

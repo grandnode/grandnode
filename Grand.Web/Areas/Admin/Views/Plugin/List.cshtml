@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
 }
-<form asp-controller="Plugin" asp-action="List" method="post" id="plugins-form">
+<form asp-area="Admin" asp-controller="Plugin" asp-action="List" method="post" id="plugins-form">
     
     <div class="row">
         <div class="col-md-12">
@@ -219,7 +219,7 @@
 </form>
 
 <div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">
-    <form asp-controller="Plugin" asp-action="UploadPlugin" method="post" enctype = "multipart/form-data">
+    <form asp-area="Admin" asp-controller="Plugin" asp-action="UploadPlugin" method="post" enctype = "multipart/form-data">
         
         <ul class="common-list">
             <li>

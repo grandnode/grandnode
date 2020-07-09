@@ -8,7 +8,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerAttributes.Values.EditValueDetails").Text;
 }
-<form asp-controller="CustomerAttribute" asp-action="ValueEditPopup"
+<form asp-area="Admin" asp-controller="CustomerAttribute" asp-action="ValueEditPopup"
       asp-route-customerAttributeId="@Context.Request.Query["customerAttributeId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

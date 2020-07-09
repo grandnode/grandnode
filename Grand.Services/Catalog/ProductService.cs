@@ -139,6 +139,8 @@ namespace Grand.Services.Catalog
             //cache
             await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
+            //event notification
+            await _mediator.EntityDeleted(product);
         }
 
         /// <summary>
@@ -1676,6 +1678,9 @@ namespace Grand.Services.Catalog
             foreach (var sci in cart)
             {
                 var product = await GetProductById(sci.ProductId);
+                if (product == null)
+                    continue;
+
                 var crossSells = product.CrossSellProduct;
                 foreach (var crossSell in crossSells)
                 {

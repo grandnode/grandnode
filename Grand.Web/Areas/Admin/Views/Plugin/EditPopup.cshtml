@@ -5,7 +5,7 @@
     ViewBag.Title = T("Admin.Configuration.Plugins.EditDetails").Text;
 }
 
-<form asp-controller="Plugin" asp-action="EditPopup" method="post" asp-route-btnId="@Context.Request.Query["btnId"]"
+<form asp-area="Admin" asp-controller="Plugin" asp-action="EditPopup" method="post" asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
     
     <div class="row">

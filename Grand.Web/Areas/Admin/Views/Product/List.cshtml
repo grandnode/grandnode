@@ -5,7 +5,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.Manage").Text;
 }
-<form asp-controller="Product" asp-action="List" method="post">
+<form asp-area="Admin" asp-controller="Product" asp-action="List" method="post">
     
     <div class="row">
         <div class="col-md-12">
@@ -397,7 +397,7 @@
 
 @*import products form*@
 <div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
-    <form asp-controller="Product" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
+    <form asp-area="Admin" asp-controller="Product" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
         
         <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
         <div class="form-group">
@@ -443,7 +443,7 @@
         });
 </script>
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-<form asp-controller="Product" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
+<form asp-area="Admin" asp-controller="Product" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
     
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
@@ -462,7 +462,7 @@
 
 </script>
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-<form asp-controller="Product" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
+<form asp-area="Admin" asp-controller="Product" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
     
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>

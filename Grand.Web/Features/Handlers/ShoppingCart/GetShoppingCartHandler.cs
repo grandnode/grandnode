@@ -353,6 +353,9 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             foreach (var sci in request.Cart)
             {
                 var product = await _productService.GetProductById(sci.ProductId);
+                if (product == null)
+                    continue;
+
                 var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel {
                     Id = sci.Id,
                     Sku = product.FormatSku(sci.AttributesXml, _productAttributeParser),

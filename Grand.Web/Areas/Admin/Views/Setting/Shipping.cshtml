@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Shipping").Text;
 }
-<form asp-controller="Setting" asp-action="Shipping" method="post">
+<form asp-area="Admin" asp-controller="Setting" asp-action="Shipping" method="post">
     
     <div asp-validation-summary="All"></div>
     <script>

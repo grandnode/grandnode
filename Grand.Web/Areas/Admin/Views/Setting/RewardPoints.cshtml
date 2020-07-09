@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.RewardPoints").Text;
 }
-<form asp-controller="Setting" asp-action="RewardPoints" method="post">
+<form asp-area="Admin" asp-controller="Setting" asp-action="RewardPoints" method="post">
     
     <div asp-validation-summary="All"></div>
     <div class="row">

@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Order").Text;
 }
-<form asp-controller="Setting" asp-action="Order" method="post">
+<form asp-area="Admin" asp-controller="Setting" asp-action="Order" method="post">
     
     <div asp-validation-summary="All"></div>
     <div class="row">
