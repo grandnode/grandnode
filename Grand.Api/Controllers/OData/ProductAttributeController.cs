@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +25,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
+        [SwaggerOperation(summary: "Get entity from ProductAttribute")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -37,6 +39,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(productAttribute.FirstOrDefault());
         }
 
+        [SwaggerOperation(summary: "Get entities from ProductAttribute")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
@@ -47,6 +50,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(await _mediator.Send(new GetQuery<ProductAttributeDto>()));
         }
 
+        [SwaggerOperation(summary: "Add new entity to ProductAttribute")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProductAttributeDto model)
         {
@@ -61,6 +65,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Update entity in ProductAttribute")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] ProductAttributeDto model)
         {
@@ -75,6 +80,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Partially update entity in ProductAttribute")]
         [HttpPatch]
         public async Task<IActionResult> Patch([FromODataUri] string key, Delta<ProductAttributeDto> model)
         {
@@ -96,6 +102,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Delete entity from ProductAttribute")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
