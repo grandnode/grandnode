@@ -7,6 +7,7 @@ using Grand.Services.Security;
 using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,6 +33,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
+        [SwaggerOperation(summary: "Get entity from Customer")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -45,6 +47,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(customer);
         }
 
+        [SwaggerOperation(summary: "Add new entity to Customer")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CustomerDto model)
         {
@@ -58,6 +61,8 @@ namespace Grand.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+
+        [SwaggerOperation(summary: "Update entity in Customer")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] CustomerDto model)
         {
@@ -72,6 +77,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Delete entity from Customer")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
@@ -89,7 +95,9 @@ namespace Grand.Api.Controllers.OData
             return Ok();
         }
 
+
         //odata/Customer/AddAddress/(email)
+        [SwaggerOperation(summary: "Invoke action AddAddress")]
         [Route("[action]/({key}")]
         [HttpPost]
         public async Task<IActionResult> AddAddress(string key, [FromBody] AddressDto address)
@@ -109,6 +117,7 @@ namespace Grand.Api.Controllers.OData
         }
 
         //odata/Customer/UpdateAddress/(email)
+        [SwaggerOperation(summary: "Invoke action UpdateAddress")]
         [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> UpdateAddress(string key, [FromBody] AddressDto address)
@@ -130,6 +139,7 @@ namespace Grand.Api.Controllers.OData
 
         //odata/Customer/DeleteAddress/(email)
         //body: { "addressId": "xxx" }
+        [SwaggerOperation(summary: "Invoke action DeleteAddress")]
         [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> DeleteAddress(string key, [FromBody] ODataActionParameters parameters)
@@ -157,6 +167,7 @@ namespace Grand.Api.Controllers.OData
 
         //odata/Customer/SetPassword/(email)
         //body: { "password": "123456" }
+        [SwaggerOperation(summary: "Invoke action SetPassword")]
         [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> SetPassword(string key, [FromBody] ODataActionParameters parameters)
