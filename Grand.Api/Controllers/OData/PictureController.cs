@@ -4,6 +4,7 @@ using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
@@ -19,6 +20,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
+        [SwaggerOperation(summary: "Get entities from Picture")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -32,6 +34,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(picture);
         }
 
+        [SwaggerOperation(summary: "Add new entity in Picture")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PictureDto model)
         {
@@ -46,6 +49,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [SwaggerOperation(summary: "Delete entity in Picture")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
