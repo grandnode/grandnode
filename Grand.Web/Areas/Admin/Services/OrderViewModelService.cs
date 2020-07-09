@@ -380,7 +380,9 @@ namespace Grand.Web.Areas.Admin.Services
             model.GenericAttributes = order.GenericAttributes;
 
             var customer = await _customerService.GetCustomerById(order.CustomerId);
-            model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+            if(customer != null)
+                model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+
             model.CustomerIp = order.CustomerIp;
             model.UrlReferrer = order.UrlReferrer;
             model.VatNumber = order.VatNumber;
