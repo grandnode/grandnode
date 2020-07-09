@@ -139,6 +139,8 @@ namespace Grand.Services.Catalog
             //cache
             await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
+            //event notification
+            await _mediator.EntityDeleted(product);
         }
 
         /// <summary>
