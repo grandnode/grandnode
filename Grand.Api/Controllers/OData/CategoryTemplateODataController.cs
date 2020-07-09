@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class CategoryTemplateController : BaseODataController
+    public partial class CategoryTemplateODataController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public CategoryTemplateController(
+        public CategoryTemplateODataController(
             IMediator mediator,
             IPermissionService permissionService)
         {

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class CustomerController : BaseODataController
+    public partial class CustomerODataController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
@@ -21,7 +21,7 @@ namespace Grand.Api.Controllers.OData
 
         private readonly CustomerSettings _customerSettings;
 
-        public CustomerController(
+        public CustomerODataController(
             IMediator mediator,
             IPermissionService permissionService,
             ICustomerRegistrationService customerRegistrationService,

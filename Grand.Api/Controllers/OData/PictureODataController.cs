@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class PictureController : BaseODataController
+    public partial class PictureODataController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public PictureController(IMediator mediator, IPermissionService permissionService)
+        public PictureODataController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;

@@ -1,4 +1,4 @@
-﻿using Grand.Api.DTOs.Shipping;
+﻿using Grand.Api.DTOs.Common;
 using Grand.Api.Queries.Models.Common;
 using Grand.Services.Security;
 using MediatR;
@@ -11,40 +11,40 @@ using System.Threading.Tasks;
 
 namespace Grand.Api.Controllers.OData
 {
-    public partial class DeliveryDateController : BaseODataController
+    public partial class CurrencyODataController : BaseODataController
     {
         private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
 
-        public DeliveryDateController(IMediator mediator, IPermissionService permissionService)
+        public CurrencyODataController(IMediator mediator, IPermissionService permissionService)
         {
             _mediator = mediator;
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Delivery Date")]
+        [SwaggerOperation(summary: "Get entity from Currency")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
+            if (!await _permissionService.Authorize(PermissionSystemName.Currencies))
                 return Forbid();
 
-            var deliverydate = await _mediator.Send(new GetQuery<DeliveryDateDto>() { Id = key });
-            if (!deliverydate.Any())
+            var currency = await _mediator.Send(new GetQuery<CurrencyDto>() { Id = key });
+            if (!currency.Any())
                 return NotFound();
 
-            return Ok(deliverydate.FirstOrDefault());
+            return Ok(currency.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from Delivery Date")]
+        [SwaggerOperation(summary: "Get entities from Currency")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.ShippingSettings))
+            if (!await _permissionService.Authorize(PermissionSystemName.Currencies))
                 return Forbid();
 
-            return Ok(await _mediator.Send(new GetQuery<DeliveryDateDto>()));
+            return Ok(await _mediator.Send(new GetQuery<CurrencyDto>()));
         }
     }
 }
