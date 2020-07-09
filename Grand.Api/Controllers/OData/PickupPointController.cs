@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
+        [SwaggerOperation(summary: "Get entity from PickupPoint")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -35,6 +37,7 @@ namespace Grand.Api.Controllers.OData
 
         }
 
+        [SwaggerOperation(summary: "Get entities from PickupPoint")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
