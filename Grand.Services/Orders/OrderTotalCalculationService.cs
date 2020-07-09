@@ -308,9 +308,12 @@ namespace Grand.Services.Orders
             decimal subTotalInclTaxWithoutDiscount = decimal.Zero;
             foreach (var shoppingCartItem in cart)
             {
+                var product = await _productService.GetProductById(shoppingCartItem.ProductId);
+                if (product == null)
+                    continue;
+
                 var subtotal = await _priceCalculationService.GetSubTotal(shoppingCartItem);
                 decimal sciSubTotal = subtotal.subTotal;
-                var product = await _productService.GetProductById(shoppingCartItem.ProductId);
 
                 decimal taxRate;
                 var pricesExcl = await _taxService.GetProductPrice(product, sciSubTotal, false, customer);
