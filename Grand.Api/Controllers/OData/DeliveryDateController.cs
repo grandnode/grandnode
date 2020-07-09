@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
+        [SwaggerOperation(summary: "Get entity from Delivery Date")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -34,6 +36,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(deliverydate.FirstOrDefault());
         }
 
+        [SwaggerOperation(summary: "Get entities from Delivery Date")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
