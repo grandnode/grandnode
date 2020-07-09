@@ -4,9 +4,9 @@ using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Grand.Api.Controllers.OData
 {
