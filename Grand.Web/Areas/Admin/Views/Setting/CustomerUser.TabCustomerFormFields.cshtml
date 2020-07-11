@@ -1,6 +1,6 @@
 ﻿@model CustomerUserSettingsModel
-@using Grand.Core.Domain.Customers;
-<script type="text/javascript">
+@using Grand.Domain.Customers;
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
         $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);

@@ -9,6 +9,7 @@ using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Plugins;
+using Grand.Domain.Data;
 using Grand.Framework.Middleware;
 using Grand.Framework.Mvc.Routing;
 using Grand.Framework.TagHelpers;
@@ -35,6 +36,7 @@ using Grand.Services.Installation;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Services.MachineNameProvider;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.News;
@@ -162,10 +164,12 @@ namespace Grand.Framework.Infrastructure
         {
             var dataSettingsManager = new DataSettingsManager();
             var dataProviderSettings = dataSettingsManager.LoadSettings();
-            builder.Register(c => dataSettingsManager.LoadSettings()).As<DataSettings>();
-            builder.Register(x => new MongoDBDataProviderManager(x.Resolve<DataSettings>())).As<BaseDataProviderManager>().InstancePerDependency();
-            builder.Register(x => x.Resolve<BaseDataProviderManager>().LoadDataProvider()).As<IDataProvider>().InstancePerDependency();
-
+            if (string.IsNullOrEmpty(dataProviderSettings.DataConnectionString))
+            {
+                builder.Register(c => dataSettingsManager.LoadSettings()).As<DataSettings>();
+                builder.Register(x => new MongoDBDataProviderManager(x.Resolve<DataSettings>())).As<BaseDataProviderManager>().InstancePerDependency();
+                builder.Register(x => x.Resolve<BaseDataProviderManager>().LoadDataProvider()).As<IDataProvider>().InstancePerDependency();
+            }
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
                 var connectionString = dataProviderSettings.DataConnectionString;
@@ -180,7 +184,7 @@ namespace Grand.Framework.Infrastructure
             }
 
             //MongoDbRepository
-            builder.RegisterGeneric(typeof(MongoDBRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
         }
 

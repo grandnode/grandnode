@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
+﻿using Grand.Domain.Localization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Logging;
@@ -49,7 +49,7 @@ namespace Grand.Services.Tasks
                     continue;
                 }
 
-                var warnings = await _shoppingCartService.AddToCart(await _customerService.GetCustomerById(bid.CustomerId), bid.ProductId, Core.Domain.Orders.ShoppingCartType.Auctions,
+                var warnings = await _shoppingCartService.AddToCart(await _customerService.GetCustomerById(bid.CustomerId), bid.ProductId, Domain.Orders.ShoppingCartType.Auctions,
                     bid.StoreId, bid.WarehouseId, customerEnteredPrice: bid.Amount);
 
                 if (!warnings.Any())
@@ -63,7 +63,7 @@ namespace Grand.Services.Tasks
                 }
                 else
                 {
-                    await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, $"EndAuctionTask - Product {auctionToEnd.Name}", string.Join(",", warnings.ToArray()));
+                    await _logger.InsertLog(Domain.Logging.LogLevel.Error, $"EndAuctionTask - Product {auctionToEnd.Name}", string.Join(",", warnings.ToArray()));
                 }
             }
         }

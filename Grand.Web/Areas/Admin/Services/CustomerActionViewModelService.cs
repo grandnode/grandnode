@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Grand.Core.Domain.Customers.CustomerAction;
+using static Grand.Domain.Customers.CustomerAction;
 
 namespace Grand.Web.Areas.Admin.Services
 {

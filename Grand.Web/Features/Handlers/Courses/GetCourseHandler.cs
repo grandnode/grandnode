@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Media;
+﻿using Grand.Domain.Media;
 using Grand.Services.Courses;
 using Grand.Services.Media;
 using Grand.Web.Extensions;

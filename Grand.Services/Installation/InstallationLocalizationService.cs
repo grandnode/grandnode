@@ -1,5 +1,4 @@
-﻿using Grand.Core;
-using Grand.Core.Extensions;
+﻿using Grand.Core.Extensions;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Grand.Core;
 
 namespace Grand.Services.Installation
 {

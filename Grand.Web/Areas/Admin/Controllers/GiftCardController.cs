@@ -31,9 +31,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             IGiftCardService giftCardService,
             ILocalizationService localizationService)
         {
-            this._giftCardViewModelService = giftCardViewModelService;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
+            _giftCardViewModelService = giftCardViewModelService;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
         }
 
         #endregion

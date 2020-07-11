@@ -101,7 +101,7 @@
         @T("Admin.Orders.OrderNotes.AddTitle")
     </strong>
 </p>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
         toggleAddOrderNoteHasDownload();
@@ -157,7 +157,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#addOrderNote').click(function () {
             var orderNoteMessage = $("#@Html.FieldIdFor(model => model.AddOrderNoteMessage)").val();

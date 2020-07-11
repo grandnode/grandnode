@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -22,7 +22,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {

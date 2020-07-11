@@ -1,14 +1,15 @@
 using Grand.Core;
+using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Events;
-using Grand.Services.Events.Web;
+using Grand.Services.Notifications.Catalog;
 using Grand.Services.Queries.Models.Catalog;
 using Grand.Services.Security;
 using Grand.Services.Stores;
@@ -138,6 +139,8 @@ namespace Grand.Services.Catalog
             //cache
             await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
+            //event notification
+            await _mediator.EntityDeleted(product);
         }
 
         /// <summary>
@@ -1675,6 +1678,9 @@ namespace Grand.Services.Catalog
             foreach (var sci in cart)
             {
                 var product = await GetProductById(sci.ProductId);
+                if (product == null)
+                    continue;
+
                 var crossSells = product.CrossSellProduct;
                 foreach (var crossSell in crossSells)
                 {

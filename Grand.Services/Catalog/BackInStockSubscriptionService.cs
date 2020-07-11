@@ -1,6 +1,6 @@
-using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
 using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Events;
 using MediatR;
@@ -30,7 +30,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="backInStockSubscriptionRepository">Back in stock subscription repository</param>
         /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="IMediator">Mediator</param>
         public BackInStockSubscriptionService(IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
             IMediator mediator)
         {

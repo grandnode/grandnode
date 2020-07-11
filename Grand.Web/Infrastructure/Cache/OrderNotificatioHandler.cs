@@ -1,5 +1,5 @@
 ﻿using Grand.Core.Caching;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Core.Events;
 using MediatR;
 using System.Threading;

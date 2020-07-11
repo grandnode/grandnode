@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -133,6 +134,12 @@ namespace Grand.Framework.StartupConfigure
             //use powered by
             if (!grandConfig.IgnoreUsePoweredByMiddleware)
                 application.UsePoweredBy();
+
+            // Write streamlined request completion events, instead of the more verbose ones from the framework.
+            // To use the default framework request logging instead, remove this line and set the "Microsoft"
+            // level in appsettings.json to "Information".
+            if (grandConfig.UseSerilogRequestLogging)
+                application.UseSerilogRequestLogging();
 
             //use routing
             application.UseRouting();

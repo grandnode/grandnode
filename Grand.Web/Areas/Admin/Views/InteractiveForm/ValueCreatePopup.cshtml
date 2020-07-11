@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.InteractiveForms.Attribute.Values.AddNew").Text;
 }
-<form asp-controller="InteractiveForm" asp-action="ValueCreatePopup"
+<form asp-area="Admin" asp-controller="InteractiveForm" asp-action="ValueCreatePopup"
       asp-route-form="@Context.Request.Query["form"]"
       asp-route-aId="@Context.Request.Query["aId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"

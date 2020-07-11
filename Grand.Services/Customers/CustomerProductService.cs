@@ -1,7 +1,7 @@
-﻿using Grand.Core;
+﻿using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Data;
+using Grand.Domain.Customers;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver.Linq;

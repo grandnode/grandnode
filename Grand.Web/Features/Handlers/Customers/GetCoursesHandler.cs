@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Courses;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Courses;
+using Grand.Domain.Customers;
 using Grand.Services.Courses;
 using Grand.Web.Features.Models.Customers;
 using Grand.Web.Models.Customer;

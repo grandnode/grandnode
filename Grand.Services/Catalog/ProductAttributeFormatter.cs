@@ -1,7 +1,7 @@
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
 using Grand.Core.Html;
 using Grand.Services.Common;
 using Grand.Services.Directory;

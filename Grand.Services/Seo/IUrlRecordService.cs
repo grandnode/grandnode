@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Seo;
+using Grand.Domain;
+using Grand.Domain.Seo;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Seo

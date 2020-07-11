@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Localization;
 using Grand.Core.Events;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;

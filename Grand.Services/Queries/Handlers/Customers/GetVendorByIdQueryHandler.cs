@@ -1,5 +1,5 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Vendors;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Vendors;
 using Grand.Services.Queries.Models.Customers;
 using MediatR;
 using System.Threading;

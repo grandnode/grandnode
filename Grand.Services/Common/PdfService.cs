@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -102,7 +102,7 @@ namespace Grand.Services.Common
                     order
                 };
                 await PrintOrdersToPdf(ms, orders, languageId, vendorId);
-                var download = new Core.Domain.Media.Download {
+                var download = new Domain.Media.Download {
                     Filename = fileName,
                     Extension = ".pdf",
                     DownloadBinary = ms.ToArray(),

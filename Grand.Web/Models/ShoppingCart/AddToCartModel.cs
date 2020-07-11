@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Orders;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Media;
 using System;

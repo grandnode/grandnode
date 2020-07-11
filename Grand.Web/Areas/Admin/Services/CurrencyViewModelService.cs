@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Directory;
+﻿using Grand.Domain.Directory;
 using Grand.Services.Directory;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;

@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Events;
 using Grand.Framework.Kendoui;

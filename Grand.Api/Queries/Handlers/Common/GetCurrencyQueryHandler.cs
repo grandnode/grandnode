@@ -20,9 +20,9 @@ namespace Grand.Api.Queries.Handlers.Common
         public Task<IMongoQueryable<CurrencyDto>> Handle(GetQuery<CurrencyDto> request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request.Id))
-                return Task.FromResult(_mongoDBContext.Database().GetCollection<CurrencyDto>(typeof(Core.Domain.Directory.Currency).Name).AsQueryable());
+                return Task.FromResult(_mongoDBContext.Database().GetCollection<CurrencyDto>(typeof(Domain.Directory.Currency).Name).AsQueryable());
             else
-                return Task.FromResult(_mongoDBContext.Database().GetCollection<CurrencyDto>(typeof(Core.Domain.Directory.Currency).Name).AsQueryable().Where(x => x.Id == request.Id));
+                return Task.FromResult(_mongoDBContext.Database().GetCollection<CurrencyDto>(typeof(Domain.Directory.Currency).Name).AsQueryable().Where(x => x.Id == request.Id));
         }
     }
 }

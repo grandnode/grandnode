@@ -1,6 +1,7 @@
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Stores;
+using Grand.Domain;
+using Grand.Domain.Catalog;
+using Grand.Domain.Stores;
 using System;
 
 namespace Grand.Services.Stores

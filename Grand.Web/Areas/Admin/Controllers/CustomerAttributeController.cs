@@ -30,10 +30,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService)
         {
-            this._customerAttributeService = customerAttributeService;
-            this._customerAttributeViewModelService = customerAttributeViewModelService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
+            _customerAttributeService = customerAttributeService;
+            _customerAttributeViewModelService = customerAttributeViewModelService;
+            _languageService = languageService;
+            _localizationService = localizationService;
         }
 
         #endregion

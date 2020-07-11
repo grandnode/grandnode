@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Directory;
+﻿using Grand.Domain.Directory;
 using Grand.Web.Areas.Admin.Models.Directory;
 
 namespace Grand.Web.Areas.Admin.Extensions

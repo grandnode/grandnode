@@ -1,5 +1,5 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -11,8 +11,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidAuctions(Product product, Bid bid = null)
         {
-            this._product = product;
-            this._bid = bid;
+            _product = product;
+            _bid = bid;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

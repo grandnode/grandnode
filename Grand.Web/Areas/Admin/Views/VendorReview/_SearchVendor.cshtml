@@ -7,7 +7,7 @@
         <span id="search-vendor-friendly-name"></span>
         <input type="button" id="search-vendor-clear" class="k-button" style="display: none;" value="@T("Admin.Common.Clear")" />
         @Html.TextBoxFor(model => model.SearchVendorId, new { autocomplete = "on", style = "display:none;" })
-        <script type="text/javascript">
+        <script>
             $(document).ready(function() {
                 $('#search-vendor-name').autocomplete({
                     delay: 500,

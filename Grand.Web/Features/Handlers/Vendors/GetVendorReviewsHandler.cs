@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Customers;
+using Grand.Domain.Vendors;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;

@@ -2,9 +2,7 @@
     Layout = "";
 }
 @model Grand.Plugin.DiscountRules.ShoppingCart.Models.RequirementModel
-@using Grand.Framework;
-
-<script type="text/javascript">
+<script>
         $(document).ready(function () {
             $('#saveShoppingCartrequirement@(Model.RequirementId)').click(function () {
                 var spentAmount = $("#@Html.IdFor(model => model.SpentAmount)").val();

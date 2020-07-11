@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Catalog;
+using Grand.Domain.Directory;
+using Grand.Domain.Discounts;
+using Grand.Domain.Vendors;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;

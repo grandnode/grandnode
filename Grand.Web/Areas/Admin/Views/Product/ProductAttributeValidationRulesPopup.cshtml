@@ -1,5 +1,5 @@
 ﻿@model ProductModel.ProductAttributeMappingModel
-@using Grand.Core.Domain.Catalog
+@using Grand.Domain.Catalog
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     //page title
@@ -7,7 +7,7 @@
 
     var attributeControlType = (AttributeControlType)Model.AttributeControlTypeId;
 }
-<form asp-controller="Product" asp-action="ProductAttributeValidationRulesPopup" enctype="multipart/form-data" method="post"
+<form asp-area="Admin" asp-controller="Product" asp-action="ProductAttributeValidationRulesPopup" enctype="multipart/form-data" method="post"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
@@ -75,7 +75,7 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
         try {
             window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();
         } catch (e) {

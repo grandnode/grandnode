@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Media;
+﻿using Grand.Domain.Media;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Extensions

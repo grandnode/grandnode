@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.AdminSearch;
-using Grand.Core.Domain.Customers;
+using Grand.Domain;
+using Grand.Domain.AdminSearch;
+using Grand.Domain.Customers;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
@@ -35,17 +36,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             ITopicService topicService, INewsService newsService, IBlogService blogService, ICustomerService customerService, IOrderService orderService,
             AdminSearchSettings adminSearchSettings, ILocalizationService localizationService, IWorkContext workContext)
         {
-            this._productService = productService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._topicService = topicService;
-            this._newsService = newsService;
-            this._blogService = blogService;
-            this._customerService = customerService;
-            this._orderService = orderService;
-            this._adminSearchSettings = adminSearchSettings;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
+            _productService = productService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _topicService = topicService;
+            _newsService = newsService;
+            _blogService = blogService;
+            _customerService = customerService;
+            _orderService = orderService;
+            _adminSearchSettings = adminSearchSettings;
+            _localizationService = localizationService;
+            _workContext = workContext;
         }
 
         [HttpPost]

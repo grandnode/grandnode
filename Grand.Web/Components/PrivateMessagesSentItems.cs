@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
+using Grand.Domain.Customers;
+using Grand.Domain.Forums;
 using Grand.Framework.Components;
 using Grand.Services.Customers;
 using Grand.Services.Forums;

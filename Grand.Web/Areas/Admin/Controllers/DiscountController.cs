@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain;
+using Grand.Domain.Customers;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -640,7 +641,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!(string.IsNullOrEmpty(model.SearchVendorEmail)))
             {
                 var tempVendors = vendors.Where(x => x.Email.ToLowerInvariant().Contains(model.SearchVendorEmail.Trim()));
-                vendors = new PagedList<Core.Domain.Vendors.Vendor>(tempVendors, command.Page - 1, command.PageSize);
+                vendors = new PagedList<Domain.Vendors.Vendor>(tempVendors, command.Page - 1, command.PageSize);
             }
 
             var gridModel = new DataSourceResult {

@@ -1,5 +1,5 @@
 ﻿@model EditForumPostModel
-@using Grand.Core.Domain.Forums;
+@using Grand.Domain.Forums;
 @using Grand.Web.Models.Boards;
 @inject IWebHelper webHelper;
 @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })

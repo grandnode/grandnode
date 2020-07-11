@@ -5,6 +5,7 @@ using Grand.Framework.Infrastructure.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Autofac;
+using Serilog;
 
 namespace Grand.Web
 {
@@ -32,6 +33,11 @@ namespace Grand.Web
                 .AddJsonFile("App_Data/appsettings.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
+
+            //create logger
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+            .CreateLogger();
         }
 
         #endregion

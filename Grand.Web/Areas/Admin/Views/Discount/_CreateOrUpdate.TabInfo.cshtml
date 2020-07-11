@@ -1,8 +1,8 @@
 ﻿@model DiscountModel
-@using Grand.Core.Domain.Discounts;
+@using Grand.Domain.Discounts;
 @using Grand.Framework.UI;
 
-<script type="text/javascript">
+<script>
         $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
             $("#@Html.FieldIdFor(model => model.UsePercentage)").click(toggleUsePercentage);

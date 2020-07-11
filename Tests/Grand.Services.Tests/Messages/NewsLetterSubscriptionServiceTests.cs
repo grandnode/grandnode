@@ -1,18 +1,15 @@
 ﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Data;
+using Grand.Domain.Messages;
 using Grand.Core.Events;
 using Grand.Services.Common;
-using Grand.Services.Customers;
-using Grand.Services.Events;
-using Grand.Services.Tests;
+using Grand.Services.Notifications.Messages;
 using MediatR;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
 using System.Threading;
 using System.Threading.Tasks;
+using Grand.Domain;
 
 namespace Grand.Services.Messages.Tests
 {
@@ -47,7 +44,7 @@ namespace Grand.Services.Messages.Tests
         public async Task InsertNewsLetterSubscription_ActiveSubcription_InvokeRepositoryAndPublishSubscriptionEvent()
         {
             var email = "johny@gmail.com";
-            var newsLetterSubscription = new NewsLetterSubscription() { Email=email,Active=true};
+            var newsLetterSubscription = new NewsLetterSubscription() { Email = email, Active = true };
             await _newsLetterSubscriptionService.InsertNewsLetterSubscription(newsLetterSubscription);
             _subscriptionRepository.Verify(r => r.InsertAsync(newsLetterSubscription), Times.Once);
             _historyServiceMock.Verify(h => h.SaveObject(It.IsAny<BaseEntity>()), Times.Once);

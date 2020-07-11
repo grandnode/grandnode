@@ -23,13 +23,13 @@ namespace Grand.Api.Queries.Handlers.Shipping
                 return Task.FromResult
                     (_mongoDBContext.Database()
                     .GetCollection<PickupPointDto>
-                    (typeof(Core.Domain.Shipping.PickupPoint).Name)
+                    (typeof(Domain.Shipping.PickupPoint).Name)
                     .AsQueryable());
             else
                 return Task.FromResult
                     (_mongoDBContext.Database()
                     .GetCollection<PickupPointDto>
-                    (typeof(Core.Domain.Shipping.PickupPoint).Name)
+                    (typeof(Domain.Shipping.PickupPoint).Name)
                     .AsQueryable()
                     .Where(x => x.Id == request.Id));
         }

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Knowledgebase;
+﻿using Grand.Domain.Knowledgebase;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
 using System.Collections.Generic;
 using System.Threading.Tasks;

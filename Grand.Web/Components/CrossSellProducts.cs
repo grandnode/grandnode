@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Catalog;
+using Grand.Domain.Orders;
 using Grand.Framework.Components;
 using Grand.Services.Catalog;
 using Grand.Services.Orders;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace Grand.Core.Domain.Catalog.Tests
+namespace Grand.Domain.Catalog.Tests
 {
     [TestClass()]
     public class ProductExtensionsTests

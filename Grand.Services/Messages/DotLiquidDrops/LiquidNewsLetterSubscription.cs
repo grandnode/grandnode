@@ -1,6 +1,6 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Messages;
+using Grand.Domain.Stores;
 using System;
 using System.Collections.Generic;
 
@@ -12,8 +12,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private Store _store;
         public LiquidNewsLetterSubscription(NewsLetterSubscription subscription, Store store)
         {
-            this._subscription = subscription;
-            this._store = store;
+            _subscription = subscription;
+            _store = store;
             AdditionalTokens = new Dictionary<string, string>();
         }
 

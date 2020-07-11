@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
+﻿using Grand.Domain.Localization;
 using Grand.Core.Extensions;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Http;

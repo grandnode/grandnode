@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.ReturnRequests").Text;
 }
-<form asp-controller="ReturnRequest" asp-action="List" method="post">
+<form asp-area="Admin" asp-controller="ReturnRequest" asp-action="List" method="post">
     
     <div class="row">
         <div class="col-md-12">
@@ -79,7 +79,7 @@
         </div>
     </div>
 </form>
-    <script type="text/javascript">
+    <script>
     $(document).ready(function() {
         $("#returnrequests-grid").kendoGrid({
             dataSource: {

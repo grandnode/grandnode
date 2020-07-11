@@ -1,6 +1,6 @@
 ﻿@model GeneralCommonSettingsModel
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
         toggleReCaptcha();

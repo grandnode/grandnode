@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Customers;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -33,10 +33,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ExternalAuthenticationSettings externalAuthenticationSettings,
             ISettingService settingService, IPluginFinder pluginFinder)
 		{
-            this._openAuthenticationService = openAuthenticationService;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._settingService = settingService;
-            this._pluginFinder = pluginFinder;
+            _openAuthenticationService = openAuthenticationService;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _settingService = settingService;
+            _pluginFinder = pluginFinder;
 		}
 
 		#endregion 

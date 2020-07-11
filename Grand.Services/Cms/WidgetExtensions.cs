@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Cms;
+using Grand.Domain.Cms;
 using System;
 
 namespace Grand.Services.Cms

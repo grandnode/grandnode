@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Media;
+using Grand.Domain.Customers;
+using Grand.Domain.Forums;
+using Grand.Domain.Media;
 using Grand.Framework.Components;
 using Grand.Services.Common;
 using Grand.Services.Customers;

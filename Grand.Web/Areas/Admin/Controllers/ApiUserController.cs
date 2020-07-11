@@ -20,8 +20,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IEncryptionService _encryptionService;
         public ApiUserController(IUserApiService userApiService, IEncryptionService encryptionService)
         {
-            this._userApiService = userApiService;
-            this._encryptionService = encryptionService;
+            _userApiService = userApiService;
+            _encryptionService = encryptionService;
         }
 
         protected (string hashpassword, string privatekey) HashPassword(string password)

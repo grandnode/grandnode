@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Catalog;
+using Grand.Domain.Media;
+using Grand.Domain.Vendors;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Media;

@@ -1,8 +1,8 @@
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Media;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Bson;

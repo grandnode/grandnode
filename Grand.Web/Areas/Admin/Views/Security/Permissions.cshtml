@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.ACL").Text;
 }
-<form asp-controller="Security" asp-action="Permissions" method="post">
+<form asp-area="Admin" asp-controller="Security" asp-action="Permissions" method="post">
     
     <div class="row">
         <div class="col-md-12">
@@ -34,7 +34,7 @@
                                     }
                                     else
                                     {
-                                        <script type="text/javascript">
+                                        <script>
                                             $(document).ready(function () {
                                                 @foreach (var cr in Model.AvailableCustomerRoles)
                                                 {

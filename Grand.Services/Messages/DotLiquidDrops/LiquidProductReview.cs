@@ -1,5 +1,5 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -11,8 +11,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidProductReview(Product product, ProductReview productReview)
         {
-            this._productReview = productReview;
-            this._product = product;
+            _productReview = productReview;
+            _product = product;
             AdditionalTokens = new Dictionary<string, string>();
         }
 

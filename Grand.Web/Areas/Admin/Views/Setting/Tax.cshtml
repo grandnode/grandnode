@@ -3,10 +3,10 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Tax").Text;
 }
-<form asp-controller="Setting" asp-action="Tax" method="post">
+<form asp-area="Admin" asp-controller="Setting" asp-action="Tax" method="post">
     
     <div asp-validation-summary="All"></div>
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
 
             $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);

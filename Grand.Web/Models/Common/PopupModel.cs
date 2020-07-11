@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Messages;
+﻿using Grand.Domain.Messages;
 using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Models.Common

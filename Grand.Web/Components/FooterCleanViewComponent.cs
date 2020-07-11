@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Stores;
 using Grand.Framework.Components;
 using Grand.Services.Localization;
 using Grand.Web.Models.Common;

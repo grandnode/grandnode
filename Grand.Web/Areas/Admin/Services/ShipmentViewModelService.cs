@@ -1,9 +1,9 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Directory;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;

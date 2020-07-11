@@ -1,24 +1,18 @@
-﻿using DotLiquid.Util;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
 using Grand.Core.Events;
+using Grand.Domain.Catalog;
+using Grand.Domain.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using MediatR;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MimeKit.Cryptography;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Moq;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
-using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,7 +44,7 @@ namespace Grand.Services.Tests.Catalog
             _storyMappingMock = new Mock<IStoreMappingService>();
             _aclServiceMock = new Mock<IAclService>();
             _settings = new CatalogSettings();
-            _categoryService = new CategoryService(_casheManagerMock.Object, _categoryRepositoryMock.Object, _productRepositoryMock.Object, _workContextMock.Object, 
+            _categoryService = new CategoryService(_casheManagerMock.Object, _categoryRepositoryMock.Object, _productRepositoryMock.Object, _workContextMock.Object,
                 _storeContextMock.Object, _mediatorMock.Object, _storyMappingMock.Object, _aclServiceMock.Object, _settings);
         }
 
@@ -61,7 +55,7 @@ namespace Grand.Services.Tests.Catalog
         }
 
         [TestMethod()]
-        public async Task  InsertCategory_ValidArgument_InvokeRepositoryAndCache()
+        public async Task InsertCategory_ValidArgument_InvokeRepositoryAndCache()
         {
             await _categoryService.InsertCategory(new Category());
             _categoryRepositoryMock.Verify(c => c.InsertAsync(It.IsAny<Category>()), Times.Once);
@@ -100,7 +94,7 @@ namespace Grand.Services.Tests.Catalog
         public void GetCategoryBreadCrumb_ShouldReturnTwoElement()
         {
             var allCategory = GetMockCategoryList();
-            var category = new Category() { Id="6",ParentCategoryId = "3" ,Published=true};
+            var category = new Category() { Id = "6", ParentCategoryId = "3", Published = true };
             _aclServiceMock.Setup(a => a.Authorize<Category>(It.IsAny<Category>())).Returns(() => true);
             _storyMappingMock.Setup(a => a.Authorize<Category>(It.IsAny<Category>())).Returns(() => true);
             var result = _categoryService.GetCategoryBreadCrumb(category, allCategory);
@@ -128,7 +122,7 @@ namespace Grand.Services.Tests.Catalog
         {
             var exprectedString = "cat5 >> cat1 >> cat6";
             var allCategory = GetMockCategoryList();
-            var category = new Category() { Id = "6",Name="cat6", ParentCategoryId = "1", Published = true };
+            var category = new Category() { Id = "6", Name = "cat6", ParentCategoryId = "1", Published = true };
             _aclServiceMock.Setup(a => a.Authorize<Category>(It.IsAny<Category>())).Returns(() => true);
             _storyMappingMock.Setup(a => a.Authorize<Category>(It.IsAny<Category>())).Returns(() => true);
             var result = _categoryService.GetFormattedBreadCrumb(category, allCategory);
@@ -150,7 +144,7 @@ namespace Grand.Services.Tests.Catalog
         {
             var collectonMock = new Mock<IMongoCollection<Product>>();
             _productRepositoryMock.Setup(p => p.Collection).Returns(collectonMock.Object);
-            await _categoryService.DeleteProductCategory(new ProductCategory() { ProductId="1"});
+            await _categoryService.DeleteProductCategory(new ProductCategory() { ProductId = "1" });
             collectonMock.Verify(c => c.UpdateOneAsync(It.IsAny<FilterDefinition<Product>>(), It.IsAny<UpdateDefinition<Product>>(), null, default(CancellationToken)), Times.Once);
             _mediatorMock.Verify(c => c.Publish(It.IsAny<EntityDeleted<ProductCategory>>(), default(CancellationToken)), Times.Once);
             _casheManagerMock.Verify(c => c.RemoveByPrefix(It.IsAny<string>(), true), Times.Exactly(2));

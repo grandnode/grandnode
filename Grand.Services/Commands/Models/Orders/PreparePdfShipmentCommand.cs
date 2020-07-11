@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Localization;
+using Grand.Domain.Shipping;
 using iTextSharp.text;
 using MediatR;
 

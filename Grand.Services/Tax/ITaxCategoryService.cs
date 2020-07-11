@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Tax;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

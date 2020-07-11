@@ -407,13 +407,13 @@
   <LocaleResource Name="Admin.Catalog.Products.Calendar.WeekDay">
     <Value>Week day</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Minute">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.IntervalUnit.Minute">
     <Value>Minute(s)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Hour">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.IntervalUnit.Hour">
     <Value>Hour(s)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Day">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.IntervalUnit.Day">
     <Value>Day(s)</Value>
   </LocaleResource>
   <LocaleResource Name="shoppingcart.reservation.date">
@@ -425,10 +425,10 @@
   <LocaleResource Name="shoppingcart.reservation.startdate">
     <Value>Date: {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.BundledProduct">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductType.BundledProduct">
     <Value>Bundled product</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.Reservation">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductType.Reservation">
     <Value>Reservation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.BundleProducts">
@@ -450,7 +450,7 @@
     <Value>You need to save the product before you can add new bundle product</Value>
   </LocaleResource>
 
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByBundleProducts">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ManageInventoryMethod.ManageStockByBundleProducts">
     <Value>Track inventory by bundle products</Value>
   </LocaleResource>  
   <LocaleResource Name="ShoppingCart.OutOfStock.BundleProduct">

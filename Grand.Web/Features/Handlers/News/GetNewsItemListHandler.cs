@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.News;
+using Grand.Domain.Media;
+using Grand.Domain.News;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -81,9 +81,9 @@ namespace Grand.Web.Features.Handlers.News
             //prepare picture model
             if (!string.IsNullOrEmpty(newsItem.PictureId))
             {
-                int pictureSize = _mediaSettings.NewsListThumbPictureSize;
+                var pictureSize = _mediaSettings.NewsListThumbPictureSize;
                 var categoryPictureCacheKey = string.Format(ModelCacheEventConst.NEWS_PICTURE_MODEL_KEY, newsItem.Id, pictureSize, true,
-                    _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
+                    _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
                 model.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
                 {
                     var pictureModel = new PictureModel {

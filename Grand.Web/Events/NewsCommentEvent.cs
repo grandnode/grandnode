@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.News;
+﻿using Grand.Domain.News;
 using Grand.Web.Models.News;
 using MediatR;
 

@@ -1,6 +1,6 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Vendors;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.Directory;
+using Grand.Domain.Vendors;
 using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Localization;

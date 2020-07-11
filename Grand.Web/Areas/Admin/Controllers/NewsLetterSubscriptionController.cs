@@ -41,13 +41,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             IExportManager exportManager,
             IImportManager importManager)
         {
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._newsletterCategoryService = newsletterCategoryService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _newsletterCategoryService = newsletterCategoryService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _exportManager = exportManager;
+            _importManager = importManager;
         }
 
         [NonAction]

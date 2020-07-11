@@ -3,6 +3,7 @@ using Grand.Core.Caching;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Plugins;
+using Grand.Domain.Data;
 using Grand.Framework.Security;
 using Grand.Services.Commands.Models.Security;
 using Grand.Services.Installation;
@@ -51,8 +52,7 @@ namespace Grand.Web.Controllers
         /// <summary>
         /// A value indicating whether we use MARS (Multiple Active Result Sets)
         /// </summary>
-        protected bool UseMars
-        {
+        protected bool UseMars {
             get { return false; }
         }
 
@@ -72,8 +72,7 @@ namespace Grand.Web.Controllers
             if (installed)
                 return View(new InstallModel() { Installed = true });
 
-            var model = new InstallModel
-            {
+            var model = new InstallModel {
                 AdminEmail = "admin@yourstore.com",
                 InstallSampleData = false,
                 DatabaseConnectionString = "",
@@ -81,8 +80,7 @@ namespace Grand.Web.Controllers
             };
             foreach (var lang in locService.GetAvailableLanguages())
             {
-                model.AvailableLanguages.Add(new SelectListItem
-                {
+                model.AvailableLanguages.Add(new SelectListItem {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = locService.GetCurrentLanguage().Code == lang.Code,
@@ -91,8 +89,7 @@ namespace Grand.Web.Controllers
             //prepare collation list
             foreach (var col in locService.GetAvailableCollations())
             {
-                model.AvailableCollation.Add(new SelectListItem
-                {
+                model.AvailableCollation.Add(new SelectListItem {
                     Value = col.Value,
                     Text = col.Name,
                     Selected = locService.GetCurrentLanguage().Code == col.Value,
@@ -186,8 +183,7 @@ namespace Grand.Web.Controllers
                 try
                 {
                     //save settings
-                    var settings = new DataSettings
-                    {
+                    var settings = new DataSettings {
                         DataProvider = "mongodb",
                         DataConnectionString = connectionString
                     };
@@ -233,7 +229,7 @@ namespace Grand.Web.Controllers
                         catch (Exception ex)
                         {
                             var _logger = _serviceProvider.GetRequiredService<ILogger>();
-                            await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error during installing plugin " + plugin.PluginDescriptor.SystemName,
+                            await _logger.InsertLog(Domain.Logging.LogLevel.Error, "Error during installing plugin " + plugin.PluginDescriptor.SystemName,
                                 ex.Message + " " + ex.InnerException?.Message);
                         }
                     }
@@ -266,8 +262,7 @@ namespace Grand.Web.Controllers
             //prepare language list
             foreach (var lang in locService.GetAvailableLanguages())
             {
-                model.AvailableLanguages.Add(new SelectListItem
-                {
+                model.AvailableLanguages.Add(new SelectListItem {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = locService.GetCurrentLanguage().Code == lang.Code,
@@ -277,8 +272,7 @@ namespace Grand.Web.Controllers
             //prepare collation list
             foreach (var col in locService.GetAvailableCollations())
             {
-                model.AvailableCollation.Add(new SelectListItem
-                {
+                model.AvailableCollation.Add(new SelectListItem {
                     Value = col.Value,
                     Text = col.Name,
                     Selected = locService.GetCurrentLanguage().Code == col.Value,

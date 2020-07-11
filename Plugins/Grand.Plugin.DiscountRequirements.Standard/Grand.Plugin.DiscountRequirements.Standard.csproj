@@ -24,23 +24,17 @@
   </Target>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Grand.Domain\Grand.Domain.csproj">
+      <Private>false</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj">
       <Private>false</Private>
-      <ExcludeAssets></ExcludeAssets>
-      <IncludeAssets></IncludeAssets>
-      <PrivateAssets></PrivateAssets>
     </ProjectReference>
     <ProjectReference Include="..\..\Grand.Framework\Grand.Framework.csproj">
       <Private>false</Private>
-      <ExcludeAssets></ExcludeAssets>
-      <PrivateAssets></PrivateAssets>
-      <IncludeAssets></IncludeAssets>
     </ProjectReference>
     <ProjectReference Include="..\..\Grand.Services\Grand.Services.csproj">
       <Private>false</Private>
-      <ExcludeAssets></ExcludeAssets>
-      <IncludeAssets></IncludeAssets>
-      <PrivateAssets></PrivateAssets>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

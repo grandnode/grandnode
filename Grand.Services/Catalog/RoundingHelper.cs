@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Directory;
+using Grand.Domain.Directory;
 using System;
 
 namespace Grand.Services.Catalog

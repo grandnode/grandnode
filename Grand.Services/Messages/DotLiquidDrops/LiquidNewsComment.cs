@@ -1,7 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.News;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Localization;
+using Grand.Domain.News;
+using Grand.Domain.Stores;
 using Grand.Services.Seo;
 using System.Collections.Generic;
 
@@ -16,10 +16,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidNewsComment(NewsItem newsItem, NewsComment newsComment, Store store, Language language)
         {
-            this._newsComment = newsComment;
-            this._newsItem = newsItem;
-            this._store = store;
-            this._language = language;
+            _newsComment = newsComment;
+            _newsItem = newsItem;
+            _store = store;
+            _language = language;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

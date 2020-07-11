@@ -20,7 +20,7 @@ namespace Grand.Web.Features.Handlers.Courses
             if (string.IsNullOrEmpty(request.Course.ProductId))
                 return true;
 
-            var orders = await _orderService.SearchOrders(customerId: request.Customer.Id, productId: request.Course.ProductId, ps: Core.Domain.Payments.PaymentStatus.Paid);
+            var orders = await _orderService.SearchOrders(customerId: request.Customer.Id, productId: request.Course.ProductId, ps: Domain.Payments.PaymentStatus.Paid);
             if (orders.TotalCount > 0)
                 return true;
 

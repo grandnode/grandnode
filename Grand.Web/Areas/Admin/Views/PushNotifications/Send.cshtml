@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.PushNotifications.Send").Text;
 }
-<form asp-controller="PushNotifications" asp-action="Send" method="post">
+<form asp-area="Admin" asp-controller="PushNotifications" asp-action="Send" method="post">
     
     <div class="row">
         <div class="col-md-12">

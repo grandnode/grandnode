@@ -1,5 +1,5 @@
-using Grand.Core.Data;
-using Grand.Core.Domain.Topics;
+using Grand.Domain.Data;
+using Grand.Domain.Topics;
 using Grand.Services.Events;
 using System;
 using System.Collections.Generic;

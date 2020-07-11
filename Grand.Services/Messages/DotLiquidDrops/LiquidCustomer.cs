@@ -1,7 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Customers;
+using Grand.Domain.Stores;
+using Grand.Domain.Tax;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using System.Collections.Generic;

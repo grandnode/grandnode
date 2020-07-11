@@ -1,9 +1,9 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Security;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Forums;
+using Grand.Domain.Orders;
+using Grand.Domain.Security;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Common;
 using Grand.Services.Localization;

@@ -1,4 +1,4 @@
-﻿@using Grand.Core.Domain.Catalog
+﻿@using Grand.Domain.Catalog
 @model ProductAttributeConditionModel
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
@@ -7,7 +7,7 @@
 }
 
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-<form asp-controller="Product" asp-action="ProductAttributeConditionPopup" enctype="multipart/form-data" method="post"
+<form asp-area="Admin" asp-controller="Product" asp-action="ProductAttributeConditionPopup" enctype="multipart/form-data" method="post"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-productAttributeMappingId="@Context.Request.Query["ProductAttributeMappingId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
@@ -56,7 +56,7 @@
                                                 <admin-label asp-for="SelectedProductAttributeId" class="col-sm-3 control-label"/>
                                                 <div class="col-md-9 col-sm-9">
                                                     <admin-select asp-for="SelectedProductAttributeId" asp-items="@(attributesList)" />
-                                                    <script type="text/javascript">
+                                                    <script>
                                                         $(document).ready(function() {
                                                             $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)").change(toggleProductAttributes);
 
@@ -163,7 +163,7 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
@@ -172,7 +172,7 @@
 
 
 
-        <script type="text/javascript">
+        <script>
             $(document).ready(function() {
                 $("#@Html.FieldIdFor(model => model.EnableCondition)").click(toggleEnableCondition);
 

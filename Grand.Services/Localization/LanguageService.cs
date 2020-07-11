@@ -1,6 +1,6 @@
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Data;
+using Grand.Domain.Localization;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Shipping;
 using Grand.Framework.Mvc.Models;
 using System.Collections.Generic;
 

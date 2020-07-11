@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.PushNotifications;
+using Grand.Domain.Customers;
+using Grand.Domain.PushNotifications;
 using Grand.Framework.Components;
 using Grand.Web.Models.PushNotifications;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-using Grand.Core.Data;
+using Grand.Domain.Data;
 using Grand.Plugin.Feed.GoogleShopping.Domain;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;

@@ -23,11 +23,11 @@ namespace Grand.Api.Queries.Handlers.Customers
                 return Task.FromResult(
                     _mongoDBContext.Database()
                     .GetCollection<CustomerRoleDto>
-                    (typeof(Core.Domain.Customers.CustomerRole).Name)
+                    (typeof(Domain.Customers.CustomerRole).Name)
                     .AsQueryable());
             else
                 return Task.FromResult(_mongoDBContext.Database()
-                    .GetCollection<CustomerRoleDto>(typeof(Core.Domain.Customers.CustomerRole).Name)
+                    .GetCollection<CustomerRoleDto>(typeof(Domain.Customers.CustomerRole).Name)
                     .AsQueryable()
                     .Where(x => x.Id == request.Id));
         }

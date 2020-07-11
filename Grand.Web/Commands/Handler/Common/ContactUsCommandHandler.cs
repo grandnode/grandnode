@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+﻿using Grand.Domain.Common;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Customers;
 using Grand.Services.Localization;

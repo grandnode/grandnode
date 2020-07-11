@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.System.ContactForm.Details").Text;
 }
-<form asp-controller="ContactForm" asp-action="Details" method="post">
+<form asp-area="Admin" asp-controller="ContactForm" asp-action="Details" method="post">
     
     <input asp-for="Id" type="hidden" />
     <div class="row">

@@ -1,4 +1,4 @@
-using Grand.Core;
+using Grand.Domain;
 using Grand.Plugin.Tax.CountryStateZip.Domain;
 using System.Threading.Tasks;
 

@@ -6,7 +6,7 @@
     ViewBag.Title = T("Admin.ContentManagement.Blog.BlogPosts.Products.AddNew").Text;
 }
 
-<form asp-controller="Blog" asp-action="ProductAddPopup" method="post"
+<form asp-area="Admin" asp-controller="Blog" asp-action="ProductAddPopup" method="post"
       asp-route-BlogPostId="@Context.Request.Query["BlogPostId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
@@ -157,8 +157,7 @@
         });
     });
     </script>
-
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             $('#search-products').click(function() {
                 var grid = $('#products-grid').data('kendoGrid');

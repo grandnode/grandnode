@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Configuration;
+using Grand.Domain.Data;
+using Grand.Domain.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Grand.Services.Configuration;

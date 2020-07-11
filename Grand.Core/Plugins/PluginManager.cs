@@ -1,13 +1,13 @@
 ﻿using Grand.Core.ComponentModel;
 using Grand.Core.Configuration;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,6 +49,7 @@ namespace Grand.Core.Plugins
         /// <summary>
         /// Initialize
         /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Initialize(IMvcCoreBuilder mvcCoreBuilder, GrandConfig config)
         {
             if (mvcCoreBuilder == null)
@@ -69,7 +70,7 @@ namespace Grand.Core.Plugins
                 {
                     var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
 
-                    Debug.WriteLine("Creating shadow copy folder and querying for dlls");
+                    Log.Information("Creating shadow copy folder and querying for dlls");
                     //ensure folders are created
                     Directory.CreateDirectory(pluginFolder.FullName);
                     Directory.CreateDirectory(_shadowCopyFolder.FullName);
@@ -81,7 +82,7 @@ namespace Grand.Core.Plugins
                         //clear out shadow copied plugins
                         foreach (var f in binFiles)
                         {
-                            Debug.WriteLine("Deleting " + f.Name);
+                            Log.Information($"Deleting {f.Name}");
                             try
                             {
                                 //ignore index.htm
@@ -93,7 +94,7 @@ namespace Grand.Core.Plugins
                             }
                             catch (Exception exc)
                             {
-                                Debug.WriteLine("Error deleting file " + f.Name + ". Exception: " + exc);
+                                Log.Error(exc, "PluginManager");
                             }
                         }
                     }
@@ -145,7 +146,7 @@ namespace Grand.Core.Plugins
                                     }
                                     catch (Exception exc)
                                     {
-                                        Debug.WriteLine("Error deleting file " + f.Name + ". Exception: " + exc);
+                                        Log.Error(exc, "PluginManager");
                                     }
                                 }
                             }
@@ -205,7 +206,6 @@ namespace Grand.Core.Plugins
                     throw fail;
                 }
 
-
                 ReferencedPlugins = referencedPlugins;
                 IncompatiblePlugins = incompatiblePlugins;
 
@@ -218,7 +218,7 @@ namespace Grand.Core.Plugins
         /// <param name="systemName">Plugin system name</param>
         public static async Task MarkPluginAsInstalled(string systemName)
         {
-            if (String.IsNullOrEmpty(systemName))
+            if (string.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
 
             var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
@@ -243,7 +243,7 @@ namespace Grand.Core.Plugins
         /// <param name="systemName">Plugin system name</param>
         public static async Task MarkPluginAsUninstalled(string systemName)
         {
-            if (String.IsNullOrEmpty(systemName))
+            if (string.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
 
             var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
@@ -344,7 +344,7 @@ namespace Grand.Core.Plugins
             }
             catch (Exception exc)
             {
-                Debug.WriteLine("Cannot validate whether an assembly is already loaded. " + exc);
+                Log.Error(exc, "PluginManager");
             }
             return false;
         }
@@ -366,12 +366,13 @@ namespace Grand.Core.Plugins
             {                
                 Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(_plug.FullName);
                 //we can now register the plugin definition
-                Debug.WriteLine("Adding to ApplicationParts: '{0}'", assembly.FullName);
+                Log.Information("Adding to ApplicationParts: '{0}'", assembly.FullName);
                 mvcCoreBuilder.AddApplicationPart(assembly);
                 return assembly;
             }
             catch (Exception ex)
             {
+                Log.Error(ex, "PluginManager");
                 throw new InvalidOperationException($"The plugin directory for the {plug.Name} file exists in a folder outside of the allowed grandnode folder hierarchy - exception because of {plug.FullName} - exception: {ex.Message}");
             }
         }
@@ -395,15 +396,22 @@ namespace Grand.Core.Plugins
                 var areFilesIdentical = shadowCopiedPlug.CreationTimeUtc.Ticks >= plug.CreationTimeUtc.Ticks;
                 if (areFilesIdentical)
                 {
-                    Debug.WriteLine("Not copying; files appear identical: '{0}'", shadowCopiedPlug.Name);
+                    Log.Information($"Not copying; files appear identical: {shadowCopiedPlug.Name}");
                     shouldCopy = false;
                 }
                 else
                 {
                     //delete an existing file
-
-                    Debug.WriteLine("New plugin found; Deleting the old file: '{0}'", shadowCopiedPlug.Name);
-                    File.Delete(shadowCopiedPlug.FullName);
+                    Log.Information($"New plugin found; Deleting the old file: {shadowCopiedPlug.Name}");
+                    try
+                    {
+                        File.Delete(shadowCopiedPlug.FullName);
+                    }
+                    catch(Exception ex)
+                    {
+                        shouldCopy = false;
+                        Log.Error(ex, "PluginManager");
+                    }
                 }
             }
 
@@ -415,7 +423,7 @@ namespace Grand.Core.Plugins
                 }
                 catch (IOException)
                 {
-                    Debug.WriteLine(shadowCopiedPlug.FullName + " is locked, attempting to rename");
+                    Log.Information($"{shadowCopiedPlug.FullName} is locked, attempting to rename");
                     //this occurs when the files are locked,
                     //for some reason devenv locks plugin files some times and for another crazy reason you are allowed to rename them
                     //which releases the lock, so that it what we are doing here, once it's renamed, we can re-shadow copy

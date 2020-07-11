@@ -28,7 +28,7 @@ namespace Grand.Web.ViewComponents
             model.Id = result.Id;
             model.Body = result.Body;
             model.Name = result.Name;
-            model.PopupType = (Core.Domain.Messages.PopupType)result.PopupTypeId;
+            model.PopupType = (Domain.Messages.PopupType)result.PopupTypeId;
             model.CustomerActionId = result.CustomerActionId;
 
             await _popupService.MovepopupToArchive(result.Id, _workContext.CurrentCustomer.Id);

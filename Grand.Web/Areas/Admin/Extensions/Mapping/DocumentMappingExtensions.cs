@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Documents;
+﻿using Grand.Domain.Documents;
 using Grand.Web.Areas.Admin.Models.Documents;
 
 namespace Grand.Web.Areas.Admin.Extensions

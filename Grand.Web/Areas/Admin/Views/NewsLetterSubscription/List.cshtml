@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.newsLetterSubscriptions").Text;
 }
-<form asp-controller="NewsletterSubscription" asp-action="List" method="post">
+<form asp-area="Admin" asp-controller="NewsletterSubscription" asp-action="List" method="post">
     
 
     <div class="row">
@@ -177,7 +177,7 @@
         });
     </script>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             $('#search-subscriptions').click(function() {
                 var grid = $('#newsletter-subscriptions-grid').data('kendoGrid');
@@ -215,7 +215,7 @@
 
     @*import emails form*@
     <div id="importcsv-window" style="display:none;">
-        <form asp-controller="NewsLetterSubscription" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
+        <form asp-area="Admin" asp-controller="NewsLetterSubscription" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
             
             <table style="text-align:left;">
                 <tr>
@@ -234,7 +234,7 @@
             </table>
         </form>
     </div>
-    <script type="text/javascript">
+    <script>
     $(document).ready(function () {
         $("#importcsv").click(function (e) {
             e.preventDefault();

@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain;
+using Grand.Domain.Catalog;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog

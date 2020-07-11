@@ -1,6 +1,6 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Shipping;
 using Grand.Core.Events;
 using MediatR;
 using MongoDB.Driver;

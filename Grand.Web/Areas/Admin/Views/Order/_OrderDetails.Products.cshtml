@@ -1,6 +1,6 @@
 ﻿@model OrderModel
-@using Grand.Core.Domain.Tax;
-@using Grand.Core.Domain.Catalog;
+@using Grand.Domain.Tax;
+@using Grand.Domain.Catalog;
 <vc:admin-widget widget-zone="order_details_products_top" additional-data="Model" />
 <div class="table-responsive">
     <table class="table table-bordered table-striped table-hover">
@@ -8,13 +8,13 @@
             <td>
                 @foreach (var item in Model.Items)
                 {
-                    <script type="text/javascript">
+                    <script>
                     $(document).ready(function() {
                         toggleOrderItemEdit@(item.Id)(false);
                         });
                     </script>
 
-                    <script type="text/javascript">
+                    <script>
                     function toggleOrderItemEdit@(item.Id) (editMode) {
                         if (editMode) {
                             $('#pnlEditPvUnitPrice@(item.Id)').show();

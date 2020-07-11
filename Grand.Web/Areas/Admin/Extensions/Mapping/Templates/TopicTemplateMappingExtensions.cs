@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Topics;
+﻿using Grand.Domain.Topics;
 using Grand.Web.Areas.Admin.Models.Templates;
 
 namespace Grand.Web.Areas.Admin.Extensions

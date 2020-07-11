@@ -8,7 +8,7 @@
         .Where(x => x.AllowToChooseWarehouse && x.AvailableWarehouses.Count > 0)
         .ToList();
 }
-<form asp-controller="Shipment" asp-action="AddShipment" method="post"
+<form asp-area="Admin" asp-controller="Shipment" asp-action="AddShipment" method="post"
       asp-route-orderId="@Context.Request.Query["orderId"]">
     
     <div asp-validation-summary="All"></div>
@@ -55,7 +55,7 @@
 
     @if (itemsFromMultipleWarehouses.Any())
     {
-    <script type="text/javascript">
+    <script>
             $(document).ready(function () {
                 $('#shipment-save').click(function () {
                     return validateWarehouseAvailability();

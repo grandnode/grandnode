@@ -1,6 +1,6 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Courses;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Courses;
 using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;

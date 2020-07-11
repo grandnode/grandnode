@@ -1,8 +1,8 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Directory;
+using Grand.Domain.Messages;
+using Grand.Domain.Orders;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

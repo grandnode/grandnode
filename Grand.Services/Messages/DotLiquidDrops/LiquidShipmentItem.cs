@@ -1,8 +1,8 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Catalog;
+using Grand.Domain.Localization;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Services.Localization;
 using System.Collections.Generic;
 using System.Net;
@@ -20,12 +20,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidShipmentItem(ShipmentItem shipmentItem, Shipment shipment, Order order, OrderItem orderItem, Product product, Language language)
         {
-            this._shipmentItem = shipmentItem;
-            this._language = language;
-            this._shipment = shipment;
-            this._order = order;
-            this._orderItem = orderItem;
-            this._product = product;
+            _shipmentItem = shipmentItem;
+            _language = language;
+            _shipment = shipment;
+            _order = order;
+            _orderItem = orderItem;
+            _product = product;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

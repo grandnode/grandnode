@@ -1,10 +1,10 @@
 ﻿using Grand.Core.Caching;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Media;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -353,6 +353,9 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             foreach (var sci in request.Cart)
             {
                 var product = await _productService.GetProductById(sci.ProductId);
+                if (product == null)
+                    continue;
+
                 var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel {
                     Id = sci.Id,
                     Sku = product.FormatSku(sci.AttributesXml, _productAttributeParser),

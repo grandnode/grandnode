@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Queries.Models.Catalog;
 using Grand.Services.Seo;

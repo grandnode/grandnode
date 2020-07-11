@@ -1,12 +1,13 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Logging;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Orders;
 using Grand.Core.Extensions;
+using Grand.Domain;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Directory;
+using Grand.Domain.Logging;
+using Grand.Domain.Messages;
+using Grand.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -145,8 +146,7 @@ namespace Grand.Services.ExportImport
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
-            var xwSettings = new XmlWriterSettings
-            {
+            var xwSettings = new XmlWriterSettings {
                 ConformanceLevel = ConformanceLevel.Auto,
                 Async = true,
             };
@@ -246,8 +246,7 @@ namespace Grand.Services.ExportImport
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
-            var xwSettings = new XmlWriterSettings
-            {
+            var xwSettings = new XmlWriterSettings {
                 ConformanceLevel = ConformanceLevel.Auto,
                 Async = true,
             };
@@ -304,8 +303,7 @@ namespace Grand.Services.ExportImport
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
-            var xwSettings = new XmlWriterSettings
-            {
+            var xwSettings = new XmlWriterSettings {
                 ConformanceLevel = ConformanceLevel.Auto,
                 Async = true
             };
@@ -696,8 +694,7 @@ namespace Grand.Services.ExportImport
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
-            var xwSettings = new XmlWriterSettings
-            {
+            var xwSettings = new XmlWriterSettings {
                 ConformanceLevel = ConformanceLevel.Auto,
                 Async = true
             };
@@ -952,8 +949,7 @@ namespace Grand.Services.ExportImport
                         {
                             var _tmp = (NewsLetterSubscription)item.Object;
 
-                            var newslettertml = new NewsLetterSubscription()
-                            {
+                            var newslettertml = new NewsLetterSubscription() {
                                 Active = _tmp.Active,
                                 CreatedOnUtc = item.CreatedOnUtc
                             };
@@ -979,8 +975,7 @@ namespace Grand.Services.ExportImport
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
-            var xwSettings = new XmlWriterSettings
-            {
+            var xwSettings = new XmlWriterSettings {
                 ConformanceLevel = ConformanceLevel.Auto,
                 Async = true,
             };

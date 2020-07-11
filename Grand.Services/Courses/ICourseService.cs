@@ -1,6 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Courses;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain;
+using Grand.Domain.Courses;
+using Grand.Domain.Customers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

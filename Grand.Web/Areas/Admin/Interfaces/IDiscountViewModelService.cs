@@ -1,7 +1,7 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Vendors;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Discounts;
+using Grand.Domain.Stores;
+using Grand.Domain.Vendors;
 using Grand.Services.Discounts;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Discounts;

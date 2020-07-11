@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain;
+using Grand.Domain.Stores;
 using Grand.Framework.Components;
 using Grand.Framework.Themes;
 using Grand.Services.Localization;

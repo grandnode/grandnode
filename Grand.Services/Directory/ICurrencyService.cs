@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Directory;
+using Grand.Domain.Directory;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

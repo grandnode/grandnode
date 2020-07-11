@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Customers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Common;
@@ -35,11 +35,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             CustomerSettings customerSettings,
             ILocalizationService localizationService)
         {
-            this._customerService = customerService;
-            this._geoLookupService = geoLookupService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._customerSettings = customerSettings;
-            this._localizationService = localizationService;
+            _customerService = customerService;
+            _geoLookupService = geoLookupService;
+            _dateTimeHelper = dateTimeHelper;
+            _customerSettings = customerSettings;
+            _localizationService = localizationService;
         }
 
         #endregion

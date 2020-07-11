@@ -5,6 +5,6 @@ namespace Grand.Plugin.ExchangeRate.McExchange
 {
     internal interface IRateProvider
     {
-        Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRates();
+        Task<IList<Domain.Directory.ExchangeRate>> GetCurrencyLiveRates();
     }
 }

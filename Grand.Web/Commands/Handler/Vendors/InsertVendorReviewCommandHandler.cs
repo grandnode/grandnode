@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Localization;
+using Grand.Domain.Vendors;
 using Grand.Services.Customers;
 using Grand.Services.Messages;
 using Grand.Services.Vendors;

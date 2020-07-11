@@ -52,15 +52,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             IExportManager exportManager,
             IImportManager importManager)
 		{
-            this._countryService = countryService;
-            this._countryViewModelService = countryViewModelService;
-            this._stateProvinceService = stateProvinceService;
-            this._localizationService = localizationService;
-            this._addressService = addressService;
-            this._languageService = languageService;
-            this._storeService = storeService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
+            _countryService = countryService;
+            _countryViewModelService = countryViewModelService;
+            _stateProvinceService = stateProvinceService;
+            _localizationService = localizationService;
+            _addressService = addressService;
+            _languageService = languageService;
+            _storeService = storeService;
+            _exportManager = exportManager;
+            _importManager = importManager;
 		}
 
 		#endregion 

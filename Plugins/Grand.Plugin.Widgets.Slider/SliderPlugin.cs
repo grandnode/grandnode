@@ -1,6 +1,7 @@
 using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Plugins;
+using Grand.Domain.Data;
 using Grand.Plugin.Widgets.Slider.Domain;
 using Grand.Services.Cms;
 using Grand.Services.Localization;

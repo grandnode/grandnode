@@ -2,7 +2,7 @@
 using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Domain.Common;
+using Grand.Domain.Common;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Middleware;
 using Grand.Framework.Mvc.Routing;

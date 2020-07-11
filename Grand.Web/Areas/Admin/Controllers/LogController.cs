@@ -23,9 +23,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public LogController(ILogViewModelService logViewModelService, ILogger logger, 
             ILocalizationService localizationService)
         {
-            this._logViewModelService = logViewModelService;
-            this._logger = logger;
-            this._localizationService = localizationService;
+            _logViewModelService = logViewModelService;
+            _logger = logger;
+            _localizationService = localizationService;
         }
 
         public IActionResult Index() => RedirectToAction("List");

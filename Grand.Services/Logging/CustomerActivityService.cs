@@ -1,8 +1,9 @@
 ﻿using Grand.Core;
+using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Logging;
+using Grand.Domain.Data;
+using Grand.Domain.Customers;
+using Grand.Domain.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;

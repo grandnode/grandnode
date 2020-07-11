@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Tax;
+﻿using Grand.Domain.Tax;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
@@ -33,11 +33,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             ITaxCategoryService taxCategoryService, TaxSettings taxSettings,
             ISettingService settingService, IServiceProvider serviceProvider)
 		{
-            this._taxService = taxService;
-            this._taxCategoryService = taxCategoryService;
-            this._taxSettings = taxSettings;
-            this._settingService = settingService;
-            this._serviceProvider = serviceProvider;
+            _taxService = taxService;
+            _taxCategoryService = taxCategoryService;
+            _taxSettings = taxSettings;
+            _settingService = settingService;
+            _serviceProvider = serviceProvider;
         }
 
 		#endregion 

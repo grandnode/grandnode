@@ -1,9 +1,9 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Data;
+using Grand.Domain.Directory;
+using Grand.Domain.Localization;
+using Grand.Domain.Tax;
 using Grand.Core.Plugins;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Directory;

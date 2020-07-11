@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Grand.Core.Domain.Catalog.Tests
+namespace Grand.Domain.Catalog.Tests
 {
     [TestClass()]
     public class ProductTests {

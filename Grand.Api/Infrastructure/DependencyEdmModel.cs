@@ -6,7 +6,7 @@ using Grand.Api.DTOs.Customers;
 using Grand.Api.DTOs.Shipping;
 using Grand.Api.Infrastructure.DependencyManagement;
 using Grand.Core.Configuration;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Microsoft.AspNet.OData.Builder;
 
 namespace Grand.Api.Infrastructure
@@ -155,7 +155,6 @@ namespace Grand.Api.Infrastructure
             createSpecification.Parameter<bool>(nameof(ProductSpecificationAttributeDto.AllowFiltering));
             createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeId));
             createSpecification.Parameter<bool>(nameof(ProductSpecificationAttributeDto.ShowOnProductPage));
-            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeOptionId));
             createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeOptionId));
 
             createSpecification.Returns<bool>();

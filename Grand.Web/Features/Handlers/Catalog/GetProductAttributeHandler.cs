@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Services.Catalog;
 using Grand.Web.Features.Models.Catalog;
 using MediatR;

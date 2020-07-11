@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
 using Grand.Plugin.Widgets.Slider.Domain;
 using Grand.Services.Stores;
 using System;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using Grand.Domain.Data;
 
 namespace Grand.Plugin.Widgets.Slider.Services
 {

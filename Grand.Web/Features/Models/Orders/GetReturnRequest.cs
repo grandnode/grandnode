@@ -1,7 +1,7 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.Localization;
+using Grand.Domain.Orders;
+using Grand.Domain.Stores;
 using Grand.Web.Models.Orders;
 using MediatR;
 

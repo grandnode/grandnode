@@ -1,6 +1,6 @@
-﻿using Grand.Core.Domain.Courses;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
+﻿using Grand.Domain.Courses;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
 using Grand.Web.Models.Course;
 using MediatR;
 

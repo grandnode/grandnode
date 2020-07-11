@@ -1,4 +1,4 @@
-using Grand.Core;
+using Grand.Domain;
 
 namespace Grand.Plugin.Tax.CountryStateZip.Domain
 {

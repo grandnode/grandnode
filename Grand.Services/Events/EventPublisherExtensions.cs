@@ -1,5 +1,5 @@
-﻿using Grand.Core;
-using Grand.Core.Events;
+﻿using Grand.Core.Events;
+using Grand.Domain;
 using MediatR;
 using System.Threading.Tasks;
 

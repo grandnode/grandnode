@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Services.Common;
 using Grand.Services.Logging;
 using Microsoft.AspNetCore.Http;

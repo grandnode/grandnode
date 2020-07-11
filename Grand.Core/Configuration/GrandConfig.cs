@@ -210,5 +210,10 @@ namespace Grand.Core.Configuration
         /// Gets or sets a value indicating whether ignore IgnoreUsePoweredByMiddleware
         /// </summary>
         public bool IgnoreUsePoweredByMiddleware { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating - (Serilog) use middleware for smarter HTTP request logging
+        /// </summary>
+        public bool UseSerilogRequestLogging { get; set; }
     }
 }

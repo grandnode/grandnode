@@ -1,9 +1,9 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Security;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Catalog;
+using Grand.Domain.Directory;
+using Grand.Domain.Media;
+using Grand.Domain.Security;
+using Grand.Domain.Stores;
 using Grand.Core.Plugins;
 using Grand.Plugin.Feed.GoogleShopping.Services;
 using Grand.Services.Catalog;

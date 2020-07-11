@@ -1,8 +1,7 @@
 using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Configuration;
-using Grand.Core.Data;
-using Grand.Core.Domain.Configuration;
+using Grand.Domain.Configuration;
+using Grand.Domain.Data;
 using Grand.Services.Commands.Models.Common;
 using MediatR;
 using MongoDB.Bson;
@@ -375,7 +374,7 @@ namespace Grand.Services.Configuration
                 catch (Exception ex)
                 {
                     var msg = $"Could not convert setting {key} to type {prop.PropertyType.FullName}";
-                    _mediator.Send(new InsertLogCommand() { LogLevel = Core.Domain.Logging.LogLevel.Error, ShortMessage = msg, FullMessage = ex.Message });
+                    _mediator.Send(new InsertLogCommand() { LogLevel = Domain.Logging.LogLevel.Error, ShortMessage = msg, FullMessage = ex.Message });
                 }
             }
 

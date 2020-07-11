@@ -1,9 +1,9 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Data;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
+using Grand.Domain.Stores;
 using Grand.Core.Plugins;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Catalog;

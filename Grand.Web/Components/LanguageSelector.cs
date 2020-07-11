@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Localization;
 using Grand.Framework.Components;
 using Grand.Services.Localization;
 using Grand.Web.Models.Common;

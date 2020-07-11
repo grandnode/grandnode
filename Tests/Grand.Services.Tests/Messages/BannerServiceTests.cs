@@ -1,5 +1,5 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Messages;
 using Grand.Core.Events;
 using Grand.Services.Messages;
 using MediatR;

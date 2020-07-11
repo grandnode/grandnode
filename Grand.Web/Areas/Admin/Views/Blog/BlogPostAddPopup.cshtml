@@ -6,7 +6,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.BlogCategory.AddNewPost").Text;
 }
-<form asp-controller="Blog" asp-action="BlogPostAddPopup" method="post"
+<form asp-area="Admin" asp-controller="Blog" asp-action="BlogPostAddPopup" method="post"
       asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
@@ -55,11 +55,11 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
-            try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
-            catch (e){}
-            window.close();
-    </script>
+        <script>
+                try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+                catch (e){}
+                window.close();
+        </script>
     }
 </form>
 
@@ -114,8 +114,7 @@
         });
     });
 </script>
-
-<script type="text/javascript">
+<script>
         $(document).ready(function() {
             $('#search-posts').click(function() {
                 var grid = $('#blogposts-grid').data('kendoGrid');

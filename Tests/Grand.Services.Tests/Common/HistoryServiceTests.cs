@@ -1,18 +1,10 @@
-﻿using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
-using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Data;
+using Grand.Domain.History;
 using Grand.Services.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 using Moq;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Tests.Common
@@ -41,7 +33,7 @@ namespace Grand.Services.Tests.Common
         {
             var product = new Product() { Id = "1" };
             await _historyService.SaveObject<Product>(product);
-            _mockHistoryRepository.Verify(c => c.InsertAsync(It.Is<HistoryObject>(h=>h.Object.Id.Equals(product.Id))), Times.Once);
+            _mockHistoryRepository.Verify(c => c.InsertAsync(It.Is<HistoryObject>(h => h.Object.Id.Equals(product.Id))), Times.Once);
         }
 
     }

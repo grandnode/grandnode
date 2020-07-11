@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Forums;
+﻿using Grand.Domain.Forums;
 using Grand.Web.Areas.Admin.Models.Forums;
 
 namespace Grand.Web.Areas.Admin.Extensions

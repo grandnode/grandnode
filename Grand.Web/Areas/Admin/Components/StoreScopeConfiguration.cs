@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Framework.Components;
 using Grand.Services.Common;
 using Grand.Services.Stores;
@@ -22,8 +22,8 @@ namespace Grand.Web.Areas.Admin.Components
 
         public StoreScopeConfigurationViewComponent(IStoreService storeService, IWorkContext workContext)
         {
-            this._storeService = storeService;
-            this._workContext = workContext;
+            _storeService = storeService;
+            _workContext = workContext;
         }
 
         #endregion

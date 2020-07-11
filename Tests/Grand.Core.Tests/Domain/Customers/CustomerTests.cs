@@ -1,8 +1,8 @@
-﻿using Grand.Core.Domain.Common;
+﻿using Grand.Domain.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
-namespace Grand.Core.Domain.Customers.Tests
+namespace Grand.Domain.Customers.Tests
 {
     [TestClass()]
     public class CustomerTests {

@@ -1,4 +1,4 @@
-﻿@using Grand.Core.Domain.Catalog
+﻿@using Grand.Domain.Catalog
 @model OrderModel.AddOrderProductModel.ProductDetailsModel
 @{
     //page title
@@ -6,7 +6,7 @@
 }
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
 
-<form asp-controller="Order" asp-action="AddProductToOrderDetails" asp-route-orderId="@Model.OrderId"
+<form asp-area="Admin" asp-controller="Order" asp-action="AddProductToOrderDetails" asp-route-orderId="@Model.OrderId"
       asp-route-productId="@Model.ProductId" enctype="multipart/form-data" method="post" id="product-details-form">
 
     

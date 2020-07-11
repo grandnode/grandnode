@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityLogType").Text;
 }
-<form asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
+<form asp-area="Admin" asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
     
     <div class="row">
         <div class="col-md-12">
@@ -98,9 +98,7 @@
     });
 
 </script>
-
-
-<script type="text/javascript">
+<script>
 
     $(document).ready(function () {
 

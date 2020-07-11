@@ -1,5 +1,5 @@
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Security;
+using Grand.Domain.Customers;
+using Grand.Domain.Security;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

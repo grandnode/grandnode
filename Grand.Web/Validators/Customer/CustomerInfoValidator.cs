@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Framework.Validators;
 using Grand.Services.Directory;
 using Grand.Services.Localization;

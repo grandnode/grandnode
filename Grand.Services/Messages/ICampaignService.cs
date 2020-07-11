@@ -1,5 +1,5 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Domain;
+using Grand.Domain.Messages;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

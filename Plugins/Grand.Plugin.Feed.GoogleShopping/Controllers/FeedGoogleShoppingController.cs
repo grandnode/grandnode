@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Stores;
 using Grand.Core.Plugins;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;

@@ -6,7 +6,7 @@
     ViewBag.Title = T("Admin.Catalog.Manufacturers.Products.AddNew").Text;
 }
 
-<form asp-controller="Manufacturer" asp-action="ProductAddPopup" method="post"
+<form asp-area="Admin" asp-controller="Manufacturer" asp-action="ProductAddPopup" method="post"
       asp-route-ManufacturerId="@Context.Request.Query["ManufacturerId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
@@ -83,7 +83,7 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
+    <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
@@ -155,7 +155,7 @@
             });
         });
     </script>
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#search-products').click(function () {
                 var grid = $('#products-grid').data('kendoGrid');

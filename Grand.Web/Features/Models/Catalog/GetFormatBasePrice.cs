@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Directory;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Directory;
 using MediatR;
 namespace Grand.Web.Features.Models.Catalog
 {

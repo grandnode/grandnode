@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Grand.Core.Domain.Configuration.Tests
+namespace Grand.Domain.Configuration.Tests
 {
     [TestClass()]
     public class SettingTests {

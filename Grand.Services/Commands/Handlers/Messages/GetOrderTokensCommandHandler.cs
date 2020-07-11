@@ -1,7 +1,7 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Tax;
-using Grand.Core.Domain.Vendors;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Shipping;
+using Grand.Domain.Tax;
+using Grand.Domain.Vendors;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Messages;
 using Grand.Services.Common;

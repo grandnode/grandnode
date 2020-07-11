@@ -1,10 +1,10 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Catalog;
+using Grand.Domain.Directory;
+using Grand.Domain.Localization;
+using Grand.Domain.Orders;
+using Grand.Domain.Stores;
+using Grand.Domain.Vendors;
 using Grand.Services.Localization;
 using System;
 using System.Collections.Generic;

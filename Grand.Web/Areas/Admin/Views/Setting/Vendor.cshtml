@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Vendor").Text;
 }
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
 
         $("#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)").click(toggleVendorCountryFormField);
@@ -87,7 +87,7 @@
         }
     }
 </script>
-<form asp-controller="Setting" asp-action="Vendor" method="post">
+<form asp-area="Admin" asp-controller="Setting" asp-action="Vendor" method="post">
     
     <div asp-validation-summary="All"></div>
     <div class="row">

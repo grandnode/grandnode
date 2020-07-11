@@ -17900,412 +17900,412 @@
   <LocaleResource Name="Edit">
     <Value>Edit</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeControlType.Checkboxes">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.Checkboxes">
     <Value>Checkboxes</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeControlType.ColorSquares">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.ColorSquares">
     <Value>Color squares</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeControlType.Datepicker">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.Datepicker">
     <Value>Date picker</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeControlType.DropdownList">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.DropdownList">
     <Value>Drop-down list</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeControlType.FileUpload">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.FileUpload">
     <Value>File upload</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeControlType.MultilineTextbox">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.MultilineTextbox">
     <Value>Multiline textbox</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeControlType.RadioList">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.RadioList">
     <Value>Radio button list</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeControlType.ReadonlyCheckboxes">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.ReadonlyCheckboxes">
     <Value>Read-only checkboxes</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeControlType.TextBox">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.TextBox">
     <Value>Textbox</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeValueType.AssociatedToProduct">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeValueType.AssociatedToProduct">
     <Value>Associated to product</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.AttributeValueType.Simple">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeValueType.Simple">
     <Value>Simple</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.BackorderMode.AllowQtyBelow0">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.BackorderMode.AllowQtyBelow0">
     <Value>Allow qty below 0</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.BackorderMode.AllowQtyBelow0AndNotifyCustomer">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.BackorderMode.AllowQtyBelow0AndNotifyCustomer">
     <Value>Allow qty below 0 and notify customer</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.BackorderMode.NoBackorders">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.BackorderMode.NoBackorders">
     <Value>No backorders</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.DownloadActivationType.Manually">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.DownloadActivationType.Manually">
     <Value>Manually</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.DownloadActivationType.WhenOrderIsPaid">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.DownloadActivationType.WhenOrderIsPaid">
     <Value>When order is paid</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.GiftCardType.Physical">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.GiftCardType.Physical">
     <Value>Physical</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.GiftCardType.Virtual">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.GiftCardType.Virtual">
     <Value>Virtual</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Day">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.IntervalUnit.Day">
     <Value>Day(s)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Hour">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.IntervalUnit.Hour">
     <Value>Hour(s)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Minute">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.IntervalUnit.Minute">
     <Value>Minute(s)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.LowStockActivity.DisableBuyButton">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.LowStockActivity.DisableBuyButton">
     <Value>Disable buy button</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.LowStockActivity.Nothing">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.LowStockActivity.Nothing">
     <Value>Nothing</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.LowStockActivity.Unpublish">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.LowStockActivity.Unpublish">
     <Value>Unpublish</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.DontManageStock">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ManageInventoryMethod.DontManageStock">
     <Value>Don't track inventory</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStock">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ManageInventoryMethod.ManageStock">
     <Value>Track inventory</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByAttributes">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ManageInventoryMethod.ManageStockByAttributes">
     <Value>Track inventory by product attributes</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByBundleProducts">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ManageInventoryMethod.ManageStockByBundleProducts">
     <Value>Track inventory by bundle products</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.BestSellers">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductSortingEnum.BestSellers">
     <Value>Best Sellers</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.CreatedOn">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductSortingEnum.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.MostViewed">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductSortingEnum.MostViewed">
     <Value>Most Viewed</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.NameAsc">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductSortingEnum.NameAsc">
     <Value>Name: A to Z</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.NameDesc">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductSortingEnum.NameDesc">
     <Value>Name: Z to A</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.OnSale">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductSortingEnum.OnSale">
     <Value>On Sale</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.Position">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductSortingEnum.Position">
     <Value>Position</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.PriceAsc">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductSortingEnum.PriceAsc">
     <Value>Price: Low to High</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.PriceDesc">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductSortingEnum.PriceDesc">
     <Value>Price: High to Low</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.BundledProduct">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductType.BundledProduct">
     <Value>Bundled product</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.GroupedProduct">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductType.GroupedProduct">
     <Value>Grouped (product with variants)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.Reservation">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductType.Reservation">
     <Value>Reservation</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.SimpleProduct">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.ProductType.SimpleProduct">
     <Value>Simple</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.RecurringProductCyclePeriod.Days">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.RecurringProductCyclePeriod.Days">
     <Value>Days</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.RecurringProductCyclePeriod.Months">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.RecurringProductCyclePeriod.Months">
     <Value>Months</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.RecurringProductCyclePeriod.Weeks">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.RecurringProductCyclePeriod.Weeks">
     <Value>Weeks</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.RecurringProductCyclePeriod.Years">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.RecurringProductCyclePeriod.Years">
     <Value>Years</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.SpecificationAttributeType.CustomHtmlText">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.SpecificationAttributeType.CustomHtmlText">
     <Value>Custom HTML text</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.SpecificationAttributeType.CustomText">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.SpecificationAttributeType.CustomText">
     <Value>Custom text</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.SpecificationAttributeType.Hyperlink">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.SpecificationAttributeType.Hyperlink">
     <Value>Hyperlink</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.SpecificationAttributeType.Option">
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.SpecificationAttributeType.Option">
     <Value>Option</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Common.FulltextSearchMode.And">
+  <LocaleResource Name="Enums.Grand.Domain.Common.FulltextSearchMode.And">
     <Value>Using CONTAINS and AND with prefix_term</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Common.FulltextSearchMode.ExactMatch">
+  <LocaleResource Name="Enums.Grand.Domain.Common.FulltextSearchMode.ExactMatch">
     <Value>Exact match (using CONTAINS with prefix_term)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Common.FulltextSearchMode.Or">
+  <LocaleResource Name="Enums.Grand.Domain.Common.FulltextSearchMode.Or">
     <Value>Using CONTAINS and OR with prefix_term</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Customers.CustomerNameFormat.ShowEmails">
+  <LocaleResource Name="Enums.Grand.Domain.Customers.CustomerNameFormat.ShowEmails">
     <Value>Show emails</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Customers.CustomerNameFormat.ShowFirstName">
+  <LocaleResource Name="Enums.Grand.Domain.Customers.CustomerNameFormat.ShowFirstName">
     <Value>Show first name</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Customers.CustomerNameFormat.ShowFullNames">
+  <LocaleResource Name="Enums.Grand.Domain.Customers.CustomerNameFormat.ShowFullNames">
     <Value>Show full names</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Customers.CustomerNameFormat.ShowUsernames">
+  <LocaleResource Name="Enums.Grand.Domain.Customers.CustomerNameFormat.ShowUsernames">
     <Value>Show usernames</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Customers.PasswordFormat.Clear">
+  <LocaleResource Name="Enums.Grand.Domain.Customers.PasswordFormat.Clear">
     <Value>Clear</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Customers.PasswordFormat.Encrypted">
+  <LocaleResource Name="Enums.Grand.Domain.Customers.PasswordFormat.Encrypted">
     <Value>Encrypted</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Customers.PasswordFormat.Hashed">
+  <LocaleResource Name="Enums.Grand.Domain.Customers.PasswordFormat.Hashed">
     <Value>Hashed</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding001">
+  <LocaleResource Name="Enums.Grand.Domain.Directory.RoundingType.Rounding001">
     <Value>Default rounding</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding005Down">
+  <LocaleResource Name="Enums.Grand.Domain.Directory.RoundingType.Rounding005Down">
     <Value>Rounding down with 0.05 intervals (0.06 round to 0.05)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding005Up">
+  <LocaleResource Name="Enums.Grand.Domain.Directory.RoundingType.Rounding005Up">
     <Value>Rounding up with 0.05 intervals (0.06 round to 0.10)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding01Down">
+  <LocaleResource Name="Enums.Grand.Domain.Directory.RoundingType.Rounding01Down">
     <Value>Rounding down with 0.10 intervals (1.05 round to 1.00)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding01Up">
+  <LocaleResource Name="Enums.Grand.Domain.Directory.RoundingType.Rounding01Up">
     <Value>Rounding up with 0.10 intervals (1.05 round to 1.10)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding05">
+  <LocaleResource Name="Enums.Grand.Domain.Directory.RoundingType.Rounding05">
     <Value>Rounding with 0.50 intervals</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding1">
+  <LocaleResource Name="Enums.Grand.Domain.Directory.RoundingType.Rounding1">
     <Value>Rounding with 1.00 intervals (1.01-1.49 round to 1.00, 1.50-1.99 round to 2.00)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding1Up">
+  <LocaleResource Name="Enums.Grand.Domain.Directory.RoundingType.Rounding1Up">
     <Value>Rounding up with 1.00 intervals (1.01–1.99 round to 2.00)</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountLimitationType.NTimesOnly">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountLimitationType.NTimesOnly">
     <Value>N times only</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountLimitationType.NTimesPerCustomer">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountLimitationType.NTimesPerCustomer">
     <Value>N times per customer</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountLimitationType.Unlimited">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountLimitationType.Unlimited">
     <Value>Unlimited</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToAllProducts">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountType.AssignedToAllProducts">
     <Value>Assigned to all products</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToCategories">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountType.AssignedToCategories">
     <Value>Assigned to categories</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToManufacturers">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountType.AssignedToManufacturers">
     <Value>Assigned to manufacturers</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToOrderSubTotal">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountType.AssignedToOrderSubTotal">
     <Value>Assigned to order subtotal</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToOrderTotal">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountType.AssignedToOrderTotal">
     <Value>Assigned to order total</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToShipping">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountType.AssignedToShipping">
     <Value>Assigned to shipping</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToSkus">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountType.AssignedToSkus">
     <Value>Assigned to products</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToVendors">
+  <LocaleResource Name="Enums.Grand.Domain.Discounts.DiscountType.AssignedToVendors">
     <Value>Assigned to vendors</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Forums.EditorType.BBCodeEditor">
+  <LocaleResource Name="Enums.Grand.Domain.Forums.EditorType.BBCodeEditor">
     <Value>BBCode editor</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Forums.EditorType.HtmlEditor">
+  <LocaleResource Name="Enums.Grand.Domain.Forums.EditorType.HtmlEditor">
     <Value>Html editor</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Forums.EditorType.SimpleTextBox">
+  <LocaleResource Name="Enums.Grand.Domain.Forums.EditorType.SimpleTextBox">
     <Value>Simple textbox</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Forums.ForumSearchType.All">
+  <LocaleResource Name="Enums.Grand.Domain.Forums.ForumSearchType.All">
     <Value>Topic titles and post text</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Forums.ForumSearchType.PostTextOnly">
+  <LocaleResource Name="Enums.Grand.Domain.Forums.ForumSearchType.PostTextOnly">
     <Value>Post text only</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Forums.ForumSearchType.TopicTitlesOnly">
+  <LocaleResource Name="Enums.Grand.Domain.Forums.ForumSearchType.TopicTitlesOnly">
     <Value>Topic titles only</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Forums.ForumTopicType.Announcement">
+  <LocaleResource Name="Enums.Grand.Domain.Forums.ForumTopicType.Announcement">
     <Value>Announcement</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Forums.ForumTopicType.Normal">
+  <LocaleResource Name="Enums.Grand.Domain.Forums.ForumTopicType.Normal">
     <Value>Normal</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Forums.ForumTopicType.Sticky">
+  <LocaleResource Name="Enums.Grand.Domain.Forums.ForumTopicType.Sticky">
     <Value>Sticky</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Logging.LogLevel.Debug">
+  <LocaleResource Name="Enums.Grand.Domain.Logging.LogLevel.Debug">
     <Value>Debug</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Logging.LogLevel.Error">
+  <LocaleResource Name="Enums.Grand.Domain.Logging.LogLevel.Error">
     <Value>Error</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Logging.LogLevel.Fatal">
+  <LocaleResource Name="Enums.Grand.Domain.Logging.LogLevel.Fatal">
     <Value>Fatal</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Logging.LogLevel.Information">
+  <LocaleResource Name="Enums.Grand.Domain.Logging.LogLevel.Information">
     <Value>Information</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Logging.LogLevel.Warning">
+  <LocaleResource Name="Enums.Grand.Domain.Logging.LogLevel.Warning">
     <Value>Warning</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Messages.MessageDelayPeriod.Days">
+  <LocaleResource Name="Enums.Grand.Domain.Messages.MessageDelayPeriod.Days">
     <Value>Days</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Messages.MessageDelayPeriod.Hours">
+  <LocaleResource Name="Enums.Grand.Domain.Messages.MessageDelayPeriod.Hours">
     <Value>Hours</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Messages.QueuedEmailPriority.High">
+  <LocaleResource Name="Enums.Grand.Domain.Messages.QueuedEmailPriority.High">
     <Value>High</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Messages.QueuedEmailPriority.Low">
+  <LocaleResource Name="Enums.Grand.Domain.Messages.QueuedEmailPriority.Low">
     <Value>Low</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.OrderStatus.Cancelled">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.OrderStatus.Cancelled">
     <Value>Cancelled</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.OrderStatus.Complete">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.OrderStatus.Complete">
     <Value>Complete</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.OrderStatus.Pending">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.OrderStatus.Pending">
     <Value>Pending</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.OrderStatus.Processing">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.OrderStatus.Processing">
     <Value>Processing</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.ReturnRequestStatus.Cancelled">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.ReturnRequestStatus.Cancelled">
     <Value>Cancelled</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.ReturnRequestStatus.ItemsRefunded">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.ReturnRequestStatus.ItemsRefunded">
     <Value>Item(s) refunded</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.ReturnRequestStatus.ItemsRepaired">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.ReturnRequestStatus.ItemsRepaired">
     <Value>Item(s) repaired</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.ReturnRequestStatus.Pending">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.ReturnRequestStatus.Pending">
     <Value>Pending</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.ReturnRequestStatus.Received">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.ReturnRequestStatus.Received">
     <Value>Received</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.ReturnRequestStatus.RequestRejected">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.ReturnRequestStatus.RequestRejected">
     <Value>Request rejected</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Orders.ReturnRequestStatus.ReturnAuthorized">
+  <LocaleResource Name="Enums.Grand.Domain.Orders.ReturnRequestStatus.ReturnAuthorized">
     <Value>Return authorized</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Payments.PaymentStatus.Authorized">
+  <LocaleResource Name="Enums.Grand.Domain.Payments.PaymentStatus.Authorized">
     <Value>Authorized</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Payments.PaymentStatus.Paid">
+  <LocaleResource Name="Enums.Grand.Domain.Payments.PaymentStatus.Paid">
     <Value>Paid</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Payments.PaymentStatus.PartiallyRefunded">
+  <LocaleResource Name="Enums.Grand.Domain.Payments.PaymentStatus.PartiallyRefunded">
     <Value>Partially refunded</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Payments.PaymentStatus.Pending">
+  <LocaleResource Name="Enums.Grand.Domain.Payments.PaymentStatus.Pending">
     <Value>Pending</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Payments.PaymentStatus.Refunded">
+  <LocaleResource Name="Enums.Grand.Domain.Payments.PaymentStatus.Refunded">
     <Value>Refunded</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Payments.PaymentStatus.Voided">
+  <LocaleResource Name="Enums.Grand.Domain.Payments.PaymentStatus.Voided">
     <Value>Voided</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Security.PasswordFormat.Clear">
+  <LocaleResource Name="Enums.Grand.Domain.Security.PasswordFormat.Clear">
     <Value>Clear</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Security.PasswordFormat.Encrypted">
+  <LocaleResource Name="Enums.Grand.Domain.Security.PasswordFormat.Encrypted">
     <Value>Encrypted</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Security.PasswordFormat.Hashed">
+  <LocaleResource Name="Enums.Grand.Domain.Security.PasswordFormat.Hashed">
     <Value>Hashed</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Security.UserRegistrationType.AdminApproval">
+  <LocaleResource Name="Enums.Grand.Domain.Security.UserRegistrationType.AdminApproval">
     <Value>A customer should be approved by administrator</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Security.UserRegistrationType.Disabled">
+  <LocaleResource Name="Enums.Grand.Domain.Security.UserRegistrationType.Disabled">
     <Value>Registration is disabled</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Security.UserRegistrationType.EmailValidation">
+  <LocaleResource Name="Enums.Grand.Domain.Security.UserRegistrationType.EmailValidation">
     <Value>Email validation is required after registration</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Security.UserRegistrationType.Standard">
+  <LocaleResource Name="Enums.Grand.Domain.Security.UserRegistrationType.Standard">
     <Value>Standard account creation</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Seo.PageTitleSeoAdjustment.PagenameAfterStorename">
+  <LocaleResource Name="Enums.Grand.Domain.Seo.PageTitleSeoAdjustment.PagenameAfterStorename">
     <Value>Page name comes after store name</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Seo.PageTitleSeoAdjustment.StorenameAfterPagename">
+  <LocaleResource Name="Enums.Grand.Domain.Seo.PageTitleSeoAdjustment.StorenameAfterPagename">
     <Value>Store name comes after page name</Value>
   </LocaleResource>  
-  <LocaleResource Name="Enums.Grand.Core.Domain.Shipping.ShippingStatus.Delivered">
+  <LocaleResource Name="Enums.Grand.Domain.Shipping.ShippingStatus.Delivered">
     <Value>Delivered</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Shipping.ShippingStatus.NotYetShipped">
+  <LocaleResource Name="Enums.Grand.Domain.Shipping.ShippingStatus.NotYetShipped">
     <Value>Not yet shipped</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Shipping.ShippingStatus.PartiallyShipped">
+  <LocaleResource Name="Enums.Grand.Domain.Shipping.ShippingStatus.PartiallyShipped">
     <Value>Partially shipped</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Shipping.ShippingStatus.Shipped">
+  <LocaleResource Name="Enums.Grand.Domain.Shipping.ShippingStatus.Shipped">
     <Value>Shipped</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Shipping.ShippingStatus.ShippingNotRequired">
+  <LocaleResource Name="Enums.Grand.Domain.Shipping.ShippingStatus.ShippingNotRequired">
     <Value>Shipping not required</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Tax.TaxBasedOn.BillingAddress">
+  <LocaleResource Name="Enums.Grand.Domain.Tax.TaxBasedOn.BillingAddress">
     <Value>Billing address</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Tax.TaxBasedOn.DefaultAddress">
+  <LocaleResource Name="Enums.Grand.Domain.Tax.TaxBasedOn.DefaultAddress">
     <Value>Default address</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Tax.TaxBasedOn.ShippingAddress">
+  <LocaleResource Name="Enums.Grand.Domain.Tax.TaxBasedOn.ShippingAddress">
     <Value>Shipping address</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Tax.TaxDisplayType.ExcludingTax">
+  <LocaleResource Name="Enums.Grand.Domain.Tax.TaxDisplayType.ExcludingTax">
     <Value>Excluding tax</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Tax.TaxDisplayType.IncludingTax">
+  <LocaleResource Name="Enums.Grand.Domain.Tax.TaxDisplayType.IncludingTax">
     <Value>Including tax</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Tax.VatNumberStatus.Empty">
+  <LocaleResource Name="Enums.Grand.Domain.Tax.VatNumberStatus.Empty">
     <Value>Empty</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Tax.VatNumberStatus.Invalid">
+  <LocaleResource Name="Enums.Grand.Domain.Tax.VatNumberStatus.Invalid">
     <Value>Invalid</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Tax.VatNumberStatus.Unknown">
+  <LocaleResource Name="Enums.Grand.Domain.Tax.VatNumberStatus.Unknown">
     <Value>Unknown</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Tax.VatNumberStatus.Valid">
+  <LocaleResource Name="Enums.Grand.Domain.Tax.VatNumberStatus.Valid">
     <Value>Valid</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Plugins.LoadPluginsMode.All">

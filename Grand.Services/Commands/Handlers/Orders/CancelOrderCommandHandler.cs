@@ -1,7 +1,8 @@
-﻿using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Discounts;
+using Grand.Services.Notifications.Orders;
 using Grand.Services.Orders;
 using Grand.Services.Shipping;
 using MediatR;

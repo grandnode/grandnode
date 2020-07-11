@@ -1,10 +1,10 @@
 ﻿@{
-    List<Grand.Core.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
+    List<Grand.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
     bool autoUpdateEnabled = ViewBag.AutoUpdateEnabled ?? false;
     //page title
     ViewBag.Title = T("Admin.Configuration.Currencies").Text;
 }
-<form asp-controller="Currency" asp-action="List">
+<form asp-area="Admin" asp-controller="Currency" asp-action="List">
     
     <div class="row">
         <div class="col-md-12">

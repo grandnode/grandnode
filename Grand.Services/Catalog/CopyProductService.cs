@@ -1,6 +1,6 @@
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Seo;
+using Grand.Domain.Catalog;
+using Grand.Domain.Media;
+using Grand.Domain.Seo;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Seo;

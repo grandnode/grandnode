@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Messages;
+using Grand.Domain;
+using Grand.Domain.Catalog;
+using Grand.Domain.Messages;
 using Grand.Services.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

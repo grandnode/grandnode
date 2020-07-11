@@ -8,14 +8,14 @@
         <div class="message-error">@validationSummary</div>
     }
 }
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.ReactionTypeId)").change(toggleReaction);
         toggleReaction();
 
         function toggleReaction() {
             var selectedReactionTypeId = $("#@Html.FieldIdFor(model => model.ReactionTypeId)").val();
-            if (selectedReactionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReactionTypeEnum.Banner).ToString()))
+            if (selectedReactionTypeId == @(((int)Grand.Domain.Customers.CustomerReactionTypeEnum.Banner).ToString()))
             {
                 $('#plnBanner').show();
                 $('#plnInteractiveForm').hide();
@@ -23,7 +23,7 @@
                 $('#plnRole').hide();
                 $('#plnTag').hide();
             }
-            if (selectedReactionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReactionTypeEnum.InteractiveForm).ToString()))
+            if (selectedReactionTypeId == @(((int)Grand.Domain.Customers.CustomerReactionTypeEnum.InteractiveForm).ToString()))
             {
                 $('#plnBanner').hide();
                 $('#plnInteractiveForm').show();
@@ -31,7 +31,7 @@
                 $('#plnRole').hide();
                 $('#plnTag').hide();
             }
-            else if (selectedReactionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReactionTypeEnum.Email).ToString()))
+            else if (selectedReactionTypeId == @(((int)Grand.Domain.Customers.CustomerReactionTypeEnum.Email).ToString()))
             {
                 $('#plnBanner').hide();
                 $('#plnInteractiveForm').hide();
@@ -39,7 +39,7 @@
                 $('#plnRole').hide();
                 $('#plnTag').hide();
 
-            } else if (selectedReactionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReactionTypeEnum.AssignToCustomerRole).ToString()))
+            } else if (selectedReactionTypeId == @(((int)Grand.Domain.Customers.CustomerReactionTypeEnum.AssignToCustomerRole).ToString()))
             {
                 $('#plnBanner').hide();
                 $('#plnInteractiveForm').hide();
@@ -47,7 +47,7 @@
                 $('#plnRole').show();
                 $('#plnTag').hide();
 
-            } else if (selectedReactionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReactionTypeEnum.AssignToCustomerTag).ToString()))
+            } else if (selectedReactionTypeId == @(((int)Grand.Domain.Customers.CustomerReactionTypeEnum.AssignToCustomerTag).ToString()))
             {
                 $('#plnBanner').hide();
                 $('#plnInteractiveForm').hide();

@@ -22,7 +22,7 @@ namespace Grand.Api.Queries.Handlers.Common
         public async Task<PictureDto> Handle(GetPictureByIdQuery request, CancellationToken cancellationToken)
         {
             return await _mongoDBContext.Database()
-                .GetCollection<PictureDto>(typeof(Core.Domain.Media.Picture).Name)
+                .GetCollection<PictureDto>(typeof(Domain.Media.Picture).Name)
                 .AsQueryable()
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
         }

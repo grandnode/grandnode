@@ -1,7 +1,7 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Seo;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Seo;
 using Grand.Core.Events;
 using Grand.Services.Catalog;
 using MediatR;

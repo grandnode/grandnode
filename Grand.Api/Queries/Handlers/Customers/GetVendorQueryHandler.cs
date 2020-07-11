@@ -23,11 +23,11 @@ namespace Grand.Api.Queries.Handlers.Customers
                 return Task.FromResult(
                     _mongoDBContext.Database()
                     .GetCollection<VendorDto>
-                    (typeof(Core.Domain.Vendors.Vendor).Name)
+                    (typeof(Domain.Vendors.Vendor).Name)
                     .AsQueryable());
             else
                 return Task.FromResult(_mongoDBContext.Database()
-                    .GetCollection<VendorDto>(typeof(Core.Domain.Vendors.Vendor).Name)
+                    .GetCollection<VendorDto>(typeof(Domain.Vendors.Vendor).Name)
                     .AsQueryable()
                     .Where(x => x.Id == request.Id));
         }

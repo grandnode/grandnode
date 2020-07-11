@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Documents;
+﻿using Grand.Domain.Documents;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Documents;
@@ -83,7 +83,7 @@ namespace Grand.Web.Areas.Admin.Services
                                 {
                                     model.Number = order.OrderNumber.ToString();
                                     model.TotalAmount = order.OrderTotal;
-                                    model.OutstandAmount = order.PaymentStatus == Core.Domain.Payments.PaymentStatus.Paid ? 0 : order.OrderTotal;
+                                    model.OutstandAmount = order.PaymentStatus == Domain.Payments.PaymentStatus.Paid ? 0 : order.OrderTotal;
                                     model.CurrencyCode = order.CustomerCurrencyCode;
                                     model.Name = string.Format(_localizationService.GetResource("Order.Document"), model.Number);
                                     model.DocDate = order.CreatedOnUtc;

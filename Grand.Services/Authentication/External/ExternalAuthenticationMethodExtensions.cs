@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using System;
 
 namespace Grand.Services.Authentication.External

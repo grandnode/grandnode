@@ -32,10 +32,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             IAddressAttributeViewModelService addressAttributeViewModelService)
         {
-            this._addressAttributeService = addressAttributeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._addressAttributeViewModelService = addressAttributeViewModelService;
+            _addressAttributeService = addressAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _addressAttributeViewModelService = addressAttributeViewModelService;
         }
 
         #endregion

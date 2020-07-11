@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Media;
+﻿using Grand.Domain.Media;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Media;
 using Grand.Services.Security;
@@ -17,7 +17,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public DownloadController(IDownloadService downloadService)
         {
-            this._downloadService = downloadService;
+            _downloadService = downloadService;
         }
 
         public async Task<IActionResult> DownloadFile(Guid downloadGuid)

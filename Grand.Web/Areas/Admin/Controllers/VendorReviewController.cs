@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
@@ -35,10 +35,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             IWorkContext workContext)
         {
-            this._vendorViewModelService = vendorViewModelService;
-            this._vendorService = vendorService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
+            _vendorViewModelService = vendorViewModelService;
+            _vendorService = vendorService;
+            _localizationService = localizationService;
+            _workContext = workContext;
         }
 
         #endregion

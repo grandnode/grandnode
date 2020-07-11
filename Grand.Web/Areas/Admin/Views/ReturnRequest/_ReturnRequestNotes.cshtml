@@ -101,7 +101,7 @@
         @T("Admin.ReturnRequests.ReturnRequestNotes.AddTitle")
     </strong>
 </p>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.AddReturnRequestNoteHasDownload)").change(toggleAddReturnRequestNoteHasDownload);
         toggleAddReturnRequestNoteHasDownload();
@@ -157,7 +157,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#addReturnRequestNote').click(function () {
             var returnrequestNoteMessage = $("#@Html.FieldIdFor(model => model.AddReturnRequestNoteMessage)").val();

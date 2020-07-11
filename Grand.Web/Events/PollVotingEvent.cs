@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Polls;
+﻿using Grand.Domain.Polls;
 using MediatR;
 
 namespace Grand.Web.Events

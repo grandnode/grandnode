@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Stores;
 using Grand.Web.Models.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;

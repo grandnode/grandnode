@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Vendors;
+﻿using Grand.Domain.Localization;
+using Grand.Domain.Vendors;
 using Grand.Services.Messages.DotLiquidDrops;
 using MediatR;
 

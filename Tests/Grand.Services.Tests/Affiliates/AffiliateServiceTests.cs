@@ -1,6 +1,6 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Affiliates;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Affiliates;
+using Grand.Domain.Orders;
 using Grand.Core.Events;
 using Grand.Services.Affiliates;
 using MediatR;

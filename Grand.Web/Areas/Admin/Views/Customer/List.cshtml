@@ -5,7 +5,7 @@
     ViewBag.Title = T("Admin.Customers.Customers").Text;
 }
 
-<form asp-controller="Customer" asp-action="List" method="post">
+<form asp-area="Admin" asp-controller="Customer" asp-action="List" method="post">
     
     <div class="row">
         <div class="col-md-12">
@@ -269,7 +269,7 @@
             });
     </script>
 
-    <script type="text/javascript">
+    <script>
 
             var selectedIds = [];
 
@@ -445,12 +445,12 @@
 </form>
 
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-<form asp-controller="Customer" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
+<form asp-area="Admin" asp-controller="Customer" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
     
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
@@ -464,12 +464,12 @@
 </script>
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-<form asp-controller="Customer" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
+<form asp-area="Admin" asp-controller="Customer" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
     
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
 
     $(document).ready(function () {
         $('#exportexcel-selected').click(function (e) {

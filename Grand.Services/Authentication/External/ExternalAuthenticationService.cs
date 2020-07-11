@@ -1,7 +1,7 @@
 using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Data;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
 using Grand.Core.Plugins;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -9,6 +9,8 @@ using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
+using Grand.Services.Notifications.Authentication;
+using Grand.Services.Notifications.Customers;
 using Grand.Services.Orders;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -69,23 +71,23 @@ namespace Grand.Services.Authentication.External
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings)
         {
-            this._customerSettings = customerSettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._authenticationService = authenticationService;
-            this._customerActivityService = customerActivityService;
-            this._customerRegistrationService = customerRegistrationService;
-            this._customerService = customerService;
-            this._mediator = mediator;
-            this._genericAttributeService = genericAttributeService;
-            this._httpContextAccessor = httpContextAccessor;
-            this._localizationService = localizationService;
-            this._pluginFinder = pluginFinder;
-            this._externalAuthenticationRecordRepository = externalAuthenticationRecordRepository;
-            this._shoppingCartService = shoppingCartService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
+            _customerSettings = customerSettings;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _authenticationService = authenticationService;
+            _customerActivityService = customerActivityService;
+            _customerRegistrationService = customerRegistrationService;
+            _customerService = customerService;
+            _mediator = mediator;
+            _genericAttributeService = genericAttributeService;
+            _httpContextAccessor = httpContextAccessor;
+            _localizationService = localizationService;
+            _pluginFinder = pluginFinder;
+            _externalAuthenticationRecordRepository = externalAuthenticationRecordRepository;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion

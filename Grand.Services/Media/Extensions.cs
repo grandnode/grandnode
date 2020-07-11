@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Media;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Media;
 using Grand.Services.Catalog;
 using Microsoft.AspNetCore.Http;
 using System;

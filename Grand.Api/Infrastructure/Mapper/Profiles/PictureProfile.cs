@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Common;
-using Grand.Core.Domain.Media;
+using Grand.Domain.Media;
 using Grand.Core.Infrastructure.Mapper;
 
 namespace Grand.Api.Infrastructure.Mapper

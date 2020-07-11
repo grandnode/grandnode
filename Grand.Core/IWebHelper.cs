@@ -118,10 +118,5 @@ namespace Grand.Core
         /// <returns>Raw URL</returns>
         string GetRawUrl(HttpRequest request);
 
-        /// <summary>
-        /// Get machine name
-        /// </summary>
-        /// <returns>Machine name</returns>
-        string GetMachineName();
     }
 }

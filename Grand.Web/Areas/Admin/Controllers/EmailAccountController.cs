@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Messages;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
@@ -31,11 +31,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService, ISettingService settingService,
             EmailAccountSettings emailAccountSettings)
         {
-            this._emailAccountViewModelService = emailAccountViewModelService;
-            this._emailAccountService = emailAccountService;
-            this._localizationService = localizationService;
-            this._emailAccountSettings = emailAccountSettings;
-            this._settingService = settingService;
+            _emailAccountViewModelService = emailAccountViewModelService;
+            _emailAccountService = emailAccountService;
+            _localizationService = localizationService;
+            _emailAccountSettings = emailAccountSettings;
+            _settingService = settingService;
         }
 
         public IActionResult List() => View();

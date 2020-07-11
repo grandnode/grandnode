@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Localization;
 using Grand.Framework.Localization;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Http;

@@ -2,7 +2,7 @@
 using Google.Apis.AnalyticsReporting.v4.Data;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
-using Grand.Core.Domain.Seo;
+using Grand.Domain.Seo;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using System;
@@ -36,7 +36,7 @@ namespace Grand.Services.Configuration
             }
             catch (Exception ex)
             {
-                await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "GoogleAnalytics", ex.Message);
+                await _logger.InsertLog(Domain.Logging.LogLevel.Error, "GoogleAnalytics", ex.Message);
                 return await Task.FromResult<AnalyticsReportingService>(null);
             }
         }

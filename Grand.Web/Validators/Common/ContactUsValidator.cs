@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Grand.Core.Domain.Common;
+using Grand.Domain.Common;
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Models.Common;

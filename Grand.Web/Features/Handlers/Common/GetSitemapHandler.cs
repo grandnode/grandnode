@@ -1,9 +1,9 @@
 ﻿using Grand.Core.Caching;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Knowledgebase;
-using Grand.Core.Domain.News;
+using Grand.Domain.Blogs;
+using Grand.Domain.Common;
+using Grand.Domain.Forums;
+using Grand.Domain.Knowledgebase;
+using Grand.Domain.News;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;

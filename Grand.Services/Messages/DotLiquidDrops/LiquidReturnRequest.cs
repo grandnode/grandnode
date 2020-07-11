@@ -1,6 +1,6 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Orders;
+using Grand.Domain.Stores;
 using Grand.Core.Html;
 using Grand.Services.Orders;
 using System.Collections.Generic;
@@ -16,10 +16,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidReturnRequest(ReturnRequest returnRequest, Store store, Order order, ReturnRequestNote returnRequestNote = null)
         {
-            this._returnRequest = returnRequest;
-            this._order = order;
-            this._store = store;
-            this._returnRequestNote = returnRequestNote;
+            _returnRequest = returnRequest;
+            _order = order;
+            _store = store;
+            _returnRequestNote = returnRequestNote;
                        
             AdditionalTokens = new Dictionary<string, string>();
         }

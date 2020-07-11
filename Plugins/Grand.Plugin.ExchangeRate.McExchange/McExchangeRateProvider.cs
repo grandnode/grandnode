@@ -32,7 +32,7 @@ namespace Grand.Plugin.ExchangeRate.McExchange
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        public Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public Task<IList<Domain.Directory.ExchangeRate>> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
             if(string.IsNullOrEmpty(exchangeRateCurrencyCode))
                 throw new ArgumentNullException(nameof(exchangeRateCurrencyCode));

@@ -1,8 +1,8 @@
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Catalog;
+using Grand.Domain.Directory;
+using Grand.Domain.Localization;
+using Grand.Domain.Tax;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using System;
@@ -34,11 +34,11 @@ namespace Grand.Services.Catalog
             TaxSettings taxSettings,
             CurrencySettings currencySettings)
         {
-            this._workContext = workContext;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._taxSettings = taxSettings;
-            this._currencySettings = currencySettings;
+            _workContext = workContext;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _taxSettings = taxSettings;
+            _currencySettings = currencySettings;
         }
 
         #endregion
@@ -165,11 +165,10 @@ namespace Grand.Services.Catalog
         public virtual async Task<string> FormatPrice(decimal price, bool showCurrency,
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = await _currencyService.GetCurrencyByCode(currencyCode) 
-                ?? new Currency
-                   {
-                       CurrencyCode = currencyCode
-                   };
+            var currency = await _currencyService.GetCurrencyByCode(currencyCode)
+                ?? new Currency {
+                    CurrencyCode = currencyCode
+                };
             return FormatPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
 
@@ -182,10 +181,10 @@ namespace Grand.Services.Catalog
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
-        public virtual string FormatPrice(decimal price, bool showCurrency, 
+        public virtual string FormatPrice(decimal price, bool showCurrency,
             Currency targetCurrency, Language language, bool priceIncludesTax)
         {
-            return FormatPrice(price, showCurrency, targetCurrency, language, 
+            return FormatPrice(price, showCurrency, targetCurrency, language,
                 priceIncludesTax, _taxSettings.DisplayTaxSuffix);
         }
 
@@ -199,7 +198,7 @@ namespace Grand.Services.Catalog
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <returns>Price</returns>
-        public string FormatPrice(decimal price, bool showCurrency, 
+        public string FormatPrice(decimal price, bool showCurrency,
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
             if (targetCurrency == null)
@@ -228,11 +227,11 @@ namespace Grand.Services.Catalog
                 }
                 return string.Format(formatStr, currencyString);
             }
-            
+
             return currencyString;
         }
 
-       
+
 
         /// <summary>
         /// Formats the shipping price
@@ -255,7 +254,7 @@ namespace Grand.Services.Catalog
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
-        public virtual string FormatShippingPrice(decimal price, bool showCurrency, 
+        public virtual string FormatShippingPrice(decimal price, bool showCurrency,
             Currency targetCurrency, Language language, bool priceIncludesTax)
         {
             bool showTax = _taxSettings.ShippingIsTaxable && _taxSettings.DisplayTaxSuffix;
@@ -272,12 +271,12 @@ namespace Grand.Services.Catalog
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <returns>Price</returns>
-        public virtual string FormatShippingPrice(decimal price, bool showCurrency, 
+        public virtual string FormatShippingPrice(decimal price, bool showCurrency,
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
             return FormatPrice(price, showCurrency, targetCurrency, language, priceIncludesTax, showTax);
         }
-        
+
         /// <summary>
         /// Formats the shipping price
         /// </summary>
@@ -287,14 +286,13 @@ namespace Grand.Services.Catalog
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
-        public virtual async Task<string> FormatShippingPrice(decimal price, bool showCurrency, 
+        public virtual async Task<string> FormatShippingPrice(decimal price, bool showCurrency,
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = await _currencyService.GetCurrencyByCode(currencyCode) 
-                ?? new Currency
-                   {
-                       CurrencyCode = currencyCode
-                   };
+            var currency = await _currencyService.GetCurrencyByCode(currencyCode)
+                ?? new Currency {
+                    CurrencyCode = currencyCode
+                };
             return FormatShippingPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
 
@@ -344,7 +342,7 @@ namespace Grand.Services.Catalog
         public virtual string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency)
         {
             bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return FormatPaymentMethodAdditionalFee(price, showCurrency, _workContext.WorkingCurrency, 
+            return FormatPaymentMethodAdditionalFee(price, showCurrency, _workContext.WorkingCurrency,
                 _workContext.WorkingLanguage, priceIncludesTax);
         }
 
@@ -374,10 +372,10 @@ namespace Grand.Services.Catalog
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <returns>Price</returns>
-        public virtual string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency, 
+        public virtual string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency,
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
-            return FormatPrice(price, showCurrency, targetCurrency, language, 
+            return FormatPrice(price, showCurrency, targetCurrency, language,
                 priceIncludesTax, showTax);
         }
 
@@ -390,15 +388,14 @@ namespace Grand.Services.Catalog
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
-        public virtual async Task<string> FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency, 
+        public virtual async Task<string> FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency,
             string currencyCode, Language language, bool priceIncludesTax)
         {
             var currency = await _currencyService.GetCurrencyByCode(currencyCode)
-                ?? new Currency
-                   {
-                       CurrencyCode = currencyCode
-                   };
-            return FormatPaymentMethodAdditionalFee(price, showCurrency, currency, 
+                ?? new Currency {
+                    CurrencyCode = currencyCode
+                };
+            return FormatPaymentMethodAdditionalFee(price, showCurrency, currency,
                 language, priceIncludesTax);
         }
 

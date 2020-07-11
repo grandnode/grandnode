@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
 }
-<form asp-controller="Product" asp-action="Edit" method="post" id="product-form">
+<form asp-area="Admin" asp-controller="Product" asp-action="Edit" method="post" id="product-form">
     
     <div class="row">
         <div class="col-md-12">
@@ -43,7 +43,7 @@
 
     @*copy product form*@
     <div id="copyproduct-window" style="display:none;">
-        <form asp-controller="Product" asp-action="CopyProduct" method="post">
+        <form asp-area="Admin" asp-controller="Product" asp-action="CopyProduct" method="post">
             
             <input asp-for="CopyProductModel.Id" type="hidden" />
             <div class="form-horizontal">
@@ -75,7 +75,7 @@
             </div>
         </form>
     </div>
-    <script type="text/javascript">
+    <script>
     $(document).ready(function () {
         $("#copyproduct").click(function (e) {
             e.preventDefault();

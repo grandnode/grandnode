@@ -1,6 +1,6 @@
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Data;
+using Grand.Domain.Tax;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver;

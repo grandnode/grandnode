@@ -7,7 +7,7 @@
     var canManageDocuments = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageDocuments);
     var canManageGenericAttributes = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageGenericAttributes);
 }
-<form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
+<form asp-area="Admin" asp-controller="Order" asp-action="Edit" method="post" id="order-form">
     
     <div class="row">
         <div class="col-md-12">
@@ -28,7 +28,7 @@
                                 <span id="order-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                             }
                             <input type="submit" id="btnRefreshPage" style="display: none" />
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function () {
                                     $('#btnRefreshPage').click(function () {
                                         //refresh page

@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Media").Text;
 }
-<form asp-controller="Setting" asp-action="Media" method="post">
+<form asp-area="Admin" asp-controller="Setting" asp-action="Media" method="post">
     
     <div asp-validation-summary="All"></div>
     <div class="row">

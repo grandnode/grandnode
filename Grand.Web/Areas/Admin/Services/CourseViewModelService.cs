@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Courses;
-using Grand.Core.Domain.Seo;
+using Grand.Domain.Catalog;
+using Grand.Domain.Courses;
+using Grand.Domain.Seo;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
 using Grand.Services.Courses;

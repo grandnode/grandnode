@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Localization;

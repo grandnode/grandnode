@@ -1,4 +1,4 @@
-﻿@using Grand.Core.Domain.Catalog;
+﻿@using Grand.Domain.Catalog;
 @model ProductModel
 <vc:admin-widget widget-zone="product_details_additional_top" additional-data="Model" />
 <div class="form-horizontal" id="group-order">
@@ -200,7 +200,7 @@
                        onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product",
                                                        new { btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds" }))', 800, 800, true); return false;" class="k-button" />
                 <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#btnRefreshRequiredProducts').click(function () {
                             loadRequiredProductFriendlyNames();

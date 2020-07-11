@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+﻿using Grand.Domain.Common;
 using Grand.Services.Directory;
 using Grand.Services.Stores;
 using Grand.Web.Features.Models.Common;

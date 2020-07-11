@@ -3,7 +3,7 @@
 @{
     if (!String.IsNullOrEmpty(Model.Id))
     {
-        <script type="text/javascript">
+        <script>
                     $(document).ready(function () {
                         $("#@Html.FieldIdFor(model => model.ConditionModel.EnableCondition)").click(toggleEnableCondition);
                         toggleEnableCondition();
@@ -41,7 +41,7 @@
                             <admin-label asp-for="ConditionModel.SelectedAttributeId" />
                             <div class="col-md-9 col-sm-9">
                                 <admin-select asp-for="ConditionModel.SelectedAttributeId" asp-items="Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() })" />
-                                <script type="text/javascript">
+                                <script>
                                     $(document).ready(function() {
                                         $("#@Html.FieldIdFor(model => model.ConditionModel.SelectedAttributeId)").change(toggleConditionAttributes);
                                         toggleConditionAttributes();

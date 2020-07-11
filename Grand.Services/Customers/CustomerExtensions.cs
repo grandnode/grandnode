@@ -1,10 +1,11 @@
 using Grand.Core;
-using Grand.Core.Domain.Customers;
 using Grand.Core.Html;
+using Grand.Domain.Customers;
 using Grand.Services.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace Grand.Services.Customers
 {
     public static class CustomerExtensions

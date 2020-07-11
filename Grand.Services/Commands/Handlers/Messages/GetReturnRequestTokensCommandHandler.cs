@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Tax;
+﻿using Grand.Domain.Messages;
+using Grand.Domain.Tax;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Messages;
 using Grand.Services.Directory;

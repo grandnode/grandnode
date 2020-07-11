@@ -1,5 +1,5 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Core.Html;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidGiftCard(GiftCard giftCard)
         {
-            this._giftCard = giftCard;
+            _giftCard = giftCard;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

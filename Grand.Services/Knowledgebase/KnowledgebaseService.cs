@@ -1,9 +1,10 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Knowledgebase;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Knowledgebase;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using MediatR;

@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Common;
+using Grand.Domain.Common;
 using Grand.Services.Localization;
 using System;
 using System.Collections.Generic;
@@ -20,8 +20,8 @@ namespace Grand.Services.Common
         public AddressAttributeParser(IAddressAttributeService addressAttributeService,
             ILocalizationService localizationService)
         {
-            this._addressAttributeService = addressAttributeService;
-            this._localizationService = localizationService;
+            _addressAttributeService = addressAttributeService;
+            _localizationService = localizationService;
         }
 
         /// <summary>

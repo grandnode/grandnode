@@ -1,6 +1,6 @@
 ﻿@model FeedGoogleShoppingModel
 @using Grand.Plugin.Feed.GoogleShopping.Models;
-@using Grand.Core.Domain.Common;
+@using Grand.Domain.Common;
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -26,7 +26,7 @@
         <div class="editor-field"><input name="CustomGoods" type="checkbox" /></div>
     </script>
 
-    <script type="text/javascript">
+    <script>
     $(document).ready(function() {
         $("#GoogleShoppingproducts-grid").kendoGrid({
             dataSource: {

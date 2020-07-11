@@ -392,10 +392,9 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language ID
         /// {1} : current store ID
-        /// {2} : machine name
         /// </remarks>
         public const string BLOG_MONTHS_MODEL_KEY = "Grand.pres.blog.months-{0}-{1}";
-        public const string BLOG_HOMEPAGE_MODEL_KEY = "Grand.pres.blog.homepage-{0}-{1}-{2}";
+        public const string BLOG_HOMEPAGE_MODEL_KEY = "Grand.pres.blog.homepage-{0}-{1}";
         public const string BLOG_CATEGORY_MODEL_KEY = "Grand.pres.blog.category-{0}-{1}";
         public const string BLOG_PATTERN_KEY = "Grand.pres.blog";
 
@@ -417,10 +416,9 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized category name)
-        /// {4} : machine name
-        /// {5} : current store ID
+        /// {4} : current store ID
         /// </remarks>
-        public const string NEWS_PICTURE_MODEL_KEY = "Grand.pres.news.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string NEWS_PICTURE_MODEL_KEY = "Grand.pres.news.picture-{0}-{1}-{2}-{3}-{4}";
 
         /// <summary>
         /// Key for return request reasons

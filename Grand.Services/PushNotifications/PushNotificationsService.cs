@@ -1,6 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.PushNotifications;
+﻿using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.PushNotifications;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -203,7 +203,7 @@ namespace Grand.Services.PushNotifications
 
                                 if (response.failure > 0)
                                 {
-                                    await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error occured while sending push notification.", sResponseFromServer);
+                                    await _logger.InsertLog(Domain.Logging.LogLevel.Error, "Error occured while sending push notification.", sResponseFromServer);
                                 }
 
                                 await InsertPushMessage(new PushMessage

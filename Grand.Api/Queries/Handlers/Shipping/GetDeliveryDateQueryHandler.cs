@@ -23,13 +23,13 @@ namespace Grand.Api.Queries.Handlers.Shipping
                 return Task.FromResult
                     (_mongoDBContext.Database()
                     .GetCollection<DeliveryDateDto>
-                    (typeof(Core.Domain.Shipping.DeliveryDate).Name)
+                    (typeof(Domain.Shipping.DeliveryDate).Name)
                     .AsQueryable());
             else
                 return Task.FromResult
                     (_mongoDBContext.Database()
                     .GetCollection<DeliveryDateDto>
-                    (typeof(Core.Domain.Shipping.DeliveryDate).Name)
+                    (typeof(Domain.Shipping.DeliveryDate).Name)
                     .AsQueryable()
                     .Where(x => x.Id == request.Id));
         }

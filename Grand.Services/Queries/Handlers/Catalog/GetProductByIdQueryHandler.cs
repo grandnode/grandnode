@@ -1,5 +1,5 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Catalog;
 using Grand.Services.Queries.Models.Catalog;
 using MediatR;
 using System.Threading;

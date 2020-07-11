@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+﻿using Grand.Domain.Common;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Extensions

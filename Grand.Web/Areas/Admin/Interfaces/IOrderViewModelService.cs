@@ -1,6 +1,6 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Orders;
 using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using System;

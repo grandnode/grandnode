@@ -8,7 +8,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.ContactAttributes.Values.AddNew").Text;
 }
-<form asp-controller="ContactAttribute" asp-action="ValueCreatePopup"
+<form asp-area="Admin" asp-controller="ContactAttribute" asp-action="ValueCreatePopup"
       asp-route-contactAttributeId="@Context.Request.Query["contactAttributeId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

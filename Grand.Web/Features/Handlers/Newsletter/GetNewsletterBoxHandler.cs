@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Customers;
 using Grand.Web.Features.Models.Newsletter;
 using Grand.Web.Models.Newsletter;
 using MediatR;

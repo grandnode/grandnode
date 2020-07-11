@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Localization;
+using Grand.Domain.Orders;
 using Grand.Web.Models.Orders;
 using MediatR;
 

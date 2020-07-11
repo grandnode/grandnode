@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Stores;
 using System.Threading.Tasks;
 
 namespace Grand.Core

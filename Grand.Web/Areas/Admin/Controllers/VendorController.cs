@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Vendors;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -38,10 +38,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             IVendorService vendorService,
             ILanguageService languageService)
         {
-            this._vendorViewModelService = vendorViewModelService;
-            this._localizationService = localizationService;
-            this._vendorService = vendorService;
-            this._languageService = languageService;
+            _vendorViewModelService = vendorViewModelService;
+            _localizationService = localizationService;
+            _vendorService = vendorService;
+            _languageService = languageService;
         }
 
         #endregion

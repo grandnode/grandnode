@@ -1,11 +1,11 @@
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Discounts;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
+using Grand.Domain.Tax;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -308,9 +308,12 @@ namespace Grand.Services.Orders
             decimal subTotalInclTaxWithoutDiscount = decimal.Zero;
             foreach (var shoppingCartItem in cart)
             {
+                var product = await _productService.GetProductById(shoppingCartItem.ProductId);
+                if (product == null)
+                    continue;
+
                 var subtotal = await _priceCalculationService.GetSubTotal(shoppingCartItem);
                 decimal sciSubTotal = subtotal.subTotal;
-                var product = await _productService.GetProductById(shoppingCartItem.ProductId);
 
                 decimal taxRate;
                 var pricesExcl = await _taxService.GetProductPrice(product, sciSubTotal, false, customer);

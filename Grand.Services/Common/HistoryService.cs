@@ -1,11 +1,12 @@
-using Grand.Core;
-using Grand.Core.Data;
+using Grand.Domain;
+using Grand.Domain.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using Grand.Domain.History;
 
 namespace Grand.Services.Common
 {

@@ -9,7 +9,7 @@ namespace Grand.Plugin.ExchangeRate.McExchange
 {
     internal class EcbExchange : IRateProvider
     {
-        public async Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRates()
+        public async Task<IList<Domain.Directory.ExchangeRate>> GetCurrencyLiveRates()
         {
             var request = (HttpWebRequest)WebRequest.Create("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml");
             using (var response = await request.GetResponseAsync())
@@ -27,10 +27,10 @@ namespace Grand.Plugin.ExchangeRate.McExchange
                 provider.NumberDecimalSeparator = ".";
                 provider.NumberGroupSeparator = "";
 
-                var exchangeRates = new List<Grand.Core.Domain.Directory.ExchangeRate>();
+                var exchangeRates = new List<Grand.Domain.Directory.ExchangeRate>();
                 foreach (XmlNode node2 in node.ChildNodes)
                 {
-                    exchangeRates.Add(new Core.Domain.Directory.ExchangeRate()
+                    exchangeRates.Add(new Domain.Directory.ExchangeRate()
                         {
                             CurrencyCode = node2.Attributes["currency"].Value,
                             Rate = decimal.Parse(node2.Attributes["rate"].Value, provider),

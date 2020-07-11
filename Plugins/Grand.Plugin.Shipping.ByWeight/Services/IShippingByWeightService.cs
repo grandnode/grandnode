@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+﻿using Grand.Domain;
 using Grand.Plugin.Shipping.ByWeight.Domain;
 using System.Threading.Tasks;
 

@@ -1,8 +1,9 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Vendors;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;

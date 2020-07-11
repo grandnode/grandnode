@@ -5,7 +5,7 @@
 }
 @model OrderModel
 
-<form asp-controller="Order" asp-action="PartiallyRefundOrderPopup" method="post"
+<form asp-area="Admin" asp-controller="Order" asp-action="PartiallyRefundOrderPopup" method="post"
       asp-route-OrderId="@Context.Request.Query["OrderId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-online="@Context.Request.Query["online"]"
@@ -51,7 +51,7 @@
     <div asp-validation-summary="All"></div>
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();

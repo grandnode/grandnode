@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Grand.Api.DTOs.Catalog;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;

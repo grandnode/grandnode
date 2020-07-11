@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Payments;
+using Grand.Domain.Payments;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -52,15 +52,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWebHelper webHelper,
             ILocalizationService localizationService)
 		{
-            this._paymentService = paymentService;
-            this._paymentSettings = paymentSettings;
-            this._settingService = settingService;
-            this._countryService = countryService;
-            this._customerService = customerService;
-            this._shippingService = shippingService;
-            this._pluginFinder = pluginFinder;
-            this._webHelper = webHelper;
-            this._localizationService = localizationService;
+            _paymentService = paymentService;
+            _paymentSettings = paymentSettings;
+            _settingService = settingService;
+            _countryService = countryService;
+            _customerService = customerService;
+            _shippingService = shippingService;
+            _pluginFinder = pluginFinder;
+            _webHelper = webHelper;
+            _localizationService = localizationService;
 		}
 
 		#endregion 

@@ -22,9 +22,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             IContactFormViewModelService contactFormViewModelService,
             ILocalizationService localizationService)
 		{
-            this._contactUsService = contactUsService;
-            this._contactFormViewModelService = contactFormViewModelService;
-            this._localizationService = localizationService;
+            _contactUsService = contactUsService;
+            _contactFormViewModelService = contactFormViewModelService;
+            _localizationService = localizationService;
         }
 
         public IActionResult Index() => RedirectToAction("List");

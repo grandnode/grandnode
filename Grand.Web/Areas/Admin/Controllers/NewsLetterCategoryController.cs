@@ -31,10 +31,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         public NewsletterCategoryController(INewsletterCategoryService newsletterCategoryService, ILanguageService languageService,
             ILocalizationService localizationService, IStoreService storeService)
         {
-            this._newsletterCategoryService = newsletterCategoryService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
+            _newsletterCategoryService = newsletterCategoryService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeService = storeService;
         }
 
         #endregion

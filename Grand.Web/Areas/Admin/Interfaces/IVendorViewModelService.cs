@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Vendors;
+﻿using Grand.Domain.Vendors;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Vendors;
 using System.Collections.Generic;

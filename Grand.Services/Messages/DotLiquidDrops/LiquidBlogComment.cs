@@ -1,7 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Blogs;
+using Grand.Domain.Localization;
+using Grand.Domain.Stores;
 using Grand.Services.Seo;
 using System.Collections.Generic;
 
@@ -15,10 +15,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly Language _language;
         public LiquidBlogComment(BlogComment blogComment, BlogPost blogPost, Store store, Language language)
         {
-            this._blogComment = blogComment;
-            this._blogPost = blogPost;
-            this._store = store;
-            this._language = language;
+            _blogComment = blogComment;
+            _blogPost = blogPost;
+            _store = store;
+            _language = language;
             AdditionalTokens = new Dictionary<string, string>();
         }
 

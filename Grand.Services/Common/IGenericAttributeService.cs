@@ -1,4 +1,4 @@
-using Grand.Core;
+using Grand.Domain;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Common

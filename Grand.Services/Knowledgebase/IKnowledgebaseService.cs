@@ -1,5 +1,5 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Knowledgebase;
+﻿using Grand.Domain;
+using Grand.Domain.Knowledgebase;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

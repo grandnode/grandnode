@@ -1,4 +1,4 @@
-﻿@using Grand.Core.Domain.Catalog
+﻿@using Grand.Domain.Catalog
 @model ProductModel.ProductAttributeValueModel
 @{
     Html.AddScriptParts("~/scripts/farbtastic.js", excludeFromBundle: true);
@@ -12,13 +12,13 @@
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
     </script>
 }
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         
         $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").change(toggleProductType);
@@ -104,7 +104,7 @@
                 <div class="col-md-9 col-sm-9">
                     <admin-input asp-for="ColorSquaresRgb" />
                     <div id="color-picker"></div>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function(){
                             $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
                         });

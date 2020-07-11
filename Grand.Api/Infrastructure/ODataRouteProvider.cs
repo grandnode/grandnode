@@ -28,7 +28,6 @@ namespace Grand.Api.Infrastructure
                 routeBuilder.Count().Filter().OrderBy().MaxTop(Configurations.MaxLimit);
                 routeBuilder.MapODataRoute(Configurations.ODataRouteName, Configurations.ODataRoutePrefix, model);
                 routeBuilder.EnableDependencyInjection();
-
             }
         }
 

@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Affiliates;
+using Grand.Domain.Affiliates;
 using Grand.Services.Affiliates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -41,7 +41,7 @@ namespace Grand.Services.Tests.Affiliates
         {
             var firstName = "Test name";
             Affiliate affiliate = new Affiliate {
-                Address = new Core.Domain.Common.Address() { FirstName = firstName}
+                Address = new Domain.Common.Address() { FirstName = firstName}
             };
             Assert.AreEqual(firstName, affiliate.GetFullName());
         }
@@ -51,7 +51,7 @@ namespace Grand.Services.Tests.Affiliates
         {
             var lastName = "Test name";
             Affiliate affiliate = new Affiliate {
-                Address = new Core.Domain.Common.Address() { LastName=lastName }
+                Address = new Domain.Common.Address() { LastName=lastName }
             };
             Assert.AreEqual(lastName, affiliate.GetFullName());
         }
@@ -61,7 +61,7 @@ namespace Grand.Services.Tests.Affiliates
         {
             var fullName = string.Format("{0} {1}", "first name", "lastName");
             Affiliate affiliate = new Affiliate {
-                Address = new Core.Domain.Common.Address() { LastName = "lastName",FirstName="first name" }
+                Address = new Domain.Common.Address() { LastName = "lastName",FirstName="first name" }
             };
             Assert.AreEqual(fullName, affiliate.GetFullName());
         }
@@ -112,7 +112,7 @@ namespace Grand.Services.Tests.Affiliates
             Affiliate affiliate = new Affiliate() {
                 FriendlyUrlName = friendlyUrl
             };
-            var result =await affiliate.ValidateFriendlyUrlName(_affiliateServiceMock.Object, new Core.Domain.Seo.SeoSettings(), friendlyUrl);
+            var result =await affiliate.ValidateFriendlyUrlName(_affiliateServiceMock.Object, new Domain.Seo.SeoSettings(), friendlyUrl);
             Assert.AreEqual(result, friendlyUrl);
         }
 
@@ -132,7 +132,7 @@ namespace Grand.Services.Tests.Affiliates
             Affiliate affiliate = new Affiliate() {
                 FriendlyUrlName = friendlyUrl
             };
-            var result = await affiliate.ValidateFriendlyUrlName(_affiliateServiceMock.Object, new Core.Domain.Seo.SeoSettings(), friendlyUrl);
+            var result = await affiliate.ValidateFriendlyUrlName(_affiliateServiceMock.Object, new Domain.Seo.SeoSettings(), friendlyUrl);
             Assert.AreEqual(result, expectedUrl);
         }
     }

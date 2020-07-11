@@ -1,6 +1,6 @@
 ﻿@model DashboardModel
 @inject Grand.Services.Security.IPermissionService permissionService
-@inject Grand.Core.Domain.Customers.CustomerSettings customerSettings
+@inject Grand.Domain.Customers.CustomerSettings customerSettings
 @inject Grand.Services.Customers.ICustomerService customerService
 @inject Grand.Services.Orders.IOrderReportService orderReportService
 @inject Grand.Services.Catalog.IPriceFormatter priceFormatter
@@ -253,7 +253,7 @@
     </div>
 }
 <vc:admin-widget widget-zone="admin_dashboard_bottom" additional-data="null" />
-<script type="text/javascript">
+<script>
     $(document).ready(function (e) {
         var site = site || {};
         site.baseUrl = site.baseUrl || "";

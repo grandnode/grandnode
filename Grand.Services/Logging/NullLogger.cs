@@ -1,6 +1,6 @@
-using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Logging;
+using Grand.Domain;
+using Grand.Domain.Customers;
+using Grand.Domain.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

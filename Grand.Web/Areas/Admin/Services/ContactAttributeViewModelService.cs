@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Catalog;
+using Grand.Domain.Messages;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;

@@ -1,5 +1,5 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Courses;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Courses;
 using Grand.Core.Events;
 using Grand.Services.Courses;
 using MediatR;
