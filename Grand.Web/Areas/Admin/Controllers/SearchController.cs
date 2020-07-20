@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    public class AdminSearchController : BaseAdminController
+    public class SearchController : BaseAdminController
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
@@ -32,7 +32,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
 
-        public AdminSearchController(IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
+        public SearchController(IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
             ITopicService topicService, INewsService newsService, IBlogService blogService, ICustomerService customerService, IOrderService orderService,
             AdminSearchSettings adminSearchSettings, ILocalizationService localizationService, IWorkContext workContext)
         {
@@ -50,7 +50,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Search(string searchTerm, FoundMenuItem[] foundMenuItems)
+        public async Task<IActionResult> Index(string searchTerm, FoundMenuItem[] foundMenuItems)
         {
             if (string.IsNullOrEmpty(searchTerm))
                 return Json("error");
