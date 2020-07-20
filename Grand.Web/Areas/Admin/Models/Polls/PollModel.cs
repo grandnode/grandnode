@@ -1,16 +1,13 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Polls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Polls
 {
-    [Validator(typeof(PollValidator))]
     public partial class PollModel : BaseGrandEntityModel, ILocalizedModel<PollLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
 
@@ -22,11 +19,11 @@ namespace Grand.Web.Areas.Admin.Models.Polls
         }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.SystemKeyword")]
-        
+
         public string SystemKeyword { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.Published")]

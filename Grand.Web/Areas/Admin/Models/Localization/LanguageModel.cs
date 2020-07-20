@@ -1,14 +1,11 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mapping;
+﻿using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Localization
 {
-    [Validator(typeof(LanguageValidator))]
     public partial class LanguageModel : BaseGrandEntityModel, IStoreMappingModel
     {
         public LanguageModel()
@@ -19,20 +16,20 @@ namespace Grand.Web.Areas.Admin.Models.Localization
             AvailableStores = new List<StoreModel>();
         }
         [GrandResourceDisplayName("Admin.Configuration.Languages.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Languages.Fields.LanguageCulture")]
-        
+
         public string LanguageCulture { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Languages.Fields.UniqueSeoCode")]
-        
+
         public string UniqueSeoCode { get; set; }
-        
+
         //flags
         [GrandResourceDisplayName("Admin.Configuration.Languages.Fields.FlagImageFileName")]
-        
+
         public string FlagImageFileName { get; set; }
         public IList<string> FlagFileNames { get; set; }
 
@@ -41,7 +38,7 @@ namespace Grand.Web.Areas.Admin.Models.Localization
 
         //default currency
         [GrandResourceDisplayName("Admin.Configuration.Languages.Fields.DefaultCurrency")]
-        
+
         public string DefaultCurrencyId { get; set; }
         public IList<SelectListItem> AvailableCurrencies { get; set; }
 

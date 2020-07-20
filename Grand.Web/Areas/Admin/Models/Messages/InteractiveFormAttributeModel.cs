@@ -1,14 +1,11 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Messages;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    [Validator(typeof(InteractiveFormAttributeValidator))]
     public partial class InteractiveFormAttributeModel : BaseGrandEntityModel, ILocalizedModel<InteractiveFormAttributeLocalizedModel>
     {
         public InteractiveFormAttributeModel()
@@ -23,7 +20,7 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.SystemName")]
         public string SystemName { get; set; }
 
-        
+
         [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.RegexValidation")]
         public string RegexValidation { get; set; }
 

@@ -1,12 +1,9 @@
-﻿using FluentValidation.Attributes;
-using Grand.Api.Validators.Catalog;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
 using System.Collections.Generic;
 
 namespace Grand.Api.DTOs.Catalog
 {
-    [Validator(typeof(SpecificationAttributeValidator))]
-    public partial class SpecificationAttributeDto: BaseApiEntityModel
+    public partial class SpecificationAttributeDto : BaseApiEntityModel
     {
         public SpecificationAttributeDto()
         {

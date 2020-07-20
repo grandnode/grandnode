@@ -10,16 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="3.3.106.23" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.110.69" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.107.26" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.111.27" />
     <PackageReference Include="EPPlus" Version="4.5.3.2" />
-    <PackageReference Include="Google.Apis" Version="1.45.0" />
-    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.45.0.1943" />
+    <PackageReference Include="Google.Apis" Version="1.48.0" />
+    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.48.0.2014" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.6.7" />
-    <PackageReference Include="MailKit" Version="2.6.0" />
+    <PackageReference Include="MailKit" Version="2.8.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.2.0" />
-    <PackageReference Include="SkiaSharp" Version="1.68.2.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="1.68.2.1" />
+    <PackageReference Include="SkiaSharp" Version="2.80.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.1" />
 
     <!-- For support Raspberry pi 4 
       <PackageReference Include="SkiaSharp" Version="1.68.0" />

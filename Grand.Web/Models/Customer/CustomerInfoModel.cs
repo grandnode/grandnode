@@ -1,9 +1,7 @@
-﻿using FluentValidation.Attributes;
-using Grand.Domain.Customers;
+﻿using Grand.Domain.Customers;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Newsletter;
-using Grand.Web.Validators.Customer;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -11,7 +9,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Customer
 {
-    [Validator(typeof(CustomerInfoValidator))]
     public partial class CustomerInfoModel : BaseGrandModel
     {
         public CustomerInfoModel()
@@ -127,7 +124,7 @@ namespace Grand.Web.Models.Customer
 
         //2factory
         public bool Is2faEnabled { get; set; }
-        
+
         //time zone
         [GrandResourceDisplayName("Account.Fields.TimeZone")]
         public string TimeZoneId { get; set; }
@@ -147,8 +144,8 @@ namespace Grand.Web.Models.Customer
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
 
-        public IList<NewsletterSimpleCategory> NewsletterCategories { get; set; }        
-        
+        public IList<NewsletterSimpleCategory> NewsletterCategories { get; set; }
+
 
         #region Nested classes
 

@@ -1,13 +1,10 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Messages;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    [Validator(typeof(ContactAttributeValueValidator))]
     public partial class ContactAttributeValueModel : BaseGrandEntityModel, ILocalizedModel<ContactAttributeValueLocalizedModel>
     {
         public ContactAttributeValueModel()
@@ -28,7 +25,7 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         public bool IsPreSelected { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.ContactAttributes.Values.Fields.DisplayOrder")]
-        public int DisplayOrder {get;set;}
+        public int DisplayOrder { get; set; }
 
         public IList<ContactAttributeValueLocalizedModel> Locales { get; set; }
 

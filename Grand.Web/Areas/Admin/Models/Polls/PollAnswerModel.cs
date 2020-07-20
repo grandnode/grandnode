@@ -1,13 +1,10 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Polls;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Polls
 {
-    [Validator(typeof(PollAnswerValidator))]
     public partial class PollAnswerModel : BaseGrandEntityModel, ILocalizedModel<PollAnswerLocalizedModel>
     {
         public PollAnswerModel()
@@ -18,7 +15,7 @@ namespace Grand.Web.Areas.Admin.Models.Polls
         public string PollId { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Polls.Answers.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes")]
@@ -37,7 +34,7 @@ namespace Grand.Web.Areas.Admin.Models.Polls
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Polls.Answers.Fields.Name")]
-        
+
         public string Name { get; set; }
     }
 

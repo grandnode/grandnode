@@ -1,10 +1,7 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.Models;
-using Grand.Web.Validators.PrivateMessages;
+﻿using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Models.PrivateMessages
 {
-    [Validator(typeof(SendPrivateMessageValidator))]
     public partial class SendPrivateMessageModel : BaseGrandEntityModel
     {
         public string ToCustomerId { get; set; }

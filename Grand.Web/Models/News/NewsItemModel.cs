@@ -1,13 +1,10 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Media;
-using Grand.Web.Validators.News;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.News
 {
-    [Validator(typeof(NewsItemValidator))]
     public partial class NewsItemModel : BaseGrandEntityModel
     {
         public NewsItemModel()

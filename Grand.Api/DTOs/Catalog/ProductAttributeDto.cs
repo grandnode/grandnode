@@ -1,11 +1,8 @@
-﻿using FluentValidation.Attributes;
-using Grand.Api.Validators.Catalog;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
 using System.Collections.Generic;
 
 namespace Grand.Api.DTOs.Catalog
 {
-    [Validator(typeof(ProductAttributeValidator))]
     public partial class ProductAttributeDto : BaseApiEntityModel
     {
         public ProductAttributeDto()
@@ -17,7 +14,7 @@ namespace Grand.Api.DTOs.Catalog
         public IList<PredefinedProductAttributeValueDto> PredefinedProductAttributeValues { get; set; }
     }
 
-    public partial class PredefinedProductAttributeValueDto: BaseApiEntityModel
+    public partial class PredefinedProductAttributeValueDto : BaseApiEntityModel
     {
         public string Name { get; set; }
         public decimal PriceAdjustment { get; set; }

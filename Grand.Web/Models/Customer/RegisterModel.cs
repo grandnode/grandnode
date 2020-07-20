@@ -1,8 +1,6 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Newsletter;
-using Grand.Web.Validators.Customer;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -10,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Customer
 {
-    [Validator(typeof(RegisterValidator))]
     public partial class RegisterModel : BaseGrandModel
     {
         public RegisterModel()
@@ -121,11 +118,11 @@ namespace Grand.Web.Models.Customer
 
         [GrandResourceDisplayName("Account.Fields.Fax")]
         public string Fax { get; set; }
-        
+
         public bool NewsletterEnabled { get; set; }
         [GrandResourceDisplayName("Account.Fields.Newsletter")]
         public bool Newsletter { get; set; }
-        
+
         public bool AcceptPrivacyPolicyEnabled { get; set; }
 
         //time zone

@@ -1,11 +1,8 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Common;
 
 namespace Grand.Web.Areas.Admin.Models.Common
 {
-    [Validator(typeof(ReviewValidator))]
     public partial class ReviewModel : BaseGrandEntityModel
     {
         /// <summary>
