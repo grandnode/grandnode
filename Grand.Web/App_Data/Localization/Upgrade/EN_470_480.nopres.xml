@@ -11,4 +11,10 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort">
     <Value>Encryption private key must be 24 characters long</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Owner">
+    <Value>Owner</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Owner.hint">
+    <Value>Allow to assign owner email account</Value>
+  </LocaleResource>
 </Language>
