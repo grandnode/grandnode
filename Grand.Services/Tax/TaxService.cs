@@ -1,18 +1,17 @@
 using Grand.Core;
+using Grand.Core.Plugins;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
 using Grand.Domain.Orders;
 using Grand.Domain.Tax;
-using Grand.Core.Plugins;
 using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Tax
@@ -652,119 +651,6 @@ namespace Grand.Services.Tax
         }
 
 
-        /// <summary>
-        /// Gets VAT Number status
-        /// </summary>
-        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
-        /// <param name="name">Name (if received)</param>
-        /// <param name="address">Address (if received)</param>
-        /// <returns>VAT Number status</returns>
-        public virtual async Task<(VatNumberStatus status, string name, string address, Exception exception)> GetVatNumberStatus(string fullVatNumber)
-        {
-            string name = string.Empty;
-            string address = string.Empty;
-
-            if (String.IsNullOrWhiteSpace(fullVatNumber))
-                return (VatNumberStatus.Empty, name, address, null);
-
-            fullVatNumber = fullVatNumber.Trim();
-
-            //GB 111 1111 111 or GB 1111111111
-            //more advanced regex - http://codeigniter.com/wiki/European_Vat_Checker
-            var r = new Regex(@"^(\w{2})(.*)");
-            var match = r.Match(fullVatNumber);
-            if (!match.Success)
-                return (VatNumberStatus.Invalid, name, address, null);
-            var twoLetterIsoCode = match.Groups[1].Value;
-            var vatNumber = match.Groups[2].Value;
-
-            return await GetVatNumberStatus(twoLetterIsoCode, vatNumber);
-        }
-
-
-        /// <summary>
-        /// Gets VAT Number status
-        /// </summary>
-        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
-        /// <param name="vatNumber">VAT number</param>
-        /// <param name="name">Name (if received)</param>
-        /// <param name="address">Address (if received)</param>
-        /// <returns>VAT Number status</returns>
-        public virtual async Task<(VatNumberStatus status, string name, string address, Exception exception)> GetVatNumberStatus(string twoLetterIsoCode, string vatNumber)
-        {
-            string name = string.Empty;
-            string address = string.Empty;
-
-            if (String.IsNullOrEmpty(twoLetterIsoCode))
-                return (VatNumberStatus.Empty, name, address, null);
-
-            if (String.IsNullOrEmpty(vatNumber))
-                return (VatNumberStatus.Empty, name, address, null);
-
-            if (_taxSettings.EuVatAssumeValid)
-                return (VatNumberStatus.Valid, name, address, null);
-
-            if (!_taxSettings.EuVatUseWebService)
-                return (VatNumberStatus.Unknown, name, address, null);
-
-            return await DoVatCheck(twoLetterIsoCode, vatNumber);
-        }
-
-        /// <summary>
-        /// Performs a basic check of a VAT number for validity
-        /// </summary>
-        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
-        /// <param name="vatNumber">VAT number</param>
-        /// <param name="name">Company name</param>
-        /// <param name="address">Address</param>
-        /// <param name="exception">Exception</param>
-        /// <returns>VAT number status</returns>
-        public virtual async Task<(VatNumberStatus status, string name, string address, Exception exception)>
-            DoVatCheck(string twoLetterIsoCode, string vatNumber)
-        {
-            var name = string.Empty;
-            var address = string.Empty;
-
-            if (vatNumber == null)
-                vatNumber = string.Empty;
-            vatNumber = vatNumber.Trim().Replace(" ", "");
-
-            if (twoLetterIsoCode == null)
-                twoLetterIsoCode = string.Empty;
-            if (!String.IsNullOrEmpty(twoLetterIsoCode))
-                //The service returns INVALID_INPUT for country codes that are not uppercase.
-                twoLetterIsoCode = twoLetterIsoCode.ToUpper();
-
-            EuropaCheckVatService.checkVatPortTypeClient s = null;
-
-            try
-            {
-                s = new EuropaCheckVatService.checkVatPortTypeClient();
-                var result = await s.checkVatAsync(new EuropaCheckVatService.checkVatRequest {
-                    vatNumber = vatNumber,
-                    countryCode = twoLetterIsoCode
-                });
-
-                var valid = result.valid;
-                name = result.name;
-                address = result.address;
-
-                return (valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid, name, address, null);
-            }
-            catch (Exception ex)
-            {
-                return (VatNumberStatus.Unknown, string.Empty, string.Empty, ex);
-            }
-            finally
-            {
-                if (name == null)
-                    name = string.Empty;
-
-                if (address == null)
-                    address = string.Empty;
-            }
-
-        }
 
         /// <summary>
         /// Gets a value indicating whether a product is tax exempt

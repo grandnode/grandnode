@@ -912,9 +912,10 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     if (!model.VatNumber.Equals(prevVatNumber, StringComparison.OrdinalIgnoreCase))
                     {
+                        var checkVatService = _serviceProvider.GetRequiredService<IVatService>();
                         await _genericAttributeService.SaveAttribute(customer,
                             SystemCustomerAttributeNames.VatNumberStatusId,
-                            (int)(await _taxService.GetVatNumberStatus(model.VatNumber)).status);
+                            (int)(await checkVatService.GetVatNumberStatus(model.VatNumber)).status);
                     }
                 }
                 else
