@@ -723,6 +723,12 @@
   <LocaleResource Name="Account.RewardPoints">
     <Value>Reward points</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.SubAccounts">
+    <Value>Subaccounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccounts.NotExists">
+    <Value>No subaccounts</Value>
+  </LocaleResource>
   <LocaleResource Name="account.twofactorauth">
     <Value>Two Factor Authentication</Value>
   </LocaleResource>
@@ -19462,6 +19468,9 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.StoreClosed">
     <Value>Store closed</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.SubAccounts">
+    <Value>Subaccounts</Value>
   </LocaleResource>
   <LocaleResource Name="pagetitle.twofactorauth">
     <Value>Enable Two Factor Authentication</Value>

@@ -1293,5 +1293,26 @@ namespace Grand.Web.Controllers
         }
 
         #endregion
+
+        #region My account / Sub accounts
+
+        public virtual async Task<IActionResult> SubAccounts()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+                return Challenge();
+
+            if (_customerSettings.HideSubAccountsTab)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = await _mediator.Send(new GetSubAccounts() { Customer = _workContext.CurrentCustomer });
+
+            return View(model);
+        }
+
+        #endregion
+
     }
 }

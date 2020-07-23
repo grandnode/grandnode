@@ -17,4 +17,13 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.Owner.hint">
     <Value>Allow to assign owner email account</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.SubAccounts">
+    <Value>Subaccounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccounts">
+    <Value>Subaccounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccounts.NotExists">
+    <Value>No subaccounts</Value>
+  </LocaleResource>
 </Language>

@@ -1001,6 +1001,17 @@ namespace Grand.Services.Installation
             await InstallStringResources("EN_470_480.nopres.xml");
 
             #endregion
+
+
+            #region Update customer settings
+
+            var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
+            var customerSettings = _serviceProvider.GetRequiredService<CustomerSettings>();
+            customerSettings.HideSubAccountsTab = true;
+            await _settingService.SaveSetting(customerSettings);
+
+            #endregion
+
         }
 
         private async Task InstallStringResources(string filenames)

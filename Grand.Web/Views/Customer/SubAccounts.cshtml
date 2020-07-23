@@ -1,0 +1,48 @@
+﻿@model IList<SubAccountModel>
+@using Grand.Web.Models.Customer;
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.SubAccounts").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.SubAccounts })
+}
+
+<div class="page account-page subaccounts-list-page pl-lg-3 pt-lg-0 pt-3">
+    @Html.AntiForgeryToken()
+    <h1 class="h2 generalTitle">@T("Account.SubAccounts")</h1>
+    @if (Model.Any())
+    {
+        <div class="col-12 px-0">
+            <div class="row account-list">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var account = Model[i];
+                    <div class="col-md-6 col-12 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h5><strong>@account.FirstName @account.LastName</strong></h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="account-item">
+                                    @account.Email
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="no-data">
+            @T("Account.SubAccounts.NotExists")
+        </div>
+    }
+</div>

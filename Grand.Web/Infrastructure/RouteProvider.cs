@@ -163,6 +163,10 @@ namespace Grand.Web.Infrastructure
                             pattern + "customer/reviews",
                             new { controller = "Customer", action = "Reviews" });
 
+            routeBuilder.MapControllerRoute("CustomerSubAccounts",
+                            pattern + "customer/subaccounts",
+                            new { controller = "Customer", action = "SubAccounts" });
+
             routeBuilder.MapControllerRoute("CustomerDownloadableProducts",
                             pattern + "customer/downloadableproducts",
                             new { controller = "Customer", action = "DownloadableProducts" });
