@@ -23,6 +23,7 @@ namespace Grand.Services.Tax.Tests
         private IWorkContext _workContext;
         private TaxSettings _taxSettings;
         private ITaxService _taxService;
+        private IVatService _vatService;
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
         private CustomerSettings _customerSettings;
@@ -53,17 +54,9 @@ namespace Grand.Services.Tax.Tests
             _taxService = new TaxService(_addressService, _workContext, 
                 _pluginFinder, _geoLookupService, _countryService, _logger,
                 _taxSettings, _customerSettings, _addressSettings);
+
+            _vatService = new VatService(_taxSettings);
         }
-
-        //TO DO
-        //[TestMethod()]
-        //public void Can_load_taxProviders()
-        //{
-
-        //    var providers = _taxService.LoadAllTaxProviders();
-        //    Assert.IsNotNull(providers);
-        //    Assert.IsTrue(providers.Count > 0);
-        //}
 
         [TestMethod()]
         public void Can_check_taxExempt_product()
@@ -135,7 +128,7 @@ namespace Grand.Services.Tax.Tests
         public async Task Should_assume_valid_VAT_number_if_EuVatAssumeValid_setting_is_true()
         {
             _taxSettings.EuVatAssumeValid = true;
-            VatNumberStatus vatNumberStatus = (await _taxService.GetVatNumberStatus("GB", "000 0000 00")).status;
+            VatNumberStatus vatNumberStatus = (await _vatService.GetVatNumberStatus("GB", "000 0000 00")).status;
             Assert.AreEqual(VatNumberStatus.Valid, vatNumberStatus);
         }
 

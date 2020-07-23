@@ -1,13 +1,10 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Shipping;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Shipping
 {
-    [Validator(typeof(ShippingMethodValidator))]
     public partial class ShippingMethodModel : BaseGrandEntityModel, ILocalizedModel<ShippingMethodLocalizedModel>
     {
         public ShippingMethodModel()
@@ -15,11 +12,11 @@ namespace Grand.Web.Areas.Admin.Models.Shipping
             Locales = new List<ShippingMethodLocalizedModel>();
         }
         [GrandResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Description")]
-        
+
         public string Description { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder")]
@@ -33,11 +30,11 @@ namespace Grand.Web.Areas.Admin.Models.Shipping
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Description")]
-        
+
         public string Description { get; set; }
 
     }

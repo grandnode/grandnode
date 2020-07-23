@@ -14,7 +14,7 @@
     <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
     <PackageReference Include="MongoDB.Driver.Core" Version="2.10.4" />
     <PackageReference Include="MongoDB.Driver.GridFS" Version="2.10.4" />
-    <PackageReference Include="DotLiquid" Version="2.0.333" />
+    <PackageReference Include="DotLiquid" Version="2.0.361" />
   </ItemGroup>
 
 </Project>

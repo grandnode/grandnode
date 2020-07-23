@@ -1,13 +1,10 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Settings;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
-    [Validator(typeof(ReturnRequestReasonValidator))]
     public partial class ReturnRequestReasonModel : BaseGrandEntityModel, ILocalizedModel<ReturnRequestReasonLocalizedModel>
     {
         public ReturnRequestReasonModel()
@@ -16,7 +13,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         }
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder")]
@@ -30,7 +27,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")]
-        
+
         public string Name { get; set; }
 
     }

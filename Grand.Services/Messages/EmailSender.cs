@@ -1,5 +1,4 @@
 ﻿using Grand.Domain.Messages;
-using Grand.Services.Logging;
 using Grand.Services.Media;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -65,7 +64,7 @@ namespace Grand.Services.Messages
             {
                 foreach (var address in bccAddresses.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
                 {
-                    message.Bcc.Add(new MailboxAddress(address.Trim()));
+                    message.Bcc.Add(MailboxAddress.Parse(address.Trim()));
                 }
             }
 
@@ -74,7 +73,7 @@ namespace Grand.Services.Messages
             {
                 foreach (var address in ccAddresses.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
                 {
-                    message.Cc.Add(new MailboxAddress(address.Trim()));
+                    message.Cc.Add(MailboxAddress.Parse(address.Trim()));
                 }
             }
 

@@ -12215,6 +12215,12 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter.Hint">
     <Value>Check to subscribe to newsletter.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Owner">
+    <Value>Owner</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Owner.hint">
+    <Value>Allow to assign owner email account</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Password">
     <Value>Password</Value>
   </LocaleResource>

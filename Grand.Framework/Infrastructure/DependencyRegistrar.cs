@@ -455,6 +455,7 @@ namespace Grand.Framework.Infrastructure
         private void RegisterTaxService(ContainerBuilder builder)
         {
             builder.RegisterType<TaxService>().As<ITaxService>().InstancePerLifetimeScope();
+            builder.RegisterType<VatService>().As<IVatService>().InstancePerLifetimeScope();
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerLifetimeScope();
         }
 

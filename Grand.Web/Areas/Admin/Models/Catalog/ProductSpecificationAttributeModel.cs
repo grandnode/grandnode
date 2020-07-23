@@ -1,20 +1,17 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Catalog;
+﻿using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    [Validator(typeof(ProductSpecificationAttributeModelValidator))]
     public partial class ProductSpecificationAttributeModel : BaseGrandEntityModel
     {
         public int AttributeTypeId { get; set; }
-        
+
         public string AttributeTypeName { get; set; }
-        
+
         public string AttributeName { get; set; }
 
         public string AttributeId { get; set; }
-        
+
         public string ValueRaw { get; set; }
 
         public bool AllowFiltering { get; set; }

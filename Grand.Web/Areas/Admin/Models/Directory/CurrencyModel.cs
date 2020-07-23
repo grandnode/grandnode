@@ -1,16 +1,13 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Directory;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Directory
 {
-    [Validator(typeof(CurrencyValidator))]
     public partial class CurrencyModel : BaseGrandEntityModel, ILocalizedModel<CurrencyLocalizedModel>, IStoreMappingModel
     {
         public CurrencyModel()
@@ -19,15 +16,15 @@ namespace Grand.Web.Areas.Admin.Models.Directory
             AvailableStores = new List<StoreModel>();
         }
         [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.CurrencyCode")]
-        
+
         public string CurrencyCode { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.DisplayLocale")]
-        
+
         public string DisplayLocale { get; set; }
 
         [UIHint("DecimalN4")]
@@ -35,7 +32,7 @@ namespace Grand.Web.Areas.Admin.Models.Directory
         public decimal Rate { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.CustomFormatting")]
-        
+
         public string CustomFormatting { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.Published")]
@@ -74,7 +71,7 @@ namespace Grand.Web.Areas.Admin.Models.Directory
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
-        
+
         public string Name { get; set; }
     }
 }

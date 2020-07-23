@@ -1,14 +1,11 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Plugins;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Plugins
 {
-    [Validator(typeof(PluginValidator))]
     public partial class PluginModel : BaseGrandModel, ILocalizedModel<PluginLocalizedModel>, IStoreMappingModel
     {
         public PluginModel()
@@ -17,23 +14,23 @@ namespace Grand.Web.Areas.Admin.Models.Plugins
             AvailableStores = new List<StoreModel>();
         }
         [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.Group")]
-        
+
         public string Group { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.FriendlyName")]
-        
+
         public string FriendlyName { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.SystemName")]
-        
+
         public string SystemName { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.Version")]
-        
+
         public string Version { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.Author")]
-        
+
         public string Author { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.DisplayOrder")]
@@ -67,7 +64,7 @@ namespace Grand.Web.Areas.Admin.Models.Plugins
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.FriendlyName")]
-        
+
         public string FriendlyName { get; set; }
     }
 }

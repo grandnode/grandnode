@@ -1,6 +1,4 @@
-﻿using FluentValidation.Attributes;
-using Grand.Api.Validators.Catalog;
-using Grand.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Framework.Mvc.Models;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -8,21 +6,20 @@ using System.Collections.Generic;
 
 namespace Grand.Api.DTOs.Catalog
 {
-    [Validator(typeof(ProductValidator))]
     public partial class ProductDto : BaseApiEntityModel
     {
         public ProductDto()
         {
-            this.Categories = new List<ProductCategoryDto>();
-            this.Manufacturers = new List<ProductManufacturerDto>();
-            this.Pictures = new List<ProductPictureDto>();
-            this.SpecificationAttribute = new List<ProductSpecificationAttributeDto>();
-            this.TierPrices = new List<ProductTierPriceDto>();
-            this.WarehouseInventory = new List<ProductWarehouseInventoryDto>();
-            this.AttributeMappings = new List<ProductAttributeMappingDto>();
-            this.AttributeCombinations = new List<ProductAttributeCombinationDto>();
-            this.Tags = new List<string>();
-            this.AppliedDiscounts = new List<string>();
+            Categories = new List<ProductCategoryDto>();
+            Manufacturers = new List<ProductManufacturerDto>();
+            Pictures = new List<ProductPictureDto>();
+            SpecificationAttribute = new List<ProductSpecificationAttributeDto>();
+            TierPrices = new List<ProductTierPriceDto>();
+            WarehouseInventory = new List<ProductWarehouseInventoryDto>();
+            AttributeMappings = new List<ProductAttributeMappingDto>();
+            AttributeCombinations = new List<ProductAttributeCombinationDto>();
+            Tags = new List<string>();
+            AppliedDiscounts = new List<string>();
         }
         [BsonElement("ProductTypeId")]
         public ProductType ProductType { get; set; }

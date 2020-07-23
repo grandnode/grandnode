@@ -1,13 +1,9 @@
-﻿using FluentValidation.Attributes;
-using Grand.Api.Validators.Customers;
-using Grand.Framework.Mvc.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Api.DTOs.Customers
 {
-    [Validator(typeof(CustomerValidator))]
     public partial class CustomerDto
     {
         public CustomerDto()
@@ -41,7 +37,7 @@ namespace Grand.Api.DTOs.Customers
         public string CountryId { get; set; }
         public string StateProvinceId { get; set; }
         public string Phone { get; set; }
-        public string Fax { get; set; }        
+        public string Fax { get; set; }
         public string VatNumber { get; set; }
         public string VatNumberStatusId { get; set; }
         public string Signature { get; set; }

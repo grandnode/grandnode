@@ -1,11 +1,8 @@
-﻿using FluentValidation.Attributes;
-using Grand.Api.Validators.Catalog;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
 using System;
 
 namespace Grand.Api.DTOs.Catalog
 {
-    [Validator(typeof(ProductTierPriceValidator))]
     public partial class ProductTierPriceDto : BaseApiEntityModel
     {
         public string StoreId { get; set; }

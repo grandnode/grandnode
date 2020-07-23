@@ -223,6 +223,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Email is already registered");
             }
 
+            if (!string.IsNullOrWhiteSpace(model.Owner))
+            {
+                var custowner = await _customerService.GetCustomerByEmail(model.Owner);
+                if (custowner == null)
+                    ModelState.AddModelError("", "Owner email is not exists");
+            }
+
             if (!string.IsNullOrWhiteSpace(model.Username) & _customerSettings.UsernamesEnabled)
             {
                 var cust2 = await _customerService.GetCustomerByUsername(model.Username);
@@ -320,7 +327,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
+            if (!string.IsNullOrWhiteSpace(model.Owner))
+            {
+                var custowner = await _customerService.GetCustomerByEmail(model.Owner);
+                if (custowner == null)
+                    ModelState.AddModelError("", "Owner email is not exists");
 
+                if(model.Owner.ToLower()==model.Email.ToLower())
+                    ModelState.AddModelError("", "You can't assign own email");
+            }
             if (ModelState.IsValid)
             {
                 try

@@ -1,15 +1,12 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Messages;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    [Validator(typeof(NewsletterCategoryValidator))]
-    public partial class NewsletterCategoryModel: BaseGrandEntityModel, ILocalizedModel<NewsletterCategoryLocalizedModel>, IStoreMappingModel
+    public partial class NewsletterCategoryModel : BaseGrandEntityModel, ILocalizedModel<NewsletterCategoryLocalizedModel>, IStoreMappingModel
     {
         public NewsletterCategoryModel()
         {
@@ -18,11 +15,11 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         }
 
         [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Description")]
-        
+
         public string Description { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Selected")]
@@ -45,11 +42,11 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Description")]
-        
+
         public string Description { get; set; }
 
     }

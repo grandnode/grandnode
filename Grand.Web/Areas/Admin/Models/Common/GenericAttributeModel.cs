@@ -1,9 +1,5 @@
-﻿using FluentValidation.Attributes;
-using Grand.Web.Areas.Admin.Validators.Common;
-
-namespace Grand.Web.Areas.Admin.Models.Common
+﻿namespace Grand.Web.Areas.Admin.Models.Common
 {
-    [Validator(typeof(GenericAttributeValidator))]
     public partial class GenericAttributeModel
     {
         public string Id { get; set; }

@@ -1,13 +1,10 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Directory;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Directory
 {
-    [Validator(typeof(StateProvinceValidator))]
     public partial class StateProvinceModel : BaseGrandEntityModel, ILocalizedModel<StateProvinceLocalizedModel>
     {
         public StateProvinceModel()
@@ -17,11 +14,11 @@ namespace Grand.Web.Areas.Admin.Models.Directory
         public string CountryId { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Countries.States.Fields.Abbreviation")]
-        
+
         public string Abbreviation { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Countries.States.Fields.Published")]
@@ -36,9 +33,9 @@ namespace Grand.Web.Areas.Admin.Models.Directory
     public partial class StateProvinceLocalizedModel : ILocalizedModelLocal
     {
         public string LanguageId { get; set; }
-        
+
         [GrandResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
-        
+
         public string Name { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace Grand.Web.Commands.Handler.Customers
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly IGrandAuthenticationService _authenticationService;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ITaxService _taxService;
+        private readonly IVatService _checkVatService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 
@@ -37,7 +37,7 @@ namespace Grand.Web.Commands.Handler.Customers
             ICustomerRegistrationService customerRegistrationService,
             IGrandAuthenticationService authenticationService,
             IGenericAttributeService genericAttributeService,
-            ITaxService taxService,
+            IVatService checkVatService,
             IWorkflowMessageService workflowMessageService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             DateTimeSettings dateTimeSettings,
@@ -49,7 +49,7 @@ namespace Grand.Web.Commands.Handler.Customers
             _customerRegistrationService = customerRegistrationService;
             _authenticationService = authenticationService;
             _genericAttributeService = genericAttributeService;
-            _taxService = taxService;
+            _checkVatService = checkVatService;
             _workflowMessageService = workflowMessageService;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _dateTimeSettings = dateTimeSettings;
@@ -120,7 +120,7 @@ namespace Grand.Web.Commands.Handler.Customers
 
             if (prevVatNumber != request.Model.VatNumber)
             {
-                var vat = (await _taxService.GetVatNumberStatus(request.Model.VatNumber));
+                var vat = (await _checkVatService.GetVatNumberStatus(request.Model.VatNumber));
                 await _genericAttributeService.SaveAttribute(request.Customer,
                         SystemCustomerAttributeNames.VatNumberStatusId,
                         (int)vat.status);

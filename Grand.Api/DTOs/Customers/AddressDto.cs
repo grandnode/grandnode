@@ -1,12 +1,9 @@
-﻿using FluentValidation.Attributes;
-using Grand.Api.Validators.Customers;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
 using System;
 
 namespace Grand.Api.DTOs.Customers
 {
-    [Validator(typeof(AddressValidator))]
-    public partial class AddressDto: BaseApiEntityModel
+    public partial class AddressDto : BaseApiEntityModel
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

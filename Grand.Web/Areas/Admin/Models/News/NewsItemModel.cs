@@ -1,16 +1,13 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.News;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.News
 {
-    [Validator(typeof(NewsItemValidator))]
     public partial class NewsItemModel : BaseGrandEntityModel, ILocalizedModel<NewsLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public NewsItemModel()
@@ -88,31 +85,31 @@ namespace Grand.Web.Areas.Admin.Models.News
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
-        
+
         public string Title { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Short")]
-        
+
         public string Short { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Full")]
-        
+
         public string Full { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaKeywords")]
-        
+
         public string MetaKeywords { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaDescription")]
-        
+
         public string MetaDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaTitle")]
-        
+
         public string MetaTitle { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.SeName")]
-        
+
         public string SeName { get; set; }
 
     }

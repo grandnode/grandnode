@@ -20,7 +20,7 @@ namespace Grand.Web.Commands.Handler.Customers
     public class CustomerRegisteredCommandHandler : IRequestHandler<CustomerRegisteredCommand, bool>
     {
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ITaxService _taxService;
+        private readonly IVatService _checkVatService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IAddressService _addressService;
@@ -33,8 +33,8 @@ namespace Grand.Web.Commands.Handler.Customers
         private readonly LocalizationSettings _localizationSettings;
 
         public CustomerRegisteredCommandHandler(
-            IGenericAttributeService genericAttributeService, 
-            ITaxService taxService, 
+            IGenericAttributeService genericAttributeService,
+            IVatService checkVatService, 
             IWorkflowMessageService workflowMessageService, 
             INewsLetterSubscriptionService newsLetterSubscriptionService, 
             IAddressService addressService, 
@@ -46,7 +46,7 @@ namespace Grand.Web.Commands.Handler.Customers
             LocalizationSettings localizationSettings)
         {
             _genericAttributeService = genericAttributeService;
-            _taxService = taxService;
+            _checkVatService = checkVatService;
             _workflowMessageService = workflowMessageService;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _addressService = addressService;
@@ -71,7 +71,7 @@ namespace Grand.Web.Commands.Handler.Customers
             {
                 await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.VatNumber, request.Model.VatNumber);
 
-                var vat = await _taxService.GetVatNumberStatus(request.Model.VatNumber);
+                var vat = await _checkVatService.GetVatNumberStatus(request.Model.VatNumber);
 
                 await _genericAttributeService.SaveAttribute(request.Customer,
                     SystemCustomerAttributeNames.VatNumberStatusId,
