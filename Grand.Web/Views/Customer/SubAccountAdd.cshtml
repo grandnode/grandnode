@@ -10,7 +10,7 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.SubAccounts })
 }
-<form asp-route="CustomerSubAccountAdd" asp-antiforgery="true" method="post">
+<form asp-route="CustomerSubAccountAdd" asp-antiforgery="true" method="post" autocomplete="off">
     <div class="page account-page subaccount-edit-page pl-lg-3 mb-3 pt-lg-0 pt-3">
         <h2 class="generalTitle">@T("Account.SubAccount.AddNew")</h2>
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
