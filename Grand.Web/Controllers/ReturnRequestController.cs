@@ -130,7 +130,6 @@ namespace Grand.Web.Controllers
             if (!await _mediator.Send(new IsReturnRequestAllowedQuery() { Order = order }))
                 return RedirectToRoute("HomePage");
 
-            //var model = new ReturnRequestModel();
             var model = await _mediator.Send(new GetReturnRequest() {
                 Order = order,
                 Language = _workContext.WorkingLanguage,
