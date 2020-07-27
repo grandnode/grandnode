@@ -72,7 +72,8 @@ namespace Grand.Services.Customers
         /// Delete a customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        Task DeleteCustomer(Customer customer);
+        /// <param name="hard">Hard delete from database</param>
+        Task DeleteCustomer(Customer customer, bool hard = false);
 
         /// <summary>
         /// Gets a customer

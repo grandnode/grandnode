@@ -167,6 +167,18 @@ namespace Grand.Web.Infrastructure
                             pattern + "customer/subaccounts",
                             new { controller = "Customer", action = "SubAccounts" });
 
+            routeBuilder.MapControllerRoute("CustomerSubAccountAdd",
+                            pattern + "customer/subaccountadd",
+                            new { controller = "Customer", action = "SubAccountAdd" });
+
+            routeBuilder.MapControllerRoute("CustomerSubAccountEdit",
+                            pattern + "customer/subaccountedit",
+                            new { controller = "Customer", action = "SubAccountEdit" });
+
+            routeBuilder.MapControllerRoute("CustomerSubAccountDelete",
+                            pattern + "customer/subaccountdelete",
+                            new { controller = "Customer", action = "SubAccountDelete" });
+
             routeBuilder.MapControllerRoute("CustomerDownloadableProducts",
                             pattern + "customer/downloadableproducts",
                             new { controller = "Customer", action = "DownloadableProducts" });

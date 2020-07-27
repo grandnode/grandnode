@@ -26,4 +26,13 @@
   <LocaleResource Name="Account.SubAccounts.NotExists">
     <Value>No subaccounts</Value>
   </LocaleResource>
+  <LocaleResource Name="account.fields.active">
+    <Value>Active account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccount.AddNew">
+    <Value>Add new account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccount.Edit">
+    <Value>Edit account</Value>
+  </LocaleResource>
 </Language>

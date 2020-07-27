@@ -381,6 +381,9 @@
   <LocaleResource Name="Account.Fields.AcceptPrivacyPolicy.Required">
     <Value>Please accept privacy policy</Value>
   </LocaleResource>
+  <LocaleResource Name="account.fields.active">
+    <Value>Active account</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.City">
     <Value>City</Value>
   </LocaleResource>
@@ -722,6 +725,12 @@
   </LocaleResource>
   <LocaleResource Name="Account.RewardPoints">
     <Value>Reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccount.AddNew">
+    <Value>Add new account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccount.Edit">
+    <Value>Edit account</Value>
   </LocaleResource>
   <LocaleResource Name="Account.SubAccounts">
     <Value>Subaccounts</Value>

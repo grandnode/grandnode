@@ -1312,6 +1312,139 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
+        public virtual IActionResult SubAccountAdd()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+                return Challenge();
+
+            var model = new SubAccountModel() {
+                Active = true,
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public virtual async Task<IActionResult> SubAccountAdd(SubAccountModel model, IFormCollection form)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+                return Challenge();
+
+            if (ModelState.IsValid)
+            {
+                var result = await _mediator.Send(new SubAccountAddCommand() {
+                    Customer = _workContext.CurrentCustomer,
+                    Model = model,
+                    Form = form,
+                    Store = _storeContext.CurrentStore
+                });
+
+                if (result.Success)
+                {
+                    return RedirectToRoute("CustomerSubAccounts");
+                }
+
+                //errors
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public virtual async Task<IActionResult> SubAccountEdit(string id)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+                return Challenge();
+
+            var model = await _mediator.Send(new GetSubAccount() { CustomerId = id, CurrentCustomer = _workContext.CurrentCustomer });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public virtual async Task<IActionResult> SubAccountEdit(SubAccountModel model, IFormCollection form)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+                return Challenge();
+
+            if (ModelState.IsValid)
+            {
+                var result = await _mediator.Send(new SubAccountEditCommand() {
+                    CurrentCustomer = _workContext.CurrentCustomer,
+                    Model = model,
+                    Form = form,
+                    Store = _storeContext.CurrentStore
+                });
+
+                if (result.success)
+                {
+                    return RedirectToRoute("CustomerSubAccounts");
+                }
+
+                //errors
+                ModelState.AddModelError("", result.error);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public virtual async Task<IActionResult> SubAccountDelete(string id)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+                return Challenge();
+
+            //find address (ensure that it belongs to the current customer)
+            if (ModelState.IsValid)
+            {
+                var result = await _mediator.Send(new SubAccountDeleteCommand() {
+                    CurrentCustomer = _workContext.CurrentCustomer,
+                    CustomerId = id,
+                });
+
+                if (result.success)
+                {
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("CustomerSubAccounts"),
+                        success = true,
+                    });
+                }
+
+                //errors
+                ModelState.AddModelError("", result.error);
+            }
+            return Json(new
+            {
+                redirect = Url.RouteUrl("CustomerSubAccounts"),
+                success = false,
+                error = string.Join("; ", ModelState.Values
+                                        .SelectMany(x => x.Errors)
+                                        .Select(x => x.ErrorMessage))
+            });
+        }
+
+
         #endregion
 
     }

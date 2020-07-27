@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Features.Models.Customers
 {
-    public class GetSubAccounts : IRequest<IList<SubAccountModel>>
+    public class GetSubAccounts : IRequest<IList<SubAccountSimpleModel>>
     {
         public Customer Customer { get; set; }
     }

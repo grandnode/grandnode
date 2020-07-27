@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.Customers
 {
-    public class GetSubAccountsHandler : IRequestHandler<GetSubAccounts, IList<SubAccountModel>>
+    public class GetSubAccountsHandler : IRequestHandler<GetSubAccounts, IList<SubAccountSimpleModel>>
     {
         private readonly ICustomerService _customerService;
         public GetSubAccountsHandler(ICustomerService customerService)
@@ -18,15 +18,15 @@ namespace Grand.Web.Features.Handlers.Customers
             _customerService = customerService;
         }
 
-        public async Task<IList<SubAccountModel>> Handle(GetSubAccounts request, CancellationToken cancellationToken)
+        public async Task<IList<SubAccountSimpleModel>> Handle(GetSubAccounts request, CancellationToken cancellationToken)
         {
-            var model = new List<SubAccountModel>();
+            var model = new List<SubAccountSimpleModel>();
 
             var subaccouns = await _customerService.GetAllCustomers(ownerId: request.Customer.Id);
             foreach (var item in subaccouns)
             {
-                model.Add(new SubAccountModel() {
-                    CustomerId = item.Id,
+                model.Add(new SubAccountSimpleModel() {
+                    Id = item.Id,
                     Email = item.Email,
                     Active = item.Active,
                     FirstName = item.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName),

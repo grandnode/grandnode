@@ -40,7 +40,7 @@ namespace Grand.Services.Customers
         private const string CUSTOMERROLES_PATTERN_KEY = "Grand.customerrole.";
         private const string CUSTOMERROLESPRODUCTS_PATTERN_KEY = "Grand.product.cr";
 
-       
+
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -251,7 +251,8 @@ namespace Grand.Services.Customers
         /// Delete a customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual async Task DeleteCustomer(Customer customer)
+        /// <param name="hard">Hard delete from database</param>
+        public virtual async Task DeleteCustomer(Customer customer, bool hard = false)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -277,6 +278,13 @@ namespace Grand.Services.Customers
             customer.CustomerTags.Clear();
             //update customer
             await _customerRepository.UpdateAsync(customer);
+
+            if (hard)
+                await _customerRepository.DeleteAsync(customer);
+
+            //event notification
+            await _mediator.EntityDeleted(customer);
+
         }
 
         /// <summary>
@@ -822,7 +830,7 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer roles</returns>
-        public virtual async Task<IPagedList<CustomerRole>> GetAllCustomerRoles(int pageIndex = 0, 
+        public virtual async Task<IPagedList<CustomerRole>> GetAllCustomerRoles(int pageIndex = 0,
             int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = from cr in _customerRoleRepository.Table
@@ -1192,7 +1200,7 @@ namespace Grand.Services.Customers
 
         #endregion
 
-       
+
         #region Customer note
 
         // <summary>
