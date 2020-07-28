@@ -50,6 +50,7 @@ namespace Grand.Web.Commands.Handler.Orders
                 StoreId = _storeContext.CurrentStore.Id,
                 OrderId = request.Order.Id,
                 CustomerId = _workContext.CurrentCustomer.Id,
+                OwnerId = string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId) ? _workContext.CurrentCustomer.Id : _workContext.CurrentCustomer.OwnerId,
                 CustomerComments = request.Model.Comments,
                 StaffNotes = string.Empty,
                 ReturnRequestStatus = ReturnRequestStatus.Pending,

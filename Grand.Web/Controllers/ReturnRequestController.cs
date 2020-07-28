@@ -116,7 +116,11 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            var model = await _mediator.Send(new GetReturnRequests());
+            var model = await _mediator.Send(new GetReturnRequests() {
+                Customer = _workContext.CurrentCustomer,
+                Store = _storeContext.CurrentStore,
+                Language = _workContext.WorkingLanguage
+            });
 
             return View(model);
         }
@@ -124,7 +128,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> ReturnRequest(string orderId, string errors = "")
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!await _mediator.Send(new IsReturnRequestAllowedQuery() { Order = order }))
@@ -144,7 +148,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> ReturnRequestSubmit(string orderId, ReturnRequestModel model, IFormCollection form)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!await _mediator.Send(new IsReturnRequestAllowedQuery() { Order = order }))
@@ -210,11 +214,11 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> ReturnRequestDetails(string returnRequestId)
         {
             var rr = await _returnRequestService.GetReturnRequestById(returnRequestId);
-            if (rr == null || _workContext.CurrentCustomer.Id != rr.CustomerId)
+            if (!rr.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             var order = await _orderService.GetOrderById(rr.OrderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = await _mediator.Send(new GetReturnRequestDetails() {

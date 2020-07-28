@@ -1,10 +1,10 @@
-﻿using Grand.Core;
-using Grand.Domain.Tax;
+﻿using Grand.Domain.Tax;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Web.Features.Models.Orders;
 using Grand.Web.Models.Orders;
 using MediatR;
@@ -17,39 +17,44 @@ namespace Grand.Web.Features.Handlers.Orders
 {
     public class GetReturnRequestsHandler : IRequestHandler<GetReturnRequests, CustomerReturnRequestsModel>
     {
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly IOrderService _orderService;
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IMediator _mediator;
 
-        public GetReturnRequestsHandler(IReturnRequestService returnRequestService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
+        public GetReturnRequestsHandler(
             IOrderService orderService,
             ICurrencyService currencyService,
             ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
-            IPriceFormatter priceFormatter)
+            IPriceFormatter priceFormatter,
+            IMediator mediator)
         {
-            _returnRequestService = returnRequestService;
-            _workContext = workContext;
-            _storeContext = storeContext;
             _orderService = orderService;
             _currencyService = currencyService;
             _localizationService = localizationService;
             _dateTimeHelper = dateTimeHelper;
             _priceFormatter = priceFormatter;
+            _mediator = mediator;
         }
 
         public async Task<CustomerReturnRequestsModel> Handle(GetReturnRequests request, CancellationToken cancellationToken)
         {
             var model = new CustomerReturnRequestsModel();
+            
+            var query = new GetReturnRequestQuery() {
+                StoreId = request.Store.Id,
+            };
 
-            var returnRequests = await _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id);
+            if (string.IsNullOrEmpty(request.Customer.OwnerId))
+                query.OwnerId = request.Customer.Id;
+            else
+                query.CustomerId = request.Customer.Id;
+
+            var returnRequests = await _mediator.Send(query);
+
             foreach (var returnRequest in returnRequests)
             {
                 var order = await _orderService.GetOrderById(returnRequest.OrderId);
@@ -75,7 +80,7 @@ namespace Grand.Web.Features.Handlers.Orders
                 var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel {
                     Id = returnRequest.Id,
                     ReturnNumber = returnRequest.ReturnNumber,
-                    ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, request.Language.Id),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
                     ProductsCount = returnRequest.ReturnRequestItems.Sum(x => x.Quantity),
                     ReturnTotal = _priceFormatter.FormatPrice(total)

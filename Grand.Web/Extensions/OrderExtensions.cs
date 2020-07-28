@@ -20,5 +20,20 @@ namespace Grand.Web.Extensions
 
             return false;
         }
+        public static bool Access(this ReturnRequest returnRequest, Customer customer)
+        {
+            if (returnRequest == null)
+                return false;
+
+            //owner
+            if (string.IsNullOrEmpty(customer.OwnerId) && (customer.Id == returnRequest.CustomerId || customer.Id == returnRequest.OwnerId))
+                return true;
+
+            //subaccount
+            if (!string.IsNullOrEmpty(customer.OwnerId) && customer.Id == returnRequest.CustomerId)
+                return true;
+
+            return false;
+        }
     }
 }
