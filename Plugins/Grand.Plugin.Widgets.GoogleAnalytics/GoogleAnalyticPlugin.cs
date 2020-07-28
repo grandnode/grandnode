@@ -43,7 +43,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics
         {
             return new List<string>
             {
-                "body_end_html_tag_before"
+                "body_end_html_tag_before", "clean_body_end_html_tag_before"
             };
         }        
 
