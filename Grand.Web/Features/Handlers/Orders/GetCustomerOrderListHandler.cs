@@ -1,4 +1,5 @@
-﻿using Grand.Services.Catalog;
+﻿using Grand.Domain.Customers;
+using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -55,7 +56,7 @@ namespace Grand.Web.Features.Handlers.Orders
                 StoreId = request.Store.Id
             };
 
-            if (!string.IsNullOrEmpty(request.Customer.OwnerId))
+            if (!request.Customer.IsOwner())
                 query.CustomerId = request.Customer.Id;
             else
                 query.OwnerId = request.Customer.Id;

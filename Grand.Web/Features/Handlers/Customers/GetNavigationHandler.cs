@@ -48,7 +48,7 @@ namespace Grand.Web.Features.Handlers.Customers
             model.HideDocuments = _customerSettings.HideDocumentsTab;
             model.HideReviews = _customerSettings.HideReviewsTab;
             model.HideCourses = _customerSettings.HideCoursesTab;
-            model.HideSubAccounts = _customerSettings.HideSubAccountsTab || !string.IsNullOrEmpty(request.Customer.OwnerId);
+            model.HideSubAccounts = _customerSettings.HideSubAccountsTab || !request.Customer.IsOwner();
             if (_vendorSettings.AllowVendorsToEditInfo && request.Vendor != null)
             {
                 model.ShowVendorInfo = true;

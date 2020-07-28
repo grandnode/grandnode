@@ -11,11 +11,11 @@ namespace Grand.Web.Extensions
                 return false;
 
             //owner
-            if (string.IsNullOrEmpty(customer.OwnerId) && (customer.Id == order.CustomerId || customer.Id == order.OwnerId))
+            if (customer.IsOwner() && (customer.Id == order.CustomerId || customer.Id == order.OwnerId))
                 return true;
 
             //subaccount
-            if (!string.IsNullOrEmpty(customer.OwnerId) && customer.Id == order.CustomerId)
+            if (!customer.IsOwner() && customer.Id == order.CustomerId)
                 return true;
 
             return false;
@@ -26,11 +26,11 @@ namespace Grand.Web.Extensions
                 return false;
 
             //owner
-            if (string.IsNullOrEmpty(customer.OwnerId) && (customer.Id == returnRequest.CustomerId || customer.Id == returnRequest.OwnerId))
+            if (customer.IsOwner() && (customer.Id == returnRequest.CustomerId || customer.Id == returnRequest.OwnerId))
                 return true;
 
             //subaccount
-            if (!string.IsNullOrEmpty(customer.OwnerId) && customer.Id == returnRequest.CustomerId)
+            if (!customer.IsOwner() && customer.Id == returnRequest.CustomerId)
                 return true;
 
             return false;

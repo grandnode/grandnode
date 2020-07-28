@@ -1301,7 +1301,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+            if (!_workContext.CurrentCustomer.IsOwner())
                 return Challenge();
 
             if (_customerSettings.HideSubAccountsTab)
@@ -1317,7 +1317,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+            if (!_workContext.CurrentCustomer.IsOwner())
                 return Challenge();
 
             var model = new SubAccountModel() {
@@ -1333,7 +1333,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+            if (!_workContext.CurrentCustomer.IsOwner())
                 return Challenge();
 
             if (ModelState.IsValid)
@@ -1364,7 +1364,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+            if (!_workContext.CurrentCustomer.IsOwner())
                 return Challenge();
 
             var model = await _mediator.Send(new GetSubAccount() { CustomerId = id, CurrentCustomer = _workContext.CurrentCustomer });
@@ -1379,7 +1379,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+            if (!_workContext.CurrentCustomer.IsOwner())
                 return Challenge();
 
             if (ModelState.IsValid)
@@ -1411,7 +1411,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            if (!string.IsNullOrEmpty(_workContext.CurrentCustomer.OwnerId))
+            if (!_workContext.CurrentCustomer.IsOwner())
                 return Challenge();
 
             //find address (ensure that it belongs to the current customer)
