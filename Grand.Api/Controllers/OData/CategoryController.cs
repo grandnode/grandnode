@@ -5,6 +5,7 @@ using Grand.Services.Security;
 using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
@@ -87,7 +88,7 @@ namespace Grand.Api.Controllers.OData
         }
         [SwaggerOperation(summary: "Update entity in Category (delta)")]
         [HttpPatch]
-        public async Task<IActionResult> Patch([FromODataUri] string key, Delta<CategoryDto> model)
+        public async Task<IActionResult> Patch([FromODataUri] string key, JsonPatchDocument<CategoryDto> model)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
@@ -98,7 +99,7 @@ namespace Grand.Api.Controllers.OData
                 return NotFound();
             }
             var cat = category.FirstOrDefault();
-            model.Patch(cat);
+            model.ApplyTo(cat);
 
             if (ModelState.IsValid)
             {

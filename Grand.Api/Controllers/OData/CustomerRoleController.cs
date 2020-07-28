@@ -5,6 +5,7 @@ using Grand.Services.Security;
 using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
@@ -86,7 +87,7 @@ namespace Grand.Api.Controllers.OData
 
         [SwaggerOperation(summary: "Partially update entity in CustomerRole")]
         [HttpPatch]
-        public async Task<IActionResult> Patch([FromODataUri] string key, Delta<CustomerRoleDto> model)
+        public async Task<IActionResult> Patch([FromODataUri] string key, JsonPatchDocument<CustomerRoleDto> model)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
@@ -97,7 +98,7 @@ namespace Grand.Api.Controllers.OData
                 return NotFound();
             }
             var cr = customerRole.FirstOrDefault();
-            model.Patch(cr);
+            model.ApplyTo(cr);
 
             if (ModelState.IsValid && !cr.IsSystemRole)
             {

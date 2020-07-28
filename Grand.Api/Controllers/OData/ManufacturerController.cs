@@ -5,6 +5,7 @@ using Grand.Services.Security;
 using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
@@ -87,7 +88,7 @@ namespace Grand.Api.Controllers.OData
 
         [SwaggerOperation(summary: "Partially update entity in Manufacturer")]
         [HttpPatch]
-        public async Task<IActionResult> Patch([FromODataUri] string key, Delta<ManufacturerDto> model)
+        public async Task<IActionResult> Patch([FromODataUri] string key, JsonPatchDocument<ManufacturerDto> model)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
@@ -98,7 +99,7 @@ namespace Grand.Api.Controllers.OData
                 return NotFound();
             }
             var man = manufacturer.FirstOrDefault();
-            model.Patch(man);
+            model.ApplyTo(man);
 
             if (ModelState.IsValid)
             {
