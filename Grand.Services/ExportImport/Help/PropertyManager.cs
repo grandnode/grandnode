@@ -1,6 +1,4 @@
-﻿using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using System;
+﻿using NPOI.SS.UserModel;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,7 +23,7 @@ namespace Grand.Services.ExportImport.Help
         {
             _properties = new Dictionary<string, PropertyByName<T>>();
 
-            var poz = 1;
+            var poz = 0;
             foreach (var propertyByName in properties)
             {
                 propertyByName.PropertyOrderPosition = poz;
@@ -57,10 +55,8 @@ namespace Grand.Services.ExportImport.Help
         /// </summary>
         /// <param name="propertyName">Property name</param>
         /// <returns>Property value</returns>
-        public object this[string propertyName]
-        {
-            get
-            {
+        public object this[string propertyName] {
+            get {
                 return _properties.ContainsKey(propertyName) && CurrentObject != null
                     ? _properties[propertyName].GetProperty(CurrentObject)
                     : null;
@@ -72,54 +68,54 @@ namespace Grand.Services.ExportImport.Help
         /// </summary>
         /// <param name="worksheet">worksheet</param>
         /// <param name="row">Row index</param>
-        public void WriteToXlsx(ExcelWorksheet worksheet, int row)
+        public void WriteToXlsx(ISheet sheet, int row)
         {
             if (CurrentObject == null)
                 return;
 
+            IRow _row = sheet.CreateRow(row);
             foreach (var prop in _properties.Values)
             {
-                worksheet.Cells[row, prop.PropertyOrderPosition].Value = prop.GetProperty(CurrentObject);
+                _row.CreateCell(prop.PropertyOrderPosition).SetCellValue(prop.GetProperty(CurrentObject)?.ToString());
             }
         }
 
         /// <summary>
         /// Read object data from XLSX worksheet
         /// </summary>
-        /// <param name="worksheet">worksheet</param>
+        /// <param name="ISheet">sheet</param>
         /// <param name="row">Row index</param>
-        public void ReadFromXlsx(ExcelWorksheet worksheet, int row)
+        public void ReadFromXlsx(ISheet sheet, int row)
         {
-            if (worksheet == null || worksheet.Cells == null)
+            if (sheet == null)
                 return;
 
+            
+            var _row = sheet.GetRow(row);
             foreach (var prop in _properties.Values)
             {
-                prop.PropertyValue = worksheet.Cells[row, prop.PropertyOrderPosition].Value;
+                var cell = _row.GetCell(prop.PropertyOrderPosition);
+                prop.PropertyValue = cell?.ToString();
             }
         }
 
         /// <summary>
         /// Write caption (first row) to XLSX worksheet
         /// </summary>
-        /// <param name="worksheet">worksheet</param>
-        /// <param name="setStyle">Detection of cell style</param>
-        public void WriteCaption(ExcelWorksheet worksheet, Action<ExcelStyle> setStyle)
+        /// <param name="ISheet">sheet</param>
+        public void WriteCaption(ISheet sheet)
         {
+            IRow row = sheet.CreateRow(0);
             foreach (var caption in _properties.Values)
             {
-                var cell = worksheet.Cells[1, caption.PropertyOrderPosition];
-                cell.Value = caption;
-                setStyle(cell.Style);
+                row.CreateCell(caption.PropertyOrderPosition).SetCellValue(caption.PropertyName);
             }
-
         }
 
         /// <summary>
         /// Count of properties
         /// </summary>
-        public int Count
-        {
+        public int Count {
             get { return _properties.Count; }
         }
 
@@ -137,8 +133,7 @@ namespace Grand.Services.ExportImport.Help
         /// <summary>
         /// Get property array
         /// </summary>
-        public PropertyByName<T>[] GetProperties
-        {
+        public PropertyByName<T>[] GetProperties {
             get { return _properties.Values.ToArray(); }
         }
     }
