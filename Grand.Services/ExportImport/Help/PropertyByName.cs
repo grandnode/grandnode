@@ -18,7 +18,7 @@ namespace Grand.Services.ExportImport.Help
             PropertyName = propertyName;
             GetProperty = func;
 
-            PropertyOrderPosition = 1;
+            PropertyOrderPosition = 0;
         }
 
         /// <summary>
