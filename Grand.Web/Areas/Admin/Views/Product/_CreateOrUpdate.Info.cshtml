@@ -415,7 +415,7 @@
         {
             var tag = productTags[i];
             productTagsSb.Append("'");
-            productTagsSb.Append(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(tag.Name));
+            productTagsSb.Append(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(string.IsNullOrEmpty(tag.Name) ? "": tag.Name));
             productTagsSb.Append("'");
             if (i != productTags.Count - 1)
             {
