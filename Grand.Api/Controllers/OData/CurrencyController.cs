@@ -22,7 +22,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Currency by key")]
+        [SwaggerOperation(summary: "Get entity from Currency by key", OperationId = "GetCurrencyById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -36,7 +36,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(currency.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from Currency")]
+        [SwaggerOperation(summary: "Get entities from Currency", OperationId = "GetCurrencies")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()

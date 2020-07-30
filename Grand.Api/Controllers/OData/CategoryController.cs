@@ -5,6 +5,7 @@ using Grand.Services.Security;
 using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Category by key")]
+        [SwaggerOperation(summary: "Get entity from Category by key", OperationId = "GetCategoryById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -39,7 +40,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(category.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from Category")]
+        [SwaggerOperation(summary: "Get entities from Category", OperationId = "GetCategories")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
@@ -50,7 +51,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(await _mediator.Send(new GetQuery<CategoryDto>()));
         }
 
-        [SwaggerOperation(summary: "Add new entity to Category")]
+        [SwaggerOperation(summary: "Add new entity to Category", OperationId = "InsertCategory")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CategoryDto model)
         {
@@ -65,7 +66,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Update entity in Category")]
+        [SwaggerOperation(summary: "Update entity in Category", OperationId = "UpdateCategory")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] CategoryDto model)
         {
@@ -85,9 +86,9 @@ namespace Grand.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
-        [SwaggerOperation(summary: "Update entity in Category (delta)")]
+        [SwaggerOperation(summary: "Update entity in Category (delta)", OperationId = "UpdateCategoryPatch")]
         [HttpPatch]
-        public async Task<IActionResult> Patch([FromODataUri] string key, Delta<CategoryDto> model)
+        public async Task<IActionResult> Patch([FromODataUri] string key, JsonPatchDocument<CategoryDto> model)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
@@ -98,7 +99,7 @@ namespace Grand.Api.Controllers.OData
                 return NotFound();
             }
             var cat = category.FirstOrDefault();
-            model.Patch(cat);
+            model.ApplyTo(cat);
 
             if (ModelState.IsValid)
             {
@@ -107,7 +108,7 @@ namespace Grand.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
-        [SwaggerOperation(summary: "Delete entity from Category")]
+        [SwaggerOperation(summary: "Delete entity from Category", OperationId = "DeleteCategory")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {

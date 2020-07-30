@@ -22,7 +22,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Warehouse by key")]
+        [SwaggerOperation(summary: "Get entity from Warehouse by key", OperationId = "GetWarehouseById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -36,7 +36,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(warehouse.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from Warehouse")]
+        [SwaggerOperation(summary: "Get entities from Warehouse", OperationId = "GetWarehouses")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
