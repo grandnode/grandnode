@@ -33,7 +33,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Customer by key")]
+        [SwaggerOperation(summary: "Get entity from Customer by key", OperationId = "GetCustomerByEmail")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -47,7 +47,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(customer);
         }
 
-        [SwaggerOperation(summary: "Add new entity to Customer")]
+        [SwaggerOperation(summary: "Add new entity to Customer", OperationId = "InsertCustomer")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CustomerDto model)
         {
@@ -62,7 +62,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Update entity in Customer")]
+        [SwaggerOperation(summary: "Update entity in Customer", OperationId = "UpdateCustomer")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] CustomerDto model)
         {
@@ -77,7 +77,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Delete entity from Customer")]
+        [SwaggerOperation(summary: "Delete entity from Customer", OperationId = "DeleteCustomer")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
@@ -97,7 +97,7 @@ namespace Grand.Api.Controllers.OData
 
 
         //odata/Customer/AddAddress/(email)
-        [SwaggerOperation(summary: "Invoke action AddAddress")]
+        [SwaggerOperation(summary: "Invoke action AddAddress", , OperationId = "AddAddress")]
         [Route("[action]/({key}")]
         [HttpPost]
         public async Task<IActionResult> AddAddress(string key, [FromBody] AddressDto address)
@@ -117,7 +117,7 @@ namespace Grand.Api.Controllers.OData
         }
 
         //odata/Customer/UpdateAddress/(email)
-        [SwaggerOperation(summary: "Invoke action UpdateAddress")]
+        [SwaggerOperation(summary: "Invoke action UpdateAddress", OperationId = "UpdateAddress")]
         [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> UpdateAddress(string key, [FromBody] AddressDto address)
@@ -139,7 +139,7 @@ namespace Grand.Api.Controllers.OData
 
         //odata/Customer/DeleteAddress/(email)
         //body: { "addressId": "xxx" }
-        [SwaggerOperation(summary: "Invoke action DeleteAddress")]
+        [SwaggerOperation(summary: "Invoke action DeleteAddress", OperationId = "DeleteAddress")]
         [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> DeleteAddress(string key, [FromBody] ODataActionParameters parameters)
@@ -167,7 +167,7 @@ namespace Grand.Api.Controllers.OData
 
         //odata/Customer/SetPassword/(email)
         //body: { "password": "123456" }
-        [SwaggerOperation(summary: "Invoke action SetPassword")]
+        [SwaggerOperation(summary: "Invoke action SetPassword", OperationId = "SetPassword")]
         [Route("[action]/({key})")]
         [HttpPost]
         public async Task<IActionResult> SetPassword(string key, [FromBody] ODataActionParameters parameters)
