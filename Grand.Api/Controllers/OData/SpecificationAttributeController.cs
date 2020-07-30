@@ -23,7 +23,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from SpecificationAttribute by key")]
+        [SwaggerOperation(summary: "Get entity from SpecificationAttribute by key", OperationId = "GetSpecificationAttributeById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -37,7 +37,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(specificationAttribute.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from SpecificationAttribute")]
+        [SwaggerOperation(summary: "Get entities from SpecificationAttribute", OperationId = "GetSpecificationAttributes")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
@@ -48,7 +48,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(await _mediator.Send(new GetQuery<SpecificationAttributeDto>()));
         }
 
-        [SwaggerOperation(summary: "Add new entity to SpecificationAttribute")]
+        [SwaggerOperation(summary: "Add new entity to SpecificationAttribute", OperationId = "InsertSpecificationAttribute")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] SpecificationAttributeDto model)
         {
@@ -63,7 +63,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Update entity in SpecificationAttribute")]
+        [SwaggerOperation(summary: "Update entity in SpecificationAttribute", OperationId = "UpdateSpecificationAttribute")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] SpecificationAttributeDto model)
         {
@@ -78,7 +78,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Partially update entity in SpecificationAttribute")]
+        [SwaggerOperation(summary: "Partially update entity in SpecificationAttribute", OperationId = "PartiallyUpdateSpecificationAttribute")]
         [HttpPatch]
         public async Task<IActionResult> Patch([FromODataUri] string key, JsonPatchDocument<SpecificationAttributeDto> model)
         {
@@ -103,7 +103,7 @@ namespace Grand.Api.Controllers.OData
 
         }
 
-        [SwaggerOperation(summary: "Delete entity in SpecificationAttribute")]
+        [SwaggerOperation(summary: "Delete entity in SpecificationAttribute", OperationId = "DeleteSpecificationAttribute")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
