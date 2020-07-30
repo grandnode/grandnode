@@ -23,7 +23,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Manufacturer by key")]
+        [SwaggerOperation(summary: "Get entity from Manufacturer by key", OperationId = "GetManufacturerById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -37,7 +37,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(manufacturer);
         }
 
-        [SwaggerOperation(summary: "Get entities from Manufacturer")]
+        [SwaggerOperation(summary: "Get entities from Manufacturer", OperationId = "GetManufacturers")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
@@ -48,7 +48,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(await _mediator.Send(new GetQuery<ManufacturerDto>()));
         }
 
-        [SwaggerOperation(summary: "Add new entity to Manufacturer")]
+        [SwaggerOperation(summary: "Add new entity to Manufacturer", OperationId = "InsertManufacturer")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ManufacturerDto model)
         {
@@ -63,7 +63,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Update entity in Manufacturer")]
+        [SwaggerOperation(summary: "Update entity in Manufacturer", OperationId = "UpdateManufacturer")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] ManufacturerDto model)
         {
@@ -86,7 +86,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Partially update entity in Manufacturer")]
+        [SwaggerOperation(summary: "Partially update entity in Manufacturer", OperationId = "PartiallyUpdateManufacturer")]
         [HttpPatch]
         public async Task<IActionResult> Patch([FromODataUri] string key, JsonPatchDocument<ManufacturerDto> model)
         {
@@ -110,7 +110,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Delete entity in Manufacturer")]
+        [SwaggerOperation(summary: "Delete entity in Manufacturer", OperationId = "DeleteManufacturer")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
