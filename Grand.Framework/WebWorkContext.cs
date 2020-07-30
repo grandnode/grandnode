@@ -192,15 +192,11 @@ namespace Grand.Framework
         #region Properties
 
         /// <summary>
-        /// Gets or sets the current customer
+        /// Gets the current customer
         /// </summary>
         public virtual Customer CurrentCustomer {
             get {
                 return _cachedCustomer;
-            }
-            set {
-                SetCustomerCookie(value.CustomerGuid);
-                _cachedCustomer = value;
             }
         }
 

@@ -404,6 +404,12 @@ namespace Grand.Web.Controllers
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
+            //check if customer is registered. 
+            if (_workContext.CurrentCustomer.IsRegistered())
+            {
+                return RedirectToRoute("HomePage");
+            }
+
             var model = await _mediator.Send(new GetRegister() {
                 Customer = _workContext.CurrentCustomer,
                 ExcludeProperties = false,
@@ -427,14 +433,12 @@ namespace Grand.Web.Controllers
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
+            //check if customer is registered. 
             if (_workContext.CurrentCustomer.IsRegistered())
             {
-                //Already registered customer. 
-                await _authenticationService.SignOut();
-
-                //Save a new record
-                _workContext.CurrentCustomer = await _customerService.InsertGuestCustomer(_storeContext.CurrentStore);
+                return RedirectToRoute("HomePage");
             }
+
             //custom customer attributes
             var customerAttributesXml = await _mediator.Send(new GetParseCustomAttributes() { Form = form });
             var customerAttributeWarnings = await customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
