@@ -22,7 +22,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from ShippingMethod by key")]
+        [SwaggerOperation(summary: "Get entity from ShippingMethod by key", OperationId = "GetShippingMethodById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -36,7 +36,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(shipping.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from ShippingMethod")]
+        [SwaggerOperation(summary: "Get entities from ShippingMethod", OperationId = "GetShippingMethods")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
