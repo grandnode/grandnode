@@ -12,6 +12,7 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Net.Http.Headers;
@@ -27,12 +28,6 @@ namespace Grand.Framework
     /// </summary>
     public partial class WebWorkContext : IWorkContext
     {
-        #region Const
-
-        private const string CUSTOMER_COOKIE_NAME = ".Grand.Customer";
-
-        #endregion
-
         #region Fields
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -93,45 +88,6 @@ namespace Grand.Framework
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Get customer cookie
-        /// </summary>
-        /// <returns>String value of cookie</returns>
-        protected virtual string GetCustomerCookie()
-        {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Request == null)
-                return null;
-
-            return _httpContextAccessor.HttpContext.Request.Cookies[CUSTOMER_COOKIE_NAME];
-        }
-
-        /// <summary>
-        /// Set customer cookie
-        /// </summary>
-        /// <param name="customerGuid">Guid of the customer</param>
-        protected virtual void SetCustomerCookie(Guid customerGuid)
-        {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Response == null)
-                return;
-
-            //delete current cookie value
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete(CUSTOMER_COOKIE_NAME);
-
-            //get date of cookie expiration
-            var cookieExpiresDate = DateTime.UtcNow.AddHours(CommonHelper.CookieAuthExpires);
-
-            //if passed guid is empty set cookie as expired
-            if (customerGuid == Guid.Empty)
-                cookieExpiresDate = DateTime.UtcNow.AddMonths(-1);
-
-            //set new cookie value
-            var options = new CookieOptions {
-                HttpOnly = true,
-                Expires = cookieExpiresDate
-            };
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(CUSTOMER_COOKIE_NAME, customerGuid.ToString(), options);
-        }
 
         /// <summary>
         /// Get language from the requested page URL
@@ -214,6 +170,13 @@ namespace Grand.Framework
                 customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
             }
 
+            //set customer as a background task if method setted as AllowAnonymous
+            var endpoint = _httpContextAccessor.HttpContext?.GetEndpoint();
+            if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() is object)
+            {
+                customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
+            }
+
             if (customer == null || customer.Deleted || !customer.Active)
             {
                 //try to get registered user
@@ -252,15 +215,15 @@ namespace Grand.Framework
             if (customer == null || customer.Deleted || !customer.Active)
             {
                 //get guest customer
-                var customerCookie = GetCustomerCookie();
-                if (!string.IsNullOrEmpty(customerCookie))
+                var customerguid = await _authenticationService.GetCustomerGuid();
+                if (!string.IsNullOrEmpty(customerguid))
                 {
-                    if (Guid.TryParse(customerCookie, out Guid customerGuid))
+                    if (Guid.TryParse(customerguid, out Guid customerGuid))
                     {
-                        //get customer from cookie (should not be registered)
-                        var customerByCookie = await _customerService.GetCustomerByGuid(customerGuid);
-                        if (customerByCookie != null && !customerByCookie.IsRegistered())
-                            customer = customerByCookie;
+                        //get customer from guid (should not be registered)
+                        var customerByguid = await _customerService.GetCustomerByGuid(customerGuid);
+                        if (customerByguid != null && !customerByguid.IsRegistered())
+                            customer = customerByguid;
                     }
                 }
             }
@@ -283,7 +246,7 @@ namespace Grand.Framework
             if (!customer.Deleted && customer.Active)
             {
                 //set customer cookie
-                SetCustomerCookie(customer.CustomerGuid);
+                await _authenticationService.SetCustomerGuid(customer.CustomerGuid);
             }
             //cache the found customer
             return _cachedCustomer = customer ?? throw new Exception("No customer could be loaded");

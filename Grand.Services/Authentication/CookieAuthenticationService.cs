@@ -15,6 +15,11 @@ namespace Grand.Services.Authentication
     /// </summary>
     public partial class CookieAuthenticationService : IGrandAuthenticationService
     {
+        #region Const
+
+        private const string CUSTOMER_COOKIE_NAME = ".Grand.Customer";
+
+        #endregion
         #region Fields
 
         private readonly CustomerSettings _customerSettings;
@@ -138,6 +143,46 @@ namespace Grand.Services.Authentication
             return _cachedCustomer;
         }
 
+        /// <summary>
+        /// Get customer cookie
+        /// </summary>
+        /// <returns>String value of cookie</returns>
+        public virtual Task<string> GetCustomerGuid()
+        {
+            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Request == null)
+                return Task.FromResult<string>(null);
+
+            return Task.FromResult(_httpContextAccessor.HttpContext.Request.Cookies[CUSTOMER_COOKIE_NAME]);
+        }
+
+        /// <summary>
+        /// Set customer cookie
+        /// </summary>
+        /// <param name="customerGuid">Guid of the customer</param>
+        public virtual Task SetCustomerGuid(Guid customerGuid)
+        {
+            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Response == null)
+                return Task.CompletedTask;
+
+            //delete current cookie value
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(CUSTOMER_COOKIE_NAME);
+
+            //get date of cookie expiration
+            var cookieExpiresDate = DateTime.UtcNow.AddHours(CommonHelper.CookieAuthExpires);
+
+            //if passed guid is empty set cookie as expired
+            if (customerGuid == Guid.Empty)
+                cookieExpiresDate = DateTime.UtcNow.AddMonths(-1);
+
+            //set new cookie value
+            var options = new CookieOptions {
+                HttpOnly = true,
+                Expires = cookieExpiresDate
+            };
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(CUSTOMER_COOKIE_NAME, customerGuid.ToString(), options);
+
+            return Task.CompletedTask;
+        }
         #endregion
     }
 }
