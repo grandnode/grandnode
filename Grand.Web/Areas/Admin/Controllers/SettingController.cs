@@ -2124,7 +2124,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> PushNotifications(DataSourceRequest command, ConfigurationModel model)
+        public async Task<IActionResult> PushNotifications(ConfigurationModel model)
         {
             var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
@@ -2140,7 +2140,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _settingService.SaveSetting(settings);
 
             //edit js file needed by firebase
-            var jsFilePath = CommonHelper.MapPath("~/wwwroot/firebase-messaging-sw.js");
+            var jsFilePath = CommonHelper.WebMapPath("firebase-messaging-sw.js");
             if (System.IO.File.Exists(jsFilePath))
             {
                 string[] lines = System.IO.File.ReadAllLines(jsFilePath);

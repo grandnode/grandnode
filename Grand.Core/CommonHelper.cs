@@ -242,6 +242,21 @@ namespace Grand.Core
         public static string BaseDirectory { get; set; }
 
         /// <summary>
+        /// Maps a virtual path to a physical disk path.
+        /// </summary>
+        /// <param name="path">The path to map. E.g. "~/bin"</param>
+        /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
+        public static string WebMapPath(string path)
+        {
+            path = path.Replace("~/", "").TrimStart('/');
+            return Path.Combine(WebRootPath, path);
+        }
+        /// <summary>
+        /// Gets or sets web application content files
+        /// </summary>
+        public static string WebRootPath { get; set; }
+
+        /// <summary>
         /// Gets or sets application default cache time minutes
         /// </summary>
         public static int CacheTimeMinutes { get; set; }

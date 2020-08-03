@@ -41,7 +41,7 @@ namespace Grand.Web.Features.Handlers.Common
             var sb = new StringBuilder();
 
             //if robots.txt exists, let's use it
-            string robotsFile = System.IO.Path.Combine(CommonHelper.MapPath("wwwroot"), "robots.custom.txt");
+            string robotsFile = System.IO.Path.Combine(CommonHelper.WebRootPath, "robots.custom.txt");
             if (System.IO.File.Exists(robotsFile))
             {
                 //the robots.txt file exists
@@ -178,7 +178,7 @@ namespace Grand.Web.Features.Handlers.Common
                 }
 
                 //load and add robots.txt additions to the end of file.
-                string robotsAdditionsFile = System.IO.Path.Combine(CommonHelper.MapPath("wwwroot"), "robots.additions.txt");
+                string robotsAdditionsFile = System.IO.Path.Combine(CommonHelper.WebRootPath, "robots.additions.txt");
                 if (System.IO.File.Exists(robotsAdditionsFile))
                 {
                     string robotsFileContent = System.IO.File.ReadAllText(robotsAdditionsFile);

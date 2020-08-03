@@ -644,7 +644,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
         /// <param name="store">Store</param>
         public virtual async Task GenerateStaticFile(Store store)
         {
-            var appPath = CommonHelper.MapPath("wwwroot/content/files/exportimport");
+            var appPath = CommonHelper.WebMapPath("content/files/exportimport");
             if (store == null)
                 throw new ArgumentNullException("store");
             string filePath = Path.Combine(appPath, store.Id + "-" + _googleShoppingSettings.StaticFileName);

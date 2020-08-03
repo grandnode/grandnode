@@ -63,7 +63,7 @@ namespace Grand.Services.Common
                 throw new ArgumentNullException("order");
 
             var fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, CommonHelper.GenerateRandomDigitCode(4));
-            var filePath = Path.Combine(CommonHelper.MapPath("~/wwwroot/content/files/exportimport"), fileName);
+            var filePath = Path.Combine(CommonHelper.WebMapPath("content/files/exportimport"), fileName);
             FileStream fileStream = null;
             try
             {
