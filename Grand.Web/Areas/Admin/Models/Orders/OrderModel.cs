@@ -245,6 +245,10 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public bool CanVoid { get; set; }
         public bool CanVoidOffline { get; set; }
 
+        //order's tags
+        [GrandResourceDisplayName("Admin.Orders.Fields.OrderTags")]
+        public string OrderTags { get; set; }
+
         #region Nested Classes
 
         public partial class OrderItemModel : BaseGrandEntityModel

@@ -1,0 +1,30 @@
+﻿@model OrderTagModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Orders.OrderTags.EditTagDetails").Text;
+}
+<form asp-area="Admin" asp-controller="OrderTags" asp-action="Edit" method="post">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-cube"></i>
+                        @T("Admin.Orders.OrderTags.EditTagDetails") - @Model.Name
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.OrderTags.BackToList").Text, "List")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <vc:admin-widget widget-zone="order_tag_details_buttons" additional-data="Model" />
+                        </div>
+                    </div>
+                </div>
+                <div class="x_content form">
+                    <partial name="_CreateOrUpdate" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

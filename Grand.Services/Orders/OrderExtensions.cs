@@ -250,5 +250,20 @@ namespace Grand.Services.Orders
             }
             return false;
         }
+
+        /// <summary>
+        /// Indicates whether a order's tag exists
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="orderTagId">Order tag identifier</param>
+        /// <returns>Result</returns>
+        public static bool OrderTagExists(this Order order, string orderTagName)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            bool result = order.OrderTags.FirstOrDefault(t => t == orderTagName) != null;
+            return result;
+        }
     }
 }

@@ -16,6 +16,7 @@ using Grand.Services.Logging;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
+using Grand.Web.Areas.Admin.Components;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Orders;
@@ -354,6 +355,42 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("btnSaveOrderTags")]
+        public async Task<IActionResult> SaveOrderTags(OrderModel orderModel)
+        {
+            var order = await _orderService.GetOrderById(orderModel.Id);
+            if (order == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+                return RedirectToAction("Edit", "Order", new { id = order.Id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
+            try
+            {
+                await _orderViewModelService.SaveOrderTags(order, orderModel.OrderTags);
+                await _orderViewModelService.LogEditOrder(order.Id);
+                var model = new OrderModel();
+                await _orderViewModelService.PrepareOrderDetailsModel(model, order);
+                return View(model);
+            }
+            catch (Exception exception) 
+            {
+                //error
+                var model = new OrderModel();
+                await _orderViewModelService.PrepareOrderDetailsModel(model, order);
+                ErrorNotification(exception, false);
+                return View(model);
+            }
         }
 
         [HttpPost, ActionName("Edit")]

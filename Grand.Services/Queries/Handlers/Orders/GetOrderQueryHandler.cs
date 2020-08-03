@@ -105,6 +105,11 @@ namespace Grand.Services.Queries.Handlers.Orders
             {
                 query = query.Where(o => o.Code == request.OrderCode.ToUpperInvariant());
             }
+
+            //tag filtering 
+            if (!string.IsNullOrEmpty(request.OrderTag))
+                query = query.Where(o => o.OrderTags.Any(y => y == request.OrderTag));
+
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 

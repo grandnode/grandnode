@@ -21311,4 +21311,51 @@
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTags">
+    <Value>Order's tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTags.Hint">
+    <Value>Order's tags are keywords that this order can also be identified by. 
+    Enter a comma separated list of the tags to be associated with this order. 
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags">
+    Order's tags
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.BackToList">
+    <Value>Back to tag list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.EditTagDetails">
+    <Value>Edit order's tag details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Fields.Name">
+    <Value>Tag name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Fields.Name.Hint">
+    <Value>The name of the order's tag.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.ProductTags.Fields.OrderCount">
+    <Value>Tagged orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Fields.OrderNumber">
+    <Value>Order's number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Info">
+    <Value>Order's tag info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Orders">
+    <Value>Orders</Value>
+  </LocaleResource>
+<LocaleResource Name="Permission.ManageOrderTags">
+    <Value>Admin area. Manage Order Tags</Value>
+  </LocaleResource>
+  <LocalResource Name="Admin.Orders.Fields.SaveOrderTags">
+    Edit
+  </LocalResource>
+  <LocalResource Name="Admin.Orders.Fields.CancelOrderTags">
+    Cancel
+  </LocalResource>
 </Language>

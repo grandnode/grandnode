@@ -135,11 +135,12 @@ namespace Grand.Services.Installation
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProductRepository;
         private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
         private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
+        private readonly IRepository<OrderTag> _orderTagRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IServiceProvider _serviceProvider;
-
+        
         #endregion
 
         #region Ctor
@@ -227,6 +228,7 @@ namespace Grand.Services.Installation
             _knowledgebaseArticleRepository = serviceProvider.GetRequiredService<IRepository<KnowledgebaseArticle>>();
             _knowledgebaseCategoryRepository = serviceProvider.GetRequiredService<IRepository<KnowledgebaseCategory>>();
             _popupArchive = serviceProvider.GetRequiredService<IRepository<PopupArchive>>();
+            _orderTagRepository = serviceProvider.GetRequiredService<IRepository<OrderTag>>();
             _genericAttributeService = serviceProvider.GetRequiredService<IGenericAttributeService>();
             _webHelper = serviceProvider.GetRequiredService<IWebHelper>();
             _hostingEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
@@ -5892,6 +5894,32 @@ namespace Grand.Services.Installation
             }
         }
 
+        // Install order's tags
+        protected virtual async Task InstallOrderTags()
+        {
+            var coolTag = new OrderTag {
+                Name = "cool",
+                Count = 0
+
+            };
+             await _orderTagRepository.InsertAsync(coolTag);
+
+            var newTag = new OrderTag {
+                Name = "new",
+                Count = 0
+
+            };
+            await _orderTagRepository.InsertAsync(newTag);
+
+            var oldTag = new OrderTag {
+                Name = "old",
+                Count = 0
+
+            };
+            await _orderTagRepository.InsertAsync(oldTag);
+
+        }
+
         protected virtual async Task InstallManufacturers()
         {
             var pictureService = _serviceProvider.GetRequiredService<IPictureService>();
@@ -10884,6 +10912,7 @@ namespace Grand.Services.Installation
                 await InstallPickupPoints();
                 await InstallVendors();
                 await InstallAffiliates();
+                await InstallOrderTags();
             }
         }
 

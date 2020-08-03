@@ -85,14 +85,27 @@ namespace Grand.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Orders</returns>
-        Task<IPagedList<Order>> SearchOrders(string storeId = "",
-            string vendorId = "", string customerId = "",
-            string productId = "", string affiliateId = "", string warehouseId = "",
-            string billingCountryId = "", string paymentMethodSystemName = null,
-            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
-            string billingEmail = null, string billingLastName = "", string orderGuid = null,
-            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<Order>> SearchOrders(
+            string storeId = "",
+            string vendorId = "", 
+            string customerId = "",
+            string productId = "", 
+            string affiliateId = "", 
+            string warehouseId = "",
+            string billingCountryId = "", 
+            string paymentMethodSystemName = null,
+            DateTime? createdFromUtc = null, 
+            DateTime? createdToUtc = null,
+            OrderStatus? os = null, 
+            PaymentStatus? ps = null, 
+            ShippingStatus? ss = null,
+            string billingEmail = null, 
+            string billingLastName = "", 
+            string orderGuid = null,
+            string orderCode = null, 
+            int pageIndex = 0, 
+            int pageSize = int.MaxValue,
+            string orderTag = "");
         
         /// <summary>
         /// Inserts an order
