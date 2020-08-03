@@ -15,8 +15,8 @@
     @await Component.InvokeAsync("BlogTags")
     @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_after" })
 }
-<div class="page blog-page mt-1">
-    <h1 class="h2 generalTitle">
+<div class="page blog-page">
+    <h2 class="generalTitle">
         <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-info link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
         @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
         {
@@ -37,11 +37,11 @@
         {
             <label class="mb-0 error-label red">@T("Blog.ResultsFor") <i>@Model.SearchKeyword</i></label>
         }
-    </h1>
-    <form method="get" id="small-search-box-form" asp-action="BlogByKeyword" asp-controller="Blog" novalidate="novalidate">
+    </h2>
+    <form method="get" id="small-search-box-form-blog" asp-action="BlogByKeyword" asp-controller="Blog" novalidate="novalidate">
         <div class="mb-3 input-group">
             <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
-            <input type="text" class="form-control search-box-text ui-autocomplete-input" id="small-searchterms"
+            <input type="text" class="form-control search-box-text ui-autocomplete-input" id="small-searchterms-blog"
                    autocomplete="off" name="SearchKeyword" placeholder="@T("Blog.SearchPlaceholder")">
 
             <span class="input-group-append">

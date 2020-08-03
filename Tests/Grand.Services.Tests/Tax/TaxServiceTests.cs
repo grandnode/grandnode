@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Tax;
 using Grand.Core.Plugins;
 using Grand.Services.Common;
 using Grand.Services.Directory;
@@ -23,6 +23,7 @@ namespace Grand.Services.Tax.Tests
         private IWorkContext _workContext;
         private TaxSettings _taxSettings;
         private ITaxService _taxService;
+        private IVatService _vatService;
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
         private CustomerSettings _customerSettings;
@@ -34,8 +35,11 @@ namespace Grand.Services.Tax.Tests
         public void TestInitialize()
         {
             //plugin initialization
-            new Grand.Services.Tests.ServiceTest().PluginInitializator();
-
+            new Services.Tests.ServiceTest().PluginInitializator();
+            var serviceProvider = new Mock<IServiceProvider>();
+            serviceProvider.Setup(x => x.GetService(typeof(FixedRateTestTaxProvider))).Returns(new FixedRateTestTaxProvider());
+            _serviceProvider = serviceProvider.Object;
+            
             _pluginFinder = new PluginFinder(_serviceProvider);
             _taxSettings = new TaxSettings();
             _taxSettings.ActiveTaxProviderSystemName = "FixedTaxRateTest";
@@ -46,23 +50,12 @@ namespace Grand.Services.Tax.Tests
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
             _logger = new NullLogger();
-            var serviceProvider = new Mock<IServiceProvider>();
-            serviceProvider.Setup(x => x.GetService(typeof(FixedRateTestTaxProvider))).Returns(new FixedRateTestTaxProvider());
-            _serviceProvider = serviceProvider.Object;
             
+            _taxService = new TaxService(_addressService, _workContext, 
+                _pluginFinder, _geoLookupService, _countryService, _logger,
+                _taxSettings, _customerSettings, _addressSettings);
 
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                _pluginFinder, _geoLookupService, _countryService, _serviceProvider, _logger,
-                _customerSettings, _addressSettings);
-        }
-
-        [TestMethod()]
-        public void Can_load_taxProviders()
-        {
-
-            var providers = _taxService.LoadAllTaxProviders();
-            Assert.IsNotNull(providers);
-            Assert.IsTrue(providers.Count > 0);
+            _vatService = new VatService(_taxSettings);
         }
 
         [TestMethod()]
@@ -135,7 +128,7 @@ namespace Grand.Services.Tax.Tests
         public async Task Should_assume_valid_VAT_number_if_EuVatAssumeValid_setting_is_true()
         {
             _taxSettings.EuVatAssumeValid = true;
-            VatNumberStatus vatNumberStatus = (await _taxService.GetVatNumberStatus("GB", "000 0000 00")).status;
+            VatNumberStatus vatNumberStatus = (await _vatService.GetVatNumberStatus("GB", "000 0000 00")).status;
             Assert.AreEqual(VatNumberStatus.Valid, vatNumberStatus);
         }
 
@@ -176,7 +169,7 @@ namespace Grand.Services.Tax.Tests
         {
             var product = new Product();
             product.TaxCategoryId = "";
-            product.IsTelecommunicationsOrBroadcastingOrElectronicServices = false;
+            product.IsTele = false;
             product.IsTaxExempt = false;
             var customer = new Customer();
             customer.IsTaxExempt = false;
@@ -209,7 +202,7 @@ namespace Grand.Services.Tax.Tests
         {
             var product = new Product();
             product.TaxCategoryId = "57516fc81b0dc92b20fdd2ef";
-            product.IsTelecommunicationsOrBroadcastingOrElectronicServices = false;
+            product.IsTele = false;
             product.IsTaxExempt = true;
             var customer = new Customer();
             customer.IsTaxExempt = true;
@@ -242,7 +235,7 @@ namespace Grand.Services.Tax.Tests
         {
             var product = new Product();
             product.TaxCategoryId = "57516fc81b0dc92b20fdd2ef";
-            product.IsTelecommunicationsOrBroadcastingOrElectronicServices = false;
+            product.IsTele = false;
             product.IsTaxExempt = true;
             var customer = new Customer();
             customer.IsTaxExempt = true;

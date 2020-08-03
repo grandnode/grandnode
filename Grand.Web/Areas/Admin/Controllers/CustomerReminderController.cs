@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -6,6 +6,7 @@ using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
@@ -27,6 +28,7 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class CustomerReminderController : BaseAdminController
     {
         #region Fields
+
         private readonly ICustomerReminderViewModelService _customerReminderViewModelService;
         private readonly ICustomerService _customerService;
         private readonly ICustomerAttributeService _customerAttributeService;
@@ -37,6 +39,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IVendorService _vendorService;
         private readonly ICustomerReminderService _customerReminderService;
         private readonly IEmailAccountService _emailAccountService;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
 
@@ -52,18 +55,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IVendorService vendorService,
             ICustomerReminderService customerReminderService,
-            IEmailAccountService emailAccountService)
+            IEmailAccountService emailAccountService,
+            IDateTimeHelper dateTimeHelper)
         {
-            this._customerReminderViewModelService = customerReminderViewModelService;
-            this._customerService = customerService;
-            this._customerAttributeService = customerAttributeService;
-            this._customerTagService = customerTagService;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._customerReminderService = customerReminderService;
-            this._emailAccountService = emailAccountService;
+            _customerReminderViewModelService = customerReminderViewModelService;
+            _customerService = customerService;
+            _customerAttributeService = customerAttributeService;
+            _customerTagService = customerTagService;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _storeService = storeService;
+            _vendorService = vendorService;
+            _customerReminderService = customerReminderService;
+            _emailAccountService = emailAccountService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -110,7 +115,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var customerReminder = await _customerReminderService.GetCustomerReminderById(id);
             if (customerReminder == null)
                 return RedirectToAction("List");
-            var model = customerReminder.ToModel();
+            var model = customerReminder.ToModel(_dateTimeHelper);
             model.ConditionCount = customerReminder.Conditions.Count();
             return View(model);
         }
@@ -346,7 +351,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var item in categories)
             {
                 var categoryModel = item.ToModel();
-                categoryModel.Breadcrumb = await item.GetFormattedBreadCrumb(categoryService);
+                categoryModel.Breadcrumb = await categoryService.GetFormattedBreadCrumb(item);
                 items.Add(categoryModel);
             }
             var gridModel = new DataSourceResult

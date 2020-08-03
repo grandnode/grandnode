@@ -12,7 +12,9 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.0.100
+        dotnet-version: 3.1.100
+    - name: Restore
+      run: dotnet restore ./GrandNode.sln --configfile ./NuGet.config
     - name: Build with dotnet
       run: dotnet build ./GrandNode.sln --configuration Release
     - name: Start Docker for Mongodb

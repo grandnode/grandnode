@@ -1,9 +1,9 @@
 ﻿@model VendorReviewHelpfulnessModel
-<div class="vendor-review-helpfulness">
+<div class="vendor-review-helpfulness d-inline-flex justify-content-end align-items-center">
     <span class="question">@T("Reviews.Helpfulness.WasHelpful?")</span>
-    <span class="vote-options">
-        <span id="vote-yes-@(Model.VendorReviewId)" class="btn btn-sm btn-outline-success vote">@T("Common.Yes")</span>
-        <span id="vote-no-@(Model.VendorReviewId)" class="btn btn-sm btn-outline-danger vote">@T("Common.No")</span>
+    <span class="vote-options btn-group">
+        <span id="vote-yes-@(Model.VendorReviewId)" class="btn btn-sm btn-outline vote">👍</span>
+        <span id="vote-no-@(Model.VendorReviewId)" class="btn btn-sm btn-outline vote">👎</span>
     </span>
     <span class="vote-stats">
         (<span id="helpfulness-vote-yes-@(Model.VendorReviewId)">@(Model.HelpfulYesTotal)</span>/<span id="helpfulness-vote-no-@(Model.VendorReviewId)">@(Model.HelpfulNoTotal)</span>)

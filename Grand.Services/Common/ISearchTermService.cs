@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Common;
+using Grand.Domain;
+using Grand.Domain.Common;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Common

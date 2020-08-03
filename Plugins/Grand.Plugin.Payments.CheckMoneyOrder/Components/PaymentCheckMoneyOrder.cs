@@ -2,7 +2,6 @@
 using Grand.Plugin.Payments.CheckMoneyOrder.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
-using Grand.Services.Stores;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -11,25 +10,16 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Components
     public class PaymentCheckMoneyOrderViewComponent : ViewComponent
     {
         private readonly IWorkContext _workContext;
-        private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILanguageService _languageService;
 
         public PaymentCheckMoneyOrderViewComponent(IWorkContext workContext,
-            IStoreService storeService,
             ISettingService settingService,
-            IStoreContext storeContext,
-            ILocalizationService localizationService,
-            ILanguageService languageService)
+            IStoreContext storeContext)
         {
-            this._workContext = workContext;
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
+            _workContext = workContext;
+            _settingService = settingService;
+            _storeContext = storeContext;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
@@ -38,7 +28,7 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Components
 
             var model = new PaymentInfoModel
             {
-                DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
+                DescriptionText = await checkMoneyOrderPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
             };
 
             return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/PaymentInfo.cshtml", await Task.FromResult(model));

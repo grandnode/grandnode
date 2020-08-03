@@ -1,5 +1,5 @@
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Bson;
@@ -28,12 +28,12 @@ namespace Grand.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="manufacturerTemplateRepository">Manufacturer template repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public ManufacturerTemplateService(IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IMediator mediator)
         {
-            this._manufacturerTemplateRepository = manufacturerTemplateRepository;
-            this._mediator = mediator;
+            _manufacturerTemplateRepository = manufacturerTemplateRepository;
+            _mediator = mediator;
         }
 
         #endregion

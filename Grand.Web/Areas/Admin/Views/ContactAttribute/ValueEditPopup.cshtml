@@ -4,11 +4,11 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.ContactAttributes.Values.EditValueDetails").Text;
 }
-<form asp-controller="ContactAttribute" asp-action="ValueEditPopup"
+<form asp-area="Admin" asp-controller="ContactAttribute" asp-action="ValueEditPopup"
       asp-route-contactAttributeId="@Context.Request.Query["contactAttributeId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

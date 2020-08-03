@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "_RootClean";
+}
+@if (IsSectionDefined("Breadcrumb"))
+{
+    @section Breadcrumb {
+        @RenderSection("Breadcrumb")
+    }
+}
+
+@await Component.InvokeAsync("Widget", new { widgetZone = "clean_main_column_before" })
+@RenderBody()
+@await Component.InvokeAsync("Widget", new { widgetZone = "clean_main_column_after" })
+

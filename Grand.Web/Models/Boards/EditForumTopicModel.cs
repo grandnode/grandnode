@@ -1,12 +1,9 @@
-﻿using FluentValidation.Attributes;
-using Grand.Core.Domain.Forums;
-using Grand.Web.Validators.Boards;
+﻿using Grand.Domain.Forums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Boards
 {
-    [Validator(typeof(EditForumTopicValidator))]
     public partial class EditForumTopicModel
     {
         public EditForumTopicModel()
@@ -26,7 +23,7 @@ namespace Grand.Web.Models.Boards
         public EditorType ForumEditor { get; set; }
         public string Subject { get; set; }
         public string Text { get; set; }
-        
+
         public bool IsCustomerAllowedToSetTopicPriority { get; set; }
         public IEnumerable<SelectListItem> TopicPriorities { get; set; }
 

@@ -1,0 +1,159 @@
+﻿@model Grand.Framework.Mvc.Models.BaseGrandEntityModel
+@inject Grand.Services.Stores.IStoreService storeService
+@inject Grand.Services.Security.IPermissionService permissionService
+@{
+    var stores = (await storeService.GetAllStores()).Select(store => new SelectListItem
+    {
+        Text = store.Shortcut,
+        Value = store.Id,
+    }).ToList();
+    var permission = await permissionService.Authorize(Grand.Services.Security.PermissionSystemName.GenericAttributes);
+}
+@if (!string.IsNullOrEmpty(Model.Id))
+{
+    <vc:admin-widget widget-zone="genericattribute_details_info_top" additional-data="Model" />
+    if (Model.GenericAttributes.Any())
+    {
+        <div class="panel panel-default">
+            <div class="form-horizontal">
+                @for (int item = 0; item < Model.GenericAttributes.Count; item++)
+                {
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3">@Model.GenericAttributes[item].Key</label>
+                            <div class="col-md-6 col-sm-6">
+                                <admin-input asp-for="@Model.GenericAttributes[item].Value" />
+                                <input type="hidden" asp-for="@Model.GenericAttributes[item].Key" />
+                                <span asp-validation-for="@Model.GenericAttributes[item].Value"></span>
+                            </div>
+                            <div class="col-md-3 col-sm-3 input-group custom-input-group">
+                                <admin-select asp-for="@Model.GenericAttributes[item].StoreId" asp-items="@stores" />
+                                <span class="input-group-addon btn red" onclick="gadelete('@Model.GenericAttributes[item].Key', '@Model.GenericAttributes[item].StoreId')"><i class="fa fa fa-times"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <script>
+            function gadelete(key, store) {
+                if (confirm('@T("Admin.Common.AreYouSure")')) {
+                    var postData = {
+                        Key: key,
+                        StoreId: store,
+                        Value: 'empty',
+                        ObjectType: "@ViewData["ObjectType"]",
+                        SelectedTab: '@ViewData["TabIndex"]',
+                        Id: '@Model.Id',
+                    };
+                    addAntiForgeryToken(postData);
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("Delete", "GenericAttribute"))",
+                        data: postData,
+                        success: function (data) {
+                            if (data.success) {
+                                window.location.href = window.location.href;
+                            }
+                            else
+                                alert(data.errors);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert('Failed to add.');
+                        }
+                    });
+                }
+            };
+        </script>
+    }
+    @if (permission)
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    <strong>@T("Admin.Common.GenericAttributes.AddNew")</strong>
+                </p>
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3">@T("Admin.Common.GenericAttributes.Fields.Key")</label>
+                            <div class="col-md-9 col-sm-9">
+                                <input class="form-control k-input text-box single-line valid" id="ga_key" name="ga_key" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3">@T("Admin.Common.GenericAttributes.Fields.Value")</label>
+                            <div class="col-md-9 col-sm-9">
+                                <input class="form-control k-input text-box single-line valid" id="ga_value" name="ga_value" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3">@T("Admin.Common.GenericAttributes.Fields.Store")</label>
+                            <div class="col-md-9 col-sm-9">
+                                @Html.DropDownList("ga_store", stores, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="button" id="addGenericAttr" class="k-primary k-button"><i class="fa fa-plus"></i>@T("Admin.Common.GenericAttributes.AddNew.Button")</button>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+
+                $('#addGenericAttr').click(function () {
+                    var attrKey = $("#ga_key").val();
+                    var attrValue = $("#ga_value").val();
+                    var attrStore = $("#ga_store").val();
+                    //some validation
+                    if (attrKey === "") {
+                        alert('@T("Admin.Common.GenericAttributes.Fields.Key.Required")');
+                        return;
+                    }
+                    if (attrValue === "") {
+                        alert('@T("Admin.Common.GenericAttributes.Fields.Value.Required")');
+                        return;
+                    }
+                    var postData = {
+                        Key: attrKey,
+                        Value: attrValue,
+                        StoreId: attrStore,
+                        ObjectType: "@ViewData["ObjectType"]",
+                        SelectedTab: '@ViewData["TabIndex"]',
+                        Id: '@Model.Id',
+                    };
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("Add", "GenericAttribute"))",
+                        data: postData,
+                        success: function (data) {
+                            if (data.success) {
+                                window.location.href = window.location.href;
+                            }
+                            else
+                                alert(data.errors);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert('Failed to add.');
+                        }
+                    });
+                });
+            });
+        </script>
+        <vc:admin-widget widget-zone="genericattribute_details_info_bottom" additional-data="Model" />
+    }
+}
+else
+{
+    <vc:admin-widget widget-zone="genericattribute_details_info_savebefore" additional-data="Model" />
+    <div class="note note-info">
+        @T("Admin.Common.GenericAttributes.SaveBeforeEdit")
+    </div>
+}

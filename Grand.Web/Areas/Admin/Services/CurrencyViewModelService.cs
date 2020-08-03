@@ -1,5 +1,4 @@
-﻿using Grand.Core.Domain.Directory;
-using Grand.Services.Configuration;
+﻿using Grand.Domain.Directory;
 using Grand.Services.Directory;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
@@ -14,17 +13,14 @@ namespace Grand.Web.Areas.Admin.Services
         #region Fields
 
         private readonly ICurrencyService _currencyService;
-        private readonly ISettingService _settingService;
 
         #endregion
 
         #region Constructors
 
-        public CurrencyViewModelService(ICurrencyService currencyService,
-            ISettingService settingService)
+        public CurrencyViewModelService(ICurrencyService currencyService)
         {
             _currencyService = currencyService;
-            _settingService = settingService;
         }
 
         #endregion

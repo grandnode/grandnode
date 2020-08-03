@@ -1,20 +1,22 @@
 ﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using Grand.Core.ComponentModel;
 using Grand.Core.Configuration;
 using Grand.Core.Extensions;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Infrastructure.Mapper;
-using Grand.Core.Infrastructure.MongoDB;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
+using Grand.Core.TypeConverters;
+using Grand.Domain.MongoDB;
+using Grand.Domain.Shipping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Grand.Core.Infrastructure
@@ -24,23 +26,7 @@ namespace Grand.Core.Infrastructure
     /// </summary>
     public class GrandEngine : IEngine
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets service provider
-        /// </summary>
-        private IServiceProvider _serviceProvider { get; set; }
-
-        #endregion
-
         #region Utilities
-
-        protected IServiceProvider GetServiceProvider()
-        {
-            var accessor = ServiceProvider.GetService<IHttpContextAccessor>();
-            var context = accessor.HttpContext;
-            return context != null ? context.RequestServices : ServiceProvider;
-        }
 
         /// <summary>
         /// Run startup tasks
@@ -63,43 +49,6 @@ namespace Grand.Core.Infrastructure
         }
 
         /// <summary>
-        /// Register dependencies using Autofac
-        /// </summary>
-        /// <param name="grandConfiguration">Startup Grand configuration parameters</param>
-        /// <param name="services">Collection of service descriptors</param>
-        /// <param name="typeFinder">Type finder</param>
-        protected virtual IServiceProvider RegisterDependencies(GrandConfig grandConfiguration, IServiceCollection services, ITypeFinder typeFinder)
-        {
-            var containerBuilder = new ContainerBuilder();
-
-            //register engine
-            containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
-
-            //register type finder
-            containerBuilder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
-
-            //find dependency registrars provided by other assemblies
-            var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
-
-            //create and sort instances of dependency registrars
-            var instances = dependencyRegistrars
-                //.Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
-                .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
-                .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
-
-            //register all provided dependencies
-            foreach (var dependencyRegistrar in instances)
-                dependencyRegistrar.Register(containerBuilder, typeFinder, grandConfiguration);
-
-            //populate Autofac container builder with the set of registered service descriptors
-            containerBuilder.Populate(services);
-
-            //create service provider
-            _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());
-            return _serviceProvider;
-        }
-
-        /// <summary>
         /// Register and configure AutoMapper
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
@@ -117,7 +66,8 @@ namespace Grand.Core.Infrastructure
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 foreach (var instance in instances)
                 {
                     cfg.AddProfile(instance.GetType());
@@ -128,6 +78,24 @@ namespace Grand.Core.Infrastructure
             AutoMapperConfiguration.Init(config);
         }
 
+        /// <summary>
+        /// Add attributes to convert some classes
+        /// </summary>
+        protected virtual void RegisterTypeConverter()
+        {
+            TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
+            TypeDescriptor.AddAttributes(typeof(List<decimal>), new TypeConverterAttribute(typeof(GenericListTypeConverter<decimal>)));
+            TypeDescriptor.AddAttributes(typeof(List<string>), new TypeConverterAttribute(typeof(GenericListTypeConverter<string>)));
+
+            //dictionaries
+            TypeDescriptor.AddAttributes(typeof(Dictionary<int, int>), new TypeConverterAttribute(typeof(GenericDictionaryTypeConverter<int, int>)));
+
+            //shipping option
+            TypeDescriptor.AddAttributes(typeof(ShippingOption), new TypeConverterAttribute(typeof(ShippingOptionTypeConverter)));
+            TypeDescriptor.AddAttributes(typeof(List<ShippingOption>), new TypeConverterAttribute(typeof(ShippingOptionListTypeConverter)));
+            TypeDescriptor.AddAttributes(typeof(IList<ShippingOption>), new TypeConverterAttribute(typeof(ShippingOptionListTypeConverter)));
+        }
+
         #endregion
 
         #region Methods
@@ -136,23 +104,27 @@ namespace Grand.Core.Infrastructure
         /// Initialize engine
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public void Initialize(IServiceCollection services)
+        public void Initialize(IServiceCollection services, IConfiguration configuration)
         {
             //set base application path
             var provider = services.BuildServiceProvider();
             var hostingEnvironment = provider.GetRequiredService<IWebHostEnvironment>();
-            var grandConfig = provider.GetRequiredService<GrandConfig>();
-            CommonHelper.HostingEnvironment = hostingEnvironment;
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
+
+            CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
+            CommonHelper.CacheTimeMinutes = config.DefaultCacheTimeMinutes;
+            CommonHelper.CookieAuthExpires = config.CookieAuthExpires > 0 ? config.CookieAuthExpires : 24 * 365;
 
             //register mongo mappings
-            MongoDBMapperConfiguration.RegisterMongoDBMappings(grandConfig);
+            MongoDBMapperConfiguration.RegisterMongoDBMappings();
 
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
-            PluginManager.Initialize(mvcCoreBuilder, grandConfig);
+            PluginManager.Initialize(mvcCoreBuilder, config);
 
             //initialize CTX sctipts
-            RoslynCompiler.Initialize(mvcCoreBuilder.PartManager, grandConfig);
+            RoslynCompiler.Initialize(mvcCoreBuilder.PartManager, config);
 
         }
 
@@ -162,7 +134,7 @@ namespace Grand.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Service provider</returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
@@ -181,25 +153,27 @@ namespace Grand.Core.Infrastructure
             //register mapper configurations
             AddAutoMapper(services, typeFinder);
 
-            //register dependencies
-            var grandConfig = services.BuildServiceProvider().GetService<GrandConfig>();
-            RegisterDependencies(grandConfig, services, typeFinder);
+            //Add attributes to register custom type converters
+            RegisterTypeConverter();
+
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
 
             //run startup tasks
-            if (!grandConfig.IgnoreStartupTasks)
+            if (!config.IgnoreStartupTasks)
                 RunStartupTasks(typeFinder);
 
-            return _serviceProvider;
         }
 
         /// <summary>
         /// Configure HTTP request pipeline
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public void ConfigureRequestPipeline(IApplicationBuilder application)
+        /// <param name="webHostEnvironment">WebHostEnvironment</param>
+        public void ConfigureRequestPipeline(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
             //find startup configurations provided by other assemblies
-            var typeFinder = Resolve<ITypeFinder>();
+            var typeFinder = new WebAppTypeFinder();
             var startupConfigurations = typeFinder.FindClassesOfType<IGrandStartup>();
 
             //create and sort instances of startup configurations
@@ -210,76 +184,41 @@ namespace Grand.Core.Infrastructure
 
             //configure request pipeline
             foreach (var instance in instances)
-                instance.Configure(application);
+                instance.Configure(application, webHostEnvironment);
         }
 
         /// <summary>
-        /// Resolve dependency
+        /// ConfigureContainer is where you can register things directly
+        /// with Autofac. This runs after ConfigureServices so the things
+        /// here will override registrations made in ConfigureServices.
         /// </summary>
-        /// <typeparam name="T">Type of resolved service</typeparam>
-        /// <returns>Resolved service</returns>
-        public T Resolve<T>() where T : class
+        /// <param name="builder"></param>
+        /// <param name="configuration"></param>
+        public void ConfigureContainer(ContainerBuilder builder, IConfiguration configuration)
         {
-            return (T)GetServiceProvider().GetRequiredService(typeof(T));
+            var typeFinder = new WebAppTypeFinder();
+
+            //register type finder
+            builder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
+
+            //find dependency registrars provided by other assemblies
+            var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
+
+            //create and sort instances of dependency registrars
+            var instances = dependencyRegistrars
+                //.Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
+                .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
+
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
+
+            //register all provided dependencies
+            foreach (var dependencyRegistrar in instances)
+                dependencyRegistrar.Register(builder, typeFinder, config);
+
         }
-
-        /// <summary>
-        /// Resolve dependency
-        /// </summary>
-        /// <param name="type">Type of resolved service</param>
-        /// <returns>Resolved service</returns>
-        public object Resolve(Type type)
-        {
-            return GetServiceProvider().GetRequiredService(type);
-        }
-
-        /// <summary>
-        /// Resolve dependencies
-        /// </summary>
-        /// <typeparam name="T">Type of resolved services</typeparam>
-        /// <returns>Collection of resolved services</returns>
-        public IEnumerable<T> ResolveAll<T>()
-        {
-            return (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
-        }
-
-        /// <summary>
-        /// Resolve unregistered service
-        /// </summary>
-        /// <param name="type">Type of service</param>
-        /// <returns>Resolved service</returns>
-        public virtual object ResolveUnregistered(Type type)
-        {
-            foreach (var constructor in type.GetConstructors())
-            {
-                try
-                {
-                    //try to resolve constructor parameters
-                    var parameters = constructor.GetParameters().Select(parameter =>
-                    {
-                        var service = Resolve(parameter.ParameterType);
-                        if (service == null)
-                            throw new GrandException("Unknown dependency");
-                        return service;
-                    });
-
-                    //all is ok, so create instance
-                    return Activator.CreateInstance(type, parameters.ToArray());
-                }
-                catch (GrandException) { }
-            }
-            throw new GrandException("No constructor was found that had all the dependencies satisfied.");
-        }
-
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Service provider
-        /// </summary>
-        public virtual IServiceProvider ServiceProvider => _serviceProvider;
-
-        #endregion
     }
 }

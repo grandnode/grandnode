@@ -1,37 +1,34 @@
 ﻿@model ProductDetailsModel.GiftCardModel
-@if (Model.IsGiftCard)
-{
-    <div class="giftcard generalMarginSupporter">
+<div class="giftcard generalMarginSupporter">
+    <fieldset>
+        <legend class="sr-only">@T("Products.GiftCard.RecipientName")</legend>
+        <label asp-for="RecipientName" class="col-form-label">@T("Products.GiftCard.RecipientName"):</label>
+        <input asp-for="RecipientName" class="form-control recipient-name" />
+    </fieldset>
+    @if (Model.GiftCardType == Grand.Domain.Catalog.GiftCardType.Virtual)
+    {
         <fieldset>
-            <legend class="sr-only">@T("Products.GiftCard.RecipientName")</legend>
-            <label asp-for="RecipientName" class="col-form-label">@T("Products.GiftCard.RecipientName"):</label>
-            <input asp-for="RecipientName" class="form-control recipient-name" />
+            <legend class="sr-only">@T("Products.GiftCard.RecipientEmail")</legend>
+            <label asp-for="RecipientEmail" class="col-form-label">@T("Products.GiftCard.RecipientEmail"):</label>
+            <input asp-for="RecipientEmail" class="form-control recipient-email" />
         </fieldset>
-        @if (Model.GiftCardType == Grand.Core.Domain.Catalog.GiftCardType.Virtual)
-        {
-            <fieldset>
-                <legend class="sr-only">@T("Products.GiftCard.RecipientEmail")</legend>
-                <label asp-for="RecipientEmail" class="col-form-label">@T("Products.GiftCard.RecipientEmail"):</label>
-                <input asp-for="RecipientEmail" class="form-control recipient-email" />
-            </fieldset>
-        }
+    }
+    <fieldset>
+        <legend class="sr-only">@T("Products.GiftCard.SenderName")</legend>
+        <label asp-for="SenderName" class="col-form-label">@T("Products.GiftCard.SenderName"):</label>
+        <input asp-for="SenderName" class="form-control sender-name" />
+    </fieldset>
+    @if (Model.GiftCardType == Grand.Domain.Catalog.GiftCardType.Virtual)
+    {
         <fieldset>
-            <legend class="sr-only">@T("Products.GiftCard.SenderName")</legend>
-            <label asp-for="SenderName" class="col-form-label">@T("Products.GiftCard.SenderName"):</label>
-            <input asp-for="SenderName" class="form-control sender-name" />
+            <legend class="sr-only">@T("Products.GiftCard.SenderEmail")</legend>
+            <label asp-for="SenderEmail" class="col-form-label">@T("Products.GiftCard.SenderEmail"):</label>
+            <input asp-for="SenderEmail" class="form-control sender-email" />
         </fieldset>
-        @if (Model.GiftCardType == Grand.Core.Domain.Catalog.GiftCardType.Virtual)
-        {
-            <fieldset>
-                <legend class="sr-only">@T("Products.GiftCard.SenderEmail")</legend>
-                <label asp-for="SenderEmail" class="col-form-label">@T("Products.GiftCard.SenderEmail"):</label>
-                <input asp-for="SenderEmail" class="form-control sender-email" />
-            </fieldset>
-        }
-        <fieldset>
-            <legend class="sr-only">@T("Products.GiftCard.Message")</legend>
-            <label asp-for="Message" class="col-form-label">@T("Products.GiftCard.Message"):</label>
-            <textarea asp-for="Message" class="form-control message"></textarea>
-        </fieldset>
-    </div>
-}
+    }
+    <fieldset>
+        <legend class="sr-only">@T("Products.GiftCard.Message")</legend>
+        <label asp-for="Message" class="col-form-label">@T("Products.GiftCard.Message"):</label>
+        <textarea asp-for="Message" class="form-control message"></textarea>
+    </fieldset>
+</div>

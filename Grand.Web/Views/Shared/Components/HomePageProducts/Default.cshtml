@@ -1,15 +1,16 @@
 ﻿@model IList<ProductOverviewModel>
 @inject DisplayOrderHomePage order 
-<div class="home-page-product-grid generalMarginSupporter order-@order.HomePageProducts">
+<div class="product-grid order-@order.HomePageProducts">
     <h2 class="generalTitle text-center">@T("HomePage.Products")</h2>
-        <div class="row px-3">
+    <div class="col-12 px-0">
+        <div class="form-row">
             @foreach (var item in Model)
             {
-                <div class="col-xl-@order.Hp_Xl col-lg-@order.Hp_Lg col-md-@order.Hp_Md col-sm-@order.Hp_Sm col-@order.Hp_Col product-container">
+                <div class="col-xl-@order.Hp_Xl col-lg-@order.Hp_Lg col-md-@order.Hp_Md col-sm-@order.Hp_Sm col-@order.Hp_Col product-container mb-2">
                     <partial name="_ProductBox" model="item" />
                 </div>
             }
         </div>
-
+    </div>
 </div>
 

@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Blogs;
+using Grand.Domain;
+using Grand.Domain.Blogs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -83,8 +83,9 @@ namespace Grand.Services.Blogs
         /// Gets all comments
         /// </summary>
         /// <param name="customerId">Customer identifier; "" to load all records</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Comments</returns>
-        Task<IList<BlogComment>> GetAllComments(string customerId);
+        Task<IList<BlogComment>> GetAllComments(string customerId, string storeId);
 
         /// <summary>
         /// Gets a blog comment
@@ -110,6 +111,13 @@ namespace Grand.Services.Blogs
         /// <param name="blogCategoryId">Blog category id</param>
         /// <returns></returns>
         Task<BlogCategory> GetBlogCategoryById(string blogCategoryId);
+
+        /// <summary>
+        /// Get category by sename
+        /// </summary>
+        /// <param name="blogCategorySeName">Blog category sename</param>
+        /// <returns></returns>
+        Task<BlogCategory> GetBlogCategoryBySeName(string blogCategorySeName);
 
         /// <summary>
         /// Get all blog categories

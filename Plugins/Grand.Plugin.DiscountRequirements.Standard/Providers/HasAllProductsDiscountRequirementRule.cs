@@ -1,8 +1,7 @@
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Services.Configuration;
 using Grand.Services.Discounts;
 using Grand.Services.Orders;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,10 +13,10 @@ namespace Grand.Plugin.DiscountRequirements.HasAllProducts
         private readonly ISettingService _settingService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
-        public HasAllProductsDiscountRequirementRule(IServiceProvider serviceProvider)
+        public HasAllProductsDiscountRequirementRule(ISettingService settingService, ShoppingCartSettings shoppingCartSettings)
         {
-            _settingService = serviceProvider.GetRequiredService<ISettingService>();
-            _shoppingCartSettings = serviceProvider.GetRequiredService<ShoppingCartSettings>();
+            _settingService = settingService;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         /// <summary>

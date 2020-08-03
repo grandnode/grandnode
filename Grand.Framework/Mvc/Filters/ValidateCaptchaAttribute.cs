@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -24,7 +26,7 @@ namespace Grand.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter enabling CAPTCHA validation
         /// </summary>
-        private class ValidateCaptchaFilter : IActionFilter
+        private class ValidateCaptchaFilter : IAsyncActionFilter
         {
             #region Constants
 
@@ -46,8 +48,8 @@ namespace Grand.Framework.Mvc.Filters
 
             public ValidateCaptchaFilter(string actionParameterName, CaptchaSettings captchaSettings)
             {
-                this._actionParameterName = actionParameterName;
-                this._captchaSettings = captchaSettings;
+                _actionParameterName = actionParameterName;
+                _captchaSettings = captchaSettings;
             }
 
             #endregion
@@ -59,22 +61,23 @@ namespace Grand.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <returns>True if CAPTCHA is valid; otherwise false</returns>
-            protected bool ValidateCaptcha(ActionExecutingContext context)
+            protected async Task<bool> ValidateCaptcha(ActionExecutingContext context)
             {
                 var isValid = false;
 
                 //get form values
-                var captchaChallengeValue = context.HttpContext.Request.Form[CHALLENGE_FIELD_KEY];
-                var captchaResponseValue = context.HttpContext.Request.Form[RESPONSE_FIELD_KEY];
+                var form = await context.HttpContext.Request.ReadFormAsync();
+                var captchaChallengeValue = form[CHALLENGE_FIELD_KEY];
+                var captchaResponseValue = form[RESPONSE_FIELD_KEY];
                 var gCaptchaResponseValue = string.Empty;
-                foreach (var item in context.HttpContext.Request.Form.Keys)
+                foreach (var item in form.Keys)
                 {
                     if (item.Contains(G_RESPONSE_FIELD_KEY_V3))
-                        gCaptchaResponseValue = context.HttpContext.Request.Form[item];
+                        gCaptchaResponseValue = form[item];
                 }
 
                 if(string.IsNullOrEmpty(gCaptchaResponseValue))
-                    gCaptchaResponseValue = context.HttpContext.Request.Form[G_RESPONSE_FIELD_KEY_V2];
+                    gCaptchaResponseValue = form[G_RESPONSE_FIELD_KEY_V2];
                 
                 if ((!StringValues.IsNullOrEmpty(captchaChallengeValue) && !StringValues.IsNullOrEmpty(captchaResponseValue)) || !string.IsNullOrEmpty(gCaptchaResponseValue))
                 {
@@ -88,7 +91,7 @@ namespace Grand.Framework.Mvc.Filters
                     };
 
                     //validate request
-                    var recaptchaResponse = captchaValidtor.Validate();
+                    var recaptchaResponse = await captchaValidtor.Validate();
                     isValid = recaptchaResponse.IsValid;
                     if (!isValid)
                         foreach (var error in recaptchaResponse.ErrorCodes)
@@ -103,35 +106,54 @@ namespace Grand.Framework.Mvc.Filters
             #endregion
 
             #region Methods
-
-            /// <summary>
-            /// Called before the action executes, after model binding is complete
-            /// </summary>
-            /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                if (context == null)
+                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                {
+                    await next();
                     return;
+                }                
 
                 //whether CAPTCHA is enabled
                 if (_captchaSettings.Enabled && context.HttpContext != null && context.HttpContext.Request != null)
                 {
                     //push the validation result as an action parameter
-                    context.ActionArguments[_actionParameterName] = ValidateCaptcha(context);
+                    context.ActionArguments[_actionParameterName] = await ValidateCaptcha(context);
                 }
                 else
                     context.ActionArguments[_actionParameterName] = false;
 
-            }
+                await next();
 
+            }
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called before the action executes, after model binding is complete
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
-            {
-                //do nothing
-            }
+            //public void OnActionExecuting(ActionExecutingContext context)
+            //{
+            //    if (context == null)
+            //        return;
+
+            //    //whether CAPTCHA is enabled
+            //    if (_captchaSettings.Enabled && context.HttpContext != null && context.HttpContext.Request != null)
+            //    {
+            //        //push the validation result as an action parameter
+            //        context.ActionArguments[_actionParameterName] = ValidateCaptcha(context);
+            //    }
+            //    else
+            //        context.ActionArguments[_actionParameterName] = false;
+
+            //}
+
+            ///// <summary>
+            ///// Called after the action executes, before the action result
+            ///// </summary>
+            ///// <param name="context">A context for action filters</param>
+            //public void OnActionExecuted(ActionExecutedContext context)
+            //{
+            //    //do nothing
+            //}
 
             #endregion
         }

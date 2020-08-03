@@ -1,16 +1,17 @@
 ﻿using Grand.Core;
+using Grand.Core.Caching;
 using Grand.Core.Configuration;
-using Grand.Core.Data;
-using Grand.Core.Domain.Media;
+using Grand.Domain.Data;
+using Grand.Domain.Media;
 using Grand.Services.Configuration;
-using Grand.Services.Events;
 using Grand.Services.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Media
 {
@@ -32,27 +33,29 @@ namespace Grand.Services.Media
 
         public AzurePictureService(IRepository<Picture> pictureRepository,
             ISettingService settingService,
-            IWebHelper webHelper,
             ILogger logger,
             IMediator mediator,
-            MediaSettings mediaSettings,
             IWebHostEnvironment hostingEnvironment,
+            IStoreContext storeContext,
+            ICacheManager cacheManager,
+            MediaSettings mediaSettings,
             GrandConfig config)
             : base(pictureRepository,
                 settingService,
-                webHelper,
                 logger,
                 mediator,
-                mediaSettings,
-                hostingEnvironment)
+                hostingEnvironment,
+                storeContext,
+                cacheManager,
+                mediaSettings)
         {
-            this._config = config;
+            _config = config;
 
-            if (String.IsNullOrEmpty(_config.AzureBlobStorageConnectionString))
+            if (string.IsNullOrEmpty(_config.AzureBlobStorageConnectionString))
                 throw new Exception("Azure connection string for BLOB is not specified");
-            if (String.IsNullOrEmpty(_config.AzureBlobStorageContainerName))
+            if (string.IsNullOrEmpty(_config.AzureBlobStorageContainerName))
                 throw new Exception("Azure container name for BLOB is not specified");
-            if (String.IsNullOrEmpty(_config.AzureBlobStorageEndPoint))
+            if (string.IsNullOrEmpty(_config.AzureBlobStorageEndPoint))
                 throw new Exception("Azure end point for BLOB is not specified");
 
             _storageAccount = CloudStorageAccount.Parse(_config.AzureBlobStorageConnectionString);
@@ -61,32 +64,40 @@ namespace Grand.Services.Media
 
             //should we do it for each HTTP request?
             blobClient = _storageAccount.CreateCloudBlobClient();
-            BlobContainerPermissions containerPermissions = new BlobContainerPermissions();
-            containerPermissions.PublicAccess = BlobContainerPublicAccessType.Blob;
-            container_thumb = blobClient.GetContainerReference(_config.AzureBlobStorageContainerName);
-            container_thumb.CreateIfNotExistsAsync().GetAwaiter().GetResult();
-            container_thumb.SetPermissionsAsync(containerPermissions).GetAwaiter().GetResult();
         }
 
         #endregion
 
         #region Utilities
 
+        protected async Task InitContainerThumb()
+        {
+            if (container_thumb == null)
+            {
+                var containerPermissions = new BlobContainerPermissions();
+                containerPermissions.PublicAccess = BlobContainerPublicAccessType.Blob;
+                container_thumb = blobClient.GetContainerReference(_config.AzureBlobStorageContainerName);
+                await container_thumb.CreateIfNotExistsAsync();
+                await container_thumb.SetPermissionsAsync(containerPermissions);
+            }
+        }
+
         /// <summary>
         /// Delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected override void DeletePictureThumbs(Picture picture)
+        protected override async Task DeletePictureThumbs(Picture picture)
         {
+            await InitContainerThumb();
+
             BlobContinuationToken continuationToken = null;
-            
             string filter = string.Format("{0}", picture.Id);
-            var files = container_thumb.ListBlobsSegmentedAsync(filter, true, BlobListingDetails.All, int.MaxValue, continuationToken, null, null).Result;
+            var files = await container_thumb.ListBlobsSegmentedAsync(filter, true, BlobListingDetails.All, int.MaxValue, continuationToken, null, null);
 
             foreach (var ff in files.Results)
             {
                 CloudBlockBlob blockBlob = (CloudBlockBlob)ff;
-                blockBlob.DeleteAsync().GetAwaiter().GetResult();
+                await blockBlob.DeleteAsync();
             }
         }
 
@@ -121,12 +132,13 @@ namespace Grand.Services.Media
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
         /// <returns>Result</returns>
-        protected override bool GeneratedThumbExists(string thumbFilePath, string thumbFileName)
+        protected override async Task<bool> GeneratedThumbExists(string thumbFilePath, string thumbFileName)
         {
             try
             {
+                await InitContainerThumb();
                 CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
-                return blockBlob.ExistsAsync().Result;
+                return await blockBlob.ExistsAsync();
             }
             catch (Exception ex)
             {
@@ -141,11 +153,12 @@ namespace Grand.Services.Media
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
         /// <param name="binary">Picture binary</param>
-        protected override void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
+        protected override Task SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
+            InitContainerThumb().Wait();
             CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
-            blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length).GetAwaiter().GetResult();
-
+            blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length).Wait();
+            return Task.CompletedTask;
         }
 
         #endregion

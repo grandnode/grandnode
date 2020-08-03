@@ -1,7 +1,9 @@
 ﻿using Grand.Core.Infrastructure;
+using Grand.Domain.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Grand.Core.Data
 {
@@ -12,6 +14,19 @@ namespace Grand.Core.Data
     {
         protected const char separator = ':';
         protected const string filename = "Settings.txt";
+
+        protected string RemoveSpecialCharacters(string str)
+        {
+            var sb = new StringBuilder();
+            foreach (char c in str)
+            {
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Parse settings
@@ -39,8 +54,10 @@ namespace Grand.Core.Data
                 {
                     continue;
                 }
-                string key = setting.Substring(0, separatorIndex).Trim();
-                string value = setting.Substring(separatorIndex + 1).Trim();
+                var key = setting.Substring(0, separatorIndex).Trim();
+                var value = setting.Substring(separatorIndex + 1).Trim();
+                if (!string.IsNullOrEmpty(key))
+                    key = RemoveSpecialCharacters(key);
 
                 switch (key)
                 {
@@ -51,7 +68,7 @@ namespace Grand.Core.Data
                         shellSettings.DataConnectionString = value;
                         break;
                     default:
-                        shellSettings.RawDataSettings.Add(key,value);
+                        shellSettings.RawDataSettings.Add(key, value);
                         break;
                 }
             }
@@ -83,7 +100,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
         {
-           
+
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
 
@@ -110,7 +127,7 @@ namespace Grand.Core.Data
 
             Singleton<DataSettings>.Instance = settings;
 
-            string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename); 
+            string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))
             {
                 using (File.Create(filePath))
@@ -118,7 +135,7 @@ namespace Grand.Core.Data
                     //we use 'using' to close the file after it's created
                 }
             }
-            
+
             var text = ComposeSettings(settings);
             File.WriteAllText(filePath, text);
         }

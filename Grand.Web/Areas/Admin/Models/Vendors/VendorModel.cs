@@ -1,10 +1,8 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Web.Areas.Admin.Models.Discounts;
-using Grand.Web.Areas.Admin.Validators.Vendors;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -12,7 +10,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Vendors
 {
-    [Validator(typeof(VendorValidator))]
     public partial class VendorModel : BaseGrandEntityModel, ILocalizedModel<VendorLocalizedModel>
     {
         public VendorModel()
@@ -28,15 +25,15 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
         }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.Email")]
-        
+
         public string Email { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.Description")]
-        
+
         public string Description { get; set; }
 
         [UIHint("Picture")]
@@ -48,7 +45,7 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
         public List<SelectListItem> AvailableStores { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.AdminComment")]
-        
+
         public string AdminComment { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.Active")]
@@ -61,19 +58,19 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
         public bool AllowCustomerReviews { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.MetaKeywords")]
-        
+
         public string MetaKeywords { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.MetaDescription")]
-        
+
         public string MetaDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.MetaTitle")]
-        
+
         public string MetaTitle { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.SeName")]
-        
+
         public string SeName { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.PageSize")]
@@ -94,7 +91,7 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
 
         //vendor notes
         [GrandResourceDisplayName("Admin.Vendors.VendorNotes.Fields.Note")]
-        
+
         public string AddVendorNoteMessage { get; set; }
 
         public List<DiscountModel> AvailableDiscounts { get; set; }
@@ -130,27 +127,27 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.Description")]
-        
+
         public string Description { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.MetaKeywords")]
-        
+
         public string MetaKeywords { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.MetaDescription")]
-        
+
         public string MetaDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.MetaTitle")]
-        
+
         public string MetaTitle { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.SeName")]
-        
+
         public string SeName { get; set; }
     }
 }

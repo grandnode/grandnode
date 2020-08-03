@@ -29,9 +29,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public AffiliateController(ILocalizationService localizationService,
             IAffiliateService affiliateService, IAffiliateViewModelService affiliateViewModelService)
         {
-            this._localizationService = localizationService;
-            this._affiliateService = affiliateService;
-            this._affiliateViewModelService = affiliateViewModelService;
+            _localizationService = localizationService;
+            _affiliateService = affiliateService;
+            _affiliateViewModelService = affiliateViewModelService;
         }
 
         #endregion
@@ -114,7 +114,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = affiliate.Id });
                 }

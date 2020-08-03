@@ -1,12 +1,12 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain;
+using Grand.Domain.Stores;
 using Grand.Services.Security;
 using Grand.Services.Topics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,8 +25,8 @@ namespace Grand.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public CheckAccessClosedStoreAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
         {
-            this._ignoreFilter = ignore;
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
 
         public bool IgnoreFilter => _ignoreFilter;
@@ -56,11 +56,11 @@ namespace Grand.Framework.Mvc.Filters
                 ITopicService topicService,
                 StoreInformationSettings storeInformationSettings)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._permissionService = permissionService;
-                this._storeContext = storeContext;
-                this._topicService = topicService;
-                this._storeInformationSettings = storeInformationSettings;
+                _ignoreFilter = ignoreFilter;
+                _permissionService = permissionService;
+                _storeContext = storeContext;
+                _topicService = topicService;
+                _storeInformationSettings = storeInformationSettings;
             }
 
             #endregion
@@ -137,10 +137,9 @@ namespace Grand.Framework.Mvc.Filters
                     await next();
                     return;
                 }
-                
+
                 //store is closed and no access, so redirect to 'StoreClosed' page
-                var storeClosedUrl = new UrlHelper(context).RouteUrl("StoreClosed");
-                context.Result = new RedirectResult(storeClosedUrl);
+                context.Result = new RedirectToRouteResult("StoreClosed", new RouteValueDictionary());
             }
 
             #endregion

@@ -1,6 +1,6 @@
-﻿using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
-using Grand.Core.Domain.Shipping;
+﻿using Grand.Domain.Orders;
+using Grand.Domain.Payments;
+using Grand.Domain.Shipping;
 using Grand.Framework.Components;
 using Grand.Framework.Extensions;
 using Grand.Services.Localization;
@@ -21,8 +21,8 @@ namespace Grand.Web.Areas.Admin.Components
 
         public AffiliateViewComponent(ILocalizationService localizationService, IPermissionService permissionService)
         {
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string affiliateId)//original Action name: AffiliatedOrderList
@@ -37,15 +37,15 @@ namespace Grand.Web.Areas.Admin.Components
             model.AffliateId = affiliateId;
 
             //order statuses
-            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //payment statuses
-            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(HttpContext, false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //shipping statuses
-            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
+            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(HttpContext, false).ToList();
             model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);

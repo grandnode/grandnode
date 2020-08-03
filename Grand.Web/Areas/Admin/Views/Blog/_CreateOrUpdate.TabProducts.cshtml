@@ -1,17 +1,18 @@
 ﻿@model BlogPostModel
 @inject AdminAreaSettings adminAreaSettings
-@{
-<div class="panel panel-default">
-    <vc:admin-widget widget-zone="blog_details_product_top" additional-data="Model" />
-    <div class="panel-body">
-        <div id="product-grid"></div>
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <vc:admin-widget widget-zone="blog_details_product_top" additional-data="Model" />
+        <div class="panel-body">
+            <div id="product-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Blog", new { blogPostId = Model.Id, btnId = "btnRefreshProducts", formId = "blog-edit" }))', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.ContentManagement.Blog.BlogPosts.Products.AddNew")</button>
+            <input type="button" id="btnRefreshProducts" style="display: none" />
+        </div>
+        <vc:admin-widget widget-zone="blog_details_product_bottom" additional-data="Model" />
     </div>
-    <div class="panel-footer">
-        <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Blog", new { blogPostId = Model.Id, btnId = "btnRefreshProducts", formId = "blog-edit" }))', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.ContentManagement.Blog.BlogPosts.Products.AddNew")</button>
-        <input type="button" id="btnRefreshProducts" style="display: none" />
-    </div>
-    <vc:admin-widget widget-zone="blog_details_product_bottom" additional-data="Model" />
-</div>
     <script>
         $(document).ready(function () {
             $("#product-grid").kendoGrid({
@@ -93,17 +94,23 @@
             });
         });
     </script>
-    <script type="text/javascript">
-            $(document).ready(function () {
-                $('#btnRefreshProducts').click(function () {
-                    //refresh grid
-                    var grid = $("#product-grid").data('kendoGrid');
-                    grid.dataSource.read();
+    <script>
+        $(document).ready(function () {
+            $('#btnRefreshProducts').click(function () {
+                //refresh grid
+                var grid = $("#product-grid").data('kendoGrid');
+                grid.dataSource.read();
 
-                    //return false to don't reload a page
-                    return false;
-                });
+                //return false to don't reload a page
+                return false;
             });
+        });
     </script>
 
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.ContentManagement.Blog.BlogPosts.SaveBeforeEdit")
+    </div>
 }

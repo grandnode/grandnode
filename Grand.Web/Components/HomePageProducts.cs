@@ -1,5 +1,8 @@
-﻿using Grand.Framework.Components;
-using Grand.Web.Interfaces;
+﻿using Grand.Domain.Catalog;
+using Grand.Framework.Components;
+using Grand.Services.Catalog;
+using Grand.Web.Features.Models.Products;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,15 +12,23 @@ namespace Grand.Web.Components
     public class HomePageProductsViewComponent : BaseViewComponent
     {
         #region Fields
-        private readonly IProductViewModelService _productViewModelService;
+
+        private readonly IProductService _productService;
+        private readonly IMediator _mediator;
+
+        private readonly CatalogSettings _catalogSettings;
+
         #endregion
 
         #region Constructors
-
         public HomePageProductsViewComponent(
-            IProductViewModelService productViewModelService)
+            IProductService productService,
+            IMediator mediator,
+            CatalogSettings catalogSettings)
         {
-            this._productViewModelService = productViewModelService;
+            _productService = productService;
+            _mediator = mediator;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -26,9 +37,18 @@ namespace Grand.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
-            var model = await _productViewModelService.PrepareProductsDisplayedOnHomePage(productThumbPictureSize);
-            if (!model.Any())
+            var products = await _productService.GetAllProductsDisplayedOnHomePage();
+
+            if (!products.Any())
                 return Content("");
+
+            var model = await _mediator.Send(new GetProductOverview() {
+                PreparePictureModel = true,
+                PreparePriceModel = true,
+                PrepareSpecificationAttributes = _catalogSettings.ShowSpecAttributeOnCatalogPages,
+                ProductThumbPictureSize = productThumbPictureSize,
+                Products = products,
+            });
 
             return View(model);
         }

@@ -1,8 +1,6 @@
-﻿using FluentValidation.Attributes;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Customers;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Customers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -10,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    [Validator(typeof(CustomerActionValidator))]
     public partial class CustomerActionModel : BaseGrandEntityModel
     {
         public CustomerActionModel()
@@ -41,8 +38,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.ReactionType")]
         public int ReactionTypeId { get; set; }
-        public CustomerReactionTypeEnum ReactionType
-        {
+        public CustomerReactionTypeEnum ReactionType {
             get { return (CustomerReactionTypeEnum)ReactionTypeId; }
             set { this.ReactionTypeId = (int)value; }
         }

@@ -1,6 +1,6 @@
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Payments;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Catalog;
+using Grand.Domain.Payments;
+using Grand.Domain.Tax;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Common;
@@ -30,6 +30,8 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 
         [GrandResourceDisplayName("Admin.Orders.Fields.ID")]
         public int OrderNumber { get; set; }
+        [GrandResourceDisplayName("Admin.Orders.Fields.Code")]
+        public string Code { get; set; }
 
         [GrandResourceDisplayName("Admin.Orders.Fields.OrderGuid")]
         public Guid OrderGuid { get; set; }
@@ -99,7 +101,11 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public string RefundedAmount { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.Profit")]
         public string Profit { get; set; }
+        [GrandResourceDisplayName("Admin.Orders.Fields.Currency")]
         public string CurrencyCode { get; set; }
+        [GrandResourceDisplayName("Admin.Orders.Fields.CurrencyRate")]
+
+        [UIHint("DecimalN4")]
         public decimal CurrencyRate { get; set; }
         //edit totals
         [GrandResourceDisplayName("Admin.Orders.Fields.Edit.OrderSubtotal")]

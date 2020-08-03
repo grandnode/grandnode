@@ -1,9 +1,7 @@
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Localization;
-using Grand.Services.Configuration;
+using Grand.Domain.Data;
+using Grand.Domain.Localization;
 using Grand.Services.Events;
-using Grand.Services.Stores;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -45,10 +43,7 @@ namespace Grand.Services.Localization
         #region Fields
 
         private readonly IRepository<Language> _languageRepository;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly ICacheManager _cacheManager;
-        private readonly ISettingService _settingService;
-        private readonly LocalizationSettings _localizationSettings;
         private readonly IMediator _mediator;
 
         #endregion
@@ -60,27 +55,18 @@ namespace Grand.Services.Localization
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="languageRepository">Language repository</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="settingService">Setting service</param>
-        /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public LanguageService(ICacheManager cacheManager,
             IRepository<Language> languageRepository,
-            IStoreMappingService storeMappingService,
-            ISettingService settingService,
-            LocalizationSettings localizationSettings,
             IMediator mediator)
         {
-            this._cacheManager = cacheManager;
-            this._languageRepository = languageRepository;
-            this._storeMappingService = storeMappingService;
-            this._settingService = settingService;
-            this._localizationSettings = localizationSettings;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _languageRepository = languageRepository;
+            _mediator = mediator;
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -91,25 +77,11 @@ namespace Grand.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException("language");
-            
-            //update default admin area language (if required)
-            if (_localizationSettings.DefaultAdminLanguageId == language.Id)
-            {
-                foreach (var activeLanguage in await GetAllLanguages())
-                {
-                    if (activeLanguage.Id != language.Id)
-                    {
-                        _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
-                        await _settingService.SaveSetting(_localizationSettings);
-                        break;
-                    }
-                }
-            }
-            
+
             await _languageRepository.DeleteAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(language);
@@ -135,10 +107,10 @@ namespace Grand.Services.Localization
             });
 
             //store mapping
-            if (!String.IsNullOrWhiteSpace(storeId))
+            if (!string.IsNullOrWhiteSpace(storeId))
             {
                 languages = languages
-                    .Where(l => _storeMappingService.Authorize(l, storeId))
+                    .Where(l => l.Stores.Contains(storeId) || !l.LimitedToStores)
                     .ToList();
             }
             return languages;
@@ -167,7 +139,7 @@ namespace Grand.Services.Localization
             await _languageRepository.InsertAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(language);
@@ -181,12 +153,12 @@ namespace Grand.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException("language");
-            
+
             //update language
             await _languageRepository.UpdateAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(language);

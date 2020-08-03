@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
@@ -21,6 +21,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IProductReviewViewModelService _productReviewViewModelService;
+        private readonly IProductReviewService _productReviewService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
 
@@ -29,11 +30,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public ProductReviewController(
-            IProductReviewViewModelService productReviewViewModelService,
+            IProductReviewViewModelService productReviewViewModelService, 
+            IProductReviewService productReviewService,
             ILocalizationService localizationService,
             IWorkContext workContext)
         {
             _productReviewViewModelService = productReviewViewModelService;
+            _productReviewService = productReviewService;
             _localizationService = localizationService;
             _workContext = workContext;
         }
@@ -68,9 +71,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public async Task<IActionResult> Edit(string id, [FromServices] IProductService productService)
+        public async Task<IActionResult> Edit(string id)
         {
-            var productReview = await productService.GetProductReviewById(id);
+            var productReview = await _productReviewService.GetProductReviewById(id);
 
             if (productReview == null)
                 //No product review found with the specified id
@@ -87,9 +90,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public async Task<IActionResult> Edit(ProductReviewModel model, bool continueEditing, [FromServices] IProductService productService)
+        public async Task<IActionResult> Edit(ProductReviewModel model, bool continueEditing)
         {
-            var productReview = await productService.GetProductReviewById(model.Id);
+            var productReview = await _productReviewService.GetProductReviewById(model.Id);
             if (productReview == null)
                 //No product review found with the specified id
                 return RedirectToAction("List");
@@ -113,9 +116,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public async Task<IActionResult> Delete(string id, [FromServices] IProductService productService)
+        public async Task<IActionResult> Delete(string id)
         {
-            var productReview = await productService.GetProductReviewById(id);
+            var productReview = await _productReviewService.GetProductReviewById(id);
             if (productReview == null)
                 //No product review found with the specified id
                 return RedirectToAction("List");

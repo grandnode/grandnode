@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.AddNew").Text;
 }
-<form asp-controller="SpecificationAttribute" asp-action="Create" method="post" id="specificationattribute-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="SpecificationAttribute" asp-action="Create" method="post" id="specificationattribute-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

@@ -1,7 +1,7 @@
-using Grand.Core;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
+using Grand.Domain.Shipping;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -37,6 +37,13 @@ namespace Grand.Services.Orders
         Task<Order> GetOrderByNumber(int orderNumber);
 
         /// <summary>
+        /// Gets orders by code
+        /// </summary>
+        /// <param name="code">The order code</param>
+        /// <returns>Order</returns>
+        Task<IList<Order>> GetOrdersByCode(string code);
+
+        /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
@@ -64,8 +71,9 @@ namespace Grand.Services.Orders
         /// <param name="customerId">Customer identifier; null to load all orders</param>
         /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
         /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
-        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="warehouseId">Warehouse identifier, only orders with products from a specified warehouse will be loaded; 0 to load all orders</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
+        /// <param name="ownerId">Owner identifier</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
@@ -73,19 +81,19 @@ namespace Grand.Services.Orders
         /// <param name="ps">Order payment status; null to load all orders</param>
         /// <param name="ss">Order shipment status; null to load all orders</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
-        /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all records.</param>
+        /// <param name="orderCode">Search by order code.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Orders</returns>
         Task<IPagedList<Order>> SearchOrders(string storeId = "",
             string vendorId = "", string customerId = "",
             string productId = "", string affiliateId = "", string warehouseId = "",
-            string billingCountryId = "", string paymentMethodSystemName = null,
+            string billingCountryId = "", string ownerId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
-            int pageIndex = 0, int pageSize = int.MaxValue);
+            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue);
         
         /// <summary>
         /// Inserts an order

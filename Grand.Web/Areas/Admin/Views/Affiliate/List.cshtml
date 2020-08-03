@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Affiliates").Text;
 }
-<antiforgery-token />
+
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">
@@ -79,7 +79,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)").click(toggleLoadOnlyWithOrders);
 
@@ -159,7 +159,7 @@
             });
         });
 </script>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
 
         $('#search-affiliates').click(function () {

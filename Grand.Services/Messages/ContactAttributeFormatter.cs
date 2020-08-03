@@ -1,6 +1,6 @@
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
 using Grand.Core.Html;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -18,35 +18,21 @@ namespace Grand.Services.Messages
     public partial class ContactAttributeFormatter : IContactAttributeFormatter
     {
         private readonly IWorkContext _workContext;
-        private readonly IContactAttributeService _contactAttributeService;
         private readonly IContactAttributeParser _contactAttributeParser;
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
 
         public ContactAttributeFormatter(IWorkContext workContext,
-            IContactAttributeService contactAttributeService,
             IContactAttributeParser contactAttributeParser,
             IDownloadService downloadService,
             IWebHelper webHelper)
         {
-            this._workContext = workContext;
-            this._contactAttributeService = contactAttributeService;
-            this._contactAttributeParser = contactAttributeParser;
-            this._downloadService = downloadService;
-            this._webHelper = webHelper;
+            _workContext = workContext;
+            _contactAttributeParser = contactAttributeParser;
+            _downloadService = downloadService;
+            _webHelper = webHelper;
         }
-
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Attributes</returns>
-        public virtual async Task<string> FormatAttributes(string attributesXml)
-        {
-            var customer = _workContext.CurrentCustomer;
-            return await FormatAttributes(attributesXml, customer);
-        }
-
+       
         /// <summary>
         /// Formats attributes
         /// </summary>

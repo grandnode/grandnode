@@ -1,39 +1,52 @@
 ﻿@model IList<ProductSpecificationModel>
-@if (Model.Any())
-{
-    <div class="product-specs-box">
-        <div class="table-responsive">
-            <table class="table table-hover data-table">
-                <colgroup>
-                    <col />
-                    <col />
-                </colgroup>
-                <tbody>
-                    @for (int i = 0; i < Model.Count; i++)
-                    {
-                        var item = Model[i];
-                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                            <td class="spec-name">
-                                @item.SpecificationAttributeName
-                            </td>
-                            <td class="spec-value">
-                                @if (String.IsNullOrEmpty(item.ColorSquaresRgb))
+<div class="spec-container table-responsive">
+    @{
+        var group = Model.GroupBy(x => x.SpecificationAttributeName);
+    }
+    <table class="table data-table border-bottom-0">
+        <colgroup>
+            <col />
+            <col />
+        </colgroup>
+        <tbody>
+            @foreach (var item in group)
+            {
+                <tr class="spec">
+                    <td class="border-bottom border-top-0">
+                        <div class="spec-name">
+                            @{
+                                var groupList = item.ToList();
+                            }
+                            @groupList[0].SpecificationAttributeName:
+                        </div>
+                    </td>
+                    <td class="border-bottom border-top-0">
+                        @{
+                            var groupList2 = item.ToList();
+                        }
+                        <div class="spec-value d-inline-flex w-100">
+                            @foreach (var spec in groupList)
+                            {
+                                @if (String.IsNullOrEmpty(spec.ColorSquaresRgb))
                                 {
-                                    @Html.Raw(item.ValueRaw)
+                                    <div class="mb-2 mr-2">
+                                        @Html.Raw(spec.ValueRaw)
+                                    </div>
                                 }
                                 else
                                 {
-                                    <div class="color-squares">
-                                        <span class="color-container" title="@Html.Raw(item.ValueRaw)">
-                                            <span class="color" style="background-color: @(item.ColorSquaresRgb);">&nbsp;</span>
+                                    <div class="color-squares mb-2 mr-2">
+                                        <span class="color-container" title="@Html.Raw(spec.ValueRaw)">
+                                            <span class="color" style="background-color: @(spec.ColorSquaresRgb);">&nbsp;</span>
                                         </span>
                                     </div>
                                 }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-}
+                            }
+                        </div>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

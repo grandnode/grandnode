@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Grand.Domain.Data;
+using System;
 
 namespace Grand.Core.Data
 {

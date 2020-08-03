@@ -1,6 +1,6 @@
 ﻿@model ContactAttributeModel
 
-<script type="text/javascript">
+<script>
             $(document).ready(function () {
                 $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
                 toggleAttributeControlType();
@@ -51,7 +51,7 @@
             }
 </script>
 <vc:admin-widget widget-zone="contact_attribute_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<ContactAttributeModel, ContactAttributeLocalizedModel>("contactattribute-localized",
+@(await Html.LocalizedEditor<ContactAttributeModel, ContactAttributeLocalizedModel>("contactattribute-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -107,7 +107,7 @@
             <admin-label asp-for="AttributeControlTypeId" />
             <div class="col-md-9 col-sm-9">
                 @{
-                var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId).ToSelectList(valuesToExclude:
+                var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId).ToSelectList(Context, valuesToExclude:
                     new[] { (int)AttributeControlType.ImageSquares });
                 }
                 <admin-select asp-for="AttributeControlTypeId" asp-items="attributeControlTypes" />

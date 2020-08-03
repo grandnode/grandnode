@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Blogs;
+﻿using Grand.Domain.Blogs;
 using Grand.Framework.Components;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +9,7 @@ namespace Grand.Web.ViewComponents
         private readonly BlogSettings _blogSettings;
         public BlogRssHeaderLinkViewComponent(BlogSettings blogSettings)
         {
-            this._blogSettings = blogSettings;
+            _blogSettings = blogSettings;
         }
 
         public IViewComponentResult Invoke()

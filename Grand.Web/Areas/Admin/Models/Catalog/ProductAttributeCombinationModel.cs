@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using System.Collections.Generic;
@@ -70,15 +70,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             }
 
             public string ProductAttributeId { get; set; }
-
             public string Name { get; set; }
-
             public string TextPrompt { get; set; }
-
             public bool IsRequired { get; set; }
-
             public AttributeControlType AttributeControlType { get; set; }
-
             public IList<ProductAttributeValueModel> Values { get; set; }
         }
 

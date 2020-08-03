@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Orders;
 using System.Collections.Generic;
 
 namespace Grand.Services.Orders
@@ -13,7 +13,7 @@ namespace Grand.Services.Orders
         /// </summary>
         public PlaceOrderResult() 
         {
-            this.Errors = new List<string>();
+            Errors = new List<string>();
         }
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace Grand.Services.Orders
         /// </summary>
         public bool Success
         {
-            get { return (this.Errors.Count == 0); }
+            get { return (Errors.Count == 0); }
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Grand.Services.Orders
         /// <param name="error">Error</param>
         public void AddError(string error)
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
 
         /// <summary>

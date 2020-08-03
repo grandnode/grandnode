@@ -1,18 +1,22 @@
 ﻿using FluentValidation;
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
 using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Validators.Catalog
 {
     public class ProductAttributeValueModelValidator : BaseGrandValidator<ProductModel.ProductAttributeValueModel>
     {
-        public ProductAttributeValueModelValidator(ILocalizationService localizationService, IProductService productService, IWorkContext workContext)
+        public ProductAttributeValueModelValidator(
+            IEnumerable<IValidatorConsumer<ProductModel.ProductAttributeValueModel>> validators,
+            ILocalizationService localizationService, IProductService productService, IWorkContext workContext)
+            : base(validators)
         {
             RuleFor(x => x.Name)
                 .NotEmpty()

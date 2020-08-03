@@ -1,5 +1,5 @@
 ﻿@model CourseModel
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         toggleRemoveButton();
     });
@@ -13,7 +13,7 @@
     }
 </script>
 <vc:admin-widget widget-zone="course_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<CourseModel, CourseLocalizedModel>("course-info-localized",
+@(await Html.LocalizedEditor<CourseModel, CourseLocalizedModel>("course-info-localized",
             @<div class="form-horizontal">
                  <div class="form-body">
                      <div class="form-group">
@@ -104,7 +104,6 @@
                                                 {
                                         @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId })
                                                 }
-                                    /**/
                                 </label>
                                 <span asp-validation-for="ProductId"></span>
                             </div>
@@ -123,7 +122,7 @@
                                     @T("Admin.Courses.Course.Fields.PurchasedWithProduct.Remove")
                                 </button>
                                 <input type="button" id="btnRefreshPurchasedWithProduct" style="display: none" />
-                                <script type="text/javascript">
+                                <script>
                                 $(document).ready(function () {
                                     $('#purchased-with-product-name-remove').click(function () {
                                         $('#purchased-with-product-name').text('');

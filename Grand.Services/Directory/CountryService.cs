@@ -1,8 +1,8 @@
 using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Directory;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using MediatR;
@@ -30,13 +30,38 @@ namespace Grand.Services.Directory
         /// {1} : show hidden records?
         /// </remarks>
         private const string COUNTRIES_ALL_KEY = "Grand.country.all-{0}-{1}";
+
+        /// <summary>
+        /// key for caching by country id
+        /// </summary>
+        /// <remarks>
+        /// {0} : country ID
+        /// </remarks>
+        private static string COUNTRIES_BY_KEY = "Grand.country.id-{0}";
+
+        /// <summary>
+        /// key for caching by country id
+        /// </summary>
+        /// <remarks>
+        /// {0} : twoletter
+        /// </remarks>
+        private static string COUNTRIES_BY_TWOLETTER = "Grand.country.twoletter-{0}";
+
+        /// <summary>
+        /// key for caching by country id
+        /// </summary>
+        /// <remarks>
+        /// {0} : threeletter
+        /// </remarks>
+        private static string COUNTRIES_BY_THREELETTER = "Grand.country.threeletter-{0}";
+
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string COUNTRIES_PATTERN_KEY = "Grand.country.";
 
         #endregion
-        
+
         #region Fields
 
         private readonly IRepository<Country> _countryRepository;
@@ -54,21 +79,20 @@ namespace Grand.Services.Directory
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="countryRepository">Country repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public CountryService(ICacheManager cacheManager,
             IRepository<Country> countryRepository,
             IStoreContext storeContext,
             CatalogSettings catalogSettings,
             IMediator mediator)
         {
-            this._cacheManager = cacheManager;
-            this._countryRepository = countryRepository;
-            this._storeContext = storeContext;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _countryRepository = countryRepository;
+            _storeContext = storeContext;
+            _catalogSettings = catalogSettings;
+            _mediator = mediator;
         }
 
         #endregion
@@ -86,7 +110,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.DeleteAsync(country);
 
-            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(country);
@@ -116,7 +140,7 @@ namespace Grand.Services.Directory
                     var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
                     filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                 }
-                var countries = await _countryRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x=>x.Name).ToListAsync();
+                var countries = await _countryRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x => x.Name).ToListAsync();
                 if (!string.IsNullOrEmpty(languageId))
                 {
                     //we should sort countries by localized names when they have the same display order
@@ -158,9 +182,13 @@ namespace Grand.Services.Directory
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Country</returns>
-        public virtual Task<Country> GetCountryById(string countryId)
+        public virtual async Task<Country> GetCountryById(string countryId)
         {
-            return _countryRepository.GetByIdAsync(countryId);
+            if (string.IsNullOrEmpty(countryId))
+                return null;
+
+            var key = string.Format(COUNTRIES_BY_KEY, countryId);
+            return await _cacheManager.GetAsync(key, () => _countryRepository.GetByIdAsync(countryId));
         }
 
         /// <summary>
@@ -195,8 +223,12 @@ namespace Grand.Services.Directory
         /// <returns>Country</returns>
         public virtual Task<Country> GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
-            var filter = Builders<Country>.Filter.Eq(x => x.TwoLetterIsoCode, twoLetterIsoCode);
-            return _countryRepository.Collection.Find(filter).FirstOrDefaultAsync();
+            var key = string.Format(COUNTRIES_BY_TWOLETTER, twoLetterIsoCode);
+            return _cacheManager.GetAsync(key, () =>
+            {
+                var filter = Builders<Country>.Filter.Eq(x => x.TwoLetterIsoCode, twoLetterIsoCode);
+                return _countryRepository.Collection.Find(filter).FirstOrDefaultAsync();
+            });
         }
 
         /// <summary>
@@ -206,8 +238,12 @@ namespace Grand.Services.Directory
         /// <returns>Country</returns>
         public virtual Task<Country> GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
-            var filter = Builders<Country>.Filter.Eq(x => x.ThreeLetterIsoCode, threeLetterIsoCode);
-            return _countryRepository.Collection.Find(filter).FirstOrDefaultAsync();
+            var key = string.Format(COUNTRIES_BY_THREELETTER, threeLetterIsoCode);
+            return _cacheManager.GetAsync(key, () =>
+            {
+                var filter = Builders<Country>.Filter.Eq(x => x.ThreeLetterIsoCode, threeLetterIsoCode);
+                return _countryRepository.Collection.Find(filter).FirstOrDefaultAsync();
+            });
         }
 
         /// <summary>
@@ -221,7 +257,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.InsertAsync(country);
 
-            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(country);
@@ -238,7 +274,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.UpdateAsync(country);
 
-            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(country);

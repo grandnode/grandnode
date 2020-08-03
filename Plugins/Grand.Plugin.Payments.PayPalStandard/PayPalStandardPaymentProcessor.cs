@@ -1,7 +1,6 @@
 using Grand.Core;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Core.Plugins;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -34,9 +33,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
     {
         #region Fields
 
-        private readonly CurrencySettings _currencySettings;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
@@ -46,15 +43,15 @@ namespace Grand.Plugin.Payments.PayPalStandard
         private readonly IProductService _productService;
         private readonly IWebHelper _webHelper;
         private readonly PayPalStandardPaymentSettings _paypalStandardPaymentSettings;
+        private readonly ILanguageService _languageService;
         private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
         #region Ctor
 
-        public PayPalStandardPaymentProcessor(CurrencySettings currencySettings,
+        public PayPalStandardPaymentProcessor(
             ICheckoutAttributeParser checkoutAttributeParser,
-            ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
@@ -63,22 +60,22 @@ namespace Grand.Plugin.Payments.PayPalStandard
             ITaxService taxService,
             IProductService productService,
             IWebHelper webHelper,
+            ILanguageService languageService,
             IServiceProvider serviceProvider,
             PayPalStandardPaymentSettings paypalStandardPaymentSettings)
         {
-            this._currencySettings = currencySettings;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._currencyService = currencyService;
-            this._genericAttributeService = genericAttributeService;
-            this._httpContextAccessor = httpContextAccessor;
-            this._localizationService = localizationService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._settingService = settingService;
-            this._taxService = taxService;
-            this._productService = productService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
-            this._paypalStandardPaymentSettings = paypalStandardPaymentSettings;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _genericAttributeService = genericAttributeService;
+            _httpContextAccessor = httpContextAccessor;
+            _localizationService = localizationService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _settingService = settingService;
+            _taxService = taxService;
+            _productService = productService;
+            _webHelper = webHelper;
+            _languageService = languageService;
+            _serviceProvider = serviceProvider;
+            _paypalStandardPaymentSettings = paypalStandardPaymentSettings;
         }
 
         #endregion
@@ -229,7 +226,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
                 //set return method to "2" (the customer redirected to the return URL by using the POST method, and all payment variables are included)
                 ["rm"] = "2",
 
-                ["currency_code"] = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode,
+                ["currency_code"] = postProcessPaymentRequest.Order.CustomerCurrencyCode,
 
                 //order identifier
                 ["invoice"] = postProcessPaymentRequest.Order.OrderNumber.ToString(),
@@ -271,38 +268,38 @@ namespace Grand.Plugin.Payments.PayPalStandard
             var roundedCartTotal = decimal.Zero;
             var itemCount = 1;
 
+            var rate = postProcessPaymentRequest.Order.CurrencyRate;
+
             //add shopping cart items
             foreach (var item in postProcessPaymentRequest.Order.OrderItems)
             {
                 var product = await _productService.GetProductById(item.ProductId);
 
-                var roundedItemPrice = Math.Round(item.UnitPriceExclTax, 2);
+                var roundedItemPrice = Math.Round(item.UnitPriceExclTax * rate, 2);
 
                 //add query parameters
                 parameters.Add($"item_name_{itemCount}", product.Name);
                 parameters.Add($"amount_{itemCount}", roundedItemPrice.ToString("0.00", CultureInfo.InvariantCulture));
                 parameters.Add($"quantity_{itemCount}", item.Quantity.ToString());
 
-                cartTotal += item.PriceExclTax;
+                cartTotal += (item.PriceExclTax * rate);
                 roundedCartTotal += roundedItemPrice * item.Quantity;
                 itemCount++;
             }
 
             //add checkout attributes as order items
-            var checkoutAttributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(postProcessPaymentRequest.Order.CheckoutAttributesXml);
+            var checkoutAttributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValue(postProcessPaymentRequest.Order.CheckoutAttributesXml);
             var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(postProcessPaymentRequest.Order.CustomerId);
             foreach (var attributeValue in checkoutAttributeValues)
             {
-                var attributePrice = await _taxService.GetCheckoutAttributePrice(attributeValue, false, customer);
+                var attributePrice = await _taxService.GetCheckoutAttributePrice(attributeValue.ca, attributeValue.cav, false, customer);
                 if (attributePrice.checkoutPrice > 0)
                 {
-                    var roundedAttributePrice = Math.Round(attributePrice.checkoutPrice, 2);
-
+                    var roundedAttributePrice = Math.Round(attributePrice.checkoutPrice * rate, 2);
                     //add query parameters
-                    var attribute = await _serviceProvider.GetRequiredService<ICheckoutAttributeService>().GetCheckoutAttributeById(attributeValue.CheckoutAttributeId);
-                    if (attribute != null)
+                    if (attributeValue.ca != null)
                     {
-                        parameters.Add($"item_name_{itemCount}", attribute.Name);
+                        parameters.Add($"item_name_{itemCount}", attributeValue.ca.Name);
                         parameters.Add($"amount_{itemCount}", roundedAttributePrice.ToString("0.00", CultureInfo.InvariantCulture));
                         parameters.Add($"quantity_{itemCount}", "1");
 
@@ -314,48 +311,48 @@ namespace Grand.Plugin.Payments.PayPalStandard
             }
 
             //add shipping fee as a separate order item, if it has price
-            var roundedShippingPrice = Math.Round(postProcessPaymentRequest.Order.OrderShippingExclTax, 2);
+            var roundedShippingPrice = Math.Round(postProcessPaymentRequest.Order.OrderShippingExclTax * rate, 2);
             if (roundedShippingPrice > decimal.Zero)
             {
                 parameters.Add($"item_name_{itemCount}", "Shipping fee");
                 parameters.Add($"amount_{itemCount}", roundedShippingPrice.ToString("0.00", CultureInfo.InvariantCulture));
                 parameters.Add($"quantity_{itemCount}", "1");
 
-                cartTotal += postProcessPaymentRequest.Order.OrderShippingExclTax;
+                cartTotal += (postProcessPaymentRequest.Order.OrderShippingExclTax * rate);
                 roundedCartTotal += roundedShippingPrice;
                 itemCount++;
             }
 
             //add payment method additional fee as a separate order item, if it has price
-            var roundedPaymentMethodPrice = Math.Round(postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax, 2);
+            var roundedPaymentMethodPrice = Math.Round(postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax * rate, 2);
             if (roundedPaymentMethodPrice > decimal.Zero)
             {
                 parameters.Add($"item_name_{itemCount}", "Payment method fee");
                 parameters.Add($"amount_{itemCount}", roundedPaymentMethodPrice.ToString("0.00", CultureInfo.InvariantCulture));
                 parameters.Add($"quantity_{itemCount}", "1");
 
-                cartTotal += postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax;
+                cartTotal += (postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax * rate);
                 roundedCartTotal += roundedPaymentMethodPrice;
                 itemCount++;
             }
 
             //add tax as a separate order item, if it has positive amount
-            var roundedTaxAmount = Math.Round(postProcessPaymentRequest.Order.OrderTax, 2);
+            var roundedTaxAmount = Math.Round(postProcessPaymentRequest.Order.OrderTax * rate, 2);
             if (roundedTaxAmount > decimal.Zero)
             {
                 parameters.Add($"item_name_{itemCount}", "Tax amount");
                 parameters.Add($"amount_{itemCount}", roundedTaxAmount.ToString("0.00", CultureInfo.InvariantCulture));
                 parameters.Add($"quantity_{itemCount}", "1");
 
-                cartTotal += postProcessPaymentRequest.Order.OrderTax;
+                cartTotal += (postProcessPaymentRequest.Order.OrderTax * rate);
                 roundedCartTotal += roundedTaxAmount;
                 itemCount++;
             }
 
-            if (cartTotal > postProcessPaymentRequest.Order.OrderTotal)
+            if (cartTotal * rate > postProcessPaymentRequest.Order.OrderTotal * rate)
             {
                 //get the difference between what the order total is and what it should be and use that as the "discount"
-                var discountTotal = Math.Round(cartTotal - postProcessPaymentRequest.Order.OrderTotal, 2);
+                var discountTotal = Math.Round(cartTotal - (postProcessPaymentRequest.Order.OrderTotal * rate), 2);
                 roundedCartTotal -= discountTotal;
 
                 //gift card or rewarded point amount applied to cart in nopCommerce - shows in PayPal as "discount"
@@ -374,7 +371,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
         private async Task AddOrderTotalParameters(IDictionary<string, string> parameters, PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //round order total
-            var roundedOrderTotal = Math.Round(postProcessPaymentRequest.Order.OrderTotal, 2);
+            var roundedOrderTotal = Math.Round(postProcessPaymentRequest.Order.OrderTotal * postProcessPaymentRequest.Order.CurrencyRate, 2);
 
             parameters.Add("cmd", "_xclick");
             parameters.Add("item_name", $"Order Number {postProcessPaymentRequest.Order.OrderNumber.ToString()}");
@@ -580,23 +577,23 @@ namespace Grand.Plugin.Payments.PayPalStandard
             });
 
             //locales
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.AdditionalFee", "Additional fee");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.BusinessEmail", "Business Email");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.BusinessEmail.Hint", "Specify your PayPal business email.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals", "Pass product names and order totals to PayPal");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals.Hint", "Check if product names and order totals should be passed to PayPal.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.PDTToken", "PDT Identity Token");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal", "PDT. Validate order total");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal.Hint", "Check if PDT handler should validate order totals.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.RedirectionTip", "You will be redirected to PayPal site to complete the order.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.UseSandbox", "Use Sandbox");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Instructions", "<p><b>If you're using this gateway ensure that your primary store currency is supported by PayPal.</b><br /><br />To use PDT, you must activate PDT and Auto Return in your PayPal account profile. You must also acquire a PDT identity token, which is used in all PDT communication you send to PayPal. Follow these steps to configure your account for PDT:<br /><br />1. Log in to your PayPal account (click <a href=\"https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8\" target=\"_blank\">here</a> to create your account).<br />2. Click the Profile subtab.<br />3. Click Website Payment Preferences in the Seller Preferences column.<br />4. Under Auto Return for Website Payments, click the On radio button.<br />5. For the Return URL, enter the URL on your site that will receive the transaction ID posted by PayPal after a customer payment ({0}).<br />6. Under Payment Data Transfer, click the On radio button.<br />7. Click Save.<br />8. Click Website Payment Preferences in the Seller Preferences column.<br />9. Scroll down to the Payment Data Transfer section of the page to view your PDT identity token.<br /><br /></p>");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.PaymentMethodDescription", "You will be redirected to PayPal site to complete the payment");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.RoundingWarning", "It looks like you have \"ShoppingCartSettings.RoundPricesDuringCalculation\" setting disabled. Keep in mind that this can lead to a discrepancy of the order total amount, as PayPal only rounds to two decimals.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.AdditionalFee", "Additional fee");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.BusinessEmail", "Business Email");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.BusinessEmail.Hint", "Specify your PayPal business email.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals", "Pass product names and order totals to PayPal");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals.Hint", "Check if product names and order totals should be passed to PayPal.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.PDTToken", "PDT Identity Token");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal", "PDT. Validate order total");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal.Hint", "Check if PDT handler should validate order totals.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.RedirectionTip", "You will be redirected to PayPal site to complete the order.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.UseSandbox", "Use Sandbox");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Instructions", "<p><b>If you're using this gateway ensure that your primary store currency is supported by PayPal.</b><br /><br />To use PDT, you must activate PDT and Auto Return in your PayPal account profile. You must also acquire a PDT identity token, which is used in all PDT communication you send to PayPal. Follow these steps to configure your account for PDT:<br /><br />1. Log in to your PayPal account (click <a href=\"https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8\" target=\"_blank\">here</a> to create your account).<br />2. Click the Profile subtab.<br />3. Click Website Payment Preferences in the Seller Preferences column.<br />4. Under Auto Return for Website Payments, click the On radio button.<br />5. For the Return URL, enter the URL on your site that will receive the transaction ID posted by PayPal after a customer payment ({0}).<br />6. Under Payment Data Transfer, click the On radio button.<br />7. Click Save.<br />8. Click Website Payment Preferences in the Seller Preferences column.<br />9. Scroll down to the Payment Data Transfer section of the page to view your PDT identity token.<br /><br /></p>");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.PaymentMethodDescription", "You will be redirected to PayPal site to complete the payment");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.RoundingWarning", "It looks like you have \"ShoppingCartSettings.RoundPricesDuringCalculation\" setting disabled. Keep in mind that this can lead to a discrepancy of the order total amount, as PayPal only rounds to two decimals.");
 
             await base.Install();
         }
@@ -610,22 +607,22 @@ namespace Grand.Plugin.Payments.PayPalStandard
             await _settingService.DeleteSetting<PayPalStandardPaymentSettings>();
 
             //locales
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.AdditionalFee");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.AdditionalFee.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.BusinessEmail");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.BusinessEmail.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.PDTToken");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.PDTToken.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.RedirectionTip");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.UseSandbox");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.Instructions");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.PaymentMethodDescription");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.PayPalStandard.RoundingWarning");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.AdditionalFee");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.AdditionalFee.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.BusinessEmail");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.BusinessEmail.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.PDTToken");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.PDTToken.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.RedirectionTip");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.UseSandbox");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.Instructions");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.PaymentMethodDescription");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.PayPalStandard.RoundingWarning");
 
             await base.Uninstall();
         }

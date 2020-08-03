@@ -1,6 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Customers;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver.Linq;
@@ -19,8 +19,8 @@ namespace Grand.Services.Customers
         #endregion
         public UserApiService(IRepository<UserApi> userRepository, IMediator mediator)
         {
-            this._userRepository = userRepository;
-            this._mediator = mediator;
+            _userRepository = userRepository;
+            _mediator = mediator;
         }
         
         /// <summary>

@@ -1,6 +1,8 @@
 ﻿using Grand.Core.Caching;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,13 +26,14 @@ namespace Grand.Core.Tests
                 2. ICacheManager object with several keys 
                 3. List<string> with several keys
             */
+            var eventPublisher = new Mock<IMediator>();
 
-            ICacheManager icacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            await icacheManager.Set("key1001", 33, int.MaxValue);
-            await icacheManager.Set("key1202", 1244, int.MaxValue);
-            await icacheManager.Set("key1003", 512, int.MaxValue);
-            await icacheManager.Set("key1204", 55, int.MaxValue);
-            await icacheManager.Set("key1005", 32, int.MaxValue);
+            ICacheManager icacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }), eventPublisher.Object);
+            await icacheManager.SetAsync("key1001", 33, int.MaxValue);
+            await icacheManager.SetAsync("key1202", 1244, int.MaxValue);
+            await icacheManager.SetAsync("key1003", 512, int.MaxValue);
+            await icacheManager.SetAsync("key1204", 55, int.MaxValue);
+            await icacheManager.SetAsync("key1005", 32, int.MaxValue);
 
             string pattern = @"key100\d"; //"key100" and one digit
 
@@ -41,10 +44,10 @@ namespace Grand.Core.Tests
             keys.Add("key1204");
             keys.Add("key1005");
 
-            await icacheManager.RemoveByPattern(pattern);
+            await icacheManager.RemoveByPrefix(pattern);
 
-            Assert.IsNotNull(icacheManager.Get<int>("key1202"));
-            Assert.IsNotNull(icacheManager.Get<int>("key1204"));
+            Assert.IsNotNull(icacheManager.GetAsync<int>("key1202", async () => { return await Task.FromResult(0); }));
+            Assert.IsNotNull(icacheManager.GetAsync<int>("key1204", async () => { return await Task.FromResult(0); }));
         }
     }
 }

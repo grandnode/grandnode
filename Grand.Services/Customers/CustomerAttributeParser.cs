@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Services.Localization;
 using System;
 using System.Collections.Generic;
@@ -20,8 +20,8 @@ namespace Grand.Services.Customers
         public CustomerAttributeParser(ICustomerAttributeService customerAttributeService,
             ILocalizationService localizationService)
         {
-            this._customerAttributeService = customerAttributeService;
-            this._localizationService = localizationService;
+            _customerAttributeService = customerAttributeService;
+            _localizationService = localizationService;
         }
 
         /// <summary>

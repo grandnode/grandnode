@@ -6,11 +6,11 @@
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew").Text;
 }
 
-<form asp-controller="Product" asp-action="AssociateProductToAttributeValuePopup"
+<form asp-area="Admin" asp-controller="Product" asp-action="AssociateProductToAttributeValuePopup"
      asp-route-productIdInput="@Context.Request.Query["productIdInput"]"
       asp-route-productNameInput="@Context.Request.Query["productNameInput"]">
 
-    <antiforgery-token />
+    
 
     <div class="row">
         <div class="col-md-12">
@@ -80,7 +80,7 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
+    <script>
             try {
                 //window.opener.document.getElementById('@(ViewBag.productIdInput)').value = '@(ViewBag.productId)';
                 //window.opener.document.getElementById('@(ViewBag.productNameInput)').innerHTML = '@(ViewBag.productName)';
@@ -157,7 +157,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#search-products').click(function () {
                 var grid = $('#products-grid').data('kendoGrid');

@@ -30,10 +30,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService)
         {
-            this._customerAttributeService = customerAttributeService;
-            this._customerAttributeViewModelService = customerAttributeViewModelService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
+            _customerAttributeService = customerAttributeService;
+            _customerAttributeViewModelService = customerAttributeViewModelService;
+            _languageService = languageService;
+            _localizationService = localizationService;
         }
 
         #endregion
@@ -44,12 +44,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ListBlock() => PartialView("ListBlock");
 
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
             //we just redirect a user to the customer settings page
             //select second tab
             const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+            await SaveSelectedTabIndex(customerFormFieldIndex);
             return RedirectToAction("CustomerUser", "Setting");
         }
 
@@ -120,7 +120,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = customerAttribute.Id });
                 }

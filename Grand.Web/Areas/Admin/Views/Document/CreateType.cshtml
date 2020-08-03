@@ -3,8 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Documents.Type.AddNew").Text;
 }
-<form asp-controller="Document" asp-action="CreateType" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Document" asp-action="CreateType" method="post">
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

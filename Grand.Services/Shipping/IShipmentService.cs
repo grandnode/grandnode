@@ -1,6 +1,6 @@
-using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain;
+using Grand.Domain.Catalog;
+using Grand.Domain.Shipping;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -81,5 +81,37 @@ namespace Grand.Services.Shipping
         /// <returns>Quantity</returns>
         Task<int> GetQuantityInShipments(Product product, string attributexml, string warehouseId,
             bool ignoreShipped, bool ignoreDelivered);
+
+        #region Shipment notes
+
+        /// <summary>
+        /// Deletes an shipment note
+        /// </summary>
+        /// <param name="shipmentNote">The shipment note</param>
+        Task DeleteShipmentNote(ShipmentNote shipmentNote);
+
+        /// <summary>
+        /// Insert an shipment note
+        /// </summary>
+        /// <param name="shipmentNote">The shipment note</param>
+        Task InsertShipmentNote(ShipmentNote shipmentNote);
+
+
+        /// <summary>
+        /// Get shipmentnotes for shipment
+        /// </summary>
+        /// <param name="shipmentId">Shipment identifier</param>
+        /// <returns>ShipmentNote</returns>
+        Task<IList<ShipmentNote>> GetShipmentNotes(string shipmentId);
+
+        /// <summary>
+        /// Get shipmentnote by id
+        /// </summary>
+        /// <param name="shipmentnoteId">Shipment note identifier</param>
+        /// <returns>ShipmentNote</returns>
+        Task<ShipmentNote> GetShipmentNote(string shipmentnoteId);
+
+        #endregion
+
     }
 }

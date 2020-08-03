@@ -1,14 +1,15 @@
-using Grand.Core;
+using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Seo;
+using Grand.Domain.Configuration;
+using Grand.Domain.Data;
+using Grand.Domain.Seo;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Configuration;
 
 namespace Grand.Services.Seo
 {
@@ -50,7 +51,7 @@ namespace Grand.Services.Seo
 
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly LocalizationSettings _localizationSettings;
+        private readonly GrandConfig _config;
 
         #endregion
 
@@ -64,11 +65,11 @@ namespace Grand.Services.Seo
         /// <param name="localizationSettings">Localization settings</param>
         public UrlRecordService(ICacheManager cacheManager,
             IRepository<UrlRecord> urlRecordRepository,
-            LocalizationSettings localizationSettings)
+            GrandConfig config)
         {
-            this._cacheManager = cacheManager;
-            this._urlRecordRepository = urlRecordRepository;
-            this._localizationSettings = localizationSettings;
+            _cacheManager = cacheManager;
+            _urlRecordRepository = urlRecordRepository;
+            _config = config;
         }
 
         #endregion
@@ -80,8 +81,7 @@ namespace Grand.Services.Seo
             if (record == null)
                 throw new ArgumentNullException("record");
 
-            var urlRecordForCaching = new UrlRecordForCaching
-            {
+            var urlRecordForCaching = new UrlRecordForCaching {
                 Id = record.Id,
                 EntityId = record.EntityId,
                 EntityName = record.EntityName,
@@ -145,7 +145,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.DeleteAsync(urlRecord);
 
             //cache
-            await _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.InsertAsync(urlRecord);
 
             //cache
-            await _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.UpdateAsync(urlRecord);
 
             //cache
-            await _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Grand.Services.Seo
 
             slug = slug.ToLowerInvariant();
 
-            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            if (_config.LoadAllUrlRecordsOnStartup)
             {
                 //load all records (we know they are cached)
                 var source = await GetAllUrlRecordsCached();
@@ -273,7 +273,7 @@ namespace Grand.Services.Seo
         /// <returns>Found slug</returns>
         public virtual async Task<string> GetActiveSlug(string entityId, string entityName, string languageId)
         {
-            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            if (_config.LoadAllUrlRecordsOnStartup)
             {
                 string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
                 return await _cacheManager.GetAsync(key, async () =>
@@ -297,7 +297,7 @@ namespace Grand.Services.Seo
             {
                 //gradual loading
                 string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
-                return _cacheManager.Get(key, () =>
+                return await _cacheManager.GetAsync(key, async () =>
                 {
 
                     var source = _urlRecordRepository.Table;
@@ -307,7 +307,7 @@ namespace Grand.Services.Seo
                                 ur.LanguageId == languageId &&
                                 ur.IsActive
                                 select ur.Slug;
-                    var slug = query.FirstOrDefault();
+                    var slug = await query.FirstOrDefaultAsync();
                     //little hack here. nulls aren't cacheable so set it to ""
                     if (slug == null)
                         slug = "";
@@ -357,8 +357,7 @@ namespace Grand.Services.Seo
                 else
                 {
                     //new record
-                    var urlRecord = new UrlRecord
-                    {
+                    var urlRecord = new UrlRecord {
                         EntityId = entityId,
                         EntityName = entityName,
                         Slug = slug,
@@ -399,8 +398,7 @@ namespace Grand.Services.Seo
                         //insert new record
                         //we do not update the existing record because we should track all previously entered slugs
                         //to ensure that URLs will work fine
-                        var urlRecord = new UrlRecord
-                        {
+                        var urlRecord = new UrlRecord {
                             EntityId = entityId,
                             EntityName = entityName,
                             Slug = slug,

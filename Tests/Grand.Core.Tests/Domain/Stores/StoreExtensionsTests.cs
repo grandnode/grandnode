@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace Grand.Core.Domain.Stores.Tests
+namespace Grand.Domain.Stores.Tests
 {
     [TestClass()]
     public class StoreExtensionsTests {

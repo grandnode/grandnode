@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Courses;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Courses;
+using Grand.Domain.Customers;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -242,7 +242,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = course.Id });
                 }
@@ -512,7 +512,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("EditLesson", new { id = lesson.Id });
                 }

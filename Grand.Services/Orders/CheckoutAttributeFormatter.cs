@@ -1,6 +1,6 @@
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
 using Grand.Core.Html;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
@@ -21,7 +21,6 @@ namespace Grand.Services.Orders
     public partial class CheckoutAttributeFormatter : ICheckoutAttributeFormatter
     {
         private readonly IWorkContext _workContext;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICurrencyService _currencyService;
         private readonly ITaxService _taxService;
@@ -30,7 +29,6 @@ namespace Grand.Services.Orders
         private readonly IWebHelper _webHelper;
 
         public CheckoutAttributeFormatter(IWorkContext workContext,
-            ICheckoutAttributeService checkoutAttributeService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICurrencyService currencyService,
             ITaxService taxService,
@@ -38,14 +36,13 @@ namespace Grand.Services.Orders
             IDownloadService downloadService,
             IWebHelper webHelper)
         {
-            this._workContext = workContext;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._currencyService = currencyService;
-            this._taxService = taxService;
-            this._priceFormatter = priceFormatter;
-            this._downloadService = downloadService;
-            this._webHelper = webHelper;
+            _workContext = workContext;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _currencyService = currencyService;
+            _taxService = taxService;
+            _priceFormatter = priceFormatter;
+            _downloadService = downloadService;
+            _webHelper = webHelper;
         }
 
         /// <summary>
@@ -151,7 +148,7 @@ namespace Grand.Services.Orders
                                 formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                                 if (renderPrices)
                                 {
-                                    decimal priceAdjustmentBase = (await _taxService.GetCheckoutAttributePrice(attributeValue, customer)).checkoutPrice;
+                                    decimal priceAdjustmentBase = (await _taxService.GetCheckoutAttributePrice(attribute, attributeValue, customer)).checkoutPrice;
                                     decimal priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {

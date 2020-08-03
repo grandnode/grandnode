@@ -1,23 +1,22 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Validators.Vendors;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Vendors
 {
-    [Validator(typeof(ApplyVendorValidator))]
     public partial class ApplyVendorModel : BaseGrandModel
     {
 
         public ApplyVendorModel()
         {
-            this.Address = new VendorAddressModel();
+            Address = new VendorAddressModel();
         }
 
         public VendorAddressModel Address { get; set; }
 
         [GrandResourceDisplayName("Vendors.ApplyAccount.Name")]
         public string Name { get; set; }
+        [DataType(DataType.EmailAddress)]
         [GrandResourceDisplayName("Vendors.ApplyAccount.Email")]
         public string Email { get; set; }
         [GrandResourceDisplayName("Vendors.ApplyAccount.Description")]

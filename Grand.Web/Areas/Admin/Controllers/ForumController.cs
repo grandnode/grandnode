@@ -24,9 +24,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public ForumController(IForumService forumService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
         {
-            this._forumService = forumService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
+            _forumService = forumService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
         }
 
         #region List

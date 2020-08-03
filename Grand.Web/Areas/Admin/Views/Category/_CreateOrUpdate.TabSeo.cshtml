@@ -1,6 +1,6 @@
 ﻿@model CategoryModel
 <vc:admin-widget widget-zone="category_details_seo_top" additional-data="Model" />
-@(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-seo-localized",
+@(await Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-seo-localized",
     @<div class="form-horizontal">
          <div class="form-body">
              <div class="form-group">

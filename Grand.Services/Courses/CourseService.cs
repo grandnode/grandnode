@@ -1,9 +1,9 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Courses;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Courses;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using MediatR;
@@ -84,7 +84,7 @@ namespace Grand.Services.Courses
             
             //get products from orders - paid/not deleted/for customer/store
             var pl = await _orderRepository.Table.Where(x => x.CustomerId == customer.Id && !x.Deleted
-                            && x.PaymentStatusId == (int)Core.Domain.Payments.PaymentStatus.Paid
+                            && x.PaymentStatusId == (int)Domain.Payments.PaymentStatus.Paid
                             && x.StoreId == storeId).SelectMany(x => x.OrderItems, (p, pr) => pr.ProductId).Distinct().ToListAsync();
 
             //courses assigned to products

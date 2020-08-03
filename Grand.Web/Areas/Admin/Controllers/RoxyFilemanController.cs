@@ -1,17 +1,15 @@
 ﻿using Grand.Core;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Security;
-using SkiaSharp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using SkiaSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
@@ -23,7 +21,6 @@ namespace Grand.Web.Areas.Admin.Controllers
     //the original file was \RoxyFileman-1.4.5-net\fileman\asp_net\main.ashx
 
     //do not validate request token (XSRF)
-    [AdminAntiForgery(true)]
     [PermissionAuthorize(PermissionSystemName.Files)]
     public class RoxyFilemanController : BaseAdminController
     {
@@ -54,20 +51,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         #endregion
 
         #region Ctor
 
         public RoxyFilemanController(IWebHostEnvironment hostingEnvironment,
             IPermissionService permissionService,
-            IWorkContext workContext,
-            IHttpContextAccessor httpContextAccessor)
+            IWorkContext workContext)
         {
-            this._hostingEnvironment = hostingEnvironment;
-            this._permissionService = permissionService;
-            this._workContext = workContext;
-            this._httpContextAccessor = httpContextAccessor;
+            _hostingEnvironment = hostingEnvironment;
+            _permissionService = permissionService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -182,6 +176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <summary>
         /// Process request
         /// </summary>
+        [IgnoreAntiforgeryToken]
         public virtual async Task ProcessRequest()
         {
             //async requests are disabled in the js code, so use .Wait() method here
@@ -252,7 +247,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                         await CreateThumbnail(HttpContext.Request.Query["f"]);
                         break;
                     case "UPLOAD":
-                        await UploadFilesAsync(HttpContext.Request.Form["d"]);
+                        var form = await HttpContext.Request.ReadFormAsync();
+                        await UploadFilesAsync(form["d"]);
                         break;
                     default:
                         await HttpContext.Response.WriteAsync(GetErrorResponse("This action is not implemented."));
@@ -261,7 +257,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                if (action == "UPLOAD" && !IsAjaxRequest())
+                if (action == "UPLOAD" && !await IsAjaxRequest())
                     await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({GetErrorResponse(GetLanguageResource("E_UploadNoFiles"))});</script>");
                 else
                     await HttpContext.Response.WriteAsync(GetErrorResponse(ex.Message));
@@ -317,7 +313,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!virtualPath.StartsWith("/"))
                 virtualPath = "/" + virtualPath;
             virtualPath = virtualPath.TrimEnd('/');
-            if(Grand.Core.OperatingSystem.IsWindows())
+            if (Grand.Core.OperatingSystem.IsWindows())
                 virtualPath = virtualPath.Replace('/', '\\');
 
             return _hostingEnvironment.WebRootPath + virtualPath;
@@ -499,7 +495,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var rootDirectoryPath = GetFullPath(GetVirtualPath(null));
             var rootDirectory = new DirectoryInfo(rootDirectoryPath);
             if (!rootDirectory.Exists)
-                throw new Exception("Invalid files root directory. Check your configuration - "+ rootDirectoryPath);
+                throw new Exception("Invalid files root directory. Check your configuration - " + rootDirectoryPath);
 
             var allDirectories = GetDirectories(rootDirectory.FullName);
             allDirectories.Insert(0, rootDirectory.FullName);
@@ -565,7 +561,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                             }
                         }
                     }
-                    catch {
+                    catch
+                    {
                         continue;
                     }
                 }
@@ -990,7 +987,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
                 await HttpContext.Response.Body.WriteAsync(file, 0, file.Length);
                 HttpContext.Response.Body.Close();
-                
+
             }
             catch { }
         }
@@ -999,11 +996,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// Whether the request is made with ajax 
         /// </summary>
         /// <returns>True or false</returns>
-        protected virtual bool IsAjaxRequest()
+        protected virtual async Task<bool> IsAjaxRequest()
         {
-            return HttpContext.Request.Form != null &&
-                !StringValues.IsNullOrEmpty(HttpContext.Request.Form["method"]) &&
-                HttpContext.Request.Form["method"] == "ajax";
+            var form = await HttpContext.Request.ReadFormAsync();
+            return form != null &&
+                !StringValues.IsNullOrEmpty(form["method"]) &&
+                form["method"] == "ajax";
         }
 
         /// <summary>
@@ -1018,9 +1016,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             try
             {
                 directoryPath = GetFullPath(GetVirtualPath(directoryPath));
-                for (var i = 0; i < HttpContext.Request.Form.Files.Count; i++)
+                var form = await HttpContext.Request.ReadFormAsync();
+                for (var i = 0; i < form.Files.Count; i++)
                 {
-                    var fileName = HttpContext.Request.Form.Files[i].FileName;
+                    var fileName = form.Files[i].FileName;
                     if (CanHandleFile(fileName))
                     {
                         var file = new FileInfo(fileName);
@@ -1028,7 +1027,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         var destinationFile = Path.Combine(directoryPath, uniqueFileName);
                         using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
                         {
-                            HttpContext.Request.Form.Files[i].CopyTo(stream);
+                            form.Files[i].CopyTo(stream);
                         }
                     }
                     else
@@ -1042,7 +1041,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 result = GetErrorResponse(ex.Message);
             }
-            if (IsAjaxRequest())
+            if (await IsAjaxRequest())
             {
                 if (hasErrors)
                     result = GetErrorResponse(GetLanguageResource("E_UploadNotAll"));

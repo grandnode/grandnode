@@ -1,13 +1,10 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Media;
-using Grand.Web.Validators.Blogs;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Blogs
 {
-    [Validator(typeof(BlogPostValidator))]
     public partial class BlogPostModel : BaseGrandEntityModel
     {
         public BlogPostModel()

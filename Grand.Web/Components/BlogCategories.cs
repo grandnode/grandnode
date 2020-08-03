@@ -1,6 +1,7 @@
-﻿using Grand.Core.Domain.Blogs;
+﻿using Grand.Domain.Blogs;
 using Grand.Framework.Components;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Blogs;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,13 +9,13 @@ namespace Grand.Web.ViewComponents
 {
     public class BlogCategoriesViewComponent : BaseViewComponent
     {
-        private readonly IBlogViewModelService _blogViewModelService;
+        private readonly IMediator _mediator;
         private readonly BlogSettings _blogSettings;
 
-        public BlogCategoriesViewComponent(IBlogViewModelService blogViewModelService, BlogSettings blogSettings)
+        public BlogCategoriesViewComponent(IMediator mediator, BlogSettings blogSettings)
         {
-            this._blogViewModelService = blogViewModelService;
-            this._blogSettings = blogSettings;
+            _mediator = mediator;
+            _blogSettings = blogSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
@@ -22,7 +23,7 @@ namespace Grand.Web.ViewComponents
             if (!_blogSettings.Enabled)
                 return Content("");
 
-            var model = await _blogViewModelService.PrepareBlogPostCategoryModel();
+            var model = await _mediator.Send(new GetBlogPostCategory());
             return View(model);
         }
     }

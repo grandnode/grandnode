@@ -6,20 +6,20 @@ namespace Grand.Plugin.Payments.PayPalStandard
 {
     public partial class RouteProvider : IRouteProvider
     {
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
             //PDT
-            routeBuilder.MapRoute("Plugin.Payments.PayPalStandard.PDTHandler",
+            routeBuilder.MapControllerRoute("Plugin.Payments.PayPalStandard.PDTHandler",
                  "Plugins/PaymentPayPalStandard/PDTHandler",
                  new { controller = "PaymentPayPalStandard", action = "PDTHandler" }
             );
             //IPN
-            routeBuilder.MapRoute("Plugin.Payments.PayPalStandard.IPNHandler",
+            routeBuilder.MapControllerRoute("Plugin.Payments.PayPalStandard.IPNHandler",
                  "Plugins/PaymentPayPalStandard/IPNHandler",
                  new { controller = "PaymentPayPalStandard", action = "IPNHandler" }
             );
             //Cancel
-            routeBuilder.MapRoute("Plugin.Payments.PayPalStandard.CancelOrder",
+            routeBuilder.MapControllerRoute("Plugin.Payments.PayPalStandard.CancelOrder",
                  "Plugins/PaymentPayPalStandard/CancelOrder",
                  new { controller = "PaymentPayPalStandard", action = "CancelOrder" }
             );

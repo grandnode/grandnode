@@ -4,13 +4,13 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.InteractiveForms.Attribute.Values.EditValue").Text;
 }
-<form asp-controller="InteractiveForm" asp-action="ValueEditPopup"
+<form asp-area="Admin" asp-controller="InteractiveForm" asp-action="ValueEditPopup"
       asp-route-form="@Context.Request.Query["form"]"
       asp-route-aId="@Context.Request.Query["aId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
-        <antiforgery-token />
+    
+        
         <div class="row">
             <div class="col-md-12">
                 <div class="x_panel light form-fit">

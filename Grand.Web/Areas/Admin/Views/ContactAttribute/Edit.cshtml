@@ -4,8 +4,8 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.ContactAttributes.EditAttributeDetails").Text;
 }
-<form asp-controller="ContactAttribute" asp-action="Edit" method="post" id="contactattribute-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="ContactAttribute" asp-action="Edit" method="post" id="contactattribute-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

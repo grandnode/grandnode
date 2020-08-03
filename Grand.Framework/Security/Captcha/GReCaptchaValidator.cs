@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.Security.Captcha
 {
@@ -21,23 +22,18 @@ namespace Grand.Framework.Security.Captcha
             _version = version;
         }
 
-        public GReCaptchaResponse Validate()
+        public async Task<GReCaptchaResponse> Validate()
         {
             GReCaptchaResponse result = null;
             var httpClient = new HttpClient();
-            var requestUri = string.Empty;
-
-            requestUri = string.Format(RECAPTCHA_VERIFY_URL, SecretKey, Response, RemoteIp);
+            var requestUri = string.Format(RECAPTCHA_VERIFY_URL, SecretKey, Response, RemoteIp);
 
             try
             {
-                var taskResult = httpClient.GetAsync(requestUri);
-                taskResult.Wait();
-                var response = taskResult.Result;
+                var response = await httpClient.GetAsync(requestUri);
                 response.EnsureSuccessStatusCode();
-                var taskString = response.Content.ReadAsStringAsync();
-                taskString.Wait();
-                result = ParseResponseResult(taskString.Result);
+                var contentresult = await response.Content.ReadAsStringAsync();
+                result = ParseResponseResult(contentresult);
 
             }
             catch (Exception exc)

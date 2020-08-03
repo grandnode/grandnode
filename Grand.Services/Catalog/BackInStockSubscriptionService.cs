@@ -1,13 +1,9 @@
-using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Services.Common;
-using Grand.Services.Customers;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Events;
-using Grand.Services.Messages;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver.Linq;
 using System;
 using System.Linq;
@@ -23,9 +19,8 @@ namespace Grand.Services.Catalog
         #region Fields
 
         private readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IMediator _mediator;
-        private readonly IServiceProvider _serviceProvider;
+
         #endregion
 
         #region Ctor
@@ -35,16 +30,12 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="backInStockSubscriptionRepository">Back in stock subscription repository</param>
         /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="IMediator">Mediator</param>
         public BackInStockSubscriptionService(IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
-            IWorkflowMessageService workflowMessageService,
-            IMediator mediator,
-            IServiceProvider serviceProvider)
+            IMediator mediator)
         {
-            this._backInStockSubscriptionRepository = backInStockSubscriptionRepository;
-            this._workflowMessageService = workflowMessageService;
-            this._mediator = mediator;
-            this._serviceProvider = serviceProvider;
+            _backInStockSubscriptionRepository = backInStockSubscriptionRepository;
+            _mediator = mediator;
         }
 
         #endregion
@@ -90,34 +81,7 @@ namespace Grand.Services.Catalog
             return await PagedList<BackInStockSubscription>.Create(query, pageIndex, pageSize);
         }
 
-        /// <summary>
-        /// Gets all subscriptions
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier; pass "" to load all records</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>Subscriptions</returns>
-        public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(string productId, string attributeXml, string warehouseId,
-            string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue)
-        {
-            var query = _backInStockSubscriptionRepository.Table;
-            //product
-            query = query.Where(biss => biss.ProductId == productId);
-            //store
-            if (!string.IsNullOrEmpty(storeId))
-                query = query.Where(biss => biss.StoreId == storeId);
-            //warehouse
-            if (!string.IsNullOrEmpty(warehouseId))
-                query = query.Where(biss => biss.WarehouseId == warehouseId);
 
-            //warehouse
-            if (!string.IsNullOrEmpty(attributeXml))
-                query = query.Where(biss => biss.AttributeXml == attributeXml);
-
-            query = query.OrderByDescending(biss => biss.CreatedOnUtc);
-            return await PagedList<BackInStockSubscription>.Create(query, pageIndex, pageSize);
-        }
 
         /// <summary>
         /// Gets all subscriptions
@@ -192,30 +156,18 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="warehouse">Warehouse ident</param>
         /// <returns>Number of sent email</returns>
-        public virtual async Task<int> SendNotificationsToSubscribers(Product product, string warehouse)
+        public virtual async Task SendNotificationsToSubscribers(Product product, string warehouse)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var subscriptions = await _mediator.Send(new SendNotificationsToSubscribersCommand() {
+                Product = product,
+                Warehouse = warehouse,
+            });
 
-            int result = 0;
-            var subscriptions = await GetAllSubscriptionsByProductId(product.Id, string.Empty, warehouse);
-            foreach (var subscription in subscriptions)
-            {
-                var customer = await customerService.GetCustomerById(subscription.CustomerId);
-                //ensure that customer is registered (simple and fast way)
-                if (customer != null && CommonHelper.IsValidEmail(customer.Email))
-                {
-                    var customerLanguageId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId, subscription.StoreId);
-                    await _workflowMessageService.SendBackInStockNotification(customer, product, subscription, customerLanguageId);
-                    result++;
-                }
-            }
-            for (int i = 0; i <= subscriptions.Count - 1; i++)
+            for (var i = 0; i <= subscriptions.Count - 1; i++)
                 await DeleteSubscription(subscriptions[i]);
-
-            return result;
         }
 
         /// <summary>
@@ -225,30 +177,20 @@ namespace Grand.Services.Catalog
         /// <param name="attributeXml">Attribute xml</param>
         /// <param name="warehouse">Warehouse ident</param>
         /// <returns>Number of sent email</returns>
-        public virtual async Task<int> SendNotificationsToSubscribers(Product product, string attributeXml, string warehouse)
+        public virtual async Task SendNotificationsToSubscribers(Product product, string attributeXml, string warehouse)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var subscriptions = await _mediator.Send(new SendNotificationsToSubscribersCommand() {
+                Product = product,
+                Warehouse = warehouse,
+                AttributeXml = attributeXml
+            });
 
-            int result = 0;
-            var subscriptions = await GetAllSubscriptionsByProductId(product.Id, attributeXml, warehouse);
-            foreach (var subscription in subscriptions)
-            {
-                var customer = await customerService.GetCustomerById(subscription.CustomerId);
-                //ensure that customer is registered (simple and fast way)
-                if (customer != null && CommonHelper.IsValidEmail(customer.Email))
-                {
-                    var customerLanguageId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId, subscription.StoreId);
-                    await _workflowMessageService.SendBackInStockNotification(customer, product, subscription, customerLanguageId);
-                    result++;
-                }
-            }
-            for (int i = 0; i <= subscriptions.Count - 1; i++)
+            for (var i = 0; i <= subscriptions.Count - 1; i++)
                 await DeleteSubscription(subscriptions[i]);
 
-            return result;
         }
 
         #endregion

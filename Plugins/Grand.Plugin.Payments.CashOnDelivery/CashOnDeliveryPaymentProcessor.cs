@@ -1,8 +1,7 @@
 using Grand.Core;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
 using Grand.Core.Plugins;
-using Grand.Plugin.Payments.CashOnDelivery.Controllers;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
@@ -26,7 +25,7 @@ namespace Grand.Plugin.Payments.CashOnDelivery
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILanguageService _languageService;
 
         #endregion
 
@@ -34,14 +33,14 @@ namespace Grand.Plugin.Payments.CashOnDelivery
 
         public CashOnDeliveryPaymentProcessor(CashOnDeliveryPaymentSettings cashOnDeliveryPaymentSettings,
             ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService,
-            ILocalizationService localizationService, IWebHelper webHelper, IServiceProvider serviceProvider)
+            ILocalizationService localizationService, IWebHelper webHelper, ILanguageService languageService)
         {
-            this._cashOnDeliveryPaymentSettings = cashOnDeliveryPaymentSettings;
-            this._settingService = settingService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
+            _cashOnDeliveryPaymentSettings = cashOnDeliveryPaymentSettings;
+            _settingService = settingService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _languageService = languageService;
         }
 
         #endregion
@@ -189,15 +188,15 @@ namespace Grand.Plugin.Payments.CashOnDelivery
             };
             await _settingService.SaveSetting(settings);
 
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.DescriptionText", "Description");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.PaymentMethodDescription", "Cash On Delivery");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.AdditionalFee", "Additional fee");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.AdditionalFee.Hint", "The additional fee.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.AdditionalFeePercentage", "Additional fee. Use percentage");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.ShippableProductRequired", "Shippable product required");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.ShippableProductRequired.Hint", "An option indicating whether shippable products are required in order to display this payment method during checkout.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.DescriptionText", "Description");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.PaymentMethodDescription", "Cash On Delivery");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.AdditionalFee", "Additional fee");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.AdditionalFee.Hint", "The additional fee.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.AdditionalFeePercentage", "Additional fee. Use percentage");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.ShippableProductRequired", "Shippable product required");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.ShippableProductRequired.Hint", "An option indicating whether shippable products are required in order to display this payment method during checkout.");
 
 
             await base.Install();
@@ -209,15 +208,15 @@ namespace Grand.Plugin.Payments.CashOnDelivery
             await _settingService.DeleteSetting<CashOnDeliveryPaymentSettings>();
 
             //locales
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.DescriptionText");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.DescriptionText.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.PaymentMethodDescription");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.AdditionalFee");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.AdditionalFee.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.AdditionalFeePercentage");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.AdditionalFeePercentage.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.ShippableProductRequired");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CashOnDelivery.ShippableProductRequired.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.DescriptionText");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.DescriptionText.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.PaymentMethodDescription");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.AdditionalFee");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.AdditionalFee.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.AdditionalFeePercentage");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.AdditionalFeePercentage.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.ShippableProductRequired");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CashOnDelivery.ShippableProductRequired.Hint");
 
             await base.Uninstall();
         }

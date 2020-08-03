@@ -1,11 +1,10 @@
 using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Messages;
 using Grand.Services.Customers;
 using Grand.Services.Events;
-using Grand.Services.Stores;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -39,20 +38,6 @@ namespace Grand.Services.Messages
         /// </remarks>
         private const string CONTACTATTRIBUTES_BY_ID_KEY = "Grand.contactattribute.id-{0}";
         /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : contact attribute ID
-        /// </remarks>
-        private const string CONTACTATTRIBUTEVALUES_ALL_KEY = "Grand.contactattributevalue.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : contact attribute value ID
-        /// </remarks>
-        private const string CONTACTATTRIBUTEVALUES_BY_ID_KEY = "Grand.contactattributevalue.id-{0}";
-        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string CONTACTATTRIBUTES_PATTERN_KEY = "Grand.contactattribute.";
@@ -65,7 +50,6 @@ namespace Grand.Services.Messages
         #region Fields
 
         private readonly IRepository<ContactAttribute> _contactAttributeRepository;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
@@ -80,21 +64,18 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="contactAttributeRepository">Contact attribute repository</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public ContactAttributeService(ICacheManager cacheManager,
             IRepository<ContactAttribute> contactAttributeRepository,
-            IStoreMappingService storeMappingService,
             IMediator mediator,
             IWorkContext workContext,
             CatalogSettings catalogSettings)
         {
-            this._cacheManager = cacheManager;
-            this._contactAttributeRepository = contactAttributeRepository;
-            this._storeMappingService = storeMappingService;
-            this._mediator = mediator;
-            this._workContext = workContext;
-            this._catalogSettings = catalogSettings;
+            _cacheManager = cacheManager;
+            _contactAttributeRepository = contactAttributeRepository;
+            _mediator = mediator;
+            _workContext = workContext;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -114,8 +95,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.DeleteAsync(contactAttribute);
 
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(contactAttribute);
@@ -125,7 +106,6 @@ namespace Grand.Services.Messages
         /// Gets all contact attributes
         /// </summary>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="excludeShippableAttributes">A value indicating whether we should exlude shippable attributes</param>
         /// <returns>Contact attributes</returns>
         public virtual async Task<IList<ContactAttribute>> GetAllContactAttributes(string storeId = "", bool ignorAcl = false)
         {
@@ -180,8 +160,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.InsertAsync(contactAttribute);
 
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(contactAttribute);
@@ -198,8 +178,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.UpdateAsync(contactAttribute);
 
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(contactAttribute);

@@ -16,6 +16,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Grand.Core;
+using Grand.Domain.Customers;
+using Grand.Domain.Seo;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -29,19 +33,29 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
+        private readonly IWorkContext _workContext;
+        private readonly SeoSettings _seoSettings;
 
         #endregion
 
         #region Constructors
 
-        public BlogController(IBlogService blogService, IBlogViewModelService blogViewModelService, ILanguageService languageService, ILocalizationService localizationService,
-            IStoreService storeService)
+        public BlogController(
+            IBlogService blogService, 
+            IBlogViewModelService blogViewModelService, 
+            ILanguageService languageService, 
+            ILocalizationService localizationService,
+            IStoreService storeService, 
+            IWorkContext workContext, 
+            SeoSettings seoSettings)
         {
-            this._blogService = blogService;
-            this._blogViewModelService = blogViewModelService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
+            _blogService = blogService;
+            _blogViewModelService = blogViewModelService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _workContext = workContext;
+            _seoSettings = seoSettings;
         }
 
         #endregion
@@ -56,8 +70,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> List(DataSourceRequest command)
         {
             var blogPosts = await _blogViewModelService.PrepareBlogPostsModel(command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = blogPosts.blogPosts,
                 Total = blogPosts.totalCount
             };
@@ -79,6 +92,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    model.LimitedToStores = true;
+                    model.SelectedStoreIds = new string[] { _workContext.CurrentCustomer.StaffStoreId };
+                }
                 var blogPost = await _blogViewModelService.InsertBlogPostModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
@@ -97,6 +115,16 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!blogPost.LimitedToStores || (blogPost.LimitedToStores && blogPost.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && blogPost.Stores.Count > 1))
+                    WarningNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Permisions"));
+                else
+                {
+                    if (!blogPost.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                        return RedirectToAction("List");
+                }
+            }
             ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
             var model = await _blogViewModelService.PrepareBlogPostModel(blogPost);
             //locales
@@ -121,15 +149,27 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!blogPost.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return RedirectToAction("Edit", new { id = blogPost.Id });
+            }
+
             if (ModelState.IsValid)
             {
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    model.LimitedToStores = true;
+                    model.SelectedStoreIds = new string[] { _workContext.CurrentCustomer.StaffStoreId };
+                }
+
                 blogPost = await _blogViewModelService.UpdateBlogPostModel(model, blogPost);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = blogPost.Id });
                 }
@@ -162,6 +202,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!blogPost.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return RedirectToAction("Edit", new { id = blogPost.Id });
+            }
+
             if (ModelState.IsValid)
             {
                 await _blogService.DeleteBlogPost(blogPost);
@@ -181,9 +227,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CategoryList(DataSourceRequest command)
         {
-            var categories = await _blogService.GetAllBlogCategories();
-            var gridModel = new DataSourceResult
-            {
+            var categories = await _blogService.GetAllBlogCategories(_workContext.CurrentCustomer.StaffStoreId);
+            var gridModel = new DataSourceResult {
                 Data = categories,
                 Total = categories.Count
             };
@@ -197,7 +242,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             await AddLocales(_languageService, model.Locales);
             //Stores
-            await model.PrepareStoresMappingModel(null, _storeService, false);
+            await model.PrepareStoresMappingModel(null, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -207,7 +252,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    model.LimitedToStores = true;
+                    model.SelectedStoreIds = new string[] { _workContext.CurrentCustomer.StaffStoreId };
+                }
+
                 var blogCategory = model.ToEntity();
+                blogCategory.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(blogCategory.SeName) ? blogCategory.Name : blogCategory.SeName, _seoSettings);
+
                 await _blogService.InsertBlogCategory(blogCategory);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogCategory.Added"));
                 return continueEditing ? RedirectToAction("CategoryEdit", new { id = blogCategory.Id }) : RedirectToAction("CategoryList");
@@ -230,6 +283,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("CategoryList");
 
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!blogCategory.LimitedToStores || (blogCategory.LimitedToStores && blogCategory.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && blogCategory.Stores.Count > 1))
+                    WarningNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogCategory.Permisions"));
+                else
+                {
+                    if (!blogCategory.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                        return RedirectToAction("List");
+                }
+            }
+
             ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
             var model = blogCategory.ToModel();
             //locales
@@ -250,15 +314,28 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("CategoryList");
 
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!blogCategory.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return RedirectToAction("CategoryEdit", new { id = blogCategory.Id });
+            }
+
             if (ModelState.IsValid)
             {
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    model.LimitedToStores = true;
+                    model.SelectedStoreIds = new string[] { _workContext.CurrentCustomer.StaffStoreId };
+                }
+
                 blogCategory = model.ToEntity(blogCategory);
+                blogCategory.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(blogCategory.SeName) ? blogCategory.Name : blogCategory.SeName, _seoSettings);
                 await _blogService.UpdateBlogCategory(blogCategory);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogCategory.Updated"));
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("CategoryEdit", new { id = blogCategory.Id });
                 }
@@ -274,7 +351,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = blogCategory.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Store
-            await model.PrepareStoresMappingModel(blogCategory, _storeService, true);
+            await model.PrepareStoresMappingModel(blogCategory, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -287,6 +364,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("CategoryList");
 
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!blogcategory.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return RedirectToAction("CategoryEdit", new { id = blogcategory.Id });
+            }
+
             if (ModelState.IsValid)
             {
                 await _blogService.DeleteBlogCategory(blogcategory);
@@ -295,7 +378,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("CategoryList");
             }
             ErrorNotification(ModelState);
-            return RedirectToAction("CategoryEdit", new { id = id });
+            return RedirectToAction("CategoryEdit", new { id = blogcategory.Id });
         }
 
         [HttpPost]
@@ -303,11 +386,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var blogCategory = await _blogService.GetBlogCategoryById(categoryId);
             if (blogCategory == null)
-                return ErrorForKendoGridJson("blogCategory no exists");
+                return ErrorForKendoGridJson("blogCategory no exists");           
 
-            var gridModel = new DataSourceResult
+            var blogposts = new List<BlogCategoryPost>();
+            foreach (var item in blogCategory.BlogPosts)
             {
-                Data =  blogCategory.BlogPosts.Select(x => new { Id = x.Id, BlogPostId = x.BlogPostId, Name = _blogService.GetBlogPostById(x.BlogPostId).Result?.Title }),
+                var post = new BlogCategoryPost();
+                post.Id = item.Id;
+                post.BlogPostId = post.BlogPostId;
+                var _post = await _blogService.GetBlogPostById(item.BlogPostId);
+                if (_post != null)
+                    post.Name = _post.Title;
+
+                blogposts.Add(post);
+            }
+            var gridModel = new DataSourceResult {
+                Data = blogposts,
                 Total = blogCategory.BlogPosts.Count
             };
             return Json(gridModel);
@@ -318,6 +412,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             var blogCategory = await _blogService.GetBlogCategoryById(categoryId);
             if (blogCategory == null)
                 return ErrorForKendoGridJson("blogCategory no exists");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!blogCategory.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return ErrorForKendoGridJson("blogCategory no permission");
+            }
+
             if (ModelState.IsValid)
             {
                 var post = blogCategory.BlogPosts.FirstOrDefault(x => x.Id == id);
@@ -335,9 +436,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var model = new AddBlogPostCategoryModel();
             //stores
+            var storeId = _workContext.CurrentCustomer.StaffStoreId;
+
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+            foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
             model.CategoryId = categoryId;
             return View(model);
         }
@@ -346,6 +449,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> BlogPostAddPopupList(DataSourceRequest command, AddBlogPostCategoryModel model)
         {
             var gridModel = new DataSourceResult();
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
+
             var posts = await _blogService.GetAllBlogPosts(storeId: model.SearchStoreId, blogPostName: model.SearchBlogTitle, pageIndex: command.Page - 1, pageSize: command.PageSize);
             gridModel.Data = posts.Select(x => new { Id = x.Id, Name = x.Title });
             gridModel.Total = posts.TotalCount;
@@ -368,7 +477,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         {
                             if (blogCategory.BlogPosts.Where(x => x.BlogPostId == id).Count() == 0)
                             {
-                                blogCategory.BlogPosts.Add(new Core.Domain.Blogs.BlogCategoryPost() { BlogPostId = id });
+                                blogCategory.BlogPosts.Add(new Domain.Blogs.BlogCategoryPost() { BlogPostId = id });
                                 await _blogService.UpdateBlogCategory(blogCategory);
                             }
                         }
@@ -392,8 +501,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Comments(string filterByBlogPostId, DataSourceRequest command)
         {
             var model = await _blogViewModelService.PrepareBlogPostCommentsModel(filterByBlogPostId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = model.blogComments,
                 Total = model.totalCount,
             };
@@ -407,6 +515,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No comment found with the specified id");
 
             var blogPost = await _blogService.GetBlogPostById(comment.BlogPostId);
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!blogPost.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return ErrorForKendoGridJson("blogPost no permission");
+            }
+
             if (ModelState.IsValid)
             {
                 await _blogService.DeleteBlogComment(comment);
@@ -467,14 +581,22 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> UpdateProduct(BlogProductModel model)
         {
-            await _blogViewModelService.UpdateProductModel(model);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                await _blogViewModelService.UpdateProductModel(model);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public async Task<IActionResult> DeleteProduct(string id)
         {
-            await _blogViewModelService.DeleteProductModel(id);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                await _blogViewModelService.DeleteProductModel(id);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #endregion

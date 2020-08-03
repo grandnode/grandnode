@@ -1,28 +1,53 @@
-﻿using Grand.Core.Domain;
+﻿using Grand.Domain.Stores;
 using Grand.Framework.Components;
-using Grand.Web.Interfaces;
+using Grand.Framework.Themes;
+using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace Grand.Web.ViewComponents
 {
     public class StoreThemeSelectorViewComponent : BaseViewComponent
     {
-        private readonly ICommonViewModelService _commonViewModelService;
+        private readonly IThemeProvider _themeProvider;
+        private readonly IThemeContext _themeContext;
+
         private readonly StoreInformationSettings _storeInformationSettings;
-        public StoreThemeSelectorViewComponent(ICommonViewModelService commonViewModelService,
+        public StoreThemeSelectorViewComponent(IThemeProvider themeProvider,
+            IThemeContext themeContext,
             StoreInformationSettings storeInformationSettings)
         {
-            this._commonViewModelService = commonViewModelService;
-            this._storeInformationSettings = storeInformationSettings;
+            _themeProvider = themeProvider;
+            _themeContext = themeContext;
+            _storeInformationSettings = storeInformationSettings;
         }
 
         public IViewComponentResult Invoke()
         {
             if (!_storeInformationSettings.AllowCustomerToSelectTheme)
                 return Content("");
-            var model = _commonViewModelService.PrepareStoreThemeSelector();
+
+            var model = PrepareStoreThemeSelector();
             return View(model);
         }
+
+        private StoreThemeSelectorModel PrepareStoreThemeSelector()
+        {
+            var model = new StoreThemeSelectorModel();
+
+            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingThemeName);
+            model.CurrentStoreTheme = new StoreThemeModel {
+                Name = currentTheme.ThemeName,
+                Title = currentTheme.ThemeTitle
+            };
+            model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations()
+                .Select(x => new StoreThemeModel {
+                    Name = x.ThemeName,
+                    Title = x.ThemeTitle
+                })
+                .ToList();
+            return model;
+        }
+
     }
 }

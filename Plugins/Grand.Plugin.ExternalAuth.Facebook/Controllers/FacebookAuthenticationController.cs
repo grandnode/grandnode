@@ -26,8 +26,6 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -37,17 +35,13 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
             IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
-            ISettingService settingService,
-            IStoreService storeService,
-            IWorkContext workContext)
+            ISettingService settingService)
         {
-            this._facebookExternalAuthSettings = facebookExternalAuthSettings;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._storeService = storeService;
-            this._workContext = workContext;
+            _facebookExternalAuthSettings = facebookExternalAuthSettings;
+            _externalAuthenticationService = externalAuthenticationService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
         }
 
         #endregion
@@ -72,7 +66,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [AuthorizeAdmin]
         [Area("Admin")]
         public async Task<IActionResult> Configure(ConfigurationModel model)
@@ -115,7 +109,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
         public async Task<IActionResult> LoginCallback(string returnUrl)
         {
             //authenticate Facebook user
-            var authenticateResult = await this.HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+            var authenticateResult = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
             if (!authenticateResult.Succeeded || !authenticateResult.Principal.Claims.Any())
                 return RedirectToRoute("Login");
 
@@ -123,7 +117,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
             var authenticationParameters = new ExternalAuthenticationParameters
             {
                 ProviderSystemName = FacebookAuthenticationDefaults.ProviderSystemName,
-                AccessToken = await this.HttpContext.GetTokenAsync(FacebookDefaults.AuthenticationScheme, "access_token"),
+                AccessToken = await HttpContext.GetTokenAsync(FacebookDefaults.AuthenticationScheme, "access_token"),
                 Email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value,
                 ExternalIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value,
                 ExternalDisplayIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value,

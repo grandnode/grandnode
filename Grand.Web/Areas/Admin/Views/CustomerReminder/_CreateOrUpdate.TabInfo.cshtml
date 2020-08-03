@@ -69,11 +69,11 @@
             <div class="col-md-9 col-sm-9">
                 @if (Model.ConditionCount > 0)
                 {
-                    <admin-select asp-for="ReminderRuleId" asp-items="((Grand.Core.Domain.Customers.CustomerReminderRuleEnum)Model.ReminderRuleId).ToSelectList()" disabled />
+                    <admin-select asp-for="ReminderRuleId" asp-items="((Grand.Domain.Customers.CustomerReminderRuleEnum)Model.ReminderRuleId).ToSelectList(Context)" disabled />
                 }
                 else
                 {
-                    <admin-select asp-for="ReminderRuleId" asp-items="((Grand.Core.Domain.Customers.CustomerReminderRuleEnum)Model.ReminderRuleId).ToSelectList()" />
+                    <admin-select asp-for="ReminderRuleId" asp-items="((Grand.Domain.Customers.CustomerReminderRuleEnum)Model.ReminderRuleId).ToSelectList(Context)" />
                 }
                 <span asp-validation-for="ReminderRuleId"></span>
                 <div class="note note-info margin-top-10">
@@ -102,7 +102,7 @@
         <div class="form-group">
             <admin-label asp-for="ConditionId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ConditionId" asp-items="((Grand.Core.Domain.Customers.CustomerReminderConditionEnum)Model.ConditionId).ToSelectList()" />
+                <admin-select asp-for="ConditionId" asp-items="((Grand.Domain.Customers.CustomerReminderConditionEnum)Model.ConditionId).ToSelectList(Context)" />
                 <span asp-validation-for="ConditionId"></span>
                 <div class="note note-info margin-top-10">
                     @T("admin.customers.actiontype.helpText.OneOfThem")

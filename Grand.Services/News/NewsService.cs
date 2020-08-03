@@ -1,7 +1,8 @@
 using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.News;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.News;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using MongoDB.Driver.Linq;
@@ -35,10 +36,10 @@ namespace Grand.Services.News
             IMediator mediator,
             IWorkContext workContext)
         {
-            this._newsItemRepository = newsItemRepository;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
-            this._workContext = workContext;
+            _newsItemRepository = newsItemRepository;
+            _catalogSettings = catalogSettings;
+            _mediator = mediator;
+            _workContext = workContext;
         }
 
         #endregion
@@ -73,7 +74,6 @@ namespace Grand.Services.News
         /// <summary>
         /// Gets all news
         /// </summary>
-        /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>

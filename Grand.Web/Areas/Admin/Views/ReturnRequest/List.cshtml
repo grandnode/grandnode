@@ -4,8 +4,8 @@
     //page title
     ViewBag.Title = T("Admin.ReturnRequests").Text;
 }
-<form asp-controller="ReturnRequest" asp-action="List" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="ReturnRequest" asp-action="List" method="post">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -79,7 +79,7 @@
         </div>
     </div>
 </form>
-    <script type="text/javascript">
+    <script>
     $(document).ready(function() {
         $("#returnrequests-grid").kendoGrid({
             dataSource: {

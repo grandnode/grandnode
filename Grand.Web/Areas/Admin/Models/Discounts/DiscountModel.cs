@@ -1,7 +1,6 @@
-﻿using FluentValidation.Attributes;
+﻿using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Discounts;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -9,8 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Discounts
 {
-    [Validator(typeof(DiscountValidator))]
-    public partial class DiscountModel : BaseGrandEntityModel
+    public partial class DiscountModel : BaseGrandEntityModel, IStoreMappingModel
     {
         public DiscountModel()
         {
@@ -79,6 +77,13 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         [UIHint("Int32Nullable")]
         public int? MaximumDiscountedQuantity { get; set; }
 
+        //Store mapping
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public string[] SelectedStoreIds { get; set; }
+
         [GrandResourceDisplayName("Admin.Promotions.Discounts.Requirements.DiscountRequirementType")]
         public string AddDiscountRequirement { get; set; }
         public IList<SelectListItem> AvailableDiscountRequirementRules { get; set; }
@@ -104,6 +109,7 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
             [GrandResourceDisplayName("Admin.Promotions.Discounts.History.Order")]
             public string OrderId { get; set; }
             public int OrderNumber { get; set; }
+            public string OrderCode { get; set; }
 
             [GrandResourceDisplayName("Admin.Promotions.Discounts.History.OrderTotal")]
             public string OrderTotal { get; set; }
@@ -121,7 +127,7 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         public partial class AddCategoryToDiscountModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
-            
+
             public string SearchCategoryName { get; set; }
 
             public string DiscountId { get; set; }
@@ -139,7 +145,7 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         public partial class AddManufacturerToDiscountModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
-            
+
             public string SearchManufacturerName { get; set; }
 
             public string DiscountId { get; set; }
@@ -166,7 +172,7 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
             }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            
+
             public string SearchProductName { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
@@ -199,11 +205,11 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         public partial class AddVendorToDiscountModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Vendors.List.SearchVendorName")]
-            
+
             public string SearchVendorName { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Vendors.List.SearchVendorEmail")]
-            
+
             public string SearchVendorEmail { get; set; }
 
             public string DiscountId { get; set; }
@@ -221,7 +227,7 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         public partial class AddStoreToDiscountModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Stores.List.SearchStoreName")]
-            
+
             public string SearchStoreName { get; set; }
 
             public string DiscountId { get; set; }

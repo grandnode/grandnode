@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.News;
+﻿using Grand.Domain.News;
 using Grand.Framework.Components;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +9,7 @@ namespace Grand.Web.ViewComponents
         private readonly NewsSettings _newsSettings;
         public NewsRssHeaderLinkViewComponent(NewsSettings newsSettings)
         {
-            this._newsSettings = newsSettings;
+            _newsSettings = newsSettings;
         }
 
         public IViewComponentResult Invoke()

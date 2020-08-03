@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Directory;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Directory;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
@@ -54,17 +54,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             ICheckoutAttributeViewModelService checkoutAttributeViewModelService)
         {
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
-            this._measureService = measureService;
-            this._measureSettings = measureSettings;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
-            this._customerService = customerService;
-            this._checkoutAttributeViewModelService = checkoutAttributeViewModelService;
+            _checkoutAttributeService = checkoutAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _currencyService = currencyService;
+            _currencySettings = currencySettings;
+            _measureService = measureService;
+            _measureSettings = measureSettings;
+            _storeService = storeService;
+            _storeMappingService = storeMappingService;
+            _customerService = customerService;
+            _checkoutAttributeViewModelService = checkoutAttributeViewModelService;
         }
 
         #endregion
@@ -169,7 +169,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new {id = checkoutAttribute.Id});
                 }

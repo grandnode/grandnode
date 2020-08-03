@@ -1,5 +1,5 @@
 ﻿using Grand.Core.Caching;
-using Grand.Core.Domain.Cms;
+using Grand.Domain.Cms;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -38,12 +38,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             IServiceProvider serviceProvider,
             WidgetSettings widgetSettings)
 		{
-            this._widgetService = widgetService;
-            this._widgetSettings = widgetSettings;
-            this._pluginFinder = pluginFinder;
-            this._cacheManager = cacheManager;
-            this._serviceProvider = serviceProvider;
-            this._settingService = settingService;
+            _widgetService = widgetService;
+            _widgetSettings = widgetSettings;
+            _pluginFinder = pluginFinder;
+            _cacheManager = cacheManager;
+            _serviceProvider = serviceProvider;
+            _settingService = settingService;
         }
 
 		#endregion 
@@ -78,7 +78,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> WidgetUpdate( WidgetModel model)
+        public async Task<IActionResult> WidgetUpdate(WidgetModel model)
         {
             var widget = _widgetService.LoadWidgetBySystemName(model.SystemName);
             if (widget.IsWidgetActive(_widgetSettings))

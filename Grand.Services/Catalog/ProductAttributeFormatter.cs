@@ -1,12 +1,13 @@
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
 using Grand.Core.Html;
 using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using Grand.Services.Seo;
 using Grand.Services.Tax;
 using System;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace Grand.Services.Catalog
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
         private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IProductService _productService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public ProductAttributeFormatter(IWorkContext workContext,
@@ -43,19 +45,21 @@ namespace Grand.Services.Catalog
             IDownloadService downloadService,
             IWebHelper webHelper,
             IPriceCalculationService priceCalculationService,
+            IProductService productService,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._workContext = workContext;
-            this._productAttributeService = productAttributeService;
-            this._productAttributeParser = productAttributeParser;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._taxService = taxService;
-            this._priceFormatter = priceFormatter;
-            this._downloadService = downloadService;
-            this._webHelper = webHelper;
-            this._priceCalculationService = priceCalculationService;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _workContext = workContext;
+            _productAttributeService = productAttributeService;
+            _productAttributeParser = productAttributeParser;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _taxService = taxService;
+            _priceFormatter = priceFormatter;
+            _downloadService = downloadService;
+            _webHelper = webHelper;
+            _priceCalculationService = priceCalculationService;
+            _productService = productService;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         /// <summary>
@@ -69,7 +73,7 @@ namespace Grand.Services.Catalog
             var customer = _workContext.CurrentCustomer;
             return FormatAttributes(product, attributesXml, customer);
         }
-        
+
         /// <summary>
         /// Formats attributes
         /// </summary>
@@ -94,7 +98,7 @@ namespace Grand.Services.Catalog
             if (_workContext.WorkingLanguage != null)
                 langId = _workContext.WorkingLanguage.Id;
             else
-                langId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
+                langId = customer?.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
 
             if (string.IsNullOrEmpty(langId))
                 langId = "";
@@ -102,134 +106,33 @@ namespace Grand.Services.Catalog
             //attributes
             if (renderProductAttributes)
             {
-                var attributes = _productAttributeParser.ParseProductAttributeMappings(product, attributesXml);
-                for (int i = 0; i < attributes.Count; i++)
+                result = await PrepareFormattedAttribute(product, attributesXml, langId, serapator, htmlEncode,
+                    renderPrices, allowHyperlinks, showInAdmin);
+
+                if (product.ProductType == ProductType.BundledProduct)
                 {
-                    var productAttribute = await _productAttributeService.GetProductAttributeById(attributes[i].ProductAttributeId);
-                    var attribute = attributes[i];
-                    var valuesStr = _productAttributeParser.ParseValues(attributesXml, attribute.Id);
-                    for (int j = 0; j < valuesStr.Count; j++)
+                    int i = 0;
+                    foreach (var bundle in product.BundleProducts)
                     {
-                        string valueStr = valuesStr[j];
-                        string formattedAttribute = string.Empty;
-                        if (!attribute.ShouldHaveValues())
+                        var p1 = await _productService.GetProductById(bundle.ProductId);
+                        if (p1 != null)
                         {
-                            //no values
-                            if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
-                            {
-                                //multiline textbox
-                                var attributeName = productAttribute.GetLocalized(a => a.Name, langId);
-                                //encode (if required)
-                                if (htmlEncode)
-                                    attributeName = WebUtility.HtmlEncode(attributeName);
-                                formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
-                                //we never encode multiline textbox input
-                            }
-                            else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
-                            {
-                                //file upload
-                                Guid downloadGuid;
-                                Guid.TryParse(valueStr, out downloadGuid);
-                                var download = await _downloadService.GetDownloadByGuid(downloadGuid);
-                                if (download != null)
-                                {
-                                    //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-                                    string attributeText = "";
-                                    var fileName = string.Format("{0}{1}", 
-                                        download.Filename ?? download.DownloadGuid.ToString(),
-                                        download.Extension);
-                                    //encode (if required)
-                                    if (htmlEncode)
-                                        fileName = WebUtility.HtmlEncode(fileName);
-                                    if (allowHyperlinks)
-                                    {
-                                        //hyperlinks are allowed
-                                        var downloadLink = string.Format("{0}download/getfileupload/?downloadId={1}", _webHelper.GetStoreLocation(false), download.DownloadGuid);
-                                        attributeText = string.Format("<a href=\"{0}\" class=\"fileuploadattribute\">{1}</a>", downloadLink, fileName);
-                                    }
-                                    else
-                                    {
-                                        //hyperlinks aren't allowed
-                                        attributeText = fileName;
-                                    }
-                                    var attributeName = productAttribute.GetLocalized(a => a.Name, langId);
-                                    //encode (if required)
-                                    if (htmlEncode)
-                                        attributeName = WebUtility.HtmlEncode(attributeName);
-                                    formattedAttribute = string.Format("{0}: {1}", attributeName, attributeText);
-                                }
-                            }
-                            else
-                            {
-                                //other attributes (textbox, datepicker)
-                                formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, langId), valueStr);
-                                //encode (if required)
-                                if (htmlEncode)
-                                    formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
-                            }
-                        }
-                        else
-                        {
-                            //attributes with values
-                            if (product.ProductAttributeMappings.Where(x => x.Id == attributes[i].Id).FirstOrDefault() != null)
-                            {
-
-                                var attributeValue = product.ProductAttributeMappings.Where(x => x.Id == attributes[i].Id).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
-                                if (attributeValue != null)
-                                {
-                                    formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, langId), attributeValue.GetLocalized(a => a.Name, langId));
-                                    
-                                    if (renderPrices)
-                                    {
-                                        decimal attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
-                                        var prices = await _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer);
-                                        decimal priceAdjustmentBase = prices.productprice;
-                                        decimal taxRate = prices.taxRate;
-                                        decimal priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
-                                        if (priceAdjustmentBase > 0)
-                                        {
-                                            string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment, false, false);
-                                            formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
-                                        }
-                                        else if (priceAdjustmentBase < decimal.Zero)
-                                        {
-                                            string priceAdjustmentStr = _priceFormatter.FormatPrice(-priceAdjustment, false, false);
-                                            formattedAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
-                                        }
-                                    }
-
-                                    //display quantity
-                                    if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity &&
-                                        attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                                    {
-                                        //render only when more than 1
-                                        if (attributeValue.Quantity > 1)
-                                        {
-                                            //TODO localize resource
-                                            formattedAttribute += string.Format(" - qty {0}", attributeValue.Quantity);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if(showInAdmin)
-                                        formattedAttribute += string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, langId), "");
-                                }
-
-                                //encode (if required)
-                                if (htmlEncode)
-                                    formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
-                            }
-                        }
-
-                        if (!String.IsNullOrEmpty(formattedAttribute))
-                        {
-                            if (i != 0 || j != 0)
+                            if (i > 0)
                                 result.Append(serapator);
-                            result.Append(formattedAttribute);
+
+                            result.Append($"<a href=\"{p1.GetSeName(langId)}\"> {p1.GetLocalized(x => x.Name, langId)} </a>");
+                            var formattedAttribute = await PrepareFormattedAttribute(p1, attributesXml, langId, serapator, htmlEncode,
+                            renderPrices, allowHyperlinks, showInAdmin);
+                            if (formattedAttribute.Length > 0)
+                            {
+                                result.Append(serapator);
+                                result.Append(formattedAttribute);
+                            }
+                            i++;
                         }
                     }
                 }
+
             }
 
             //gift cards
@@ -271,6 +174,142 @@ namespace Grand.Services.Catalog
                 }
             }
             return result.ToString();
+        }
+
+        private async Task<StringBuilder> PrepareFormattedAttribute(Product product, string attributesXml, string langId,
+            string serapator, bool htmlEncode, bool renderPrices,
+            bool allowHyperlinks, bool showInAdmin)
+        {
+            var result = new StringBuilder();
+            var attributes = _productAttributeParser.ParseProductAttributeMappings(product, attributesXml);
+            for (int i = 0; i < attributes.Count; i++)
+            {
+                var productAttribute = await _productAttributeService.GetProductAttributeById(attributes[i].ProductAttributeId);
+                var attribute = attributes[i];
+                var valuesStr = _productAttributeParser.ParseValues(attributesXml, attribute.Id);
+                for (int j = 0; j < valuesStr.Count; j++)
+                {
+                    string valueStr = valuesStr[j];
+                    string formattedAttribute = string.Empty;
+                    if (!attribute.ShouldHaveValues())
+                    {
+                        //no values
+                        if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
+                        {
+                            //multiline textbox
+                            var attributeName = productAttribute.GetLocalized(a => a.Name, langId);
+                            //encode (if required)
+                            if (htmlEncode)
+                                attributeName = WebUtility.HtmlEncode(attributeName);
+                            formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
+                            //we never encode multiline textbox input
+                        }
+                        else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
+                        {
+                            //file upload
+                            Guid downloadGuid;
+                            Guid.TryParse(valueStr, out downloadGuid);
+                            var download = await _downloadService.GetDownloadByGuid(downloadGuid);
+                            if (download != null)
+                            {
+                                //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
+                                string attributeText = "";
+                                var fileName = string.Format("{0}{1}",
+                                    download.Filename ?? download.DownloadGuid.ToString(),
+                                    download.Extension);
+                                //encode (if required)
+                                if (htmlEncode)
+                                    fileName = WebUtility.HtmlEncode(fileName);
+                                if (allowHyperlinks)
+                                {
+                                    //hyperlinks are allowed
+                                    var downloadLink = string.Format("{0}download/getfileupload/?downloadId={1}", _webHelper.GetStoreLocation(false), download.DownloadGuid);
+                                    attributeText = string.Format("<a href=\"{0}\" class=\"fileuploadattribute\">{1}</a>", downloadLink, fileName);
+                                }
+                                else
+                                {
+                                    //hyperlinks aren't allowed
+                                    attributeText = fileName;
+                                }
+                                var attributeName = productAttribute.GetLocalized(a => a.Name, langId);
+                                //encode (if required)
+                                if (htmlEncode)
+                                    attributeName = WebUtility.HtmlEncode(attributeName);
+                                formattedAttribute = string.Format("{0}: {1}", attributeName, attributeText);
+                            }
+                        }
+                        else
+                        {
+                            //other attributes (textbox, datepicker)
+                            formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, langId), valueStr);
+                            //encode (if required)
+                            if (htmlEncode)
+                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
+                        }
+                    }
+                    else
+                    {
+                        //attributes with values
+                        if (product.ProductAttributeMappings.Where(x => x.Id == attributes[i].Id).FirstOrDefault() != null)
+                        {
+
+                            var attributeValue = product.ProductAttributeMappings.Where(x => x.Id == attributes[i].Id).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault();
+                            if (attributeValue != null)
+                            {
+                                formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, langId), attributeValue.GetLocalized(a => a.Name, langId));
+
+                                if (renderPrices)
+                                {
+                                    decimal attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
+                                    var prices = await _taxService.GetProductPrice(product, attributeValuePriceAdjustment, _workContext.CurrentCustomer);
+                                    decimal priceAdjustmentBase = prices.productprice;
+                                    decimal taxRate = prices.taxRate;
+                                    decimal priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                    if (priceAdjustmentBase > 0)
+                                    {
+                                        string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment, false, false);
+                                        formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
+                                    }
+                                    else if (priceAdjustmentBase < decimal.Zero)
+                                    {
+                                        string priceAdjustmentStr = _priceFormatter.FormatPrice(-priceAdjustment, false, false);
+                                        formattedAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
+                                    }
+                                }
+
+                                //display quantity
+                                if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity &&
+                                    attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                                {
+                                    //render only when more than 1
+                                    if (attributeValue.Quantity > 1)
+                                    {
+                                        //TODO localize resource
+                                        formattedAttribute += string.Format(" - qty {0}", attributeValue.Quantity);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (showInAdmin)
+                                    formattedAttribute += string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, langId), "");
+                            }
+
+                            //encode (if required)
+                            if (htmlEncode)
+                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(formattedAttribute))
+                    {
+                        if (i != 0 || j != 0)
+                            result.Append(serapator);
+                        result.Append(formattedAttribute);
+                    }
+                }
+            }
+            return result;
         }
     }
 }

@@ -22,9 +22,9 @@ namespace Grand.Web.Areas.Admin.Components
             IStoreContext storeContext
             )
         {
-            this._workContext = workContext;
-            this._languageService = languageService;
-            this._storeContext = storeContext;
+            _workContext = workContext;
+            _languageService = languageService;
+            _storeContext = storeContext;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

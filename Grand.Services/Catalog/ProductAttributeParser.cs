@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,17 +12,11 @@ namespace Grand.Services.Catalog
     /// </summary>
     public partial class ProductAttributeParser : IProductAttributeParser
     {
-        #region Fields
-
-        private readonly IProductAttributeService _productAttributeService;
-
-        #endregion
 
         #region Ctor
 
-        public ProductAttributeParser(IProductAttributeService productAttributeService)
+        public ProductAttributeParser()
         {
-            this._productAttributeService = productAttributeService;
         }
 
         #endregion
@@ -76,7 +70,7 @@ namespace Grand.Services.Catalog
             var ids = ParseProductAttributeMappingIds(attributesXml);
             foreach (string id in ids)
             {
-                var attribute = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault();  
+                var attribute = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault();
                 if (attribute != null)
                 {
                     attribute.ProductId = product.Id;
@@ -108,15 +102,15 @@ namespace Grand.Services.Catalog
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                            if (attribute.ProductAttributeValues.Where(x => x.Id == valueStr).Count() > 0)
+                        if (attribute.ProductAttributeValues.Where(x => x.Id == valueStr).Count() > 0)
+                        {
+                            var value = attribute.ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault();
+                            if (value != null)
                             {
-                                var value = attribute.ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
-                                if (value != null)
-                                {
-                                    value.ProductId = product.Id;
-                                    values.Add(value);
-                                }
+                                value.ProductId = product.Id;
+                                values.Add(value);
                             }
+                        }
                     }
                 }
             }
@@ -145,16 +139,16 @@ namespace Grand.Services.Catalog
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
-                        string str1 =node1.Attributes["ID"].InnerText.Trim();
-                            if (str1 == productAttributeMappingId)
+                        string str1 = node1.Attributes["ID"].InnerText.Trim();
+                        if (str1 == productAttributeMappingId)
+                        {
+                            var nodeList2 = node1.SelectNodes(@"ProductAttributeValue/Value");
+                            foreach (XmlNode node2 in nodeList2)
                             {
-                                var nodeList2 = node1.SelectNodes(@"ProductAttributeValue/Value");
-                                foreach (XmlNode node2 in nodeList2)
-                                {
-                                    string value = node2.InnerText.Trim();
-                                    selectedValues.Add(value);
-                                }
+                                string value = node2.InnerText.Trim();
+                                selectedValues.Add(value);
                             }
+                        }
                     }
                 }
             }
@@ -196,12 +190,12 @@ namespace Grand.Services.Catalog
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
-                        string str1 =node1.Attributes["ID"].InnerText.Trim();
-                            if (str1 == productAttributeMapping.Id)
-                            {
-                                attributeElement = (XmlElement)node1;
-                                break;
-                            }
+                        string str1 = node1.Attributes["ID"].InnerText.Trim();
+                        if (str1 == productAttributeMapping.Id)
+                        {
+                            attributeElement = (XmlElement)node1;
+                            break;
+                        }
                     }
                 }
 
@@ -296,6 +290,8 @@ namespace Grand.Services.Catalog
                 attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
             }
             var attributes2 = ParseProductAttributeMappings(product, attributesXml2);
+            //TO DO - Where(x=>x.IsRequired).ToList()
+
             if (ignoreNonCombinableAttributes)
             {
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
@@ -414,8 +410,8 @@ namespace Grand.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var combinations = product.ProductAttributeCombinations; 
-            return combinations.FirstOrDefault(x => 
+            var combinations = product.ProductAttributeCombinations;
+            return combinations.FirstOrDefault(x =>
                 AreProductAttributesEqual(product, x.AttributesXml, attributesXml, ignoreNonCombinableAttributes));
         }
 
@@ -430,7 +426,9 @@ namespace Grand.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var allProductAttributMappings = product.ProductAttributeMappings; 
+            var allProductAttributMappings = product.ProductAttributeMappings;
+            //TO DO .Where(x => x.IsRequired).ToList()
+
             if (ignoreNonCombinableAttributes)
             {
                 allProductAttributMappings = allProductAttributMappings.Where(x => !x.IsNonCombinable()).ToList();
@@ -446,7 +444,7 @@ namespace Grand.Services.Catalog
                         combination.Add(allProductAttributMappings.ToArray()[i]);
                     }
                 }
-                if(combination.Any())
+                if (combination.Any())
                     allPossibleAttributeCombinations.Add(combination);
             }
 
@@ -459,7 +457,7 @@ namespace Grand.Services.Catalog
                     if (!pam.ShouldHaveValues())
                         continue;
 
-                    var attributeValues = product.ProductAttributeMappings.Where(x => x.Id == pam.Id).FirstOrDefault().ProductAttributeValues; 
+                    var attributeValues = product.ProductAttributeMappings.Where(x => x.Id == pam.Id).FirstOrDefault().ProductAttributeValues;
                     if (!attributeValues.Any())
                         continue;
 
@@ -478,7 +476,7 @@ namespace Grand.Services.Catalog
                                     checkboxCombination.Add(attributeValues.ToArray()[i]);
                                 }
                             }
-                            if(checkboxCombination.Any())
+                            if (checkboxCombination.Any())
                                 allPossibleCheckboxCombinations.Add(checkboxCombination);
                         }
                     }

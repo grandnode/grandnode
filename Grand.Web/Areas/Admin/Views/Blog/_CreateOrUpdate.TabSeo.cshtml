@@ -1,6 +1,6 @@
 ﻿@model BlogPostModel
 <vc:admin-widget widget-zone="blog_details_seo_top" additional-data="Model" />
-@(Html.LocalizedEditor<BlogPostModel, BlogLocalizedModel>("blogpost-seo-localized",
+@(await Html.LocalizedEditor<BlogPostModel, BlogLocalizedModel>("blogpost-seo-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">

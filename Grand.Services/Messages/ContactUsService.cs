@@ -1,6 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Messages;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver;
@@ -22,8 +22,8 @@ namespace Grand.Services.Messages
             IRepository<ContactUs> contactusRepository,
             IMediator mediator)
         {
-            this._contactusRepository = contactusRepository;
-            this._mediator = mediator;
+            _contactusRepository = contactusRepository;
+            _mediator = mediator;
         }
         /// <summary>
         /// Deletes a contactus item

@@ -32,6 +32,13 @@
                 </div>
             </content>
         </tabstrip-item>
+        <tabstrip-item text="@T("Admin.ContentManagement.News.NewsItems.Comments")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabComments" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         <vc:admin-widget widget-zone="news_details_tabs" additional-data="Model" />
     </items>
 </admin-tabstrip>

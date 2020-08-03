@@ -1,5 +1,5 @@
 ﻿@model ForumPageModel
-@using Grand.Core.Domain.Forums;
+@using Grand.Domain.Forums;
 @using Grand.Web.Models.Boards;
 @using Grand.Web.Models.Common;
 @inject Grand.Services.Localization.ILocalizationService localizationService
@@ -166,7 +166,7 @@
                                                     @if (!String.IsNullOrEmpty(topic.CustomerId))
                                                     {
                                                         <label>@T("Forum.Author"):</label>
-                                                        if (topic.AllowViewingProfiles)
+                                                        if (topic.AllowViewingProfiles && !string.IsNullOrEmpty(topic.CustomerName))
                                                         {
                                                             @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
                                                         }

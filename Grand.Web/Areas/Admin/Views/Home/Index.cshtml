@@ -1,6 +1,6 @@
 ﻿@model DashboardModel
 @inject Grand.Services.Security.IPermissionService permissionService
-@inject Grand.Core.Domain.Customers.CustomerSettings customerSettings
+@inject Grand.Domain.Customers.CustomerSettings customerSettings
 @inject Grand.Services.Customers.ICustomerService customerService
 @inject Grand.Services.Orders.IOrderReportService orderReportService
 @inject Grand.Services.Catalog.IPriceFormatter priceFormatter
@@ -15,7 +15,7 @@
     var ordersToday = await orderReportService.GetOrderPeriodReport(0, workContext.CurrentCustomer.StaffStoreId);
     var ordersAmount = priceFormatter.FormatPrice(ordersToday.Amount, true, false);
 }
-<antiforgery-token />
+
 <vc:admin-widget widget-zone="admin_dashboard_top" additional-data="null" />
 @if (!Model.IsLoggedInAsVendor && canManageOrders)
 {
@@ -24,7 +24,11 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-user"></i></div>
                 <div class="count">@customersOnline</div>
-                <h3> @T("Admin.Dashboard.OnlineCustomers")</h3>
+                <h3> 
+                    <a href="@Url.Action("List", "OnlineCustomer")">
+                        @T("Admin.Dashboard.OnlineCustomers")
+                    </a>
+                </h3>
                 <p>@T("Admin.Dashboard.OnlineCustomerMinutes", customerSettings.OnlineCustomerMinutes)</p>
             </div>
         </div>
@@ -32,7 +36,11 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-shopping-cart"></i></div>
                 <div class="count">@customersShoppingCart</div>
-                <h3> @T("Admin.Dashboard.ActiveShoppingCarts")</h3>
+                <h3>
+                    <a href="@Url.Action("CurrentCarts", "ShoppingCart")">
+                        @T("Admin.Dashboard.ActiveShoppingCarts")
+                    </a>
+                </h3>
                 <p>@T("Admin.Dashboard.OnlineShoppingCart", customerSettings.OnlineShoppingCartMinutes)</p>
             </div>
         </div>
@@ -40,7 +48,11 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-money"></i></div>
                 <div class="count"> @ordersAmount / @ordersToday.Count</div>
-                <h3>  @T("Admin.Dashboard.TodayOrders")</h3>
+                <h3>
+                    <a href="@Url.Action("List", "Order", new { startDate = DateTime.UtcNow.ToUniversalTime() })">
+                        @T("Admin.Dashboard.TodayOrders")
+                    </a>
+                </h3>
                 <p> @T("Admin.Dashboard.TodayOrders.AmountCount")</p>
             </div>
         </div>
@@ -112,7 +124,7 @@
                 </div>
                 @if (canAccessReports)
                 {
-                    <div class="col-sm-12 col-lg-8 col-md-12 whiteBg sssss">
+                    <div class="col-sm-12 col-lg-8 col-md-12">
                         @await Component.InvokeAsync("OrderReportOrderTimeChart")
                     </div>
                 }
@@ -121,7 +133,7 @@
             {
                 @if (canAccessReports)
                 {
-                    <div class="col-sm-12 col-lg-12 col-md-12 whiteBg">
+                    <div class="col-sm-12 col-lg-12 col-md-12">
                         @await Component.InvokeAsync("OrderReportOrderTimeChart")
                     </div>
                 }
@@ -241,7 +253,7 @@
     </div>
 }
 <vc:admin-widget widget-zone="admin_dashboard_bottom" additional-data="null" />
-<script type="text/javascript">
+<script>
     $(document).ready(function (e) {
         var site = site || {};
         site.baseUrl = site.baseUrl || "";
@@ -334,7 +346,7 @@
         }
 
         $(".Dashboard_GoogleAnalytics_Data").each(function (index, item) {
-            $(item).html('<img src="administration/images/loading.gif" /> Loading ...');
+            $(item).html('<img src="administration/build/images/loading.gif" /> Loading ...');
             var url = $(item).data("url") + '?startDate=' + $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD') + '&endDate=' + $('#dashboard-report-range').data('daterangepicker').endDate.format('YYYY-MM-DD');
             if (url && url.length > 0) {
                 $(item).load(url);

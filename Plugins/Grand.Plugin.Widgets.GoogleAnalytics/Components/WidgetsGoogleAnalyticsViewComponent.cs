@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;
@@ -21,40 +21,27 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
         private readonly ILogger _logger;
-        private readonly ICategoryService _categoryService;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IServiceProvider _serviceProvider;
 
         public WidgetsGoogleAnalyticsViewComponent(IWorkContext workContext,
             IStoreContext storeContext,
             ISettingService settingService,
-            IOrderService orderService,
             ILogger logger,
-            ICategoryService categoryService,
-            IProductService productService,
-            IProductAttributeParser productAttributeParser,
             IServiceProvider serviceProvider
             )
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._settingService = settingService;
-            this._orderService = orderService;
-            this._productService = productService;
-            this._logger = logger;
-            this._categoryService = categoryService;
-            this._productAttributeParser = productAttributeParser;
-            this._serviceProvider = serviceProvider;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _settingService = settingService;
+            _logger = logger;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
-            string globalScript = "";
+            var globalScript = "";
             var routeData = Url.ActionContext.RouteData;
-
             try
             {
                 var controller = routeData.Values["controller"];
@@ -77,7 +64,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
             }
             catch (Exception ex)
             {
-                await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for google ecommerce tracking", ex.ToString());
+                await _logger.InsertLog(Domain.Logging.LogLevel.Error, "Error creating scripts for google ecommerce tracking", ex.ToString());
             }
 
             return View("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", globalScript);
@@ -85,7 +72,8 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
 
         private async Task<Order> GetLastOrder()
         {
-            var order = (await _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+            var orderService = _serviceProvider.GetRequiredService<IOrderService>();
+            var order = (await orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
                 customerId: _workContext.CurrentCustomer.Id, pageSize: 1)).FirstOrDefault();
             return order;
         }
@@ -121,21 +109,26 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{COUNTRY}", order.BillingAddress == null || String.IsNullOrEmpty(order.BillingAddress.CountryId) ? "" : FixIllegalJavaScriptChars((await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(order.BillingAddress.CountryId)).Name));
 
                 var sb = new StringBuilder();
+
+                var productService = _serviceProvider.GetRequiredService<IProductService>();
+                var categoryService = _serviceProvider.GetRequiredService<ICategoryService>();
+                var productAttributeParser = _serviceProvider.GetRequiredService<IProductAttributeParser>();
+
                 foreach (var item in order.OrderItems)
                 {
-                    var product = await _productService.GetProductById(item.ProductId);
+                    var product = await productService.GetProductById(item.ProductId);
                     string analyticsEcommerceDetailScript = GoogleAnalyticsEcommerceSettings.EcommerceDetailScript;
                     //get category
                     string category = "";
-                    if (product.ProductCategories.FirstOrDefault() != null)
+                    if (product.ProductCategories.Any())
                     {
-                        var defaultProductCategory = await _categoryService.GetCategoryById(product.ProductCategories.FirstOrDefault().CategoryId); 
+                        var defaultProductCategory = await categoryService.GetCategoryById(product.ProductCategories.OrderBy(x => x.DisplayOrder).FirstOrDefault().CategoryId);
                         if (defaultProductCategory != null)
                             category = defaultProductCategory.Name;
                     }
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{ORDERID}", order.Id.ToString());
                     //The SKU code is a required parameter for every item that is added to the transaction
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(product.FormatSku(item.AttributesXml, _productAttributeParser)));
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(product.FormatSku(item.AttributesXml, productAttributeParser)));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(product.Name));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
                     var unitPrice = GoogleAnalyticsEcommerceSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;

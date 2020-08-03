@@ -1,15 +1,12 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Blogs;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Blogs
 {
-    [Validator(typeof(BlogCategoryValidator))]
     public partial class BlogCategoryModel : BaseGrandEntityModel, ILocalizedModel<BlogCategoryLocalizedModel>, IStoreMappingModel
     {
         public BlogCategoryModel()
@@ -19,8 +16,13 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         }
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogCategory.Fields.Name")]
         public string Name { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogCategory.Fields.SeName")]
+        public string SeName { get; set; }
+
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogCategory.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
+
         public IList<BlogCategoryLocalizedModel> Locales { get; set; }
         //Store mapping
         public bool LimitedToStores { get; set; }
@@ -46,7 +48,7 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         public string SearchBlogTitle { get; set; }
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogCategory.SearchStore")]
         public string SearchStoreId { get; set; }
-        
+
         public IList<SelectListItem> AvailableStores { get; set; }
 
         public string CategoryId { get; set; }

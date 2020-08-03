@@ -1,5 +1,5 @@
 ﻿@model CustomerActionConditionModel
-<script type="text/javascript">
+<script>
             $(document).ready(function () {
                 $("#@Html.FieldIdFor(model => model.CustomerActionConditionTypeId)").change(toggleConditionType);
                 toggleConditionType();
@@ -7,7 +7,7 @@
 
         function toggleConditionType() {
             var selectedConditionTypeId = $("#@Html.FieldIdFor(model => model.CustomerActionConditionTypeId)").val();
-            if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.Product).ToString()))
+            if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.Product).ToString()))
             {
                 $('#tab-product').show();
                 $('#tab-manufacturer').hide();
@@ -23,7 +23,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.Manufacturer).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.Manufacturer).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').show();
@@ -39,7 +39,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
 
-            } else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.Category).ToString()))
+            } else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.Category).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -55,7 +55,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.Vendor).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.Vendor).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -71,7 +71,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.ProductAttribute).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.ProductAttribute).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -87,7 +87,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.ProductSpecification).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.ProductSpecification).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -103,7 +103,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.CustomerRole).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.CustomerRole).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -119,7 +119,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.Store).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.Store).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -135,7 +135,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').show();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.CustomerTag).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.CustomerTag).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -151,7 +151,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.CustomerRegisterField).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.CustomerRegisterField).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -167,7 +167,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.CustomCustomerAttribute).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.CustomCustomerAttribute).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -183,7 +183,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.UrlReferrer).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.UrlReferrer).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -199,7 +199,7 @@
                 $('#tab-urlCurrent').hide();
                 $('#tab-store').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.UrlCurrent).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerActionConditionTypeEnum.UrlCurrent).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -263,7 +263,7 @@
         <div class="form-group">
             <admin-label asp-for="ConditionId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ConditionId" asp-items="((Grand.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList()" />
+                <admin-select asp-for="ConditionId" asp-items="((Grand.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList(Context)" />
                 <span asp-validation-for="ConditionId"></span>
             </div>
         </div>

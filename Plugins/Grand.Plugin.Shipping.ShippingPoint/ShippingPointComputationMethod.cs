@@ -1,12 +1,10 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Core.Plugins;
 using Grand.Plugin.Shipping.ShippingPoint.Services;
-using Grand.Services.Catalog;
 using Grand.Services.Common;
-using Grand.Services.Configuration;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Shipping;
@@ -25,44 +23,35 @@ namespace Grand.Plugin.Shipping.ShippingPoint
     {
         #region Fields
 
-        private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly ISettingService _settingService;
         private readonly IShippingPointService _shippingPointService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICountryService _countryService;
         private readonly IWebHelper _webHelper;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILanguageService _languageService;
         #endregion
 
         #region Ctor
-        public ShippingPointComputationMethod(IShippingService shippingService,
-            IStoreContext storeContext,
-            IPriceCalculationService priceCalculationService,
-            ISettingService settingService,
+        public ShippingPointComputationMethod(IStoreContext storeContext,
             IShippingPointService shippingPointService,
             ILocalizationService localizationService,
             IWorkContext workContext,
             IGenericAttributeService genericAttributeService,
             ICountryService countryService,
             IWebHelper webHelper,
-            IServiceProvider serviceProvider
+            ILanguageService languageService
             )
         {
-            this._shippingService = shippingService;
-            this._storeContext = storeContext;
-            this._priceCalculationService = priceCalculationService;
-            this._settingService = settingService;
-            this._shippingPointService = shippingPointService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._genericAttributeService = genericAttributeService;
-            this._countryService = countryService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
+            _storeContext = storeContext;
+            _shippingPointService = shippingPointService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _genericAttributeService = genericAttributeService;
+            _countryService = countryService;
+            _webHelper = webHelper;
+            _languageService = languageService;
         }
         #endregion
 
@@ -108,38 +97,38 @@ namespace Grand.Plugin.Shipping.ShippingPoint
         public override async Task Install()
         {
             //locales       
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.PluginName", "Shipping Point");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.PluginDescription", "Choose a place where you can pick up your order");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName", "Point Name");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName.Hint", "Simple Name For Your Collection Point");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Description", "Description");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Description.Hint", "Information That Isn't Provided By Other Fields");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.PickupFee", "Pickup Fee");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.PickupFee.Hint", "Price For Using Given Collection Point");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours", "Open Between");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours.Hint", "Opening Hours");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Store", "Store Name");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Store.Hint", "Which Store/Stores Can Use This Collection Point");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.City", "City");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.City.hint", "City");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Address1", "Address 1");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Address1.hint", "Address 1");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode", "Zip postal code");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode.hint", "Zip postal code");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Country", "Country");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Country.hint", "Country Name");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.PluginName", "Shipping Point");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.PluginDescription", "Choose a place where you can pick up your order");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName", "Point Name");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName.Hint", "Simple Name For Your Collection Point");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Description", "Description");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Description.Hint", "Information That Isn't Provided By Other Fields");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.PickupFee", "Pickup Fee");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.PickupFee.Hint", "Price For Using Given Collection Point");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours", "Open Between");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours.Hint", "Opening Hours");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Store", "Store Name");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Store.Hint", "Which Store/Stores Can Use This Collection Point");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.City", "City");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.City.hint", "City");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Address1", "Address 1");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Address1.hint", "Address 1");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode", "Zip postal code");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode.hint", "Zip postal code");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Country", "Country");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Country.hint", "Country Name");
 
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.ShippingPointName", "Point Name");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Address", "Address");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.MethodAndFee", "{0} ({1})");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.ShippingPointName", "Point Name");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Address", "Address");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.MethodAndFee", "{0} ({1})");
 
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.AddNew", "Add New Point");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredShippingPointName", "Shipping Point Name Is Required");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredDescription", "Description Is Required");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredOpeningHours", "Opening Hours Are Required");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.SelectShippingOption", "Select Shipping Option");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.ChooseShippingPoint", "Choose Shipping Point");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.SelectBeforeProceed", "Select Shipping Option Before Proceed");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.AddNew", "Add New Point");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.RequiredShippingPointName", "Shipping Point Name Is Required");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.RequiredDescription", "Description Is Required");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.RequiredOpeningHours", "Opening Hours Are Required");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.SelectShippingOption", "Select Shipping Option");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.ChooseShippingPoint", "Choose Shipping Point");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.SelectBeforeProceed", "Select Shipping Option Before Proceed");
 
             await base.Install();
         }
@@ -149,38 +138,38 @@ namespace Grand.Plugin.Shipping.ShippingPoint
         /// </summary>
         public override async Task Uninstall()
         {
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.PluginName");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.PluginDescription");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Description");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Descriptio.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.PickupFee");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.PickupFee.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Store");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Store.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.AddNew");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredShippingPointName");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredDescription");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredOpeningHours");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.SelectShippingOption");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.ChooseShippingPoint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.SelectBeforeProceed");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.PluginName");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.PluginDescription");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Description");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Descriptio.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.PickupFee");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.PickupFee.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Store");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Store.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.AddNew");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.RequiredShippingPointName");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.RequiredDescription");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.RequiredOpeningHours");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.SelectShippingOption");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.ChooseShippingPoint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.SelectBeforeProceed");
 
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.City");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.City.hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Address1");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Address1.hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode.hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Country");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Country.hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.City");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.City.hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Address1");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Address1.hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode.hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Country");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Fields.Country.hint");
 
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.ShippingPointName");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Address");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.MethodAndFee");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.ShippingPointName");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.Address");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.ShippingPoint.MethodAndFee");
 
 
             await base.Uninstall();

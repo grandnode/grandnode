@@ -18,8 +18,7 @@
             }
         }
 </script>
-
-@(Html.LocalizedEditor<SlideModel, SlideLocalizedModel>("slide-info-localized",
+@(await Html.LocalizedEditor<SlideModel, SlideLocalizedModel>("slide-info-localized",
         @<div class="form-horizontal">
             <div class="form-body">
                 <div class="form-group">

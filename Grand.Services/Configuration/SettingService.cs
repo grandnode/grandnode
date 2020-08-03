@@ -1,11 +1,9 @@
 using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Configuration;
-using Grand.Core.Data;
-using Grand.Core.Domain.Configuration;
-using Grand.Services.Events;
+using Grand.Domain.Configuration;
+using Grand.Domain.Data;
+using Grand.Services.Commands.Models.Common;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -41,7 +39,6 @@ namespace Grand.Services.Configuration
         private readonly IRepository<Setting> _settingRepository;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
-        private readonly IServiceProvider _serviceProvider;
 
         private IDictionary<string, IList<SettingForCaching>> _allSettings = null;
 
@@ -53,15 +50,14 @@ namespace Grand.Services.Configuration
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="settingRepository">Setting repository</param>
-        public SettingService(IEnumerable<ICacheManager> cacheManager, IMediator mediator,
-            IRepository<Setting> settingRepository, IServiceProvider serviceProvider)
+        public SettingService(ICacheManager cacheManager, IMediator mediator,
+            IRepository<Setting> settingRepository)
         {
-            this._cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
-            this._mediator = mediator;
-            this._settingRepository = settingRepository;
-            this._serviceProvider = serviceProvider;
+            _cacheManager = cacheManager;
+            _mediator = mediator;
+            _settingRepository = settingRepository;
         }
 
         #endregion
@@ -148,7 +144,7 @@ namespace Grand.Services.Configuration
 
             //cache
             if (clearCache)
-                await _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+                await _cacheManager.RemoveByPrefix(SETTINGS_PATTERN_KEY);
 
         }
 
@@ -166,7 +162,7 @@ namespace Grand.Services.Configuration
 
             //cache
             if (clearCache)
-                await _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+                await _cacheManager.RemoveByPrefix(SETTINGS_PATTERN_KEY);
 
         }
 
@@ -182,7 +178,7 @@ namespace Grand.Services.Configuration
             await _settingRepository.DeleteAsync(setting);
 
             //cache
-            await _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SETTINGS_PATTERN_KEY);
 
         }
 
@@ -191,17 +187,7 @@ namespace Grand.Services.Configuration
         /// </summary>
         /// <param name="settingId">Setting identifier</param>
         /// <returns>Setting</returns>
-        public virtual Setting GetSettingById(string settingId)
-        {
-            return _settingRepository.GetById(settingId);
-        }
-
-        /// <summary>
-        /// Gets a setting by identifier
-        /// </summary>
-        /// <param name="settingId">Setting identifier</param>
-        /// <returns>Setting</returns>
-        public virtual Task<Setting> GetSettingByIdAsync(string settingId)
+        public virtual Task<Setting> GetSettingById(string settingId)
         {
             return _settingRepository.GetByIdAsync(settingId);
         }
@@ -213,7 +199,7 @@ namespace Grand.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting</returns>
-        public virtual Setting GetSetting(string key, string storeId = "", bool loadSharedValueIfNotFound = false)
+        public virtual async Task<Setting> GetSetting(string key, string storeId = "", bool loadSharedValueIfNotFound = false)
         {
             if (String.IsNullOrEmpty(key))
                 return null;
@@ -230,7 +216,7 @@ namespace Grand.Services.Configuration
                     setting = settingsByKey.FirstOrDefault(x => x.StoreId == "");
 
                 if (setting != null)
-                    return GetSettingById(setting.Id);
+                    return await GetSettingById(setting.Id);
             }
 
             return null;
@@ -290,7 +276,7 @@ namespace Grand.Services.Configuration
             if (settingForCaching != null)
             {
                 //update
-                var setting = await GetSettingByIdAsync(settingForCaching.Id);
+                var setting = await GetSettingById(settingForCaching.Id);
                 setting.Value = valueStr;
                 await UpdateSetting(setting, clearCache);
             }
@@ -378,7 +364,7 @@ namespace Grand.Services.Configuration
                 catch (Exception ex)
                 {
                     var msg = $"Could not convert setting {key} to type {prop.PropertyType.FullName}";
-                    _serviceProvider.GetRequiredService<Logging.ILogger>().InsertLog(Core.Domain.Logging.LogLevel.Error, msg, ex.Message).GetAwaiter().GetResult();
+                    _mediator.Send(new InsertLogCommand() { LogLevel = Domain.Logging.LogLevel.Error, ShortMessage = msg, FullMessage = ex.Message });
                 }
             }
 
@@ -491,7 +477,7 @@ namespace Grand.Services.Configuration
             if (settingForCaching != null)
             {
                 //update
-                var setting = await GetSettingByIdAsync(settingForCaching.Id);
+                var setting = await GetSettingById(settingForCaching.Id);
                 await DeleteSetting(setting);
             }
         }
@@ -501,7 +487,7 @@ namespace Grand.Services.Configuration
         /// </summary>
         public virtual async Task ClearCache()
         {
-            await _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SETTINGS_PATTERN_KEY);
         }
 
         #endregion

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Forums;
+﻿using Grand.Domain.Forums;
 using Grand.Core.Html;
 using System;
 using System.Threading.Tasks;
@@ -19,7 +19,7 @@ namespace Grand.Services.Forums
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = HtmlHelper.FormatText(text, false, true, false, true, false, true);
 
             return text;
         }
@@ -86,34 +86,6 @@ namespace Grand.Services.Forums
         }
         
         /// <summary>
-        /// Get forum last topic
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <param name="forumService">Forum service</param>
-        /// <returns>Forum topic</returns>
-        public static async Task<ForumTopic> GetLastTopic(this Forum forum, IForumService forumService)
-        {
-            if (forum == null)
-                throw new ArgumentNullException("forum");
-
-            return await forumService.GetTopicById(forum.LastTopicId);
-        }
-
-        /// <summary>
-        /// Get forum last post
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <param name="forumService">Forum service</param>
-        /// <returns>Forum topic</returns>
-        public static async Task<ForumPost> GetLastPost(this Forum forum, IForumService forumService)
-        {
-            if (forum == null)
-                throw new ArgumentNullException("forum");
-
-            return await forumService.GetPostById(forum.LastPostId);
-        }
-
-        /// <summary>
         /// Get first post
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
@@ -130,20 +102,5 @@ namespace Grand.Services.Forums
 
             return null;
         }
-
-        /// <summary>
-        /// Get last post
-        /// </summary>
-        /// <param name="forumTopic">Forum topic</param>
-        /// <param name="forumService">Forum service</param>
-        /// <returns>Forum post</returns>
-        public static async Task<ForumPost> GetLastPost(this ForumTopic forumTopic, IForumService forumService)
-        {
-            if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
-
-            return await forumService.GetPostById(forumTopic.LastPostId);
-        }
-
     }
 }

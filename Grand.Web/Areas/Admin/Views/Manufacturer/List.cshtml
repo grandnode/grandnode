@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers").Text;
 }
-<antiforgery-token />
+
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">
@@ -139,7 +139,7 @@
         });
     });
 </script>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         //search button
         $('#search-manufacturers').click(function () {
@@ -169,8 +169,8 @@
 </script>
 @*import manufacturers form*@
 <div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
-    <form asp-controller="Manufacturer" asp-action="ImportFromXlsx" method="post" enctype="multipart/form-data">
-        <antiforgery-token />
+    <form asp-area="Admin" asp-controller="Manufacturer" asp-action="ImportFromXlsx" method="post" enctype="multipart/form-data">
+        
         <em>@T("Admin.Catalog.Manufacturer.List.ImportFromExcelTip")</em>
         <div class="form-group">
             &nbsp;
@@ -198,7 +198,7 @@
         </div>
     </form>
 </div>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#importexcel").click(function (e) {
             e.preventDefault();

@@ -1,9 +1,11 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Grand.Framework.Infrastructure.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting;
+using Autofac;
+using Serilog;
 
 namespace Grand.Web
 {
@@ -31,6 +33,11 @@ namespace Grand.Web
                 .AddJsonFile("App_Data/appsettings.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
+
+            //create logger
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+            .CreateLogger();
         }
 
         #endregion
@@ -39,18 +46,30 @@ namespace Grand.Web
         /// Add services to the application and configure service provider
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            return services.ConfigureApplicationServices(Configuration);
+            services.ConfigureApplicationServices(Configuration);
         }
 
         /// <summary>
         /// Configure the application HTTP request pipeline
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public void Configure(IApplicationBuilder application)
+        /// <param name="env">IWebHostEnvironment</param>
+        public void Configure(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
-            application.ConfigureRequestPipeline();
+            application.ConfigureRequestPipeline(webHostEnvironment);
+        }
+
+        /// <summary>
+        /// ConfigureContainer is where you can register things directly
+        /// with Autofac. This runs after ConfigureServices so the things
+        /// here will override registrations made in ConfigureServices.
+        /// </summary>
+        /// <param name="builder"></param>
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.ConfigureContainer(Configuration);
         }
     }
 }

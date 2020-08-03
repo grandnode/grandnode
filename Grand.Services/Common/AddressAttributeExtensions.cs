@@ -1,5 +1,5 @@
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 
 namespace Grand.Services.Common
 {

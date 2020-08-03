@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.News;
+using Grand.Domain;
+using Grand.Domain.News;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,7 +26,6 @@ namespace Grand.Services.News
         /// <summary>
         /// Gets all news
         /// </summary>
-        /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>

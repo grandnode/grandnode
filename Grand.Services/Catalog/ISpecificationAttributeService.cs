@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain;
+using Grand.Domain.Catalog;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
@@ -17,6 +17,13 @@ namespace Grand.Services.Catalog
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
         /// <returns>Specification attribute</returns>
         Task<SpecificationAttribute> GetSpecificationAttributeById(string specificationAttributeId);
+
+        /// <summary>
+        /// Gets a specification attribute by sename
+        /// </summary>
+        /// <param name="sename">Sename</param>
+        /// <returns>Specification attribute</returns>
+        Task<SpecificationAttribute> GetSpecificationAttributeBySeName(string sename);
 
         /// <summary>
         /// Gets specification attributes

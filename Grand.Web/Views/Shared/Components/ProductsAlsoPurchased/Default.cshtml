@@ -1,14 +1,16 @@
 ﻿@model IList<ProductOverviewModel>
-
-<div class="col-12 also-purchased-products-grid generalFlexBox px-0">
-    <h2 class="h3 generalTitle text-center">@T("Products.AlsoPurchased")</h2>
-    <div class="flex-row d-flex row">
-        @foreach (var item in Model)
+@if (Model.Any())
+{
+    <div class="col-12 customGrid also-purchased-products-grid text-center generalFlexBox px-0">
+        <h2 class="h3 generalTitle text-center">@T("Products.AlsoPurchased")</h2>
+        <div class="flex-grid form-row">
+            @foreach (var item in Model)
             {
-            <div class="col-lg-3 col-sm-6 col-6">
-                <partial name="_ProductBox" model="item" />
-            </div>
-        }
+                <div class="col-lg-3 col-sm-6 col-6 product-container mb-2">
+                    <partial name="_ProductBox" model="item" />
+                </div>
+            }
+        </div>
     </div>
-</div>
+}
 

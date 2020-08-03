@@ -1,8 +1,9 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Core;
+using Grand.Domain.Catalog;
 using Grand.Framework.Components;
 using Grand.Services.Catalog;
-using Grand.Web.Models.Catalog;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Products;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -12,20 +13,27 @@ namespace Grand.Web.Components
     {
         #region Fields
         private readonly IProductService _productService;
-        private readonly IProductViewModelService _productViewModelService;
+        private readonly IMediator _mediator;
+        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly CatalogSettings _catalogSettings;
+
         #endregion
 
         #region Constructors
 
         public ProductReviewsViewComponent(
             IProductService productService,
-            IProductViewModelService productViewModelService,
+            IMediator mediator,
+            IWorkContext workContext,
+            IStoreContext storeContext,
             CatalogSettings catalogSettings)
         {
-            this._productService = productService;
-            this._catalogSettings = catalogSettings;
-            this._productViewModelService = productViewModelService;
+            _productService = productService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _mediator = mediator;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -37,9 +45,14 @@ namespace Grand.Web.Components
             if (product == null || !product.Published || !product.AllowCustomerReviews)
                 return Content("");
 
-            var model = new ProductReviewsModel();
-            await _productViewModelService.PrepareProductReviewsModel(model, product, _catalogSettings.NumberOfReview);
-            
+            var model = await _mediator.Send(new GetProductReviews() {
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Product = product,
+                Store = _storeContext.CurrentStore,
+                Size = _catalogSettings.NumberOfReview
+            });
+
             return View(model);
         }
 

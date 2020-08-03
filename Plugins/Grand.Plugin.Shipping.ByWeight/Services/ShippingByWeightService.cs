@@ -1,6 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Caching;
-using Grand.Core.Data;
+﻿using Grand.Core.Caching;
+using Grand.Domain;
+using Grand.Domain.Data;
 using Grand.Plugin.Shipping.ByWeight.Domain;
 using System;
 using System.Collections.Generic;
@@ -28,8 +28,8 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
         public ShippingByWeightService(ICacheManager cacheManager,
             IRepository<ShippingByWeightRecord> sbwRepository)
         {
-            this._cacheManager = cacheManager;
-            this._sbwRepository = sbwRepository;
+            _cacheManager = cacheManager;
+            _sbwRepository = sbwRepository;
         }
 
         #endregion
@@ -43,7 +43,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
 
             await _sbwRepository.DeleteAsync(shippingByWeightRecord);
 
-            await _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHT_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
         public virtual async Task<IPagedList<ShippingByWeightRecord>> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
@@ -140,7 +140,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
 
             await _sbwRepository.InsertAsync(shippingByWeightRecord);
 
-            await _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHT_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
         public virtual async Task UpdateShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
@@ -150,7 +150,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
 
             await _sbwRepository.UpdateAsync(shippingByWeightRecord);
 
-            await _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHT_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
         #endregion

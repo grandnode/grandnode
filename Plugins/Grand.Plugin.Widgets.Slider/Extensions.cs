@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Localization;
+using Grand.Domain.Stores;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
@@ -48,7 +48,7 @@ namespace Grand.Plugin.Widgets.Slider
         {
             baseGrandEntityModel.AvailableStores = (await _storeService
                .GetAllStores())
-               .Select(s => new StoreModel { Id = s.Id, Name = s.Name })
+               .Select(s => new StoreModel { Id = s.Id, Name = s.Shortcut })
                .ToList();
             if (!excludeProperties)
             {

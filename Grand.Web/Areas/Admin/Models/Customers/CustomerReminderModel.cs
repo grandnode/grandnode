@@ -1,15 +1,11 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Customers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    [Validator(typeof(CustomerReminderValidator))]
     public partial class CustomerReminderModel : BaseGrandEntityModel
     {
 
@@ -39,7 +35,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.ReminderRule")]
         public int ReminderRuleId { get; set; }
-        
+
         [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.ConditionId")]
         public int ConditionId { get; set; }
         public int ConditionCount { get; set; }
@@ -76,7 +72,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
                 }
 
                 [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-                
+
                 public string SearchProductName { get; set; }
                 [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
                 public string SearchCategoryId { get; set; }
@@ -103,7 +99,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public partial class AddCategoryConditionModel
             {
                 [GrandResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
-                
+
                 public string SearchCategoryName { get; set; }
 
                 public string CustomerReminderId { get; set; }
@@ -114,7 +110,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public partial class AddManufacturerConditionModel
             {
                 [GrandResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
-                
+
                 public string SearchManufacturerName { get; set; }
 
                 public string CustomerReminderId { get; set; }
@@ -157,7 +153,6 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         }
 
-        [Validator(typeof(CustomerReminderLevelValidator))]
         public partial class ReminderLevelModel : BaseGrandEntityModel
         {
             public ReminderLevelModel()
@@ -195,7 +190,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string Subject { get; set; }
 
             [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Body")]
-            
+
             public string Body { get; set; }
         }
 

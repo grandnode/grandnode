@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Autofac;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 
 namespace Grand.Core.Infrastructure
 {
@@ -18,7 +18,8 @@ namespace Grand.Core.Infrastructure
         /// Initialize engine
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        void Initialize(IServiceCollection services);
+        /// <param name="configuration">Configuration root of the application</param>
+        void Initialize(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// Add and configure services
@@ -26,40 +27,22 @@ namespace Grand.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Service provider</returns>
-        IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration);
+        void ConfigureServices(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// Configure HTTP request pipeline
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        void ConfigureRequestPipeline(IApplicationBuilder application);
+        /// <param name="webHostEnvironment">WebHostEnvironment</param>
+        void ConfigureRequestPipeline(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment);
 
         /// <summary>
-        /// Resolve dependency
+        /// ConfigureContainer is where you can register things directly
+        /// with Autofac. This runs after ConfigureServices so the things
+        /// here will override registrations made in ConfigureServices.
         /// </summary>
-        /// <typeparam name="T">Type of resolved service</typeparam>
-        /// <returns>Resolved service</returns>
-        T Resolve<T>() where T : class;
-
-        /// <summary>
-        /// Resolve dependency
-        /// </summary>
-        /// <param name="type">Type of resolved service</param>
-        /// <returns>Resolved service</returns>
-        object Resolve(Type type);
-
-        /// <summary>
-        /// Resolve dependencies
-        /// </summary>
-        /// <typeparam name="T">Type of resolved services</typeparam>
-        /// <returns>Collection of resolved services</returns>
-        IEnumerable<T> ResolveAll<T>();
-
-        /// <summary>
-        /// Resolve unregistered service
-        /// </summary>
-        /// <param name="type">Type of service</param>
-        /// <returns>Resolved service</returns>
-        object ResolveUnregistered(Type type);
+        /// <param name="builder"></param>
+        /// <param name="configuration"></param>
+        void ConfigureContainer(ContainerBuilder builder, IConfiguration configuration);
     }
 }

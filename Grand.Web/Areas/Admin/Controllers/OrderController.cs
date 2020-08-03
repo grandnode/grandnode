@@ -1,16 +1,15 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Common;
-using Grand.Services.Directory;
-using Grand.Services.Documents;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -20,6 +19,7 @@ using Grand.Services.Shipping;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Orders;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -43,8 +43,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
         private readonly IExportManager _exportManager;
-        private readonly IDocumentService _documentService;
-
+        private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
@@ -55,10 +54,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             IWorkContext workContext,
-            ICurrencyService currencyService,
             IPdfService pdfService,
             IExportManager exportManager,
-            IDocumentService documentService)
+            IMediator mediator)
         {
             _orderViewModelService = orderViewModelService;
             _orderService = orderService;
@@ -67,7 +65,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _workContext = workContext;
             _pdfService = pdfService;
             _exportManager = exportManager;
-            _documentService = documentService;
+            _mediator = mediator;
         }
 
         #endregion
@@ -77,9 +75,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Index() => RedirectToAction("List");
 
         public async Task<IActionResult> List(int? orderStatusId = null,
-            int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null)
+            int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null, string code = null)
         {
-            var model = await _orderViewModelService.PrepareOrderListModel(orderStatusId, paymentStatusId, shippingStatusId, startDate, _workContext.CurrentCustomer.StaffStoreId);
+            var model = await _orderViewModelService.PrepareOrderListModel(orderStatusId, paymentStatusId, shippingStatusId, startDate, _workContext.CurrentCustomer.StaffStoreId, code);
             return View(model);
         }
 
@@ -92,11 +90,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             var storeId = string.Empty;
             if (_workContext.CurrentCustomer.IsStaff())
                 storeId = _workContext.CurrentCustomer.StaffStoreId;
-
+            
+            string vendorId = string.Empty;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                vendorId = _workContext.CurrentVendor.Id;
+            }
             //products
             const int productNumber = 15;
             var products = (await productService.SearchProducts(
                 storeId: storeId,
+                vendorId: vendorId,
                 keywords: term,
                 pageSize: productNumber,
                 showHidden: true)).products;
@@ -139,9 +144,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("go-to-order-by-number")]
         public async Task<IActionResult> GoToOrderId(OrderListModel model)
         {
-            var order = await _orderService.GetOrderByNumber(model.GoDirectlyToNumber);
+            Order order = null;
+            int.TryParse(model.GoDirectlyToNumber, out var orderNumber);
+            if (orderNumber > 0)
+            {
+                order = await _orderService.GetOrderByNumber(orderNumber);
+            }
+            var orders = await _orderService.GetOrdersByCode(model.GoDirectlyToNumber);
+            if (orders.Count > 1)
+            {
+                return RedirectToAction("List", new { Code = model.GoDirectlyToNumber });
+            }
+            if (orders.Count == 1)
+            {
+                order = orders.FirstOrDefault();
+            }
             if (order == null)
-                return RedirectToAction("List", "Order");
+                return RedirectToAction("List");
 
             if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
             {
@@ -282,7 +301,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                await _orderProcessingService.CancelOrder(order, true);
+                await _mediator.Send(new CancelOrderCommand() { Order = order, NotifyCustomer = true });
                 await _orderViewModelService.LogEditOrder(order.Id);
                 var model = new OrderModel();
                 await _orderViewModelService.PrepareOrderDetailsModel(model, order);
@@ -686,12 +705,33 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                await _orderProcessingService.DeleteOrder(order);
+                await _mediator.Send(new DeleteOrderCommand() { Order = order });
                 await customerActivityService.InsertActivity("DeleteOrder", id, _localizationService.GetResource("ActivityLog.DeleteOrder"), order.Id);
                 return RedirectToAction("List");
             }
             ErrorNotification(ModelState);
             return RedirectToAction("Edit", "Order", new { id = id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteSelected(ICollection<string> selectedIds, [FromServices] ICustomerActivityService customerActivityService)
+        {
+            if (_workContext.CurrentVendor != null || _workContext.CurrentCustomer.IsStaff())
+                return RedirectToAction("List", "Order");
+
+            if (selectedIds != null)
+            {
+                var orders = new List<Order>();
+                orders.AddRange(await _orderService.GetOrdersByIds(selectedIds.ToArray()));
+                for (var i = 0; i < orders.Count; i++)
+                {
+                    var order = orders[i];
+                    await _orderService.DeleteOrder(order);
+                    await customerActivityService.InsertActivity("DeleteOrder", order.Id, _localizationService.GetResource("ActivityLog.DeleteOrder"), order.Id);
+                }
+            }
+
+            return Json(new { Result = true });
         }
 
         public async Task<IActionResult> PdfInvoice(string orderId)
@@ -853,6 +893,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             order.OrderTax = model.TaxValue;
             order.OrderDiscount = model.OrderTotalDiscountValue;
             order.OrderTotal = model.OrderTotalValue;
+            order.CurrencyRate = model.CurrencyRate;
             await _orderService.UpdateOrder(order);
 
             //add a note
@@ -900,10 +941,42 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("save-generic-attributes")]
+        public async Task<IActionResult> EditGenericAttributes(string id, OrderModel model)
+        {
+            var order = await _orderService.GetOrderById(id);
+            if (order == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+                return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
+
+            order.GenericAttributes = model.GenericAttributes;
+
+            await _orderService.UpdateOrder(order);
+            await _orderViewModelService.LogEditOrder(order.Id);
+
+            await _orderViewModelService.PrepareOrderDetailsModel(model, order);
+
+            //selected tab
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
+
+            return View(model);
+        }
+
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
@@ -987,7 +1060,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1029,7 +1102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     ErrorNotification($"This order item is in associated with shipment {shipment.ShipmentNumber}. Please delete it first.", false);
                     //selected tab
-                    SaveSelectedTabIndex(persistForTheNextRequest: false);
+                    await SaveSelectedTabIndex(persistForTheNextRequest: false);
                     var model = new OrderModel();
                     await _orderViewModelService.PrepareOrderDetailsModel(model, order);
                     return View(model);
@@ -1048,7 +1121,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification("This order item has an associated gift card record. Please delete it first.", false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
 
@@ -1074,7 +1147,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -1116,7 +1189,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1157,7 +1230,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1525,20 +1598,5 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Documents
-
-        [HttpPost]
-        public async Task<IActionResult> DocumentList(DataSourceRequest command, string orderId)
-        {
-            var documents = await _documentService.GetAll(objectId: orderId, reference: (int)Core.Domain.Documents.Reference.Order, 
-                pageSize: command.PageSize, pageIndex: command.Page - 1);
-            var gridModel = new DataSourceResult {
-                Data = documents.ToList(),
-                Total = documents.TotalCount
-            };
-            return Json(gridModel);
-        }
-
-        #endregion
     }
 }

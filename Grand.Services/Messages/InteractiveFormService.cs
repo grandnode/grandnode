@@ -1,5 +1,5 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Messages;
 using Grand.Services.Events;
 using System;
 using System.Collections.Generic;
@@ -19,13 +19,13 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="FormRepository">Form repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="formRepository">Form repository</param>
+        /// <param name="mediator">Mediator</param>
         public InteractiveFormService(IRepository<InteractiveForm> formRepository,
             IMediator mediator)
         {
-            this._formRepository = formRepository;
-            this._mediator = mediator;
+            _formRepository = formRepository;
+            _mediator = mediator;
         }
 
         /// <summary>

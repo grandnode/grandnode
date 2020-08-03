@@ -27,8 +27,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerActionService customerActionService
             )
         {
-            this._customerActionService = customerActionService;
-            this._localizationService = localizationService;
+            _customerActionService = customerActionService;
+            _localizationService = localizationService;
         }
 
         #endregion

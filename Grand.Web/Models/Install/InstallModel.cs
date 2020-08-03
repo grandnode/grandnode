@@ -1,20 +1,18 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.Models;
-using Grand.Web.Validators.Install;
+﻿using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Install
 {
-    [Validator(typeof(InstallValidator))]
     public partial class InstallModel : BaseGrandModel
     {
         public InstallModel()
         {
-            this.AvailableLanguages = new List<SelectListItem>();
-            this.AvailableCollation = new List<SelectListItem>();
+            AvailableLanguages = new List<SelectListItem>();
+            AvailableCollation = new List<SelectListItem>();
         }
+        [DataType(DataType.EmailAddress)]
         public string AdminEmail { get; set; }
         [DataType(DataType.Password)]
         public string AdminPassword { get; set; }

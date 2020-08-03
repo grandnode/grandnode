@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Grand.Core.Domain.Customers.CustomerAction;
+using static Grand.Domain.Customers.CustomerAction;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -159,7 +159,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<CustomerAction> InsertCustomerActionModel(CustomerActionModel model)
         {
-            var customeraction = model.ToEntity();
+            var customeraction = model.ToEntity(_dateTimeHelper);
             await _customerActionService.InsertCustomerAction(customeraction);
             await _customerActivityService.InsertActivity("AddNewCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerAction"), customeraction.Name);
             return customeraction;
@@ -171,7 +171,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (String.IsNullOrEmpty(model.ActionTypeId))
                 model.ActionTypeId = customeraction.ActionTypeId;
 
-            customeraction = model.ToEntity(customeraction);
+            customeraction = model.ToEntity(customeraction, _dateTimeHelper);
             await _customerActionService.UpdateCustomerAction(customeraction);
             await _customerActivityService.InsertActivity("EditCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.EditCustomerAction"), customeraction.Name);
             return customeraction;
@@ -316,7 +316,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = _categoryService.GetFormattedBreadCrumb(c, categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
@@ -326,7 +326,7 @@ namespace Grand.Web.Areas.Admin.Services
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             foreach (var s in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
@@ -334,7 +334,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
 
             return model;
@@ -649,7 +649,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(CustomerActionConditionModel.AddProductToConditionModel model, int pageIndex, int pageSize)
         {
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Orders;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Services.Discounts;
@@ -274,6 +274,7 @@ namespace Grand.Web.Models.Catalog
             public PictureModel ImageSquaresPictureModel { get; set; }
             public string PriceAdjustment { get; set; }
             public decimal PriceAdjustmentValue { get; set; }
+            public string StockAvailability { get; set; }
             public bool IsPreSelected { get; set; }
             //picture model is used when we want to override a default product picture when some attribute is selected
             public PictureModel PictureModel { get; set; }
@@ -281,6 +282,11 @@ namespace Grand.Web.Models.Catalog
 
         public partial class ProductBundleModel : BaseGrandModel
         {
+            public ProductBundleModel()
+            {
+                ProductAttributes = new List<ProductAttributeModel>();
+            }
+
             public string ProductId { get; set; }
             public string Name { get; set; }
             public string SeName { get; set; }
@@ -292,6 +298,7 @@ namespace Grand.Web.Models.Catalog
             public string Price { get; set; }
             public decimal PriceValue { get; set; }
             public PictureModel DefaultPictureModel { get; set; }
+            public IList<ProductAttributeModel> ProductAttributes { get; set; }
         }
 
         public partial class ProductWarehouseModel : BaseGrandModel

@@ -1,11 +1,8 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.Models;
-using Grand.Web.Validators.PrivateMessages;
+﻿using Grand.Framework.Mvc.Models;
 using System;
 
 namespace Grand.Web.Models.PrivateMessages
 {
-    [Validator(typeof(SendPrivateMessageValidator))]
     public partial class PrivateMessageModel : BaseGrandEntityModel
     {
         public string FromCustomerId { get; set; }
@@ -19,7 +16,7 @@ namespace Grand.Web.Models.PrivateMessages
         public string Subject { get; set; }
 
         public string Message { get; set; }
-        
+
         public DateTime CreatedOn { get; set; }
 
         public bool IsRead { get; set; }

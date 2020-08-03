@@ -1,0 +1,31 @@
+﻿@{
+    Layout = "_Root.Head";
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = "clean_body_start_html_tag_after" })
+<partial name="_Notifications" />
+<partial name="_JavaScriptDisabledWarning" />
+<partial name="_OldInternetExplorerWarning" />
+<main class="c-offcanvas-content-wrap clean-page">
+    <div class="container page-container">
+        <div class="d-inline-flex flex-sm-row flex-column align-items-center justify-content-between w-100 mt-3">
+            @await Component.InvokeAsync("Logo")
+            <div class="back-to-store mt-sm-0 mt-3" onclick="setLocation('@(Url.RouteUrl("ContinueShopping"))')">
+                <span>@T("shoppingcart.continueshopping")</span>
+                <span class="mdi mdi-close"></span>
+            </div>
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "clean_content_before" })
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = "clean_content_after" })
+    </div>
+    @await Component.InvokeAsync("FooterClean")
+</main>
+<script asp-location="Footer">
+    AjaxCart.init('.cart-qty', '.wishlist-qty', '.flyout-cart');
+</script>
+@await Component.InvokeAsync("EuCookieLaw")
+@await Component.InvokeAsync("Widget", new { widgetZone = "clean_body_end_html_tag_before" })

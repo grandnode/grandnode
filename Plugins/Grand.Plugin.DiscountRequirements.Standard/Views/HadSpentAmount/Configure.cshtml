@@ -4,7 +4,7 @@
 @model Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount.Models.RequirementModel
 @using Grand.Framework;
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#savehadspentamountrequirement@(Model.RequirementId)').click(function () {
             var spentAmount = $("#@Html.FieldIdFor(model => model.SpentAmount)").val();

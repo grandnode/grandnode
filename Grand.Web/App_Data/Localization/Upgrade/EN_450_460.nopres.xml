@@ -650,9 +650,9 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.ProductId.Hint">
     <Value>A customer is added to this course once a specified product is purchased (paid).</Value>
   </LocaleResource>
-  <LocalResource Name="Admin.Orders.Products.Commission">
+  <LocaleResource Name="Admin.Orders.Products.Commission">
     <Value>Commission</Value>
-  </LocalResource>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Commission">
     <Value>Commission</Value>
   </LocaleResource>
@@ -701,4 +701,140 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.ShortDescription.Hint">
     <Value>The short description of the course. </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Permisions">
+    <Value>You can't edit this discount, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.AddNew">
+    <Value>Add new generic attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.AddNew.Button">
+    <Value>Add new generic attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Id.Required">
+    <Value>Id is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Key">
+    <Value>Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Key.Required">
+    <Value>Key is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.ObjectType.Required">
+    <Value>Object type is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Value">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Value.Required">
+    <Value>Value is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Permission">
+    <Value>You don't have permission to add new value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.SaveBeforeEdit">
+    <Value>You need to save object before you can add values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Tab">
+    <Value>Generic attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.common.genericattributes.fields.store">
+    <Value>Select store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.NewCustomer">
+    <Value>Don't have an account? Create one for free</Value>
+  </LocaleResource>
+  <LocaleResource Name="SideBar.NewCustomer">
+    <Value>New Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture">
+    <Value>Convert picture to webp format</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Button">
+    <Value>Convert</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Number">
+    <Value>Number of converted picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency.hint">
+    <Value>Order was placed in currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CurrencyRate">
+    <Value>Currency rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder">
+    <Value>Deactivate gift cards after canceled of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is canceled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DefaultSort">
+    <Value>Default sorting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DefaultSort.hint">
+    <Value>Allow to set default sorting for this manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ViewDetails.Info ">
+    <Value>Shipment info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipment.Document">
+    <Value>Shipment document {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToShipment">
+    <Value>Go to shipment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToCategory">
+    <Value>Go to category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToManufacturer">
+    <Value>Go to manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToVendor">
+    <Value>Go to vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToReturnRequest">
+    <Value>Go to return request</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Comments">
+    <Value>Comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.SaveBeforeEdit">
+    <Value>You need to save the blog post.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Comments">
+    <Value>Comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.SaveBeforeEdit">
+    <Value>You need to save the news item.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Permisions">
+    <Value>You can't edit this blog post, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogCategory.Permisions">
+    <Value>You can't edit this category blog, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published.Hint">
+    <Value>Please check this box, if topic should be visible publicly.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Updated">
+    <Value>The scheduled task has been updated successfully.</Value>
+  </LocaleResource>
 </Language>
+

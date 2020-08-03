@@ -1,6 +1,6 @@
-using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Logging;
+using Grand.Domain;
+using Grand.Domain.Customers;
+using Grand.Domain.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -63,7 +63,7 @@ namespace Grand.Services.Logging
         /// <returns>Log item</returns>
         public virtual Task<Log> GetLogById(string logId)
         {
-            return null;
+            return Task.FromResult<Log>(null);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Grand.Services.Logging
         /// <returns>A log item</returns>
         public virtual Task<Log> InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
-            return null;
+            return Task.FromResult<Log>(null);
         }
     }
 }

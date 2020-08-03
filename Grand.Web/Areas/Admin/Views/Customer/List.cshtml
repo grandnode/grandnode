@@ -5,8 +5,8 @@
     ViewBag.Title = T("Admin.Customers.Customers").Text;
 }
 
-<form asp-controller="Customer" asp-action="List" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Customer" asp-action="List" method="post">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -40,6 +40,10 @@
                             </ul>
                             <vc:admin-widget widget-zone="customer_list_buttons" additional-data="null" />
                         </div>
+                        <button type="button" name="delete-selected" id="delete-selected" class="btn red" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); ">
+                            <i class="fa fa-trash-o"></i>
+                            @T("Admin.Common.Delete.Selected")
+                        </button>
                     </div>
                 </div>
                 <div class="x_content form">
@@ -195,7 +199,7 @@
                         @if (Model.UsernamesEnabled)
                         {
                             <text>{
-                                field: "UserName",
+                                field: "Username",
                                 title: "@T("Admin.Customers.Customers.Fields.Username")",
                                 width: 200
                             },</text>
@@ -265,7 +269,7 @@
             });
     </script>
 
-    <script type="text/javascript">
+    <script>
 
             var selectedIds = [];
 
@@ -337,6 +341,34 @@
                         $("#search-customers").click();
                         return false;
                     }
+                });
+
+                //delete selected
+                $('#delete-selected').click(function(e) {
+
+                    e.preventDefault();
+
+                    var postData = {
+                        selectedIds: selectedIds
+                    };
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("DeleteSelected", "Customer"))",
+                        data: postData,
+                        complete: function(data) {
+                            //reload grid
+                            var grid = $('#customers-grid').data('kendoGrid');
+                            grid.dataSource.read();
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert(thrownError);
+                        },
+                        traditional: true
+                    });
+                    return false;
                 });
 
                 $('#mastercheckbox').click(function () {
@@ -413,12 +445,12 @@
 </form>
 
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-<form asp-controller="Customer" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Customer" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
+    
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
@@ -432,12 +464,12 @@
 </script>
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-<form asp-controller="Customer" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Customer" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
+    
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
 
     $(document).ready(function () {
         $('#exportexcel-selected').click(function (e) {

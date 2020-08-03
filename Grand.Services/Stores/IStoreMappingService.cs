@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Stores;
+using Grand.Domain;
+using Grand.Domain.Stores;
 
 namespace Grand.Services.Stores
 {
@@ -8,15 +8,6 @@ namespace Grand.Services.Stores
     /// </summary>
     public partial interface IStoreMappingService
     {
-
-        /// <summary>
-        /// Find store identifiers with granted access (mapped to the entity)
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Wntity</param>
-        /// <returns>Store identifiers</returns>
-        string[] GetStoresIdsWithAccess<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
-
         /// <summary>
         /// Authorize whether entity could be accessed in the current store (mapped to this store)
         /// </summary>

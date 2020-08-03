@@ -4,7 +4,7 @@
 @model Grand.Plugin.DiscountRequirements.HasAllProducts.Models.RequirementModel
 @using Grand.Framework;
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#saveHasAllProductsrequirement@(Model.RequirementId)').click(function () {
             var productIds = $("#@Html.FieldIdFor(model => model.Products)").val();
@@ -53,7 +53,7 @@
         <span id="discountrequirement-products-check-progress@(Model.RequirementId)" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
 
         <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none" />
-        <script type="text/javascript">
+        <script>
                 $(document).ready(function () {
                     $('#btnRefreshDiscountRequirementProducts@(Model.RequirementId)').click(function () {
                         //refresh product list

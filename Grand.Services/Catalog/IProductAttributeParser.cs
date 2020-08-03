@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using System.Collections.Generic;
 
 namespace Grand.Services.Catalog

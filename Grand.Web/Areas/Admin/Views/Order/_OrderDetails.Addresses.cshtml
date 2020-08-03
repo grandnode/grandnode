@@ -380,7 +380,7 @@
                                     <label class="control-label" id="lblShippingMethod">@Model.ShippingMethod</label>
                                     @if (!Model.IsLoggedInAsVendor)
                                     {
-                                        <script type="text/javascript">
+                                        <script>
                                             $(document).ready(function () {
                                                 toggleEditShippingMethod(false);
                                             });

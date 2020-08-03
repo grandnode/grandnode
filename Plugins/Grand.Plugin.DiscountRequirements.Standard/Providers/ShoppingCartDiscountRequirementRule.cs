@@ -1,10 +1,9 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
 using Grand.Services.Discounts;
 using Grand.Services.Orders;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,12 +17,13 @@ namespace Grand.Plugin.DiscountRequirements.ShoppingCart
         private readonly ISettingService _settingService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
-        public ShoppingCartDiscountRequirementRule(IServiceProvider serviceProvider)
+        public ShoppingCartDiscountRequirementRule(IWorkContext workContext, IPriceCalculationService priceCalculationService,
+            ISettingService settingService, ShoppingCartSettings shoppingCartSettings)
         {
-            _workContext = serviceProvider.GetRequiredService<IWorkContext>();
-            _priceCalculationService = serviceProvider.GetRequiredService<IPriceCalculationService>();
-            _settingService = serviceProvider.GetRequiredService<ISettingService>();
-            _shoppingCartSettings = serviceProvider.GetRequiredService<ShoppingCartSettings>();
+            _workContext = workContext;
+            _priceCalculationService = priceCalculationService;
+            _settingService = settingService;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Grand.Plugin.DiscountRequirements.ShoppingCart
                 return result;
             }
             decimal spentAmount = 0;
-            
+
             foreach (var ca in cart)
             {
                 bool calculateWithDiscount = false;

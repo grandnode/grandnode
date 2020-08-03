@@ -30,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="PictureUrl" class="col-form-label">@T("Account.VendorInfo.Picture"):</label>
-                <input class="form-control-file" name="uploadedFile" type="file" />
+                <input class="form-control-file" name="uploadedFile" type="file" accept="image/*"/>
                 @if (!String.IsNullOrEmpty(Model.PictureUrl))
                 {
                     <div class="vendor-picture">

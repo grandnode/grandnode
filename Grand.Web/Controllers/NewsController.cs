@@ -1,11 +1,10 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.News;
+using Grand.Domain.Customers;
+using Grand.Domain.News;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Rss;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -13,8 +12,11 @@ using Grand.Services.News;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
+using Grand.Web.Commands.Models.News;
+using Grand.Web.Events;
+using Grand.Web.Features.Models.News;
 using Grand.Web.Models.News;
-using Grand.Web.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -26,7 +28,6 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly INewsViewModelService _newsViewModelService;
         private readonly INewsService _newsService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -35,7 +36,7 @@ namespace Grand.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
-
+        private readonly IMediator _mediator;
         private readonly NewsSettings _newsSettings;
         private readonly CaptchaSettings _captchaSettings;
 
@@ -43,26 +44,29 @@ namespace Grand.Web.Controllers
 
         #region Constructors
 
-        public NewsController(INewsViewModelService newsViewModelService, INewsService newsService,
-            IWorkContext workContext, IStoreContext storeContext,
+        public NewsController(INewsService newsService,
+            IWorkContext workContext,
+            IStoreContext storeContext,
             ILocalizationService localizationService,
-            IWebHelper webHelper, ICustomerActivityService customerActivityService,
+            IWebHelper webHelper,
+            ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
+            IMediator mediator,
             NewsSettings newsSettings,
             CaptchaSettings captchaSettings)
         {
-            this._newsViewModelService = newsViewModelService;
-            this._newsService = newsService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._customerActivityService = customerActivityService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._newsSettings = newsSettings;
-            this._captchaSettings = captchaSettings;
+            _newsService = newsService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _customerActivityService = customerActivityService;
+            _storeMappingService = storeMappingService;
+            _permissionService = permissionService;
+            _mediator = mediator;
+            _newsSettings = newsSettings;
+            _captchaSettings = captchaSettings;
         }
 
         #endregion
@@ -74,8 +78,7 @@ namespace Grand.Web.Controllers
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = await _newsViewModelService.PrepareNewsItemList(command);
-
+            var model = await _mediator.Send(new GetNewsItemList() { Command = command });
             return View(model);
         }
 
@@ -115,8 +118,7 @@ namespace Grand.Web.Controllers
                 !_storeMappingService.Authorize(newsItem))
                 return RedirectToRoute("HomePage");
 
-            var model = new NewsItemModel();
-            await _newsViewModelService.PrepareNewsItemModel(model, newsItem, true);
+            var model = await _mediator.Send(new GetNewsItem() { NewsItem = newsItem });
 
             //display "edit" (manage) link
             if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageNews))
@@ -127,7 +129,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("NewsItem")]
         [FormValueRequired("add-comment")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> NewsCommentAdd(string newsItemId, NewsItemModel model, bool captchaValid)
         {
@@ -151,18 +153,21 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _newsViewModelService.InsertNewsComment(newsItem, model);
+                await _mediator.Send(new InsertNewsCommentCommand() { NewsItem = newsItem, Model = model });
+
+                //notification
+                await _mediator.Publish(new NewsCommentEvent(newsItem, model.AddNewComment));
+
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.AddNewsComment", newsItem.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));
 
                 //The text boxes should be cleared after a comment has been posted
-                //That' why we reload the page
                 TempData["Grand.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
                 return RedirectToRoute("NewsItem", new { SeName = newsItem.GetSeName(_workContext.WorkingLanguage.Id) });
             }
 
             //If we got this far, something failed, redisplay form
-            await _newsViewModelService.PrepareNewsItemModel(model, newsItem, true);
+            model = await _mediator.Send(new GetNewsItem() { NewsItem = newsItem });
             return View(model);
         }
         #endregion

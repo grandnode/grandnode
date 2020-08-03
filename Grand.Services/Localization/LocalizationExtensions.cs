@@ -1,10 +1,10 @@
 using Grand.Core;
-using Grand.Core.Configuration;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Security;
+using Grand.Domain;
+using Grand.Domain.Configuration;
+using Grand.Domain.Localization;
+using Grand.Domain.Security;
 using Grand.Core.Plugins;
 using Grand.Services.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -110,7 +110,7 @@ namespace Grand.Services.Localization
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
-        public static string GetLocalizedSetting<T>(this T settings, ISettingService settingService,
+        public static async Task<string> GetLocalizedSetting<T>(this T settings, ISettingService settingService,
             Expression<Func<T, string>> keySelector, string languageId, string storeId,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where T : ISettings, new()
@@ -118,7 +118,7 @@ namespace Grand.Services.Localization
             string key = settings.GetSettingKey(keySelector);
 
             //we do not support localized settings per store (overridden store settings)
-            var setting = settingService.GetSetting(key, storeId: storeId, loadSharedValueIfNotFound: true);
+            var setting = await settingService.GetSetting(key, storeId: storeId, loadSharedValueIfNotFound: true);
             if (setting == null)
                 return null;
 
@@ -274,28 +274,10 @@ namespace Grand.Services.Localization
             {
                 var lsr = await localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr != null)
-                    localizationService.DeleteLocaleStringResource(lsr).Wait();
+                    await localizationService.DeleteLocaleStringResource(lsr);
             }
         }
 
-
-
-        /// <summary>
-        /// Delete a locale resource
-        /// </summary>
-        /// <param name="plugin">Plugin</param>
-        /// <param name="resourceName">Resource name</param>
-        public static async Task DeletePluginLocaleResource(this BasePlugin plugin, IServiceProvider serviceProvider,
-            string resourceName)
-        {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
-                var languageService = scope.ServiceProvider.GetRequiredService<ILanguageService>();
-                await DeletePluginLocaleResource(plugin, localizationService,
-                languageService, resourceName.ToLowerInvariant());
-            }
-        }
         /// <summary>
         /// Delete a locale resource
         /// </summary>
@@ -323,25 +305,7 @@ namespace Grand.Services.Localization
                     await localizationService.DeleteLocaleStringResource(lsr);
             }
         }
-        /// <summary>
-        /// Add a locale resource (if new) or update an existing one
-        /// </summary>
-        /// <param name="plugin">Plugin</param>
-        /// <param name="resourceName">Resource name</param>
-        /// <param name="resourceValue">Resource value</param>
-        /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        public static async Task AddOrUpdatePluginLocaleResource(this BasePlugin plugin, IServiceProvider serviceProvider,
-        string resourceName, string resourceValue, string languageCulture = null)
-        {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
-                var languageService = scope.ServiceProvider.GetRequiredService<ILanguageService>();
-                await AddOrUpdatePluginLocaleResource(plugin, localizationService,
-                     languageService, resourceName, resourceValue, languageCulture);
-            }
 
-        }
         /// <summary>
         /// Add a locale resource (if new) or update an existing one
         /// </summary>
@@ -463,13 +427,13 @@ namespace Grand.Services.Localization
                 if (string.IsNullOrWhiteSpace(localizedFriendlyName))
                 {
                     //delete
-                    localizationService.DeleteLocaleStringResource(resource).Wait();
+                    await localizationService.DeleteLocaleStringResource(resource);
                 }
                 else
                 {
                     //update
                     resource.ResourceValue = localizedFriendlyName;
-                    localizationService.UpdateLocaleStringResource(resource).Wait();
+                    await localizationService.UpdateLocaleStringResource(resource);
                 }
             }
             else

@@ -1,7 +1,7 @@
 using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Directory;
+using Grand.Domain.Data;
+using Grand.Domain.Directory;
 using Grand.Core.Plugins;
 using Grand.Services.Events;
 using Grand.Services.Stores;
@@ -28,6 +28,13 @@ namespace Grand.Services.Directory
         /// {0} : currency ID
         /// </remarks>
         private const string CURRENCIES_BY_ID_KEY = "Grand.currency.id-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : currency code
+        /// </remarks>
+        private const string CURRENCIES_BY_CODE = "Grand.currency.code-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -65,7 +72,7 @@ namespace Grand.Services.Directory
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public CurrencyService(ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
             IStoreMappingService storeMappingService,
@@ -73,12 +80,12 @@ namespace Grand.Services.Directory
             IPluginFinder pluginFinder,
             IMediator mediator)
         {
-            this._cacheManager = cacheManager;
-            this._currencyRepository = currencyRepository;
-            this._storeMappingService = storeMappingService;
-            this._currencySettings = currencySettings;
-            this._pluginFinder = pluginFinder;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _currencyRepository = currencyRepository;
+            _storeMappingService = storeMappingService;
+            _currencySettings = currencySettings;
+            _pluginFinder = pluginFinder;
+            _mediator = mediator;
         }
 
         #endregion
@@ -109,7 +116,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.DeleteAsync(currency);
 
-            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(currency);
@@ -157,10 +164,17 @@ namespace Grand.Services.Directory
         /// <returns>Currency</returns>
         public virtual async Task<Currency> GetCurrencyByCode(string currencyCode)
         {
-            if (String.IsNullOrEmpty(currencyCode))
+            if (string.IsNullOrEmpty(currencyCode))
                 return null;
-            var currencies = await GetAllCurrencies(true);
-            return currencies.FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
+
+            var key = string.Format(CURRENCIES_BY_CODE, currencyCode);
+            return await _cacheManager.GetAsync(key, () =>
+            {
+                var query = from q in _currencyRepository.Table
+                            where q.CurrencyCode.ToLowerInvariant() == currencyCode.ToLower()
+                            select q;
+                return query.FirstOrDefaultAsync();
+            });
         }
 
         /// <summary>
@@ -183,7 +197,7 @@ namespace Grand.Services.Directory
             });
 
             //store mapping
-            if (!String.IsNullOrEmpty(storeId))
+            if (!string.IsNullOrEmpty(storeId))
             {
                 currencies = currencies.Where(c => _storeMappingService.Authorize(c, storeId)).ToList();
             }
@@ -201,7 +215,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.InsertAsync(currency);
 
-            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(currency);
@@ -218,7 +232,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.UpdateAsync(currency);
 
-            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(currency);

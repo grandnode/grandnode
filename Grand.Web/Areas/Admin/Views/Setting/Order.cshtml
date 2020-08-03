@@ -4,8 +4,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Order").Text;
 }
-<form asp-controller="Setting" asp-action="Order" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Setting" asp-action="Order" method="post">
+    
     <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">

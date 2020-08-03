@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Localization;
 using Grand.Framework.Themes;
 using Grand.Services.Localization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Framework.Mvc.Razor
 {
@@ -21,7 +21,7 @@ namespace Grand.Framework.Mvc.Razor
             get
             {
                 if (_workContext == null)
-                    _workContext = EngineContext.Current.Resolve<IWorkContext>();
+                    _workContext = ViewContext.HttpContext.RequestServices.GetRequiredService<IWorkContext>();
                 return _workContext;
             }
         }
@@ -34,7 +34,7 @@ namespace Grand.Framework.Mvc.Razor
             get
             {
                 if (_localizationService == null)
-                    _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+                    _localizationService = ViewContext.HttpContext.RequestServices.GetRequiredService<ILocalizationService>();
 
                 if (_localizer == null)
                 {
@@ -90,8 +90,8 @@ namespace Grand.Framework.Mvc.Razor
             if (supportRtl)
             {
                 //ensure that the active theme also supports it
-                var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
-                var themeContext = EngineContext.Current.Resolve<IThemeContext>();
+                var themeProvider = ViewContext.HttpContext.RequestServices.GetRequiredService<IThemeProvider>();
+                var themeContext = ViewContext.HttpContext.RequestServices.GetRequiredService<IThemeContext>();
                 supportRtl = themeProvider.GetThemeConfiguration(themeContext.WorkingThemeName).SupportRtl;
             }
             return supportRtl;

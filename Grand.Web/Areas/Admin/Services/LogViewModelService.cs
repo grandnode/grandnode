@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Logging;
+using Grand.Domain.Logging;
 using Grand.Framework.Extensions;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
@@ -28,18 +28,18 @@ namespace Grand.Web.Areas.Admin.Services
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
             IServiceProvider serviceProvider)
         {
-            this._logger = logger;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._serviceProvider = serviceProvider;
+            _logger = logger;
+            _workContext = workContext;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _serviceProvider = serviceProvider;
         }
 
         public virtual LogListModel PrepareLogListModel()
         {
             var model = new LogListModel
             {
-                AvailableLogLevels = LogLevel.Debug.ToSelectList(false).ToList()
+                AvailableLogLevels = LogLevel.Debug.ToSelectList(_localizationService, _workContext, false).ToList()
             };
             model.AvailableLogLevels.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             return model;

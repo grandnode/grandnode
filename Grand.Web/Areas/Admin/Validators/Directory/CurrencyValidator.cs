@@ -3,13 +3,17 @@ using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Directory;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Grand.Web.Areas.Admin.Validators.Directory
 {
     public class CurrencyValidator : BaseGrandValidator<CurrencyModel>
     {
-        public CurrencyValidator(ILocalizationService localizationService)
+        public CurrencyValidator(
+            IEnumerable<IValidatorConsumer<CurrencyModel>> validators,
+            ILocalizationService localizationService)
+            : base(validators)
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Currencies.Fields.Name.Required"))

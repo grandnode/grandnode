@@ -1,12 +1,9 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Catalog;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    [Validator(typeof(ProductReviewValidator))]
     public partial class ProductReviewModel : BaseGrandEntityModel
     {
         [GrandResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Product")]
@@ -15,8 +12,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string ProductName { get; set; }
 
         public string Ids {
-            get
-            {
+            get {
                 return Id + ":" + ProductId;
             }
         }

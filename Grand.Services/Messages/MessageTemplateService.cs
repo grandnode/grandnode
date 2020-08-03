@@ -1,7 +1,7 @@
 ﻿using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Messages;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
@@ -44,7 +44,6 @@ namespace Grand.Services.Messages
         #region Fields
 
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly ILanguageService _languageService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly CatalogSettings _catalogSettings;
         private readonly IMediator _mediator;
@@ -58,25 +57,21 @@ namespace Grand.Services.Messages
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="languageService">Language service</param>
-        /// <param name="localizedEntityService">Localized entity service</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="messageTemplateRepository">Message template repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public MessageTemplateService(ICacheManager cacheManager,
-            ILanguageService languageService,
             IStoreMappingService storeMappingService,
             IRepository<MessageTemplate> messageTemplateRepository,
             CatalogSettings catalogSettings,
             IMediator mediator)
         {
-            this._cacheManager = cacheManager;
-            this._languageService = languageService;
-            this._storeMappingService = storeMappingService;
-            this._messageTemplateRepository = messageTemplateRepository;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _storeMappingService = storeMappingService;
+            _messageTemplateRepository = messageTemplateRepository;
+            _catalogSettings = catalogSettings;
+            _mediator = mediator;
         }
 
         #endregion
@@ -94,7 +89,7 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.DeleteAsync(messageTemplate);
 
-            await _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(messageTemplate);
@@ -111,7 +106,7 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.InsertAsync(messageTemplate);
 
-            await _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(messageTemplate);
@@ -128,7 +123,7 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.UpdateAsync(messageTemplate);
 
-            await _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(messageTemplate);

@@ -28,6 +28,17 @@
                 </div>
             </content>
         </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="3">
+            <content>
+                <div>
+                    @{
+                        ViewData["ObjectType"] = "ProductAttribute";
+                        ViewData["TabIndex"] = 3;
+                    }
+                    <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
+                </div>
+            </content>
+        </tabstrip-item>
         <vc:admin-widget widget-zone="productattribute_details_tabs" additional-data="Model" />
     </items>
 </admin-tabstrip>

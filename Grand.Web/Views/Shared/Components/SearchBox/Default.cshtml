@@ -1,10 +1,10 @@
 ﻿@model SearchBoxModel
 @using System.Text.Encodings.Web
-<form asp-route="ProductSearch" method="get" id="small-search-box-form">
+<form asp-route="ProductSearch" method="get" id="small-search-box-form" class="w-100">
     <input type="hidden" asp-for="Box" value="true" />
     <label for="small-searchterms" class="sr-only">@T("Search.SearchBox.Tooltip")</label>
     <div class="input-group flex-row">
-        <input type="text" class="form-control search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")">
+        <input type="search" class="form-control search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")">
         @if (Model.AvailableCategories.Any())
         {
             <select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" class="search-box-select custom-select input-group-addon"></select>
@@ -21,12 +21,12 @@
             <li class="left-side col-md-6 col-12">
                 <ul>
                     <li class="categories-container">
-                        <a class="title">Categories</a>
+                        <a class="title">@T("search.category")</a>
                         <div class="no-data pl-md-3 pl-0">@T("search.noresultstextcategory")</div>
                         <ul></ul>
                     </li>
                     <li class="manufacturers-container">
-                        <a href="@Url.RouteUrl("ManufacturerList")" class="title">Manufacturers</a>
+                        <a href="@Url.RouteUrl("ManufacturerList")" class="title">@T("search.manufacturer")</a>
                         <div class="no-data pl-0">@T("search.noresultstextmanufacturer")</div>
                         <ul></ul>
                     </li>
@@ -40,7 +40,7 @@
             <li class="center-side col-12">
                 <ul>
                     <li class="blog-container mb-3">
-                        <a href="@Url.RouteUrl("Blog")" class="title">Blog</a>
+                        <a href="@Url.RouteUrl("Blog")" class="title">@T("search.blog")</a>
                         <div class="no-data pl-md-3 pl-0">@T("search.noresultstextblog")</div>
                         <ul></ul>
                     </li>
@@ -70,3 +70,6 @@
 
     @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox" })
 </form>
+<button class="mobile-search-trigger d-lg-none d-flex" data-toggle="modal" data-target="#searchModal">
+    <span class="mdi mdi-magnify"></span>
+</button>

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+﻿using Grand.Domain.Common;
 using Grand.Services.Customers;
 using System;
 using System.Threading.Tasks;
@@ -15,8 +15,8 @@ namespace Grand.Services.Tasks
 
         public DeleteGuestsScheduleTask(ICustomerService customerService, CommonSettings commonSettings)
         {
-            this._customerService = customerService;
-            this._commonSettings = commonSettings;
+            _customerService = customerService;
+            _commonSettings = commonSettings;
         }
 
         /// <summary>

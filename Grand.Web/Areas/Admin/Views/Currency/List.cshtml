@@ -1,11 +1,11 @@
 ﻿@{
-    List<Grand.Core.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
+    List<Grand.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
     bool autoUpdateEnabled = ViewBag.AutoUpdateEnabled ?? false;
     //page title
     ViewBag.Title = T("Admin.Configuration.Currencies").Text;
 }
-<form asp-controller="Currency" asp-action="List">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Currency" asp-action="List">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -204,7 +204,7 @@
                                 var rate = rates[i];
                                 <text>
                                 {
-                                    CurrencyCode: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(rate.CurrencyCode)))",
+                                    CurrencyCode: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(string.IsNullOrEmpty(rate.CurrencyCode) ? "" : rate.CurrencyCode)))",
                                     Rate: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(rate.Rate.ToString())))"
                                 }
                                 </text>

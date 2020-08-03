@@ -1,0 +1,70 @@
+﻿@model ManufacturerModel
+@inject AdminAreaSettings adminAreaSettings
+<div class="panel panel-default">
+    <vc:admin-widget widget-zone="manufacturer_details_documents_top" additional-data="Model" />
+    <div class="panel-body">
+        <div id="manufacturer-documents-grid"></div>
+    </div>
+    <div class="panel-footer">
+        <button type="button" class="k-button" onclick="location.href='@Url.Action("CreateDocument", "Document", new { ObjectId = Model.Id, Reference = (int)Reference.Manufacturer })'"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Customers.Document.Add")</button>
+    </div>
+    <vc:admin-widget widget-zone="manufacturer_details_documents_bottom" additional-data="Model" />
+</div>
+
+<script>
+$(document).ready(function () {
+    $("#manufacturer-documents-grid").kendoGrid({
+        dataSource: {
+            transport: {
+                read: {
+                    url: "@Html.Raw(Url.Action("ListDocuments", "Document", new { reference = (int)Reference.Manufacturer, ObjectId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                },
+            },
+            schema: {
+                data: "Data",
+                total: "Total",
+                errors: "Errors",
+            },
+            error: function(e) {
+                display_kendoui_grid_error(e);
+                // Cancel the changes
+                this.cancelChanges();
+            },
+            pageSize: @(adminAreaSettings.DefaultGridPageSize),
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
+        },
+        pageable: {
+            refresh: true,
+            pageSizes: [@(adminAreaSettings.GridPageSizes)]
+        },
+        editable: {
+            confirmation: true,
+            mode: "inline"
+        },
+        scrollable: false,
+        columns: [{
+                field: "Number",
+                title: "@T("Admin.Documents.Document.Fields.Number")",
+                template: '<a class="k-link" href="/Admin/Document/EditDocument/#=Id#">#=kendo.htmlEncode(Number)#</a>',
+            },
+            {
+                field: "Name",
+                title: "@T("Admin.Documents.Document.Fields.Name")",
+                template: '<a class="k-link" href="/Admin/Document/EditDocument/#=Id#">#=kendo.htmlEncode(Name)#</a>',
+            }, {
+                field: "Published",
+                title: "@T("Admin.Documents.Document.Fields.Published")",
+                width: 100,
+                minScreenWidth: 500,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+        }]
+    });
+});
+</script>

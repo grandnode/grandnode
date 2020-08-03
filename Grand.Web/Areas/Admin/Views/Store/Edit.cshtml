@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Stores.EditStoreDetails").Text;
 }
-<form asp-controller="Store" asp-action="Edit" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Store" asp-action="Edit" method="post">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

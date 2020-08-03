@@ -1,6 +1,5 @@
 ﻿@model ProductDetailsModel
 @using System.Globalization
-@inject CatalogSettings catalogSettings
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.reservation.js");
     Html.AddCssFileParts("~/content/jquery-ui-themes/smoothness/jquery-ui.calendar.min.css");
@@ -38,7 +37,7 @@
             </div>
             <div>
                 <h5 style="margin-top:10px">@T("Products.Reservation.Hour"):</h5>
-                <div id="hoursDiv" class="btn-group d-flex flex-wrap" data-toggle="buttons"></div>
+                <div id="hoursDiv" class="d-inline-flex flex-wrap" data-toggle="buttons"></div>
             </div>
         }
     </div>

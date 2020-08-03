@@ -1,5 +1,5 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Messages;
 using Grand.Services.Events;
 using System;
 using System.Linq;
@@ -21,14 +21,14 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="popupActiveRepository">Popup Active repository</param>
         /// <param name="popupArchiveRepository">Popup Archive repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public PopupService(IRepository<PopupActive> popupActiveRepository,
             IRepository<PopupArchive> popupArchiveRepository,
             IMediator mediator)
         {
-            this._popupActiveRepository = popupActiveRepository;
-            this._popupArchiveRepository = popupArchiveRepository;
-            this._mediator = mediator;
+            _popupActiveRepository = popupActiveRepository;
+            _popupArchiveRepository = popupArchiveRepository;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -47,11 +47,6 @@ namespace Grand.Services.Messages
         }
 
 
-        /// <summary>
-        /// Gets a popup by identifier
-        /// </summary>
-        /// <param name="popupId">Popup identifier</param>
-        /// <returns>Banner</returns>
         public virtual async Task<PopupActive> GetActivePopupByCustomerId(string customerId)
         {
             var query = from c in _popupActiveRepository.Table

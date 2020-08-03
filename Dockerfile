@@ -1,13 +1,15 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100 AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 
 WORKDIR /app
 
 COPY GrandNode.sln .
+COPY Grand.Domain/Grand.Domain.csproj Grand.Domain/Grand.Domain.csproj
 COPY Grand.Core/Grand.Core.csproj Grand.Core/Grand.Core.csproj
 COPY Grand.Framework/Grand.Framework.csproj Grand.Framework/Grand.Framework.csproj
 COPY Grand.Services/Grand.Services.csproj Grand.Services/Grand.Services.csproj
 COPY Grand.Web/Grand.Web.csproj Grand.Web/Grand.Web.csproj
 COPY Plugins/Grand.Plugin.DiscountRequirements.Standard/Grand.Plugin.DiscountRequirements.Standard.csproj Plugins/Grand.Plugin.DiscountRequirements.Standard/Grand.Plugin.DiscountRequirements.Standard.csproj
+COPY Plugins/Grand.Plugin.Misc.EuropaCheckVat/Grand.Plugin.Misc.EuropaCheckVat.csproj Plugins/Grand.Plugin.Misc.EuropaCheckVat/Grand.Plugin.Misc.EuropaCheckVat.csproj
 COPY Plugins/Grand.Plugin.ExchangeRate.McExchange/Grand.Plugin.ExchangeRate.McExchange.csproj Plugins/Grand.Plugin.ExchangeRate.McExchange/Grand.Plugin.ExchangeRate.McExchange.csproj
 COPY Plugins/Grand.Plugin.ExternalAuth.Facebook/Grand.Plugin.ExternalAuth.Facebook.csproj Plugins/Grand.Plugin.ExternalAuth.Facebook/Grand.Plugin.ExternalAuth.Facebook.csproj
 COPY Plugins/Grand.Plugin.ExternalAuth.Google/Grand.Plugin.ExternalAuth.Google.csproj Plugins/Grand.Plugin.ExternalAuth.Google/Grand.Plugin.ExternalAuth.Google.csproj
@@ -23,12 +25,14 @@ COPY Plugins/Grand.Plugin.Shipping.ShippingPoint/Grand.Plugin.Shipping.ShippingP
 COPY Plugins/Grand.Plugin.Tax.CountryStateZip/Grand.Plugin.Tax.CountryStateZip.csproj Plugins/Grand.Plugin.Tax.CountryStateZip/Grand.Plugin.Tax.CountryStateZip.csproj
 COPY Plugins/Grand.Plugin.Tax.FixedRate/Grand.Plugin.Tax.FixedRate.csproj Plugins/Grand.Plugin.Tax.FixedRate/Grand.Plugin.Tax.FixedRate.csproj
 COPY Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAnalytics.csproj Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAnalytics.csproj
+COPY Plugins/Grand.Plugin.Widgets.FacebookPixel/Grand.Plugin.Widgets.FacebookPixel.csproj Plugins/Grand.Plugin.Widgets.FacebookPixel/Grand.Plugin.Widgets.FacebookPixel.csproj
 COPY Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj
 
 # Copy everything else and build
 COPY . ./
 RUN dotnet publish Grand.Web -c Release -o out
 RUN dotnet build Plugins/Grand.Plugin.DiscountRequirements.Standard
+RUN dotnet build Plugins/Grand.Plugin.Misc.EuropaCheckVat
 RUN dotnet build Plugins/Grand.Plugin.ExchangeRate.McExchange
 RUN dotnet build Plugins/Grand.Plugin.ExternalAuth.Facebook
 RUN dotnet build Plugins/Grand.Plugin.ExternalAuth.Google
@@ -44,10 +48,11 @@ RUN dotnet build Plugins/Grand.Plugin.Shipping.ShippingPoint
 RUN dotnet build Plugins/Grand.Plugin.Tax.CountryStateZip
 RUN dotnet build Plugins/Grand.Plugin.Tax.FixedRate
 RUN dotnet build Plugins/Grand.Plugin.Widgets.GoogleAnalytics
+RUN dotnet build Plugins/Grand.Plugin.Widgets.FacebookPixel
 RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.0
 RUN apt-get update && \
   apt-get -y install libgdiplus
 RUN ln -s /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libdl.so

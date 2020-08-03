@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Shipping;
 using System.Collections.Generic;
 
 namespace Grand.Services.Shipping
@@ -13,8 +13,8 @@ namespace Grand.Services.Shipping
         /// </summary>
         public GetShippingOptionResponse()
         {
-            this.Errors = new List<string>();
-            this.ShippingOptions = new List<ShippingOption>();
+            Errors = new List<string>();
+            ShippingOptions = new List<ShippingOption>();
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Grand.Services.Shipping
         {
             get 
             { 
-                return this.Errors.Count == 0; 
+                return Errors.Count == 0; 
             }
         }
 
@@ -49,7 +49,7 @@ namespace Grand.Services.Shipping
         /// <param name="error">Error</param>
         public void AddError(string error)
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
     }
 }

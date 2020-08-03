@@ -1,5 +1,5 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Vendors;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -10,7 +10,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidVendor(Vendor vendor)
         {
-            this._vendor = vendor;
+            _vendor = vendor;
             AdditionalTokens = new Dictionary<string, string>();
         }
 

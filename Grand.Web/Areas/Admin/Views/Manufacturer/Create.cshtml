@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers.AddNew").Text;
 }
-<form asp-controller="Manufacturer" asp-action="Create" method="post" id="manufacturer-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Manufacturer" asp-action="Create" method="post" id="manufacturer-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

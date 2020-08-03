@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
@@ -8,13 +8,6 @@ namespace Grand.Services.Messages
     /// </summary>
     public partial interface IContactAttributeFormatter
     {
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Attributes</returns>
-        Task<string> FormatAttributes(string attributesXml);
-
         /// <summary>
         /// Formats attributes
         /// </summary>

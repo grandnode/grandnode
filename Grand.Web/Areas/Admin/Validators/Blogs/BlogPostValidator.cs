@@ -2,12 +2,16 @@
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Blogs;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Validators.Blogs
 {
     public class BlogPostValidator : BaseGrandValidator<BlogPostModel>
     {
-        public BlogPostValidator(ILocalizationService localizationService)
+        public BlogPostValidator(
+            IEnumerable<IValidatorConsumer<BlogPostModel>> validators,
+            ILocalizationService localizationService)
+            : base(validators)
         {
             RuleFor(x => x.Title)
                 .NotEmpty()

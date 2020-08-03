@@ -1,14 +1,17 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Courses;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Courses;
+using Grand.Domain.Customers;
 using Grand.Services.Common;
+using Grand.Services.Courses;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Security;
 using Grand.Services.Stores;
-using Grand.Web.Interfaces;
+using Grand.Web.Commands.Models.Courses;
+using Grand.Web.Features.Models.Courses;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -27,15 +30,28 @@ namespace Grand.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActionEventService _customerActionEventService;
-        private readonly ICourseViewModelService _courseViewModelService;
+        private readonly ICourseService _courseService;
+        private readonly ICourseLessonService _courseLessonService;
         private readonly IDownloadService _downloadService;
+        private readonly IMediator _mediator;
         private readonly CourseSettings _courseSettings;
 
-        public CourseController(IPermissionService permissionService, IAclService aclService,
-            IWorkContext workContext, IStoreMappingService storeMappingService, ICustomerActivityService customerActivityService,
-            IGenericAttributeService genericAttributeService, IWebHelper webHelper, IStoreContext storeContext,
-            ILocalizationService localizationService, ICustomerActionEventService customerActionEventService, ICourseViewModelService courseViewModelService,
-            IDownloadService downloadService, CourseSettings courseSettings)
+        public CourseController(
+            IPermissionService permissionService, 
+            IAclService aclService, 
+            IWorkContext workContext, 
+            IStoreMappingService storeMappingService, 
+            ICustomerActivityService customerActivityService, 
+            IGenericAttributeService genericAttributeService, 
+            IWebHelper webHelper, 
+            IStoreContext storeContext, 
+            ILocalizationService localizationService, 
+            ICustomerActionEventService customerActionEventService, 
+            ICourseService courseService, 
+            ICourseLessonService courseLessonService, 
+            IDownloadService downloadService, 
+            IMediator mediator, 
+            CourseSettings courseSettings)
         {
             _permissionService = permissionService;
             _aclService = aclService;
@@ -47,9 +63,11 @@ namespace Grand.Web.Controllers
             _storeContext = storeContext;
             _localizationService = localizationService;
             _customerActionEventService = customerActionEventService;
-            _courseViewModelService = courseViewModelService;
-            _courseSettings = courseSettings;
+            _courseService = courseService;
+            _courseLessonService = courseLessonService;
             _downloadService = downloadService;
+            _mediator = mediator;
+            _courseSettings = courseSettings;
         }
 
         protected async Task<bool> CheckPermission(Course course, Customer customer)
@@ -66,7 +84,8 @@ namespace Grand.Web.Controllers
                 return false;
 
             //Check whether the current user purchased the course
-            if (!await _courseViewModelService.CheckOrder(course, customer) && !await _permissionService.Authorize(StandardPermissionProvider.ManageCourses, customer))
+            if (!await _mediator.Send(new GetCheckOrder() { Course = course, Customer = customer })
+                && !await _permissionService.Authorize(StandardPermissionProvider.ManageCourses, customer))
                 return false;
 
             //ACL (access control list)
@@ -84,11 +103,11 @@ namespace Grand.Web.Controllers
         {
             var customer = _workContext.CurrentCustomer;
 
-            var course = await _courseViewModelService.GetCourseById(courseId);
+            var course = await _courseService.GetById(courseId);
             if (course == null)
                 return InvokeHttp404();
 
-            if(!await CheckPermission(course, customer))
+            if (!await CheckPermission(course, customer))
                 return InvokeHttp404();
 
             //'Continue shopping' URL
@@ -103,7 +122,11 @@ namespace Grand.Web.Controllers
             await _customerActionEventService.Viewed(customer, HttpContext.Request.Path.ToString(), Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers["Referer"].ToString() : "");
 
             //model
-            var model = await _courseViewModelService.PrepareCourseModel(course);
+            var model = await _mediator.Send(new GetCourse() {
+                Course = course,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage
+            });
 
             return View(model);
         }
@@ -111,11 +134,11 @@ namespace Grand.Web.Controllers
         {
             var customer = _workContext.CurrentCustomer;
 
-            var lesson = await _courseViewModelService.GetLessonById(id);
+            var lesson = await _courseLessonService.GetById(id);
             if (lesson == null)
                 return InvokeHttp404();
 
-            var course = await _courseViewModelService.GetCourseById(lesson.CourseId);
+            var course = await _courseService.GetById(lesson.CourseId);
             if (course == null)
                 return InvokeHttp404();
 
@@ -134,7 +157,12 @@ namespace Grand.Web.Controllers
             await _customerActionEventService.Viewed(customer, HttpContext.Request.Path.ToString(), Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers["Referer"].ToString() : "");
 
             //model
-            var model = await _courseViewModelService.PrepareLessonModel(course, lesson);
+            var model = await _mediator.Send(new GetLesson() {
+                Course = course,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Lesson = lesson
+            });
 
             return View(model);
         }
@@ -142,11 +170,11 @@ namespace Grand.Web.Controllers
         {
             var customer = _workContext.CurrentCustomer;
 
-            var lesson = await _courseViewModelService.GetLessonById(id);
+            var lesson = await _courseLessonService.GetById(id);
             if (lesson == null || string.IsNullOrEmpty(lesson.AttachmentId))
                 return InvokeHttp404();
 
-            var course = await _courseViewModelService.GetCourseById(lesson.CourseId);
+            var course = await _courseService.GetById(lesson.CourseId);
             if (course == null)
                 return InvokeHttp404();
 
@@ -177,11 +205,11 @@ namespace Grand.Web.Controllers
         {
             var customer = _workContext.CurrentCustomer;
 
-            var lesson = await _courseViewModelService.GetLessonById(id);
+            var lesson = await _courseLessonService.GetById(id);
             if (lesson == null || string.IsNullOrEmpty(lesson.VideoFile))
                 return InvokeHttp404();
 
-            var course = await _courseViewModelService.GetCourseById(lesson.CourseId);
+            var course = await _courseService.GetById(lesson.CourseId);
             if (course == null)
                 return InvokeHttp404();
 
@@ -212,18 +240,18 @@ namespace Grand.Web.Controllers
         {
             var customer = _workContext.CurrentCustomer;
 
-            var lesson = await _courseViewModelService.GetLessonById(id);
+            var lesson = await _courseLessonService.GetById(id);
             if (lesson == null)
                 return Json(new { result = false });
 
-            var course = await _courseViewModelService.GetCourseById(lesson.CourseId);
+            var course = await _courseService.GetById(lesson.CourseId);
             if (course == null)
                 return Json(new { result = false });
 
             if (!await CheckPermission(course, customer))
                 return Json(new { result = false });
 
-            await _courseViewModelService.Approved(course, lesson, customer);
+            await _mediator.Send(new CourseLessonApprovedCommand() { Course = course, Lesson = lesson, Customer = _workContext.CurrentCustomer });
 
             return Json(new { result = true });
         }

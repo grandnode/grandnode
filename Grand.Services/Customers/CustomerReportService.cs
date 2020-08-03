@@ -1,9 +1,9 @@
-using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
+using Grand.Domain.Shipping;
 using Grand.Services.Helpers;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -41,10 +41,10 @@ namespace Grand.Services.Customers
             IRepository<Order> orderRepository, ICustomerService customerService,
             IDateTimeHelper dateTimeHelper)
         {
-            this._customerRepository = customerRepository;
-            this._orderRepository = orderRepository;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
+            _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion

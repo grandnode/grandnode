@@ -1,10 +1,7 @@
-﻿using FluentValidation.Attributes;
-using Grand.Core.Domain.Forums;
-using Grand.Web.Validators.Boards;
+﻿using Grand.Domain.Forums;
 
 namespace Grand.Web.Models.Boards
 {
-    [Validator(typeof(EditForumPostValidator))]
     public partial class EditForumPostModel
     {
         public string Id { get; set; }

@@ -1,6 +1,5 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Customers;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver;
@@ -21,7 +20,6 @@ namespace Grand.Services.Orders
 
         private readonly IRepository<RewardPointsHistory> _rphRepository;
         private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly IStoreContext _storeContext;
         private readonly IMediator _mediator;
 
         #endregion
@@ -33,17 +31,14 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="rphRepository">RewardPointsHistory repository</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public RewardPointsService(IRepository<RewardPointsHistory> rphRepository,
             RewardPointsSettings rewardPointsSettings,
-            IStoreContext storeContext,
             IMediator mediator)
         {
-            this._rphRepository = rphRepository;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._storeContext = storeContext;
-            this._mediator = mediator;
+            _rphRepository = rphRepository;
+            _rewardPointsSettings = rewardPointsSettings;
+            _mediator = mediator;
         }
         #endregion
 
@@ -102,16 +97,16 @@ namespace Grand.Services.Orders
             return rewardPointsHistory;
         }
 
-        public virtual async Task<IList<RewardPointsHistory>> GetRewardPointsHistory(string customerId = "", bool showHidden = false)
+        public virtual async Task<IList<RewardPointsHistory>> GetRewardPointsHistory(string customerId = "", string storeId = "", bool showHidden = false)
         {
             var query = _rphRepository.Table;
-            if (!String.IsNullOrEmpty(customerId))
+            if (!string.IsNullOrEmpty(customerId))
                 query = query.Where(rph => rph.CustomerId == customerId);
             if (!showHidden && !_rewardPointsSettings.PointsAccumulatedForAllStores)
             {
                 //filter by store
-                var currentStoreId = _storeContext.CurrentStore.Id;
-                query = query.Where(rph => rph.StoreId == currentStoreId);
+                if(!string.IsNullOrEmpty(storeId))
+                    query = query.Where(rph => rph.StoreId == storeId);
             }
             query = query.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id);
 

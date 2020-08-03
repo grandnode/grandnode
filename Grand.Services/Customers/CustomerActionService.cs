@@ -1,7 +1,7 @@
-﻿using Grand.Core;
+﻿using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Data;
+using Grand.Domain.Customers;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver;
@@ -13,10 +13,12 @@ using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
-    public partial class CustomerActionService: ICustomerActionService
+    public partial class CustomerActionService : ICustomerActionService
     {
         #region Fields
+
         private const string CUSTOMER_ACTION_TYPE = "Grand.customer.action.type";
+
         private readonly IRepository<CustomerAction> _customerActionRepository;
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
         private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;
@@ -33,17 +35,17 @@ namespace Grand.Services.Customers
             IMediator mediator,
             ICacheManager cacheManager)
         {
-            this._customerActionRepository = customerActionRepository;
-            this._customerActionTypeRepository = customerActionTypeRepository;
-            this._customerActionHistoryRepository = customerActionHistoryRepository;
-            this._mediator = mediator;
-            this._cacheManager = cacheManager;
+            _customerActionRepository = customerActionRepository;
+            _customerActionTypeRepository = customerActionTypeRepository;
+            _customerActionHistoryRepository = customerActionHistoryRepository;
+            _mediator = mediator;
+            _cacheManager = cacheManager;
         }
 
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Gets customer action
         /// </summary>
@@ -88,7 +90,7 @@ namespace Grand.Services.Customers
         public virtual async Task DeleteCustomerAction(CustomerAction customerAction)
         {
             if (customerAction == null)
-                throw new ArgumentNullException("customerAction"); 
+                throw new ArgumentNullException("customerAction");
 
             await _customerActionRepository.DeleteAsync(customerAction);
 
@@ -143,7 +145,7 @@ namespace Grand.Services.Customers
             await _customerActionTypeRepository.UpdateAsync(customerActionType);
 
             //clear cache
-            await _cacheManager.Remove(CUSTOMER_ACTION_TYPE);
+            await _cacheManager.RemoveAsync(CUSTOMER_ACTION_TYPE);
             //event notification
             await _mediator.EntityUpdated(customerActionType);
         }

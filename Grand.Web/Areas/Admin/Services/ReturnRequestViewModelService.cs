@@ -1,8 +1,9 @@
-﻿using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Core;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Directory;
+using Grand.Domain.Localization;
+using Grand.Domain.Orders;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -11,6 +12,7 @@ using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Web.Areas.Admin.Extensions;
@@ -30,6 +32,7 @@ namespace Grand.Web.Areas.Admin.Services
         #region Fields
 
         private readonly IOrderService _orderService;
+        private readonly IWorkContext _workContext;
         private readonly IProductService _productService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICustomerService _customerService;
@@ -46,11 +49,13 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IDownloadService _downloadService;
         #endregion Fields
 
         #region Constructors
 
         public ReturnRequestViewModelService(IOrderService orderService,
+            IWorkContext workContext,
             IProductService productService,
             ICustomerService customerService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
@@ -64,25 +69,28 @@ namespace Grand.Web.Areas.Admin.Services
             IStateProvinceService stateProvinceService,
             IAddressAttributeService addressAttributeService,
             IAddressAttributeParser addressAttributeParser,
+            IDownloadService downloadService,
             OrderSettings orderSettings)
         {
-            this._orderService = orderService;
-            this._productService = productService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._customerActivityService = customerActivityService;
-            this._returnRequestService = returnRequestService;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._addressSettings = addressSettings;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._orderSettings = orderSettings;
+            _orderService = orderService;
+            _workContext = workContext;
+            _productService = productService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _customerActivityService = customerActivityService;
+            _returnRequestService = returnRequestService;
+            _priceFormatter = priceFormatter;
+            _currencyService = currencyService;
+            _addressSettings = addressSettings;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _addressAttributeService = addressAttributeService;
+            _addressAttributeParser = addressAttributeParser;
+            _downloadService = downloadService;
+            _orderSettings = orderSettings;
         }
 
         #endregion
@@ -109,6 +117,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.Id = returnRequest.Id;
             model.OrderId = order.Id;
             model.OrderNumber = order.OrderNumber;
+            model.OrderCode = order.Code;
             model.ReturnNumber = returnRequest.ReturnNumber;
             model.CustomerId = returnRequest.CustomerId;
             model.NotifyCustomer = returnRequest.NotifyCustomer;
@@ -121,12 +130,14 @@ namespace Grand.Web.Areas.Admin.Services
             model.ReturnRequestStatusStr = returnRequest.ReturnRequestStatus.ToString();
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
             model.PickupDate = returnRequest.PickupDate;
+            model.GenericAttributes = returnRequest.GenericAttributes;
 
             if (!excludeProperties)
             {
                 var addr = new AddressModel();
                 model.PickupAddress = await PrepareAddressModel(addr, returnRequest.PickupAddress, excludeProperties);
                 model.CustomerComments = returnRequest.CustomerComments;
+                model.ExternalId = returnRequest.ExternalId;
                 model.StaffNotes = returnRequest.StaffNotes;
                 model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
             }
@@ -150,11 +161,13 @@ namespace Grand.Web.Areas.Admin.Services
             DateTime? endDateValue = (model.EndDate == null) ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            var returnRequests = await _returnRequestService.SearchReturnRequests(model.StoreId, 
-                customerId, 
-                "", 
-                (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null), 
-                pageIndex - 1, 
+            var returnRequests = await _returnRequestService.SearchReturnRequests(model.StoreId,
+                customerId,
+                "",
+                _workContext.CurrentVendor?.Id,
+                "",
+                (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null),
+                pageIndex - 1,
                 pageSize,
                 startDateValue,
                 endDateValue);
@@ -172,7 +185,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 if (!excludeProperties)
                 {
-                    model = address.ToModel();
+                    model = await address.ToModel(_countryService, _stateProvinceService);
                 }
             }
 
@@ -230,10 +243,9 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual ReturnReqestListModel PrepareReturnReqestListModel()
         {
-            var model = new ReturnReqestListModel
-            {
+            var model = new ReturnReqestListModel {
                 //Return request status
-                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList(false).ToList()
+                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList().ToList()
             };
             model.ReturnRequestStatus.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
 
@@ -242,15 +254,14 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<IList<ReturnRequestModel.ReturnRequestItemModel>> PrepareReturnRequestItemModel(string returnRequestId)
         {
             var returnRequest = await _returnRequestService.GetReturnRequestById(returnRequestId);
-            List<ReturnRequestModel.ReturnRequestItemModel> items = new List<ReturnRequestModel.ReturnRequestItemModel>();
+            var items = new List<ReturnRequestModel.ReturnRequestItemModel>();
             var order = await _orderService.GetOrderById(returnRequest.OrderId);
 
             foreach (var item in returnRequest.ReturnRequestItems)
             {
                 var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
 
-                items.Add(new ReturnRequestModel.ReturnRequestItemModel
-                {
+                items.Add(new ReturnRequestModel.ReturnRequestItemModel {
                     ProductId = orderItem.ProductId,
                     ProductName = (await _productService.GetProductByIdIncludeArch(orderItem.ProductId)).Name,
                     Quantity = item.Quantity,
@@ -266,7 +277,10 @@ namespace Grand.Web.Areas.Admin.Services
             returnRequest.CustomerComments = model.CustomerComments;
             returnRequest.StaffNotes = model.StaffNotes;
             returnRequest.ReturnRequestStatusId = model.ReturnRequestStatusId;
+            returnRequest.ExternalId = model.ExternalId;
             returnRequest.UpdatedOnUtc = DateTime.UtcNow;
+            returnRequest.GenericAttributes = model.GenericAttributes;
+
             if (_orderSettings.ReturnRequests_AllowToSpecifyPickupDate)
                 returnRequest.PickupDate = model.PickupDate;
             if (_orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
@@ -289,6 +303,57 @@ namespace Grand.Web.Areas.Admin.Services
             await _returnRequestService.DeleteReturnRequest(returnRequest);
             //activity log
             await _customerActivityService.InsertActivity("DeleteReturnRequest", returnRequest.Id, _localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id);
+        }
+
+        public virtual async Task<IList<ReturnRequestModel.ReturnRequestNote>> PrepareReturnRequestNotes(ReturnRequest returnRequest)
+        {
+            //return request notes
+            var returnRequestNoteModels = new List<ReturnRequestModel.ReturnRequestNote>();
+            foreach (var returnRequestNote in (await _returnRequestService.GetReturnRequestNotes(returnRequest.Id))
+                .OrderByDescending(on => on.CreatedOnUtc))
+            {
+                var download = await _downloadService.GetDownloadById(returnRequestNote.DownloadId);
+                returnRequestNoteModels.Add(new ReturnRequestModel.ReturnRequestNote {
+                    Id = returnRequestNote.Id,
+                    ReturnRequestId = returnRequest.Id,
+                    DownloadId = String.IsNullOrEmpty(returnRequestNote.DownloadId) ? "" : returnRequestNote.DownloadId,
+                    DownloadGuid = download != null ? download.DownloadGuid : Guid.Empty,
+                    DisplayToCustomer = returnRequestNote.DisplayToCustomer,
+                    Note = returnRequestNote.FormatReturnRequestNoteText(),
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequestNote.CreatedOnUtc, DateTimeKind.Utc),
+                    CreatedByCustomer = returnRequestNote.CreatedByCustomer
+                });
+            }
+            return returnRequestNoteModels;
+        }
+
+        public virtual async Task InsertReturnRequestNote(ReturnRequest returnRequest, Order order, string downloadId, bool displayToCustomer, string message)
+        {
+            var returnRequestNote = new ReturnRequestNote {
+                DisplayToCustomer = displayToCustomer,
+                Note = message,
+                DownloadId = downloadId,
+                ReturnRequestId = returnRequest.Id,
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            await _returnRequestService.InsertReturnRequestNote(returnRequestNote);
+
+            //new return request notification
+            if (displayToCustomer)
+            {
+                //email
+                await _workflowMessageService.SendNewReturnRequestNoteAddedCustomerNotification(returnRequest, returnRequestNote, order);
+            }
+        }
+
+        public virtual async Task DeleteReturnRequestNote(ReturnRequest returnRequest, string id)
+        {
+            var returnRequestNote = (await _returnRequestService.GetReturnRequestNotes(returnRequest.Id)).FirstOrDefault(on => on.Id == id);
+            if (returnRequestNote == null)
+                throw new ArgumentException("No return request note found with the specified id");
+
+            returnRequestNote.ReturnRequestId = returnRequest.Id;
+            await _returnRequestService.DeleteReturnRequestNote(returnRequestNote);
         }
     }
 }

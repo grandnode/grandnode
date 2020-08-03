@@ -1,19 +1,15 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Settings;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
-    [Validator(typeof(OrderSettingsValidator))]
     public partial class OrderSettingsModel : BaseGrandModel
     {
         public OrderSettingsModel()
         {
             GiftCards_Activated_OrderStatuses = new List<SelectListItem>();
-            GiftCards_Deactivated_OrderStatuses = new List<SelectListItem>();
         }
 
         public string ActiveStoreScopeConfiguration { get; set; }
@@ -92,15 +88,14 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.NumberOfDaysReturnRequestAvailable")]
         public int NumberOfDaysReturnRequestAvailable { get; set; }
         public bool NumberOfDaysReturnRequestAvailable_OverrideForStore { get; set; }
-        
-        
+
+
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.GiftCards_Activated")]
         public int GiftCards_Activated_OrderStatusId { get; set; }
         public IList<SelectListItem> GiftCards_Activated_OrderStatuses { get; set; }
 
-        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.GiftCards_Deactivated")]
-        public int GiftCards_Deactivated_OrderStatusId { get; set; }
-        public IList<SelectListItem> GiftCards_Deactivated_OrderStatuses { get; set; }
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder")]
+        public bool DeactivateGiftCardsAfterCancelOrder { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder")]
         public bool DeactivateGiftCardsAfterDeletingOrder { get; set; }

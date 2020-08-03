@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Stores;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
@@ -35,8 +35,8 @@ namespace Grand.Framework
 
         public WebStoreContext(IHttpContextAccessor httpContextAccessor, IStoreService storeService)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._storeService = storeService;
+            _httpContextAccessor = httpContextAccessor;
+            _storeService = storeService;
         }
 
         /// <summary>
@@ -104,11 +104,10 @@ namespace Grand.Framework
             _httpContextAccessor.HttpContext.Response.Cookies.Delete(STORE_COOKIE_NAME);
 
             //get date of cookie expiration
-            var cookieExpires = 24 * 365; //TODO make configurable
-            var cookieExpiresDate = DateTime.Now.AddHours(cookieExpires);
+            var cookieExpiresDate = DateTime.UtcNow.AddHours(CommonHelper.CookieAuthExpires);
 
             //set new cookie value
-            var options = new Microsoft.AspNetCore.Http.CookieOptions
+            var options = new CookieOptions
             {
                 HttpOnly = true,
                 Expires = cookieExpiresDate

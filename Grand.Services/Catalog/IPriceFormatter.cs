@@ -1,6 +1,6 @@
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Catalog;
+using Grand.Domain.Directory;
+using Grand.Domain.Localization;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog

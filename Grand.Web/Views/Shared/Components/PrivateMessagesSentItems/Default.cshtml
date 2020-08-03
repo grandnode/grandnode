@@ -65,7 +65,7 @@
                                             </label>
                                         </div>
                                         <div class="from col-sm-2 col-12 pb-1">
-                                            @if (item.AllowViewingFromProfile)
+                                            @if (item.AllowViewingFromProfile && !string.IsNullOrEmpty(item.CustomerFromName))
                                             {
                                                 @Html.RouteLink(item.CustomerFromName, "CustomerProfile", new { Id = item.FromCustomerId })
                                             }

@@ -1,8 +1,6 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mapping;
+﻿using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Documents;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -10,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Documents
 {
-    [Validator(typeof(DocumentValidator))]
     public class DocumentModel : BaseGrandEntityModel, IAclMappingModel, IStoreMappingModel
     {
         public DocumentModel()

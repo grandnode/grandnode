@@ -1,6 +1,6 @@
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Directory;
+using Grand.Domain.Data;
+using Grand.Domain.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using MediatR;
@@ -19,6 +19,10 @@ namespace Grand.Services.Directory
     public partial class StateProvinceService : IStateProvinceService
     {
         #region Constants
+
+        /// {0} : state ID
+        /// </remarks>
+        private const string STATEPROVINCES_BY_KEY = "Grand.stateprovince.{0}";
 
         /// {0} : country ID
         /// {1} : language ID
@@ -47,7 +51,7 @@ namespace Grand.Services.Directory
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="stateProvinceRepository">State/province repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public StateProvinceService(ICacheManager cacheManager,
             IRepository<StateProvince> stateProvinceRepository,
             IMediator mediator)
@@ -71,7 +75,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.DeleteAsync(stateProvince);
 
-            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(stateProvince);
@@ -84,10 +88,12 @@ namespace Grand.Services.Directory
         /// <returns>State/province</returns>
         public virtual async Task<StateProvince> GetStateProvinceById(string stateProvinceId)
         {
-            if (String.IsNullOrEmpty(stateProvinceId))
+            if (string.IsNullOrEmpty(stateProvinceId))
                 return null;
 
-            return await _stateProvinceRepository.GetByIdAsync(stateProvinceId);
+            var key = string.Format(STATEPROVINCES_BY_KEY, stateProvinceId);
+            return await _cacheManager.GetAsync(key, () => _stateProvinceRepository.GetByIdAsync(stateProvinceId));
+
         }
 
         /// <summary>
@@ -146,7 +152,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.InsertAsync(stateProvince);
 
-            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(stateProvince);
@@ -163,7 +169,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.UpdateAsync(stateProvince);
 
-            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(stateProvince);

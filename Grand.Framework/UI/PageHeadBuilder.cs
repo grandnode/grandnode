@@ -1,5 +1,5 @@
 ﻿using BundlerMinifier;
-using Grand.Core.Domain.Seo;
+using Grand.Domain.Seo;
 using Grand.Services.Seo;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -49,18 +49,18 @@ namespace Grand.Framework.UI
         /// <param name="hostingEnvironment">Hosting environment</param>
         public PageHeadBuilder(SeoSettings seoSettings, IWebHostEnvironment hostingEnvironment)
         {
-            this._seoSettings = seoSettings;
-            this._hostingEnvironment = hostingEnvironment;
-            this._processor = new BundleFileProcessor();
+            _seoSettings = seoSettings;
+            _hostingEnvironment = hostingEnvironment;
+            _processor = new BundleFileProcessor();
 
-            this._titleParts = new List<string>();
-            this._metaDescriptionParts = new List<string>();
-            this._metaKeywordParts = new List<string>();
-            this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
-            this._cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
-            this._canonicalUrlParts = new List<string>();
-            this._headCustomParts = new List<string>();
-            this._pageCssClassParts = new List<string>();
+            _titleParts = new List<string>();
+            _metaDescriptionParts = new List<string>();
+            _metaKeywordParts = new List<string>();
+            _scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
+            _cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
+            _canonicalUrlParts = new List<string>();
+            _headCustomParts = new List<string>();
+            _pageCssClassParts = new List<string>();
         }
 
         #endregion

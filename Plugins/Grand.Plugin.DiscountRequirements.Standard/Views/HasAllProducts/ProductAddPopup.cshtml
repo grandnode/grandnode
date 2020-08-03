@@ -3,14 +3,14 @@
 }
 @model Grand.Plugin.DiscountRequirements.HasAllProducts.Models.RequirementModel.AddProductModel
 @using Grand.Framework;
-@using Grand.Core.Domain.Common;
+@using Grand.Domain.Common;
 @inject AdminAreaSettings adminAreaSettings
 @{
     //page title
     ViewBag.Title = T("Plugins.DiscountRequirements.HasAllProducts.Fields.Products.Choose").Text;
 }
 <form asp-controller="HasAllProducts" asp-action="ProductAddPopup" method="post">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -75,7 +75,7 @@
         </div>
     </div>
     <div id="products-grid"></div>
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $("#products-grid").kendoGrid({
                 dataSource: {
@@ -131,7 +131,7 @@
             });
         });
     </script>
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#search-products').click(function () {
                 var grid = $('#products-grid').data('kendoGrid');

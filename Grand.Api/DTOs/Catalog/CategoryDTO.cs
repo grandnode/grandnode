@@ -1,11 +1,8 @@
-﻿using FluentValidation.Attributes;
-using Grand.Api.Validators.Catalog;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
 
 namespace Grand.Api.DTOs.Catalog
 {
-    [Validator(typeof(CategoryValidator))]
-    public partial class CategoryDto: BaseApiEntityModel
+    public partial class CategoryDto : BaseApiEntityModel
     {
         public string Name { get; set; }
         public string Description { get; set; }

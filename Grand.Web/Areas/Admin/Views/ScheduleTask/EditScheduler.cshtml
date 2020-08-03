@@ -2,9 +2,9 @@
 @{
     ViewBag.Title = T("Admin.System.ScheduleTasks.Edit").Text;
 }
-<form asp-controller="ScheduleTask" asp-action="EditScheduler" method="post">
+<form asp-area="Admin" asp-controller="ScheduleTask" asp-action="EditScheduler" method="post">
     <div asp-validation-summary="All"></div>
-    <antiforgery-token />
+    
     <input asp-for="Id" type="hidden" />
     <div class="row">
         <div class="col-md-12">

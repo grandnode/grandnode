@@ -1,8 +1,7 @@
 using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Common;
-using Grand.Services.Events;
-using MediatR;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Common;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -21,30 +20,82 @@ namespace Grand.Services.Common
 
         private readonly IRepository<BaseEntity> _baseRepository;
         private readonly IRepository<GenericAttributeBaseEntity> _genericattributeBaseEntitRepository;
-        private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="genericAttributeRepository">Generic attribute repository</param>
-        /// <param name="GenericAttributeBaseEntity">Generic attribute base repository</param>
-        /// <param name="eventPublisher">Event published</param>
         public GenericAttributeService(
             IRepository<BaseEntity> baseRepository,
-            IRepository<GenericAttributeBaseEntity> genericattributeBaseEntitRepository,
-            IMediator mediator)
+            IRepository<GenericAttributeBaseEntity> genericattributeBaseEntitRepository)
         {
-            this._baseRepository = baseRepository;
-            this._genericattributeBaseEntitRepository = genericattributeBaseEntitRepository;
-            this._mediator = mediator;
+            _baseRepository = baseRepository;
+            _genericattributeBaseEntitRepository = genericattributeBaseEntitRepository;
         }
 
         #endregion
 
         #region Methods
+
+
+        /// <summary>
+        /// Save attribute value
+        /// </summary>
+        /// <typeparam name="TPropType">Property type</typeparam>
+        /// <param name="entity">Entity name (collection name)</param>
+        /// <param name="entityId">EntityId</param>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <param name="storeId">Store identifier; pass 0 if this attribute will be available for all stores</param>
+        public virtual async Task SaveAttribute<TPropType>(string entity, string entityId, string key, TPropType value, string storeId = "")
+        {
+            if (string.IsNullOrEmpty(entity))
+                throw new ArgumentNullException("entity");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key");
+
+            var collection = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(entity);
+            var query = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(entity).Find(new BsonDocument("_id", entityId)).FirstOrDefault();
+
+            var props = query.GenericAttributes.Where(x => string.IsNullOrEmpty(storeId) || x.StoreId == storeId);
+
+            var prop = props.FirstOrDefault(ga =>
+                ga.Key.Equals(key, StringComparison.OrdinalIgnoreCase)); //should be culture invariant
+
+            var valueStr = CommonHelper.To<string>(value);
+
+            if (prop != null)
+            {
+                if (string.IsNullOrWhiteSpace(valueStr))
+                {
+                    //delete
+                    var builder = Builders<GenericAttributeBaseEntity>.Update;
+                    var updatefilter = builder.PullFilter(x => x.GenericAttributes, y => y.Key == prop.Key && y.StoreId == storeId);
+                    await collection.UpdateManyAsync(new BsonDocument("_id", entityId), updatefilter);
+                }
+                else
+                {
+                    //update
+                    prop.Value = valueStr;
+                    var builder = Builders<GenericAttributeBaseEntity>.Filter;
+                    var filter = builder.Eq(x => x.Id, entityId);
+                    filter = filter & builder.Where(x => x.GenericAttributes.Any(y => y.Key == prop.Key && y.StoreId == storeId));
+                    var update = Builders<GenericAttributeBaseEntity>.Update
+                        .Set(x => x.GenericAttributes.ElementAt(-1).Value, prop.Value);
+                    await collection.UpdateManyAsync(filter, update);
+                }
+            }
+            else
+            {
+                prop = new GenericAttribute {
+                    Key = key,
+                    Value = valueStr,
+                    StoreId = storeId,
+                };
+                var updatebuilder = Builders<GenericAttributeBaseEntity>.Update;
+                var update = updatebuilder.AddToSet(p => p.GenericAttributes, prop);
+                await collection.UpdateOneAsync(new BsonDocument("_id", entityId), update);
+            }
+        }
 
         /// <summary>
         /// Save attribute value

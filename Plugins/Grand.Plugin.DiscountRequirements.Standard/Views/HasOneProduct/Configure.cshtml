@@ -4,7 +4,7 @@
 @model Grand.Plugin.DiscountRequirements.HasOneProduct.Models.RequirementModel
 @using Grand.Framework;
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#saveHasOneProductrequirement@(Model.RequirementId)').click(function () {
             var productIds = $("#@Html.FieldIdFor(model => model.Products)").val();
@@ -55,7 +55,7 @@
         <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none" />
     </div>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#btnRefreshDiscountRequirementProducts@(Model.RequirementId)').click(function () {
                 //refresh product list

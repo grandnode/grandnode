@@ -56,16 +56,14 @@
     }
 }
 <div class="page category-page">
-    <h2 class="generalTitle">@Model.Name</h2>
+    <h1 class="generalTitle">@Model.Name</h1>
     @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_top", additionalData = Model.Id })
     @*description*@
     @if (!String.IsNullOrWhiteSpace(Model.Description))
     {
         <div class="card category-description">
-            <div class="card-body">
-                <h2 class="card-title m-0">
-                    @Html.Raw(Model.Description)
-                </h2>
+            <div class="card-body py-0">
+                @Html.Raw(Model.Description)
             </div>
         </div>
     }
@@ -73,23 +71,23 @@
     @*subcategories*@
     @if (Model.SubCategories.Any())
     {
-        <div class="categoryItems">
-            <div class="row">
+        <div class="categoryGrid col-12 px-0 text-center">
+            <div class="flex-grid form-row">
                 @foreach (var item in Model.SubCategories)
                 {
-                    <div class="col-md-4 col-sm-6 col-12 mb-2">
-                        <div class="card">
+                    <div class="col-md-4 col-6 mb-2">
+                        <div class="card p-0">
                             <div class="list-picture">
                                 <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                     <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
                                 </a>
                             </div>
                             <div class="list-title mt-3">
-                                <h3 class="h5 card-title m-0 p-0">
-                                    <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })">
+                                <h2>
+                                    <a class="h6 card-title m-0 p-0" href="@Url.RouteUrl("Category", new { SeName = item.SeName })">
                                         @item.Name
                                     </a>
-                                </h3>
+                                </h2>
                             </div>
                         </div>
                     </div>
@@ -102,14 +100,14 @@
     @if (Model.FeaturedProducts.Any())
     {
         <div class="page-separator"></div>
-        <div class="col-12 product-grid featured-product-grid px-0">
-            <h2 class="h5">
-                <strong>@T("Products.FeaturedProducts")</strong>
+        <div class="col-12 product-grid customGrid text-center featured-product-grid px-0">
+            <h2 class="h5 text-left">
+                <span>@T("Products.FeaturedProducts")</span>
             </h2>
-            <div class="row flex-grid">
+            <div class="form-row flex-grid">
                 @foreach (var item in Model.FeaturedProducts)
                 {
-                    <div class="col-lg-4 col-sm-6 col-6 product-container">
+                    <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
                         <partial name="_ProductBox" model="item" />
                     </div>
                 }
@@ -128,11 +126,11 @@
 
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {
-            <div class="product-grid subCategoryList">
-                <div class="row flex-grid">
+            <div class="product-grid col-12 px-0">
+                <div class="form-row flex-grid">
                     @foreach (var product in Model.Products)
                     {
-                        <div class="col-lg-4 col-sm-6 col-6 product-container">
+                        <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
                             <partial name="_ProductBox" model="product" />
                         </div>
                     }
@@ -152,22 +150,24 @@
         }
         else
         {
-            <div class="product-grid row">
+            <div class="product-grid">
                 <div class="col-12">
-                    @foreach (var product in Model.Products)
-                    {
-                        <partial name="_ProductBoxList" model="product" />
-                    }
-                    @{
-                        var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-                    }
-                    @if (!pager.IsEmpty())
-                    {
-                        <nav aria-label="Page navigation">
-                            @pager
-                        </nav>
-                    }
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
+                    <div class="row">
+                        @foreach (var product in Model.Products)
+                        {
+                            <partial name="_ProductBoxList" model="product" />
+                        }
+                        @{
+                            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+                        }
+                        @if (!pager.IsEmpty())
+                        {
+                            <nav aria-label="Page navigation">
+                                @pager
+                            </nav>
+                        }
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
+                    </div>
                 </div>
             </div>
 

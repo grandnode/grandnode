@@ -1,6 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Security;
-using Grand.Core.Domain.Stores;
+﻿using Grand.Domain;
+using Grand.Domain.Security;
+using Grand.Domain.Stores;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.Models;
 using Grand.Services.Customers;

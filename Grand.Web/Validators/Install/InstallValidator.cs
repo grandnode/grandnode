@@ -1,13 +1,17 @@
 ﻿using FluentValidation;
 using Grand.Framework.Validators;
-using Grand.Web.Infrastructure.Installation;
+using Grand.Services.Installation;
 using Grand.Web.Models.Install;
+using System.Collections.Generic;
 
 namespace Grand.Web.Validators.Install
 {
     public class InstallValidator : BaseGrandValidator<InstallModel>
     {
-        public InstallValidator(IInstallationLocalizationService locService)
+        public InstallValidator(
+            IEnumerable<IValidatorConsumer<InstallModel>> validators,
+            IInstallationLocalizationService locService)
+            : base(validators)
         {
             RuleFor(x => x.AdminEmail).NotEmpty().WithMessage(locService.GetResource("AdminEmailRequired"));
             RuleFor(x => x.AdminEmail).EmailAddress();

@@ -52,7 +52,7 @@
         "'quantity': '{QUANTITY}'" + "\r\n" +
         "});"));
 }
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#pre-configure-google-analytics").click(preConfigureGoogleAnalytic);
         $("#pre-configure-universal-analytics").click(preConfigureUniversalAnalytic);
@@ -71,7 +71,7 @@
     }
 </script>
 <form asp-controller="WidgetsGoogleAnalytics" asp-action="Configure" method="post">
-    <antiforgery-token />
+    
     <div class="form-horizonal">
         <div class="form-body">
             <div class="form-group">

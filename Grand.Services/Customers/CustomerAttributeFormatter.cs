@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Catalog;
 using Grand.Core.Html;
 using Grand.Services.Localization;
 using System;
@@ -15,7 +15,6 @@ namespace Grand.Services.Customers
         #region Fields
 
         private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -23,12 +22,10 @@ namespace Grand.Services.Customers
         #region Ctor
 
         public CustomerAttributeFormatter(ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
             IWorkContext workContext)
         {
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._workContext = workContext;
+            _customerAttributeParser = customerAttributeParser;
+            _workContext = workContext;
         }
 
         #endregion

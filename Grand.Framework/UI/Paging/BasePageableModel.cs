@@ -1,6 +1,6 @@
 //Contributor : MVCContrib
 
-using Grand.Core;
+using Grand.Domain;
 using System;
 
 namespace Grand.Framework.UI.Paging

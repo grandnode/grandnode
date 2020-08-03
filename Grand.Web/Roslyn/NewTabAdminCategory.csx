@@ -1,4 +1,4 @@
-﻿#! "netcoreapp2.2"
+﻿#! "netcoreapp3.1"
 #r "Grand.Core"
 #r "Grand.Services"
 #r "Grand.Framework"

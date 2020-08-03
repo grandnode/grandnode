@@ -1,13 +1,11 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Validators.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Common
 {
-    [Validator(typeof(AddressValidator))]
     public partial class AddressModel : BaseGrandEntityModel
     {
         public AddressModel()
@@ -21,6 +19,7 @@ namespace Grand.Web.Models.Common
         public string FirstName { get; set; }
         [GrandResourceDisplayName("Address.Fields.LastName")]
         public string LastName { get; set; }
+        [DataType(DataType.EmailAddress)]
         [GrandResourceDisplayName("Address.Fields.Email")]
         public string Email { get; set; }
 
@@ -69,11 +68,13 @@ namespace Grand.Web.Models.Common
 
         public bool PhoneEnabled { get; set; }
         public bool PhoneRequired { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [GrandResourceDisplayName("Address.Fields.PhoneNumber")]
         public string PhoneNumber { get; set; }
 
         public bool FaxEnabled { get; set; }
         public bool FaxRequired { get; set; }
+
         [GrandResourceDisplayName("Address.Fields.FaxNumber")]
         public string FaxNumber { get; set; }
 

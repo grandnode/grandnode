@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Nop.Plugin.ExternalAuth.Google.Components
+namespace Grand.Plugin.ExternalAuth.Google.Components
 {
     [ViewComponent(Name = "GoogleAuthentication")]
     public class GoogleAuthenticationViewComponent : ViewComponent

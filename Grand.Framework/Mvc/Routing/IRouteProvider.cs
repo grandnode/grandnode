@@ -11,7 +11,7 @@ namespace Grand.Framework.Mvc.Routing
         /// Register routes
         /// </summary>
         /// <param name="routeBuilder">Route builder</param>
-        void RegisterRoutes(IRouteBuilder routeBuilder);
+        void RegisterRoutes(IEndpointRouteBuilder routeBuilder);
 
         /// <summary>
         /// Gets a priority of route provider

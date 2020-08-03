@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
 }
-<form asp-controller="ProductTags" method="post" id = "product-tags-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="ProductTags" method="post" id = "product-tags-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -100,20 +100,6 @@
                     title: "@T("Admin.Common.Delete")",
                     width: 100
                 }]
-            });
-        });
-    </script>
-
-    <input type="submit" id="btnRefresh" style="display: none" />
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#btnRefresh').click(function () {
-                //refresh grid
-                var grid = $("#product-tags-grid").data('kendoGrid');
-                grid.dataSource.read();
-
-                //return false to don't reload a page
-                return false;
             });
         });
     </script>

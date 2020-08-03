@@ -7,7 +7,7 @@ namespace Grand.Web.Models.Catalog
     {
         public VendorNavigationModel()
         {
-            this.Vendors = new List<VendorBriefInfoModel>();
+            Vendors = new List<VendorBriefInfoModel>();
         }
 
         public IList<VendorBriefInfoModel> Vendors { get; set; }

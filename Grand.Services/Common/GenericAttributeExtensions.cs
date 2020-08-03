@@ -1,4 +1,5 @@
 using Grand.Core;
+using Grand.Domain;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

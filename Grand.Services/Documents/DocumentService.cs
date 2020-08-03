@@ -1,6 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Documents;
+﻿using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Documents;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver.Linq;
@@ -51,7 +51,10 @@ namespace Grand.Services.Documents
                 query = query.Where(m => m.CustomerEmail != null && m.CustomerEmail.ToLower().Contains(email.ToLower()));
 
             if (!string.IsNullOrWhiteSpace(objectId))
-                query = query.Where(m => m.ObjectId == objectId && m.ReferenceId == reference);
+                query = query.Where(m => m.ObjectId == objectId);
+
+            if (reference > 0)
+                query = query.Where(m => m.ReferenceId == reference);
 
             if (status >= 0)
                 query = query.Where(d => d.StatusId == status);

@@ -1,11 +1,9 @@
 using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Services.Common;
-using Grand.Services.Configuration;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace Grand.Services.Helpers
 {
@@ -15,8 +13,6 @@ namespace Grand.Services.Helpers
     public partial class DateTimeHelper : IDateTimeHelper
     {
         private readonly IWorkContext _workContext;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ISettingService _settingService;
         private readonly DateTimeSettings _dateTimeSettings;
 
         /// <summary>
@@ -27,14 +23,10 @@ namespace Grand.Services.Helpers
         /// <param name="settingService">Setting service</param>
         /// <param name="dateTimeSettings">Datetime settings</param>
         public DateTimeHelper(IWorkContext workContext,
-            IGenericAttributeService genericAttributeService,
-            ISettingService settingService,
             DateTimeSettings dateTimeSettings)
         {
-            this._workContext = workContext;
-            this._genericAttributeService = genericAttributeService;
-            this._settingService = settingService;
-            this._dateTimeSettings = dateTimeSettings;
+            _workContext = workContext;
+            _dateTimeSettings = dateTimeSettings;
         }
 
         /// <summary>

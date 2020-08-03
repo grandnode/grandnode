@@ -1,9 +1,11 @@
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Microsoft.AspNetCore.Http;
+using Grand.Core.Caching;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
@@ -13,12 +15,33 @@ namespace Grand.Services.Catalog
     /// </summary>
     public partial class RecentlyViewedProductsService : IRecentlyViewedProductsService
     {
+
+        #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer id
+        /// {1} : number
+        /// </remarks>
+        private const string RECENTLY_VIEW_PRODUCTS_KEY = "Grand.recentlyviewedproducts-{0}-{1}";
+
+        /// <summary>
+        /// Key pattern to clear cache
+        /// {0} customer id
+        /// </summary>
+        private const string RECENTLY_VIEW_PRODUCTS_PATTERN_KEY = "Grand.recentlyviewedproducts-{0}";
+
+        #endregion
+
         #region Fields
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IProductService _productService;
+        private readonly ICacheManager _cacheManager;
         private readonly CatalogSettings _catalogSettings;
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProducts;
+
         #endregion
 
         #region Ctor
@@ -26,31 +49,27 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="httpContext">HTTP context</param>
         /// <param name="productService">Product service</param>
+        /// <param name="cacheManager">Cache manager</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        public RecentlyViewedProductsService(IHttpContextAccessor httpContextAccessor, IProductService productService,
-            CatalogSettings catalogSettings, IRepository<RecentlyViewedProduct> recentlyViewedProducts)
+        /// <param name="recentlyViewedProducts">Collection recentlyViewedProducts</param>
+        public RecentlyViewedProductsService(
+            IProductService productService,
+            ICacheManager cacheManager,
+            CatalogSettings catalogSettings, 
+            IRepository<RecentlyViewedProduct> recentlyViewedProducts)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._productService = productService;
-            this._catalogSettings = catalogSettings;
-            this._recentlyViewedProducts = recentlyViewedProducts;
+            _productService = productService;
+            _cacheManager = cacheManager;
+            _catalogSettings = catalogSettings;
+            _recentlyViewedProducts = recentlyViewedProducts;
         }
 
         #endregion
 
         #region Utilities
 
-        /// <summary>
-        /// Gets a "recently viewed products" identifier list
-        /// </summary>
-        /// <returns>"recently viewed products" list</returns>
-        protected IList<string> GetRecentlyViewedProductsIds(string customerId)
-        {
-            return GetRecentlyViewedProductsIds(customerId, int.MaxValue);
-        }
-
+        
         protected IList<RecentlyViewedProduct> GetRecentlyViewedProducts(string customerId)
         {
             var query = from p in _recentlyViewedProducts.Table
@@ -65,15 +84,17 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="number">Number of products to load</param>
         /// <returns>"recently viewed products" list</returns>
-        protected IList<string> GetRecentlyViewedProductsIds(string customerId, int number)
+        protected async Task<IList<string>> GetRecentlyViewedProductsIds(string customerId, int number)
         {
-            var query = from p in _recentlyViewedProducts.Table
-                        where p.CustomerId == customerId
-                        orderby p.CreatedOnUtc descending
-                        select p.ProductId;
-
-            var productIds = query.Take(number).ToList();
-            return productIds;
+            string key = string.Format(RECENTLY_VIEW_PRODUCTS_KEY, customerId, number);
+            return await _cacheManager.GetAsync(key, async () =>
+            {
+                var query = from p in _recentlyViewedProducts.Table
+                             where p.CustomerId == customerId
+                             orderby p.CreatedOnUtc descending
+                             select p.ProductId;
+                return await query.Take(number).ToListAsync();
+            });            
         }
 
         #endregion
@@ -89,7 +110,7 @@ namespace Grand.Services.Catalog
         public virtual async Task<IList<Product>> GetRecentlyViewedProducts(string customerId, int number)
         {
             var products = new List<Product>();
-            var productIds = GetRecentlyViewedProductsIds(customerId, number);
+            var productIds = await GetRecentlyViewedProductsIds(customerId, number);
             foreach (var product in await _productService.GetProductsByIds(productIds.ToArray()))
                 if (product.Published)
                     products.Add(product);
@@ -124,6 +145,9 @@ namespace Grand.Services.Catalog
             {
                 await _recentlyViewedProducts.DeleteAsync(recentlyViewedProducts.OrderBy(x => x.CreatedOnUtc).Take(recentlyViewedProducts.Count - _catalogSettings.RecentlyViewedProductsNumber));
             }
+
+            //Clear cache
+            await _cacheManager.RemoveByPrefixAsync(string.Format(RECENTLY_VIEW_PRODUCTS_PATTERN_KEY, customerId));
 
         }
 

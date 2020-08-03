@@ -1,6 +1,6 @@
 ﻿@model CustomerReminderModel.ConditionModel
 
-<script type="text/javascript">
+<script>
             $(document).ready(function () {
                 $("#@Html.FieldIdFor(model => model.ConditionTypeId)").change(toggleConditionType);
                 toggleConditionType();
@@ -8,7 +8,7 @@
 
         function toggleConditionType() {
             var selectedConditionTypeId = $("#@Html.FieldIdFor(model => model.ConditionTypeId)").val();
-            if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReminderConditionTypeEnum.Product).ToString()))
+            if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerReminderConditionTypeEnum.Product).ToString()))
             {
                 $('#tab-product').show();
                 $('#tab-manufacturer').hide();
@@ -18,7 +18,7 @@
                 $('#tab-customerRegister').hide();
                 $('#tab-customAttribute').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReminderConditionTypeEnum.Manufacturer).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerReminderConditionTypeEnum.Manufacturer).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').show();
@@ -28,7 +28,7 @@
                 $('#tab-customerRegister').hide();
                 $('#tab-customAttribute').hide();
 
-            } else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReminderConditionTypeEnum.Category).ToString()))
+            } else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerReminderConditionTypeEnum.Category).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -39,7 +39,7 @@
                 $('#tab-customAttribute').hide();
 
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReminderConditionTypeEnum.CustomerRole).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerReminderConditionTypeEnum.CustomerRole).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -49,7 +49,7 @@
                 $('#tab-customerRegister').hide();
                 $('#tab-customAttribute').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReminderConditionTypeEnum.CustomerTag).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerReminderConditionTypeEnum.CustomerTag).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -59,7 +59,7 @@
                 $('#tab-customerRegister').hide();
                 $('#tab-customAttribute').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReminderConditionTypeEnum.CustomerRegisterField).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerReminderConditionTypeEnum.CustomerRegisterField).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -69,7 +69,7 @@
                 $('#tab-customerRegister').show();
                 $('#tab-customAttribute').hide();
             }
-            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReminderConditionTypeEnum.CustomCustomerAttribute).ToString()))
+            else if (selectedConditionTypeId == @(((int)Grand.Domain.Customers.CustomerReminderConditionTypeEnum.CustomCustomerAttribute).ToString()))
             {
                 $('#tab-product').hide();
                 $('#tab-manufacturer').hide();
@@ -120,7 +120,7 @@
         <div class="form-group">
             <admin-label asp-for="ConditionId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ConditionId" asp-items="((Grand.Core.Domain.Customers.CustomerReminderConditionEnum)Model.ConditionId).ToSelectList()" />
+                <admin-select asp-for="ConditionId" asp-items="((Grand.Domain.Customers.CustomerReminderConditionEnum)Model.ConditionId).ToSelectList(Context)" />
                 <span asp-validation-for="ConditionId"></span>
             </div>
         </div>

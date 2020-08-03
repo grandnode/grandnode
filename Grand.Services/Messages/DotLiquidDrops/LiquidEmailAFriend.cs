@@ -10,8 +10,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidEmailAFriend(string personalMessage, string customerEmail)
         {
-            this._personalMessage = personalMessage;
-            this._customerEmail = customerEmail;
+            _personalMessage = personalMessage;
+            _customerEmail = customerEmail;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

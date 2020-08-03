@@ -117,5 +117,6 @@ namespace Grand.Core
         /// <param name="request">Http request</param>
         /// <returns>Raw URL</returns>
         string GetRawUrl(HttpRequest request);
+
     }
 }

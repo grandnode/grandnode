@@ -1,7 +1,7 @@
-using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Affiliates;
-using Grand.Core.Domain.Orders;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Affiliates;
+using Grand.Domain.Orders;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver.Linq;
@@ -31,7 +31,7 @@ namespace Grand.Services.Affiliates
         /// </summary>
         /// <param name="affiliateRepository">Affiliate repository</param>
         /// <param name="orderRepository">Order repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public AffiliateService(IRepository<Affiliate> affiliateRepository,
             IRepository<Order> orderRepository,
             IMediator mediator)

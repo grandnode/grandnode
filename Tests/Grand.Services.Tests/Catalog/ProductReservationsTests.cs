@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
 using Grand.Services.Catalog;
 using Grand.Services.Events;
 using MediatR;
@@ -35,7 +35,7 @@ namespace Grand.Services.Tests.Catalog
             _eventPublisher = eventPublisher.Object;
 
             _productReservationService = new ProductReservationService(_productReservationRepository,
-                _customerReservationsHelperRepository, _eventPublisher, _workContext);
+                _customerReservationsHelperRepository, _eventPublisher);
 
             _productRepository.Insert(new Product
             {

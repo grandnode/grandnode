@@ -1,26 +1,27 @@
 ﻿using Grand.Framework.Components;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Polls;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
     public class PollBlockViewComponent : BaseViewComponent
     {
-        private readonly IPollViewModelService _pollViewModelService;
+        private readonly IMediator _mediator;
 
-        public PollBlockViewComponent(IPollViewModelService pollViewModelService)
+        public PollBlockViewComponent(IMediator mediator)
         {
-            this._pollViewModelService = pollViewModelService;
+            _mediator = mediator;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string systemKeyword)
         {
             if (string.IsNullOrWhiteSpace(systemKeyword))
                 return Content("");
-            var model = await _pollViewModelService.PreparePollBySystemName(systemKeyword);
-            if (model == null)
+
+            var model = await _mediator.Send(new GetPollBySystemName() { SystemName = systemKeyword });
+            if (model == null || string.IsNullOrWhiteSpace(model.Id))
                 return Content("");
 
             return View(model);

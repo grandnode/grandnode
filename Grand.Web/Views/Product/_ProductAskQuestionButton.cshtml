@@ -1,7 +1,7 @@
 ﻿@model ProductDetailsModel
 @if (Model.AskQuestionEnabled)
 {
-        <button type="button" value="@T("Products.AskQuestion")" class="btn btn-secondary ask-a-question-button" onclick="setLocation('@Url.RouteUrl("AskQuestion", new { productId = Model.Id })')" data-toggle="tooltip" data-placement="bottom" title="@T("Products.AskQuestion")">
+        <button type="button" value="@T("Products.AskQuestion")" class="btn btn-outline-secondary ask-a-question-button" onclick="setLocation('@Url.RouteUrl("AskQuestion", new { productId = Model.Id })')" data-toggle="tooltip" data-placement="bottom" title="@T("Products.AskQuestion")">
             <span class="mdi mdi-comment-question-outline"></span>
             <span class="sr-only">@T("Products.AskQuestion")</span>
         </button>

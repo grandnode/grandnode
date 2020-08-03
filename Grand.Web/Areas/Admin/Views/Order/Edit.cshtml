@@ -5,9 +5,10 @@
     ViewBag.Title = T("Admin.Orders.EditOrderDetails").Text;
     //has "Manage Documents" permission?
     var canManageDocuments = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageDocuments);
+    var canManageGenericAttributes = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageGenericAttributes);
 }
-<form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Order" asp-action="Edit" method="post" id="order-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -27,7 +28,7 @@
                                 <span id="order-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                             }
                             <input type="submit" id="btnRefreshPage" style="display: none" />
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function () {
                                     $('#btnRefreshPage').click(function () {
                                         //refresh page
@@ -80,6 +81,25 @@
                                     <content>
                                         <div>
                                             <partial name="_OrderDetails.Documents" model="Model" />
+                                        </div>
+                                    </content>
+                                </tabstrip-item>
+                            }
+                            @if (canManageGenericAttributes)
+                            {
+                                <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="5">
+                                    <content>
+                                        <div>
+                                            <div class="form-actions">
+                                                <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveGenericAttributes" name="save-generic-attributes" class="k-button" />
+                                            </div>
+                                            <div class="form-horizontal">
+                                                @{
+                                                    ViewData["ObjectType"] = "Order";
+                                                    ViewData["TabIndex"] = 5;
+                                                 }
+                                                <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
+                                            </div>
                                         </div>
                                     </content>
                                 </tabstrip-item>

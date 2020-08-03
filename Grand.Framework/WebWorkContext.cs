@@ -1,9 +1,10 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Tax;
-using Grand.Core.Domain.Vendors;
+using Grand.Core.Configuration;
+using Grand.Domain.Customers;
+using Grand.Domain.Directory;
+using Grand.Domain.Localization;
+using Grand.Domain.Tax;
+using Grand.Domain.Vendors;
 using Grand.Services.Authentication;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -11,6 +12,7 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Net.Http.Headers;
@@ -26,12 +28,6 @@ namespace Grand.Framework
     /// </summary>
     public partial class WebWorkContext : IWorkContext
     {
-        #region Const
-
-        private const string CUSTOMER_COOKIE_NAME = ".Grand.Customer";
-
-        #endregion
-
         #region Fields
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -47,6 +43,7 @@ namespace Grand.Framework
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly GrandConfig _config;
 
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
@@ -70,7 +67,8 @@ namespace Grand.Framework
             IStoreMappingService storeMappingService,
             IVendorService vendorService,
             LocalizationSettings localizationSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            GrandConfig config)
         {
             _httpContextAccessor = httpContextAccessor;
             _authenticationService = authenticationService;
@@ -84,51 +82,12 @@ namespace Grand.Framework
             _vendorService = vendorService;
             _localizationSettings = localizationSettings;
             _taxSettings = taxSettings;
+            _config = config;
         }
 
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Get customer cookie
-        /// </summary>
-        /// <returns>String value of cookie</returns>
-        protected virtual string GetCustomerCookie()
-        {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Request == null)
-                return null;
-
-            return _httpContextAccessor.HttpContext.Request.Cookies[CUSTOMER_COOKIE_NAME];
-        }
-
-        /// <summary>
-        /// Set customer cookie
-        /// </summary>
-        /// <param name="customerGuid">Guid of the customer</param>
-        protected virtual void SetCustomerCookie(Guid customerGuid)
-        {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Response == null)
-                return;
-
-            //delete current cookie value
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete(CUSTOMER_COOKIE_NAME);
-
-            //get date of cookie expiration
-            var cookieExpires = 24 * 365; //TODO make configurable
-            var cookieExpiresDate = DateTime.Now.AddHours(cookieExpires);
-
-            //if passed guid is empty set cookie as expired
-            if (customerGuid == Guid.Empty)
-                cookieExpiresDate = DateTime.Now.AddMonths(-1);
-
-            //set new cookie value
-            var options = new Microsoft.AspNetCore.Http.CookieOptions {
-                HttpOnly = true,
-                Expires = cookieExpiresDate
-            };
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(CUSTOMER_COOKIE_NAME, customerGuid.ToString(), options);
-        }
 
         /// <summary>
         /// Get language from the requested page URL
@@ -189,15 +148,11 @@ namespace Grand.Framework
         #region Properties
 
         /// <summary>
-        /// Gets or sets the current customer
+        /// Gets the current customer
         /// </summary>
         public virtual Customer CurrentCustomer {
             get {
                 return _cachedCustomer;
-            }
-            set {
-                SetCustomerCookie(value.CustomerGuid);
-                _cachedCustomer = value;
             }
         }
 
@@ -212,6 +167,13 @@ namespace Grand.Framework
             if (_httpContextAccessor.HttpContext == null)
             {
                 //in this case return built-in customer record for background task
+                customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
+            }
+
+            //set customer as a background task if method setted as AllowAnonymous
+            var endpoint = _httpContextAccessor.HttpContext?.GetEndpoint();
+            if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() is object)
+            {
                 customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
             }
 
@@ -253,22 +215,22 @@ namespace Grand.Framework
             if (customer == null || customer.Deleted || !customer.Active)
             {
                 //get guest customer
-                var customerCookie = GetCustomerCookie();
-                if (!string.IsNullOrEmpty(customerCookie))
+                var customerguid = await _authenticationService.GetCustomerGuid();
+                if (!string.IsNullOrEmpty(customerguid))
                 {
-                    if (Guid.TryParse(customerCookie, out Guid customerGuid))
+                    if (Guid.TryParse(customerguid, out Guid customerGuid))
                     {
-                        //get customer from cookie (should not be registered)
-                        var customerByCookie = await _customerService.GetCustomerByGuid(customerGuid);
-                        if (customerByCookie != null && !customerByCookie.IsRegistered())
-                            customer = customerByCookie;
+                        //get customer from guid (should not be registered)
+                        var customerByguid = await _customerService.GetCustomerByGuid(customerGuid);
+                        if (customerByguid != null && !customerByguid.IsRegistered())
+                            customer = customerByguid;
                     }
                 }
             }
 
             if (customer == null || customer.Deleted || !customer.Active)
             {
-                var crawler = _httpContextAccessor?.HttpContext?.Request.Crawler();
+                var crawler = _httpContextAccessor.HttpContext.Request?.Crawler();
                 //check whether request is made by a search engine, in this case return built-in customer record for search engines
                 if (crawler != null)
                     customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
@@ -284,11 +246,12 @@ namespace Grand.Framework
             if (!customer.Deleted && customer.Active)
             {
                 //set customer cookie
-                SetCustomerCookie(customer.CustomerGuid);
+                await _authenticationService.SetCustomerGuid(customer.CustomerGuid);
             }
             //cache the found customer
             return _cachedCustomer = customer ?? throw new Exception("No customer could be loaded");
         }
+
 
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)
@@ -352,7 +315,7 @@ namespace Grand.Framework
             var allStoreLanguages = await _languageService.GetAllLanguages();
 
             //localized URLs are enabled, so try to get language from the requested page URL
-            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            if (_config.SeoFriendlyUrlsForLanguagesEnabled)
                 detectedLanguage = await GetLanguageFromUrl(allStoreLanguages);
 
             //whether we should detect the language from the request

@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Affiliates;
+using Grand.Domain;
+using Grand.Domain.Affiliates;
 using System;
 using System.Threading.Tasks;
 

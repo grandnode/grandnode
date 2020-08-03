@@ -1,27 +1,31 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.AdminSearch;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Knowledgebase;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Logging;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.PushNotifications;
-using Grand.Core.Domain.Security;
-using Grand.Core.Domain.Seo;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Tasks;
-using Grand.Core.Domain.Topics;
+﻿using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.AdminSearch;
+using Grand.Domain.Blogs;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Knowledgebase;
+using Grand.Domain.Localization;
+using Grand.Domain.Logging;
+using Grand.Domain.Messages;
+using Grand.Domain.Orders;
+using Grand.Domain.PushNotifications;
+using Grand.Domain.Security;
+using Grand.Domain.Seo;
+using Grand.Domain.Shipping;
+using Grand.Domain.Tasks;
+using Grand.Domain.Topics;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Security;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
+using Grand.Services.Stores;
 using Grand.Services.Topics;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -31,6 +35,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Grand.Core.Data;
+using Grand.Core;
 
 namespace Grand.Services.Installation
 {
@@ -38,8 +44,8 @@ namespace Grand.Services.Installation
     {
         #region Fields
         private readonly IServiceProvider _serviceProvider;
+        private readonly IMediator _mediator;
         private readonly IRepository<GrandNodeVersion> _versionRepository;
-        private readonly IWebHelper _webHelper;
 
         private const string version_400 = "4.00";
         private const string version_410 = "4.10";
@@ -48,14 +54,19 @@ namespace Grand.Services.Installation
         private const string version_440 = "4.40";
         private const string version_450 = "4.50";
         private const string version_460 = "4.60";
+        private const string version_470 = "4.70";
+        private const string version_480 = "4.80";
+
         #endregion
 
         #region Ctor
-        public UpgradeService(IServiceProvider serviceProvider, IRepository<GrandNodeVersion> versionRepository, IWebHelper webHelper)
+        public UpgradeService(IServiceProvider serviceProvider,
+            IMediator mediator,
+            IRepository<GrandNodeVersion> versionRepository)
         {
             _serviceProvider = serviceProvider;
+            _mediator = mediator;
             _versionRepository = versionRepository;
-            _webHelper = webHelper;
         }
         #endregion
 
@@ -94,6 +105,22 @@ namespace Grand.Services.Installation
                 await From440To450();
                 fromversion = version_450;
             }
+            if (fromversion == version_450)
+            {
+                await From450To460();
+                fromversion = version_460;
+            }
+            if (fromversion == version_460)
+            {
+                await From460To470();
+                fromversion = version_470;
+            }
+            if (fromversion == version_470)
+            {
+                await From470To480();
+                fromversion = version_480;
+            }
+
             if (fromversion == toversion)
             {
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
@@ -343,7 +370,7 @@ namespace Grand.Services.Installation
             #region Permisions
 
             IPermissionProvider provider = new StandardPermissionProvider();
-            await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
+            await _mediator.Send(new InstallPermissionsCommand() { PermissionProvider = provider });
 
             #endregion
 
@@ -573,7 +600,7 @@ namespace Grand.Services.Installation
 
             #region Permisions
             IPermissionProvider provider = new StandardPermissionProvider();
-            await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
+            await _mediator.Send(new InstallPermissionsCommand() { PermissionProvider = provider });
             #endregion
 
             #region Update tags on the products
@@ -717,7 +744,7 @@ namespace Grand.Services.Installation
 
             var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
 
-            await orderRepository.Collection.UpdateOneAsync(new BsonDocument(), updateOrder);
+            await orderRepository.Collection.UpdateManyAsync(new BsonDocument(), updateOrder);
 
             #endregion
 
@@ -736,12 +763,13 @@ namespace Grand.Services.Installation
             #region Permisions
 
             IPermissionProvider provider = new StandardPermissionProvider();
-            await _serviceProvider.GetRequiredService<IPermissionService>().InstallNewPermissions(provider);
+            await _mediator.Send(new InstallNewPermissionsCommand() { PermissionProvider = provider });
 
             #endregion
         }
         private async Task From450To460()
         {
+
             #region Install String resources
 
             await InstallStringResources("EN_450_460.nopres.xml");
@@ -764,8 +792,7 @@ namespace Grand.Services.Installation
             #region Permisions
 
             IPermissionProvider provider = new StandardPermissionProvider();
-            await _serviceProvider.GetRequiredService<IPermissionService>().InstallNewPermissions(provider);
-
+            await _mediator.Send(new InstallNewPermissionsCommand() { PermissionProvider = provider });
             #endregion
 
             #region Activity Log Type
@@ -832,12 +859,20 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Update catalog settings
+
+            var catalogSettings = _serviceProvider.GetRequiredService<CatalogSettings>();
+            catalogSettings.PeriodBestsellers = 6;
+            await _settingService.SaveSetting(catalogSettings);
+
+            #endregion
+
             #region Update topics
 
             IRepository<Topic> _topicRepository = _serviceProvider.GetRequiredService<IRepository<Topic>>();
             foreach (var topic in _topicRepository.Table)
             {
-                topic.Published  = true;
+                topic.Published = true;
                 _topicRepository.Update(topic);
             }
 
@@ -854,11 +889,140 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Update product - rename fields
+
+            var renameFields = Builders<object>.Update
+                .Rename("IsTelecommunicationsOrBroadcastingOrElectronicServices", "IsTele");
+
+            var dbContext = _serviceProvider.GetRequiredService<IMongoDatabase>();
+            await dbContext.GetCollection<object>(typeof(Product).Name).UpdateManyAsync(new BsonDocument(), renameFields);
+
+            #endregion
+
         }
+
+        private async Task From460To470()
+        {
+            #region Install String resources
+            await InstallStringResources("EN_460_470.nopres.xml");
+            #endregion
+
+            #region MessageTemplates
+
+            var emailAccount = _serviceProvider.GetRequiredService<IRepository<EmailAccount>>().Table.FirstOrDefault();
+            if (emailAccount == null)
+                throw new Exception("Default email account cannot be loaded");
+            var messageTemplates = new List<MessageTemplate>
+            {
+                new MessageTemplate
+                {
+                    Name = "Customer.EmailTokenValidationMessage",
+                    Subject = "{{Store.Name}} - Email Verification Code",
+                    Body = "Hello {{Customer.FullName}}, <br /><br />\r\n Enter this 6 digit code on the sign in page to confirm your identity:<br /><br /> \r\n <b>{{Customer.Token}}</b><br /><br />\r\n Yours securely, <br /> \r\n Team",
+                    IsActive = true,
+                    EmailAccountId = emailAccount.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = "OrderCancelled.VendorNotification",
+                    Subject = "{{Store.Name}}. Order #{{Order.OrderNumber}} cancelled",
+                    Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Order #{{Order.OrderNumber}} has been cancelled. <br /><br />Order Number: {{Order.OrderNumber}}<br />   Date Ordered: {{Order.CreatedOn}} <br /><br /> ",
+                    IsActive = false,
+                    EmailAccountId = emailAccount.Id,
+                },
+
+            };
+
+            await _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().InsertAsync(messageTemplates);
+            #endregion
+
+            #region Update store
+
+            var storeService = _serviceProvider.GetRequiredService<IStoreService>();
+            foreach (var store in await storeService.GetAllStores())
+            {
+                store.Shortcut = "Store";
+                await storeService.UpdateStore(store);
+            }
+
+            #endregion
+
+            #region Update specification - sename field
+
+            var specification = _serviceProvider.GetRequiredService<IRepository<SpecificationAttribute>>();
+
+            foreach (var specificationAttribute in specification.Table.ToList())
+            {
+                specificationAttribute.SeName = SeoExtensions.GetSeName(specificationAttribute.Name, false, false);
+                specificationAttribute.SpecificationAttributeOptions.ToList().ForEach(x =>
+                {
+                    x.SeName = SeoExtensions.GetSeName(x.Name, false, false);
+                });
+                await specification.UpdateAsync(specificationAttribute);
+            }
+
+            #endregion
+
+            #region Update product attributes - sename field
+
+            var attributes = _serviceProvider.GetRequiredService<IRepository<ProductAttribute>>();
+            foreach (var attribute in attributes.Table.ToList())
+            {
+                attribute.SeName = SeoExtensions.GetSeName(attribute.Name, false, false);
+                await attributes.UpdateAsync(attribute);
+            }
+
+            #endregion
+
+            #region Update blog category - sename field
+
+            var blogcategories = _serviceProvider.GetRequiredService<IRepository<BlogCategory>>();
+
+            foreach (var category in blogcategories.Table.ToList())
+            {
+                category.SeName = SeoExtensions.GetSeName(category.Name, false, false);
+                await blogcategories.UpdateAsync(category);
+            }
+
+            #endregion
+
+            #region Update media settings
+
+            var settingsService = _serviceProvider.GetRequiredService<ISettingService>();
+            var storeInDB = settingsService.GetSettingByKey("Media.Images.StoreInDB", true);
+            await settingsService.SetSetting("MediaSettings.StoreInDb", storeInDB);
+
+            #endregion
+        }
+
+        private async Task From470To480()
+        {
+            #region Install String resources
+
+            await InstallStringResources("EN_470_480.nopres.xml");
+
+            #endregion
+
+
+            #region Update customer settings
+
+            var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
+            var customerSettings = _serviceProvider.GetRequiredService<CustomerSettings>();
+            customerSettings.HideSubAccountsTab = true;
+            await _settingService.SaveSetting(customerSettings);
+
+            #endregion
+
+        }
+
         private async Task InstallStringResources(string filenames)
         {
             //'English' language            
-            var language = _serviceProvider.GetRequiredService<IRepository<Language>>().Table.Single(l => l.Name == "English");
+            var langRepository = _serviceProvider.GetRequiredService<IRepository<Language>>();
+            var language = langRepository.Table.FirstOrDefault(l => l.Name == "English");
+
+            if (language == null)
+                language = langRepository.Table.FirstOrDefault();
 
             //save resources
             foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/Upgrade"), "*" + filenames, SearchOption.TopDirectoryOnly))

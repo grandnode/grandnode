@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Grand.Domain.Data;
+using System;
 
 namespace Grand.Core.Data
 {
@@ -15,7 +16,7 @@ namespace Grand.Core.Data
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
-            this.Settings = settings;
+            Settings = settings;
         }
 
         /// <summary>

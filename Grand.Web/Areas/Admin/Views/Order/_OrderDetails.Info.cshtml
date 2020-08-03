@@ -1,10 +1,10 @@
 ﻿@model OrderModel
-@using Grand.Core.Domain.Tax;
-@using Grand.Core.Domain.Orders;
+@using Grand.Domain.Tax;
+@using Grand.Domain.Orders;
 
 @if (!Model.IsLoggedInAsVendor)
 {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             toggleChangeOrderStatus(false);
             toggleOrderTotals(false);
@@ -78,563 +78,603 @@
         <div class="form-body">
             @if (!Model.IsLoggedInAsVendor)
             {
-            <div class="form-group">
-                <label asp-for="OrderStatus" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
-                <div class="col-xs-12 col-md-9 col-sm-9 orderEditBtn">
-                    <strong>
-                        @Model.OrderStatus
-                    </strong>&nbsp;
-                    @if (Model.CanCancelOrder)
-                    {
-                        <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="btn red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-                    }
-                    <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn green" />
-                    <div id="pnlChangeOrderStatus">
-                        <div class="note note-info">@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</div>
-                        <admin-select asp-for="OrderStatusId" asp-items="((OrderStatus)Model.OrderStatusId).ToSelectList()" />
-                        <div class="form-actions btn-group btn-group-devided">
-                            <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="k-button" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-                            <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="k-button" />
+                <div class="form-group">
+                    <admin-label asp-for="OrderStatus" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-12 col-md-9 col-sm-9 orderEditBtn">
+                        <strong>
+                            @Model.OrderStatus
+                        </strong>&nbsp;
+                        @if (Model.CanCancelOrder)
+                        {
+                            <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="btn red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                        }
+                        <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn green" />
+                        <div id="pnlChangeOrderStatus">
+                            <div class="note note-info">@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</div>
+                            <admin-select asp-for="OrderStatusId" asp-items="((OrderStatus)Model.OrderStatusId).ToSelectList(Context)" />
+                            <div class="form-actions btn-group btn-group-devided">
+                                <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="k-button" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                                <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="k-button" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
+            @if (Model.IsLoggedInAsVendor && Model.OrderStatusId == (int)OrderStatus.Cancelled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="OrderStatus" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-12 col-md-9 col-sm-9">
+                        <label class="control-label text-danger">
+                            <strong>
+                                @Model.OrderStatus
+                            </strong>
+                        </label>
+                    </div>
+                </div>
             }
             <div class="form-group">
-                <label asp-for="OrderNumber" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                <admin-label asp-for="OrderNumber" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
                 <div class="col-xs-9 col-md-9 col-sm-9">
                     <label class="control-label">@Model.OrderNumber</label>
                 </div>
             </div>
-            @if (!Model.IsLoggedInAsVendor)
+            @if (!string.IsNullOrEmpty(Model.Code))
             {
                 <div class="form-group">
-                    <label asp-for="OrderGuid" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="Code" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
-                        <label class="control-label">@Model.OrderGuid</label>
+                        <label class="control-label">@Model.Code</label>
                     </div>
                 </div>
             }
             <div class="form-group">
-                <label asp-for="StoreName" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                <admin-label asp-for="CurrencyCode" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
                 <div class="col-xs-9 col-md-9 col-sm-9">
-                    <label class="control-label">@Model.StoreName</label>
+                    <label class="control-label">
+                        @Model.CurrencyCode
+                    @if (Model.CurrencyRate != 1)
+                    {
+                        <text>(@Model.CurrencyRate)</text>
+                    }
+                </label>
+            </div>
+        </div>
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <div class="form-group">
+                <admin-label asp-for="OrderGuid" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                <div class="col-xs-9 col-md-9 col-sm-9">
+                    <label class="control-label">@Model.OrderGuid</label>
                 </div>
             </div>
+        }
+        <div class="form-group">
+            <admin-label asp-for="StoreName" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+            <div class="col-xs-9 col-md-9 col-sm-9">
+                <label class="control-label">@Model.StoreName</label>
+            </div>
+        </div>
 
-            @if (!Model.IsLoggedInAsVendor)
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <div class="form-group">
+                <admin-label asp-for="CustomerId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                <div class="col-xs-9 col-md-9 col-sm-9">
+                    <label class="control-label">
+                        @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="CustomerIp" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                <div class="col-xs-9 col-md-9 col-sm-9">
+                    <label class="control-label">@Model.CustomerIp</label>
+                </div>
+            </div>
+            if (!String.IsNullOrEmpty(Model.UrlReferrer))
             {
                 <div class="form-group">
-                    <label asp-for="CustomerId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="UrlReferrer" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.UrlReferrer</label>
+                    </div>
+                </div>
+            }
+            if (!String.IsNullOrEmpty(Model.RecurringPaymentId))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="RecurringPaymentId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
                         <label class="control-label">
-                            @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                            <a href="@Url.Action("Edit", "RecurringPayment", new { id = Model.RecurringPaymentId })">@T("Admin.Common.View")</a>
                         </label>
                     </div>
                 </div>
+            }
+            if (!String.IsNullOrEmpty(Model.VatNumber))
+            {
                 <div class="form-group">
-                    <label asp-for="CustomerIp" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="VatNumber" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
-                        <label class="control-label">@Model.CustomerIp</label>
+                        <label class="control-label">@Model.VatNumber</label>
                     </div>
                 </div>
-                if (!String.IsNullOrEmpty(Model.UrlReferrer))
+            }
+            if (!String.IsNullOrEmpty(Model.AffiliateId))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="AffiliateId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">
+                            <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
+                        </label>
+                    </div>
+                </div>
+            }
+            if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="OrderSubtotalInclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.OrderSubtotalInclTax</label>
+                    </div>
+                </div>
+            }
+            if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="OrderSubtotalExclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.OrderSubtotalExclTax</label>
+                    </div>
+                </div>
+            }
+            if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+                && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="OrderSubTotalDiscountInclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.OrderSubTotalDiscountInclTax</label>
+                    </div>
+                </div>
+            }
+            if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+                && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="OrderSubTotalDiscountExclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.OrderSubTotalDiscountExclTax</label>
+                    </div>
+                </div>
+            }
+            if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="OrderShippingInclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.OrderShippingInclTax</label>
+                    </div>
+                </div>
+            }
+            if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="OrderShippingExclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.OrderShippingExclTax</label>
+                    </div>
+                </div>
+            }
+            if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+                && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeInclTax))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="PaymentMethodAdditionalFeeInclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.PaymentMethodAdditionalFeeInclTax</label>
+                    </div>
+                </div>
+            }
+            if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+                && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="PaymentMethodAdditionalFeeExclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.PaymentMethodAdditionalFeeExclTax</label>
+                    </div>
+                </div>
+            }
+            if (Model.DisplayTaxRates)
+            {
+                foreach (var tr in Model.TaxRates)
                 {
                     <div class="form-group">
-                        <label asp-for="UrlReferrer" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="Tax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label> @tr.Rate%:
                         <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.UrlReferrer</label>
+                            <label class="control-label">@tr.Value</label>
                         </div>
                     </div>
                 }
-                if (!String.IsNullOrEmpty(Model.RecurringPaymentId))
-                {
-                    <div class="form-group">
-                        <label asp-for="RecurringPaymentId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
+            }
+            if (Model.DisplayTax)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="Tax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.Tax</label>
+                    </div>
+                </div>
+            }
+            if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="OrderTotalDiscount" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.OrderTotalDiscount</label>
+                    </div>
+                </div>
+            }
+            foreach (var gc in Model.GiftCards)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="GiftCards[0].CouponCode" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">(@(gc.CouponCode))</label>
+                        <label class="control-label">@gc.Amount</label>
+                    </div>
+                </div>
+            }
+            if (Model.RedeemedRewardPoints > 0)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="RedeemedRewardPoints" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">
+                            @Model.RedeemedRewardPoints @T("Admin.Orders.Fields.RedeemedRewardPoints.Points")
+                            <text>/</text>
+                            @Model.RedeemedRewardPointsAmount
+                        </label>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <admin-label asp-for="OrderTotal" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                <div class="col-xs-9 col-md-9 col-sm-9">
+                    <label class="control-label">@Model.OrderTotal</label>
+                </div>
+            </div>
+            if (!String.IsNullOrEmpty(Model.RefundedAmount))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="RefundedAmount" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.RefundedAmount</label>
+                    </div>
+                </div>
+            }
+            if (Model.UsedDiscounts.Count > 0)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="UsedDiscounts" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        @for (int i = 0; i < Model.UsedDiscounts.Count; i++)
+                        {
+                            var discount = Model.UsedDiscounts[i];
                             <label class="control-label">
-                                <a href="@Url.Action("Edit", "RecurringPayment", new { id = Model.RecurringPaymentId })">@T("Admin.Common.View")</a>
+                                <a href="@Url.Action("Edit", "Discount", new { id = discount.DiscountId })">@discount.DiscountName</a>
+                                @if (i != Model.UsedDiscounts.Count - 1)
+                                {
+                                    <text>,</text>
+                                }
                             </label>
-                        </div>
+                        }
                     </div>
-                }
-                if (!String.IsNullOrEmpty(Model.VatNumber))
-                {
-                    <div class="form-group">
-                        <label asp-for="VatNumber" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.VatNumber</label>
-                        </div>
-                    </div>
-                }
-                if (!String.IsNullOrEmpty(Model.AffiliateId))
-                {
-                    <div class="form-group">
-                        <label asp-for="AffiliateId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">
-                                <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
-                            </label>
-                        </div>
-                    </div>
-                }
-                if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    <div class="form-group">
-                        <label asp-for="OrderSubtotalInclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.OrderSubtotalInclTax</label>
-                        </div>
-                    </div>
-                }
-                if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-                {
-                    <div class="form-group">
-                        <label asp-for="OrderSubtotalExclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.OrderSubtotalExclTax</label>
-                        </div>
-                    </div>
-                }
-                if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-                    && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
-                {
-                    <div class="form-group">
-                        <label asp-for="OrderSubTotalDiscountInclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.OrderSubTotalDiscountInclTax</label>
-                        </div>
-                    </div>
-                }
-                if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-                    && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
-                {
-                    <div class="form-group">
-                        <label asp-for="OrderSubTotalDiscountExclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.OrderSubTotalDiscountExclTax</label>
-                        </div>
-                    </div>
-                }
-                if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    <div class="form-group">
-                        <label asp-for="OrderShippingInclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.OrderShippingInclTax</label>
-                        </div>
-                    </div>
-                }
-                if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-                {
-                    <div class="form-group">
-                        <label asp-for="OrderShippingExclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.OrderShippingExclTax</label>
-                        </div>
-                    </div>
-                }
-                if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-                    && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeInclTax))
-                {
-                    <div class="form-group">
-                        <label asp-for="PaymentMethodAdditionalFeeInclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.PaymentMethodAdditionalFeeInclTax</label>
-                        </div>
-                    </div>
-                }
-                if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-                    && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax))
-                {
-                    <div class="form-group">
-                        <label asp-for="PaymentMethodAdditionalFeeExclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.PaymentMethodAdditionalFeeExclTax</label>
-                        </div>
-                    </div>
-                }
-                if (Model.DisplayTaxRates)
-                {
-                    foreach (var tr in Model.TaxRates)
-                    {
-                        <div class="form-group">
-                            <label asp-for="Tax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label> @tr.Rate%:
-                            <div class="col-xs-9 col-md-9 col-sm-9">
-                                <label class="control-label">@tr.Value</label>
+                </div>
+            }
+            <div class="form-group">
+                <admin-label asp-for="Profit" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                <div class="col-xs-9 col-md-9 col-sm-9">
+                    <label class="control-label">@Model.Profit</label>
+                </div>
+            </div>
+            <div class="form-group" id="trEditOrderTotals">
+                <label class="control-label col-md-3"></label>
+                <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div class="form-horizontal portlet light bg-inverse form-fit">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <admin-label asp-for="OrderSubtotalInclTaxValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                                <div class="col-xs-8 col-md-4 col-sm-6">
+                                    <label class="control-label"> @T("Admin.Orders.Fields.Edit.InclTax") </label>
+                                    <admin-input asp-for="OrderSubtotalInclTaxValue" />
+                                </div>
+                                <div class="col-xs-8 col-md-4 col-sm-6">
+                                    <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax") </label>
+                                    <admin-input asp-for="OrderSubtotalExclTaxValue" />
+                                </div>
                             </div>
-                        </div>
-                    }
-                }
-                if (Model.DisplayTax)
-                {
-                    <div class="form-group">
-                        <label asp-for="Tax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.Tax</label>
-                        </div>
-                    </div>
-                }
-                if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
-                {
-                    <div class="form-group">
-                        <label asp-for="OrderTotalDiscount" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.OrderTotalDiscount</label>
-                        </div>
-                    </div>
-                }
-                foreach (var gc in Model.GiftCards)
-                {
-                    <div class="form-group">
-                        <label asp-for="GiftCards[0].CouponCode" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">(@(gc.CouponCode))</label>
-                            <label class="control-label">@gc.Amount</label>
-                        </div>
-                    </div>
-                }
-                if (Model.RedeemedRewardPoints > 0)
-                {
-                    <div class="form-group">
-                        <label asp-for="RedeemedRewardPoints" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">
-                                @Model.RedeemedRewardPoints @T("Admin.Orders.Fields.RedeemedRewardPoints.Points")
-                                <text>/</text>
-                                @Model.RedeemedRewardPointsAmount
-                            </label>
-                        </div>
-                    </div>
-                }
-                <div class="form-group">
-                    <label asp-for="OrderTotal" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                    <div class="col-xs-9 col-md-9 col-sm-9">
-                        <label class="control-label">@Model.OrderTotal</label>
-                    </div>
-                </div>
-                if (!String.IsNullOrEmpty(Model.RefundedAmount))
-                {
-                    <div class="form-group">
-                        <label asp-for="RefundedAmount" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.RefundedAmount</label>
-                        </div>
-                    </div>
-                }
-                if (Model.UsedDiscounts.Count > 0)
-                {
-                    <div class="form-group">
-                        <label asp-for="UsedDiscounts" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            @for (int i = 0; i < Model.UsedDiscounts.Count; i++)
-                            {
-                                var discount = Model.UsedDiscounts[i];
-                                <label class="control-label">
-                                    <a href="@Url.Action("Edit", "Discount", new { id = discount.DiscountId })">@discount.DiscountName</a>
-                                    @if (i != Model.UsedDiscounts.Count - 1)
-                                    {
-                                        <text>,</text>
-                                    }
-                                </label>
-                            }
-                        </div>
-                    </div>
-                }
-                <div class="form-group">
-                    <label asp-for="Profit" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                    <div class="col-xs-9 col-md-9 col-sm-9">
-                        <label class="control-label">@Model.Profit</label>
-                    </div>
-                </div>
-                <div class="form-group" id="trEditOrderTotals">
-                    <label class="control-label col-md-3"></label>
-                    <div class="col-xs-12 col-md-12 col-sm-12">
-                        <div class="form-horizontal portlet light bg-inverse form-fit">
-                            <div class="form-body">
-                                <div class="form-group">
-                                    <label asp-for="OrderSubtotalInclTaxValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
-                                    <div class="col-xs-8 col-md-4 col-sm-6">
-                                        <label class="control-label"> @T("Admin.Orders.Fields.Edit.InclTax") </label>
-                                        <admin-input asp-for="OrderSubtotalInclTaxValue" />
-                                    </div>
-                                    <div class="col-xs-8 col-md-4 col-sm-6">
-                                        <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax") </label>
-                                        <admin-input asp-for="OrderSubtotalExclTaxValue" />
-                                    </div>
+                            <div class="form-group">
+                                <admin-label asp-for="OrderSubTotalDiscountInclTaxValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                                <div class="col-xs-8 col-md-4 col-sm-6">
+                                    <label class="control-label">@T("Admin.Orders.Fields.Edit.InclTax") </label>
+                                    <admin-input asp-for="OrderSubTotalDiscountInclTaxValue" />
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="OrderSubTotalDiscountInclTaxValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
-                                    <div class="col-xs-8 col-md-4 col-sm-6">
-                                        <label class="control-label">@T("Admin.Orders.Fields.Edit.InclTax") </label>
-                                        <admin-input asp-for="OrderSubTotalDiscountInclTaxValue" />
-                                    </div>
-                                    <div class="col-xs-8 col-md-4 col-sm-6">
-                                        <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax") </label>
-                                        <admin-input asp-for="OrderSubTotalDiscountExclTaxValue" />
-                                    </div>
+                                <div class="col-xs-8 col-md-4 col-sm-6">
+                                    <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax") </label>
+                                    <admin-input asp-for="OrderSubTotalDiscountExclTaxValue" />
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="OrderShippingInclTaxValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
-                                    <div class="col-xs-8 col-md-4 col-sm-6">
-                                        <label class="control-label">@T("Admin.Orders.Fields.Edit.InclTax") </label>
-                                        <admin-input asp-for="OrderShippingInclTaxValue" />
-                                    </div>
-                                    <div class="col-xs-8 col-md-4 col-sm-6">
-                                        <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax")</label>
-                                        <admin-input asp-for="OrderShippingExclTaxValue" />
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="OrderShippingInclTaxValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                                <div class="col-xs-8 col-md-4 col-sm-6">
+                                    <label class="control-label">@T("Admin.Orders.Fields.Edit.InclTax") </label>
+                                    <admin-input asp-for="OrderShippingInclTaxValue" />
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="PaymentMethodAdditionalFeeInclTaxValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
-                                    <div class="col-xs-8 col-md-4 col-sm-6">
-                                        <label class="control-label"> @T("Admin.Orders.Fields.Edit.InclTax") </label>
-                                        <admin-input asp-for="PaymentMethodAdditionalFeeInclTaxValue" />
-                                    </div>
-                                    <div class="col-xs-8 col-md-4 col-sm-6">
-                                        <label class="control-label"> @T("Admin.Orders.Fields.Edit.ExclTax") </label>
-                                        <admin-input asp-for="PaymentMethodAdditionalFeeExclTaxValue" />
-                                    </div>
+                                <div class="col-xs-8 col-md-4 col-sm-6">
+                                    <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax")</label>
+                                    <admin-input asp-for="OrderShippingExclTaxValue" />
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="TaxRatesValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
-                                    <div class="col-md-8">
-                                        <admin-input asp-for="TaxRatesValue" />
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="PaymentMethodAdditionalFeeInclTaxValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                                <div class="col-xs-8 col-md-4 col-sm-6">
+                                    <label class="control-label"> @T("Admin.Orders.Fields.Edit.InclTax") </label>
+                                    <admin-input asp-for="PaymentMethodAdditionalFeeInclTaxValue" />
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="TaxValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
-                                    <div class="col-md-8">
-                                        <admin-input asp-for="TaxValue" />
-                                    </div>
+                                <div class="col-xs-8 col-md-4 col-sm-6">
+                                    <label class="control-label"> @T("Admin.Orders.Fields.Edit.ExclTax") </label>
+                                    <admin-input asp-for="PaymentMethodAdditionalFeeExclTaxValue" />
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="OrderTotalDiscountValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
-                                    <div class="col-md-8">
-                                        <admin-input asp-for="OrderTotalDiscountValue" />
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="TaxRatesValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                                <div class="col-md-8">
+                                    <admin-input asp-for="TaxRatesValue" />
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="OrderTotalValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
-                                    <div class="col-md-8">
-                                        <admin-input asp-for="OrderTotalValue" />
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="TaxValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                                <div class="col-md-8">
+                                    <admin-input asp-for="TaxValue" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="OrderTotalDiscountValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                                <div class="col-md-8">
+                                    <admin-input asp-for="OrderTotalDiscountValue" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="CurrencyRate" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                                <div class="col-md-8">
+                                    <admin-input asp-for="CurrencyRate" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="OrderTotalValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3"></admin-label>
+                                <div class="col-md-8">
+                                    <admin-input asp-for="OrderTotalValue" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3"></label>
+                <div class="col-md-9 actions btn-group btn-group-devided">
+                    <button type="submit" id="btnEditOrderTotals" onclick=" toggleOrderTotals(true);return false; " name="btnEditOrderTotals" class="k-button"><span class="k-icon k-i-edit"></span>&nbsp;@T("Admin.Orders.Fields.EditOrderTotals")</button>
+                    <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                    <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick=" toggleOrderTotals(false);return false; " id="btnCancelOrderTotals" class="k-button" />
+                </div>
+            </div>
+            if (Model.AllowStoringCreditCardNumber)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="CardType" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label" id="lblCardType">@Model.CardType</label>
+                        <admin-input asp-for="CardType" />
+                    </div>
+                </div>
+            }
+            if (Model.AllowStoringCreditCardNumber)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="CardName" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label" id="lblCardName">@Model.CardName</label>
+                        <admin-input asp-for="CardName" />
+                    </div>
+                </div>
+            }
+            if (Model.AllowStoringCreditCardNumber || !String.IsNullOrEmpty(Model.CardNumber))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="CardNumber" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label" id="lblCardNumber">@Model.CardNumber</label>
+                        <admin-input asp-for="CardNumber" />
+                    </div>
+                </div>
+            }
+            if (Model.AllowStoringCreditCardNumber)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="CardCvv2" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label" id="lblCardCvv2">@Model.CardCvv2</label>
+                        <admin-input asp-for="CardCvv2" />
+                    </div>
+                </div>
+            }
+            if (Model.AllowStoringCreditCardNumber)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="CardExpirationMonth" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label" id="lblCardExpirationMonth">@Model.CardExpirationMonth</label>
+                        <admin-input asp-for="CardExpirationMonth" />
+                    </div>
+                </div>
+            }
+            if (Model.AllowStoringCreditCardNumber)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="CardExpirationYear" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label" id="lblCardExpirationYear">@Model.CardExpirationYear</label>
+                        <admin-input asp-for="CardExpirationYear" />
+                    </div>
+                </div>
+            }
+            if (Model.AllowStoringCreditCardNumber)
+            {
                 <div class="form-group">
                     <label class="control-label col-md-3"></label>
                     <div class="col-md-9 actions btn-group btn-group-devided">
-                        <button type="submit" id="btnEditOrderTotals" onclick=" toggleOrderTotals(true);return false; " name="btnEditOrderTotals" class="k-button"><span class="k-icon k-i-edit"></span>&nbsp;@T("Admin.Orders.Fields.EditOrderTotals")</button>
-                        <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                        <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick=" toggleOrderTotals(false);return false; " id="btnCancelOrderTotals" class="k-button" />
+                        <input type="submit" name="btnEditCC" value="@T("Admin.Orders.Fields.EditCC")" onclick=" toggleCC(true);return false; " id="btnEditCC" class="k-button" />
+                        <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btnSaveCC" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <input type="submit" name="btnCancelCC" value="@T("Admin.Orders.Fields.CancelCC")" onclick=" toggleCC(false);return false; " id="btnCancelCC" class="k-button" />
                     </div>
                 </div>
-                if (Model.AllowStoringCreditCardNumber)
-                {
-                    <div class="form-group">
-                        <label asp-for="CardType" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label" id="lblCardType">@Model.CardType</label>
-                            <admin-input asp-for="CardType" />
-                        </div>
-                    </div>
-                }
-                if (Model.AllowStoringCreditCardNumber)
-                {
-                    <div class="form-group">
-                        <label asp-for="CardName" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label" id="lblCardName">@Model.CardName</label>
-                            <admin-input asp-for="CardName" />
-                        </div>
-                    </div>
-                }
-                if (Model.AllowStoringCreditCardNumber || !String.IsNullOrEmpty(Model.CardNumber))
-                {
-                    <div class="form-group">
-                        <label asp-for="CardNumber" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label" id="lblCardNumber">@Model.CardNumber</label>
-                            <admin-input asp-for="CardNumber" />
-                        </div>
-                    </div>
-                }
-                if (Model.AllowStoringCreditCardNumber)
-                {
-                    <div class="form-group">
-                        <label asp-for="CardCvv2" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label" id="lblCardCvv2">@Model.CardCvv2</label>
-                            <admin-input asp-for="CardCvv2" />
-                        </div>
-                    </div>
-                }
-                if (Model.AllowStoringCreditCardNumber)
-                {
-                    <div class="form-group">
-                        <label asp-for="CardExpirationMonth" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label" id="lblCardExpirationMonth">@Model.CardExpirationMonth</label>
-                            <admin-input asp-for="CardExpirationMonth" />
-                        </div>
-                    </div>
-                }
-                if (Model.AllowStoringCreditCardNumber)
-                {
-                    <div class="form-group">
-                        <label asp-for="CardExpirationYear" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label" id="lblCardExpirationYear">@Model.CardExpirationYear</label>
-                            <admin-input asp-for="CardExpirationYear" />
-                        </div>
-                    </div>
-                }
-                if (Model.AllowStoringCreditCardNumber)
-                {
-                    <div class="form-group">
-                        <label class="control-label col-md-3"></label>
-                        <div class="col-md-9 actions btn-group btn-group-devided">
-                            <input type="submit" name="btnEditCC" value="@T("Admin.Orders.Fields.EditCC")" onclick=" toggleCC(true);return false; " id="btnEditCC" class="k-button" />
-                            <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btnSaveCC" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <input type="submit" name="btnCancelCC" value="@T("Admin.Orders.Fields.CancelCC")" onclick=" toggleCC(false);return false; " id="btnCancelCC" class="k-button" />
-                        </div>
-                    </div>
-                }
-                if (!String.IsNullOrEmpty(Model.AuthorizationTransactionId))
-                {
-                    <div class="form-group">
-                        <label asp-for="AuthorizationTransactionId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.AuthorizationTransactionId</label>
-                        </div>
-                    </div>
-                }
-                if (!String.IsNullOrEmpty(Model.CaptureTransactionId))
-                {
-                    <div class="form-group">
-                        <label asp-for="CaptureTransactionId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label">@Model.CaptureTransactionId</label>
-                        </div>
-                    </div>
-                }
-                if (!String.IsNullOrEmpty(Model.SubscriptionTransactionId))
-                {
-                    <div class="form-group">
-                        <label asp-for="SubscriptionTransactionId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                        <div class="col-xs-9 col-md-9 col-sm-9">
-                            <label class="control-label"> @Model.SubscriptionTransactionId</label>
-                        </div>
-                    </div>
-                }
+            }
+            if (!String.IsNullOrEmpty(Model.AuthorizationTransactionId))
+            {
                 <div class="form-group">
-                    <label asp-for="PaymentMethod" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="AuthorizationTransactionId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
-                        <label class="control-label">@Model.PaymentMethod</label>
+                        <label class="control-label">@Model.AuthorizationTransactionId</label>
+                    </div>
+                </div>
+            }
+            if (!String.IsNullOrEmpty(Model.CaptureTransactionId))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="CaptureTransactionId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label">@Model.CaptureTransactionId</label>
+                    </div>
+                </div>
+            }
+            if (!String.IsNullOrEmpty(Model.SubscriptionTransactionId))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="SubscriptionTransactionId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+                    <div class="col-xs-9 col-md-9 col-sm-9">
+                        <label class="control-label"> @Model.SubscriptionTransactionId</label>
                     </div>
                 </div>
             }
             <div class="form-group">
-                <label asp-for="PaymentStatus" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                <admin-label asp-for="PaymentMethod" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
                 <div class="col-xs-9 col-md-9 col-sm-9">
-                    @{
-                        var labelStatus = "";
-                        switch (@Model.PaymentStatusEnum)
-                        {
-                            case Grand.Core.Domain.Payments.PaymentStatus.Paid:
-                                labelStatus = "success";
-                                break;
-                            case Grand.Core.Domain.Payments.PaymentStatus.Pending:
-                                labelStatus = "default";
-                                break;
-                            case Grand.Core.Domain.Payments.PaymentStatus.Authorized:
-                                labelStatus = "info";
-                                break;
-                            case Grand.Core.Domain.Payments.PaymentStatus.PartiallyRefunded:
-                                labelStatus = "info";
-                                break;
-                            case Grand.Core.Domain.Payments.PaymentStatus.Refunded:
-                                labelStatus = "warning";
-                                break;
-                            case Grand.Core.Domain.Payments.PaymentStatus.Voided:
-                                labelStatus = "danger";
-                                break;
-                        }
-                    }
-
-
-                    <h2><span class="label label-@labelStatus">@Model.PaymentStatus</span></h2>
-
-                    @if (!Model.IsLoggedInAsVendor)
+                    <label class="control-label">@Model.PaymentMethod</label>
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            <admin-label asp-for="PaymentStatus" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+            <div class="col-xs-9 col-md-9 col-sm-9">
+                @{
+                    var labelStatus = "";
+                    switch (@Model.PaymentStatusEnum)
                     {
-                        if (Model.CanCapture)
-                        {
-                            <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanMarkOrderAsPaid)
-                        {
-                            <button type="submit" id="markorderaspaid" name="markorderaspaid" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " class="k-button"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;@T("Admin.Orders.Fields.MarkAsPaid")</button>
-                        }
-                        if (Model.CanRefund)
-                        {
-                            <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanRefundOffline)
-                        {
-                            <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanPartiallyRefund)
-                        {
-                            <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="k-button" />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanPartiallyRefundOffline)
-                        {
-                            <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="k-button" />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanVoid)
-                        {
-                            <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanVoidOffline)
-                        {
-                            <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
+                        case Grand.Domain.Payments.PaymentStatus.Paid:
+                            labelStatus = "success";
+                            break;
+                        case Grand.Domain.Payments.PaymentStatus.Pending:
+                            labelStatus = "default";
+                            break;
+                        case Grand.Domain.Payments.PaymentStatus.Authorized:
+                            labelStatus = "info";
+                            break;
+                        case Grand.Domain.Payments.PaymentStatus.PartiallyRefunded:
+                            labelStatus = "info";
+                            break;
+                        case Grand.Domain.Payments.PaymentStatus.Refunded:
+                            labelStatus = "warning";
+                            break;
+                        case Grand.Domain.Payments.PaymentStatus.Voided:
+                            labelStatus = "danger";
+                            break;
                     }
-                </div>
+                }
+
+
+                <h2><span class="label label-@labelStatus">@Model.PaymentStatus</span></h2>
+
+                @if (!Model.IsLoggedInAsVendor)
+                {
+                    if (Model.CanCapture)
+                    {
+                        <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <text>&nbsp;</text>
+                    }
+                    if (Model.CanMarkOrderAsPaid)
+                    {
+                        <button type="submit" id="markorderaspaid" name="markorderaspaid" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " class="k-button"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;@T("Admin.Orders.Fields.MarkAsPaid")</button>
+                    }
+                    if (Model.CanRefund)
+                    {
+                        <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <text>&nbsp;</text>
+                    }
+                    if (Model.CanRefundOffline)
+                    {
+                        <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <text>&nbsp;</text>
+                    }
+                    if (Model.CanPartiallyRefund)
+                    {
+                        <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="k-button" />
+                        <text>&nbsp;</text>
+                    }
+                    if (Model.CanPartiallyRefundOffline)
+                    {
+                        <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="k-button" />
+                        <text>&nbsp;</text>
+                    }
+                    if (Model.CanVoid)
+                    {
+                        <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <text>&nbsp;</text>
+                    }
+                    if (Model.CanVoidOffline)
+                    {
+                        <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <text>&nbsp;</text>
+                    }
+                }
             </div>
-            @if (Model.CustomValues != null && Model.CustomValues.Count > 0)
-                        {
-                <div class="form-group">
-                    <label asp-for="CustomValues" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
-                    <div class="col-xs-9 col-md-9 col-sm-9">
-                        <table>
-                            @foreach (var item in Model.CustomValues)
-                        {
-                                <tr>
-                                    <td>@item.Key:</td>
-                                    <td>@(item.Value != null ? item.Value.ToString() : "")</td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </div>
-            }
+        </div>
+        @if (Model.CustomValues != null && Model.CustomValues.Count > 0)
+        {
             <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                <admin-label asp-for="CustomValues" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
                 <div class="col-xs-9 col-md-9 col-sm-9">
-                    <label class="control-label"> @Html.DisplayFor(model => model.CreatedOn)</label>
+                    <table>
+                        @foreach (var item in Model.CustomValues)
+                        {
+                            <tr>
+                                <td>@item.Key:</td>
+                                <td>@(item.Value != null ? item.Value.ToString() : "")</td>
+                            </tr>
+                        }
+                    </table>
                 </div>
             </div>
+        }
+        <div class="form-group">
+            <admin-label asp-for="CreatedOn" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3"></admin-label>
+            <div class="col-xs-9 col-md-9 col-sm-9">
+                <label class="control-label"> @Html.DisplayFor(model => model.CreatedOn)</label>
+            </div>
+        </div>
         </div>
         <vc:admin-widget widget-zone="order_details_info_bottom" additional-data="Model" />
     </div>

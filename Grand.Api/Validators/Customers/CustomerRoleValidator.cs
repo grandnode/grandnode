@@ -1,17 +1,21 @@
 ﻿using FluentValidation;
 using Grand.Api.DTOs.Customers;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Api.Validators.Customers
 {
     public class CustomerRoleValidator : BaseGrandValidator<CustomerRoleDto>
     {
-        public CustomerRoleValidator(ILocalizationService localizationService, IProductService productService, ICustomerService customerService)
+        public CustomerRoleValidator(
+            IEnumerable<IValidatorConsumer<CustomerRoleDto>> validators,
+            ILocalizationService localizationService, IProductService productService, ICustomerService customerService)
+            : base(validators)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Customers.CustomerRole.Fields.Name.Required"));
             

@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Components;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Newsletter;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -7,16 +8,16 @@ namespace Grand.Web.ViewComponents
 {
     public class NewsletterBoxViewComponent : BaseViewComponent
     {
-        private readonly INewsletterViewModelService _newsletterViewModelService;
+        private readonly IMediator _mediator;
 
-        public NewsletterBoxViewComponent(INewsletterViewModelService newsletterViewModelService)
+        public NewsletterBoxViewComponent(IMediator mediator)
         {
-            this._newsletterViewModelService = newsletterViewModelService;
+            _mediator = mediator;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _newsletterViewModelService.PrepareNewsletterBox();
+            var model = await _mediator.Send(new GetNewsletterBox());
             if (model == null)
                 return Content("");
 

@@ -1,7 +1,8 @@
-﻿using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Seo;
+﻿using Grand.Core;
+using Grand.Domain.Blogs;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Seo;
 using Grand.Framework.Extensions;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
@@ -30,7 +31,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IPictureService _pictureService;
         private readonly ICustomerService _customerService;
         private readonly IProductService _productService;
@@ -39,18 +39,17 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IVendorService _vendorService;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
+        private readonly IWorkContext _workContext;
         private readonly SeoSettings _seoSettings;
 
         public BlogViewModelService(IBlogService blogService, IDateTimeHelper dateTimeHelper, IStoreService storeService, IUrlRecordService urlRecordService,
-            IStoreMappingService storeMappingService, IPictureService pictureService, ICustomerService customerService, 
-            ILocalizationService localizationService, IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
-            IVendorService vendorService,
-            ILanguageService languageService, SeoSettings seoSettings)
+            IPictureService pictureService, ICustomerService customerService, ILocalizationService localizationService, IProductService productService, 
+            ICategoryService categoryService, IManufacturerService manufacturerService, IVendorService vendorService,
+            ILanguageService languageService, IWorkContext workContext, SeoSettings seoSettings)
         {
             _blogService = blogService;
             _dateTimeHelper = dateTimeHelper;
             _storeService = storeService;
-            _storeMappingService = storeMappingService;
             _urlRecordService = urlRecordService;
             _pictureService = pictureService;
             _customerService = customerService;
@@ -60,15 +59,16 @@ namespace Grand.Web.Areas.Admin.Services
             _manufacturerService = manufacturerService;
             _vendorService = vendorService;
             _languageService = languageService;
+            _workContext = workContext;
             _seoSettings = seoSettings;
         }
 
         public virtual async Task<(IEnumerable<BlogPostModel> blogPosts, int totalCount)> PrepareBlogPostsModel(int pageIndex, int pageSize)
         {
-            var blogPosts = await _blogService.GetAllBlogPosts("", null, null, pageIndex - 1, pageSize, true);
+            var blogPosts = await _blogService.GetAllBlogPosts(_workContext.CurrentCustomer.StaffStoreId, null, null, pageIndex - 1, pageSize, true);
             return (blogPosts.Select(x =>
                 {
-                    var m = x.ToModel();
+                    var m = x.ToModel(_dateTimeHelper);
                     m.Body = "";
                     if (x.StartDateUtc.HasValue)
                         m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
@@ -83,7 +83,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new BlogPostModel();
             //Stores
-            await model.PrepareStoresMappingModel(null, _storeService, false);
+            await model.PrepareStoresMappingModel(null, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
             //default values
             model.AllowComments = true;
             //locales
@@ -92,27 +92,27 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPostModel blogPostmodel)
         {
-            await blogPostmodel.PrepareStoresMappingModel(null, _storeService, true);
+            await blogPostmodel.PrepareStoresMappingModel(null, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
             return blogPostmodel;
         }
         public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPostModel blogPostmodel, BlogPost blogPost)
         {
             //Store
-            await blogPostmodel.PrepareStoresMappingModel(blogPost, _storeService, true);
+            await blogPostmodel.PrepareStoresMappingModel(blogPost, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
             return blogPostmodel;
         }
 
         public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPost blogPost)
         {
-            var model = blogPost.ToModel();
+            var model = blogPost.ToModel(_dateTimeHelper);
             //Store
-            await model.PrepareStoresMappingModel(blogPost, _storeService, false);
+            await model.PrepareStoresMappingModel(blogPost, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
             return model;
         }
 
         public virtual async Task<BlogPost> InsertBlogPostModel(BlogPostModel model)
         {
-            var blogPost = model.ToEntity();
+            var blogPost = model.ToEntity(_dateTimeHelper);
             blogPost.CreatedOnUtc = DateTime.UtcNow;
             await _blogService.InsertBlogPost(blogPost);
 
@@ -132,7 +132,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<BlogPost> UpdateBlogPostModel(BlogPostModel model, BlogPost blogPost)
         {
             string prevPictureId = blogPost.PictureId;
-            blogPost = model.ToEntity(blogPost);
+            blogPost = model.ToEntity(blogPost, _dateTimeHelper);
             await _blogService.UpdateBlogPost(blogPost);
 
             //search engine name
@@ -158,7 +158,8 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<(IEnumerable<BlogCommentModel> blogComments, int totalCount)> PrepareBlogPostCommentsModel(string filterByBlogPostId, int pageIndex, int pageSize)
         {
             IList<BlogComment> comments;
-            if (!String.IsNullOrEmpty(filterByBlogPostId))
+            var storeId = string.IsNullOrEmpty(_workContext.CurrentCustomer.StaffStoreId) ? "" : _workContext.CurrentCustomer.StaffStoreId;
+            if (!string.IsNullOrEmpty(filterByBlogPostId))
             {
                 //filter comments by blog
                 var blogPost = await _blogService.GetBlogPostById(filterByBlogPostId);
@@ -167,13 +168,12 @@ namespace Grand.Web.Areas.Admin.Services
             else
             {
                 //load all blog comments
-                comments = await _blogService.GetAllComments("");
+                comments = await _blogService.GetAllComments("", storeId);
             }
             var commentsList = new List<BlogCommentModel>();
             foreach (var blogComment in comments.Skip((pageIndex - 1) * pageSize).Take(pageSize))
             {
-                var commentModel = new BlogCommentModel
-                {
+                var commentModel = new BlogCommentModel {
                     Id = blogComment.Id,
                     BlogPostId = blogComment.BlogPostId,
                     BlogPostTitle = blogComment.BlogPostTitle,
@@ -213,7 +213,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = _categoryService.GetFormattedBreadCrumb(c, categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
@@ -221,9 +221,10 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
+            var storeId = _workContext.CurrentCustomer.StaffStoreId;
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+            foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
@@ -231,7 +232,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
 
             return model;
@@ -239,8 +240,12 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(BlogProductModel.AddProductModel model, int pageIndex, int pageSize)
         {
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
 
         public virtual async Task InsertProductModel(string blogPostId, BlogProductModel.AddProductModel model)
@@ -251,7 +256,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var product = await _productService.GetProductById(id);
                 if (product != null)
                 {
-                    if(products.FirstOrDefault(x=>x.ProductId == id) == null)
+                    if (products.FirstOrDefault(x => x.ProductId == id) == null)
                     {
                         await _blogService.InsertBlogProduct(new BlogProduct() {
                             BlogPostId = blogPostId,

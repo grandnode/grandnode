@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.News").Text;
 }
-<form asp-controller="Setting" asp-action="News" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Setting" asp-action="News" method="post">
+    
     <div asp-validation-summary="All"></div>
 
     <div class="row">

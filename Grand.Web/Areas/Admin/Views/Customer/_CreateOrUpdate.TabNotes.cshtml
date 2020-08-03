@@ -98,7 +98,7 @@
         @T("Admin.Customers.CustomerNotes.AddTitle")
     </strong>
 </p>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.AddCustomerNoteHasDownload)").change(toggleAddCustomerNoteHasDownload);
         toggleAddCustomerNoteHasDownload();
@@ -161,7 +161,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#addCustomerNote').click(function () {
             var customerTitle = $("#@Html.FieldIdFor(model => model.AddCustomerTitle)").val();

@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Polls;
+using Grand.Domain;
+using Grand.Domain.Polls;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Polls

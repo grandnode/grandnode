@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails").Text;
 }
-<form asp-controller="Shipping" asp-action="EditDeliveryDate" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Shipping" asp-action="EditDeliveryDate" method="post">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

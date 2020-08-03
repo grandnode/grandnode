@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.RecurringPayments").Text;
 }
-<antiforgery-token />
+
 
 <div class="row">
     <div class="col-md-12">
@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#recurringpayments-grid").kendoGrid({
             dataSource: {

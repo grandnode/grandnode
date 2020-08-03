@@ -1,8 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.PushNotifications;
+using Grand.Domain.PushNotifications;
 using Grand.Framework.Mvc;
-using Grand.Services.Localization;
-using Grand.Services.Logging;
 using Grand.Services.PushNotifications;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,16 +12,11 @@ namespace Grand.Web.Controllers
     {
         private readonly IWorkContext _workContext;
         private readonly IPushNotificationsService _pushNotificationsService;
-        private readonly ILogger _logger;
-        private readonly ILocalizationService _localizationService;
 
-        public PushNotificationsController(IWorkContext workContext, IPushNotificationsService pushNotificationsService, ILogger logger,
-            ILocalizationService localizationService)
+        public PushNotificationsController(IWorkContext workContext, IPushNotificationsService pushNotificationsService)
         {
-            this._workContext = workContext;
-            this._pushNotificationsService = pushNotificationsService;
-            this._logger = logger;
-            this._localizationService = localizationService;
+            _workContext = workContext;
+            _pushNotificationsService = pushNotificationsService;
         }
 
         [HttpPost]
@@ -35,8 +28,7 @@ namespace Grand.Web.Controllers
 
                 if (toUpdate == null)
                 {
-                    await _pushNotificationsService.InsertPushReceiver(new PushRegistration
-                    {
+                    await _pushNotificationsService.InsertPushReceiver(new PushRegistration {
                         CustomerId = _workContext.CurrentCustomer.Id,
                         Token = value,
                         RegisteredOn = DateTime.UtcNow,
@@ -59,8 +51,7 @@ namespace Grand.Web.Controllers
 
                     if (toUpdate == null)
                     {
-                        await _pushNotificationsService.InsertPushReceiver(new PushRegistration
-                        {
+                        await _pushNotificationsService.InsertPushReceiver(new PushRegistration {
                             CustomerId = _workContext.CurrentCustomer.Id,
                             Token = "[DENIED]",
                             RegisteredOn = DateTime.UtcNow,

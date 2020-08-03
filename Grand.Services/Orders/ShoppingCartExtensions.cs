@@ -1,6 +1,6 @@
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Catalog;
+using Grand.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using System.Collections.Generic;
@@ -49,9 +49,6 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
         /// <param name="localizationService">Localization service</param>
-        /// <param name="cycleLength">Cycle length</param>
-        /// <param name="cyclePeriod">Cycle period</param>
-        /// <param name="totalCycles">Total cycles</param>
         /// <returns>Error (if exists); otherwise, empty string</returns>
         public static async Task<(string info, int cycleLength, RecurringProductCyclePeriod cyclePeriod, int totalCycles)> 
             GetRecurringCycleInfo(this IList<ShoppingCartItem> shoppingCart,

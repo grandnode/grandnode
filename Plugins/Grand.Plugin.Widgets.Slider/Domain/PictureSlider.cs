@@ -1,11 +1,11 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Stores;
+﻿using Grand.Domain;
+using Grand.Domain.Localization;
+using Grand.Domain.Stores;
 using System.Collections.Generic;
 
 namespace Grand.Plugin.Widgets.Slider.Domain
 {
-    public partial class PictureSlider: BaseEntity, ILocalizedEntity, IStoreMappingSupported
+    public partial class PictureSlider : BaseEntity, ILocalizedEntity, IStoreMappingSupported
     {
         public PictureSlider()
         {
@@ -21,15 +21,12 @@ namespace Grand.Plugin.Widgets.Slider.Domain
         public bool Published { get; set; }
         public int SliderTypeId { get; set; }
         public string ObjectEntry { get; set; }
-        public SliderType SliderType
-        {
-            get
-            {
-                return (SliderType)this.SliderTypeId;
+        public SliderType SliderType {
+            get {
+                return (SliderType)SliderTypeId;
             }
-            set
-            {
-                this.SliderTypeId = (int)value;
+            set {
+                SliderTypeId = (int)value;
             }
 
         }

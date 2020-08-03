@@ -25,9 +25,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             ILanguageService languageService)
         {
-            this._bannerService = bannerService;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
+            _bannerService = bannerService;
+            _localizationService = localizationService;
+            _languageService = languageService;
         }
 
         public IActionResult Index() => RedirectToAction("List");

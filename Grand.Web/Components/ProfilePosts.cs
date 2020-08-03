@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Forums;
+﻿using Grand.Domain.Forums;
 using Grand.Framework.Components;
 using Grand.Services.Customers;
 using Grand.Services.Forums;
@@ -23,16 +23,16 @@ namespace Grand.Web.ViewComponents
         private readonly ForumSettings _forumSettings;
 
         public ProfilePostsViewComponent(IForumService forumService,
-            ICustomerService customerService, 
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             ForumSettings forumSettings)
         {
-            this._forumService = forumService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._forumSettings = forumSettings;
+            _forumService = forumService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _forumSettings = forumSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string customerProfileId, int pageNumber)
@@ -66,18 +66,17 @@ namespace Grand.Web.ViewComponents
                     posted = _dateTimeHelper.ConvertToUserTime(forumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
                 }
                 var forumtopic = await _forumService.GetTopicById(forumPost.TopicId);
-                latestPosts.Add(new PostsModel
-                {
-                    ForumTopicId = forumPost.TopicId,
-                    ForumTopicTitle = forumtopic.Subject,
-                    ForumTopicSlug = forumtopic.GetSeName(),
-                    ForumPostText = forumPost.FormatPostText(),
-                    Posted = posted
-                });
+                if (forumtopic != null)
+                    latestPosts.Add(new PostsModel {
+                        ForumTopicId = forumPost.TopicId,
+                        ForumTopicTitle = forumtopic.Subject,
+                        ForumTopicSlug = forumtopic.GetSeName(),
+                        ForumPostText = forumPost.FormatPostText(),
+                        Posted = posted
+                    });
             }
 
-            var pagerModel = new PagerModel(_localizationService)
-            {
+            var pagerModel = new PagerModel(_localizationService) {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,
                 PageIndex = list.PageIndex,
@@ -87,8 +86,7 @@ namespace Grand.Web.ViewComponents
                 RouteValues = new RouteValues { pageNumber = pageNumber, id = customerProfileId }
             };
 
-            var model = new ProfilePostsModel
-            {
+            var model = new ProfilePostsModel {
                 PagerModel = pagerModel,
                 Posts = latestPosts,
             };

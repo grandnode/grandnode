@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Orders;
 using Grand.Web.Areas.Admin.Models.Orders;
 using System.Collections.Generic;
 using System.Threading.Tasks;

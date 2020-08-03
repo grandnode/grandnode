@@ -10,6 +10,8 @@ namespace Grand.Web.Models.Topics
 
         public bool IsPasswordProtected { get; set; }
 
+        public string Password { get; set; }
+
         public string Title { get; set; }
 
         public string Body { get; set; }

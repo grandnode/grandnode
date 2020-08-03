@@ -1,9 +1,11 @@
-﻿using Grand.Core;
-using Grand.Core.Infrastructure;
+﻿using Grand.Core.Data;
+using Grand.Domain.Configuration;
+using Grand.Domain.Data;
 using Grand.Services.Authentication.External;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Net;
@@ -20,11 +22,19 @@ namespace Grand.Plugin.ExternalAuth.Google.Infrastructure
         /// Configure
         /// </summary>
         /// <param name="builder">Authentication builder</param>
-        public void Configure(AuthenticationBuilder builder)
+        public void Configure(AuthenticationBuilder builder, IConfiguration configuration)
         {
             builder.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
             {
-                var settings = EngineContext.Current.Resolve<GoogleExternalAuthSettings>();
+                var settings = new GoogleExternalAuthSettings();
+                try
+                {
+                    var goSettings = new Repository<Setting>(DataSettingsHelper.ConnectionString()).Table.Where(x => x.Name.StartsWith("googleexternalauthsettings"));
+                    settings.ClientKeyIdentifier = goSettings.FirstOrDefault(x => x.Name == "googleexternalauthsettings.clientkeyidentifier")?.Value;
+                    settings.ClientSecret = goSettings.FirstOrDefault(x => x.Name == "googleexternalauthsettings.clientsecret")?.Value;
+                }
+                catch { };
+
                 options.ClientId = !string.IsNullOrWhiteSpace(settings.ClientKeyIdentifier) ? settings.ClientKeyIdentifier : "000";
                 options.ClientSecret = !string.IsNullOrWhiteSpace(settings.ClientSecret) ? settings.ClientSecret : "000";
                 options.SaveTokens = true;
@@ -36,10 +46,7 @@ namespace Grand.Plugin.ExternalAuth.Google.Infrastructure
                         ctx.HandleResponse();
                         var errorMessage = ctx.Failure.Message;
                         var state = ctx.Request.Query["state"].FirstOrDefault();
-
-                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                         errorMessage = WebUtility.UrlEncode(errorMessage);
-
                         ctx.Response.Redirect($"/google-signin-failed?error_message={errorMessage}");
 
                         return Task.FromResult(0);
@@ -48,7 +55,7 @@ namespace Grand.Plugin.ExternalAuth.Google.Infrastructure
             });
 
         }
-        public int Order => 0;
+        public int Order => 502;
 
     }
 }

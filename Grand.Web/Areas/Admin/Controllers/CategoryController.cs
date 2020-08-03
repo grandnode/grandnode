@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -55,15 +55,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             IImportManager importManager)
         {
-            this._categoryService = categoryService;
-            this._categoryViewModelService = categoryViewModelService;
-            this._customerService = customerService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
-            this._exportManager = exportManager;
-            this._workContext = workContext;
-            this._importManager = importManager;
+            _categoryService = categoryService;
+            _categoryViewModelService = categoryViewModelService;
+            _customerService = customerService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _exportManager = exportManager;
+            _workContext = workContext;
+            _importManager = importManager;
         }
 
         #endregion
@@ -226,7 +226,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = category.Id });
                 }

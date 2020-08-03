@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
 using Grand.Core.Plugins;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
@@ -24,22 +24,25 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
         private readonly ISettingService _settingService;
         private readonly IShippingService _shippingService;
         private readonly IWebHelper _webHelper;
-        private readonly IServiceProvider _serviceProvider;
         private readonly IWorkContext _workContext;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILanguageService _languageService;
         #endregion
 
         #region Ctor
         public FixedRateShippingComputationMethod(ISettingService settingService,
             IShippingService shippingService,
             IWebHelper webHelper,
-            IServiceProvider serviceProvider,
+            ILocalizationService localizationService, 
+            ILanguageService languageService,
             IWorkContext workContext)
         {
-            this._settingService = settingService;
-            this._shippingService = shippingService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
-            this._workContext = workContext;
+            _settingService = settingService;
+            _shippingService = shippingService;
+            _webHelper = webHelper;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _workContext = workContext;
         }
         #endregion
 
@@ -131,8 +134,8 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
         public override async Task Install()
         {
             //locales
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName", "Shipping method");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.FixedRateShipping.Fields.Rate", "Rate");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName", "Shipping method");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.FixedRateShipping.Fields.Rate", "Rate");
 
             await base.Install();
         }
@@ -144,8 +147,8 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
         public override async Task Uninstall()
         {
             //locales
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.FixedRateShipping.Fields.Rate");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Shipping.FixedRateShipping.Fields.Rate");
 
             await base.Uninstall();
         }

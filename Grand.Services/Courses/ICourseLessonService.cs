@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Courses;
+﻿using Grand.Domain.Courses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

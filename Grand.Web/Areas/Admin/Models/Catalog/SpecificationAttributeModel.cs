@@ -1,13 +1,10 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Catalog;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    [Validator(typeof(SpecificationAttributeValidator))]
     public partial class SpecificationAttributeModel : BaseGrandEntityModel, ILocalizedModel<SpecificationAttributeLocalizedModel>
     {
         public SpecificationAttributeModel()
@@ -16,11 +13,13 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")]
-        
         public string Name { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.SeName")]
+        public string SeName { get; set; }
+
         [GrandResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")]
-        public int DisplayOrder {get;set;}
+        public int DisplayOrder { get; set; }
 
 
         public IList<SpecificationAttributeLocalizedModel> Locales { get; set; }
@@ -32,7 +31,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")]
-        
         public string Name { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Discounts;
+﻿using Grand.Domain.Discounts;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security;
@@ -28,10 +28,10 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
             ICustomerService customerService, ISettingService settingService,
             IPermissionService permissionService)
         {
-            this._discountService = discountService;
-            this._customerService = customerService;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
+            _discountService = discountService;
+            _customerService = customerService;
+            _settingService = settingService;
+            _permissionService = permissionService;
         }
 
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId)
@@ -70,7 +70,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId, string customerRoleId)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))

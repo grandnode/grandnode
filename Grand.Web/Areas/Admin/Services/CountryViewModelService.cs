@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Directory;
+﻿using Grand.Domain.Directory;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Extensions;
@@ -12,15 +12,12 @@ namespace Grand.Web.Areas.Admin.Services
     {
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly ILanguageService _languageService;
 
         public CountryViewModelService(ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            ILanguageService languageService)
+            IStateProvinceService stateProvinceService)
         {
             _countryService = countryService;
             _stateProvinceService = stateProvinceService;
-            _languageService = languageService;
         }
 
         public virtual CountryModel PrepareCountryModel()

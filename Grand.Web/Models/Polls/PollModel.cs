@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Models.Polls
 {
-    public partial class PollModel : BaseGrandEntityModel, ICloneable
+    public partial class PollModel : BaseGrandEntityModel
     {
         public PollModel()
         {
@@ -19,11 +19,6 @@ namespace Grand.Web.Models.Polls
         
         public IList<PollAnswerModel> Answers { get; set; }
 
-        public object Clone()
-        {
-            //we use a shallow copy (deep clone is not required here)
-            return this.MemberwiseClone();
-        }
     }
 
     public partial class PollAnswerModel : BaseGrandEntityModel

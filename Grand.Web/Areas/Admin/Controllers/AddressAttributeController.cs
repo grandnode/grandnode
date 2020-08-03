@@ -32,10 +32,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             IAddressAttributeViewModelService addressAttributeViewModelService)
         {
-            this._addressAttributeService = addressAttributeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._addressAttributeViewModelService = addressAttributeViewModelService;
+            _addressAttributeService = addressAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _addressAttributeViewModelService = addressAttributeViewModelService;
         }
 
         #endregion
@@ -47,11 +47,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ListBlock() => PartialView("ListBlock");
 
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
             //select third tab
             const int addressFormFieldIndex = 2;
-            SaveSelectedTabIndex(addressFormFieldIndex);
+            await SaveSelectedTabIndex(addressFormFieldIndex);
             return RedirectToAction("CustomerUser", "Setting");
         }
 
@@ -122,7 +122,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new {id = addressAttribute.Id});
                 }

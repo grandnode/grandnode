@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
+﻿using Grand.Domain.Localization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Logging;
@@ -14,7 +14,6 @@ namespace Grand.Services.Tasks
     /// </summary>
     public partial class EndAuctionsTask : IScheduleTask
     {
-        private readonly IProductService _productService;
         private readonly IAuctionService _auctionService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
@@ -22,17 +21,16 @@ namespace Grand.Services.Tasks
         private readonly ICustomerService _customerService;
         private readonly ILogger _logger;
 
-        public EndAuctionsTask(IProductService productService, IAuctionService auctionService, IQueuedEmailService queuedEmailService,
+        public EndAuctionsTask(IAuctionService auctionService,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationService, IShoppingCartService shoppingCartService,
             ICustomerService customerService, ILogger logger)
         {
-            this._productService = productService;
-            this._auctionService = auctionService;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationService;
-            this._shoppingCartService = shoppingCartService;
-            this._customerService = customerService;
-            this._logger = logger;
+            _auctionService = auctionService;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationService;
+            _shoppingCartService = shoppingCartService;
+            _customerService = customerService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -51,8 +49,8 @@ namespace Grand.Services.Tasks
                     continue;
                 }
 
-                var warnings = await _shoppingCartService.AddToCart(await _customerService.GetCustomerById(bid.CustomerId), bid.ProductId, Core.Domain.Orders.ShoppingCartType.Auctions,
-                    bid.StoreId, customerEnteredPrice: bid.Amount);
+                var warnings = await _shoppingCartService.AddToCart(await _customerService.GetCustomerById(bid.CustomerId), bid.ProductId, Domain.Orders.ShoppingCartType.Auctions,
+                    bid.StoreId, bid.WarehouseId, customerEnteredPrice: bid.Amount);
 
                 if (!warnings.Any())
                 {
@@ -65,7 +63,7 @@ namespace Grand.Services.Tasks
                 }
                 else
                 {
-                    await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, $"EndAuctionTask - Product {auctionToEnd.Name}", string.Join(",", warnings.ToArray()));
+                    await _logger.InsertLog(Domain.Logging.LogLevel.Error, $"EndAuctionTask - Product {auctionToEnd.Name}", string.Join(",", warnings.ToArray()));
                 }
             }
         }

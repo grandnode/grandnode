@@ -5,8 +5,8 @@
     ViewBag.Title = T("Admin.Orders.Shipments.List").Text;
 }
 
-<form asp-controller="Shipment" asp-action="List" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Shipment" asp-action="List" method="post">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -217,7 +217,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <script>
 
         var selectedIds = [];
 
@@ -387,12 +387,12 @@
 
 </form>
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-<form asp-controller="Shipment" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Shipment" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
+    
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
-<script type="text/javascript">
+<script>
 
     $(document).ready(function () {
         $('#exportpackagingslips-selected').click(function (e) {

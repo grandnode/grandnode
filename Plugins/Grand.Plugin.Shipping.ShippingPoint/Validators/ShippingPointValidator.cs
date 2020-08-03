@@ -2,12 +2,16 @@
 using Grand.Services.Localization;
 using Grand.Framework.Validators;
 using Grand.Plugin.Shipping.ShippingPoint.Models;
+using System.Collections.Generic;
 
 namespace Grand.Plugin.Shipping.ShippingPoint.Validators
 {
-    class ShippingPointValidator : BaseGrandValidator<ShippingPointModel>
+    public class ShippingPointValidator : BaseGrandValidator<ShippingPointModel>
     {
-        public ShippingPointValidator(ILocalizationService localizationService)
+        public ShippingPointValidator(
+            IEnumerable<IValidatorConsumer<ShippingPointModel>> validators, 
+            ILocalizationService localizationService)
+            : base(validators)
         {
             RuleFor(x => x.ShippingPointName).NotEmpty().WithMessage(localizationService.GetResource("Plugins.Shipping.ShippingPoint.RequiredShippingPointName"));
             RuleFor(x => x.Description).NotEmpty().WithMessage(localizationService.GetResource("Plugins.Shipping.ShippingPoint.RequiredDescription"));

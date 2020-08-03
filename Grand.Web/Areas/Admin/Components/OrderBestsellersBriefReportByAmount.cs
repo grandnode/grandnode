@@ -11,7 +11,7 @@ namespace Grand.Web.Areas.Admin.Components
 
         public OrderBestsellersBriefReportByAmountViewComponent(IPermissionService permissionService)
         {
-            this._permissionService = permissionService;
+            _permissionService = permissionService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

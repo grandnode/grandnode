@@ -1,13 +1,11 @@
 ﻿using Grand.Core;
-using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Localization;
+using Grand.Domain.Orders;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
-using Grand.Services.Events;
 using Grand.Services.Media;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
@@ -25,16 +23,8 @@ namespace Grand.Services.Orders.Tests
     public class CheckoutAttributeParserTests {
         private IRepository<CheckoutAttribute> _checkoutAttributeRepo;
         private IMediator _eventPublisher;
-        private IStoreMappingService _storeMappingService;
         private ICheckoutAttributeService _checkoutAttributeService;
         private ICheckoutAttributeParser _checkoutAttributeParser;
-        private IWorkContext _workContext;
-        private ICurrencyService _currencyService;
-        private ITaxService _taxService;
-        private IPriceFormatter _priceFormatter;
-        private IDownloadService _downloadService;
-        private IWebHelper _webHelper;
-        private ICheckoutAttributeFormatter _checkoutAttributeFormatter;
 
         private CheckoutAttribute ca1, ca2, ca3;
         private CheckoutAttributeValue cav1_1, cav1_2, cav2_1, cav2_2;
@@ -105,7 +95,11 @@ namespace Grand.Services.Orders.Tests
                 DisplayOrder = 3,
             };
 
-
+            var tempEventPublisher = new Mock<IMediator>();
+            {
+                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
+                _eventPublisher = tempEventPublisher.Object;
+            }
 
             var tempCheckoutAttributeRepo = new Mock<IRepository<CheckoutAttribute>>();
             {
@@ -120,21 +114,10 @@ namespace Grand.Services.Orders.Tests
                 _checkoutAttributeRepo = tempCheckoutAttributeRepo.Object;
             }
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
-
-            _storeMappingService = new Mock<IStoreMappingService>().Object;
-
-
-
-            var tempEventPublisher = new Mock<IMediator>();
-            {
-                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
-                _eventPublisher = tempEventPublisher.Object;
-            }
-
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
 
             _checkoutAttributeService = new CheckoutAttributeService(cacheManager, _checkoutAttributeRepo,
-                _storeMappingService, _eventPublisher, null, null);
+               _eventPublisher, null, null);
 
             _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);
 
@@ -144,22 +127,7 @@ namespace Grand.Services.Orders.Tests
             var tempWorkContext = new Mock<IWorkContext>();
             {
                 tempWorkContext.Setup(x => x.WorkingLanguage).Returns(workingLanguage);
-                _workContext = tempWorkContext.Object;
             }
-            _currencyService = new Mock<ICurrencyService>().Object;
-            _taxService = new Mock<ITaxService>().Object;
-            _priceFormatter = new Mock<IPriceFormatter>().Object;
-            _downloadService = new Mock<IDownloadService>().Object;
-            _webHelper = new Mock<IWebHelper>().Object;
-
-            _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_workContext,
-                _checkoutAttributeService,
-                _checkoutAttributeParser,
-                _currencyService,
-                _taxService,
-                _priceFormatter,
-                _downloadService,
-                _webHelper);
         }
 
         [TestMethod()]

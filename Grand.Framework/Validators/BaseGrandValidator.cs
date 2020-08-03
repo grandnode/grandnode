@@ -1,19 +1,19 @@
 using FluentValidation;
-using Grand.Core.Infrastructure;
+using System.Collections.Generic;
 
 namespace Grand.Framework.Validators
 {
     public abstract class BaseGrandValidator<T> : AbstractValidator<T> where T : class
     {
-        protected BaseGrandValidator()
+
+        protected BaseGrandValidator(IEnumerable<IValidatorConsumer<T>> validators)
         {
-            PostInitialize();
+            PostInitialize(validators);
         }
 
-        protected virtual void PostInitialize()
+        protected virtual void PostInitialize(IEnumerable<IValidatorConsumer<T>> validators)
         {
-            var validator = EngineContext.Current.ResolveAll<IValidatorConsumer<T>>();
-            foreach (var item in validator)
+            foreach (var item in validators)
             {
                 item.AddRules(this);
             }

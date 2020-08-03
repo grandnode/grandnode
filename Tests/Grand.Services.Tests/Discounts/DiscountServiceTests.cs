@@ -1,11 +1,11 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Discounts;
+using Grand.Domain.Orders;
+using Grand.Domain.Stores;
+using Grand.Domain.Vendors;
 using Grand.Core.Plugins;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Common;
@@ -34,6 +34,7 @@ namespace Grand.Services.Discounts.Tests
         private IServiceProvider _serviceProvider;
 
         private ShoppingCartSettings _shoppingCartSettings;
+        private CatalogSettings _catalogSettings;
 
         [TestInitialize()]
         public void TestInitialize() {
@@ -76,20 +77,16 @@ namespace Grand.Services.Discounts.Tests
 
             _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>().Object;
             _discountCouponRepo = new Mock<IRepository<DiscountCoupon>>().Object;
-            var extraProductRepo = new Mock<IRepository<Product>>().Object;
-            var extraCategoryRepo = new Mock<IRepository<Category>>().Object;
-            var extraManufacturerRepo = new Mock<IRepository<Manufacturer>>().Object;
-            var extraStoreRepo = new Mock<IRepository<Store>>().Object;
-            var extraVendorRepo = new Mock<IRepository<Vendor>>().Object;
 
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _localizationService = new Mock<ILocalizationService>().Object;
             _shoppingCartSettings = new Mock<ShoppingCartSettings>().Object;
+            _catalogSettings = new Mock<CatalogSettings>().Object;
 
-            _discountService = new DiscountService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _discountRepo, _discountCouponRepo,
-                _discountUsageHistoryRepo, _localizationService, _storeContext, _genericAttributeService,
-                new PluginFinder(_serviceProvider), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, extraStoreRepo, new PerRequestCacheManager(null),
-                _shoppingCartSettings);
+            _discountService = new DiscountService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher), _discountRepo, _discountCouponRepo,
+                _discountUsageHistoryRepo, _localizationService, _storeContext,
+                new PluginFinder(_serviceProvider), _eventPublisher, 
+                _shoppingCartSettings, _catalogSettings);
         }
 
         [TestMethod()]

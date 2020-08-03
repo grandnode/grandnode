@@ -37,23 +37,6 @@ namespace Grand.Framework.Mvc.ModelBinding
         public string ResourceKey { get; set; }
 
         /// <summary>
-        /// Getss the display name
-        /// </summary>
-        public override string DisplayName
-        {
-            get
-            {
-                //get working language identifier
-                var workingLanguageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
-
-                //get locale resource value
-                _resourceValue = EngineContext.Current.Resolve<ILocalizationService>().GetResource(ResourceKey, workingLanguageId, true, ResourceKey);
-
-                return _resourceValue;
-            }
-        }
-
-        /// <summary>
         /// Gets name of the attribute
         /// </summary>
         public string Name

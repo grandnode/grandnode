@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Payments;
+using Grand.Domain.Payments;
 
 namespace Grand.Plugin.Payments.PayPalStandard
 {

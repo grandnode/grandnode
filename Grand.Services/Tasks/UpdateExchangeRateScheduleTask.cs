@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Tasks;
+﻿using Grand.Domain.Directory;
+using Grand.Domain.Tasks;
 using Grand.Services.Directory;
 using System;
 using System.Threading.Tasks;

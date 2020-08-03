@@ -1,13 +1,11 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Validators.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Vendors
 {
-    [Validator(typeof(VendorAddressValidator))]
     public partial class VendorAddressModel : BaseGrandEntityModel
     {
         public VendorAddressModel()
@@ -48,6 +46,7 @@ namespace Grand.Web.Models.Vendors
         public string ZipPostalCode { get; set; }
         public bool PhoneEnabled { get; set; }
         public bool PhoneRequired { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [GrandResourceDisplayName("Account.VendorInfo.PhoneNumber")]
         public string PhoneNumber { get; set; }
         public bool FaxEnabled { get; set; }

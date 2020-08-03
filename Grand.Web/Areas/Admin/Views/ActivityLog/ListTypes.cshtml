@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityLogType").Text;
 }
-<form asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -43,7 +43,7 @@
         <text>
         {
             Id: '@(alt.Id)',
-            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(alt.Name)))",
+            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(string.IsNullOrEmpty(alt.Name) ? "" : alt.Name)))",
             Enabled: @(alt.Enabled.ToString().ToLowerInvariant())
         }
         </text>
@@ -98,9 +98,7 @@
     });
 
 </script>
-
-
-<script type="text/javascript">
+<script>
 
     $(document).ready(function () {
 

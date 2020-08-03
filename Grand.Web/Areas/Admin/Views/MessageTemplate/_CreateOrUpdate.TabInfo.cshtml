@@ -33,7 +33,7 @@
         </div>
     </div>
 </div>
-@(Html.LocalizedEditor<MessageTemplateModel, MessageTemplateLocalizedModel>("messagetemplate-localized",
+@(await Html.LocalizedEditor<MessageTemplateModel, MessageTemplateLocalizedModel>("messagetemplate-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -131,7 +131,7 @@
                     <span asp-validation-for="DelayBeforeSend"></span>
                 </div>
                 <div class="col-md-3 col-sm-3">
-                    <admin-select asp-for="DelayPeriodId" asp-items="((Grand.Core.Domain.Messages.MessageDelayPeriod)Model.DelayPeriodId).ToSelectList()" />
+                    <admin-select asp-for="DelayPeriodId" asp-items="((Grand.Domain.Messages.MessageDelayPeriod)Model.DelayPeriodId).ToSelectList(Context)" />
                     <span asp-validation-for="DelayPeriodId"></span>
                 </div>
             </div>
@@ -157,7 +157,7 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
+<script>
         $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
             $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);

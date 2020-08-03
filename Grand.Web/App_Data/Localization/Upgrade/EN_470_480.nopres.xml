@@ -1,0 +1,38 @@
+<Language>
+  <LocaleResource Name="Sitemap.KnowledgebaseArticles">
+    <Value>Knowledgebase Articles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.CreateDate">
+    <Value>Create date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.CreateDate.Hint">
+    <Value>Allow user to change create date for the blog post.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort">
+    <Value>Encryption private key must be 24 characters long</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Owner">
+    <Value>Owner</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Owner.hint">
+    <Value>Allow to assign owner email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.SubAccounts">
+    <Value>Subaccounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccounts">
+    <Value>Subaccounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccounts.NotExists">
+    <Value>No subaccounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="account.fields.active">
+    <Value>Active account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccount.AddNew">
+    <Value>Add new account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccount.Edit">
+    <Value>Edit account</Value>
+  </LocaleResource>
+</Language>

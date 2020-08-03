@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Topics;
+using Grand.Domain.Topics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

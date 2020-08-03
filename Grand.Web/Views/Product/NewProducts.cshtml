@@ -6,14 +6,14 @@
     Html.AddTitleParts(T("PageTitle.NewProducts").Text);
 }
 @using Grand.Web.Models.Catalog;
-<div class="page recently-added-products-page">     
+<div class="page recently-added-products-page col-12 px-0">     
         <h1 class="h2 generalTitle"><a href="@Url.RouteUrl("NewProductsRSS")" class="btn btn-sm btn-outline-success link-rss" title="@T("Products.NewProducts.RSS.Hint")">@T("Products.NewProducts.RSS")</a> @T("Products.NewProducts")</h1>
         @if (Model.Any())
         {
-            <div class="row">
+            <div class="form-row flex-grid">
                 @foreach (var product in Model)
                 {
-                    <div class="col-lg-4 col-sm-6 col-6 product-container">
+                    <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
                         <partial name="_ProductBox" model="product" />
                     </div>
                 }

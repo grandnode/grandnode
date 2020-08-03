@@ -1,6 +1,6 @@
 ﻿@model CustomerReturnRequestsModel
 @using Grand.Web.Models.Customer
-@using Grand.Web.Models.Order
+@using Grand.Web.Models.Orders
 @{
     Layout = "_ColumnsTwo";
 
@@ -11,35 +11,44 @@
     {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
 }
-<div class="page account-page return-request-list-page pl-lg-3 pt-3 pt-lg-0">
-    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Account.Navigation")</span></a>
-    <h1 class="h2 generalTitle">@T("Account.CustomerReturnRequests")</h1>
-    <div class="row flex-grid">
-        @foreach (var item in Model.Items)
+    <div class="page account-page return-request-list-page pl-lg-3 pt-3 pt-lg-0">
+        <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Account.Navigation")</span></a>
+        <h1 class="h2 generalTitle">@T("Account.CustomerReturnRequests")</h1>
+        @if (Model.Items.Any())
         {
-            <div class="col-lg-6 col-md-6 col-12">
-                <div class="card">
-                    <h6 class="card-header">
-                        <strong>@string.Format(T("Account.CustomerReturnRequests.Title").Text, item.ReturnNumber, item.ReturnRequestStatus)</strong>
-                    </h6>
-                    <div class="card-body">
-                        <ul class="details pl-0 date">
-                            <li class="date">
-                                <label>@T("Account.CustomerReturnRequests.Date")</label>
-                                <span>@item.CreatedOn.ToString()</span>
-                            </li>
-                        </ul>
-                        <ul class="details pl-0">
-                            <li>
-                                <span>@string.Format(@T("Account.CustomerReturnRequests.Totals").Text, item.ProductsCount, item.ReturnTotal)</span>
-                            </li>
-                        </ul>
+            <div class="row flex-grid">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <div class="card">
+                            <h6 class="card-header">
+                                <strong>@string.Format(T("Account.CustomerReturnRequests.Title").Text, item.ReturnNumber, item.ReturnRequestStatus)</strong>
+                            </h6>
+                            <div class="card-body">
+                                <ul class="details pl-0 date">
+                                    <li class="date">
+                                        <label>@T("Account.CustomerReturnRequests.Date")</label>
+                                        <span>@item.CreatedOn.ToString()</span>
+                                    </li>
+                                </ul>
+                                <ul class="details pl-0">
+                                    <li>
+                                        <span>@string.Format(@T("Account.CustomerReturnRequests.Totals").Text, item.ProductsCount, item.ReturnTotal)</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-footer">
+                                <input type="button" value="@T("Account.CustomerReturnRequests.Details")" class="btn btn-sm btn-info" onclick="setLocation('@Url.RouteUrl("ReturnRequestDetails", new { returnRequestId = item.Id })')" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-footer">
-                        <input type="button" value="@T("Account.CustomerReturnRequests.Details")" class="btn btn-sm btn-info" onclick="setLocation('@Url.RouteUrl("ReturnRequestDetails", new { returnRequestId = item.Id })')" />
-                    </div>
-                </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.CustomerReturnRequests.NoReturnRequests")
             </div>
         }
     </div>
-</div>

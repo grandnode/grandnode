@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Services.Common;
 using Grand.Services.Logging;
 using Microsoft.AspNetCore.Http;
@@ -48,11 +48,11 @@ namespace Grand.Framework.Mvc.Filters
                 IWorkContext workContext,
                 ICustomerActivityService customerActivityService)
             {
-                this._customerSettings = customerSettings;
-                this._genericAttributeService = genericAttributeService;
-                this._webHelper = webHelper;
-                this._workContext = workContext;
-                this._customerActivityService = customerActivityService;
+                _customerSettings = customerSettings;
+                _genericAttributeService = genericAttributeService;
+                _webHelper = webHelper;
+                _workContext = workContext;
+                _customerActivityService = customerActivityService;
             }
 
             #endregion

@@ -1,16 +1,13 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Knowledgebase;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Knowledgebase
 {
-    [Validator(typeof(KnowledgebaseCategoryModelValidator))]
     public class KnowledgebaseCategoryModel : BaseGrandEntityModel, ILocalizedModel<KnowledgebaseCategoryLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public KnowledgebaseCategoryModel()

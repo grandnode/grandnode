@@ -1,6 +1,6 @@
 ﻿@model CheckoutAttributeModel
 
-<script type="text/javascript">
+<script>
             $(document).ready(function () {
 
                 $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
@@ -63,7 +63,7 @@
             }
 </script>
 <vc:admin-widget widget-zone="checkout_attribute_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+@(await Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -146,7 +146,7 @@
             <admin-label asp-for="AttributeControlTypeId" />
             <div class="col-md-9 col-sm-9">
                 @{
-                var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId).ToSelectList(valuesToExclude:
+                var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId).ToSelectList(Context, valuesToExclude:
                     new[] { (int)AttributeControlType.ImageSquares });
                 }
                 <admin-select asp-for="AttributeControlTypeId" asp-items="attributeControlTypes" />

@@ -1,16 +1,14 @@
 ﻿@model ProductDetailsModel.ProductBreadcrumbModel
-
 @if (Model.Enabled)
 {
-    var count = 0;
+    var count = 1;
     <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
         @await Component.InvokeAsync("Widget", new { widgetZone = "productbreadcrumb_before" })
-        <li class="breadcrumb-item">
-            <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
-                <a href="@Url.RouteUrl("HomePage")" itemprop="url">
-                    <span itemprop="title">@T("Products.Breadcrumb.Top")</span>
-                </a>
-            </span>
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="@Url.RouteUrl("HomePage")" itemprop="item">
+                <span itemprop="name">@T("Products.Breadcrumb.Top")</span>
+            </a>
+            <meta itemprop="position" content="@count" />
         </li>
         @foreach (var category in Model.CategoryBreadcrumb)
         {
@@ -23,11 +21,11 @@
             </li>
 
         }
-               
-        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+
+        <li class="breadcrumb-item active" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
             <strong class="current-item" itemprop="name">@Model.ProductName</strong>
             <span itemprop="item" itemscope itemtype="http://schema.org/Thing"
-                id="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">
+                  id="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">
             </span>
             <meta itemprop="position" content="@(count+1)" />
         </li>

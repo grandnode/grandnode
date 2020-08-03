@@ -1,0 +1,172 @@
+﻿@model IList<ProductDetailsModel.ProductAttributeModel>
+<div class="attributes">
+    <table class="table">
+        @foreach (var attribute in Model)
+        {
+            string controlId = string.Format("product_attribute_{0}", attribute.Id);
+            string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+            <tr>
+                <td class="d-inline-flex w-100" id="@string.Format("product_attribute_label_{0}", attribute.Id)">
+                    <span class="text-prompt">
+                        @textPrompt
+                    </span>
+                    @if (attribute.IsRequired)
+                    {
+                        <span class="pl-1 required">*</span>
+                    }
+                    @if (!string.IsNullOrEmpty(attribute.Description))
+                    {
+                        <span class="attribute-description">
+                            @Html.Raw(attribute.Description)
+                        </span>
+                    }
+                </td>
+                <td id="@string.Format("product_attribute_input_{0}", attribute.Id)">
+                    @switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                            {
+                                <label for="@(controlId)" class="sr-only">@textPrompt</label>
+                                <select class="custom-select form-control" name="@(controlId)" id="@(controlId)">
+                                    @if (!attribute.IsRequired)
+                                    {
+                                        <option value="0">---</option>
+                                    }
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                       <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
+                                    }
+                                </select>
+                            }
+                            break;
+                        case AttributeControlType.RadioList:
+                            {
+                                <ul>
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <li>
+                                            <label class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                                <span class="custom-control-label"></span>
+                                                <span class="custom-control-description">@attributeValue.Name</span>
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            break;
+                        case AttributeControlType.Checkboxes:
+                        case AttributeControlType.ReadonlyCheckboxes:
+                            {
+                                <ul>
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <li>
+                                            <label class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                                <span class="custom-control-label"></span>
+                                                <span class="sr-only">@attributeValue.Name</span>
+                                                <span class="custom-control-description">@attributeValue.Name</span>
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            break;
+                        case AttributeControlType.TextBox:
+                            {
+                                <input name="@(controlId)" type="text" class="form-control textbox" id="@(controlId)" value="@(attribute.DefaultValue) " />
+                            }
+                            break;
+                        case AttributeControlType.MultilineTextbox:
+                            {
+                                <textarea class="form-control" cols="20" id="@(controlId)" name="@(controlId)">@(attribute.DefaultValue)</textarea>
+                            }
+                            break;
+                        case AttributeControlType.Datepicker:
+                            {
+                                <date-picker-dropdown control-day="@(controlId + "_day")"
+                                                      control-month="@(controlId + "_month")"
+                                                      control-year="@(controlId + "_year")"
+                                                      begin-year="@(DateTime.Now.Year)"
+                                                      end-year="@(DateTime.Now.Year + 1)"
+                                                      selected-day="(attribute.SelectedDay.HasValue ? attribute.SelectedDay.Value : 0)"
+                                                      selected-month="(attribute.SelectedMonth.HasValue ? attribute.SelectedMonth.Value : 0)"
+                                                      selected-year="(attribute.SelectedYear.HasValue ? attribute.SelectedYear.Value : 0)"
+                                                      class="col-12 input-group" />
+                            }
+                            break;
+                        case AttributeControlType.ColorSquares:
+                            {
+                                <ul class="list-inline option-list color-squares pl-0" id="color-squares-@(attribute.Id)">
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                            attributeValue.Name :
+                                            T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
+                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value list-inline-item\"") : @Html.Raw(" class=\"list-inline-item\""))>
+                                            <label>
+                                                <span class="color-container" title="@attributeName">
+                                                    <span class="color" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
+                                                </span>
+                                                <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                                <script asp-location="Footer">
+                                        $(document).ready(function() {
+                                            $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+                                                $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
+                                                $(this).closest('li').addClass('selected-value');
+                                            });
+                                        });
+                                </script>
+                            }
+                            break;
+
+
+                        case AttributeControlType.ImageSquares:
+                            {
+                                <ul class="option-list color-squares d-inline-flex align-items-center pl-0" id="color-squares-@(attribute.Id)">
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                            attributeValue.Name :
+                                            T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
+                                        <li class="mr-2" @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value mr-2\"") : null)>
+                                            <label class="mb-0" data-toggle="tooltip" title="<img src='@(attributeValue.ImageSquaresPictureModel.FullSizeImageUrl)' alt='@attributeName' />">
+                                                <span class="color-container">
+                                                    <span class="color" style="background: url('@(attributeValue.ImageSquaresPictureModel.ImageUrl)') 50% 50% no-repeat;">&nbsp;</span>
+                                                </span>
+                                                <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                            </label>
+                                            <script asp-location="Footer">
+                                                $('[data-toggle="tooltip"]').tooltip({
+                                                    animated: 'fade',
+                                                    placement: 'right',
+                                                    html: true
+                                                });
+                                            </script>
+                                        </li>
+                                    }
+                                </ul>
+                                <script asp-location="Footer">
+	                                    $(document).ready(function() {
+	                                        $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+	                                            $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
+	                                            $(this).closest('li').addClass('selected-value');
+	                                        });
+	                                    });
+                                </script>
+                            }
+                            break;
+
+                        case AttributeControlType.FileUpload:
+                            break;
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

@@ -1,6 +1,8 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
+using Grand.Domain.Stores;
 using Grand.Core.Html;
+using Grand.Services.Orders;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -9,11 +11,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private ReturnRequest _returnRequest;
         private Order _order;
+        private Store _store;
+        private ReturnRequestNote _returnRequestNote;
 
-        public LiquidReturnRequest(ReturnRequest returnRequest, Order order)
+        public LiquidReturnRequest(ReturnRequest returnRequest, Store store, Order order, ReturnRequestNote returnRequestNote = null)
         {
-            this._returnRequest = returnRequest;
-            this._order = order;
+            _returnRequest = returnRequest;
+            _order = order;
+            _store = store;
+            _returnRequestNote = returnRequestNote;
                        
             AdditionalTokens = new Dictionary<string, string>();
         }
@@ -28,9 +34,17 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _returnRequest.ReturnNumber; }
         }
 
+        public string ExternalId {
+            get { return _returnRequest.ExternalId; }
+        }
+
         public string OrderId
         {
             get { return _order.OrderNumber.ToString(); }
+        }
+
+        public string OrderCode {
+            get { return _order.Code; }
         }
 
         public string CustomerComment
@@ -111,6 +125,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string PickupAddressCountry { get; set; }
 
+        public string NewNoteText {
+            get { return _returnRequestNote.FormatReturnRequestNoteText(); }
+        }
+
+        public string ReturnRequestNoteAttachmentUrl {
+            get {
+                return string.Format("{0}download/returnrequestnotefile/{1}", (_store.SslEnabled ? _store.SecureUrl : _store.Url), _returnRequestNote.Id);
+            }
+        }
         public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

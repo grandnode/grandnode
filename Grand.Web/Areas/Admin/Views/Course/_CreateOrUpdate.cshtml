@@ -46,6 +46,17 @@
                 </div>
             </content>
         </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="6">
+            <content>
+                <div>
+                    @{
+                        ViewData["ObjectType"] = "Course";
+                        ViewData["TabIndex"] = 6;
+                     }
+                    <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
+                </div>
+            </content>
+        </tabstrip-item>
         <vc:admin-widget widget-zone="course_details_tabs" additional-data="Model" />
     </items>
 </admin-tabstrip>

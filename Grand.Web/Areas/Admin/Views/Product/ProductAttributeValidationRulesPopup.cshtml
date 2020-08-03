@@ -1,5 +1,5 @@
 ﻿@model ProductModel.ProductAttributeMappingModel
-@using Grand.Core.Domain.Catalog
+@using Grand.Domain.Catalog
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     //page title
@@ -7,11 +7,11 @@
 
     var attributeControlType = (AttributeControlType)Model.AttributeControlTypeId;
 }
-<form asp-controller="Product" asp-action="ProductAttributeValidationRulesPopup" enctype="multipart/form-data" method="post"
+<form asp-area="Admin" asp-controller="Product" asp-action="ProductAttributeValidationRulesPopup" enctype="multipart/form-data" method="post"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -39,14 +39,14 @@
                                 </div>
                             </div>
                             <div class="form-group" @(attributeControlType != AttributeControlType.FileUpload ? Html.Raw("style='display: none;'") : null)>
-                                <admin-label asp-for="ValidationFileAllowedExtensions" class="col-sm-3 control-label" />)
+                                <admin-label asp-for="ValidationFileAllowedExtensions" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
                                     <admin-input asp-for="ValidationFileAllowedExtensions" />
                                     <span asp-validation-for="ValidationFileAllowedExtensions"></span>
                                 </div>
                             </div>
                             <div class="form-group" @(attributeControlType != AttributeControlType.FileUpload ? Html.Raw("style='display: none;'") : null)>
-                                <admin-label asp-for="ValidationFileMaximumSize" class="col-sm-3 control-label" />)
+                                <admin-label asp-for="ValidationFileMaximumSize" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
                                     <admin-input asp-for="ValidationFileMaximumSize" />
                                     <span asp-validation-for="ValidationFileMaximumSize"></span>
@@ -75,7 +75,7 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
         try {
             window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();
         } catch (e) {

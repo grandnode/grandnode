@@ -8,7 +8,7 @@ namespace Grand.Web.Models.Common
 
         public PagerModel(ILocalizationService localizationService)
         {
-            this._localizationService = localizationService;
+            _localizationService = localizationService;
         }
 
         #endregion Constructors
@@ -45,7 +45,7 @@ namespace Grand.Web.Models.Common
         {
             get
             {
-                return (this.PageIndex + 1);
+                return (PageIndex + 1);
             }
         }
 
@@ -74,15 +74,15 @@ namespace Grand.Web.Models.Common
         {
             get
             {
-                if (this.pageIndex < 0)
+                if (pageIndex < 0)
                 {
                     return 0;
                 }
-                return this.pageIndex;
+                return pageIndex;
             }
             set
             {
-                this.pageIndex = value;
+                pageIndex = value;
             }
         }
 
@@ -213,12 +213,12 @@ namespace Grand.Web.Models.Common
         {
             get
             {
-                if ((this.TotalRecords == 0) || (this.PageSize == 0))
+                if ((TotalRecords == 0) || (PageSize == 0))
                 {
                     return 0;
                 }
-                int num = this.TotalRecords / this.PageSize;
-                if ((this.TotalRecords % this.PageSize) > 0)
+                int num = TotalRecords / PageSize;
+                if ((TotalRecords % PageSize) > 0)
                 {
                     num++;
                 }
@@ -342,16 +342,16 @@ namespace Grand.Web.Models.Common
         /// <returns>Page index</returns>
         public int GetFirstIndividualPageIndex()
         {
-            if ((this.TotalPages < this.IndividualPagesDisplayedCount) ||
-                ((this.PageIndex - (this.IndividualPagesDisplayedCount / 2)) < 0))
+            if ((TotalPages < IndividualPagesDisplayedCount) ||
+                ((PageIndex - (IndividualPagesDisplayedCount / 2)) < 0))
             {
                 return 0;
             }
-            if ((this.PageIndex + (this.IndividualPagesDisplayedCount / 2)) >= this.TotalPages)
+            if ((PageIndex + (IndividualPagesDisplayedCount / 2)) >= TotalPages)
             {
-                return (this.TotalPages - this.IndividualPagesDisplayedCount);
+                return (TotalPages - IndividualPagesDisplayedCount);
             }
-            return (this.PageIndex - (this.IndividualPagesDisplayedCount / 2));
+            return (PageIndex - (IndividualPagesDisplayedCount / 2));
         }
 
         /// <summary>
@@ -360,21 +360,21 @@ namespace Grand.Web.Models.Common
         /// <returns>Page index</returns>
         public int GetLastIndividualPageIndex()
         {
-            int num = this.IndividualPagesDisplayedCount / 2;
-            if ((this.IndividualPagesDisplayedCount % 2) == 0)
+            int num = IndividualPagesDisplayedCount / 2;
+            if ((IndividualPagesDisplayedCount % 2) == 0)
             {
                 num--;
             }
-            if ((this.TotalPages < this.IndividualPagesDisplayedCount) ||
-                ((this.PageIndex + num) >= this.TotalPages))
+            if ((TotalPages < IndividualPagesDisplayedCount) ||
+                ((PageIndex + num) >= TotalPages))
             {
-                return (this.TotalPages - 1);
+                return (TotalPages - 1);
             }
-            if ((this.PageIndex - (this.IndividualPagesDisplayedCount / 2)) < 0)
+            if ((PageIndex - (IndividualPagesDisplayedCount / 2)) < 0)
             {
-                return (this.IndividualPagesDisplayedCount - 1);
+                return (IndividualPagesDisplayedCount - 1);
             }
-            return (this.PageIndex + num);
+            return (PageIndex + num);
         }
 
         #endregion Methods

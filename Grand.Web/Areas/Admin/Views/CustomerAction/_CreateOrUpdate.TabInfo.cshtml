@@ -57,7 +57,7 @@
         <div class="form-group">
             <admin-label asp-for="ConditionId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ConditionId" asp-items="((Grand.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList()" />
+                <admin-select asp-for="ConditionId" asp-items="((Grand.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList(Context)" />
                 <span asp-validation-for="ConditionId"></span>
                 <div class="note note-info margin-top-10">
                     <p>@T("admin.customers.actiontype.helpText.OneOfThem")</p>

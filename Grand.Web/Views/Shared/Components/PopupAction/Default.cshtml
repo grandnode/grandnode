@@ -1,0 +1,34 @@
+﻿@model PopupModel
+@if (Model.PopupType == Grand.Domain.Messages.PopupType.Banner)
+{
+    <a class="popup-action-banner" data-mfp-src="#action_modal_banner"></a>
+    <div id="action_modal_banner" class="zoom-anim-dialog mfp-hide">
+        <div id="action-body-banner">@Html.Raw(Model.Body)</div>
+    </div>
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            window.setTimeout(function () {
+                $('.popup-action-banner').magnificPopup('open');
+            }, 100);
+        });
+
+    </script>
+}
+
+@if (Model.PopupType == Grand.Domain.Messages.PopupType.InteractiveForm)
+{
+    <a class="popup-action-form" data-mfp-src="#action_modal_form" style="display:none"></a>
+    <div id="action_modal_form" class="zoom-anim-dialog mfp-hide">
+        <form asp-route="PopupInteractiveForm" method="post" id="interactive-form">
+            <div id="action-body-form">@Html.Raw(Model.Body)</div>
+        </form>
+    </div>
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            window.setTimeout(function () {
+                $('.popup-action-form').magnificPopup('open');
+            }, 100);
+        });
+
+    </script>
+}

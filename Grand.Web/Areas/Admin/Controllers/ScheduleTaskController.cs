@@ -1,7 +1,6 @@
-﻿using Grand.Core.Domain.Tasks;
+﻿using Grand.Domain.Tasks;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security.Authorization;
-using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Tasks;
@@ -18,23 +17,19 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class ScheduleTaskController : BaseAdminController
     {
         #region Fields
+
         private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IServiceProvider _serviceProvider;
+
         #endregion
 
         #region Constructors
         public ScheduleTaskController(
             IScheduleTaskService scheduleTaskService,
-            IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService,
-            IServiceProvider serviceProvider)
+            ILocalizationService localizationService)
         {
-            this._scheduleTaskService = scheduleTaskService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._serviceProvider = serviceProvider;
+            _scheduleTaskService = scheduleTaskService;
+            _localizationService = localizationService;
         }
         #endregion
 
@@ -108,10 +103,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 scheduleTask.StopOnError = model.StopOnError;
                 scheduleTask.TimeInterval = model.TimeInterval;
                 await _scheduleTaskService.UpdateTask(scheduleTask);
+                SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.Updated"));
                 return await EditScheduler(model.Id);
             }
             model.ScheduleTaskName = scheduleTask.ScheduleTaskName;
             model.Type = scheduleTask.Type;
+
+            ErrorNotification(ModelState);
 
             return View(model);
         }
@@ -123,7 +121,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var scheduleTask = await _scheduleTaskService.GetTaskById(id);
                 if (scheduleTask == null) throw new Exception("Schedule task cannot be loaded");
                 var typeofTask = Type.GetType(scheduleTask.Type);
-                var task = _serviceProvider.GetServices<IScheduleTask>().FirstOrDefault(x => x.GetType() == typeofTask);
+                var task = HttpContext.RequestServices.GetServices<IScheduleTask>().FirstOrDefault(x => x.GetType() == typeofTask);
                 if (task != null)
                 {
                     scheduleTask.LastStartUtc = DateTime.UtcNow;

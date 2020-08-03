@@ -1,12 +1,14 @@
 ﻿@using Grand.Core.Plugins
 @using Grand.Services.Security
+@using Grand.Services.Localization
 @using Grand.Framework.Menu
 @inject IPluginFinder pluginFinder
 @inject IPermissionService permissionService
+@inject ILocalizationService localizationService 
 @{
     //load sitemap
-    var siteMap = new XmlSiteMap();
-    siteMap.LoadFrom("~/Areas/Admin/sitemap.config");
+    var siteMap = new XmlSiteMap(localizationService, permissionService);
+    await siteMap.LoadFrom("~/App_Data/sitemap.config");
 }
 
 <div class="col-md-3 left_col">
@@ -26,7 +28,7 @@
                         var adminMenuPlugins = pluginFinder.GetPlugins<IAdminMenuPlugin>().ToList();
                         foreach (var adminMenuPlugin in adminMenuPlugins)
                         {
-                            adminMenuPlugin.ManageSiteMap(rootNode);
+                            await adminMenuPlugin.ManageSiteMap(rootNode);
                         }
                         //"Plugins" menu item should be visible when it has some child nodes
                         var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");

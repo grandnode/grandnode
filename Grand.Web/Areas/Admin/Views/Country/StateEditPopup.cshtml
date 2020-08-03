@@ -3,11 +3,11 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     ViewBag.Title = T("Admin.Configuration.Countries.States.EditStateDetails").Text;
 }
-<form asp-controller="Country" asp-action="StateEditPopup"
+<form asp-area="Admin" asp-controller="Country" asp-action="StateEditPopup"
       asp-route-countryId="@Context.Request.Query["countryId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

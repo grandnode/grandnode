@@ -11,7 +11,7 @@
         addToWishlistText = T("ShoppingCart.AddToWishlist").Text;
     }
     
-        <button id="add-to-wishlist-button-@Model.ProductId" class="btn btn-outline-secondary add-to-wishlist-button mr-1" value="@addToWishlistText" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist })', '#product-details-form');return false;">
+        <button id="add-to-wishlist-button-@Model.ProductId" class="btn btn-outline-secondary add-to-wishlist-button mr-1" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist })', '#product-details-form');return false;" data-toggle="tooltip" data-placement="bottom" title="@addToWishlistText">
             <span class="sr-only">@addToWishlistText</span>
             <span class="mdi mdi-heart-outline mr-0"></span>
         </button>

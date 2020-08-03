@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Directory;
+using Grand.Domain.Shipping;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -63,18 +63,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             ICustomerService customerService)
         {
-            this._shippingService = shippingService;
-            this._shippingSettings = shippingSettings;
-            this._settingService = settingService;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._pluginFinder = pluginFinder;
-            this._webHelper = webHelper;
-            this._storeService = storeService;
-            this._customerService = customerService;
+            _shippingService = shippingService;
+            _shippingSettings = shippingSettings;
+            _settingService = settingService;
+            _addressService = addressService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _pluginFinder = pluginFinder;
+            _webHelper = webHelper;
+            _storeService = storeService;
+            _customerService = customerService;
         }
 
         #endregion
@@ -134,7 +134,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectStore"), Value = "" });
             foreach (var c in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = c.Shortcut, Value = c.Id.ToString() });
 
             model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectWarehouse"), Value = "" });
             foreach (var c in await _shippingService.GetAllWarehouses())
@@ -485,7 +485,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = warehouse.ToModel();
             if (address != null)
             {
-                model.Address = address.ToModel();
+                model.Address = await address.ToModel(_countryService, _stateProvinceService);
             }
             await PrepareAddressWarehouseModel(model);
             return View(model);
@@ -502,7 +502,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var address = await _addressService.GetAddressByIdSettings(warehouse.AddressId) ??
-                    new Core.Domain.Common.Address
+                    new Domain.Common.Address
                     {
                         CreatedOnUtc = DateTime.UtcNow,
                     };
@@ -596,7 +596,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("PickupPoints");
 
             var model = pickuppoint.ToModel();
-            model.Address = pickuppoint.Address.ToModel();
+            model.Address = await pickuppoint.Address.ToModel(_countryService, _stateProvinceService);
             await PreparePickupPointModel(model);
 
             return View(model);
@@ -612,7 +612,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var address = new Core.Domain.Common.Address { CreatedOnUtc = DateTime.UtcNow };
+                var address = new Domain.Common.Address { CreatedOnUtc = DateTime.UtcNow };
                 address = model.Address.ToEntity(address);
                 pickupPoint = model.ToEntity(pickupPoint);
                 pickupPoint.Address = address;
@@ -770,7 +770,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Restrictions.Updated"));
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("Restrictions");
         }

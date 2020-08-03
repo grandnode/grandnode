@@ -6,11 +6,11 @@
 @model DiscountModel.AddStoreToDiscountModel
 @inject AdminAreaSettings adminAreaSettings
 
-<form asp-controller="Discount" asp-action="StoreAddPopup" method="post"
+<form asp-area="Admin" asp-controller="Discount" asp-action="StoreAddPopup" method="post"
       asp-route-DiscountId="@Context.Request.Query["DiscountId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -49,11 +49,11 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
+        <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
-    </script>
+        </script>
     }
 
     <script>
@@ -106,7 +106,7 @@
         });
     });
     </script>
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             $('#search-stores').click(function() {
                 var grid = $('#stores-grid').data('kendoGrid');

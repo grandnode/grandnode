@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Components;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Topics;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,16 +9,17 @@ namespace Grand.Web.Components
     public class TopicBlockViewComponent : BaseViewComponent
     {
         #region Fields
-        private readonly ITopicViewModelService _topicViewModelService;
+
+        private readonly IMediator _mediator;
+
         #endregion
 
         #region Constructors
 
         public TopicBlockViewComponent(
-            ITopicViewModelService topicViewModelService
-)
+            IMediator mediator)
         {
-            this._topicViewModelService = topicViewModelService;
+            _mediator = mediator;
         }
 
         #endregion
@@ -26,7 +28,7 @@ namespace Grand.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string systemName)
         {
-            var model = await _topicViewModelService.TopicBlock(systemName);
+            var model = await _mediator.Send(new GetTopicBlock() { SystemName = systemName });
             if (model == null)
                 return Content("");
 

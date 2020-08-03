@@ -1,0 +1,36 @@
+﻿@model SubAccountModel
+
+<input asp-for="Id" type="hidden" />
+<div class="edit-subaccount row">
+    <div class="form-group col-sm-12 col-md-6">
+        <label asp-for="FirstName" class="col-form-label">@T("Account.Fields.FirstName"):</label>
+        <span class="required">*</span>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName"></span>
+    </div>
+    <div class="form-group col-sm-12 col-md-6">
+        <label asp-for="LastName" class="col-form-label">@T("Account.Fields.LastName"):</label>
+        <span class="required">*</span>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName"></span>
+    </div>
+    <div class="form-group col-sm-12">
+        <label asp-for="Email" class="col-form-label">@T("Account.Fields.Email"):</label>
+        <span class="required">*</span>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div class="form-group col-sm-12">
+        <label asp-for="Password" class="col-form-label">@T("Account.Fields.Password"):</label>
+        <span class="required">*</span>
+        <input asp-for="Password" class="form-control password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div class="form-group col-sm-12">
+        <label asp-for="Active" class="col-form-label">@T("Account.Fields.Active"):</label>
+        <label class="custom-control custom-checkbox">
+            <input asp-for="Active" class="form-control custom-control-input" />
+            <span class="custom-control-label"></span>
+        </label>
+    </div>
+</div>

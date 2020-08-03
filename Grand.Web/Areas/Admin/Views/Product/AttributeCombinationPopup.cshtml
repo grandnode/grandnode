@@ -14,13 +14,13 @@
     }
 }
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-<form asp-controller="Product" asp-action="AttributeCombinationPopup" enctype="multipart/form-data"
+<form asp-area="Admin" asp-controller="Product" asp-action="AttributeCombinationPopup" enctype="multipart/form-data"
       asp-route-productId="@Context.Request.Query["productId"]"
       asp-route-Id="@Context.Request.Query["Id"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
 
-    <antiforgery-token />
+    
     <div asp-validation-summary="All"></div>
     <input asp-for="Id" type="hidden" />
     <input asp-for="ProductId" type="hidden" />
@@ -256,7 +256,7 @@
     </div>
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
@@ -400,7 +400,7 @@
                 <text>
                         , {
                             Id: "@(store.Id)",
-                            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(store.Name)))"
+                            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(string.IsNullOrEmpty(store.Shortcut) ? "" : store.Shortcut)))"
                         }
                         </text>
             }
@@ -420,7 +420,7 @@
                 <text>
                     , {
             Id: "@(customerRole.Id)",
-            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(customerRole.Name)))"
+            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(string.IsNullOrEmpty(customerRole.Name) ? "": customerRole.Name))))"
         }
         </text>
             }

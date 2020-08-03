@@ -1,7 +1,5 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Messages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -9,35 +7,39 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    [Validator(typeof(CampaignValidator))]
     public partial class CampaignModel : BaseGrandEntityModel
     {
         public CampaignModel()
         {
-            this.AvailableStores = new List<SelectListItem>();
-            this.AvailableCustomerTags = new List<SelectListItem>();
-            this.CustomerTags = new List<string>();
-            this.NewsletterCategories = new List<string>();
-            this.AvailableCustomerRoles = new List<SelectListItem>();
-            this.CustomerRoles = new List<string>();
-            this.AvailableEmailAccounts = new List<EmailAccountModel>();
+            AvailableStores = new List<SelectListItem>();
+            AvailableLanguages = new List<SelectListItem>();
+            AvailableCustomerTags = new List<SelectListItem>();
+            CustomerTags = new List<string>();
+            NewsletterCategories = new List<string>();
+            AvailableCustomerRoles = new List<SelectListItem>();
+            CustomerRoles = new List<string>();
+            AvailableEmailAccounts = new List<EmailAccountModel>();
         }
 
         [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.Subject")]
-        
+
         public string Subject { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.Body")]
-        
+
         public string Body { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.Store")]
         public string StoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.Language")]
+        public string LanguageId { get; set; }
+        public IList<SelectListItem> AvailableLanguages { get; set; }
 
 
         [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.CustomerCreatedDateFrom")]
@@ -100,7 +102,7 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         public IList<EmailAccountModel> AvailableEmailAccounts { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.TestEmail")]
-        
+
         public string TestEmail { get; set; }
     }
 }

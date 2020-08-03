@@ -4,13 +4,13 @@
     ViewBag.Title = T("Admin.Customers.CustomerReminder.EditLevel").Text;
 }
 
-<form asp-controller="CustomerReminder" 
+<form asp-area="Admin" asp-controller="CustomerReminder" 
       asp-action="EditLevel" 
       asp-route-CustomerReminderId="@Context.Request.Query["CustomerReminderId"]"
       asp-route-cid="@Context.Request.Query["cid"]"
       method="post" 
       id="customer-reminder-level-form">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

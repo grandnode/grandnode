@@ -1,4 +1,4 @@
-using Grand.Core.Data;
+using Grand.Domain.Data;
 using Grand.Plugin.Feed.GoogleShopping.Domain;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -22,7 +22,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Services
 
         public GoogleService(IRepository<GoogleProductRecord> gpRepository)
         {
-            this._gpRepository = gpRepository;
+            _gpRepository = gpRepository;
         }
 
         #endregion
@@ -32,7 +32,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Services
         private string GetEmbeddedFileContent(string resourceName)
         {
             string fullResourceName = string.Format("Grand.Plugin.Feed.GoogleShopping.Files.{0}", resourceName);
-            var assem = this.GetType().Assembly;
+            var assem = GetType().Assembly;
             using (var stream = assem.GetManifestResourceStream(fullResourceName))
             using (var reader = new StreamReader(stream))
                 return reader.ReadToEnd();

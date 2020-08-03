@@ -1,5 +1,4 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
@@ -12,7 +11,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    [Validator(typeof(ProductValidator))]
     public partial class ProductModel : BaseGrandEntityModel, ILocalizedModel<ProductLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public ProductModel()
@@ -87,19 +85,19 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public bool ShowOnHomePage { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
-        
+
         public string MetaKeywords { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaDescription")]
-        
+
         public string MetaDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaTitle")]
-        
+
         public string MetaTitle { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.SeName")]
-        
+
         public string SeName { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AllowCustomerReviews")]
@@ -109,15 +107,15 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string ProductTags { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Sku")]
-        
+
         public string Sku { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ManufacturerPartNumber")]
-        
+
         public string ManufacturerPartNumber { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.GTIN")]
-        
+
         public virtual string Gtin { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsGiftCard")]
@@ -170,7 +168,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public bool HasUserAgreement { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.UserAgreementText")]
-        
+
         public string UserAgreementText { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsRecurring")]
@@ -212,7 +210,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public IList<SelectListItem> AvailableTaxCategories { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices")]
-        public bool IsTelecommunicationsOrBroadcastingOrElectronicServices { get; set; }
+        public bool IsTele { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ManageInventoryMethod")]
         public int ManageInventoryMethodId { get; set; }
@@ -405,7 +403,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public IList<SelectListItem> AvailableManufacturers { get; set; }
         //product attributes
         public IList<SelectListItem> AvailableProductAttributes { get; set; }
-        
+
 
 
         //pictures
@@ -423,7 +421,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         //copy product
         public CopyProductModel CopyProductModel { get; set; }
-        
+
         #region Nested classes
 
         public partial class AddRequiredProductModel : BaseGrandModel
@@ -438,7 +436,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            
+
             public string SearchProductName { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
@@ -461,7 +459,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public bool IsLoggedInAsVendor { get; set; }
         }
 
-        [Validator(typeof(AddProductSpecificationAttributeModelValidator))]
         public partial class AddProductSpecificationAttributeModel : BaseGrandModel
         {
             public AddProductSpecificationAttributeModel()
@@ -469,7 +466,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
                 AvailableAttributes = new List<SelectListItem>();
                 AvailableOptions = new List<SelectListItem>();
             }
-            
+
             [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")]
             public string SpecificationAttributeId { get; set; }
 
@@ -478,7 +475,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
             [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")]
             public string SpecificationAttributeOptionId { get; set; }
-            
+
             [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
             public string CustomValue { get; set; }
 
@@ -496,7 +493,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public IList<SelectListItem> AvailableOptions { get; set; }
         }
 
-        [Validator(typeof(ProductPictureModelValidator))]
         public partial class ProductPictureModel : BaseGrandEntityModel
         {
             public string ProductId { get; set; }
@@ -512,15 +508,14 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute")]
-            
+
             public string OverrideAltAttribute { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")]
-            
+
             public string OverrideTitleAttribute { get; set; }
         }
 
-        [Validator(typeof(ProductCategoryModelValidator))]
         public partial class ProductCategoryModel : BaseGrandEntityModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Products.Categories.Fields.Category")]
@@ -537,7 +532,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
 
-        [Validator(typeof(ProductManufacturerModelValidator))]
         public partial class ProductManufacturerModel : BaseGrandEntityModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")]
@@ -554,7 +548,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
 
-        [Validator(typeof(RelatedProductModelValidator))]
         public partial class RelatedProductModel : BaseGrandEntityModel
         {
             public string ProductId1 { get; set; }
@@ -562,11 +555,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
             [GrandResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.Product")]
             public string Product2Name { get; set; }
-            
+
             [GrandResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
-        [Validator(typeof(AddRelatedProductModelValidator))]
         public partial class AddRelatedProductModel : BaseGrandModel
         {
             public AddRelatedProductModel()
@@ -579,7 +571,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            
+
             public string SearchProductName { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
@@ -606,7 +598,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public bool IsLoggedInAsVendor { get; set; }
         }
 
-        [Validator(typeof(SimilarProductModelValidator))]
         public partial class SimilarProductModel : BaseGrandEntityModel
         {
             public string ProductId1 { get; set; }
@@ -619,7 +610,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
 
-        [Validator(typeof(AddSimilarProductModelValidator))]
         public partial class AddSimilarProductModel : BaseGrandModel
         {
             public AddSimilarProductModel()
@@ -659,7 +649,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public bool IsLoggedInAsVendor { get; set; }
         }
 
-        [Validator(typeof(BundleProductModelValidator))]
         public partial class BundleProductModel : BaseGrandEntityModel
         {
             public string ProductBundleId { get; set; }
@@ -675,7 +664,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
 
-        [Validator(typeof(AddBundleProductModelValidator))]
         public partial class AddBundleProductModel : BaseGrandModel
         {
             public AddBundleProductModel()
@@ -709,7 +697,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             //vendor
             public bool IsLoggedInAsVendor { get; set; }
         }
-        [Validator(typeof(AssociatedProductModelValidator))]
+
         public partial class AssociatedProductModel : BaseGrandEntityModel
         {
             public string ProductId { get; set; }
@@ -718,7 +706,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
-        [Validator(typeof(AddAssociatedProductModelValidator))]
+
         public partial class AddAssociatedProductModel : BaseGrandModel
         {
             public AddAssociatedProductModel()
@@ -731,7 +719,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            
+
             public string SearchProductName { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
@@ -758,7 +746,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public bool IsLoggedInAsVendor { get; set; }
         }
 
-        [Validator(typeof(CrossSellProductModelValidator))]
         public partial class CrossSellProductModel : BaseGrandEntityModel
         {
             public string ProductId { get; set; }
@@ -767,7 +754,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Products.CrossSells.Fields.Product")]
             public string Product2Name { get; set; }
         }
-        [Validator(typeof(AddCrossSellProductModelValidator))]
+
         public partial class AddCrossSellProductModel : BaseGrandModel
         {
             public AddCrossSellProductModel()
@@ -780,7 +767,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            
+
             public string SearchProductName { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
@@ -807,7 +794,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public bool IsLoggedInAsVendor { get; set; }
         }
 
-        [Validator(typeof(TierPriceModelValidator))]
         public partial class TierPriceModel : BaseGrandEntityModel
         {
 
@@ -950,7 +936,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         }
 
-        [Validator(typeof(ProductAttributeMappingModelValidator))]
         public partial class ProductAttributeMappingModel : BaseGrandEntityModel
         {
             public ProductAttributeMappingModel()
@@ -965,12 +950,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public IList<SelectListItem> AvailableProductAttribute { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
-            
             public string TextPrompt { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired")]
             public bool IsRequired { get; set; }
-
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.ShowOnCatalogPage")]
+            public bool ShowOnCatalogPage { get; set; }
             public int AttributeControlTypeId { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")]
             public string AttributeControlType { get; set; }
@@ -994,7 +979,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int? ValidationMaxLength { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions")]
-            
+
             public string ValidationFileAllowedExtensions { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize")]
@@ -1002,7 +987,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int? ValidationFileMaximumSize { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue")]
-            
+
             public string DefaultValue { get; set; }
             public string ValidationRulesString { get; set; }
 
@@ -1021,7 +1006,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
             public string ProductAttributeName { get; set; }
         }
-        [Validator(typeof(ProductAttributeValueModelValidator))]
+
         public partial class ProductAttributeValueModel : BaseGrandEntityModel, ILocalizedModel<ProductAttributeValueLocalizedModel>
         {
             public ProductAttributeValueModel()
@@ -1044,11 +1029,11 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string AssociatedProductName { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
-            
+
             public string Name { get; set; }
-            
+
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ColorSquaresRgb")]
-            
+
             public string ColorSquaresRgb { get; set; }
             public bool DisplayColorSquaresRgb { get; set; }
 
@@ -1103,7 +1088,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
                 }
 
                 [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-                
+
                 public string SearchProductName { get; set; }
                 [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
                 public string SearchCategoryId { get; set; }
@@ -1121,7 +1106,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
                 public IList<SelectListItem> AvailableStores { get; set; }
                 public IList<SelectListItem> AvailableVendors { get; set; }
                 public IList<SelectListItem> AvailableProductTypes { get; set; }
-                
+
                 //vendor
                 public bool IsLoggedInAsVendor { get; set; }
 
@@ -1149,7 +1134,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string LanguageId { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
-            
+
             public string Name { get; set; }
         }
         public partial class ProductAttributeCombinationModel : BaseGrandEntityModel
@@ -1157,10 +1142,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string ProductId { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")]
-            
+
             public string AttributesXml { get; set; }
 
-            
+
             public string Warnings { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")]
@@ -1216,31 +1201,31 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ShortDescription")]
-        
+
         public string ShortDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.FullDescription")]
-        
+
         public string FullDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
-        
+
         public string MetaKeywords { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaDescription")]
-        
+
         public string MetaDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaTitle")]
-        
+
         public string MetaTitle { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.SeName")]
-        
+
         public string SeName { get; set; }
     }
 }

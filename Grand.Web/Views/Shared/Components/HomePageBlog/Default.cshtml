@@ -2,45 +2,28 @@
 @inject DisplayOrderHomePage order
 @if (Model.Items.Any())
 {
-    <div class="blog-list-homepage my-3 order-@order.HomePageBlog">
+    <div class="blog-list-homepage text-center customGrid my-3 order-@order.HomePageBlog">
         <h2 class="generalTitle text-center mb-3">
             @T("Blog.Latest")
         </h2>
-        <div class="row">
-            @foreach (var item in Model.Items)
-            {
-                @if (item.PictureModel != null && !string.IsNullOrEmpty(item.PictureModel.ImageUrl))
+        <div class="col-12 px-0">
+            <div class="form-row flex-grid">
+                @foreach (var item in Model.Items)
                 {
-                    <div class="col-xl-@order.Pb_Xl col-lg-@order.Pb_Lg col-md-@order.Pb_Md col-sm-@order.Pb_Sm col-@order.Pb_Col mb-md-0 mb-3">
-                        <div class="card p-0">
-                            <div class="card-header p-0">
-                                <div class="img-container">
-                                    <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
-                                        <img class="card-img-top img-fluid rounded-0" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
-                                    </a>
+                    @if (item.PictureModel != null && !string.IsNullOrEmpty(item.PictureModel.ImageUrl))
+                    {
+                        <div class="col-xl-@order.Pb_Xl col-lg-@order.Pb_Lg col-md-@order.Pb_Md col-sm-@order.Pb_Sm col-@order.Pb_Col mb-md-0 mb-3">
+                            <div class="card text-lg-left text-center">
+                                <div class="card-header border-bottom-0 p-0">
+                                    <div class="img-container">
+                                        <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
+                                            <img class="card-img-top img-fluid rounded-0" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card-body pb-0 px-0 d-flex align-items-center flex-column">
-                                <h3 class="h5 mb-2 text-left w-100"><a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@item.Title</a></h3>
-                                <span class="news-date d-inline-flex align-items-center text-muted text-left w-100"><span class="mdi mdi-alarm mr-2"></span>@item.CreatedOn.ToString("D")</span>
-                                <div class="desc-short my-3">
-                                    @Html.Raw(item.Short)
-                                </div>
-                                <div class="d-flex justify-content-center w-100">
-                                    <a class="btn btn-sm btn-info read-more text-capitalize" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("Blog.MoreInfo")</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="col-xl-@order.Pb_Xl col-lg-@order.Pb_Lg col-md-@order.Pb_Md col-sm-@order.Pb_Sm col-@order.Pb_Col mb-md-0 pb-3 d-flex align-items-center">
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="card p-3">
-                                    <h3 class="h5 mb-2"><a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@item.Title</a></h3>
-                                    <span class="news-date text-muted d-flex align-items-center"><span class="mdi mdi-alarm mr-2"></span>@item.CreatedOn.ToString("D")</span>
+                                <div class="card-body pb-0 px-0 d-flex align-items-lg-center align-items-start flex-column">
+                                    <h3 class="h5 mb-2 text-left w-100"><a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@item.Title</a></h3>
+                                    <span class="news-date d-inline-flex align-items-center text-muted text-left w-100"><span class="mdi mdi-alarm mr-2"></span>@item.CreatedOn.ToString("D")</span>
                                     <div class="desc-short my-3">
                                         @Html.Raw(item.Short)
                                     </div>
@@ -50,9 +33,28 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="col-xl-@order.Pb_Xl col-lg-@order.Pb_Lg col-md-@order.Pb_Md col-sm-@order.Pb_Sm col-@order.Pb_Col mb-md-0 pb-3 d-flex align-items-center">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="card">
+                                        <h3 class="h5 mb-2"><a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@item.Title</a></h3>
+                                        <span class="news-date text-muted d-flex justify-content-lg-start justify-content-center"><span class="mdi mdi-alarm mr-2"></span>@item.CreatedOn.ToString("D")</span>
+                                        <div class="desc-short my-3">
+                                            @Html.Raw(item.Short)
+                                        </div>
+                                        <div class="d-flex justify-content-center w-100">
+                                            <a class="btn btn-sm btn-info read-more text-capitalize" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("Blog.MoreInfo")</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 }
-            }
+            </div>
         </div>
         <div class="view-all text-center mt-3">
             <a class="btn btn-outline-secondary" href="@Url.RouteUrl("Blog")">@T("Blog.ViewAll")</a>

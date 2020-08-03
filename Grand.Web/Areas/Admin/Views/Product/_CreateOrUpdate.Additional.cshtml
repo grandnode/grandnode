@@ -1,4 +1,4 @@
-﻿@using Grand.Core.Domain.Catalog;
+﻿@using Grand.Domain.Catalog;
 @model ProductModel
 <vc:admin-widget widget-zone="product_details_additional_top" additional-data="Model" />
 <div class="form-horizontal" id="group-order">
@@ -42,7 +42,7 @@
         <div class="form-group" id="pnlGiftCardType">
             <admin-label asp-for="GiftCardTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="GiftCardTypeId" asp-items="((GiftCardType)Model.GiftCardTypeId).ToSelectList()" />
+                <admin-select asp-for="GiftCardTypeId" asp-items="((GiftCardType)Model.GiftCardTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="GiftCardTypeId"></span>
             </div>
         </div>
@@ -102,7 +102,7 @@
         <div class="form-group" id="pnlDownloadActivationType">
             <admin-label asp-for="DownloadActivationTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="DownloadActivationTypeId" asp-items="((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList()" />
+                <admin-select asp-for="DownloadActivationTypeId" asp-items="((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="DownloadActivationTypeId"></span>
             </div>
         </div>
@@ -164,7 +164,7 @@
         <div class="form-group" id="pnlCyclePeriod">
             <admin-label asp-for="RecurringCyclePeriodId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="RecurringCyclePeriodId" asp-items="((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList()" />
+                <admin-select asp-for="RecurringCyclePeriodId" asp-items="((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList(Context)" />
                 <span asp-validation-for="RecurringCyclePeriodId"></span>
             </div>
         </div>
@@ -200,7 +200,7 @@
                        onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product",
                                                        new { btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds" }))', 800, 800, true); return false;" class="k-button" />
                 <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#btnRefreshRequiredProducts').click(function () {
                             loadRequiredProductFriendlyNames();

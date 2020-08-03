@@ -1,6 +1,6 @@
 ﻿@model CheckoutCompletedModel
 @{
-    Layout = "_ColumnsOne";
+    Layout = "_ColumnsOneClean";
 
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
@@ -13,8 +13,8 @@
     <h2 class="generalTitle text-center">@T("Checkout.ThankYou")</h2>
     <div class="checkout-data">
         @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_completed_top", additionalData = Model.OrderId })
-        <div class="card order-completed text-center">
-            <div class="alert-success alert text-success text-center mx-3 mb-0"><strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong></div>
+        <div class="card order-completed text-center border-0">
+            <div class="alert-success alert text-success text-center mx-3 mb-0"><span>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</span></div>
             <div class="card-body pt-0 text-center">
                 <div class="order-number generalMarginSupporter text-center">
                     <strong>@T("Checkout.OrderNumber"): @Model.OrderNumber</strong>

@@ -1,6 +1,6 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.News;
-using Grand.Core.Domain.Seo;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.News;
+using Grand.Domain.Seo;
 using Grand.Framework.Extensions;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
@@ -28,7 +28,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IStoreService _storeService;
         private readonly IPictureService _pictureService;
         private readonly IServiceProvider _serviceProvider;
         #endregion
@@ -39,7 +38,6 @@ namespace Grand.Web.Areas.Admin.Services
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IUrlRecordService urlRecordService,
-            IStoreService storeService,
             IPictureService pictureService,
             IServiceProvider serviceProvider)
         {
@@ -47,7 +45,6 @@ namespace Grand.Web.Areas.Admin.Services
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
             _urlRecordService = urlRecordService;
-            _storeService = storeService;
             _pictureService = pictureService;
             _serviceProvider = serviceProvider;
         }
@@ -59,7 +56,7 @@ namespace Grand.Web.Areas.Admin.Services
             var news = await _newsService.GetAllNews(model.SearchStoreId, pageIndex - 1, pageSize, true, true);
             return (news.Select(x =>
             {
-                var m = x.ToModel();
+                var m = x.ToModel(_dateTimeHelper);
                 m.Full = "";
                 m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                 m.Comments = x.CommentCount;
@@ -68,7 +65,8 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<NewsItem> InsertNewsItemModel(NewsItemModel model)
         {
-            var newsItem = model.ToEntity();
+            var datetimeHelper = _serviceProvider.GetRequiredService<IDateTimeHelper>();
+            var newsItem = model.ToEntity(_dateTimeHelper);
             newsItem.CreatedOnUtc = DateTime.UtcNow;
             await _newsService.InsertNews(newsItem);
 
@@ -86,7 +84,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<NewsItem> UpdateNewsItemModel(NewsItem newsItem, NewsItemModel model)
         {
             string prevPictureId = newsItem.PictureId;
-            newsItem = model.ToEntity(newsItem);
+            newsItem = model.ToEntity(newsItem, _dateTimeHelper);
             var seName = await newsItem.ValidateSeName(model.SeName, model.Title, true, _serviceProvider.GetRequiredService<SeoSettings>(), _urlRecordService, _serviceProvider.GetRequiredService<ILanguageService>());
             newsItem.SeName = seName;
             newsItem.Locales = await model.Locales.ToLocalizedProperty(newsItem, x => x.Title, _serviceProvider.GetRequiredService<SeoSettings>(), _urlRecordService, _serviceProvider.GetRequiredService<ILanguageService>());

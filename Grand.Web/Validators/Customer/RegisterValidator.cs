@@ -1,19 +1,23 @@
 ﻿using FluentValidation;
 using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Framework.Validators;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Web.Models.Customer;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Web.Validators.Customer
 {
     public class RegisterValidator : BaseGrandValidator<RegisterModel>
     {
-        public RegisterValidator(ILocalizationService localizationService,
+        public RegisterValidator(
+            IEnumerable<IValidatorConsumer<RegisterModel>> validators,
+            ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
             CustomerSettings customerSettings)
+            : base(validators)
         {
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Email.Required"));
             RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Common.WrongEmail"));

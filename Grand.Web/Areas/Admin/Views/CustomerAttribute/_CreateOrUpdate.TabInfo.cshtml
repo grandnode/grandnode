@@ -1,5 +1,5 @@
 ﻿@model CustomerAttributeModel
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
         toggleAttributeControlType();
@@ -18,7 +18,7 @@
 
 </script>
 <vc:admin-widget widget-zone="customer_attribute_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
+@(await Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -61,7 +61,7 @@
             <div class="col-md-9 col-sm-9">
                 @{
                     var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
-                        .ToSelectList(valuesToExclude:
+                        .ToSelectList(Context, valuesToExclude:
                          //custom customer attributes don't support some attribute control types
                          new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
                 }

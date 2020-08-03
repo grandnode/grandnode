@@ -1,15 +1,13 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Media;
+using Grand.Domain.Customers;
+using Grand.Domain.Forums;
+using Grand.Domain.Media;
 using Grand.Framework.Components;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
-using Grand.Services.Forums;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
-using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Web.Models.Profile;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +18,8 @@ namespace Grand.Web.ViewComponents
 {
     public class ProfileInfoViewComponent : BaseViewComponent
     {
-        private readonly IForumService _forumService;
         private readonly ICustomerService _customerService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ForumSettings _forumSettings;
         private readonly CustomerSettings _customerSettings;
@@ -33,26 +27,20 @@ namespace Grand.Web.ViewComponents
         private readonly MediaSettings _mediaSettings;
         private readonly ICountryService _countryService;
 
-        public ProfileInfoViewComponent(IForumService forumService,
-            ICustomerService customerService, ICustomerActivityService customerActivityService,
-            ILocalizationService localizationService, IWorkContext workContext,
-            IStoreContext storeContext, IDateTimeHelper dateTimeHelper,
+        public ProfileInfoViewComponent(ICustomerService customerService, 
+            IWorkContext workContext, IDateTimeHelper dateTimeHelper,
             ForumSettings forumSettings, CustomerSettings customerSettings,
             IPictureService pictureService, MediaSettings mediaSettings,
             ICountryService countryService)
         {
-            this._forumService = forumService;
-            this._customerService = customerService;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._dateTimeHelper = dateTimeHelper;
-            this._forumSettings = forumSettings;
-            this._customerSettings = customerSettings;
-            this._pictureService = pictureService;
-            this._mediaSettings = mediaSettings;
-            this._countryService = countryService;
+            _customerService = customerService;
+            _workContext = workContext;
+            _dateTimeHelper = dateTimeHelper;
+            _forumSettings = forumSettings;
+            _customerSettings = customerSettings;
+            _pictureService = pictureService;
+            _mediaSettings = mediaSettings;
+            _countryService = countryService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string customerProfileId)

@@ -1,7 +1,7 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Vendors;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Discounts;
+using Grand.Domain.Stores;
+using Grand.Domain.Vendors;
 using Grand.Services.Discounts;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Discounts;
@@ -28,11 +28,9 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task DeleteCategory(Discount discount, Category category);
         Task DeleteVendor(Discount discount, Vendor vendor);
         Task DeleteManufacturer(Discount discount, Manufacturer manufacturer);
-        Task DeleteStore(Discount discount, Store store);
         Task InsertCategoryToDiscountModel(DiscountModel.AddCategoryToDiscountModel model);
         Task InsertManufacturerToDiscountModel(DiscountModel.AddManufacturerToDiscountModel model);
         Task InsertVendorToDiscountModel(DiscountModel.AddVendorToDiscountModel model);
-        Task InsertStoreToDiscountModel(DiscountModel.AddStoreToDiscountModel model);
         Task<(IEnumerable<DiscountModel.DiscountUsageHistoryModel> usageHistoryModels, int totalCount)> PrepareDiscountUsageHistoryModel(Discount discount, int pageIndex, int pageSize);
 
     }

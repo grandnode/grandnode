@@ -4,11 +4,11 @@
     ViewBag.Title = T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.AddNew").Text;
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
 }
-<form asp-controller="Knowledgebase" asp-action="ArticlesPopup" method="post"
+<form asp-area="Admin" asp-controller="Knowledgebase" asp-action="ArticlesPopup" method="post"
       asp-route-KnowledgebaseId="@Context.Request.Query["KnowledgebaseId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
     <input asp-for="ArticleId" type="hidden" />
     <div class="row">
         <div class="col-md-12">
@@ -48,7 +48,7 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
                     try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
                     catch (e){}
                     window.close();
@@ -113,7 +113,7 @@
         });
     </script>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#search-articles').click(function () {
                 var grid = $('#articles-grid').data('kendoGrid');

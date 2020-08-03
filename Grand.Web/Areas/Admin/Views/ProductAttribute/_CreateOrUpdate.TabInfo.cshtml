@@ -1,6 +1,6 @@
 ﻿@model ProductAttributeModel
 <vc:admin-widget widget-zone="product_attribute_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<ProductAttributeModel, ProductAttributeLocalizedModel>("productattribute-localized",
+@(await Html.LocalizedEditor<ProductAttributeModel, ProductAttributeLocalizedModel>("productattribute-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -40,4 +40,15 @@
         </div>
     </div>
     ))
-     <vc:admin-widget widget-zone="product_attribute_details_info_bottom" additional-data="Model" />
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <admin-label asp-for="SeName" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="SeName" />
+                    <span asp-validation-for="SeName"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+<vc:admin-widget widget-zone="product_attribute_details_info_bottom" additional-data="Model" />

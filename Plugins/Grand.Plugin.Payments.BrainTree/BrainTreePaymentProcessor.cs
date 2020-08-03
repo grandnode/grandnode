@@ -1,7 +1,7 @@
 ﻿using Braintree;
 using Grand.Core;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
 using Grand.Core.Plugins;
 using Grand.Plugin.Payments.BrainTree.Models;
 using Grand.Plugin.Payments.BrainTree.Validators;
@@ -31,7 +31,7 @@ namespace Grand.Plugin.Payments.BrainTree
         private readonly BrainTreePaymentSettings _brainTreePaymentSettings;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILanguageService _languageService;
 
         #endregion
 
@@ -44,16 +44,16 @@ namespace Grand.Plugin.Payments.BrainTree
             BrainTreePaymentSettings brainTreePaymentSettings,
             ILocalizationService localizationService,
             IWebHelper webHelper,
-            IServiceProvider serviceProvider)
+            ILanguageService languageService)
         {
-            this._customerService = customerService;
-            this._settingService = settingService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._paymentService = paymentService;
-            this._brainTreePaymentSettings = brainTreePaymentSettings;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
+            _customerService = customerService;
+            _settingService = settingService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _paymentService = paymentService;
+            _brainTreePaymentSettings = brainTreePaymentSettings;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _languageService = languageService;
         }
 
         #endregion
@@ -323,21 +323,21 @@ namespace Grand.Plugin.Payments.BrainTree
             await _settingService.SaveSetting(settings);
 
             //locales
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.Use3DS", "Use the 3D secure");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.Use3DS.Hint", "Check to enable the 3D secure integration");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.UseSandbox", "Use Sandbox");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.MerchantId", "Merchant ID");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.MerchantId.Hint", "Enter Merchant ID");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.PublicKey", "Public Key");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.PublicKey.Hint", "Enter Public key");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.PrivateKey", "Private Key");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.PrivateKey.Hint", "Enter Private key");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.AdditionalFee", "Additional fee");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.PaymentMethodDescription", "Pay by credit / debit card");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.Use3DS", "Use the 3D secure");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.Use3DS.Hint", "Check to enable the 3D secure integration");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.UseSandbox", "Use Sandbox");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.MerchantId", "Merchant ID");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.MerchantId.Hint", "Enter Merchant ID");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.PublicKey", "Public Key");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.PublicKey.Hint", "Enter Public key");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.PrivateKey", "Private Key");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.PrivateKey.Hint", "Enter Private key");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.AdditionalFee", "Additional fee");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.PaymentMethodDescription", "Pay by credit / debit card");
 
             await base.Install();
         }
@@ -348,19 +348,19 @@ namespace Grand.Plugin.Payments.BrainTree
             await _settingService.DeleteSetting<BrainTreePaymentSettings>();
 
             //locales
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.UseSandbox");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.UseSandbox.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.MerchantId");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.MerchantId.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.PublicKey");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.PublicKey.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.PrivateKey");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.PrivateKey.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.AdditionalFee");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.AdditionalFee.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.AdditionalFeePercentage");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.AdditionalFeePercentage.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.PaymentMethodDescription");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.UseSandbox");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.UseSandbox.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.MerchantId");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.MerchantId.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.PublicKey");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.PublicKey.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.PrivateKey");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.PrivateKey.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.AdditionalFee");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.AdditionalFee.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.AdditionalFeePercentage");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.Fields.AdditionalFeePercentage.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payments.BrainTree.PaymentMethodDescription");
 
             await base.Uninstall();
         }

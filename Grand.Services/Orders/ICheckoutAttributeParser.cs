@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,6 +22,13 @@ namespace Grand.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Checkout attribute values</returns>
         Task<IList<CheckoutAttributeValue>> ParseCheckoutAttributeValues(string attributesXml);
+
+        /// <summary>
+        /// Get checkout attribute values with checkout attribute 
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>Checkout attribute values with checkout attribute </returns>
+        Task<IList<(CheckoutAttribute ca, CheckoutAttributeValue cav)>> ParseCheckoutAttributeValue(string attributesXml);
 
         /// <summary>
         /// Gets selected checkout attribute value

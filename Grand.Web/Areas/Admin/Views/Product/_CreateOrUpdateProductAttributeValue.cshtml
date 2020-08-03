@@ -1,4 +1,4 @@
-﻿@using Grand.Core.Domain.Catalog
+﻿@using Grand.Domain.Catalog
 @model ProductModel.ProductAttributeValueModel
 @{
     Html.AddScriptParts("~/scripts/farbtastic.js", excludeFromBundle: true);
@@ -12,13 +12,13 @@
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
     </script>
 }
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         
         $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").change(toggleProductType);
@@ -31,13 +31,11 @@
         if (selectedProductTypeId == @(((int)AttributeValueType.Simple).ToString())) {
             $('#group-associated-product').hide();
             $('#group-quantity').hide();
-            $('#group-price-adjustment').show();
             $('#group-weight-adjustment').show();
             $('#group-cost').show();
         } else if (selectedProductTypeId == @(((int)AttributeValueType.AssociatedToProduct).ToString())) {
             $('#group-associated-product').show();
             $('#group-quantity').show();
-            $('#group-price-adjustment').hide();
             $('#group-weight-adjustment').hide();
             $('#group-cost').hide();
         }
@@ -48,7 +46,7 @@
         <div class="form-group">
             <admin-label asp-for="AttributeValueTypeId" class="col-sm-3 control-label"/>
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="AttributeValueTypeId" asp-items="((AttributeValueType)Model.AttributeValueTypeId).ToSelectList()" />
+                <admin-select asp-for="AttributeValueTypeId" asp-items="((AttributeValueType)Model.AttributeValueTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="AttributeValueTypeId"></span>
             </div>
         </div>
@@ -70,7 +68,7 @@
         </div>
     </div>
 </div>
-@(Html.LocalizedEditor<ProductModel.ProductAttributeValueModel, ProductModel.ProductAttributeValueLocalizedModel>("productattributevalue-localized",
+@(await Html.LocalizedEditor<ProductModel.ProductAttributeValueModel, ProductModel.ProductAttributeValueLocalizedModel>("productattributevalue-localized",
 @<div class="form-horizontal">
      <div class="form-body">
          <div class="form-group">
@@ -106,7 +104,7 @@
                 <div class="col-md-9 col-sm-9">
                     <admin-input asp-for="ColorSquaresRgb" />
                     <div id="color-picker"></div>
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function(){
                             $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
                         });

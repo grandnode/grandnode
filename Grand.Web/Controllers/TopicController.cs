@@ -1,9 +1,8 @@
 ﻿using Grand.Core;
 using Grand.Services.Localization;
 using Grand.Services.Security;
-using Grand.Services.Stores;
-using Grand.Services.Topics;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Topics;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -12,33 +11,26 @@ namespace Grand.Web.Controllers
     public partial class TopicController : BasePublicController
     {
         #region Fields
-        private readonly ITopicViewModelService _topicViewModelService;
-        private readonly ITopicService _topicService;
+
         private readonly ILocalizationService _localizationService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IAclService _aclService;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
+        private readonly IMediator _mediator;
 
         #endregion
 
         #region Constructors
 
-        public TopicController(ITopicService topicService,
-            ITopicViewModelService topicViewModelService,
+        public TopicController(
             ILocalizationService localizationService,
-            IStoreMappingService storeMappingService,
-            IAclService aclService,
             IPermissionService permissionService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IMediator mediator)
         {
-            this._topicService = topicService;
-            this._topicViewModelService = topicViewModelService;
-            this._localizationService = localizationService;
-            this._storeMappingService = storeMappingService;
-            this._aclService = aclService;
-            this._permissionService = permissionService;
-            this._workContext = workContext;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _workContext = workContext;
+            _mediator = mediator;
         }
 
         #endregion
@@ -47,18 +39,21 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> TopicDetails(string topicId)
         {
-            var model = await _topicViewModelService.TopicDetails(topicId);
+            if (string.IsNullOrEmpty(topicId))
+                return RedirectToRoute("HomePage");
+
+            var model = await _mediator.Send(new GetTopicBlock() { TopicId = topicId });
             if (model == null)
                 return RedirectToRoute("HomePage");
 
             //hide topic if it`s set as no published
-            if(!model.Published
-                && !(await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel)) 
-                && !(await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))) 
+            if (!model.Published
+                && !(await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
+                && !(await _permissionService.Authorize(StandardPermissionProvider.ManageTopics)))
                 return RedirectToRoute("HomePage");
 
             //template
-            var templateViewPath = await _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
+            var templateViewPath = await _mediator.Send(new GetTopicTemplateViewPath() { TemplateId = model.TopicTemplateId });
 
             //display "edit" (manage) link
             if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
@@ -69,12 +64,12 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> TopicDetailsPopup(string systemName)
         {
-            var model = await _topicViewModelService.TopicDetailsPopup(systemName);
+            var model = await _mediator.Send(new GetTopicBlock() { SystemName = systemName });
             if (model == null)
                 return RedirectToRoute("HomePage");
 
             //template
-            var templateViewPath = await _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
+            var templateViewPath = await _mediator.Send(new GetTopicTemplateViewPath() { TemplateId = model.TopicTemplateId });
 
             ViewBag.IsPopup = true;
             return View(templateViewPath, model);
@@ -83,26 +78,25 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Authenticate(string id, string password)
         {
+            if (string.IsNullOrEmpty(id))
+                return Json(new { Authenticated = false, Error = "Empty id" });
+
             var authResult = false;
             var title = string.Empty;
             var body = string.Empty;
             var error = string.Empty;
 
-            var topic = await _topicService.GetTopicById(id);
+            var topic = await _mediator.Send(new GetTopicBlock() { TopicId = id });
 
             if (topic != null &&
                 //password protected?
-                topic.IsPasswordProtected &&
-                //store mapping
-                _storeMappingService.Authorize(topic) &&
-                //ACL (access control list)
-                _aclService.Authorize(topic))
+                topic.IsPasswordProtected)
             {
                 if (topic.Password != null && topic.Password.Equals(password))
                 {
                     authResult = true;
-                    title = topic.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id);
-                    body = topic.GetLocalized(x => x.Body, _workContext.WorkingLanguage.Id);
+                    title = topic.Title;
+                    body = topic.Body;
                 }
                 else
                 {

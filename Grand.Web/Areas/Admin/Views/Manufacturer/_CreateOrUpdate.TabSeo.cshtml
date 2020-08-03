@@ -1,6 +1,6 @@
 ﻿@model ManufacturerModel
 <vc:admin-widget widget-zone="manufacturer_details_seo_top" additional-data="Model" />
-@(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-seo-localized",
+@(await Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-seo-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">

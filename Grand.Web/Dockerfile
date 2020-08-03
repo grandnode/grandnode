@@ -1,11 +1,12 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src
 COPY ["Grand.Web/Grand.Web.csproj", "Grand.Web/"]
 COPY ["Grand.Framework/Grand.Framework.csproj", "Grand.Framework/"]
+COPY ["Grand.Domain/Grand.Domain.csproj", "Grand.Domain/"]
 COPY ["Grand.Core/Grand.Core.csproj", "Grand.Core/"]
 COPY ["Grand.Services/Grand.Services.csproj", "Grand.Services/"]
 COPY ["Grand.Api/Grand.Api.csproj", "Grand.Api/"]

@@ -5,15 +5,14 @@
     //title
     Html.AddTitleParts(T("PageTitle.RecentlyViewedProducts").Text);
 }
-@using Grand.Web.Models.Catalog;
-<div class="page recently-viewed-products-page">
+<div class="page recently-viewed-products-page col-12 px-0">
         <h2 class="generalTitle">@T("Products.RecentlyViewedProducts")</h2>
         @if (Model.Any())
         {
-            <div class="row">
+            <div class="form-row flex-grid">
                 @foreach (var product in Model)
                 {
-                    <div class="col-lg-4 col-sm-6 col-6 product-container">
+                    <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
                         <partial name="_ProductBox" model="product" />
                     </div>
                 }

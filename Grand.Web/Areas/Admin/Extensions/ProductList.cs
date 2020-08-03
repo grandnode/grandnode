@@ -1,5 +1,5 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain;
+using Grand.Domain.Catalog;
 using Grand.Services.Catalog;
 using System;
 using System.Collections.Generic;

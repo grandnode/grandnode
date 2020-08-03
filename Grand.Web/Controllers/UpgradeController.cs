@@ -12,6 +12,7 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly IUpgradeService _upgradeService;
+
         #endregion
 
         #region Ctor
@@ -32,6 +33,9 @@ namespace Grand.Web.Controllers
                 DatabaseVersion = _upgradeService.DatabaseVersion()
             };
 
+            if (model.ApplicationVersion == model.DatabaseVersion)
+                return RedirectToRoute("Homepage");
+
             return View(model);
         }
 
@@ -47,6 +51,8 @@ namespace Grand.Web.Controllers
             {
                 await _upgradeService.UpgradeData(model.DatabaseVersion, model.ApplicationVersion);
             }
+            else
+                return RedirectToRoute("HomePage");
 
             //restart application
             webHelper.RestartAppDomain();

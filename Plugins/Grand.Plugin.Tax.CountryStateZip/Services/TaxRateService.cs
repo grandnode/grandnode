@@ -1,6 +1,6 @@
-using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
+using Grand.Domain;
+using Grand.Domain.Data;
 using Grand.Plugin.Tax.CountryStateZip.Domain;
 using Grand.Services.Events;
 using MediatR;
@@ -33,7 +33,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxRateRepository">Tax rate repository</param>
         public TaxRateService(IMediator mediator,
@@ -60,7 +60,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.DeleteAsync(taxRate);
 
-            await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(taxRate);
@@ -89,7 +89,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// <returns>Tax rate</returns>
         public virtual Task<TaxRate> GetTaxRateById(string taxRateId)
         {
-           return _taxRateRepository.GetByIdAsync(taxRateId);
+            return _taxRateRepository.GetByIdAsync(taxRateId);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.InsertAsync(taxRate);
 
-            await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(taxRate);
@@ -120,7 +120,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.UpdateAsync(taxRate);
 
-            await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(taxRate);

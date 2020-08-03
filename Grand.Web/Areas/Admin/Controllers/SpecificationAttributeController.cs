@@ -1,4 +1,5 @@
-﻿using Grand.Framework.Kendoui;
+﻿using Grand.Domain.Seo;
+using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
@@ -6,6 +7,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
+using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +26,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly SeoSettings _seoSettings;
 
         #endregion Fields
 
@@ -32,12 +35,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         public SpecificationAttributeController(ISpecificationAttributeService specificationAttributeService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService,
+            SeoSettings seoSettings)
         {
-            this._specificationAttributeService = specificationAttributeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
+            _specificationAttributeService = specificationAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _customerActivityService = customerActivityService;
+            _seoSettings = seoSettings;
         }
 
         #endregion
@@ -54,8 +59,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var specificationAttributes = await _specificationAttributeService
                 .GetSpecificationAttributes(command.Page - 1, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = specificationAttributes.Select(x => x.ToModel()),
                 Total = specificationAttributes.TotalCount
             };
@@ -78,6 +82,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var specificationAttribute = model.ToEntity();
+                specificationAttribute.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(specificationAttribute.SeName) ? specificationAttribute.Name : specificationAttribute.SeName, _seoSettings);
                 await _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
                 //activity log
                 await _customerActivityService.InsertActivity("AddNewSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name);
@@ -118,6 +123,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 specificationAttribute = model.ToEntity(specificationAttribute);
+                specificationAttribute.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(specificationAttribute.SeName) ? specificationAttribute.Name : specificationAttribute.SeName, _seoSettings);
                 await _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
                 //activity log
                 await _customerActivityService.InsertActivity("EditSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name);
@@ -127,7 +133,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = specificationAttribute.Id });
                 }
@@ -168,9 +174,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> OptionList(string specificationAttributeId, DataSourceRequest command)
         {
-            var options = (await _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)).SpecificationAttributeOptions;
-            var gridModel = new DataSourceResult
-            {
+            var options = (await _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)).SpecificationAttributeOptions.OrderBy(x => x.DisplayOrder);
+            var gridModel = new DataSourceResult {
                 Data = options.Select(x =>
                     {
                         var model = x.ToModel();
@@ -188,8 +193,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public async Task<IActionResult> OptionCreatePopup(string specificationAttributeId)
         {
-            var model = new SpecificationAttributeOptionModel
-            {
+            var model = new SpecificationAttributeOptionModel {
                 SpecificationAttributeId = specificationAttributeId
             };
             //locales
@@ -208,6 +212,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var sao = model.ToEntity();
+                sao.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(sao.SeName) ? sao.Name : sao.SeName, _seoSettings);
                 //clear "Color" values if it's disabled
                 if (!model.EnableColorSquaresRgb)
                     sao.ColorSquaresRgb = null;
@@ -254,6 +259,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sao = model.ToEntity(sao);
+                sao.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(sao.SeName) ? sao.Name : sao.SeName, _seoSettings);
+
                 //clear "Color" values if it's disabled
                 if (!model.EnableColorSquaresRgb)
                     sao.ColorSquaresRgb = null;

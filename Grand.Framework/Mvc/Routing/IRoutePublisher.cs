@@ -10,7 +10,7 @@ namespace Grand.Framework.Mvc.Routing
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        void RegisterRoutes(IRouteBuilder routeBuilder);
+        /// <param name="routeBuilder">End point Route builder</param>
+        void RegisterRoutes(IEndpointRouteBuilder routeBuilder);
     }
 }

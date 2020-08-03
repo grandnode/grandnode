@@ -1,12 +1,13 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Documents;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Orders;
+using Grand.Services.Shipping;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
@@ -22,6 +23,7 @@ namespace Grand.Web.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IProductService _productService;
         private readonly IOrderService _orderService;
+        private readonly IReturnRequestService _returnRequestService;
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
         private readonly CustomerSettings _customerSettings;
@@ -29,16 +31,18 @@ namespace Grand.Web.Controllers
         public DownloadController(IDownloadService downloadService,
             IProductService productService,
             IOrderService orderService,
+            IReturnRequestService returnRequestService,
             IWorkContext workContext,
             ILocalizationService localizationService,
             CustomerSettings customerSettings)
         {
-            this._downloadService = downloadService;
-            this._productService = productService;
-            this._orderService = orderService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._customerSettings = customerSettings;
+            _downloadService = downloadService;
+            _productService = productService;
+            _orderService = orderService;
+            _returnRequestService = returnRequestService;
+            _workContext = workContext;
+            _localizationService = localizationService;
+            _customerSettings = customerSettings;
         }
 
         public virtual async Task<IActionResult> Sample(string productId)
@@ -73,7 +77,7 @@ namespace Grand.Web.Controllers
 
             var order = await _orderService.GetOrderByOrderItemId(orderItem.Id);
             var product = await _productService.GetProductById(orderItem.ProductId);
-            if (!await _downloadService.IsDownloadAllowed(orderItem))
+            if (!_downloadService.IsDownloadAllowed(order, orderItem, product))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -178,7 +182,7 @@ namespace Grand.Web.Controllers
 
             var order = await _orderService.GetOrderByOrderItemId(orderItem.Id);
             var product = await _productService.GetProductById(orderItem.ProductId);
-            if (!await _downloadService.IsLicenseDownloadAllowed(orderItem))
+            if (!_downloadService.IsLicenseDownloadAllowed(order, orderItem, product))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -253,6 +257,41 @@ namespace Grand.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
+        public virtual async Task<IActionResult> GetShipmentNoteFile(string shipmentNoteId, 
+            [FromServices] IShipmentService shipmentService)
+        {
+            var shipmentNote = await shipmentService.GetShipmentNote(shipmentNoteId);
+            if (shipmentNote == null)
+                return InvokeHttp404();
+
+            var shipment = await shipmentService.GetShipmentById(shipmentNote.ShipmentId);
+            if (shipment == null)
+                return InvokeHttp404();
+
+            var order = await _orderService.GetOrderById(shipment.OrderId);
+            if (order == null)
+                return InvokeHttp404();
+
+            if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
+                return Challenge();
+
+            var download = await _downloadService.GetDownloadById(shipmentNote.DownloadId);
+            if (download == null)
+                return Content("Download is not available any more.");
+
+            if (download.UseDownloadUrl)
+                return new RedirectResult(download.DownloadUrl);
+
+            //binary download
+            if (download.DownloadBinary == null)
+                return Content("Download data is not available any more.");
+
+            //return result
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : shipmentNote.Id.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
+        }
+
         public virtual async Task<IActionResult> GetCustomerNoteFile(string customerNoteId,
             [FromServices] ICustomerService customerService)
         {
@@ -279,6 +318,36 @@ namespace Grand.Web.Controllers
 
             //return result
             string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : customerNote.Id.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
+        }
+
+        public virtual async Task<IActionResult> GetReturnRequestNoteFile(string returnRequestNoteId)
+        {
+            var returnRequestNote = await _returnRequestService.GetReturnRequestNote(returnRequestNoteId);
+            if (returnRequestNote == null)
+                return InvokeHttp404();
+
+            var returnRequest = await _returnRequestService.GetReturnRequestById(returnRequestNote.ReturnRequestId);
+            if (returnRequest == null)
+                return InvokeHttp404();
+
+            if (_workContext.CurrentCustomer == null || returnRequest.CustomerId != _workContext.CurrentCustomer.Id)
+                return Challenge();
+
+            var download = await _downloadService.GetDownloadById(returnRequestNote.DownloadId);
+            if (download == null)
+                return Content("Download is not available any more.");
+
+            if (download.UseDownloadUrl)
+                return new RedirectResult(download.DownloadUrl);
+
+            //binary download
+            if (download.DownloadBinary == null)
+                return Content("Download data is not available any more.");
+
+            //return result
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : returnRequestNote.Id.ToString();
             string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }

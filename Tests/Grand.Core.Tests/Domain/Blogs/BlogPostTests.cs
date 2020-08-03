@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Grand.Core.Domain.Blogs.Tests
+namespace Grand.Domain.Blogs.Tests
 {
     [TestClass()]
     public class BlogPostTests {

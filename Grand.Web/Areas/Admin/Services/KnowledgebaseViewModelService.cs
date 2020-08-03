@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Knowledgebase;
-using Grand.Core.Domain.Seo;
+﻿using Grand.Domain.Knowledgebase;
+using Grand.Domain.Seo;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Knowledgebase;
@@ -171,6 +171,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<KnowledgebaseCategoryModel> PrepareKnowledgebaseCategoryModel()
         {
             var model = new KnowledgebaseCategoryModel();
+            model.Published = true;
             await PrepareCategory(model);
             return model;
         }

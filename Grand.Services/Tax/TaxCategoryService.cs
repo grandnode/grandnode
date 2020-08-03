@@ -1,7 +1,6 @@
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Data;
+using Grand.Domain.Tax;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver;
@@ -49,7 +48,6 @@ namespace Grand.Services.Tax
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
-        private readonly IRepository<Product> _productRepository;
 
         #endregion
 
@@ -60,15 +58,14 @@ namespace Grand.Services.Tax
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxCategoryRepository">Tax category repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public TaxCategoryService(ICacheManager cacheManager,
             IRepository<TaxCategory> taxCategoryRepository,
-            IMediator mediator, IRepository<Product> productRepository)
+            IMediator mediator)
         {
             _cacheManager = cacheManager;
             _taxCategoryRepository = taxCategoryRepository;
             _mediator = mediator;
-            _productRepository = productRepository;
         }
 
         #endregion
@@ -84,16 +81,13 @@ namespace Grand.Services.Tax
             if (taxCategory == null)
                 throw new ArgumentNullException("taxCategory");
 
-            var builder = Builders<Product>.Filter;
-            var filter = builder.Eq(x => x.TaxCategoryId, taxCategory.Id);
-            var update = Builders<Product>.Update
-                .Set(x => x.TaxCategoryId, "");
-            await _productRepository.Collection.UpdateManyAsync(filter, update);
-
             await _taxCategoryRepository.DeleteAsync(taxCategory);
 
-            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            //clear tax categories cache
+            await _cacheManager.RemoveByPrefix(TAXCATEGORIES_PATTERN_KEY);
+
+            //clear product cache
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(taxCategory);
@@ -137,7 +131,7 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.InsertAsync(taxCategory);
 
-            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(taxCategory);
@@ -154,7 +148,7 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.UpdateAsync(taxCategory);
 
-            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(taxCategory);

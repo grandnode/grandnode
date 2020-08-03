@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Currencies.AddNew").Text;
 }
-<form asp-controller="Currency" asp-action="Create">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Currency" asp-action="Create">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

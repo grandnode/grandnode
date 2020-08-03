@@ -1,15 +1,17 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Knowledgebase;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Knowledgebase;
+using Grand.Domain.Localization;
+using Grand.Domain.Stores;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Events;
 using Grand.Services.Knowledgebase;
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -29,7 +31,6 @@ namespace Grand.Services.Tests.Knowledgebase
         private IMediator _eventPublisher;
         private IWorkContext _workContext;
         private IStoreContext _storeContext;
-        private ICacheManager _cacheManager;
         private CommonSettings _commonSettings;
         private CatalogSettings _catalogSettings;
 
@@ -64,8 +65,8 @@ namespace Grand.Services.Tests.Knowledgebase
             var commonSettings = new Mock<CommonSettings>();
             _commonSettings = commonSettings.Object;
 
-            var cacheManager = new Mock<ICacheManager>();
-            _cacheManager = cacheManager.Object;
+            var _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
+            
 
             _knowledgebaseService = new KnowledgebaseService(_categoryRepository, _articleRepository, _eventPublisher, _commonSettings, _catalogSettings,
                 _workContext, _cacheManager, _storeContext, _articleCommentRepository);
@@ -292,9 +293,9 @@ namespace Grand.Services.Tests.Knowledgebase
         {
             ClearArticleRepository();
 
-            var article1 = new KnowledgebaseArticle();
-            var article2 = new KnowledgebaseArticle();
-            var article3 = new KnowledgebaseArticle();
+            var article1 = new KnowledgebaseArticle() { Published = true };
+            var article2 = new KnowledgebaseArticle() { Published = true };
+            var article3 = new KnowledgebaseArticle() { Published = true };
 
             await _knowledgebaseService.InsertKnowledgebaseArticle(article1);
             await _knowledgebaseService.InsertKnowledgebaseArticle(article2);

@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Components;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.Polls;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,18 +9,19 @@ namespace Grand.Web.ViewComponents
 {
     public class HomePagePollsViewComponent : BaseViewComponent
     {
-        private readonly IPollViewModelService _pollViewModelService;
+        private readonly IMediator _mediator;
 
-        public HomePagePollsViewComponent(IPollViewModelService pollViewModelService)
+        public HomePagePollsViewComponent(IMediator mediator)
         {
-            this._pollViewModelService = pollViewModelService;
+            _mediator = mediator;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _pollViewModelService.PrepareHomePagePoll();
+            var model = await _mediator.Send(new GetHomePagePolls());
             if (!model.Any())
                 Content("");
+
             return View(model);
         }
     }

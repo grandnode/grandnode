@@ -1,10 +1,7 @@
-﻿using FluentValidation.Attributes;
-using Grand.Api.Validators.Catalog;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Api.DTOs.Catalog
 {
-    [Validator(typeof(ProductPictureValidator))]
     public partial class ProductPictureDto
     {
         [Key]

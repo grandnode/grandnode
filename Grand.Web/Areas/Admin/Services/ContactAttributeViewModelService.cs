@@ -1,6 +1,6 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Catalog;
+using Grand.Domain.Messages;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
@@ -92,7 +92,7 @@ namespace Grand.Web.Areas.Admin.Services
          
         public virtual async Task<IEnumerable<ContactAttributeModel>> PrepareContactAttributeListModel()
         {
-            var contactAttributes = await _contactAttributeService.GetAllContactAttributes();
+            var contactAttributes = await _contactAttributeService.GetAllContactAttributes(_workContext.CurrentCustomer.StaffStoreId, ignorAcl: true);
             return contactAttributes.Select(x =>
             {
                 var attributeModel = x.ToModel();
@@ -119,7 +119,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 EnableCondition = !string.IsNullOrEmpty(contactAttribute.ConditionAttributeXml),
                 SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : "",
-                ConditionAttributes = (await _contactAttributeService.GetAllContactAttributes())
+                ConditionAttributes = (await _contactAttributeService.GetAllContactAttributes(_workContext.CurrentCustomer.StaffStoreId, ignorAcl: true))
                     //ignore this attribute and non-combinable attributes
                     .Where(x => x.Id != contactAttribute.Id && x.CanBeUsedAsCondition())
                     .Select(x =>

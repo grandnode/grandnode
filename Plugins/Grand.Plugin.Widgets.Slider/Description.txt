@@ -1,8 +1,8 @@
 ﻿Group: Widgets
 FriendlyName: Bootstrap Slider
 SystemName: Widgets.Slider
-Version: 1.04
-SupportedVersions: 4.60
+Version: 1.05
+SupportedVersions: 4.80
 Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.Widgets.Slider.dll

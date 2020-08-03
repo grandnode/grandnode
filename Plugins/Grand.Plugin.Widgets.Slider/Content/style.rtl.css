@@ -1,0 +1,205 @@
+﻿/* carousel */
+
+    #GrandCarousel {
+        width: calc(100vw - 10px);
+    }
+
+    #GrandCarousel .carousel-item.img-desc,
+    #GrandCarousel .carousel-item.img-desc .carousel-caption {
+        height: 500px;
+    }
+
+    #GrandCarousel .carousel-item[onclick] {
+        cursor: pointer;
+    }
+
+    #GrandCarousel .carousel-item .carousel-caption {
+        position: relative;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        padding: 0;
+    }
+
+    #GrandCarousel .carousel-indicators li {
+        background-color: #d2d2d2;
+    }
+
+    #GrandCarousel .carousel-item.with-bg .carousel-caption {
+        position: absolute;
+    }
+
+    #GrandCarousel .carousel-item .slideRow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    #GrandCarousel .carousel-item:not(.img-desc) img {
+        width: auto;
+        height: auto;
+        margin: auto;
+    }
+
+    #GrandCarousel .carousel-item.img-desc img {
+        width: 100%;
+        height: auto;
+        margin: auto;
+    }
+
+    #GrandCarousel .carousel-item .slide-title h2 {
+        font-size: 38px;
+        font-weight: 300;
+        color: #1D1F20;
+    }
+
+    #GrandCarousel .carousel-item .slide-title.grandslide h2 {
+        font-size: 44px;
+        font-weight: 400;
+    }
+
+    #GrandCarousel .carousel-item .slide-content {
+        font-size: 20px;
+        font-weight: 300;
+        color: #dfdfdf;
+        text-align: right;
+    }
+
+    #GrandCarousel .carousel-item .slide-content.grandslide {
+        max-width: 100%;
+        margin: 0 auto 0 auto;
+        font-size: 24px;
+        text-align: center;
+        color: #dfdfdf;
+    }
+
+    #GrandCarousel .carousel-item .slide-price .actual {
+        font-size: 32px;
+        font-weight: 500;
+        color: #1D1F20;
+        margin-right: 15px;
+        margin-bottom: 0;
+    }
+
+    #GrandCarousel .carousel-item .slide-price .old-price {
+        font-size: 24px;
+        font-weight: 300;
+        color: #888;
+        text-decoration: line-through;
+        margin-bottom: 0;
+    }
+
+    #GrandCarousel .btn {
+        font-size: 18px;
+        font-weight: 500;
+        border-width: 2px;
+        padding: 10px 20px;
+    }
+
+    #GrandCarousel .carousel-indicators {
+        margin-bottom: 15px;
+    }
+
+    #GrandCarousel .carousel-control-prev,
+    #GrandCarousel .carousel-control-next {
+        top: calc(50% - 25px);
+        width: 5%;
+        height: 50px;
+        color: #364150;
+        background: #f2f2f2;
+        font-size: 30px;
+        opacity: 0;
+        z-index: 10;
+        -webkit-transition: all .3s ease;
+        transition: all .3s ease;
+    }
+    #GrandCarousel .carousel-control-prev .mdi,
+    #GrandCarousel .carousel-control-next .mdi {
+        font-size: 34px;
+    }
+
+    #GrandCarousel:hover .carousel-control-prev,
+    #GrandCarousel:hover .carousel-control-next {
+        opacity: .8;
+    }
+
+    #GrandCarousel .carousel-control-prev {
+        left: 0;
+        border-top-right-radius: .25rem;
+        border-bottom-right-radius: .25rem;
+    }
+
+    #GrandCarousel .carousel-control-next {
+        right: 0;
+        border-top-left-radius: .25rem;
+        border-bottom-left-radius: .25rem;
+    }
+
+@media screen and (max-width: 1200px) {
+    #GrandCarousel .carousel-item .slide-content.grandslide {
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: -0.5px;
+    }
+    #GrandCarousel .btn {
+        padding: 6px 18px;
+    }
+    #GrandCarousel .carousel-item .slide-title.grandslide h2 {
+        font-size: 36px;
+    }
+
+    #GrandCarousel .carousel-item .slide-title h2,
+    #GrandCarousel .carousel-item .slide-price .actual {
+        font-size: 26px;
+    }
+
+    #GrandCarousel .carousel-item .slide-content {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 1024px) {
+    #GrandCarousel {
+        width: 100vw;
+    }
+}
+
+@media (max-width: 991px) {
+    #GrandCarousel .carousel-item .slideRow {
+        margin: 0;
+    }
+
+    #GrandCarousel .btn {
+        padding: 5px 20px;
+    }
+
+    #GrandCarousel .carousel-item.img-desc,
+    #GrandCarousel .carousel-item.img-desc .carousel-caption {
+        height: 335px;
+    }
+
+    #GrandCarousel .carousel-item.grandslide .slide-content {
+        font-size: 24px;
+    }
+
+    #GrandCarousel .carousel-item .slide-content:not(.grandslide) {
+        display: none;
+    }
+
+    #GrandCarousel .carousel-item .slide-title h2 {
+        font-size: 24px;
+    }
+
+    #GrandCarousel .carousel-item .slide-price .actual {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 767px) {
+    #GrandCarousel {
+        display: none;
+    }
+}

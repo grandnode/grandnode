@@ -5,137 +5,143 @@
     var thisPageUrl = webHelper.GetThisPageUrl(true);
 }
 @Html.Raw(String.Format("<a name=\"{0}\"></a>", Model.Id))
-<div class="topic-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">
-        <div class="card pb-3">
-            <div class="flex-column flex-md-row d-flex card-header user-info">
-                <div class="col-lg-2 col-md-3 col-sm-3 text-center text-md-left forum-media-header">
-                    @if (Model.AllowViewingProfiles)
-                    {
-                        <strong>
-                            @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { id = Model.CustomerId }, new { @class = "username" })
-                        </strong>
-                    }
-                    else
-                    {
-                        <h5 class="username">
-                            <strong>
-                                @Model.CustomerName
-                            </strong>
-                        </h5>
-                    }
-                </div>
-                <div class="col-lg-10 col-md-9 col-12 forum-media-header">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 post-time d-none d-md-block">
-                            <span>@T("Forum.Posted"):</span>
-                            <span class="stat-value">@Model.PostCreatedOnStr</span>
-                        </div>
-                        <div class="float-right btn-group btn-group-sm text-sm-right manage-post ml-auto">
-                            @if (Model.IsCurrentCustomerAllowedToEditPost)
-                            {
-                                @Html.RouteLink(T("Forum.EditPost").Text, "PostEdit", new { id = Model.Id }, new { @class = "btn btn-secondary edit-post-button" })
-                            }
-                            @if (Model.IsCurrentCustomerAllowedToDeletePost)
-                            {
-                                <a href="#" class="btn btn-secondary delete-post-button" onclick="deletepost('@(Model.Id)')">
-                                    <i class="mdi mdi-delete d-lg-none" aria-hidden="true"></i>
-                                    <span class="d-none d-lg-block">@T("Forum.DeletePost").Text</span>
-                                </a>
-                            }
-                            @Html.RouteLink(T("Forum.QuotePost").Text, "PostCreateQuote", new { id = Model.ForumTopicId, quote = Model.Id }, new { @class = "btn btn-secondary quote-post-button" })
 
-                            <a id="@Model.Id" title="@T("Forum.PostLinkTitle")" class="btn btn-secondary btn-sm post-link-button" href="@(thisPageUrl)#@(Model.Id)"><span class="d-none d-lg-block">@T("Forum.PostLink")</span></a>
-                        </div>
+<div class="topic-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">
+    <div class="card pb-3">
+        <div class="flex-column flex-md-row d-flex card-header user-info">
+            <div class="col-lg-2 col-md-3 col-sm-3 text-center text-md-left forum-media-header">
+                @if (Model.AllowViewingProfiles && !string.IsNullOrEmpty(Model.CustomerName))
+                {
+                    <strong>
+                        @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { id = Model.CustomerId }, new { @class = "username" })
+                    </strong>
+                }
+                else
+                {
+                    <h5 class="username">
+                        <strong>
+                            @Model.CustomerName
+                        </strong>
+                    </h5>
+                }
+            </div>
+            <div class="col-lg-10 col-md-9 col-12 forum-media-header">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 post-time d-none d-md-block">
+                        <span>@T("Forum.Posted"):</span>
+                        <span class="stat-value">@Model.PostCreatedOnStr</span>
+                    </div>
+                    <div class="float-right btn-group btn-group-sm text-sm-right manage-post ml-auto">
+                        @if (Model.IsCurrentCustomerAllowedToEditPost)
+                        {
+                            @Html.RouteLink(T("Forum.EditPost").Text, "PostEdit", new { id = Model.Id }, new { @class = "btn btn-secondary edit-post-button" })
+                        }
+                        @if (Model.IsCurrentCustomerAllowedToDeletePost)
+                        {
+                            <a href="#" class="btn btn-secondary delete-post-button" onclick="deletepost('@(Model.Id)')">
+                                <i class="mdi mdi-delete d-lg-none" aria-hidden="true"></i>
+                                <span class="d-none d-lg-block">@T("Forum.DeletePost").Text</span>
+                            </a>
+                        }
+                        @Html.RouteLink(T("Forum.QuotePost").Text, "PostCreateQuote", new { id = Model.ForumTopicId, quote = Model.Id }, new { @class = "btn btn-secondary quote-post-button" })
+
+                        <a id="@Model.Id" title="@T("Forum.PostLinkTitle")" class="btn btn-secondary btn-sm post-link-button" href="@(thisPageUrl)#@(Model.Id)"><span class="d-none d-lg-block">@T("Forum.PostLink")</span></a>
                     </div>
                 </div>
             </div>
-            <div class="card-body row flex-row mb-3">
-                    <div class="col-lg-2 col-md-3 col-12 text-center text-md-left forum-post">
-                        @if (!String.IsNullOrEmpty(Model.CustomerAvatarUrl))
+        </div>
+        <div class="card-body row flex-row mb-3">
+            <div class="col-lg-2 col-md-3 col-12 text-center text-md-left forum-post">
+                @if (!String.IsNullOrEmpty(Model.CustomerAvatarUrl))
+                {
+                    <div class="avatar mb-1">
+                        @if (Model.AllowViewingProfiles)
                         {
-                            <div class="avatar mb-1">
-                                @if (Model.AllowViewingProfiles)
-                                {
-                                    <a href="@Url.RouteUrl("CustomerProfile", new { id = Model.CustomerId })" class="avatar-img-link">
-                                        <img src="@(Model.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
-                                    </a>
-                                }
-                                else
-                                {
-                                    <img src="@(Model.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
-                                }
-                            </div>
+                            <a href="@Url.RouteUrl("CustomerProfile", new { id = Model.CustomerId })" class="avatar-img-link">
+                                <img src="@(Model.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
+                            </a>
                         }
-                        <ul class="user-stats pl-0 mb-0">
-                            <li class="post-time d-md-none small">
-                                <span>@T("Forum.Posted"):</span>
-                                <span class="stat-value">@Model.PostCreatedOnStr</span>
-                            </li>
-                            @if (Model.IsCustomerForumModerator)
-                            {
-                                <li class="status">
-                                    <label>@T("Forum.Status"):</label>
-                                    <span>@T("Forum.Moderator")</span>
-                                </li>
-                            }
-                            @if (Model.ShowCustomersPostCount)
-                            {
-                                <li class="total-posts">
-                                    <label>@T("Forum.TotalPosts"):</label>
-                                    <span>@Model.ForumPostCount</span>
-                                </li>
-                            }
-                            @if (Model.ShowCustomersJoinDate)
-                            {
-                                <li class="joined">
-                                    <label>@T("Forum.Joined"):</label>
-                                    <span>@Model.CustomerJoinDate.ToString("d")</span>
-                                </li>
-                            }
-                            @if (Model.ShowCustomersLocation && !String.IsNullOrEmpty(Model.CustomerLocation))
-                            {
-                                <li class="location">
-                                    <label>@T("Forum.Location"):</label>
-                                    <span>@Model.CustomerLocation</span>
-                                </li>
-                            }
-                        </ul>
-                        @if (Model.AllowPrivateMessages)
+                        else
                         {
-                            <div class="send-pm pb-1">
-                                @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerId }, new { @class = "btn btn-sm btn-primary pm-button" })
-                            </div>
+                            <img src="@(Model.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
                         }
                     </div>
-                    <div class="col-lg-9 col-md-7 col-9">
-                        <div class="post-text pt-2">
-                            @Html.Raw(Model.FormattedText)
-                            @Html.Hidden("Id", Model.Id)
-                        </div>
+                }
+                <ul class="user-stats pl-0 mb-0">
+                    <li class="post-time d-md-none small">
+                        <span>@T("Forum.Posted"):</span>
+                        <span class="stat-value">@Model.PostCreatedOnStr</span>
+                    </li>
+                    @if (Model.IsCustomerForumModerator)
+                    {
+                        <li class="status">
+                            <label>@T("Forum.Status"):</label>
+                            <span>@T("Forum.Moderator")</span>
+                        </li>
+                    }
+                    @if (Model.ShowCustomersPostCount)
+                    {
+                        <li class="total-posts">
+                            <label>@T("Forum.TotalPosts"):</label>
+                            <span>@Model.ForumPostCount</span>
+                        </li>
+                    }
+                    @if (Model.ShowCustomersJoinDate)
+                    {
+                        <li class="joined">
+                            <label>@T("Forum.Joined"):</label>
+                            <span>@Model.CustomerJoinDate.ToString("d")</span>
+                        </li>
+                    }
+                    @if (Model.ShowCustomersLocation && !String.IsNullOrEmpty(Model.CustomerLocation))
+                    {
+                        <li class="location">
+                            <label>@T("Forum.Location"):</label>
+                            <span>@Model.CustomerLocation</span>
+                        </li>
+                    }
+                </ul>
+                @if (Model.AllowPrivateMessages)
+                {
+                    <div class="send-pm pb-1">
+                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerId }, new { @class = "btn btn-sm btn-primary pm-button" })
+                    </div>
+                }
+            </div>
+            <div class="col-lg-9 col-md-7 col-9">
+                <div class="post-text pt-2">
+                    @Html.Raw(Model.FormattedText)
+                    @Html.Hidden("Id", Model.Id)
+                </div>
 
-                    </div>
-                            <div class="col-3 col-sm-2 col-lg-1 ml-auto text-center px-0" id="@String.Format("post-vote-{0}", Model.Id)">
-                                    <span class="col vote up @if (Model.VoteIsUp.HasValue && (bool) Model.VoteIsUp){<text>selected</text>}"
-                                          title="This post/answer is useful">
-                                        <i class="mdi mdi-chevron-up" aria-hidden="true"></i>
-                                    </span>
-                                    <div class="col vote-count-post btn btn-sm btn-block btn-secondary"> @Model.VoteCount </div>
-                                    <span class="col vote down @if (Model.VoteIsUp.HasValue && (bool)!Model.VoteIsUp) { <text>selected</text> }"
-                                          title="This post/answer is not useful">
-                                        <i class="mdi mdi-chevron-down" aria-hidden="true"></i>
-                                    </span>
-                            </div>
-                        </div>
-            @if (Model.SignaturesEnabled & !String.IsNullOrEmpty(Model.FormattedSignature))
+            </div>
+            @if (Model.AllowPostVoting)
             {
-                <div class="card-footer signature">
-                    @Html.Raw(Model.FormattedSignature)
+                <div class="col-3 col-sm-2 col-lg-1 ml-auto text-center px-0" id="@String.Format("post-vote-{0}", Model.Id)">
+                    <span class="col vote up @if (Model.VoteIsUp.HasValue && (bool)Model.VoteIsUp)
+                    {<text>selected</text>}"
+                          title="This post/answer is useful">
+                        <i class="mdi mdi-chevron-up" aria-hidden="true"></i>
+                    </span>
+                    <div class="col vote-count-post btn btn-sm btn-block btn-secondary"> @Model.VoteCount </div>
+                    <span class="col vote down @if (Model.VoteIsUp.HasValue && (bool)!Model.VoteIsUp)
+                    { <text>selected</text> }"
+                          title="This post/answer is not useful">
+                        <i class="mdi mdi-chevron-down" aria-hidden="true"></i>
+                    </span>
                 </div>
             }
-                    </div>
-
-
         </div>
+        @if (Model.SignaturesEnabled & !String.IsNullOrEmpty(Model.FormattedSignature))
+        {
+            <div class="card-footer signature">
+                @Html.Raw(Model.FormattedSignature)
+            </div>
+        }
+    </div>
+
+
+</div>
 
 @if (Model.AllowPostVoting)
 {

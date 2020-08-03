@@ -6,20 +6,20 @@
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToCategories.AddNew").Text;
 }
 
-<form asp-controller="Discount" asp-action="CategoryAddPopup" method="post"
+<form asp-area="Admin" asp-controller="Discount" asp-action="CategoryAddPopup" method="post"
       asp-route-DiscountId="@Context.Request.Query["DiscountId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
 
 
     @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
+        <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
-    </script>
+        </script>
     }
 
     <div class="row">
@@ -116,7 +116,7 @@
         });
     });
     </script>
-    <script type="text/javascript">
+    <script>
                     $(document).ready(function() {
                         $('#search-categories').click(function() {
                             var grid = $('#categories-grid').data('kendoGrid');

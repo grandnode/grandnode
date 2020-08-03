@@ -1,10 +1,7 @@
-﻿using FluentValidation.Attributes;
-using Grand.Api.Validators.Common;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
 
 namespace Grand.Api.DTOs.Common
 {
-    [Validator(typeof(PictureValidator))]
     public partial class PictureDto : BaseApiEntityModel
     {
         public byte[] PictureBinary { get; set; }

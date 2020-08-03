@@ -1,12 +1,12 @@
 ﻿using Grand.Core;
+using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Localization;
 using Grand.Framework.Localization;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Framework.Mvc.Filters
@@ -35,7 +35,7 @@ namespace Grand.Framework.Mvc.Filters
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
             private readonly ILanguageService _languageService;
-            private readonly LocalizationSettings _localizationSettings;
+            private readonly GrandConfig _config;
 
             #endregion
 
@@ -43,12 +43,12 @@ namespace Grand.Framework.Mvc.Filters
 
             public CheckLanguageSeoCodeFilter(IWebHelper webHelper,
                 IWorkContext workContext, ILanguageService languageService,
-                LocalizationSettings localizationSettings)
+                GrandConfig config)
             {
-                this._webHelper = webHelper;
-                this._workContext = workContext;
-                this._languageService = languageService;
-                this._localizationSettings = localizationSettings;
+                _webHelper = webHelper;
+                _workContext = workContext;
+                _languageService = languageService;
+                _config = config;
             }
 
             #endregion
@@ -81,17 +81,14 @@ namespace Grand.Framework.Mvc.Filters
                 }
 
                 //whether SEO friendly URLs are enabled
-                if (!_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                if (!_config.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     await next();
                     return;
                 }
 
-
-                //ensure that this route is registered and localizable (LocalizedRoute in RouteProvider)
-                if (context.RouteData == null
-                    || context.RouteData.Routers == null
-                    || !context.RouteData.Routers.ToList().Any(r => r is LocalizedRoute))
+                var lang = context.RouteData.Values["language"];
+                if (lang == null)
                 {
                     await next();
                     return;

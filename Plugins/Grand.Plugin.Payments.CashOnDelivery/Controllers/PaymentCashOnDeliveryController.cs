@@ -1,9 +1,11 @@
 ﻿using Grand.Core;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Payments.CashOnDelivery.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
+using Grand.Services.Security;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +15,7 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Controllers
 {
     [AuthorizeAdmin]
     [Area("Admin")]
+    [PermissionAuthorize(PermissionSystemName.PaymentMethods)]
     public class PaymentCashOnDeliveryController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
@@ -28,11 +31,11 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Controllers
             ILocalizationService localizationService,
             ILanguageService languageService)
         {
-            this._workContext = workContext;
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
+            _workContext = workContext;
+            _storeService = storeService;
+            _settingService = settingService;
+            _localizationService = localizationService;
+            _languageService = languageService;
         }
         
         public async Task<IActionResult> Configure()
@@ -44,9 +47,9 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Controllers
             var model = new ConfigurationModel();
             model.DescriptionText = cashOnDeliveryPaymentSettings.DescriptionText;
             //locales
-            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, async (locale, languageId) => 
             {
-                locale.DescriptionText = cashOnDeliveryPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, languageId, "", false, false);
+                locale.DescriptionText = await cashOnDeliveryPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, languageId, "", false, false);
             });
             model.AdditionalFee = cashOnDeliveryPaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = cashOnDeliveryPaymentSettings.AdditionalFeePercentage;

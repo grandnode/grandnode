@@ -162,7 +162,7 @@
                 var day = splitResults[2].substring(0, 2);
 
                 if (selectedYear == year && selectedMonth == month && selectedDay == day) {
-                    $("#hoursDiv").append("<label class='btn btn-secondary'><input type='radio' id='Reservation_" + Reservation.availableDates[i].Id + "' name='Reservation' value='" + Reservation.availableDates[i].Id + "' />" + Reservation.availableDates[i].Date.substring(11, 16) + "</label>");
+                    $("#hoursDiv").append("<a class='btn btn-secondary text-white rounded-0 mr-1 mb-1'><input type='radio' id='Reservation_" + Reservation.availableDates[i].Id + "' name='Reservation' value='" + Reservation.availableDates[i].Id + "' />" + Reservation.availableDates[i].Date.substring(11, 16) + "</a>");
                 }
             }
 

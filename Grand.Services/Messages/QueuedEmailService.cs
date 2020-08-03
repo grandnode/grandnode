@@ -1,7 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Messages;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver;
@@ -16,27 +15,18 @@ namespace Grand.Services.Messages
     public partial class QueuedEmailService : IQueuedEmailService
     {
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
-        private readonly IDataProvider _dataProvider;
-        private readonly CommonSettings _commonSettings;
         private readonly IMediator _mediator;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="queuedEmailRepository">Queued email repository</param>
-        /// <param name="eventPublisher">Event published</param>
-        /// <param name="dbContext">DB context</param>
-        /// <param name="dataProvider">WeData provider</param>
-        /// <param name="commonSettings">Common settings</param>
+        /// <param name="mediator">Mediator</param>
         public QueuedEmailService(IRepository<QueuedEmail> queuedEmailRepository,
-            IMediator mediator,
-            IDataProvider dataProvider, 
-            CommonSettings commonSettings)
+            IMediator mediator)
         {
             _queuedEmailRepository = queuedEmailRepository;
             _mediator = mediator;
-            _dataProvider = dataProvider;
-            _commonSettings = commonSettings;
         }
 
         /// <summary>

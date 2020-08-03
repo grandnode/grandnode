@@ -6,14 +6,14 @@
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
     </script>
 }
     <vc:admin-widget widget-zone="address_attribute_value_details_top" additional-data="Model" />
-@(Html.LocalizedEditor<AddressAttributeValueModel, AddressAttributeValueLocalizedModel>("addressattributevalue-localized",
+@(await Html.LocalizedEditor<AddressAttributeValueModel, AddressAttributeValueLocalizedModel>("addressattributevalue-localized",
     @<div class="form-horizontal">
          <div class="form-body">
              <div class="form-group">

@@ -1,14 +1,11 @@
-﻿using FluentValidation.Attributes;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Common
 {
-    [Validator(typeof(AddressValidator))]
     public partial class AddressModel : BaseGrandEntityModel
     {
         public AddressModel()
@@ -19,19 +16,19 @@ namespace Grand.Web.Areas.Admin.Models.Common
         }
 
         [GrandResourceDisplayName("Admin.Address.Fields.FirstName")]
-        
+
         public string FirstName { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.LastName")]
-        
+
         public string LastName { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.Email")]
-        
+
         public string Email { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.Company")]
-        
+
         public string Company { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.VatNumber")]
@@ -41,38 +38,38 @@ namespace Grand.Web.Areas.Admin.Models.Common
         public string CountryId { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.Country")]
-        
+
         public string CountryName { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.StateProvince")]
         public string StateProvinceId { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.StateProvince")]
-        
+
         public string StateProvinceName { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.City")]
-        
+
         public string City { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.Address1")]
-        
+
         public string Address1 { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.Address2")]
-        
+
         public string Address2 { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.ZipPostalCode")]
-        
+
         public string ZipPostalCode { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.PhoneNumber")]
-        
+
         public string PhoneNumber { get; set; }
 
         [GrandResourceDisplayName("Admin.Address.Fields.FaxNumber")]
-        
+
         public string FaxNumber { get; set; }
 
         //address in HTML format (usually used in grids)

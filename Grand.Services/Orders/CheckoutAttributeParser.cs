@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +17,7 @@ namespace Grand.Services.Orders
 
         public CheckoutAttributeParser(ICheckoutAttributeService checkoutAttributeService)
         {
-            this._checkoutAttributeService = checkoutAttributeService;
+            _checkoutAttributeService = checkoutAttributeService;
         }
 
         /// <summary>
@@ -100,6 +100,37 @@ namespace Grand.Services.Orders
                         var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
                         if (value != null)
                             values.Add(value);
+                    }
+                }
+            }
+            return values;
+        }
+
+        /// <summary>
+        /// Get checkout attribute values with checkout attribute 
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>Checkout attribute values with checkout attribute </returns>
+        public virtual async Task<IList<(CheckoutAttribute ca, CheckoutAttributeValue cav)>> ParseCheckoutAttributeValue(string attributesXml)
+        {
+            var values = new List<(CheckoutAttribute ca, CheckoutAttributeValue cav)>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return values;
+
+            var attributes = await ParseCheckoutAttributes(attributesXml);
+            foreach (var attribute in attributes)
+            {
+                if (!attribute.ShouldHaveValues())
+                    continue;
+
+                var valuesStr = ParseValues(attributesXml, attribute.Id);
+                foreach (string valueStr in valuesStr)
+                {
+                    if (!String.IsNullOrEmpty(valueStr))
+                    {
+                        var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault();
+                        if (value != null)
+                            values.Add((attribute, value));
                     }
                 }
             }

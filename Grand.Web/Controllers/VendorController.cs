@@ -1,12 +1,12 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
+using Grand.Domain.Media;
+using Grand.Domain.Seo;
+using Grand.Domain.Vendors;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -15,15 +15,17 @@ using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Seo;
 using Grand.Services.Vendors;
+using Grand.Web.Commands.Models.Vendors;
 using Grand.Web.Extensions;
+using Grand.Web.Features.Models.Common;
+using Grand.Web.Models.Common;
 using Grand.Web.Models.Vendors;
-using Grand.Web.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Grand.Core.Domain.Seo;
 
 namespace Grand.Web.Controllers
 {
@@ -32,15 +34,15 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IVendorService _vendorService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
-        private readonly IAddressViewModelService _addressViewModelService;
         private readonly ICountryService _countryService;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IMediator _mediator;
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
         private readonly CaptchaSettings _captchaSettings;
@@ -50,37 +52,38 @@ namespace Grand.Web.Controllers
 
         #region Constructors
 
-        public VendorController(IWorkContext workContext,
+        public VendorController(
+            IWorkContext workContext,
+            IStoreContext storeContext,
             ILocalizationService localizationService,
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
             IVendorService vendorService,
             IUrlRecordService urlRecordService,
             IPictureService pictureService,
-            IAddressViewModelService addressViewModelService,
             ICountryService countryService,
-            IServiceProvider serviceProvider,
+            IMediator mediator,
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
             CaptchaSettings captchaSettings,
             CommonSettings commonSettings,
             MediaSettings mediaSettings)
         {
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._customerService = customerService;
-            this._workflowMessageService = workflowMessageService;
-            this._vendorService = vendorService;
-            this._urlRecordService = urlRecordService;
-            this._pictureService = pictureService;
-            this._addressViewModelService = addressViewModelService;
-            this._countryService = countryService;
-            this._serviceProvider = serviceProvider;
-            this._localizationSettings = localizationSettings;
-            this._vendorSettings = vendorSettings;
-            this._captchaSettings = captchaSettings;
-            this._commonSettings = commonSettings;
-            this._mediaSettings = mediaSettings;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _customerService = customerService;
+            _workflowMessageService = workflowMessageService;
+            _vendorService = vendorService;
+            _urlRecordService = urlRecordService;
+            _pictureService = pictureService;
+            _countryService = countryService;
+            _mediator = mediator;
+            _localizationSettings = localizationSettings;
+            _vendorSettings = vendorSettings;
+            _captchaSettings = captchaSettings;
+            _commonSettings = commonSettings;
+            _mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -120,19 +123,20 @@ namespace Grand.Web.Controllers
             model.TermsOfServiceEnabled = _vendorSettings.TermsOfServiceEnabled;
             model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
-            await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
-                address: null,
-                excludeProperties: false,
-                prePopulateWithCustomerFields: true,
-                customer: _workContext.CurrentCustomer,
-                loadCountries: () => countries,
-                vendorSettings: _vendorSettings);
+            model.Address = await _mediator.Send(new GetVendorAddress() {
+                Language = _workContext.WorkingLanguage,
+                Address = null,
+                ExcludeProperties = false,
+                PrePopulateWithCustomerFields = true,
+                Customer = _workContext.CurrentCustomer,
+                LoadCountries = () => countries,
+            });
 
             return View(model);
         }
 
         [HttpPost, ActionName("ApplyVendor")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
         {
@@ -148,18 +152,22 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
-            string pictureId = "";
+            string pictureId = string.Empty;
+            string contentType = string.Empty;
+            byte[] vendorPictureBinary = null;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
                 try
                 {
-                    var contentType = uploadedFile.ContentType;
-                    var vendorPictureBinary = uploadedFile.GetPictureBits();
-                    var picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    contentType = uploadedFile.ContentType;
+                    if (string.IsNullOrEmpty(contentType))
+                        ModelState.AddModelError("", "Empty content type");
+                    else
+                        if (!contentType.StartsWith("image"))
+                            ModelState.AddModelError("", "Only image content type is allowed");
 
-                    if (picture != null)
-                        pictureId = picture.Id;
+                    vendorPictureBinary = uploadedFile.GetPictureBits();
                 }
                 catch (Exception)
                 {
@@ -169,11 +177,17 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                if (vendorPictureBinary != null && !string.IsNullOrEmpty(contentType))
+                {
+                    var picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    if (picture != null)
+                        pictureId = picture.Id;
+                }
+
                 var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
                 var address = new Address();
                 //disabled by default
-                var vendor = new Vendor
-                {
+                var vendor = new Vendor {
                     Name = model.Name,
                     Email = model.Email,
                     Description = description,
@@ -185,9 +199,10 @@ namespace Grand.Web.Controllers
                 };
                 model.Address.ToEntity(vendor.Address, true);
                 await _vendorService.InsertVendor(vendor);
-                //search engine name (the same as vendor name)
-                var seName = await vendor.ValidateSeName(vendor.Name, vendor.Name, true, _serviceProvider.GetRequiredService<SeoSettings>(), 
-                    _serviceProvider.GetRequiredService<IUrlRecordService>(), _serviceProvider.GetRequiredService<ILanguageService>());
+
+                //search engine name (the same as vendor name)                
+                var seName = await vendor.ValidateSeName(vendor.Name, vendor.Name, true, HttpContext.RequestServices.GetRequiredService<SeoSettings>(),
+                    HttpContext.RequestServices.GetRequiredService<IUrlRecordService>(), HttpContext.RequestServices.GetRequiredService<ILanguageService>());
                 await _urlRecordService.SaveSlug(vendor, seName, "");
 
                 //associate to the current customer
@@ -198,7 +213,7 @@ namespace Grand.Web.Controllers
 
                 //notify store owner here (email)
                 await _workflowMessageService.SendNewVendorAccountApplyStoreOwnerNotification(_workContext.CurrentCustomer,
-                    vendor, _localizationSettings.DefaultAdminLanguageId);
+                    vendor, _storeContext.CurrentStore, _localizationSettings.DefaultAdminLanguageId);
 
                 model.DisableFormInput = true;
                 model.Result = _localizationService.GetResource("Vendors.ApplyAccount.Submitted");
@@ -208,14 +223,15 @@ namespace Grand.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
-            await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
-                address: null,
-                excludeProperties: false,
-                prePopulateWithCustomerFields: true,
-                customer: _workContext.CurrentCustomer,
-                loadCountries: () => countries,
-                vendorSettings: _vendorSettings);
-
+            model.Address = await _mediator.Send(new GetVendorAddress() {
+                Language = _workContext.WorkingLanguage,
+                Address = null,
+                Model = model.Address,
+                ExcludeProperties = false,
+                PrePopulateWithCustomerFields = true,
+                Customer = _workContext.CurrentCustomer,
+                LoadCountries = () => countries,
+            });
             return View(model);
         }
 
@@ -232,22 +248,21 @@ namespace Grand.Web.Controllers
             model.Description = vendor.Description;
             model.Email = vendor.Email;
             model.Name = vendor.Name;
-
-            var picture = await _pictureService.GetPictureById(vendor.PictureId);
-            var pictureSize = _mediaSettings.AvatarPictureSize;
-            model.PictureUrl = picture != null ? await _pictureService.GetPictureUrl(picture, pictureSize) : string.Empty;
+            model.GenericAttributes = vendor.GenericAttributes;
+            model.PictureUrl = await _pictureService.GetPictureUrl(vendor.PictureId, _mediaSettings.AvatarPictureSize, false);
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
-            await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
-                address: vendor.Address,
-                excludeProperties: false,
-                loadCountries: () => countries,
-                vendorSettings: _vendorSettings);
+            model.Address = await _mediator.Send(new GetVendorAddress() {
+                Language = _workContext.WorkingLanguage,
+                Address = vendor.Address,
+                ExcludeProperties = false,
+                LoadCountries = () => countries,
+            });
 
             return View(model);
         }
 
         [HttpPost, ActionName("Info")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("save-info-button")]
         public virtual async Task<IActionResult> Info(VendorInfoModel model, IFormFile uploadedFile)
         {
@@ -257,15 +272,22 @@ namespace Grand.Web.Controllers
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
 
-            Picture picture = null;
+            string pictureId = string.Empty;
+            string contentType = string.Empty;
+            byte[] vendorPictureBinary = null;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
                 try
                 {
-                    var contentType = uploadedFile.ContentType;
-                    var vendorPictureBinary = uploadedFile.GetPictureBits();
-                    picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    contentType = uploadedFile.ContentType;
+                    if (string.IsNullOrEmpty(contentType))
+                        ModelState.AddModelError("", "Empty content type");
+                    else
+                        if (!contentType.StartsWith("image"))
+                        ModelState.AddModelError("", "Only image content type is allowed");
+
+                    vendorPictureBinary = uploadedFile.GetPictureBits();
                 }
                 catch (Exception)
                 {
@@ -284,13 +306,14 @@ namespace Grand.Web.Controllers
                 vendor.Email = model.Email;
                 vendor.Description = description;
 
-                if (picture != null)
+                if (vendorPictureBinary != null && !string.IsNullOrEmpty(contentType))
                 {
-                    vendor.PictureId = picture.Id;
-
-                    if (prevPicture != null)
-                        await _pictureService.DeletePicture(prevPicture);
+                    var picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    if (picture != null)
+                        vendor.PictureId = picture.Id;
                 }
+                if (prevPicture != null)
+                    await _pictureService.DeletePicture(prevPicture);
 
                 //update picture seo file name
                 await UpdatePictureSeoNames(vendor);
@@ -300,22 +323,24 @@ namespace Grand.Web.Controllers
 
                 //notifications
                 if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
-                    await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _storeContext.CurrentStore, _localizationSettings.DefaultAdminLanguageId);
 
                 return RedirectToAction("Info");
             }
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
-            await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
-                address: vendor.Address,
-                excludeProperties: false,
-                loadCountries: () => countries,
-                vendorSettings: _vendorSettings);
+            model.Address = await _mediator.Send(new GetVendorAddress() {
+                Language = _workContext.WorkingLanguage,
+                Model = model.Address,
+                Address = vendor.Address,
+                ExcludeProperties = false,
+                LoadCountries = () => countries,
+            });
 
             return View(model);
         }
 
         [HttpPost, ActionName("Info")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("remove-picture")]
         public virtual async Task<IActionResult> RemovePicture()
         {
@@ -336,11 +361,62 @@ namespace Grand.Web.Controllers
 
             //notifications
             if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
-                await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendVendorInformationChangeNotification(vendor, _storeContext.CurrentStore, _localizationSettings.DefaultAdminLanguageId);
 
             return RedirectToAction("Info");
         }
 
+        //contact vendor page
+        public virtual async Task<IActionResult> ContactVendor(string vendorId)
+        {
+            if (!_vendorSettings.AllowCustomersToContactVendors)
+                return RedirectToRoute("HomePage");
+
+            var vendor = await _vendorService.GetVendorById(vendorId);
+            if (vendor == null || !vendor.Active || vendor.Deleted)
+                return RedirectToRoute("HomePage");
+
+            var model = new ContactVendorModel {
+                Email = _workContext.CurrentCustomer.Email,
+                FullName = _workContext.CurrentCustomer.GetFullName(),
+                SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage,
+                VendorId = vendor.Id,
+                VendorName = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("ContactVendor")]
+        [AutoValidateAntiforgeryToken]
+        [ValidateCaptcha]
+        public virtual async Task<IActionResult> ContactVendor(ContactVendorModel model, bool captchaValid)
+        {
+            if (!_vendorSettings.AllowCustomersToContactVendors)
+                return RedirectToRoute("HomePage");
+
+            var vendor = await _vendorService.GetVendorById(model.VendorId);
+            if (vendor == null || !vendor.Active || vendor.Deleted)
+                return RedirectToRoute("HomePage");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+            }
+
+            model.VendorName = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
+
+            if (ModelState.IsValid)
+            {
+                model = await _mediator.Send(new ContactVendorSendCommand() { Model = model, Vendor = vendor, Store = _storeContext.CurrentStore });;
+                return View(model);
+            }
+
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
+            return View(model);
+        }
         #endregion
     }
 }

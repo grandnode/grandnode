@@ -6,9 +6,9 @@ namespace Grand.Plugin.ExternalAuth.Google
 {
     public partial class RouteProvider : IRouteProvider
     {
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
-            routeBuilder.MapRoute("Plugin.ExternalAuth.Google.SignInGoogle",
+            routeBuilder.MapControllerRoute("Plugin.ExternalAuth.Google.SignInGoogle",
                  "google-signin-failed",
                  new { controller = "ExternalAuthGoogle", action = "SignInFailed" }
             );

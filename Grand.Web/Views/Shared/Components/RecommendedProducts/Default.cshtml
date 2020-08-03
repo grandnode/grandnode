@@ -1,13 +1,13 @@
 ﻿@model IList<ProductOverviewModel>
 @inject DisplayOrderHomePage order
 <div class="col-12 product-grid recommended-product-grid px-0 order-@order.RecommendedProducts">
-    <h2 class="h3 generalTitle text-center">
+    <h2 class="generalTitle text-center">
         @T("HomePage.Recommended.Products")
     </h2>
-    <div class="row">
+    <div class="form-row flex-grid">
         @foreach (var item in Model)
         {
-            <div class="col-xl-@order.Rp_Xl col-lg-@order.Rp_Lg col-md-@order.Rp_Md col-sm-@order.Rp_Sm col-@order.Rp_Col product-container">
+            <div class="col-xl-@order.Rp_Xl col-lg-@order.Rp_Lg col-md-@order.Rp_Md col-sm-@order.Rp_Sm col-@order.Rp_Col product-container mb-2">
                 <partial name="_ProductBox" model="item" />
             </div>
         }

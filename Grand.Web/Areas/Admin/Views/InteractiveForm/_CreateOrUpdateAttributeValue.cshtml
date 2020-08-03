@@ -7,14 +7,14 @@
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){} 
         window.close();
     </script>
 }
 
-@(Html.LocalizedEditor<InteractiveFormAttributeValueModel, InteractiveFormAttributeValueLocalizedModel>("attributevalue-localized",
+@(await Html.LocalizedEditor<InteractiveFormAttributeValueModel, InteractiveFormAttributeValueLocalizedModel>("attributevalue-localized",
 @<div class="form-horizontal">
      <div class="form-body">
          <div class="form-group">

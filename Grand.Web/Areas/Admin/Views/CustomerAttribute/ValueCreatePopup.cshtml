@@ -4,12 +4,12 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerAttributes.Values.AddNew").Text;
 }
-<form asp-controller="CustomerAttribute" asp-action="ValueCreatePopup"
+<form asp-area="Admin" asp-controller="CustomerAttribute" asp-action="ValueCreatePopup"
       asp-route-customerAttributeId="@Context.Request.Query["customerAttributeId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
 
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

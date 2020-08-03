@@ -1,5 +1,5 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Documents;
+﻿using Grand.Domain;
+using Grand.Domain.Documents;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Documents

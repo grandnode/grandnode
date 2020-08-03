@@ -22,12 +22,23 @@
     }
     @if (Model.Manufacturers.Any())
     {
-        <li class="nav-item dropdown manufacturer-items d-lg-flex d-none">
-            <a class="nav-link dropdown-toggle" href="@Url.RouteUrl("ManufacturerList")" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <li class="nav-item dropdown manufacturer-items">
+            <a class="nav-link dropdown-toggle" href="@Url.RouteUrl("ManufacturerList")" aria-haspopup="true" aria-expanded="false">
                 <span>@T("Manufacturers.Menu")</span>
                 <span class="mdi mdi-chevron-down arrow-down"></span>
             </a>
             <ul class="dropdown-menu manufacturer-dropdown first-level">
+                <li class="nav-item cat-back d-lg-none d-inline-flex">
+                    <a class="nav-link justify-content-start align-items-center">
+                        <span class="mdi mdi-arrow-left"></span>
+                        <span>@T("Mobile.Categories.Back")</span>
+                    </a>
+                </li>
+                <li class="nav-item d-lg-none d-inline-flex sub-cat-name-container">
+                    <a class="nav-link sub-cat-name" href="@Url.RouteUrl("ManufacturerList")">
+                        <span>@T("Mobile.Category.Show") @T("Manufacturers.List")</span>
+                    </a>
+                </li>
                 @foreach (var manuf in Model.Manufacturers)
                 {
                     <li class="nav-item">

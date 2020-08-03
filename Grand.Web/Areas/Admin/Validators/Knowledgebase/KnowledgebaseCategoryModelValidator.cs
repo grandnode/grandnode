@@ -3,13 +3,17 @@ using Grand.Framework.Validators;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Validators.Knowledgebase
 {
     public class KnowledgebaseCategoryModelValidator : BaseGrandValidator<KnowledgebaseCategoryModel>
     {
-        public KnowledgebaseCategoryModelValidator(ILocalizationService localizationService, IKnowledgebaseService knowledgebaseService)
+        public KnowledgebaseCategoryModelValidator(
+            IEnumerable<IValidatorConsumer<KnowledgebaseCategoryModel>> validators,
+            ILocalizationService localizationService, IKnowledgebaseService knowledgebaseService)
+            : base(validators)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Name.Required"));
             RuleFor(x => x.ParentCategoryId).MustAsync(async (x, y, context) =>

@@ -1,5 +1,5 @@
 ﻿@model ReturnRequestDetailsModel
-@using Grand.Web.Models.Order
+@using Grand.Web.Models.Orders
 @{
     Layout = "_ColumnsTwo";
 
@@ -184,6 +184,52 @@
                                 </li>
                             }
                         </ul>
+                    </div>
+                </div>
+            }
+
+            @if (Model.ReturnRequestNotes.Any())
+            {
+                <div class="returnrequest-notes">
+                    <h5>
+                       @T("ReturnRequests.Notes")
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover data-table">
+                            <colgroup>
+                                <col />
+                                <col />
+                            </colgroup>
+                            <thead class="table-inverse">
+                                <tr class="row mx-0">
+                                    <th class="created-on col-4">
+                                        @T("ReturnRequests.Notes.CreatedOn")
+                                    </th>
+                                    <th class="note col-8">
+                                        @T("ReturnRequests.Notes.Note")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ReturnRequestNotes)
+                                {
+                                    <tr class="row mx-0">
+                                        <td class="created-on col-4">
+                                            @item.CreatedOn.ToString()
+                                        </td>
+                                        <td class="note col-8">
+                                            @Html.Raw(item.Note)
+                                            @if (item.HasDownload)
+                                            {
+                                                <p class="download">
+                                                    <a href="@Url.RouteUrl("GetReturnRequestNoteFile", new { returnrequestnoteid = item.Id })">@T("ReturnRequests.Notes.Download")</a>
+                                                </p>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             }

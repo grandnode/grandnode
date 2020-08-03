@@ -4,8 +4,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.GeneralCommon").Text;
 }
-<form asp-controller="Setting" asp-action="GeneralCommon" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Setting" asp-action="GeneralCommon" method="post">
+    
     <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">
@@ -101,8 +101,8 @@
 </form>
 
 <div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">
-    <form asp-controller="Plugin" asp-action="UploadTheme" method="post" enctype="multipart/form-data">
-        <antiforgery-token />
+    <form asp-area="Admin" asp-controller="Plugin" asp-action="UploadTheme" method="post" enctype="multipart/form-data">
+        
         <ul class="common-list">
             <li>
                 <strong>NOTE: It can take up to several minutes.</strong>
@@ -135,7 +135,7 @@
     </form>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#importfile").click(function (e) {
             e.preventDefault();

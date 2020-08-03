@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Messages;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
@@ -33,11 +33,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             IWorkContext workContext)
 		{
-            this._queuedEmailService = queuedEmailService;
-            this._emailAccountService = emailAccountService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
+            _queuedEmailService = queuedEmailService;
+            _emailAccountService = emailAccountService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _workContext = workContext;
 		}
 
         public IActionResult Index() => RedirectToAction("List");

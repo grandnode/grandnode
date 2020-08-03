@@ -1,14 +1,18 @@
 ﻿using FluentValidation;
-using Grand.Core.Domain.Common;
+using Grand.Domain.Common;
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Models.Common;
+using System.Collections.Generic;
 
 namespace Grand.Web.Validators.Common
 {
     public class ContactUsValidator : BaseGrandValidator<ContactUsModel>
     {
-        public ContactUsValidator(ILocalizationService localizationService, CommonSettings commonSettings)
+        public ContactUsValidator(
+            IEnumerable<IValidatorConsumer<ContactUsModel>> validators,
+            ILocalizationService localizationService, CommonSettings commonSettings)
+            : base(validators)
         {
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("ContactUs.Email.Required"));
             RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Common.WrongEmail"));

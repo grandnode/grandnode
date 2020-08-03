@@ -83,8 +83,8 @@
                 {
                     int ratingPercent = review.Rating * 20;
                 <div class="card comment vendor-review-item pb-3 mb-3">
-                    <div class="card-header review-item-head pr-0">
-                        <div class="ratings">
+                    <div class="card-header review-item-head pt-0 pr-0">
+                        <div class="ratings justify-content-start">
                             <div class="rating-box">
                                 <div class="rating" style="width: @(ratingPercent)%">
                                 </div>
@@ -132,13 +132,12 @@
 
 <script asp-location="Footer">
     $(document).ready(function () {
-        $('.rating-options .custom-radio').hover(function () {
+        $('.rating-options .custom-radio').on("click",function () {
             if (!$(this).find('input').is(':checked')) {
                 $(this).find('.custom-control-label').html('&#9733;');
                 $(this).prevAll('.custom-radio').find('.custom-control-label').html('&#9733;');
                 $(this).nextAll('.custom-radio').find('.custom-control-label').html('&#x2606;');
             }
-            $(this).find('input').click();
         });
     });
 </script>

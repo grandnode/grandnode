@@ -1,12 +1,11 @@
-﻿using System.Linq;
+﻿using Grand.Domain.Customers;
+using Grand.Services.Common;
+using Grand.Services.Notifications.Authentication;
+using MediatR;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using Grand.Core.Domain.Customers;
-using Grand.Services.Authentication.External;
-using Grand.Services.Common;
-using Grand.Services.Events;
-using MediatR;
 
 namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
 {
@@ -16,7 +15,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
     public partial class FacebookAuthenticationEventConsumer : INotificationHandler<CustomerAutoRegisteredByExternalMethodEvent>
     {
         #region Fields
-        
+
         private readonly IGenericAttributeService _genericAttributeService;
 
         #endregion
@@ -25,7 +24,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
 
         public FacebookAuthenticationEventConsumer(IGenericAttributeService genericAttributeService)
         {
-            this._genericAttributeService = genericAttributeService;
+            _genericAttributeService = genericAttributeService;
         }
 
         #endregion

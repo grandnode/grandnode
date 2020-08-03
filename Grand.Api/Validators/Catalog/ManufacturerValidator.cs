@@ -5,12 +5,15 @@ using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using System.Collections.Generic;
 
 namespace Grand.Api.Validators.Catalog
 {
     public class ManufacturerValidator : BaseGrandValidator<ManufacturerDto>
     {
-        public ManufacturerValidator(ILocalizationService localizationService, IPictureService pictureService, IManufacturerService manufacturerService, IManufacturerTemplateService manufacturerTemplateService)
+        public ManufacturerValidator(IEnumerable<IValidatorConsumer<ManufacturerDto>> validators, 
+            ILocalizationService localizationService, IPictureService pictureService, IManufacturerService manufacturerService, IManufacturerTemplateService manufacturerTemplateService)
+            : base(validators)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.Manufacturer.Fields.Name.Required"));
             RuleFor(x => x.PageSizeOptions).Must(FluentValidationUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResource("Api.Catalog.Manufacturer.Fields.PageSizeOptions.ShouldHaveUniqueItems"));

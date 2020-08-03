@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Messages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +17,7 @@ namespace Grand.Services.Messages
 
         public ContactAttributeParser(IContactAttributeService contactAttributeService)
         {
-            this._contactAttributeService = contactAttributeService;
+            _contactAttributeService = contactAttributeService;
         }
 
         /// <summary>

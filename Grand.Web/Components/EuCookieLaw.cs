@@ -1,11 +1,10 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
+using Grand.Domain.Stores;
 using Grand.Framework.Components;
 using Grand.Services.Common;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -17,9 +16,9 @@ namespace Grand.Web.ViewComponents
         public EuCookieLawViewComponent(StoreInformationSettings storeInformationSettings,
             IWorkContext workContext, IStoreContext storeContext)
         {
-            this._storeInformationSettings = storeInformationSettings;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
+            _storeInformationSettings = storeInformationSettings;
+            _workContext = workContext;
+            _storeContext = storeContext;
         }
 
         public IViewComponentResult Invoke()

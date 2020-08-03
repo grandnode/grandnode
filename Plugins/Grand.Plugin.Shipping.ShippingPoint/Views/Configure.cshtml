@@ -4,12 +4,12 @@
 }
 
 <form asp-controller="ShippingPoint" asp-action="Configure" method="post" id="shipping-instore-form">
-    <antiforgery-token />
+    
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="shipping-points-grid"></div>
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function() {
                         $("#shipping-points-grid").kendoGrid({
                             dataSource: {
@@ -95,7 +95,7 @@
                 <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
             </div>
 
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $('#btnRefresh').click(function () {
                         var grid = $("#shipping-points-grid").data('kendoGrid');

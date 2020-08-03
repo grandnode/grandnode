@@ -9,7 +9,7 @@
                 @foreach (var category in Model)
                 {
                     <li>
-                        <a href="@Url.RouteUrl("BlogByCategory", new { categoryid = category.Id })">
+                        <a href="@Url.RouteUrl("BlogByCategory", new { categorySeName = category.SeName })">
                             @category.Name 
                             (@(category.BlogPostCount))
                         </a>

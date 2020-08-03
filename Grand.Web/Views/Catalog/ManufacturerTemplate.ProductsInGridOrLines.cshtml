@@ -16,7 +16,7 @@
 }
 
 <div class="page manufacturer-page">
-    <h2 class="generalTitle">@Model.Name</h2>
+    <h1 class="generalTitle mt-3 mb-0">@Model.Name</h1>
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_top", additionalData = Model.Id })
     @*description*@
     @if (!String.IsNullOrWhiteSpace(Model.Description))
@@ -30,14 +30,14 @@
     @if (Model.FeaturedProducts.Any())
     {
         <div class="page-separator"></div>
-        <div class="col-12 px-0 product-grid featured-product-grid">
-            <h2 class="h5">
-                <strong>@T("Products.FeaturedProducts")</strong>
+        <div class="col-12 px-0 product-grid customGrid text-center featured-product-grid">
+            <h2 class="h5 text-left">
+                <span>@T("Products.FeaturedProducts")</span>
             </h2>
-            <div class="row">
+            <div class="form-row flex-grid">
                 @foreach (var product in Model.FeaturedProducts)
                 {
-                    <div class="col-6 col-md-6 col-lg-4 product-container">
+                    <div class="col-6 col-md-6 col-lg-4 product-container mb-2">
                         <partial name="_ProductBox" model="product" />
                     </div>
                 }
@@ -50,21 +50,17 @@
         <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_filters", additionalData = Model.Id })
-    @*filtering*@
-    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
-    {
-        <partial name="_FilterPriceBox" model="Model.PagingFilteringContext.PriceRangeFilter" />
-    }
+    
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_product_list", additionalData = Model.Id })
     @if (Model.Products.Any())
     {
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {
-            <div class="product-grid manufactureGrid">
-                <div class="row flex-grid">
+            <div class="product-grid col-12 px-0">
+                <div class="form-row flex-grid">
                     @foreach (var product in Model.Products)
                     {
-                        <div class="col-lg-4 col-sm-6 col-6 product-container">
+                        <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
                             <partial name="_ProductBox" model="product" />
                         </div>
                     }
@@ -73,8 +69,8 @@
         }
         else
         {
-            <div class="product-grid row">
-                <div class="col-12">
+            <div class="product-grid col-12">
+                <div class="row">
                     @foreach (var product in Model.Products)
                     {
                         <partial name="_ProductBoxList" model="product" />
@@ -88,12 +84,24 @@
     }
     @if (!pager.IsEmpty())
     {
-            <nav aria-label="Page navigation">
-                @pager
-            </nav>
+        <nav aria-label="Page navigation">
+            @pager
+        </nav>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_bottom", additionalData = Model.Id })
 </div>
 
-
+@section filters
+    {
+    @*filtering*@
+    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
+    {
+        <partial name="_FilterPriceBox" model="Model.PagingFilteringContext.PriceRangeFilter" />
+    }
+    @*filtering*@
+    @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
+    {
+        <partial name="_FilterSpecsBox" model="Model.PagingFilteringContext.SpecificationFilter" />
+    }
+}
 

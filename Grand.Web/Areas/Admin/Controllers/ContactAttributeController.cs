@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
@@ -41,12 +41,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             ICustomerService customerService)
         {
-            this._contactAttributeViewModelService = contactAttributeViewModelService;
-            this._contactAttributeService = contactAttributeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
-            this._customerService = customerService;
+            _contactAttributeViewModelService = contactAttributeViewModelService;
+            _contactAttributeService = contactAttributeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _customerService = customerService;
         }
 
         #endregion
@@ -147,7 +147,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = contactAttribute.Id });
                 }

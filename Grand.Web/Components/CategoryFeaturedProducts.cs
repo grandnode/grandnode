@@ -1,5 +1,7 @@
-﻿using Grand.Framework.Components;
-using Grand.Web.Interfaces;
+﻿using Grand.Core;
+using Grand.Framework.Components;
+using Grand.Web.Features.Models.Catalog;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,16 +11,23 @@ namespace Grand.Web.Components
     public class CategoryFeaturedProductsViewComponent : BaseViewComponent
     {
         #region Fields
-        private readonly ICatalogViewModelService _catalogViewModelService;
+
+        private readonly IMediator _mediator;
+        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
+
         #endregion
 
         #region Constructors
 
         public CategoryFeaturedProductsViewComponent(
-            ICatalogViewModelService catalogViewModelService
-)
+            IMediator mediator,
+            IWorkContext workContext,
+            IStoreContext storeContext)
         {
-            this._catalogViewModelService = catalogViewModelService;
+            _mediator = mediator;
+            _workContext = workContext;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -27,7 +36,12 @@ namespace Grand.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _catalogViewModelService.PrepareCategoryFeaturedProducts();
+            var model = await _mediator.Send(new GetCategoryFeaturedProducts() {
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
+
             if (!model.Any())
                 return Content("");
             return View(model);

@@ -1,8 +1,8 @@
 ﻿@model ProductDetailsModel
-<div class="gallery col-12 col-md-6 px-0">
+<div class="gallery col-12 col-md-6 mt-md-0 mt-3 px-0">
         <div class="zoom picture-@Model.Id mb-1">
             <a title="@Model.DefaultPictureModel.Title"
-               id="main-product-img-lightbox-anchor-@Model.Id">
+               id="main-product-img-anchor-@Model.Id">
                 <img class="img-fluid"
                      alt="@Model.DefaultPictureModel.AlternateText"
                      src="@Model.DefaultPictureModel.ImageUrl"
@@ -65,13 +65,13 @@
                                 }
                             }
                         });
-                        $('#main-product-img-lightbox-anchor-@Model.Id img').on('click', function () {
+                        $('#main-product-img-anchor-@Model.Id img').on('click', function () {
                             var href = $(this).attr('data-fullsize');
                             $("a[data-mfp-src$='" + href + "']").click();
                         });
                         $('#ModalQuickView .thumb-popup-link img').on('click', function () {
                             var href2 = $(this).attr('data-size');
-                            $("#ModalQuickView #main-product-img-lightbox-anchor-@Model.Id img").attr("src", href2);
+                            $("#ModalQuickView #main-product-img-anchor-@Model.Id img").attr("src", href2);
                         });
                     });
                 </script>
@@ -82,7 +82,7 @@
                     $(document).ready(function () {
                         if ($(window).width() > 768) {
                             $('.picture-@Model.Id').zoom({
-                                url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
+                                url: $('#main-product-img-anchor-@Model.Id img').attr('data-fullsize')
                             });
                         }
                         $('.product-standard  .picture-thumbs-@Model.Id').magnificPopup({
@@ -125,17 +125,17 @@
                             }
                         });
                         $('.product-standard .picture-@Model.Id').on('click', function () {
-                            var href = $(this).find("#main-product-img-lightbox-anchor-@Model.Id img").attr('data-fullsize');
+                            var href = $(this).find("#main-product-img-anchor-@Model.Id img").attr('data-fullsize');
                             $("a[data-mfp-src$='" + href + "']").click();
                         });
                         
                         $('#ModalQuickView .thumb-popup-link').on('click', function () {
                                 var href2 = $(this).attr('data-mfp-src');
-                                $("#ModalQuickView #main-product-img-lightbox-anchor-@Model.Id > img").attr("src", href2);
+                                $("#ModalQuickView #main-product-img-anchor-@Model.Id > img").attr("src", href2);
                                 $('#ModalQuickView .picture-@Model.Id .zoomImg').remove();
                                 if ($(window).width() > 768) {
                                     $('#ModalQuickView .zoom').zoom({
-                                        url: $('#ModalQuickView #main-product-img-lightbox-anchor-@Model.Id a img').attr("src")
+                                        url: $('#ModalQuickView #main-product-img-anchor-@Model.Id a img').attr("src")
                                     });
                                 }
                         });
@@ -150,8 +150,8 @@
 
                 <script asp-location="Footer">
                 $(document).ready(function () {
-                    $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').attr('href', "@Model.DefaultPictureModel.FullSizeImageUrl");
-                    $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').magnificPopup({
+                    $('.product-standard #main-product-img-anchor-@Model.Id').attr('href', "@Model.DefaultPictureModel.FullSizeImageUrl");
+                    $('.product-standard #main-product-img-anchor-@Model.Id').magnificPopup({
                             type: 'image',
                             removalDelay: 300,
                             gallery: {
@@ -172,11 +172,11 @@
                     $(document).ready(function () {
                         if ($(window).width() > 768) {
                             $('.picture-@Model.Id').zoom({
-                                url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
+                                url: $('#main-product-img-anchor-@Model.Id img').attr('data-fullsize')
                             });
                         }
-                        $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').attr('href', "@Model.DefaultPictureModel.FullSizeImageUrl");
-                        $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').magnificPopup({
+                        $('.product-standard #main-product-img-anchor-@Model.Id').attr('href', "@Model.DefaultPictureModel.FullSizeImageUrl");
+                        $('.product-standard #main-product-img-anchor-@Model.Id').magnificPopup({
                             type: 'image',
                             removalDelay: 300,
                             gallery: {
@@ -196,15 +196,10 @@
                             }
                         });
                         $('.product-standard .picture-@Model.Id').on('click', function () {
-                            $(".product-standard #main-product-img-lightbox-anchor-@Model.Id").click();
+                            $(".product-standard #main-product-img-anchor-@Model.Id").click();
                         });
                     });
                 </script>
             }
         }
 </div>
-@*<script asp-location="Footer">
-    $(document).ready(function () {
-        $('.gallery .picture-@Model.Id').trigger('zoom.destroy');
-    });
-</script>*@

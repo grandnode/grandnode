@@ -31,9 +31,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public ActivityLogController(ICustomerActivityService customerActivityService,
             ILocalizationService localizationService, IActivityLogViewModelService activityLogViewModelService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._activityLogViewModelService = activityLogViewModelService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _activityLogViewModelService = activityLogViewModelService;
         }
 
         #endregion

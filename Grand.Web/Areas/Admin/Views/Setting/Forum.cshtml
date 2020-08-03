@@ -3,11 +3,11 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Forums").Text;
 }
-<form asp-controller="Setting" asp-action="Forum" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Setting" asp-action="Forum" method="post">
+    
     <div asp-validation-summary="All"></div>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.AllowPostVoting)").click(toggleAllowVoting);
             toggleAllowVoting();

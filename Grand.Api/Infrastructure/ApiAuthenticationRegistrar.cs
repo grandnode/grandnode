@@ -6,6 +6,7 @@ using Grand.Services.Authentication.External;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -15,31 +16,31 @@ namespace Grand.Api.Infrastructure
 {
     public partial class ApiAuthenticationRegistrar : IExternalAuthenticationRegistrar
     {
-        public void Configure(AuthenticationBuilder builder)
+        public void Configure(AuthenticationBuilder builder, IConfiguration configuration)
         {
             builder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
-                var apiConfig = EngineContext.Current.Resolve<ApiConfig>();
+                var config = new ApiConfig();
+                configuration.GetSection("Api").Bind(config);
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = apiConfig.ValidateIssuer,
-                    ValidateAudience = apiConfig.ValidateAudience,
+                    ValidateIssuer = config.ValidateIssuer,
+                    ValidateAudience = config.ValidateAudience,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = apiConfig.ValidIssuer,
-                    ValidAudience = apiConfig.ValidAudience,
-                    IssuerSigningKey = JwtSecurityKey.Create(apiConfig.SecretKey)
+                    ValidIssuer = config.ValidIssuer,
+                    ValidAudience = config.ValidAudience,
+                    IssuerSigningKey = JwtSecurityKey.Create(config.SecretKey)
                 };
 
                 options.Events = new JwtBearerEvents
                 {
-                    OnAuthenticationFailed = context =>
+                    OnAuthenticationFailed = async context =>
                     {
                         context.NoResult();
                         context.Response.StatusCode = 401;
                         context.Response.ContentType = "text/plain";
-                        context.Response.WriteAsync(context.Exception.Message).Wait();
-                        return Task.CompletedTask;
+                        await context.Response.WriteAsync(context.Exception.Message);
                     },
                     OnChallenge = context =>
                     {
@@ -50,7 +51,7 @@ namespace Grand.Api.Infrastructure
                     {
                         try
                         {
-                            var apiAuthenticationService = EngineContext.Current.Resolve<IApiAuthenticationService>();
+                            var apiAuthenticationService = context.HttpContext.RequestServices.GetRequiredService<IApiAuthenticationService>();
                             if (await apiAuthenticationService.Valid(context))
                                 await apiAuthenticationService.SignIn();
                             else

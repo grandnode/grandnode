@@ -1,5 +1,5 @@
-﻿using Grand.Core.Data;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Domain.Data;
+using Grand.Domain.Messages;
 using Grand.Services.Events;
 using System;
 using System.Collections.Generic;
@@ -24,8 +24,8 @@ namespace Grand.Services.Messages
 
         public NewsletterCategoryService(IRepository<NewsletterCategory> newsletterCategoryRepository, IMediator mediator)
         {
-            this._newsletterCategoryRepository = newsletterCategoryRepository;
-            this._mediator = mediator;
+            _newsletterCategoryRepository = newsletterCategoryRepository;
+            _mediator = mediator;
         }
         #endregion
 
@@ -33,7 +33,7 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Inserts a newsletter category
         /// </summary>
-        /// <param name="NewsletterCategory">NewsletterCategory</param>        
+        /// <param name="newslettercategory">NewsletterCategory</param>        
         public virtual async Task InsertNewsletterCategory(NewsletterCategory newslettercategory)
         {
             if (newslettercategory == null)
@@ -48,7 +48,7 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Updates a newsletter category
         /// </summary>
-        /// <param name="NewsletterCategory">NewsletterCategory</param>
+        /// <param name="newslettercategory">NewsletterCategory</param>
         public virtual async Task UpdateNewsletterCategory(NewsletterCategory newslettercategory)
         {
             if (newslettercategory == null)
@@ -64,7 +64,7 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Deleted a newsletter category
         /// </summary>
-        /// <param name="NewsletterCategory">NewsletterCategory</param>
+        /// <param name="newslettercategory">NewsletterCategory</param>
         public virtual async Task DeleteNewsletterCategory(NewsletterCategory newslettercategory)
         {
             if (newslettercategory == null)
@@ -80,7 +80,7 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Gets a newsletter by category
         /// </summary>
-        /// <param name="Id">newsletter category</param>
+        /// <param name="id">newsletter category</param>
         /// <returns>Banner</returns>
         public virtual Task<NewsletterCategory> GetNewsletterCategoryById(string id)
         {

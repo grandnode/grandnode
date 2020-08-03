@@ -16,11 +16,8 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
     public class SliderViewComponent : ViewComponent
     {
         private readonly IPictureService _pictureService;
-        private readonly ICacheManager _cacheManager;
         private readonly ISliderService _sliderService;
         private readonly IWorkContext _workContext;
-
-        public const string PICTURE_URL_MODEL_KEY = "Grand.plugins.widgets.slider.pictureurl-{0}";
 
         public SliderViewComponent(
             IPictureService pictureService,
@@ -28,33 +25,26 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
             ISliderService sliderService,
             IWorkContext workContext)
         {
-            this._pictureService = pictureService;
-            this._cacheManager = cacheManager;
-            this._sliderService = sliderService;
-            this._workContext = workContext;
+            _pictureService = pictureService;
+            _sliderService = sliderService;
+            _workContext = workContext;
         }
 
         protected async Task<string> GetPictureUrl(string pictureId)
         {
+            var url = await _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false);
+            if (url == null)
+                url = "";
 
-            string cacheKey = string.Format(PICTURE_URL_MODEL_KEY, pictureId);
-            return await _cacheManager.GetAsync(cacheKey, async () =>
-            {
-                var url = await _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false);
-                if (url == null)
-                    url = "";
-
-                return url;
-            });
+            return url;
         }
 
         protected async Task PrepareModel(IList<PictureSlider> sliders, PublicInfoModel model)
         {
             int i = 1;
-            foreach (var item in sliders.OrderBy(x=>x.DisplayOrder))
+            foreach (var item in sliders.OrderBy(x => x.DisplayOrder))
             {
-                model.Slide.Add(new PublicInfoModel.Slider()
-                {
+                model.Slide.Add(new PublicInfoModel.Slider() {
                     Link = item.Link,
                     PictureUrl = await GetPictureUrl(item.PictureId),
                     Name = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),

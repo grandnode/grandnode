@@ -1,17 +1,21 @@
 ﻿using FluentValidation;
 using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Validators.Catalog
 {
     public class ProductPictureModelValidator : BaseGrandValidator<ProductModel.ProductPictureModel>
     {
-        public ProductPictureModelValidator(ILocalizationService localizationService, IProductService productService, IWorkContext workContext)
+        public ProductPictureModelValidator(
+            IEnumerable<IValidatorConsumer<ProductModel.ProductPictureModel>> validators,
+            ILocalizationService localizationService, IProductService productService, IWorkContext workContext)
+            : base(validators)
         {
             if (workContext.CurrentCustomer.IsStaff())
             {

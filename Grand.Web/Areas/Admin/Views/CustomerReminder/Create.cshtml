@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerReminder.AddNew").Text;
 }
-<form asp-controller="CustomerReminder" asp-action="Create" method="post" id="customer-reminder-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="CustomerReminder" asp-action="Create" method="post" id="customer-reminder-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

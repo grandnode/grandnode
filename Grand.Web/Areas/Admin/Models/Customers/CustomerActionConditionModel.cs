@@ -1,14 +1,10 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Customers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    [Validator(typeof(CustomerActionConditionValidator))]
     public partial class CustomerActionConditionModel : BaseGrandEntityModel
     {
         public CustomerActionConditionModel()
@@ -29,7 +25,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         public string CustomerActionId { get; set; }
 
 
-        public partial class AddProductToConditionModel 
+        public partial class AddProductToConditionModel
         {
             public AddProductToConditionModel()
             {
@@ -41,7 +37,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            
+
             public string SearchProductName { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
@@ -66,10 +62,10 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string[] SelectedProductIds { get; set; }
         }
 
-        public partial class AddCategoryConditionModel 
+        public partial class AddCategoryConditionModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
-            
+
             public string SearchCategoryName { get; set; }
 
             public string CustomerActionId { get; set; }
@@ -78,10 +74,10 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string[] SelectedCategoryIds { get; set; }
         }
 
-        public partial class AddManufacturerConditionModel 
+        public partial class AddManufacturerConditionModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
-            
+
             public string SearchManufacturerName { get; set; }
 
             public string CustomerActionId { get; set; }

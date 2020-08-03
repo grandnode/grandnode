@@ -1,11 +1,11 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Stores;
 using Grand.Core.Plugins;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Feed.GoogleShopping.Domain;
 using Grand.Plugin.Feed.GoogleShopping.Models;
 using Grand.Plugin.Feed.GoogleShopping.Services;
@@ -26,6 +26,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
 {
     [Area("Admin")]
     [AuthorizeAdmin]
+    [PermissionAuthorize(PermissionSystemName.Plugins)]
     public class FeedGoogleShoppingController : BasePluginController
     {
         private readonly IGoogleService _googleService;
@@ -54,18 +55,18 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
             IPermissionService permissionService,
             IServiceProvider serviceProvider)
         {
-            this._googleService = googleService;
-            this._productService = productService;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._pluginFinder = pluginFinder;
-            this._logger = logger;
-            this._webHelper = webHelper;
-            this._storeService = storeService;
-            this._GoogleShoppingSettings = GoogleShoppingSettings;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
-            this._serviceProvider = serviceProvider;
+            _googleService = googleService;
+            _productService = productService;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _pluginFinder = pluginFinder;
+            _logger = logger;
+            _webHelper = webHelper;
+            _storeService = storeService;
+            _GoogleShoppingSettings = GoogleShoppingSettings;
+            _settingService = settingService;
+            _permissionService = permissionService;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<IActionResult> Configure()
@@ -79,7 +80,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
             model.StoreId = _GoogleShoppingSettings.StoreId;
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
             //currencies
             model.CurrencyId = _GoogleShoppingSettings.CurrencyId;
             foreach (var c in await _currencyService.GetAllCurrencies())
@@ -98,7 +99,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
                 if (System.IO.File.Exists(localFilePath))
                     model.GeneratedFiles.Add(new FeedGoogleShoppingModel.GeneratedFileModel
                     {
-                        StoreName = store.Name,
+                        StoreName = store.Shortcut,
                         FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _GoogleShoppingSettings.StaticFileName)
                     });
             }
@@ -168,7 +169,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> GoogleProductList(DataSourceRequest command)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -209,7 +210,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> GoogleProductUpdate(FeedGoogleShoppingModel.GoogleProductModel model)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))

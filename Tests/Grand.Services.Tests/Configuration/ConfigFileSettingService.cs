@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Configuration;
+using Grand.Domain.Data;
+using Grand.Domain.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Grand.Services.Configuration;
@@ -19,19 +19,14 @@ namespace Grand.Services.Tests.Configuration
     public class ConfigFileSettingService : SettingService
     {
         private readonly ICacheManager _cacheManager;
-        public ConfigFileSettingService(IEnumerable<ICacheManager> cacheManager,
+        public ConfigFileSettingService(ICacheManager cacheManager,
             IMediator eventPublisher,
-            IRepository<Setting> settingRepository,
-            IServiceProvider serviceProvider) :
-            base(cacheManager, eventPublisher, settingRepository, serviceProvider)
+            IRepository<Setting> settingRepository) :
+            base(cacheManager, eventPublisher, settingRepository)
         {
-            _cacheManager = cacheManager.FirstOrDefault();
+            _cacheManager = cacheManager;
         }
-        public override Setting GetSettingById(string settingId)
-        {
-            throw new InvalidOperationException("Get setting by id is not supported");
-        }
-
+        
         public override T GetSettingByKey<T>(string key, T defaultValue = default(T),
             string storeId = "", bool loadSharedValueIfNotFound = false)
         {

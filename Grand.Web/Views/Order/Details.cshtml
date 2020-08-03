@@ -35,7 +35,7 @@
 
             @if (Model.ShowAddOrderNote)
             {
-                <a href="@Url.RouteUrl("AddOrderNote", new { orderId = Model.Id })" class="btn btn-outline-secondary">Add order note</a>
+                <a href="@Url.RouteUrl("AddOrderNote", new { orderId = Model.Id })" class="btn btn-outline-secondary">@T("Order.AddOrderNote")</a>
             }
         </div>
     }
@@ -49,6 +49,12 @@
         <h5 class="order-number">
             <strong>@T("Order.Order#")@Model.OrderNumber</strong>
         </h5>
+        @if(!string.IsNullOrEmpty(Model.OrderCode))
+        {
+            <div class="order-code">
+                @T("Order.OrderCode"): @Model.OrderCode
+            </div>
+        }
         <div class="order-date">
             @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
         </div>
@@ -367,9 +373,13 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                             <col width="1">
                             <col width="1">
                             <col width="1">
+                            <col width="1">
                         </colgroup>
                         <thead>
                             <tr>
+                                <th class="product-picture text-center">
+                                    @T("Order.Product(s).Picture")
+                                </th>
                                 <th class="product text-center">
                                     @T("Order.Product(s).Name")
                                 </th>
@@ -388,6 +398,9 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                             @foreach (var item in Model.Items)
                             {
                                 <tr class="item-container">
+                                    <td class="product-picture text-center">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                    </td>
                                     <td class="product">
                                         @if (!Model.PrintMode)
                                         {
@@ -467,7 +480,7 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                 {
                     var inclTax = Model.PricesIncludeTax;
                     <div class="tax-shipping-info">
-                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
+                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
                     </div>
                 }
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))

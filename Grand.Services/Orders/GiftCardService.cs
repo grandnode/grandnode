@@ -1,7 +1,8 @@
-using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Orders;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Orders;
 using Grand.Services.Events;
+using Grand.Services.Queries.Models.Orders;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -30,7 +31,7 @@ namespace Grand.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="giftCardRepository">Gift card context</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public GiftCardService(IRepository<GiftCard> giftCardRepository, IMediator mediator)
         {
             _giftCardRepository = giftCardRepository;
@@ -84,22 +85,18 @@ namespace Grand.Services.Orders
             string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _giftCardRepository.Table;
+            var model = new GetGiftCardQuery() {
+                CreatedFromUtc = createdFromUtc,
+                CreatedToUtc = createdToUtc,
+                GiftCardCouponCode = giftCardCouponCode,
+                IsGiftCardActivated = isGiftCardActivated,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                PurchasedWithOrderItemId = purchasedWithOrderItemId,
+                RecipientName = recipientName
+            };
 
-            if (!string.IsNullOrEmpty(purchasedWithOrderItemId))
-                query = query.Where(gc => gc.PurchasedWithOrderItem.Id == purchasedWithOrderItemId);
-
-            if (createdFromUtc.HasValue)
-                query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
-            if (createdToUtc.HasValue)
-                query = query.Where(gc => createdToUtc.Value >= gc.CreatedOnUtc);
-            if (isGiftCardActivated.HasValue)
-                query = query.Where(gc => gc.IsGiftCardActivated == isGiftCardActivated.Value);
-            if (!String.IsNullOrEmpty(giftCardCouponCode))
-                query = query.Where(gc => gc.GiftCardCouponCode == giftCardCouponCode);
-            if (!String.IsNullOrWhiteSpace(recipientName))
-                query = query.Where(c => c.RecipientName.Contains(recipientName));
-            query = query.OrderByDescending(gc => gc.CreatedOnUtc);
+            var query = await _mediator.Send(model);
             return await PagedList<GiftCard>.Create(query, pageIndex, pageSize);
         }
 

@@ -44,13 +44,13 @@
         <div class="form-group">
             <admin-label asp-for="StatusId" />
             <div class="col-md-4 col-sm-6">
-                <admin-select asp-for="StatusId" asp-items="((DocumentStatus)Model.StatusId).ToSelectList()" />
+                <admin-select asp-for="StatusId" asp-items="((DocumentStatus)Model.StatusId).ToSelectList(Context)" />
             </div>
         </div>
         <div class="form-group">
             <admin-label asp-for="ReferenceId" />
             <div class="col-md-4 col-sm-6">
-                <admin-select asp-for="ReferenceId" asp-items="((Reference)Model.ReferenceId).ToSelectList()" />
+                <admin-select asp-for="ReferenceId" asp-items="((Reference)Model.ReferenceId).ToSelectList(Context)" />
             </div>
         </div>
         <div class="form-group object-reference">

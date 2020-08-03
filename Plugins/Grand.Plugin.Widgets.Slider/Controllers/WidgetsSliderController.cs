@@ -2,6 +2,7 @@
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Widgets.Slider.Models;
 using Grand.Plugin.Widgets.Slider.Services;
 using Grand.Services.Catalog;
@@ -20,6 +21,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
 {
     [AuthorizeAdmin]
     [Area("Admin")]
+    [PermissionAuthorize(PermissionSystemName.Widgets)]
     public class WidgetsSliderController : BasePluginController
     {
         private readonly IStoreService _storeService;
@@ -27,7 +29,6 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ISliderService _sliderService;
         private readonly ILanguageService _languageService;
-        private readonly IPermissionService _permissionService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
 
@@ -37,18 +38,16 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             ILocalizationService localizationService,
             ISliderService sliderService,
             ILanguageService languageService,
-            IPermissionService permissionService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService)
         {
-            this._storeService = storeService;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._sliderService = sliderService;
-            this._languageService = languageService;
-            this._permissionService = permissionService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
+            _storeService = storeService;
+            _pictureService = pictureService;
+            _localizationService = localizationService;
+            _sliderService = sliderService;
+            _languageService = languageService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
         }
 
         protected virtual async Task PrepareAllCategoriesModel(SlideModel model)
@@ -66,7 +65,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             {
                 model.AvailableCategories.Add(new SelectListItem
                 {
-                    Text = c.GetFormattedBreadCrumb(categories),
+                    Text = _categoryService.GetFormattedBreadCrumb(c, categories),
                     Value = c.Id.ToString()
                 });
             }
@@ -91,20 +90,14 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 });
             }
         }
-
-        public async Task<IActionResult> Configure()
+        public IActionResult Configure()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             return View("~/Plugins/Widgets.Slider/Views/List.cshtml");
         }
+
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             var sliders = await _sliderService.GetPictureSliders();
 
             var items = new List<SlideListModel>();
@@ -128,9 +121,6 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
 
         public async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             var model = new SlideModel();
             //locales
             await AddLocales(_languageService, model.Locales);
@@ -145,9 +135,6 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(SlideModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var pictureSlider = model.ToEntity();
@@ -172,9 +159,6 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
         }
         public async Task<IActionResult> Edit(string id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             var slide = await _sliderService.GetById(id);
             if (slide == null)
                 return RedirectToAction("Configure");
@@ -200,9 +184,6 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(SlideModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             var pictureSlider = await _sliderService.GetById(model.Id);
             if (pictureSlider == null)
                 return RedirectToAction("Configure");
@@ -229,9 +210,6 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
 
         public async Task<IActionResult> Delete(string id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             var pictureSlider = await _sliderService.GetById(id);
             if (pictureSlider == null)
                 return Json(new DataSourceResult { Errors = "This pictureSlider not exists" });

@@ -31,9 +31,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             IGiftCardService giftCardService,
             ILocalizationService localizationService)
         {
-            this._giftCardViewModelService = giftCardViewModelService;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
+            _giftCardViewModelService = giftCardViewModelService;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
         }
 
         #endregion
@@ -112,7 +112,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = giftCard.Id });
                 }

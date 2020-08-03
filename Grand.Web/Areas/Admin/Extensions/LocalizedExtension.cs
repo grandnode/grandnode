@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Seo;
+using Grand.Domain;
+using Grand.Domain.Localization;
+using Grand.Domain.Seo;
 using Grand.Framework.Localization;
 using Grand.Services.Localization;
 using Grand.Services.Seo;

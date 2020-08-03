@@ -1,12 +1,16 @@
 ﻿/* carousel */
 
-#GrandCarousel {
-    width: calc(100vw - 10px);
-}
+    #GrandCarousel {
+        width: calc(100vw - 10px);
+    }
 
     #GrandCarousel .carousel-item.img-desc,
     #GrandCarousel .carousel-item.img-desc .carousel-caption {
         height: 500px;
+    }
+
+    #GrandCarousel .carousel-item[onclick] {
+        cursor: pointer;
     }
 
     #GrandCarousel .carousel-item .carousel-caption {
@@ -16,6 +20,10 @@
         bottom: 0;
         left: 0;
         padding: 0;
+    }
+
+    #GrandCarousel .carousel-indicators li {
+        background-color: #d2d2d2;
     }
 
     #GrandCarousel .carousel-item.with-bg .carousel-caption {
@@ -44,7 +52,7 @@
 
     #GrandCarousel .carousel-item .slide-title h2 {
         font-size: 38px;
-        font-weight: 500;
+        font-weight: 300;
         color: #1D1F20;
     }
     #GrandCarousel .carousel-item .slide-title.grandslide h2 {
@@ -59,9 +67,9 @@
         text-align: left;
     }
     #GrandCarousel .carousel-item .slide-content.grandslide {
-        max-width: 90%;
+        max-width: 100%;
         margin: 0 auto 0 auto;
-        font-size: 32px;
+        font-size: 24px;
         text-align: center;
         color: #dfdfdf;
     }
@@ -89,34 +97,53 @@
         padding: 10px 20px;
     }
 
+    #GrandCarousel .carousel-indicators {
+        margin-bottom: 15px;
+    }
+
     #GrandCarousel .carousel-control-prev,
     #GrandCarousel .carousel-control-next {
         top: calc(50% - 25px);
         width: 5%;
         height: 50px;
-        color: #1D1F20;
+        color: #364150;
+        background: #f2f2f2;
         font-size: 30px;
         opacity: 0;
         z-index: 10;
+        -webkit-transition: all .3s ease;
         transition: all .3s ease;
+    }
+    #GrandCarousel .carousel-control-prev .mdi,
+    #GrandCarousel .carousel-control-next .mdi {
+        font-size: 34px;
     }
 
     #GrandCarousel:hover .carousel-control-prev,
     #GrandCarousel:hover .carousel-control-next {
-        opacity: 1;
+        opacity: .8;
     }
 
     #GrandCarousel .carousel-control-prev {
         left: 0;
+        border-top-right-radius: .25rem;
+        border-bottom-right-radius: .25rem;
     }
 
     #GrandCarousel .carousel-control-next {
         right: 0;
+        border-top-left-radius: .25rem;
+        border-bottom-left-radius: .25rem;
     }
 
 @media screen and (max-width: 1200px) {
     #GrandCarousel .carousel-item .slide-content.grandslide {
-        font-size: 18px;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: -0.5px;
+    }
+    #GrandCarousel .btn {
+        padding: 6px 18px;
     }
     #GrandCarousel .carousel-item .slide-title.grandslide h2 {
         font-size: 36px;

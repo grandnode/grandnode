@@ -27,7 +27,7 @@
     }
 }
 <div class="page compare-products-page">
-        <h2 class="text-xs-center generalTitle">@T("Products.Compare.Title")</h2>
+        <h2 class="text-center generalTitle">@T("Products.Compare.Title")</h2>
         @if (Model.Products.Any())
         {
             <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')" class="btn btn-sm btn-outline-secondary clear-list">@T("Products.Compare.Clear")</a>
@@ -143,9 +143,9 @@
                 </table>
             </div>
 }
-else
-{
-            <div class="no-data">
+        else
+        {
+            <div class="no-data text-center">
                 @T("Products.Compare.NoItems")
             </div>
         }

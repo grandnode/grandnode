@@ -1,17 +1,15 @@
 ﻿@model IList<ProductOverviewModel>
 @if (Model.Any())
 {
-    <div class="product-grid row cross-sells pt-1">
-        <div class="col-12 px-0">
-            <h4 class="generalTitle"><strong>@T("ShoppingCart.CrossSells")</strong></h4>
-            <div class="row flex-grid w-100">
-                @foreach (var product in Model)
-                {
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-2">
-                        <partial name="_ProductBox" model="product" />
-                    </div>
-                }
-            </div>
+    <div class="col-12 px-0 customGrid cross-sell-container">
+        <h5 class="generalTitle text-center"><strong>@T("ShoppingCart.CrossSells")</strong></h5>
+        <div class="form-row flex-grid mx-0">
+            @foreach (var product in Model)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 col-6 product-container mb-2">
+                    <partial name="_ProductBox" model="product" />
+                </div>
+            }
         </div>
     </div>
 }

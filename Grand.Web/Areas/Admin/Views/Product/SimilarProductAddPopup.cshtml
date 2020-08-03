@@ -6,11 +6,11 @@
     ViewBag.Title = T("Admin.Catalog.Products.SimilarProducts.AddNew").Text;
 }
 
-<form asp-controller="Product" asp-action="SimilarProductAddPopup"
+<form asp-area="Admin" asp-controller="Product" asp-action="SimilarProductAddPopup"
       asp-route-productId="@Context.Request.Query["productId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
 
     <div class="row">
         <div class="col-md-12">
@@ -79,7 +79,7 @@
     </div>
     @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
+    <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
@@ -144,7 +144,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#search-products').click(function () {
                 var grid = $('#products-grid').data('kendoGrid');

@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Stores;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -42,8 +42,7 @@ namespace Grand.Services.Helpers.Tests
                 DefaultStoreTimeZoneId = ""
             };
 
-            _dateTimeHelper = new DateTimeHelper(_workContext, _genericAttributeService,
-                _settingService, _dateTimeSettings);
+            _dateTimeHelper = new DateTimeHelper(_workContext, _dateTimeSettings);
         }
 
         [TestMethod()]

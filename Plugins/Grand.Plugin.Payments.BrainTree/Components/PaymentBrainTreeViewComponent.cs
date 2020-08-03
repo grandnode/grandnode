@@ -4,14 +4,14 @@ using System.Net;
 using System.Threading.Tasks;
 using Braintree;
 using Grand.Core;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Plugin.Payments.BrainTree;
 using Grand.Plugin.Payments.BrainTree.Models;
 using Grand.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Nop.Plugin.Payments.BrainTree.Components
+namespace Grand.Plugin.Payments.BrainTree.Components
 {
     [ViewComponent(Name = "PaymentBrainTree")]
     public class PaymentBrainTreeViewComponent : ViewComponent
@@ -88,11 +88,11 @@ namespace Nop.Plugin.Payments.BrainTree.Components
             }
 
             //set postback values (we cannot access "Form" with "GET" requests)
-            if (Request.Method != WebRequestMethods.Http.Get)
+            if (Request.Method == WebRequestMethods.Http.Get)
                 return View("~/Plugins/Payments.BrainTree/Views/PaymentInfo.cshtml", model);
 
+            var form = await HttpContext.Request.ReadFormAsync();
 
-            var form = Request.Form;
             model.CardholderName = form["CardholderName"];
             model.CardNumber = form["CardNumber"];
             model.CardCode = form["CardCode"];

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Messages;
+﻿using Grand.Domain.Messages;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -23,9 +23,9 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IEmailAccountService _emailAccountService;
-        private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IStoreService _storeService;
+        private readonly ILanguageService _languageService;
         private readonly ICustomerTagService _customerTagService;
         private readonly INewsletterCategoryService _newsletterCategoryService;
 
@@ -33,9 +33,9 @@ namespace Grand.Web.Areas.Admin.Services
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IEmailAccountService emailAccountService,
-            ILocalizationService localizationService,
             IMessageTokenProvider messageTokenProvider,
             IStoreService storeService,
+            ILanguageService languageService,
             ICustomerTagService customerTagService,
             INewsletterCategoryService newsletterCategoryService)
         {
@@ -43,9 +43,9 @@ namespace Grand.Web.Areas.Admin.Services
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _emailAccountService = emailAccountService;
-            _localizationService = localizationService;
             _messageTokenProvider = messageTokenProvider;
             _storeService = storeService;
+            _languageService = languageService;
             _customerTagService = customerTagService;
             _newsletterCategoryService = newsletterCategoryService;
         }
@@ -69,18 +69,28 @@ namespace Grand.Web.Areas.Admin.Services
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores.Add(new SelectListItem
-            {
-                Text = _localizationService.GetResource("Admin.Common.All"),
-                Value = ""
-            });
             var stores = await _storeService.GetAllStores();
             foreach (var store in stores)
             {
                 model.AvailableStores.Add(new SelectListItem
                 {
-                    Text = store.Name,
+                    Text = store.Shortcut,
                     Value = store.Id.ToString()
+                });
+            }
+        }
+
+        protected virtual async Task PrepareLanguagesModel(CampaignModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var languages = await _languageService.GetAllLanguages();
+            foreach (var lang in languages)
+            {
+                model.AvailableLanguages.Add(new SelectListItem {
+                    Text = lang.Name,
+                    Value = lang.Id.ToString()
                 });
             }
         }
@@ -122,6 +132,8 @@ namespace Grand.Web.Areas.Admin.Services
             model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             await PrepareStoresModel(model);
+            //languages
+            await PrepareLanguagesModel(model);
             //Tags
             await PrepareCustomerTagsModel(model);
             //Roles
@@ -139,6 +151,8 @@ namespace Grand.Web.Areas.Admin.Services
             model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             await PrepareStoresModel(model);
+            //languages
+            await PrepareLanguagesModel(model);
             //Tags
             await PrepareCustomerTagsModel(model);
             //Newsletter categories
@@ -156,6 +170,8 @@ namespace Grand.Web.Areas.Admin.Services
             model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             await PrepareStoresModel(model);
+            //languages
+            await PrepareLanguagesModel(model);
             //Tags
             await PrepareCustomerTagsModel(model);
             //Newsletter categories

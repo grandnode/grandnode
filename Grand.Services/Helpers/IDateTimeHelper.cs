@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;

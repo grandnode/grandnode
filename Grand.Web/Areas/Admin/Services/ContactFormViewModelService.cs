@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Messages;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
@@ -30,12 +30,12 @@ namespace Grand.Web.Areas.Admin.Services
             IStoreService storeService,
             IEmailAccountService emailAccountService)
         {
-            this._contactUsService = contactUsService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeService = storeService;
-            this._emailAccountService = emailAccountService;
+            _contactUsService = contactUsService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _storeService = storeService;
+            _emailAccountService = emailAccountService;
         }
 
         public virtual async Task<ContactFormListModel> PrepareContactFormListModel()
@@ -44,7 +44,7 @@ namespace Grand.Web.Areas.Admin.Services
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
 
             return model;
         }
@@ -79,7 +79,7 @@ namespace Grand.Web.Areas.Admin.Services
                 m.CreatedOn = _dateTimeHelper.ConvertToUserTime(item.CreatedOnUtc, DateTimeKind.Utc);
                 m.Enquiry = "";
                 m.Email = m.FullName + " - " + m.Email;
-                m.Store = store != null ? store.Name : "-empty-";
+                m.Store = store != null ? store.Shortcut : "-empty-";
                 contactformmodelList.Add(m);
             }
 
@@ -90,7 +90,7 @@ namespace Grand.Web.Areas.Admin.Services
             var model = contactUs.ToModel();
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(contactUs.CreatedOnUtc, DateTimeKind.Utc);
             var store = await _storeService.GetStoreById(contactUs.StoreId);
-            model.Store = store != null ? store.Name : "-empty-";
+            model.Store = store != null ? store.Shortcut : "-empty-";
             var email = await _emailAccountService.GetEmailAccountById(contactUs.EmailAccountId);
             model.EmailAccountName = email != null ? email.DisplayName : "-empty-";
             return model;

@@ -1,6 +1,5 @@
 ﻿@model Grand.Framework.Mvc.Models.DeleteConfirmationModel
-<form asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" method="post" asp-route-id="@Model.Id">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" method="post" asp-route-id="@Model.Id">
     <div>
         <p>
             @T("Admin.Common.DeleteConfirmation")

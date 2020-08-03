@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Media;
-using Grand.Framework.Security;
+using Grand.Domain.Media;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,7 +14,7 @@ namespace Grand.Web.Areas.Admin.Controllers
     /// Controller used by jbimages (JustBoil.me) plugin (TimyMCE)
     /// </summary>
     //do not validate request token (XSRF)
-    [AdminAntiForgery(true)]
+    [IgnoreAntiforgeryToken]
     public partial class JbimagesController : BaseAdminController
     {
         private readonly IPermissionService _permissionService;
@@ -23,8 +22,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public JbimagesController(IPermissionService permissionService, MediaSettings mediaSettings)
         {
-            this._permissionService = permissionService;
-            this._mediaSettings = mediaSettings;
+            _permissionService = permissionService;
+            _mediaSettings = mediaSettings;
         }
 
         [NonAction]
@@ -45,11 +44,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ViewData["result"] = "No access to this functionality";
                 return View();
             }
-
-            if (Request.Form.Files.Count == 0)
+            var form = await HttpContext.Request.ReadFormAsync();
+            if (form.Files.Count == 0)
                 throw new Exception("No file uploaded");
 
-            var uploadFile = Request.Form.Files.FirstOrDefault();
+            var uploadFile = form.Files.FirstOrDefault();
             if (uploadFile == null)
             {
                 ViewData["resultCode"] = "failed";

@@ -6,13 +6,13 @@
 <vc:admin-widget widget-zone="country_state_details_top" additional-data="Model" />
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
     </script>
 }
-@(Html.LocalizedEditor<StateProvinceModel, StateProvinceLocalizedModel>("state-localized",
+@(await Html.LocalizedEditor<StateProvinceModel, StateProvinceLocalizedModel>("state-localized",
     @<div class="form-horizontal">
         <div class="form-body"></div>
         <div class="form-group">

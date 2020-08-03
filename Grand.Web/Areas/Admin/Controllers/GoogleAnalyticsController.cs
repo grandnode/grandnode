@@ -1,7 +1,4 @@
-﻿using Grand.Core.Caching;
-using Grand.Services.Configuration;
-using Grand.Services.Localization;
-using Grand.Services.Security;
+﻿using Grand.Services.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -10,35 +7,18 @@ using System.Threading.Tasks;
 namespace Grand.Web.Areas.Admin.Controllers
 {
     public partial class GoogleAnalyticsController : BaseAdminController
-	{
-        private readonly ICacheManager _cacheManager;
-        private readonly IPermissionService _permissionService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ILanguageService _languageService;
+    {
         private readonly IGoogleAnalyticsService _googleAnalyticsService;
 
-        public GoogleAnalyticsController(ICacheManager cacheManager,
-            ILocalizationService localizationService, 
-            IPermissionService permissionService,
-            ILanguageService languageService,
+        public GoogleAnalyticsController(
             IGoogleAnalyticsService googleAnalyticsService)
-		{
-            this._cacheManager = cacheManager;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._languageService = languageService;
-            this._googleAnalyticsService = googleAnalyticsService;
-           
+        {
+            _googleAnalyticsService = googleAnalyticsService;
         }
-
-        #region Utilities
-
-
-        #endregion
-
+       
         public async Task<IActionResult> DashboardGeneralData(DateTime? startDate = null, DateTime? endDate = null)
         {
-            if(!startDate.HasValue)
+            if (!startDate.HasValue)
             {
                 startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             }

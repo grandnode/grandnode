@@ -1,8 +1,8 @@
 using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Security;
+using Grand.Domain;
+using Grand.Domain.Catalog;
+using Grand.Domain.Data;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Security;
@@ -72,7 +72,6 @@ namespace Grand.Services.Catalog
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
@@ -91,30 +90,27 @@ namespace Grand.Services.Catalog
         /// <param name="manufacturerRepository">Category repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="aclService">Acl service </param>
         public ManufacturerService(ICacheManager cacheManager,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
             IWorkContext workContext,
-            IStoreContext storeContext,
             CatalogSettings catalogSettings,
             IMediator mediator,
             IStoreMappingService storeMappingService,
             IAclService aclService)
         {
-            this._cacheManager = cacheManager;
-            this._manufacturerRepository = manufacturerRepository;
-            this._productRepository = productRepository;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
-            this._storeMappingService = storeMappingService;
-            this._aclService = aclService;
+            _cacheManager = cacheManager;
+            _manufacturerRepository = manufacturerRepository;
+            _productRepository = productRepository;
+            _workContext = workContext;
+            _catalogSettings = catalogSettings;
+            _mediator = mediator;
+            _storeMappingService = storeMappingService;
+            _aclService = aclService;
         }
         #endregion
 
@@ -133,8 +129,8 @@ namespace Grand.Services.Catalog
             var updatefilter = builder.PullFilter(x => x.ProductManufacturers, y => y.ManufacturerId == manufacturer.Id);
             await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
 
             await _manufacturerRepository.DeleteAsync(manufacturer);
 
@@ -164,7 +160,7 @@ namespace Grand.Services.Catalog
 
             if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)))
             {
-                if (!_catalogSettings.IgnoreAcl)
+                if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
@@ -232,8 +228,8 @@ namespace Grand.Services.Catalog
             await _manufacturerRepository.InsertAsync(manufacturer);
 
             //cache
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(manufacturer);
@@ -251,8 +247,8 @@ namespace Grand.Services.Catalog
             await _manufacturerRepository.UpdateAsync(manufacturer);
 
             //cache
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(manufacturer);
@@ -272,9 +268,9 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
             //event notification
             await _mediator.EntityDeleted(productManufacturer);
@@ -288,10 +284,10 @@ namespace Grand.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        public virtual async Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerId(string manufacturerId,
+        public virtual async Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerId(string manufacturerId, string storeId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, storeId);
             return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _productRepository.Table.Where(x => x.ProductManufacturers.Any(y => y.ManufacturerId == manufacturerId));
@@ -306,12 +302,11 @@ namespace Grand.Services.Catalog
                                 where !p.SubjectToAcl || allowedCustomerRolesIds.Any(x => p.CustomerRoles.Contains(x))
                                 select p;
                     }
-                    if (!_catalogSettings.IgnoreStoreLimitations)
+                    if (!_catalogSettings.IgnoreStoreLimitations && !string.IsNullOrEmpty(storeId))
                     {
                         //Store mapping
-                        var currentStoreId = _storeContext.CurrentStore.Id;
                         query = from p in query
-                                where !p.LimitedToStores || p.Stores.Contains(currentStoreId)
+                                where !p.LimitedToStores || p.Stores.Contains(storeId)
                                 select p;
 
                     }
@@ -320,8 +315,7 @@ namespace Grand.Services.Catalog
 
                 var query_ProductManufacturer = from prod in query
                                                 from pm in prod.ProductManufacturers
-                                                select new SerializeProductManufacturer
-                                                {
+                                                select new SerializeProductManufacturer {
                                                     Id = pm.Id,
                                                     ProductId = prod.Id,
                                                     DisplayOrder = pm.DisplayOrder,
@@ -366,9 +360,9 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
             //event notification
             await _mediator.EntityInserted(productManufacturer);
@@ -394,9 +388,9 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
             //event notification
             await _mediator.EntityUpdated(productManufacturer);

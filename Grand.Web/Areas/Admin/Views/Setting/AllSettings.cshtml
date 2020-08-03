@@ -1,11 +1,12 @@
 ﻿@model SettingFilterModel
 @inject AdminAreaSettings adminAreaSettings
+@inject IStoreService storeService
 @using Grand.Services.Stores
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
 }
-<antiforgery-token />
+
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">
@@ -167,7 +168,6 @@
             Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
         }
         @{
-            var storeService = EngineContext.Current.Resolve<IStoreService>();
             var allStores = await storeService.GetAllStores();
         }
         @foreach (var store in allStores)
@@ -175,7 +175,7 @@
             <text>
             , {
                 Id: "@(store.Id)",
-                Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(store.Name)))"
+                Name: "@(Html.Raw(store.Shortcut))"
             }
             </text>
         }

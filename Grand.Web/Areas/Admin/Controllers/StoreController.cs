@@ -28,10 +28,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService)
         {
-            this._storeViewModelService = storeViewModelService;
-            this._storeService = storeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
+            _storeViewModelService = storeViewModelService;
+            _storeService = storeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
         }
 
         public IActionResult List() => View();
@@ -105,6 +105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = store.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Shortcut = store.GetLocalized(x => x.Shortcut, languageId, false, false);
             });
             return View(model);
         }

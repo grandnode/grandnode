@@ -1,5 +1,4 @@
 ﻿@model ProductModel
-@using Grand.Core.Domain.Catalog
 
 <div class="panel panel-default">
     <vc:admin-widget widget-zone="product_details_product_attributes_top" additional-data="Model" />
@@ -8,7 +7,7 @@
     </div>
     <vc:admin-widget widget-zone="product_details_product_attributes_bottom" additional-data="Model" />
     <div class="panel-footer">
-        <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeMappingPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshProductAttributes", formId = "product-form" }))', 800, 600, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Catalog.Products.ProductAttributes.AddNew")</button>
+        <button type="submit" id="btnAddNewAttributes" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeMappingPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshProductAttributes", formId = "product-form" }))', 800, 600, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Catalog.Products.ProductAttributes.AddNew")</button>
     </div>
 </div>
 
@@ -111,28 +110,14 @@
                         field: "AttributeControlTypeId",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")",
                         width: 140,
-                        editor: attributeControlTypeDropDownEditor,
-                        template: "#:AttributeControlType#"
+                        template: "#:AttributeControlType# <br> # if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?&productId=@(Model.Id)&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 300, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink")</a><br />#=ValidationRulesString# #}  #"
                     },
                     {
-                        field: "DisplayOrder",
-                        title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder")",
-                        width: 70,
-                        headerAttributes: { style: "text-align:center" },
-                        attributes: { style: "text-align:center" },
-                        //integer format
-                        format: "{0:0}"
-                    }, {
                         field: "ShouldHaveValues",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values")",
                         width: 60,
                         template: '# if(ShouldHaveValues) {# <a href="@Url.Content("~/Admin/Product/EditAttributeValues/")?productAttributeMappingId=#=Id#&productId=@(Model.Id)">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink")</a><br />@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.TotalValues") #=TotalValues# #}  #'
                     },
-                    {
-                        field: "ValidationRulesAllowed",
-                        title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")",
-                        width: 80,
-                        template: "# if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?&productId=@(Model.Id)&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 300, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink")</a><br />#=ValidationRulesString# #}  #"},
                     {
                         field: "ConditionAllowed",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")",
@@ -152,65 +137,10 @@
             });
         });
 
-        //local datasource
-        var allProductAttributes = [
-            @for (int i = 0; i < Model.AvailableProductAttributes.Count; i++)
-            {
-                var productAttributeItem = Model.AvailableProductAttributes[i];
-                <text>
-            {
-                Id: '@(productAttributeItem.Value)',
-                Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(productAttributeItem.Text)))"
-            }
-                </text>
-                if (i != Model.AvailableProductAttributes.Count - 1)
-                {
-                    <text>,</text>
-                }
-            }
-        ];
 
-        var allAttributeControlTypes = [
-            @{
-                var allAttributeControlTypes = (from act in AttributeControlType.DropdownList.ToSelectList()
-                    select new {Id = act.Value, Name = act.Text}).ToList();
-            }
-            @for (int i = 0; i < allAttributeControlTypes.Count; i++)
-            {
-                var attributeControlType = allAttributeControlTypes[i];
-                <text>
-            {
-                Id: '@(attributeControlType.Id)',
-                Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(attributeControlType.Name)))"
-            }
-            </text>
-                if (i != allAttributeControlTypes.Count - 1)
-                {
-                    <text>,</text>
-                }
-            }
-        ];
-
-        function productAttributeDropDownEditor(container, options) {
-            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:ProductAttributeId"/>')
-                .appendTo(container)
-                .kendoDropDownList({
-                    autoBind: true,
-                    dataSource: allProductAttributes
-                });
-        }
-
-        function attributeControlTypeDropDownEditor(container, options) {
-            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:AttributeControlTypeId"/>')
-                .appendTo(container)
-                .kendoDropDownList({
-                    autoBind: true,
-                    dataSource: allAttributeControlTypes
-                });
-        }
 </script>
 <input type="submit" id="btnRefreshProductAttributes" style="display: none" />
-<script type="text/javascript">
+<script>
         $(document).ready(function () {
             $('#btnRefreshProductAttributes').click(function () {
                 //refresh grid

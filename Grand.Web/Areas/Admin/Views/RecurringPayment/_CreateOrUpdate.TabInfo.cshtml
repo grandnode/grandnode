@@ -1,5 +1,5 @@
 ﻿@model RecurringPaymentModel
-@using Grand.Core.Domain.Catalog;
+@using Grand.Domain.Catalog;
 
 <div class="form-horizontal">
     <vc:admin-widget widget-zone="reccuring_payment_details_info_top" additional-data="Model" />
@@ -30,7 +30,7 @@
         <div class="form-group">
             <admin-label asp-for="CyclePeriodId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="CyclePeriodId" asp-items="((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList()" />
+                <admin-select asp-for="CyclePeriodId" asp-items="((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList(Context)" />
                 <span asp-validation-for="CyclePeriodId"></span>
             </div>
         </div>

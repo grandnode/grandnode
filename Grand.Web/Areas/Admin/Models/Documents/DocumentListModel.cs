@@ -17,5 +17,10 @@ namespace Grand.Web.Areas.Admin.Models.Documents
         [GrandResourceDisplayName("Admin.Documents.Document.List.DocumentStatus")]
         public int StatusId { get; set; }
 
+        public int Reference { get; set; }
+
+        public string ObjectId { get; set; }
+        public string CustomerId { get; set; }
+
     }
 }

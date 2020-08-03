@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Framework.Components;
 using Grand.Services.Configuration;
 using Grand.Services.Stores;
@@ -15,9 +15,9 @@ namespace Grand.Web.Areas.Admin.Components
 
         public CommonAclDisabledWarningViewComponent(ISettingService settingService, IStoreService storeService, CatalogSettings catalogSettings)
         {
-            this._settingService = settingService;
-            this._storeService = storeService;
-            this._catalogSettings = catalogSettings;
+            _settingService = settingService;
+            _storeService = storeService;
+            _catalogSettings = catalogSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

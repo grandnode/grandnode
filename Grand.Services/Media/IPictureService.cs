@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Media;
+using Grand.Domain;
+using Grand.Domain.Media;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Media
@@ -15,6 +15,14 @@ namespace Grand.Services.Media
         /// <param name="picture">Picture</param>
         /// <returns>Picture binary</returns>
         Task<byte[]> LoadPictureBinary(Picture picture);
+
+        /// <summary>
+        /// Gets the loaded picture binary depending on picture storage settings
+        /// </summary>
+        /// <param name="picture">Picture</param>
+        /// <param name="fromDb">Load from database; otherwise, from file system</param>
+        /// <returns>Picture binary</returns>
+        Task<byte[]> LoadPictureBinary(Picture picture, bool fromDb);
 
         /// <summary>
         /// Get picture SEO friendly name
@@ -87,6 +95,20 @@ namespace Grand.Services.Media
         Task DeletePicture(Picture picture);
 
         /// <summary>
+        /// Deletes a picture on file system
+        /// </summary>
+        /// <param name="picture">Picture</param>
+        void DeletePictureOnFileSystem(Picture picture);
+
+        /// <summary>
+        /// Save picture on file system
+        /// </summary>
+        /// <param name="pictureId">Picture identifier</param>
+        /// <param name="pictureBinary">Picture binary</param>
+        /// <param name="mimeType">MIME type</param>
+        void SavePictureInFile(string pictureId, byte[] pictureBinary, string mimeType);
+
+        /// <summary>
         /// Clear Pictures stored in Content/Images/Thumbs 
         /// </summary>
         Task ClearThumbs();
@@ -112,7 +134,7 @@ namespace Grand.Services.Media
         /// <returns>Picture</returns>
         Task<Picture> InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename, 
             string altAttribute = null, string titleAttribute = null,
-            bool isNew = true, bool validateBinary = true);
+            bool isNew = true, bool validateBinary = false);
 
         /// <summary>
         /// Updates the picture
@@ -131,6 +153,13 @@ namespace Grand.Services.Media
             bool isNew = true, bool validateBinary = true);
 
         /// <summary>
+        /// Updates the picture
+        /// </summary>
+        /// <param name="picture">Picture</param>
+        /// <returns>Picture</returns>
+        Task<Picture> UpdatePicture(Picture picture);
+
+        /// <summary>
         /// Updates a SEO filename of a picture
         /// </summary>
         /// <param name="pictureId">The picture identifier</param>
@@ -144,11 +173,7 @@ namespace Grand.Services.Media
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
         /// <returns>Picture binary or throws an exception</returns>
-        Task<byte[]> ValidatePicture(byte[] pictureBinary, string mimeType);
+        byte[] ValidatePicture(byte[] pictureBinary, string mimeType);
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the images should be stored in data base.
-        /// </summary>
-        bool StoreInDb { get; set; }
     }
 }

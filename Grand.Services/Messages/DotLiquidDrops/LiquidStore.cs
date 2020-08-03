@@ -1,7 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Localization;
+using Grand.Domain.Messages;
+using Grand.Domain.Stores;
 using Grand.Services.Localization;
 using System.Collections.Generic;
 
@@ -15,9 +15,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidStore(Store store, Language language, EmailAccount emailAccount = null)
         {
-            this._store = store;
-            this._language = language;
-            this._emailAccount = emailAccount;
+            _store = store;
+            _language = language;
+            _emailAccount = emailAccount;
 
             AdditionalTokens = new Dictionary<string, string>();
         }
@@ -25,6 +25,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
         public string Name
         {
             get { return _store.GetLocalized(x => x.Name, _language.Id); }
+        }
+
+        public string Shortcut {
+            get { return _store.GetLocalized(x => x.Shortcut, _language.Id); }
         }
 
         public string URL

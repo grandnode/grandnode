@@ -4,11 +4,11 @@
     //page title
     ViewBag.Title = string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName);
 }
-<form asp-controller="Product" asp-action="EditAttributeValues" id="productattribute-form" 
+<form asp-area="Admin" asp-controller="Product" asp-action="EditAttributeValues" id="productattribute-form" 
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -135,7 +135,7 @@
         });
     </script>
             
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#btnRefresh').click(function () {
                 //refresh grid

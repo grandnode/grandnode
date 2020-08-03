@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Seo;
-using Grand.Core.Domain.Topics;
+﻿using Grand.Domain.Seo;
+using Grand.Domain.Topics;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Seo;
@@ -44,7 +44,7 @@ namespace Grand.Web.Areas.Admin.Services
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in await _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
             return model;
         }
 

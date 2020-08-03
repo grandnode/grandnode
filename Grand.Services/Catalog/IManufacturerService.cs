@@ -1,5 +1,5 @@
-using Grand.Core;
-using Grand.Core.Domain.Catalog;
+using Grand.Domain;
+using Grand.Domain.Catalog;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -66,11 +66,12 @@ namespace Grand.Services.Catalog
         /// Gets product manufacturer collection
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <param name="storeId">Store ident</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerId(string manufacturerId,
+        Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerId(string manufacturerId, string storeId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>

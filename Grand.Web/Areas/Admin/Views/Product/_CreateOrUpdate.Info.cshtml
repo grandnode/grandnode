@@ -6,10 +6,10 @@
     Html.AppendScriptParts("~/scripts/tagEditor/jquery.tag-editor.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/tagEditor/jquery.caret.min.js", excludeFromBundle: true);
 }
-@using Grand.Core.Domain.Catalog;
+@using Grand.Domain.Catalog;
 @using Grand.Services.Catalog;
 @using System.Text;
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
 
         @if (!Model.IsLoggedInAsVendor)
@@ -415,7 +415,7 @@
         {
             var tag = productTags[i];
             productTagsSb.Append("'");
-            productTagsSb.Append(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(tag.Name));
+            productTagsSb.Append(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(string.IsNullOrEmpty(tag.Name) ? "": tag.Name));
             productTagsSb.Append("'");
             if (i != productTags.Count - 1)
             {
@@ -490,7 +490,7 @@
         <div class="form-group">
             <admin-label asp-for="ProductTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ProductTypeId" asp-items="((ProductType)Model.ProductTypeId).ToSelectList()" />
+                <admin-select asp-for="ProductTypeId" asp-items="((ProductType)Model.ProductTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="ProductTypeId"></span>
             </div>
         </div>
@@ -524,7 +524,7 @@
         </div>
     </div>
 </div>
-@(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
+@(await Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
     @<div class="form-horizontal portlet bg-inverse form-fit">
         <div class="form-body">
             <div class="form-group">

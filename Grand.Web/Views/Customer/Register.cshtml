@@ -108,10 +108,10 @@
                                                       control-year="@Html.IdFor(x => x.DateOfBirthYear)"
                                                       begin-year="@(DateTime.Now.Year - 100)"
                                                       end-year="DateTime.Now.Year"
-                                                      selected-day="0"
-                                                      selected-month="0"
-                                                      selected-year="0"
-                                                      class="col-12 input-group" />
+                                                      selected-day="Model.DateOfBirthDay.HasValue ? Model.DateOfBirthDay.Value : 0"
+                                                      selected-month="Model.DateOfBirthMonth.HasValue ? Model.DateOfBirthMonth.Value : 0"
+                                                      selected-year="Model.DateOfBirthYear.HasValue ? Model.DateOfBirthYear.Value : 0"
+                                                      class="col-12 input-group px-0" />
                             </div>
                             <div class="row">
                                 <span asp-validation-for="DateOfBirthDay"></span>

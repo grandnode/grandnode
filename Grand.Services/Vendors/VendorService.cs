@@ -1,6 +1,6 @@
-using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Vendors;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Bson;
@@ -32,13 +32,13 @@ namespace Grand.Services.Vendors
         /// Ctor
         /// </summary>
         /// <param name="vendorRepository">Vendor repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public VendorService(IRepository<Vendor> vendorRepository, IRepository<VendorReview> vendorReviewRepository,
             IMediator mediator)
         {
-            this._vendorRepository = vendorRepository;
-            this._vendorReviewRepository = vendorReviewRepository;
-            this._mediator = mediator;
+            _vendorRepository = vendorRepository;
+            _vendorReviewRepository = vendorReviewRepository;
+            _mediator = mediator;
         }
 
         #endregion
@@ -291,7 +291,9 @@ namespace Grand.Services.Vendors
             var update = Builders<VendorReview>.Update
                 .Set(x => x.Title, vendorreview.Title)
                 .Set(x => x.ReviewText, vendorreview.ReviewText)
-                .Set(x => x.IsApproved, vendorreview.IsApproved);
+                .Set(x => x.IsApproved, vendorreview.IsApproved)
+                .Set(x => x.HelpfulYesTotal, vendorreview.HelpfulYesTotal)
+                .Set(x => x.HelpfulNoTotal, vendorreview.HelpfulNoTotal);
 
             await _vendorReviewRepository.Collection.UpdateManyAsync(filter, update);
 

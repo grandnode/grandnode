@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Messages;
+﻿using Grand.Domain.Messages;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
@@ -8,7 +8,7 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Inserts a popup
         /// </summary>
-        /// <param name="Popup">Popup</param>        
+        /// <param name="popup">Popup</param>        
         Task InsertPopupActive(PopupActive popup);
         /// <summary>
         /// Gets active banner for customer

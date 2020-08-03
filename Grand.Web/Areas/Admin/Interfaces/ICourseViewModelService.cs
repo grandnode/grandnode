@@ -1,6 +1,7 @@
-﻿using Grand.Core.Domain.Courses;
+﻿using Grand.Domain.Courses;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Courses;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

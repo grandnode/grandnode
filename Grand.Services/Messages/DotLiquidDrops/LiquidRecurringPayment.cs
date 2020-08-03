@@ -1,5 +1,5 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -10,8 +10,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidRecurringPayment(RecurringPayment recurringPayment)
         {
-            this._recurringPayment = recurringPayment;
-
+            _recurringPayment = recurringPayment;
             AdditionalTokens = new Dictionary<string, string>();
         }
 

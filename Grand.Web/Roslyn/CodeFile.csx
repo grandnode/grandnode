@@ -1,10 +1,10 @@
-﻿#! "netcoreapp2.2"
+﻿#! "netcoreapp3.1"
 #r "Grand.Core"
 #r "Grand.Services"
 
 using System;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Messages;
+using Grand.Domain.Orders;
 using Grand.Services.Events;
 using System.Threading;
 using System.Threading.Tasks;

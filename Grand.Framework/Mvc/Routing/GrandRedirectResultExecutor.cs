@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Security;
+﻿using Grand.Domain.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -26,7 +26,7 @@ namespace Grand.Framework.Mvc.Routing
             IUrlHelperFactory urlHelperFactory,
             SecuritySettings securitySettings) : base(loggerFactory, urlHelperFactory)
         {
-            this._securitySettings = securitySettings;
+            _securitySettings = securitySettings;
         }
 
         #endregion

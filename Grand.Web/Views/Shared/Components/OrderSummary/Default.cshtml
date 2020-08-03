@@ -4,7 +4,10 @@
 
 <div class="order-summary-content mt-3" id="ordersummarypagecart">
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
-    <partial name="_OrderReviewData" model="Model.OrderReviewData" />
+    @if (Model.OrderReviewData.Display)
+    {
+        <partial name="_OrderReviewData" model="Model.OrderReviewData" />
+    }
     @if (Model.Items.Any())
     {
         if (Model.Warnings.Any())
@@ -23,21 +26,19 @@
             <div class="shopping-cart-container">
                 <table class="shopping-cart">
                     <colgroup>
-                        <col width="1">
-                        <col width="1">
-                        <col width="1">
+                        <col span="1">
+                        <col span="1">
+                        <col span="1">
                         <col>
-                        <col width="1">
-                        <col width="1">
-                        <col width="1">
+                        <col span="1">
+                        <col span="1">
+                        <col span="1">
                     </colgroup>
                     <thead>
                         <tr>
-                            @if (Model.IsEditable)
+                            @if (Model.IsEditable && Model.IsAllowOnHold)
                             {
-                                <th class="remove-from-cart text-center">
-                                    @T("Remove")
-                                </th>
+                                <th class="cart text-center"></th>
                             }
                             @if (Model.ShowProductImages)
                             {
@@ -57,19 +58,27 @@
                             <th class="subtotal text-center">
                                 @T("ShoppingCart.ItemTotal")
                             </th>
+                            @if (Model.IsEditable)
+                            {
+                                <th class="remove-from-cart text-center">
+                                    @T("Remove")
+                                </th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.Items)
                         {
                             <tr class="item-container">
-                                @if (Model.IsEditable)
+                                @if (Model.IsEditable && Model.IsAllowOnHold)
                                 {
-                                    <td class="remove-from-cart text-center">
-                                        <button type="button" class="btn btn-link text-danger deleteshoppingcartitem" data-href="@Url.RouteUrl("DeleteCartItem", new { id = item.Id, shoppingcartpage = true })">
-                                            <span class="mdi mdi-close pr-1"></span>
-                                        </button>
-                                    </td>
+                                    <td class="onhold-cart text-left">
+                                        <label class="custom-control custom-checkbox mb-0 pl-0">
+                                            <input id="checkbox_@item.Id" type="checkbox" checked="@item.IsCart" class="custom-control-input changeshoppingcartitem" 
+                                                   data-href="@Url.RouteUrl("ChangeTypeCartItem", new { id = item.Id, status = !item.IsCart })" />
+                                            <span class="custom-control-label ml-4"></span>
+                                        </label>
+                                    </td>                                   
                                 }
                                 @if (Model.ShowProductImages)
                                 {
@@ -94,6 +103,13 @@
                                     {
                                         <div class="attributes small">
                                             @Html.Raw(item.WarehouseName)
+                                        </div>
+                                    }
+                                    @if (!String.IsNullOrEmpty(item.VendorName))
+                                    {
+                                        <div class="attributes small">
+                                            @T("ShoppingCart.Vendor")
+                                            <a href="@Url.RouteUrl("Vendor", new { SeName = item.VendorSeName })"> @item.VendorName</a>
                                         </div>
                                     }
                                     @if (!String.IsNullOrEmpty(item.AuctionInfo))
@@ -198,6 +214,14 @@
                                     }
 
                                 </td>
+                                @if (Model.IsEditable)
+                                {
+                                    <td class="remove-from-cart text-center">
+                                        <button type="button" class="btn btn-link text-secondary deleteshoppingcartitem" data-href="@Url.RouteUrl("DeleteCartItem", new { id = item.Id, shoppingcartpage = true })">
+                                            <span class="mdi mdi-delete pr-1"></span>
+                                        </button>
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>
@@ -205,23 +229,24 @@
             </div>
             @if (Model.IsEditable)
             {
-                <div class="common-buttons btn-group btn-group-sm text-sm-right d-flex justify-content-end">
-                    <button type="button" onclick="setLocation('@(Url.RouteUrl("ClearCart"))')" class="btn btn-danger d-flex justify-content-center removeAll-cart-button ml-sm-1"><span class="mdi mdi-delete-forever-outline pr-1"></span><span class="d-sm-block">@T("shoppingcart.clearcart")</span></button>
-                    <button type="button" onclick="setLocation('@(Url.RouteUrl("ContinueShopping"))')" class="btn btn-outline-secondary d-flex justify-content-center continue-shopping-button ml-sm-1"><span class="mdi mdi-forward pr-1"></span><span class="d-sm-block">@T("ShoppingCart.ContinueShopping")</span></button>
+                <div class="common-buttons btn-group btn-group-sm mb-3">
+                    <button type="button" onclick="setLocation('@(Url.RouteUrl("ClearCart"))')" class="btn btn-danger d-flex justify-content-center removeAll-cart-button"><span class="mdi mdi-delete-forever-outline pr-1"></span><span class="d-sm-block">@T("shoppingcart.clearcart")</span></button>
                 </div>
             }
-            <div class="row px-3 cart-options">
-                @if (Model.IsEditable)
-                {
-                    <div class="col-12 col-md-6 checkoutAttributes">
-                        <partial name="_CheckoutAttributes" model="Model.CheckoutAttributes" />
-                    </div>
-                }
-                <div class="selected-checkout-attributes col-sm-3 col-md-6 col-12 ml-auto justify-content-end text-right mt-3">
-                    @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
+            <div class="cart-options">
+                <div class="row">
+                    @if (Model.IsEditable)
                     {
-                        @Html.Raw(Model.CheckoutAttributeInfo)
+                        <div class="col-12 col-md-6 checkoutAttributes">
+                            <partial name="_CheckoutAttributes" model="Model.CheckoutAttributes" />
+                        </div>
                     }
+                    <div class="selected-checkout-attributes col-sm-3 col-md-6 col-12 ml-auto justify-content-end text-right mt-3">
+                        @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
+                        {
+                            @Html.Raw(Model.CheckoutAttributeInfo)
+                        }
+                    </div>
                 </div>
             </div>
             @if (Model.IsEditable && Model.Items.Any() && Model.DisplayTaxShippingInfo)
@@ -231,7 +256,7 @@
                 //of course, you can modify appropriate locales to include VAT info there
                 <div class="tax-shipping-info d-flex justify-content-end mt-2 mb-2">
                     <span class="taxHelper">
-                        @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
+                        @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
                     </span>
                 </div>
             }
@@ -282,7 +307,7 @@
                                         }
                                         else
                                         {
-                                            <span>@T("Checkout.TermsOfService.IAccept")<a class="custom-control-description read pl-1 font-weight-bold" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a></span>
+                                            <span>@T("Checkout.TermsOfService.IAccept")<a class="custom-control-description read pl-1 font-weight-bold" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("conditionsofuse", Context) })">@T("Checkout.TermsOfService.Read")</a></span>
                                         }
                                     </label>
                                 </div>
@@ -371,9 +396,7 @@
             </div>
             @if (Model.IsEditable)
             {
-                <div class="px-3">
-                    @await Component.InvokeAsync("CrossSellProducts")
-                </div>
+                @await Component.InvokeAsync("CrossSellProducts")
             }
         </form>
     }
@@ -420,6 +443,20 @@
                     }
                 });
             });
+            $(".changeshoppingcartitem").click(function () {
+                var href = $(this).closest('[data-href]').data('href');
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: href,
+                    success: function (data) {
+                        $('#ordersummarypagecart').replaceWith(data.cart);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Shopping Cart Page.');
+                    }
+                });
+            });            
         });
     </script>
 </div>

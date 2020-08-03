@@ -7,11 +7,11 @@
     ViewBag.Title = T("Admin.Catalog.Products.TierPrices.Edit").Text;
 }
 
-<form asp-controller="Product" asp-action="TierPriceEditPopup"
+<form asp-area="Admin" asp-controller="Product" asp-action="TierPriceEditPopup"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

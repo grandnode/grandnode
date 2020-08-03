@@ -1,5 +1,5 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.PushNotifications;
+﻿using Grand.Domain;
+using Grand.Domain.PushNotifications;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -56,7 +56,7 @@ namespace Grand.Services.PushNotifications
         /// <summary>
         /// Inserts push message
         /// </summary>
-        /// <param name="registration"></param>
+        /// <param name="message"></param>
         Task InsertPushMessage(PushMessage message);
 
         /// <summary>

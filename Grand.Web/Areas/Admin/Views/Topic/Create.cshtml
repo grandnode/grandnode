@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Topics.AddNew").Text;
 }
-<form asp-controller="Topic" asp-action="Create" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Topic" asp-action="Create" method="post">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Security;
+﻿using Grand.Domain.Security;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -12,7 +12,7 @@ namespace Grand.Services.Security
 
         public EncryptionService(SecuritySettings securitySettings)
         {
-            this._securitySettings = securitySettings;
+            _securitySettings = securitySettings;
         }
 
         /// <summary>
@@ -40,30 +40,18 @@ namespace Grand.Services.Security
         /// <returns>Password hash</returns>
         public virtual string CreatePasswordHash(string password, string saltkey, string passwordFormat = "SHA1")
         {
-            if (String.IsNullOrEmpty(passwordFormat))
+            if (string.IsNullOrEmpty(passwordFormat))
                 passwordFormat = "SHA1";
 
-            string saltAndPassword = String.Concat(password, saltkey);
-
-            HashAlgorithm algorithm = default(HashAlgorithm);
-            switch (passwordFormat)
+            var saltAndPassword = string.Concat(password, saltkey);
+            HashAlgorithm algorithm = passwordFormat switch
             {
-                case "SHA1":
-                    algorithm = SHA1.Create();
-                    break;
-                case "SHA256":
-                    algorithm = SHA256.Create();
-                    break;
-                case "SHA384":
-                    algorithm = SHA384.Create();
-                    break;
-                case "SHA512":
-                    algorithm = SHA512.Create();
-                    break;
-                default:
-                    throw new NotSupportedException("Not supported hash");
-            }
-
+                "SHA1" => SHA1.Create(),
+                "SHA256" => SHA256.Create(),
+                "SHA384" => SHA384.Create(),
+                "SHA512" => SHA512.Create(),
+                _ => throw new NotSupportedException("Not supported hash"),
+            };
             if (algorithm == null)
                 throw new ArgumentException("Unrecognized hash name");
 
@@ -82,12 +70,10 @@ namespace Grand.Services.Security
             if (string.IsNullOrEmpty(plainText))
                 return plainText;
 
-            if (String.IsNullOrEmpty(encryptionPrivateKey))
+            if (string.IsNullOrEmpty(encryptionPrivateKey))
                 encryptionPrivateKey = _securitySettings.EncryptionKey;
 
             var tDESalg = TripleDES.Create();
-
-            var w = new ASCIIEncoding().GetBytes(encryptionPrivateKey.Substring(0, 24));
 
             tDESalg.Key = new ASCIIEncoding().GetBytes(encryptionPrivateKey.Substring(0, 24));
             tDESalg.IV = new ASCIIEncoding().GetBytes(encryptionPrivateKey.Substring(16, 8));
@@ -104,10 +90,10 @@ namespace Grand.Services.Security
         /// <returns>Decrypted text</returns>
         public virtual string DecryptText(string cipherText, string encryptionPrivateKey = "")
         {
-            if (String.IsNullOrEmpty(cipherText))
+            if (string.IsNullOrEmpty(cipherText))
                 return cipherText;
 
-            if (String.IsNullOrEmpty(encryptionPrivateKey))
+            if (string.IsNullOrEmpty(encryptionPrivateKey))
                 encryptionPrivateKey = _securitySettings.EncryptionKey;
 
             var tDESalg = TripleDES.Create();

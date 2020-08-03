@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "_ColumnsOne";
 }
-<div class="page home-page custom-container d-flex flex-column">
+<div class="page home-page custom-container d-flex flex-column mt-0">
     @await Component.InvokeAsync("PushNotificationsRegistration")
     @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_top" })
     @await Component.InvokeAsync("TopicBlock", new { systemName = "HomePageText" })

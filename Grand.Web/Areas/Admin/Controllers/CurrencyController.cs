@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Directory;
+using Grand.Domain.Directory;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
@@ -49,14 +49,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             IStoreService storeService)
         {
-            this._currencyService = currencyService;
-            this._currencyViewModelService = currencyViewModelService;
-            this._currencySettings = currencySettings;
-            this._settingService = settingService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._storeService = storeService;
+            _currencyService = currencyService;
+            _currencyViewModelService = currencyViewModelService;
+            _currencySettings = currencySettings;
+            _settingService = settingService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _storeService = storeService;
         }
         
         #endregion
@@ -230,7 +230,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new {id = currency.Id});
                 }

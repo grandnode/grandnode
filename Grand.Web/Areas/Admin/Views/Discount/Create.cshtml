@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AddNew").Text;
 }
-<form asp-controller="Discount" asp-action="Create" method="post" id="discount-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Discount" asp-action="Create" method="post" id="discount-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

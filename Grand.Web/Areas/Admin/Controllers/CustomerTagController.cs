@@ -34,9 +34,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             ICustomerTagService customerTagService)
         {
-            this._customerTagViewModelService = customerTagViewModelService;
-            this._localizationService = localizationService;
-            this._customerTagService = customerTagService;
+            _customerTagViewModelService = customerTagViewModelService;
+            _localizationService = localizationService;
+            _customerTagService = customerTagService;
         }
 
         #endregion

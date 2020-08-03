@@ -1,4 +1,4 @@
-﻿using Grand.Core.Configuration;
+﻿using Grand.Domain.Configuration;
 
 namespace Grand.Framework.Security.Captcha
 {
@@ -19,6 +19,10 @@ namespace Grand.Framework.Security.Captcha
         /// A value indicating whether CAPTCHA should be displayed on the registration page
         /// </summary>
         public bool ShowOnRegistrationPage { get; set; }
+        /// <summary>
+        /// A value indicating whether CAPTCHA should be displayed on the password recovery page
+        /// </summary>
+        public bool ShowOnPasswordRecoveryPage { get; set; }
         /// <summary>
         /// A value indicating whether CAPTCHA should be displayed on the contacts page
         /// </summary>

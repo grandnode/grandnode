@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.Campaigns.EditCampaignDetails").Text;
 }
-<form asp-controller="Campaign" asp-action="Edit" method="post" id="campaign-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Campaign" asp-action="Edit" method="post" id="campaign-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

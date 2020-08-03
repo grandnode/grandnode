@@ -1,7 +1,17 @@
-﻿@model PublicInfoModel
+﻿@using Grand.Core;
+@model PublicInfoModel
+@inject IWorkContext workContext
 @{
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.Slider/Content/slider.js");
-    Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.Slider/Content/style.css");
+    var supportRtl = workContext.WorkingLanguage.Rtl;
+    if (supportRtl)
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.Slider/Content/slider.rtl.js");
+        Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.Slider/Content/style.rtl.css");
+    } else
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.Slider/Content/slider.js");
+        Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.Slider/Content/style.css");
+    }
 }
 <div id="GrandCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
@@ -44,8 +54,8 @@
                 //with background
                 if (item.FullWidth)
                 {
-                    <div class="carousel-item wide-img with-bg">
-                        <a href="@item.Link">
+                    <div class="carousel-item wide-img with-bg" @if (!string.IsNullOrEmpty(item.Link)) { <text> onclick="window.location='@item.Link'" </text> }>
+                        <a>
                             <picture>
                                 <source media="(max-width: 767px)" sizes="1px" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 1w" />
                                 <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="@item.Name" title="" />
@@ -58,12 +68,14 @@
                 }
                 else
                 {
-                    <div class="carousel-item no-wide-img with-bg">
+                    <div class="carousel-item no-wide-img with-bg" @if (!string.IsNullOrEmpty(item.Link)) { <text> onclick="window.location='@item.Link'" </text> }>
                         <div class="container">
-                            <picture>
-                                <source media="(max-width: 767px)" sizes="1px" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 1w" />
-                                <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="" title="@item.Name">
-                            </picture>
+                            <a>
+                                <picture>
+                                    <source media="(max-width: 767px)" sizes="1px" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 1w" />
+                                    <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="" title="@item.Name">
+                                </picture>
+                            </a>
                             <div class="carousel-caption container d-none d-md-block">
                                 @Html.Raw(item.Description)
                             </div>

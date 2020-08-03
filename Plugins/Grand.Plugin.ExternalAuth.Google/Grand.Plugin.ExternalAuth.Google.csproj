@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
@@ -17,6 +17,10 @@
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\ExternalAuth.Google\refs" />
+  </Target>
+
   <ItemGroup>
     <Content Include="Views\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -30,6 +34,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\..\Grand.Domain\Grand.Domain.csproj">
+      <Private>false</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj">
       <Private>false</Private>
     </ProjectReference>
@@ -42,15 +49,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.6" />
   </ItemGroup>
 
   <Target Name="CopyFile" AfterTargets="AfterBuild">
     <ItemGroup>
-      <CopyFiles Include="$(NuGetPackageRoot)\microsoft.aspnetcore.authentication.google\3.0.0\lib\netcoreapp3.0\*.dll" />
+      <CopyFiles Include="$(NuGetPackageRoot)\microsoft.aspnetcore.authentication.google\3.1.6\lib\netcoreapp3.1\*.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(CopyFiles)"
-       DestinationFolder="..\..\Grand.Web\Plugins\ExternalAuth.Google\" />
+    <Copy SourceFiles="@(CopyFiles)" DestinationFolder="..\..\Grand.Web\Plugins\ExternalAuth.Google\" />
   </Target>
 
   <ItemGroup>

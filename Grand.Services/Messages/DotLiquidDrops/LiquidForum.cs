@@ -1,7 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Customers;
+using Grand.Domain.Forums;
+using Grand.Domain.Stores;
 using Grand.Services.Customers;
 using Grand.Services.Forums;
 using Grand.Services.Seo;
@@ -29,13 +29,13 @@ namespace Grand.Services.Messages.DotLiquidDrops
             int? friendlyForumTopicPageIndex = null,
             string appendedPostIdentifierAnchor = "")
         {
-            this._forumTopic = forumTopic;
-            this._forumPost = forumPost;
-            this._forum = forum;
-            this._friendlyForumTopicPageIndex = friendlyForumTopicPageIndex;
-            this._appendedPostIdentifierAnchor = appendedPostIdentifierAnchor;
-            this._customer = customer;
-            this._store = store;
+            _forumTopic = forumTopic;
+            _forumPost = forumPost;
+            _forum = forum;
+            _friendlyForumTopicPageIndex = friendlyForumTopicPageIndex;
+            _appendedPostIdentifierAnchor = appendedPostIdentifierAnchor;
+            _customer = customer;
+            _store = store;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

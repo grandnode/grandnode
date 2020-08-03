@@ -6,7 +6,7 @@
         <div id="order-documents-grid"></div>
     </div>
     <div class="panel-footer">
-        <button type="button" class="k-button" onclick="location.href='@Url.Action("CreateDocument", "Document", new { customerId = Model.CustomerId, OrderId = Model.Id })'"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Customers.Document.Add")</button>
+        <button type="button" class="k-button" onclick="location.href='@Url.Action("CreateDocument", "Document", new { ObjectId = Model.Id, Reference = (int)Reference.Order })'"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Customers.Document.Add")</button>
     </div>
     <vc:admin-widget widget-zone="order_details_documents_bottom" additional-data="Model" />
 </div>
@@ -17,7 +17,7 @@ $(document).ready(function () {
         dataSource: {
             transport: {
                 read: {
-                    url: "@Html.Raw(Url.Action("DocumentList", "Order", new { orderId = Model.Id }))",
+                    url: "@Html.Raw(Url.Action("ListDocuments", "Document", new { reference = (int)Reference.Order, ObjectId = Model.Id }))",
                     type: "POST",
                     dataType: "json",
                     data: addAntiForgeryToken
@@ -27,9 +27,6 @@ $(document).ready(function () {
                 data: "Data",
                 total: "Total",
                 errors: "Errors",
-                model: {
-                    id: "Id"
-                }
             },
             error: function(e) {
                 display_kendoui_grid_error(e);
@@ -37,6 +34,9 @@ $(document).ready(function () {
                 this.cancelChanges();
             },
             pageSize: @(adminAreaSettings.DefaultGridPageSize),
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
         },
         pageable: {
             refresh: true,

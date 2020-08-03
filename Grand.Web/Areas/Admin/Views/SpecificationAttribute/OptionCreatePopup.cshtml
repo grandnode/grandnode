@@ -6,12 +6,12 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew").Text;
 }
-<form asp-controller="SpecificationAttribute" asp-action="OptionCreatePopup" 
+<form asp-area="Admin" asp-controller="SpecificationAttribute" asp-action="OptionCreatePopup" 
     method="post" id="specificationattribute-form"
       asp-route-Id="@Context.Request.Query["Id"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

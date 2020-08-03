@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -24,8 +25,8 @@ namespace Grand.Framework.TagHelpers.Admin
         private const string EditorTemplateViewPath = "EditorTemplates";
         public const string IEnumerableOfIFormFileName = "IEnumerable`" + nameof(IFormFile);
 
-        private static readonly Dictionary<string, Func<IHtmlHelper, IHtmlContent>> _defaultDisplayActions =
-            new Dictionary<string, Func<IHtmlHelper, IHtmlContent>>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, Func<IHtmlHelper, Task<IHtmlContent>>> _defaultDisplayActions =
+            new Dictionary<string, Func<IHtmlHelper, Task<IHtmlContent>>>(StringComparer.OrdinalIgnoreCase)
             {
                 { "Collection", DefaultDisplayTemplates.CollectionTemplate },
                 { "EmailAddress", DefaultDisplayTemplates.EmailAddressTemplate },
@@ -39,8 +40,8 @@ namespace Grand.Framework.TagHelpers.Admin
                 { typeof(object).Name, DefaultDisplayTemplates.ObjectTemplate },
             };
 
-        private static readonly Dictionary<string, Func<IHtmlHelper, IHtmlContent>> _defaultEditorActions =
-            new Dictionary<string, Func<IHtmlHelper, IHtmlContent>>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, Func<IHtmlHelper, Task<IHtmlContent>>> _defaultEditorActions =
+            new Dictionary<string, Func<IHtmlHelper, Task<IHtmlContent>>>(StringComparer.OrdinalIgnoreCase)
             {
                 { "Collection", DefaultEditorTemplates.CollectionTemplate },
                 { "EmailAddress", DefaultEditorTemplates.EmailAddressInputTemplate },
@@ -116,7 +117,7 @@ namespace Grand.Framework.TagHelpers.Admin
             _readOnly = readOnly;
         }
 
-        public IHtmlContent Render()
+        public async Task<IHtmlContent> Render()
         {
             var defaultActions = GetDefaultActions();
             var modeViewPath = _readOnly ? DisplayTemplateViewPath : EditorTemplateViewPath;
@@ -140,8 +141,7 @@ namespace Grand.Framework.TagHelpers.Admin
                         using (view as IDisposable)
                         {
                             var viewContext = new ViewContext(_viewContext, viewEngineResult.View, _viewData, writer);
-                            var renderTask = viewEngineResult.View.RenderAsync(viewContext);
-                            renderTask.GetAwaiter().GetResult();
+                            await viewEngineResult.View.RenderAsync(viewContext);
                             return viewBuffer;
                         }
                     }
@@ -149,14 +149,13 @@ namespace Grand.Framework.TagHelpers.Admin
 
                 if (defaultActions.TryGetValue(viewName, out var defaultAction))
                 {
-                    return defaultAction(MakeHtmlHelper(_viewContext, _viewData));
+                    return await defaultAction(MakeHtmlHelper(_viewContext, _viewData));
                 }
             }
 
             throw new InvalidOperationException(_viewData.ModelExplorer.ModelType.FullName);
         }
-
-        private Dictionary<string, Func<IHtmlHelper, IHtmlContent>> GetDefaultActions()
+        private Dictionary<string, Func<IHtmlHelper, Task<IHtmlContent>>> GetDefaultActions()
         {
             return _readOnly ? _defaultDisplayActions : _defaultEditorActions;
         }

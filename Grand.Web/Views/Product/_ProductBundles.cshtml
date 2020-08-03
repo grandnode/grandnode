@@ -1,26 +1,29 @@
 ﻿@model ProductDetailsModel
-@if (Model.ProductBundleModels.Any())
-{
-    <div class="product-bundle mt-3">
-            @foreach (var item in Model.ProductBundleModels)
-            {
-                <div class="card mb-0">
-                    <div class="card-block p-3">
-                        <div class="row">
-                            <div class="col-md-3 col-3 d-flex justify-content-center align-items-center pr-0">
-                                <div class="img-fluid text-center">
-                                    <img class="img-fluid" alt="@item.DefaultPictureModel.AlternateText" src="@item.DefaultPictureModel.ImageUrl" title="@item.DefaultPictureModel.Title"/>
-                                </div>
-                            </div>
-                            <div class="col-md-9 col-9">
-                                <h6 class="card-title">@item.Quantity x <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })"> @item.Name </a>(@item.Price)</h6>
-                                <p class="card-text small">@Html.Raw(item.ShortDescription)</p>
-                            </div>
+<div class="product-bundle my-3">
+    @foreach (var item in Model.ProductBundleModels)
+    {
+        <div class="card mb-0">
+            <div class="card-block pb-3">
+                <div class="row">
+                    <div class="col-md-3 col-4 d-flex justify-content-center align-items-start pr-0">
+                        <div class="img-fluid text-center">
+                            <img class="img-fluid" alt="@item.DefaultPictureModel.AlternateText" src="@item.DefaultPictureModel.ImageUrl" title="@item.DefaultPictureModel.Title" />
                         </div>
                     </div>
+                    <div class="col-md-9 col-8">
+                        <h6 class="card-title">@item.Quantity x <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })"> @item.Name </a>(@item.Price)</h6>
+                        <p class="card-text small">@Html.Raw(item.ShortDescription)</p>
+                    </div>
+                </div>
+            </div>
+            @if (item.ProductAttributes.Any())
+            {
+                var dataDictAttributes = new ViewDataDictionary(ViewData);
+                dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", item.ProductId);
+                <div class="col-12 pt-1">
+                    <partial name="_ProductAttributesBundle" model="item.ProductAttributes" view-data="dataDictAttributes" />
                 </div>
             }
-
-    </div>
-
-}
+        </div>
+    }
+</div>

@@ -24,7 +24,7 @@ namespace Grand.Services.Directory
 
         public GeoLookupService(ILogger logger)
         {
-            this._logger = logger;
+            _logger = logger;
         }
 
         #endregion

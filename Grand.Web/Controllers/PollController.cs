@@ -1,9 +1,14 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
+using Grand.Domain.Polls;
+using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Polls;
-using Grand.Web.Interfaces;
+using Grand.Web.Events;
+using Grand.Web.Extensions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,23 +18,51 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly IPollViewModelService _pollViewModelService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IPollService _pollService;
+        private readonly ICustomerService _customerService;
+        private readonly IMediator _mediator;
+
         #endregion
 
         #region Constructors
 
-        public PollController(IPollViewModelService pollViewModelService,
+        public PollController(
             ILocalizationService localizationService,
             IWorkContext workContext,
-            IPollService pollService)
+            IPollService pollService,
+            ICustomerService customerService,
+            IMediator mediator)
         {
-            this._pollViewModelService = pollViewModelService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._pollService = pollService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _pollService = pollService;
+            _customerService = customerService;
+            _mediator = mediator;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        protected async Task PollVoting(Poll poll, PollAnswer pollAnswer)
+        {
+            pollAnswer.PollVotingRecords.Add(new PollVotingRecord {
+                PollId = poll.Id,
+                PollAnswerId = pollAnswer.Id,
+                CustomerId = _workContext.CurrentCustomer.Id,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+            //update totals
+            pollAnswer.NumberOfVotes = pollAnswer.PollVotingRecords.Count;
+            await _pollService.UpdatePoll(poll);
+
+            if (!_workContext.CurrentCustomer.HasContributions)
+            {
+                await _customerService.UpdateContributions(_workContext.CurrentCustomer);
+            }
+            await _mediator.Publish(new PollVotingEvent(poll, pollAnswer));
         }
 
         #endregion
@@ -64,12 +97,12 @@ namespace Grand.Web.Controllers
             if (!alreadyVoted)
             {
                 //vote
-                await _pollViewModelService.PollVoting(poll, pollAnswer);
+                await PollVoting(poll, pollAnswer);
             }
 
             return Json(new
             {
-                html = this.RenderPartialViewToString("_Poll", await _pollViewModelService.PreparePoll(poll, true)),
+                html = await RenderPartialViewToString("_Poll", poll.ToModel(_workContext.WorkingLanguage, _workContext.CurrentCustomer)),
             });
         }
         

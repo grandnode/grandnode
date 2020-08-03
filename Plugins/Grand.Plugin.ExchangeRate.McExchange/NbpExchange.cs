@@ -11,7 +11,7 @@ namespace Grand.Plugin.ExchangeRate.McExchange
 {
     internal class NbpExchange : IRateProvider
     {
-        public async Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRates()
+        public async Task<IList<Domain.Directory.ExchangeRate>> GetCurrencyLiveRates()
         {
             var currentDate = DateTime.Today.AddDays(-1);
             var request = (HttpWebRequest)WebRequest.Create($"http://api.nbp.pl/api/exchangerates/tables/A/{currentDate.AddDays(-7):yyyy-MM-dd}/{currentDate:yyyy-MM-dd}");
@@ -33,11 +33,11 @@ namespace Grand.Plugin.ExchangeRate.McExchange
                 provider.CurrencyDecimalSeparator = ".";
                 provider.NumberGroupSeparator = "";
 
-                var exchangeRates = new List<Grand.Core.Domain.Directory.ExchangeRate>();
+                var exchangeRates = new List<Domain.Directory.ExchangeRate>();
                 foreach (XmlNode node2 in ratesNode.ChildNodes)
                 {
                     var rate = decimal.Parse(node2.SelectSingleNode("Mid").InnerText, provider);
-                    exchangeRates.Add(new Core.Domain.Directory.ExchangeRate {
+                    exchangeRates.Add(new Domain.Directory.ExchangeRate {
                         CurrencyCode = node2.SelectSingleNode("Code").InnerText,
                         Rate = Math.Round(1m / rate, 4, MidpointRounding.AwayFromZero),
                         UpdatedOn = updateDate

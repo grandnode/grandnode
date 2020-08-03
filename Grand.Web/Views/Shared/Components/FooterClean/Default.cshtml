@@ -1,0 +1,50 @@
+﻿@model FooterCleanModel
+<footer class="mt-3">
+    <div class="container max-100">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "before_footerclean" })
+        <div id="footer-block-about-us" class="col-lg-12 col-md-12 col-sm-12 footer-block about-us block">
+            <div class="viewBox">
+                <ul class="pl-0 list-group list-pad">
+                    <li class="list-group-item">
+                        <span>@T("Footer.CompanyName.Title")</span>
+                        <span>@Model.CompanyName</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>@T("Footer.Address.Title")</span>
+                        <span>@Model.CompanyAddress</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>@T("footer.Email.Title")</span>
+                        <span>@Model.CompanyEmail</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>@T("Footer.Phone.Title")</span>
+                        <span>@Model.CompanyPhone</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>@T("Footer.Hour.Title")</span>
+                        <span>@Model.CompanyHours</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-lower small">
+            <div class="row">
+                <div class="col-12 col-md pb-1 pt-1 flex-column text-lg-left text-center copyright">
+                    <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
+                </div>
+                @if (!Model.HidePoweredByGrandNode)
+                {
+                    <div class="col-12 col-md-4  pb-1 pt-1 text-center text-lg-right">
+                        <a class="pr-1 text-success" href="http://www.grandNode.com/">GrandNode</a><span>- Powered by </span><a href="http://www.nopcommerce.com/">nopCommerce </a>
+                    </div>
+                }
+            </div>
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "after_footerclean" })
+    </div>
+</footer>
+<a href="#" id="back-to-top" title="Back to top">
+    <span class="mdi mdi-chevron-up"></span>
+    <span class="sr-only">back to top</span>
+</a>

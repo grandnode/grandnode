@@ -1,6 +1,6 @@
 ﻿@model ProductModel
 @inject AdminAreaSettings adminAreaSettings
-@using Grand.Core.Domain.Catalog;
+@using Grand.Domain.Catalog;
 @if (!String.IsNullOrEmpty(Model.Id))
 {
     <input type="hidden" asp-for="CalendarModel.ProductId" />
@@ -51,7 +51,7 @@
                     <span id="pnlInterval">
                         <admin-input asp-for="CalendarModel.Interval" />
                     </span>
-                    <admin-select asp-for="CalendarModel.IntervalUnit" asp-items="((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList()" class="form-control input-xsmall" style="height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " />
+                    <admin-select asp-for="CalendarModel.IntervalUnit" asp-items="((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList(Context)" class="form-control input-xsmall" style="height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " />
                 </div>
             </div>
             <div class="form-group" id="pnlQuantity">
@@ -134,7 +134,7 @@
     </div>
     <vc:admin-widget widget-zone="product_details_calendar_bottom" additional-data="Model" />
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             function toggleInternalType() {
                 var selectedInternalTypeId = $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").val();

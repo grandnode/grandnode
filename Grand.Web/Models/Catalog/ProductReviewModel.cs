@@ -1,7 +1,5 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Validators.Catalog;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
@@ -17,7 +15,6 @@ namespace Grand.Web.Models.Catalog
         public bool AllowCustomerReviews { get; set; }
     }
 
-    [Validator(typeof(ProductReviewsValidator))]
     public partial class ProductReviewsModel : BaseGrandModel
     {
         public ProductReviewsModel()

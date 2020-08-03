@@ -1,10 +1,10 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Domain.Cms;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Payments;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Cms;
+using Grand.Domain.Customers;
+using Grand.Domain.Payments;
+using Grand.Domain.Shipping;
+using Grand.Domain.Tax;
 using Grand.Core.Plugins;
 using Grand.Framework.Controllers;
 using Grand.Framework.Extensions;
@@ -16,7 +16,6 @@ using Grand.Services.Authentication.External;
 using Grand.Services.Cms;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
-using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Payments;
@@ -79,21 +78,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             ExternalAuthenticationSettings externalAuthenticationSettings,
             WidgetSettings widgetSettings)
         {
-            this._pluginFinder = pluginFinder;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._languageService = languageService;
-            this._settingService = settingService;
-            this._customerActivityService = customerActivityService;
-            this._storeService = storeService;
-            this._themeProvider = themeProvider;
-            this._mediator = mediator;
-            this._cacheManager = cacheManager;
-            this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._widgetSettings = widgetSettings;
+            _pluginFinder = pluginFinder;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _languageService = languageService;
+            _settingService = settingService;
+            _customerActivityService = customerActivityService;
+            _storeService = storeService;
+            _themeProvider = themeProvider;
+            _mediator = mediator;
+            _cacheManager = cacheManager;
+            _paymentSettings = paymentSettings;
+            _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _widgetSettings = widgetSettings;
         }
 
         #endregion
@@ -121,7 +120,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //stores
                 pluginModel.AvailableStores = (await _storeService
                     .GetAllStores())
-                    .Select(s => new StoreModel() { Id = s.Id, Name = s.Name })
+                    .Select(s => new StoreModel() { Id = s.Id, Name = s.Shortcut })
                     .ToList();
                 pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToArray();
                 pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Count > 0;
@@ -181,10 +180,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            var model = new PluginListModel
-            {
+            var model = new PluginListModel {
                 //load modes
-                AvailableLoadModes = LoadPluginsMode.All.ToSelectList(false).ToList()
+                AvailableLoadModes = LoadPluginsMode.All.ToSelectList(HttpContext, false).ToList()
             };
             //groups
             model.AvailableGroups.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
@@ -199,12 +197,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             var loadMode = (LoadPluginsMode)model.SearchLoadModeId;
             var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode, "", model.SearchGroup).ToList();
             var items = new List<PluginModel>();
-            foreach (var item in pluginDescriptors.OrderBy(x=>x.Group))
+            foreach (var item in pluginDescriptors.OrderBy(x => x.Group))
             {
                 items.Add(await PreparePluginModel(item, false, false));
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = pluginDescriptors.Count()
             };
@@ -541,8 +538,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Redirect("List");
 
             var plugin = descriptor.Instance<IMiscPlugin>(_pluginFinder.ServiceProvider);
-            var model = new MiscPluginModel
-            {
+            var model = new MiscPluginModel {
                 FriendlyName = descriptor.FriendlyName,
                 ConfigurationUrl = plugin.GetConfigurationPageUrl()
             };

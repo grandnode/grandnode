@@ -1,5 +1,5 @@
 ﻿@model IList<Grand.Web.Models.Customer.CustomerAttributeModel>
-@using Grand.Core.Domain.Catalog;
+@using Grand.Domain.Catalog;
 @foreach (var attribute in Model)
 {
     string controlId = string.Format("customer_attribute_{0}", attribute.Id);

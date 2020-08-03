@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Documents.Document.Edit").Text;
 }
-<form asp-controller="Document" asp-action="EditDocument" method="post" id="document-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Document" asp-action="EditDocument" method="post" id="document-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -21,9 +21,29 @@
                         {
                             <small><i class="fa fa-shopping-cart"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToOrder").Text, "Edit", "Order", new { id = Model.ObjectId })</small>
                         }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 20)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToShipment").Text, "ShipmentDetails", "Shipment", new { id = Model.ObjectId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 30)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToReturnRequest").Text, "Edit", "ReturnRequest", new { id = Model.ObjectId })</small>
+                        }
                         @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 40)
                         {
                             <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToProduct").Text, "Edit", "Product", new { id = Model.ObjectId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 50)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToCategory").Text, "Edit", "Category", new { id = Model.ObjectId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 60)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToManufacturer").Text, "Edit", "Manufacturer", new { id = Model.ObjectId })</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 70)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToVendor").Text, "Edit", "Vendor", new { id = Model.ObjectId })</small>
                         }
                     </div>
                     <div class="actions">

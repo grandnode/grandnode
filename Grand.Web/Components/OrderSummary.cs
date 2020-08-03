@@ -1,9 +1,10 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Framework.Components;
 using Grand.Services.Orders;
+using Grand.Web.Features.Models.ShoppingCart;
 using Grand.Web.Models.ShoppingCart;
-using Grand.Web.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -11,15 +12,16 @@ namespace Grand.Web.ViewComponents
 {
     public class OrderSummaryViewComponent : BaseViewComponent
     {
-        private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
+        private readonly IMediator _mediator;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
-
-        public OrderSummaryViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IShoppingCartService shoppingCartService, IStoreContext storeContext)
+        private readonly IWorkContext _workContext;
+        public OrderSummaryViewComponent(IMediator mediator, IShoppingCartService shoppingCartService, IStoreContext storeContext, IWorkContext workContext)
         {
-            _shoppingCartViewModelService = shoppingCartViewModelService;
+            _mediator = mediator;
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData, ShoppingCartModel overriddenModel)
@@ -30,10 +32,17 @@ namespace Grand.Web.ViewComponents
 
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
-            var model = new ShoppingCartModel();
-            await _shoppingCartViewModelService.PrepareShoppingCart(model, cart,
-                isEditable: false,
-                prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
+            var model = await _mediator.Send(new GetShoppingCart() {
+                Cart = cart,
+                IsEditable = false,
+                PrepareAndDisplayOrderReviewData = prepareAndDisplayOrderReviewData.GetValueOrDefault(),
+                Customer = _workContext.CurrentCustomer,
+                Currency = _workContext.WorkingCurrency,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                TaxDisplayType = _workContext.TaxDisplayType
+            });
+
             return View(model);
 
         }

@@ -1,5 +1,5 @@
 ﻿
-@using Grand.Core.Domain.Catalog;
+@using Grand.Domain.Catalog;
 
 @model ProductModel
 <vc:admin-widget widget-zone="product_details_inventory_top" additional-data="Model" />
@@ -8,7 +8,7 @@
         <div class="form-group">
             <admin-label asp-for="ManageInventoryMethodId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ManageInventoryMethodId" asp-items="((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectList()" />
+                <admin-select asp-for="ManageInventoryMethodId" asp-items="((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectList(Context)" />
                 <span asp-validation-for="ManageInventoryMethodId"></span>
             </div>
         </div>
@@ -139,7 +139,7 @@
         <div class="form-group" id="pnlLowStockActivity">
             <admin-label asp-for="LowStockActivityId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="LowStockActivityId" asp-items="((LowStockActivity)Model.LowStockActivityId).ToSelectList()" />
+                <admin-select asp-for="LowStockActivityId" asp-items="((LowStockActivity)Model.LowStockActivityId).ToSelectList(Context)" />
                 <span asp-validation-for="LowStockActivityId"></span>
             </div>
         </div>
@@ -153,7 +153,7 @@
         <div class="form-group" id="pnlBackorders">
             <admin-label asp-for="BackorderModeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="BackorderModeId" asp-items="((BackorderMode)Model.BackorderModeId).ToSelectList()" />
+                <admin-select asp-for="BackorderModeId" asp-items="((BackorderMode)Model.BackorderModeId).ToSelectList(Context)" />
                 <span asp-validation-for="BackorderModeId"></span>
             </div>
         </div>

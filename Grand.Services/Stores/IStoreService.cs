@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Stores;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -40,11 +40,5 @@ namespace Grand.Services.Stores
         /// <param name="store">Store</param>
         Task UpdateStore(Store store);
 
-        /// <summary>
-        /// Gets a store mapping 
-        /// </summary>
-        /// <param name="discountId">Discount id mapping identifier</param>
-        /// <returns>store mapping</returns>
-        Task<IList<Store>> GetAllStoresByDiscount(string discountId);
     }
 }

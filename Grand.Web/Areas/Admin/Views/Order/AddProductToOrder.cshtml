@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderNumber);
 }
-<antiforgery-token />
+
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">
@@ -126,7 +126,7 @@
         });
     });
 </script>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $('#search-products').click(function () {
             var grid = $('#products-grid').data('kendoGrid');

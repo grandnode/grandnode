@@ -1,5 +1,5 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain;
+using Grand.Domain.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -72,8 +72,9 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Gets customer reservations helpers
         /// </summary>
+        /// <param name="customerId">Customer ident</param>
         /// <returns>List<CustomerReservationsHelper></returns>
-        Task<IList<CustomerReservationsHelper>> GetCustomerReservationsHelpers();
+        Task<IList<CustomerReservationsHelper>> GetCustomerReservationsHelpers(string customerId);
 
         /// <summary>
         /// Gets customer reservations helper by Shopping Cart Item id

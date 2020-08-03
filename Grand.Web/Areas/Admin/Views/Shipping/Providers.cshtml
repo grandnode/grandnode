@@ -2,7 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Providers").Text;
 }
-<antiforgery-token />
+
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">
@@ -26,7 +26,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
 $(document).ready(function () {
     $("#shippingproviders-grid").kendoGrid({
         dataSource: {

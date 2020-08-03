@@ -6,8 +6,7 @@
 @using Grand.Plugin.Payments.CashOnDelivery.Models;
 @await Component.InvokeAsync("StoreScopeConfiguration")
 <form asp-controller="PaymentCashOnDelivery" asp-action="Configure" method="post">
-    <antiforgery-token />
-    @(Html.LocalizedEditor<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized",
+    @(await Html.LocalizedEditor<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">

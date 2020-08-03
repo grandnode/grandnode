@@ -1,6 +1,6 @@
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Common;
+using Grand.Domain.Data;
+using Grand.Domain.Common;
 using Grand.Services.Directory;
 using Grand.Services.Events;
 using System;
@@ -54,7 +54,7 @@ namespace Grand.Services.Common
         /// <param name="countryService">Country service</param>
         /// <param name="stateProvinceService">State/province service</param>
         /// <param name="addressAttributeService">Address attribute service</param>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="addressSettings">Address settings</param>
         public AddressService(ICacheManager cacheManager,
             IRepository<Address> addressRepository,
@@ -64,13 +64,13 @@ namespace Grand.Services.Common
             IMediator mediator, 
             AddressSettings addressSettings)
         {
-            this._cacheManager = cacheManager;
-            this._addressRepository = addressRepository;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressAttributeService = addressAttributeService;
-            this._mediator = mediator;
-            this._addressSettings = addressSettings;
+            _cacheManager = cacheManager;
+            _addressRepository = addressRepository;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _addressAttributeService = addressAttributeService;
+            _mediator = mediator;
+            _addressSettings = addressSettings;
         }
 
         #endregion
@@ -136,7 +136,7 @@ namespace Grand.Services.Common
             await _addressRepository.InsertAsync(address);
 
             //cache
-            await _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ADDRESSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(address);
@@ -154,7 +154,7 @@ namespace Grand.Services.Common
             await _addressRepository.UpdateAsync(address);
 
             //cache
-            await _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ADDRESSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(address);

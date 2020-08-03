@@ -1,5 +1,5 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Forums;
+using Grand.Domain.Forums;
 using Grand.Services.Forums;
 using System.Collections.Generic;
 
@@ -11,7 +11,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public LiquidPrivateMessage(PrivateMessage privateMessage)
         {
-            this._privateMessage = privateMessage;
+            _privateMessage = privateMessage;
 
             AdditionalTokens = new Dictionary<string, string>();
         }

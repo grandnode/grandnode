@@ -1,5 +1,5 @@
 ﻿@model VendorModel
-<script type="text/javascript">
+<script>
         $(document).ready(function () {
             $("@Model.AllowCustomersToSelectPageSize").click(togglePageSize);
             togglePageSize();
@@ -16,7 +16,7 @@
         }
 </script>
 <vc:admin-widget widget-zone="vendor_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
+@(await Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -171,12 +171,16 @@
         </div>
     </div>
 </div>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        @T("Admin.Vendors.Fields.Address")
+@if (Model.Address.FaxEnabled || Model.Address.PhoneEnabled || Model.Address.StateProvinceEnabled || Model.Address.StreetAddressEnabled || Model.Address.ZipPostalCodeEnabled ||
+ Model.Address.CityEnabled || Model.Address.CompanyEnabled || Model.Address.CountryEnabled || Model.Address.StreetAddress2Enabled)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("Admin.Vendors.Fields.Address")
+        </div>
+        <div class="panel-body">
+            <admin-input asp-for="Address" asp-template="Address" />
+        </div>
     </div>
-    <div class="panel-body">
-        <admin-input asp-for="Address" asp-template="Address" />
-    </div>
-</div>
+}
 <vc:admin-widget widget-zone="vendor_details_info_bottom" additional-data="Model" />

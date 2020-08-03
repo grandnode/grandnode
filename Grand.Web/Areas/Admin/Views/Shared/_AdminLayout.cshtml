@@ -8,14 +8,14 @@
 @inject Grand.Core.Configuration.GrandConfig grandConfig
 
 @using System.Text.Encodings.Web
-@using Grand.Core.Domain.Customers
+@using Grand.Domain.Customers
 @using Grand.Framework.UI;
 @using Grand.Core;
-@using Grand.Core.Domain.Localization
+@using Grand.Domain.Localization
 @using Grand.Services.Security;
-@using Grand.Core.Domain.Common;
+@using Grand.Domain.Common;
 @{
-    var currentCustomer = this.WorkContext.CurrentCustomer;
+    var currentCustomer = workContext.CurrentCustomer;
     var usernamesEnabled = customerSettings.UsernamesEnabled;
     var currentVersion = GrandVersion.CurrentVersion;
     var kendoVersion = "2019.2.514";
@@ -97,7 +97,8 @@
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head, false)
     @Html.GrandScripts(this.Url, ResourceLocation.Head, false)
 </head>
-<body >
+<body>
+    @Html.AntiForgeryToken()
     <script>
         if (document.readyState == "loading") {
             let value = localStorage.getItem("sideBarCookie");
@@ -108,7 +109,7 @@
                 if ($('body').hasClass('nav-sm')) {
                     $('#sidebar-menu').find('li.active').addClass('active-sm').removeClass('active');
                     $('#sidebar-menu').find('li.active-sm ul').hide();
-                }      
+                }
             }
             else {
                 $('body').removeClass('nav-sm');
@@ -156,7 +157,7 @@
                                     <input id="searchInput" type="text" class="form-control" placeholder="@T("Admin.AdminSearch.Placeholder")">
                                     <script>
                                       $(document).ready(function () {
-                                        Admin.Search.init("@(Url.Action("Search", "AdminSearch"))");
+                                        Admin.Search.init("@(Url.Action("Index", "Search"))");
                                       });
                                     </script>
                                 </div>
@@ -181,85 +182,82 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="http://grandnode.com/boards" target="_blank">
+                                            <a href="https://grandnode.com/boards" target="_blank">
                                                 <i class="icon-bubbles"></i>
                                                 @T("Admin.Header.Community")
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:;">
-                                                <i class="fa fa-dot-circle-o"></i> grandnode @currentVersion
+                                            <a href="https://grandnode.com/release-notes" target="_blank">
+                                                <i class="fa fa-dot-circle-o"></i>
+                                                grandnode @currentVersion
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="icon-settings"></i>
-                                    </a>
-                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list overflow-h" role="menu">
-                                        @if (canManageMaintenance)
-                                        {
+                                @if (canManageMaintenance)
+                                {
+                                    <li role="presentation" class="dropdown">
+                                        <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="icon-settings"></i>
+                                        </a>
+                                        <ul id="menu1" class="dropdown-menu list-unstyled msg_list overflow-h" role="menu">
                                             <li>
-                                                <a href="@Url.Action("ClearCache", "Common", new { memory = true, returnurl = webHelper.GetRawUrl(this.Context.Request)})">
+                                                <a href="@Url.Action("ClearCache", "Common", new { memory = true, returnurl = webHelper.GetRawUrl(this.Context.Request) })">
                                                     <i class="icon-refresh"></i>
                                                     @T("Admin.Header.ClearCacheMemory")
                                                 </a>
                                             </li>
-                                            @if (grandConfig.RedisCachingEnabled)
-                                            {
-                                                <li>
-                                                    <a href="@Url.Action("ClearCache", "Common",  new { memory = false, returnurl = webHelper.GetRawUrl(this.Context.Request)})">
-                                                        <i class="icon-refresh"></i>
-                                                        @T("Admin.Header.ClearCacheRedis")
-                                                    </a>
-                                                </li>
-                                            }
+                                            
                                             <li>
                                                 <a href="@Url.Action("RestartApplication", "Common", new { returnurl = webHelper.GetRawUrl(this.Context.Request) })" id="restart-application">
                                                     <i class="icon-reload"></i>
                                                     @T("Admin.Header.RestartApplication")
                                                 </a>
                                             </li>
-                                        }
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <img src="~/administration/build/images/avatar.png" alt="">
+                                            
+                                        </ul>
+                                    </li>
+                                }
+                                    <li>
+                                        <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            <img src="~/administration/build/images/avatar.png" alt="">
 
-                                        @if (currentCustomer != null && currentCustomer.IsRegistered())
-                                        {
-                                            <div class="username-hide-on-mobile">
-                                                @(usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
-                                            </div>
+                                            @if (currentCustomer != null && currentCustomer.IsRegistered())
+                                            {
+                                                <div class="username-hide-on-mobile">
+                                                    @(usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
+                                                </div>
 
-                                        }
-                                        <span class="fa fa-angle-down"></span>
-                                    </a>
+                                            }
+                                            <span class="fa fa-angle-down"></span>
+                                        </a>
 
-                                    <ul class="dropdown-menu dropdown-menu-default">
-                                        <li>
-                                            <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
-                                                <i class="icon-user"></i> @T("Admin.Header.Profile")
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@Url.Action("Logout", "Customer", new { area = "" }, null)">
-                                                <i class="icon-logout"></i> @T("Admin.Header.Logout")
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                        <ul class="dropdown-menu dropdown-menu-default">
+                                            @if (currentCustomer.IsAdmin())
+                                            {
+                                                <li>
+                                                    <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
+                                                        <i class="icon-user"></i> @T("Admin.Header.Profile")
+                                                    </a>
+                                                </li>
+                                            }
+                                            <li>
+                                                <a href="@Url.Action("Logout", "Customer", new { area = "" }, null)">
+                                                    <i class="icon-logout"></i> @T("Admin.Header.Logout")
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
 
 
-                                @await Component.InvokeAsync("CommonLanguageSelector")
-                                <li class="dropdown" role="presentation">
-                                    <span id="searchIcon" class="searchIcon dropdown-toggle">
-                                        <i class="icon-magnifier"></i>
-                                    </span>
-                                </li>
-                            </ul>
+                                    @await Component.InvokeAsync("CommonLanguageSelector")
+                                    <li class="dropdown" role="presentation">
+                                        <span id="searchIcon" class="searchIcon dropdown-toggle">
+                                            <i class="icon-magnifier"></i>
+                                        </span>
+                                    </li>
+                                </ul>
                         </nav>
                     </div>
                     <div class="clear"></div>
@@ -267,10 +265,10 @@
                 <vc:admin-widget widget-zone="header_navbar_after" additional-data="null" />
             }
 
-                <div class="right_col" role="main">
-                    <partial name="Notifications" />
-                    @RenderBody()
-                </div>
+            <div class="right_col" role="main">
+                <partial name="Notifications" />
+                @RenderBody()
+            </div>
             <div class="throbber">
                 <div class="curtain">
                 </div>

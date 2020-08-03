@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Shipping;
+using Grand.Domain.Shipping;
 using System;
 using System.Collections.Generic;
 using System.Linq;

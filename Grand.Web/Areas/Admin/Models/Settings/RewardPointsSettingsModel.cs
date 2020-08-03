@@ -1,13 +1,16 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Settings;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
-    [Validator(typeof(RewardPointsSettingsValidator))]
     public partial class RewardPointsSettingsModel : BaseGrandModel
     {
+        public RewardPointsSettingsModel()
+        {
+            PointsForPurchases_Awarded_OrderStatuses = new List<SelectListItem>();
+        }
         public string ActiveStoreScopeConfiguration { get; set; }
 
 
@@ -35,10 +38,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         [GrandResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Awarded")]
         public int PointsForPurchases_Awarded { get; set; }
         public bool PointsForPurchases_Awarded_OverrideForStore { get; set; }
+        public IList<SelectListItem> PointsForPurchases_Awarded_OrderStatuses { get; set; }
 
-        [GrandResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled")]
-        public int PointsForPurchases_Canceled { get; set; }
-        public bool PointsForPurchases_Canceled_OverrideForStore { get; set; }
+        [GrandResourceDisplayName("Admin.Configuration.Settings.RewardPoints.ReduceRewardPointsAfterCancelOrder")]
+        public bool ReduceRewardPointsAfterCancelOrder { get; set; }
+        public bool ReduceRewardPointsAfterCancelOrder_OverrideForStore { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.RewardPoints.DisplayHowMuchWillBeEarned")]
         public bool DisplayHowMuchWillBeEarned { get; set; }

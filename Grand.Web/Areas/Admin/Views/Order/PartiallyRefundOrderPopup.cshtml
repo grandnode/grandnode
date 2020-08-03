@@ -5,13 +5,13 @@
 }
 @model OrderModel
 
-<form asp-controller="Order" asp-action="PartiallyRefundOrderPopup" method="post"
+<form asp-area="Admin" asp-controller="Order" asp-action="PartiallyRefundOrderPopup" method="post"
       asp-route-OrderId="@Context.Request.Query["OrderId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-online="@Context.Request.Query["online"]"
       asp-route-formId="@Context.Request.Query["formId"]"
       >
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -24,7 +24,7 @@
                 <vc:admin-widget widget-zone="order_partially_refund_buttons" additional-data="Model" />
                 <div class="note note-info">
                     <strong>
-                        @string.Format(T("Admin.Orders.Fields.PartialRefund.OrderInfo").Text, Model.Id)
+                        @string.Format(T("Admin.Orders.Fields.PartialRefund.OrderInfo").Text, Model.OrderNumber)
                     </strong>
                 </div>
                 <div class="x_content form">
@@ -51,7 +51,7 @@
     <div asp-validation-summary="All"></div>
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();

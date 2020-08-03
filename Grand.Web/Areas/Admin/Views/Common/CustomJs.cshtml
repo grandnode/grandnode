@@ -1,0 +1,83 @@
+﻿@model Editor
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.CustomJs").Text;
+}
+@{
+    Html.AddScriptParts("~/content/codemirror/codemirror.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/content/codemirror/mode/javascript/javascript.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/content/codemirror/hint/show-hint.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/content/codemirror/hint/javascript-hint.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/content/codemirror/edit/matchbrackets.js", excludeFromBundle: true);
+    Html.AddCssFileParts("~/content/codemirror/codemirror.css", excludeFromBundle: true);
+    Html.AddCssFileParts("~/content/codemirror/hint/show-hint.css", excludeFromBundle: true);
+}
+<style>
+    .CodeMirror {
+        background: #f8f8f8;
+        border: 1px solid #eee;
+        height: 600px;
+    }
+</style>
+<antiforgery-token />
+<div class="row">
+    <div class="col-md-12">
+        <div class="x_panel light form-fit">
+            <div class="x_title">
+                <div class="caption level-caption">
+                    <i class="fa fa-sitemap"></i>
+                    @T("Admin.System.CustomJs")
+                </div>
+            </div>
+            <div class="note note-info">
+                <strong>@T("Admin.System.CustomJs.Tip")</strong>
+            </div>
+            <div class="actions">
+                <div class="util-btn-margin-bottom-5">
+                    <button id="btnSave" class="btn btn-success">
+                        <i class="fa fa fa-check"></i> @T("Admin.Common.Save")
+                    </button>
+                </div>
+            </div>
+            <div class="x_content form">
+                <div class="col-12">
+                    <textarea id="Content" name="Content">@Model.Content</textarea>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        var editor = CodeMirror.fromTextArea(document.getElementById('Content'), {
+                            lineNumbers: true,
+                            mode: "javascript",
+                            matchBrackets: true,
+                            extraKeys: { "Ctrl-Space": "autocomplete" }
+                        });
+
+                        $('#btnSave').click(function () {
+				            $.ajax({
+					            cache: false,
+					            url: "@Url.Action("SaveEditor", "Common")",
+                                data: additionalData(),
+					            type: 'POST',
+					            success: function (response) {
+						            alert(response);
+					            }
+				            });
+				            return false;
+                        });
+
+                        function additionalData() {
+                                var data = {
+                                    content: editor.getValue(),
+                                    css: false
+                                };
+                                addAntiForgeryToken(data);
+                                return data;
+                        }
+
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+

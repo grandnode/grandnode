@@ -6,14 +6,14 @@
     ViewBag.Title = T("Admin.Courses.Course.Fields.PurchasedWithProduct.Choose").Text;
 }
 
-<form asp-controller="Course" asp-action="AssociateProductToCoursePopup" method="post"
+<form asp-area="Admin" asp-controller="Course" asp-action="AssociateProductToCoursePopup" method="post"
       asp-route-CustomerRoleId="@Context.Request.Query["CourseId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-productIdInput="@Context.Request.Query["productIdInput"]"
       asp-route-productNameInput="@Context.Request.Query["productNameInput"]"
       id="associateproduct"
       >
-    <antiforgery-token />
+    
 
     <div class="row">
         <div class="col-md-12">
@@ -84,15 +84,15 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
-    try {
-            window.opener.document.getElementById('@(Context.Request.Query["productIdInput"])').value = '@(ViewBag.productId)';
-            window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
-            window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
-    }
-    catch (e){}
-    window.close();
-    </script>
+        <script>
+            try {
+                    window.opener.document.getElementById('@(Context.Request.Query["productIdInput"])').value = '@(ViewBag.productId)';
+                    window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
+                    window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
+            }
+            catch (e){}
+            window.close();
+        </script>
     }
 
     <input asp-for="AssociatedToProductId" type="hidden" />
@@ -163,7 +163,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#search-products').click(function () {
                 var grid = $('#products-grid').data('kendoGrid');

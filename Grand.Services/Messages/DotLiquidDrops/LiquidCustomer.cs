@@ -1,8 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Tax;
+using Grand.Domain.Customers;
+using Grand.Domain.Stores;
+using Grand.Domain.Tax;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using System.Collections.Generic;
@@ -15,16 +14,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private Customer _customer;
         private CustomerNote _customerNote;
         private Store _store;
-        private Language _language;
 
-        public LiquidCustomer(Customer customer, Store store, Language language, CustomerNote customerNote = null)
+        public LiquidCustomer(Customer customer, Store store, CustomerNote customerNote = null)
         {
-
-            this._customer = customer;
-            this._customerNote = customerNote;
-            this._store = store;
-            this._language = language;
-
+            _customer = customer;
+            _customerNote = customerNote;
+            _store = store;
             AdditionalTokens = new Dictionary<string, string>();
         }
 
@@ -135,6 +130,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
         public string CustomerNoteAttachmentUrl
         {
             get { return string.Format("{0}download/customernotefile/{1}", (_store.SslEnabled ? _store.SecureUrl : _store.Url), _customerNote.Id); }
+        }
+
+        public string Token {
+            get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.TwoFactorValidCode); }
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="form-group">
-            @if (Model.GiftCardType == Grand.Core.Domain.Catalog.GiftCardType.Virtual)
+            @if (Model.GiftCardType == Grand.Domain.Catalog.GiftCardType.Virtual)
             {
                 <admin-label asp-for="RecipientEmail" />
                 <div class="col-md-9 col-sm-9">
@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="form-group">
-            @if (Model.GiftCardType == Grand.Core.Domain.Catalog.GiftCardType.Virtual)
+            @if (Model.GiftCardType == Grand.Domain.Catalog.GiftCardType.Virtual)
             {
                 <admin-label asp-for="SenderEmail" />
                 <div class="col-md-9 col-sm-9">

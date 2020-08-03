@@ -1,7 +1,13 @@
 ﻿@model ReturnRequestModel
 @inject AdminAreaSettings adminAreaSettings
 @inject OrderSettings orderSettings
-
+@inject Grand.Services.Security.IPermissionService permissionService
+@{
+    //has "Manage Documents" permission?
+    var canManageDocuments = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageDocuments);
+    //has "Manage Generic attributes" permission?
+    var canManageGenericAttributes = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageGenericAttributes);
+}
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <admin-tabstrip name="returnrequest-edit">
@@ -19,6 +25,39 @@
                 <content>
                     <div>
                         <partial name="_CreateOrUpdate.TabAddress" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+        }
+        @if (canManageDocuments)
+        {
+            <tabstrip-item text="@T("Admin.ReturnRequests.Documents")" tab-index="2">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabDocuments" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+        }
+        <tabstrip-item text="@T("Admin.ReturnRequests.ReturnRequestNotes")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_ReturnRequestNotes" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        @if (canManageGenericAttributes)
+        {
+            <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="4">
+                <content>
+                    <div>
+                        <div class="form-horizontal">
+                            @{
+                                ViewData["ObjectType"] = "ReturnRequest";
+                                ViewData["TabIndex"] = 4;
+                            }
+                            <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
+                        </div>
                     </div>
                 </content>
             </tabstrip-item>

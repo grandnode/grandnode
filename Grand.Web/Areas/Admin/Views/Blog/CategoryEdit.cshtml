@@ -4,8 +4,8 @@
     ViewBag.Title = T("Admin.ContentManagement.Blog.BlogCategory.EditBlogCategoryDetails").Text;
 }
 
-<form asp-controller="Blog" asp-action="CategoryEdit" method="post" id="category-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Blog" asp-action="CategoryEdit" method="post" id="category-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

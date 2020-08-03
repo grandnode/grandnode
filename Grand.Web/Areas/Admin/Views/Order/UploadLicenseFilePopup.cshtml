@@ -4,8 +4,8 @@
     //page title
     ViewBag.Title = T("Admin.Orders.Products.License.UploadFile").Text;
 }
-<form asp-controller="Order" asp-action="UploadLicenseFilePopup" method="post">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Order" asp-action="UploadLicenseFilePopup" method="post">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -29,7 +29,7 @@
     <div asp-validation-summary="All"></div>
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();

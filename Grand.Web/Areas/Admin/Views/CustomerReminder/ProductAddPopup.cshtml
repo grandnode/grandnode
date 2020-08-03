@@ -6,7 +6,7 @@
     ViewBag.Title = T("Admin.Customers.CustomerReminder.Condition.Products.AddNew").Text;
 }
 
-<form asp-controller="CustomerReminder" asp-action="ProductAddPopup" method="post" 
+<form asp-area="Admin" asp-controller="CustomerReminder" asp-action="ProductAddPopup" method="post" 
       asp-route-CustomerReminderId="@Context.Request.Query["CustomerReminderId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
@@ -14,11 +14,11 @@
     <input asp-for="CustomerReminderId" type="hidden" />
     <input asp-for="ConditionId" type="hidden" />
 
-    <antiforgery-token />
+    
 
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
@@ -157,7 +157,7 @@
     });
     </script>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             $('#search-products').click(function() {
                 var grid = $('#products-grid').data('kendoGrid');

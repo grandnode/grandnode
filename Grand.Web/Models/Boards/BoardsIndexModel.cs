@@ -6,7 +6,7 @@ namespace Grand.Web.Models.Boards
     {
         public BoardsIndexModel()
         {
-            this.ForumGroups = new List<ForumGroupModel>();
+            ForumGroups = new List<ForumGroupModel>();
         }
         
         public IList<ForumGroupModel> ForumGroups { get; set; }

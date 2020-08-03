@@ -16,20 +16,23 @@ namespace Grand.Plugin.ExternalAuth.Facebook
         #region Fields
         
         private readonly ISettingService _settingService;
-        private readonly IServiceProvider _serviceProvider;
         private readonly IWebHelper _webHelper;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILanguageService _languageService;
 
         #endregion
 
         #region Ctor
 
         public FacebookAuthenticationMethod(ISettingService settingService,
-            IServiceProvider serviceProvider,
+            ILocalizationService localizationService, 
+            ILanguageService languageService,
             IWebHelper webHelper)
         {
-            this._settingService = settingService;
-            this._serviceProvider = serviceProvider;
-            this._webHelper = webHelper;
+            _settingService = settingService;
+            _webHelper = webHelper;
+            _localizationService = localizationService;
+            _languageService = languageService;
         }
 
         #endregion
@@ -62,14 +65,14 @@ namespace Grand.Plugin.ExternalAuth.Facebook
             await _settingService.SaveSetting(new FacebookExternalAuthSettings());
 
             //locales
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.Login", "Login using Facebook account");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.ClientKeyIdentifier", "App ID/API Key");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint", "Enter your app ID/API key here. You can find it on your FaceBook application page.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.ClientSecret", "App Secret");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.ClientSecret.Hint", "Enter your app secret here. You can find it on your FaceBook application page.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.Failed", "Facebook - Login error");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.Failed.ErrorCode", "Error code");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.Failed.ErrorMessage", "Error message");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.Login", "Login using Facebook account");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.ClientKeyIdentifier", "App ID/API Key");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint", "Enter your app ID/API key here. You can find it on your FaceBook application page.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.ClientSecret", "App Secret");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.ClientSecret.Hint", "Enter your app secret here. You can find it on your FaceBook application page.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.Failed", "Facebook - Login error");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.Failed.ErrorCode", "Error code");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.Failed.ErrorMessage", "Error message");
 
             await base.Install();
         }
@@ -83,11 +86,11 @@ namespace Grand.Plugin.ExternalAuth.Facebook
             await _settingService.DeleteSetting<FacebookExternalAuthSettings>();
 
             //locales
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.Login");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.ClientKeyIdentifier");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.ClientSecret");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Facebook.ClientSecret.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.Login");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.ClientKeyIdentifier");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.ClientSecret");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.ExternalAuth.Facebook.ClientSecret.Hint");
 
             await base.Uninstall();
         }

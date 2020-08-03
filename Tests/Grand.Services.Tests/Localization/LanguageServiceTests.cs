@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Localization;
+using Grand.Domain.Data;
+using Grand.Domain.Localization;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Configuration;
 using Grand.Services.Events;
@@ -57,8 +57,8 @@ namespace Grand.Services.Localization.Tests
             }
             _localizationSettings = new LocalizationSettings();
 
-            _languageService = new LanguageService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _languageRepo, _storeMappingService,
-                _settingService, _localizationSettings, _eventPublisher);
+            _languageService = new LanguageService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher), _languageRepo, 
+                _eventPublisher);
         }
 
         [TestMethod()]

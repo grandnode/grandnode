@@ -1,5 +1,4 @@
-﻿using Grand.Core.Domain.Media;
-using Grand.Framework.Security;
+﻿using Grand.Domain.Media;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Media;
 using Grand.Services.Security;
@@ -18,7 +17,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public DownloadController(IDownloadService downloadService)
         {
-            this._downloadService = downloadService;
+            _downloadService = downloadService;
         }
 
         public async Task<IActionResult> DownloadFile(Guid downloadGuid)
@@ -38,30 +37,28 @@ namespace Grand.Web.Areas.Admin.Controllers
             string contentType = !String.IsNullOrWhiteSpace(download.ContentType)
                 ? download.ContentType
                 : "application/octet-stream";
-            return new FileContentResult(download.DownloadBinary, contentType)
-            {
+            return new FileContentResult(download.DownloadBinary, contentType) {
                 FileDownloadName = fileName + download.Extension
             };
         }
 
         [HttpPost]
-        
+
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)] 
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> SaveDownloadUrl(string downloadUrl)
         {
-            if(string.IsNullOrEmpty(downloadUrl))
+            if (string.IsNullOrEmpty(downloadUrl))
             {
                 return Json(new { success = false, error = "URL can't be empty" });
             }
             //insert
-            var download = new Download
-            {
+            var download = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = true,
                 DownloadUrl = downloadUrl,
                 IsNew = true
-              };
+            };
             await _downloadService.InsertDownload(download);
 
             return Json(new { downloadId = download.Id, success = true });
@@ -69,10 +66,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> AsyncUpload()
         {
-            var httpPostedFile = Request.Form.Files.FirstOrDefault();
+            var form = await HttpContext.Request.ReadFormAsync();
+            var httpPostedFile = form.Files.FirstOrDefault();
             if (httpPostedFile == null)
             {
                 return Json(new
@@ -87,8 +85,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
-                fileName = Request.Form[qqFileNameParameter].ToString();
+            if (String.IsNullOrEmpty(fileName) && form.ContainsKey(qqFileNameParameter))
+                fileName = form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
             fileName = Path.GetFileName(fileName);
 
@@ -99,8 +97,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 fileExtension = fileExtension.ToLowerInvariant();
 
 
-            var download = new Download
-            {
+            var download = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
                 DownloadUrl = "",

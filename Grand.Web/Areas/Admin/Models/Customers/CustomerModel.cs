@@ -1,8 +1,6 @@
-﻿using FluentValidation.Attributes;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Domain.Catalog;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Customers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -10,38 +8,37 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    [Validator(typeof(CustomerValidator))]
     public partial class CustomerModel : BaseGrandEntityModel
     {
         public CustomerModel()
         {
-            this.AvailableTimeZones = new List<SelectListItem>();
-            this.SendEmail = new SendEmailModel() { SendImmediately = true }; 
-            this.SendPm = new SendPmModel();
-            this.AvailableCustomerRoles = new List<CustomerRoleModel>();
-            this.AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
-            this.AvailableCountries = new List<SelectListItem>();
-            this.AvailableStates = new List<SelectListItem>();
-            this.AvailableVendors = new List<SelectListItem>();
-            this.AvailableStores = new List<SelectListItem>();
-            this.CustomerAttributes = new List<CustomerAttributeModel>();
-            this.AvailableNewsletterSubscriptionStores = new List<StoreModel>();
-            this.RewardPointsAvailableStores = new List<SelectListItem>();
+            AvailableTimeZones = new List<SelectListItem>();
+            SendEmail = new SendEmailModel() { SendImmediately = true };
+            SendPm = new SendPmModel();
+            AvailableCustomerRoles = new List<CustomerRoleModel>();
+            AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
+            AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
+            AvailableVendors = new List<SelectListItem>();
+            AvailableStores = new List<SelectListItem>();
+            CustomerAttributes = new List<CustomerAttributeModel>();
+            AvailableNewsletterSubscriptionStores = new List<StoreModel>();
+            RewardPointsAvailableStores = new List<SelectListItem>();
         }
 
         public bool AllowUsersToChangeUsernames { get; set; }
         public bool UsernamesEnabled { get; set; }
 
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Username")]
-        
         public string Username { get; set; }
 
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Email")]
-        
         public string Email { get; set; }
 
+        [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Owner")]
+        public string Owner { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Password")]
-        
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
@@ -58,74 +55,75 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         //form fields & properties
         public bool GenderEnabled { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Gender")]
         public string Gender { get; set; }
 
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.FirstName")]
-        
         public string FirstName { get; set; }
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.LastName")]
-        
+
         public string LastName { get; set; }
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.FullName")]
         public string FullName { get; set; }
-        
+
         public bool DateOfBirthEnabled { get; set; }
         [UIHint("DateNullable")]
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.DateOfBirth")]
         public DateTime? DateOfBirth { get; set; }
 
         public bool CompanyEnabled { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Company")]
-        
         public string Company { get; set; }
 
         public bool StreetAddressEnabled { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.StreetAddress")]
-        
         public string StreetAddress { get; set; }
 
         public bool StreetAddress2Enabled { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.StreetAddress2")]
-        
         public string StreetAddress2 { get; set; }
 
         public bool ZipPostalCodeEnabled { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.ZipPostalCode")]
-        
         public string ZipPostalCode { get; set; }
 
         public bool CityEnabled { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.City")]
-        
         public string City { get; set; }
 
         public bool CountryEnabled { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Country")]
         public string CountryId { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
 
         public bool StateProvinceEnabled { get; set; }
+        
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.StateProvince")]
         public string StateProvinceId { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
 
         public bool PhoneEnabled { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Phone")]
-        
         public string Phone { get; set; }
 
         public bool FaxEnabled { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Fax")]
-        
         public string Fax { get; set; }
 
         public List<CustomerAttributeModel> CustomerAttributes { get; set; }
 
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.AdminComment")]
-        
         public string AdminComment { get; set; }
-        
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.IsTaxExempt")]
         public bool IsTaxExempt { get; set; }
 
@@ -137,12 +135,13 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
         public string AffiliateId { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
         public string AffiliateName { get; set; }
         public string CustomAttributes { get; set; }
+
         //time zone
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.TimeZoneId")]
-        
         public string TimeZoneId { get; set; }
 
         public bool AllowCustomersToSetTimeZone { get; set; }
@@ -151,7 +150,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         //EU VAT
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.VatNumber")]
-        
+
         public string VatNumber { get; set; }
 
         public string VatNumberStatusNote { get; set; }
@@ -189,6 +188,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         //newsletter subscriptions (per store)
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
         public List<StoreModel> AvailableNewsletterSubscriptionStores { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
         public string[] SelectedNewsletterSubscriptionStoreIds { get; set; }
 
@@ -199,11 +199,11 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         public int AddRewardPointsValue { get; set; }
 
         [GrandResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage")]
-        
         public string AddRewardPointsMessage { get; set; }
 
         [GrandResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
         public string AddRewardPointsStoreId { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
         public IList<SelectListItem> RewardPointsAvailableStores { get; set; }
 
@@ -216,6 +216,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         //re-send the activation message
         public bool AllowReSendingOfActivationMessage { get; set; }
         public bool ShowMessageContactForm { get; set; }
+
         //external auth
         [GrandResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
@@ -257,7 +258,6 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public int PointsBalance { get; set; }
 
             [GrandResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Message")]
-            
             public string Message { get; set; }
 
             [GrandResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Date")]
@@ -267,11 +267,9 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         public partial class SendEmailModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.SendEmail.Subject")]
-            
             public string Subject { get; set; }
 
             [GrandResourceDisplayName("Admin.Customers.Customers.SendEmail.Body")]
-            
             public string Body { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.SendEmail.SendImmediately")]
             public bool SendImmediately { get; set; }
@@ -296,22 +294,18 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public override string Id { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.ID")]
             public int OrderNumber { get; set; }
-
+            [GrandResourceDisplayName("Admin.Customers.Customers.Orders.Code")]
+            public string OrderCode { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.OrderStatus")]
             public string OrderStatus { get; set; }
-
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.PaymentStatus")]
             public string PaymentStatus { get; set; }
-
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.ShippingStatus")]
             public string ShippingStatus { get; set; }
-
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.OrderTotal")]
             public string OrderTotal { get; set; }
-
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.Store")]
             public string StoreName { get; set; }
-
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.CreatedOn")]
             public DateTime CreatedOn { get; set; }
         }

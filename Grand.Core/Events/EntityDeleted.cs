@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Grand.Domain;
+using MediatR;
 
 namespace Grand.Core.Events
 {
@@ -11,7 +12,7 @@ namespace Grand.Core.Events
     {
         public EntityDeleted(T entity)
         {
-            this.Entity = entity;
+            Entity = entity;
         }
         public T Entity { get; private set; }
     }

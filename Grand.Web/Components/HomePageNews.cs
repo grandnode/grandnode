@@ -1,6 +1,7 @@
-﻿using Grand.Core.Domain.News;
+﻿using Grand.Domain.News;
 using Grand.Framework.Components;
-using Grand.Web.Interfaces;
+using Grand.Web.Features.Models.News;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,13 +10,13 @@ namespace Grand.Web.ViewComponents
 {
     public class HomePageNewsViewComponent : BaseViewComponent
     {
-        private readonly INewsViewModelService _newsViewModelService;
+        private readonly IMediator _mediator;
         private readonly NewsSettings _newsSettings;
-        public HomePageNewsViewComponent(INewsViewModelService newsViewModelService,
+        public HomePageNewsViewComponent(IMediator mediator,
             NewsSettings newsSettings)
         {
-            this._newsViewModelService = newsViewModelService;
-            this._newsSettings = newsSettings;
+            _mediator = mediator;
+            _newsSettings = newsSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
@@ -23,7 +24,7 @@ namespace Grand.Web.ViewComponents
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
 
-            var model = await _newsViewModelService.PrepareHomePageNewsItems();
+            var model = await _mediator.Send(new GetHomePageNewsItems());
             if (!model.NewsItems.Any())
                 return Content("");
 

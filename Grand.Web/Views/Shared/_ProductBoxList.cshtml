@@ -33,45 +33,53 @@
     }
     var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
 }
-    <div class="card gen rowHelper col-12 mb-3" data-productid="@Model.Id">
-        <div class="row flex-row flex-nowrap prod-list">
-            <div class="d-inline-flex img-holder">
+
+@await Component.InvokeAsync("Widget", new { widgetZone = "productbox_list_before_content", additionalData = Model })
+
+<div class="product-box list-box animation lazyload" data-productid="@Model.Id">
+    <div class="picture-container">
+        <a class="picture" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+            <picture>
+                <source media="(max-width: 480px)" picture-id="@Model.DefaultPictureModel.Id" picture-size="300" />
+                <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+            </picture>
+        </a>
+        @if (!string.IsNullOrEmpty(Model.SecondPictureModel.ImageUrl))
+        {
+            <div class="hover-img">
                 <a class="picture" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
                     <picture>
-                        <source media="(max-width: 480px)" picture-id="@Model.DefaultPictureModel.Id" picture-size="200" />
-                        <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title"
-                             @if (!string.IsNullOrEmpty(Model.SecondPictureModel.ImageUrl)) { <text>
-                             onmouseover="this.src='@Model.SecondPictureModel.ImageUrl';" onmouseout="this.src='@Model.DefaultPictureModel.ImageUrl';"
-                             </text> } />
+                        <source media="(max-width: 480px)" picture-id="@Model.SecondPictureModel.Id" picture-size="300" />
+                        <img class="img-fluid" alt="@Model.SecondPictureModel.AlternateText" src="@Model.SecondPictureModel.ImageUrl" />
                     </picture>
                 </a>
-                @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
-                {
-                    @if (!string.IsNullOrEmpty(Model.Flag))
-                    {
-                        <span class="new-product-label with-promo bg-info text-white">@Model.Flag</span>
-                    }
-                    <span class="change-percent bg-success text-white">
-                        <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
-                    </span>
-                }
-                else
-                {
-                    @if (!string.IsNullOrEmpty(Model.Flag))
-                    {
-                        <span class="new-product-label bg-info text-white">@Model.Flag</span>
-                    }
-                }
             </div>
-            <div class="d-inline-flex">
-                <div class="card-body p-sm-3 px-2 py-1 text-left">
-                    <h2 class="h6 card-title">
-                        <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
-                        @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
-                        {
-                            <span class="d-block py-1">@Model.Sku</span>
-                        }
-                    </h2>
+        }
+    </div>
+    <div class="labels">
+        @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+        {
+            <span class="product-discount badge product-box-label">
+                <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
+            </span>
+        }
+        @if (!string.IsNullOrEmpty(Model.Flag))
+        {
+            <span class="product-box-label badge bg-info">@Model.Flag</span>
+        }
+    </div>
+    <div class="product-info">
+        <div class="top">
+            <div class="title">
+                <h5 class="mb-0">
+                    <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
+                </h5>
+            </div>
+            @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
+            {
+                <span class="sku">@Model.Sku</span>
+            }
+            <div class="prices-rating">
                 @if (Model.ReviewOverviewModel.AllowCustomerReviews)
                 {
                     int ratingPercent = 0;
@@ -86,50 +94,154 @@
                         </div>
                     </div>
                 }
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })
-                <ul class="pl-0 mb-0">
-
+                <div class="prices d-inline-flex align-items-center">
                     @if (Model.ProductType != ProductType.Auction)
                     {
-                        <li class="price actual-price d-inline-flex">@Model.ProductPrice.Price</li>
+                        <div class="actual-price price">
+                            @Model.ProductPrice.Price
+                        </div>
                     }
                     else
                     {
-                        <li class="price actual-price d-inline-flex">@(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)</li>
+                        <div class="actual-price price">
+                            @(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)
+                        </div>
                     }
                     @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                     {
-                        <li class="d-inline-flex ml-2">
-                            <span class="price old-price">@Model.ProductPrice.OldPrice</span>
-                        </li>
+                        <div class="old-price price ml-1">
+                            @Model.ProductPrice.OldPrice
+                        </div>
                     }
+                </div>
+            </div>
+            @if (Model.ProductPrice.DisplayTaxShippingInfo)
+            {
+                var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
+                <div class="tax-shipping-info">
+                    @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
+                </div>
+            }
+            @if (Model.ProductType == ProductType.Auction)
+            {
+                @if (Model.EndTime.HasValue)
+                {
+                    <div class="countdown-box text-left p-sm-2 p-1 bg-light">
+                        @if (Model.EndTime > DateTime.UtcNow)
+                        {
+                            <label class="d-inline-block mb-0">@T("AddToCart.Timeleft"): </label>
+                            <div class="d-inline-block" data-countdown="@Model.EndTime.Value.ToString("yyyy-MM-dd HH:mm UTC")"></div>
+                        }
+                        else
+                        {
+                            <div class="d-inline-flex flex-wrap justify-content-center">
+                                <label class="ended-label">@T("ShoppingCart.Auctionends"):</label>
+                                <div class="count-date">@Model.EndTimeLocalTime.Value.ToString()</div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+        <div class="bottom d-md-flex d-none">
+            @if (Model.SpecificationAttributeModels.Any())
+            {
+                <div class="spec-container">
+                    @{
+                        var group = Model.SpecificationAttributeModels.GroupBy(x => x.SpecificationAttributeName);
+                    }
+                    <table>
+                        <tbody>
+                            @foreach (var item in group)
+                            {
+                                <tr class="spec">
+                                    <td>
+                                        <div class="spec-name">
+                                            @{
+                                                var groupList = item.ToList();
+                                            }
+                                            @groupList[0].SpecificationAttributeName:
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var groupList2 = item.ToList();
+                                        }
+                                        <div class="spec-value">
+                                            @foreach (var spec in groupList)
+                                            {
+                                                <span>
+                                                    @Html.Raw(spec.ValueRaw)
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
 
-                    @if (Model.ProductPrice.DisplayTaxShippingInfo)
-                    {
-                        var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
-                        //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
-                        //of course, you can modify appropriate locales to include VAT info there
-                        <li class="">
-                            <span class="tax-shipping-info">
-                                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
-                            </span>
-                        </li>
-                    }
-                    @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
-                    {
-                        <li class="base-price-pangv">
-                            @Model.ProductPrice.BasePricePAngV
-                        </li>
-                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            @if (Model.ProductAttributeModels.Any())
+            {
+                <div class="attr-container">
+                    <table>
+                        <tbody>
+                            @foreach (var item in Model.ProductAttributeModels)
+                            {
+                                <tr class="attr">
+                                    <td>
+                                        <div class="attr-name">
+                                            @item.Name
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="attr-value">
+                                            @foreach (var spec in item.Values)
+                                            {
+                                                switch (item.AttributeControlType)
+                                                {
+                                                    case AttributeControlType.DropdownList:
+                                                    case AttributeControlType.RadioList:
+                                                    case AttributeControlType.Checkboxes:
+                                                    case AttributeControlType.ReadonlyCheckboxes:
+                                                        <div class="name">
+                                                            @Html.Raw(spec.Name)
+                                                        </div>
+                                                        break;
+                                                    case AttributeControlType.ColorSquares:
+                                                        <div class="name color-container" title="@spec.Name">
+                                                            <span class="color" style="background-color:@spec.ColorSquaresRgb;">&nbsp;</span>
+                                                        </div>
+                                                        break;
+                                                    case AttributeControlType.ImageSquares:
+                                                        <div class="name image-container">
+                                                            <img src="@spec.ImageSquaresPictureModel?.ImageUrl" />
+                                                        </div>
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                            }
+                                        </div>
+                                    </td>
 
-                </ul>
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })
-                <div class="btn-group list d-lg-inline-flex d-none">
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            <div class="desc">
+                @Html.Raw(Model.ShortDescription)
+            </div>
+            <div>
+                <div class="buttons btn-group">
                     @if (Model.ShowQty)
                     {
                         var qtyId = "addtocart_" + @Model.Id + "_EnteredQuantity";
-                        <input class="form-control input-group-addon catalog-quantity"
-                               type="text" id="@qtyId" name="@qtyId" value="1">
+                        <input class="form-control input-group-addon catalog-quantity" type="number" id="@qtyId" name="@qtyId" value="1">
                     }
                     @if (!Model.ProductPrice.DisableBuyButton)
                     {
@@ -142,42 +254,44 @@
                         {
                             addToCartText = T("ShoppingCart.PreOrder").Text;
                         }
-                        <input type="button" value="@(addToCartText)" class="btn btn-info" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.ShowQty', '@Model.Id');return false;" />
+                        <button type="button" class="btn btn-info d-flex align-items-center" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.ShowQty', '@Model.Id');return false;">
+                            <span class="mdi mdi-cart-outline mr-1"></span>
+                            <span class="add-cart-text">@(addToCartText)</span>
+                            <span class="sr-only">AddToCart</span>
+                        </button>
                     }
                     else
                     {
                         if (Model.ProductType == ProductType.Auction)
                         {
                             var addToCartText = T("ShoppingCart.Bids").Text;
-                            <button type="button" class="btn btn-info" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', 'false', '@Model.Id');return false;">
-                                <span class="mdi mdi-gavel"></span>
-                                <span class="d-none d-xl-block">@(addToCartText)</span>
+                            <button type="button" class="btn btn-info d-flex align-items-center" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', 'false', '@Model.Id');return false;">
+                                <span class="mdi mdi-gavel mr-1"></span>
+                                <span class="add-cart-text">@(addToCartText)</span>
                                 <span class="sr-only">AddToCart</span>
                             </button>
                         }
 
                     }
-                    <button type="button" value="@T("Products.QuickView")" title="@T("Products.QuickView")" class="btn btn-secondary" data-toggle="modal" data-target="ModalQuickView" onclick="AjaxCart.quickview_product('@quickviewurl')">
-                        <span class="sr-only">@T("Products.QuickView")</span>
-                        <span class="mdi mdi-magnify"></span>
-                    </button>
-                    @if (!Model.ProductPrice.DisableAddToCompareListButton && Model.ProductType == ProductType.SimpleProduct)
-                    {
-                        <button type="button" value="@T("ShoppingCart.AddToCompareList")" title="@T("ShoppingCart.AddToCompareList")" class="btn btn-secondary" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
-                            <span class="mdi mdi-repeat"></span>
-                            <span class="sr-only">@T("ShoppingCart.AddToCompareList")</span>
-                        </button>
-                    }
                     @if (!Model.ProductPrice.DisableWishlistButton && Model.ProductType == ProductType.SimpleProduct)
                     {
-                        <button type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="btn btn-secondary" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink', '@Model.ShowQty', '@Model.Id');return false;">
-                            <span class="mdi mdi-heart-outline"></span>
-                            <span class="sr-only">@T("ShoppingCart.AddToWishlist")</span>
+                        <button type="button" value="@T("ShoppingCart.AddToWishlist")" data-tooltip="title" title="@T("ShoppingCart.AddToWishlist")" class="btn btn-secondary" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink', '@Model.ShowQty', '@Model.Id');return false;">
+                            <span class="mdi mdi-heart-outline">
+                            </span>
+                            <span class="sr-only">AddToWishlist</span>
                         </button>
                     }
-
+                    @if (!Model.ProductPrice.DisableAddToCompareListButton && Model.ProductType == ProductType.SimpleProduct)
+                    {
+                        <button type="button" data-tooltip="title" title="@T("ShoppingCart.AddToCompareList")" class="btn btn-secondary" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
+                            <span class="sr-only">AddToCompareList</span>
+                            <span class="mdi mdi-repeat"></span>
+                        </button>
+                    }
+                    <button type="button" value="@T("Products.QuickView")" data-tooltip="title" title="@T("Products.QuickView")" class="btn btn-secondary d-flex align-items-center" data-toggle="modal" data-target="ModalQuickView" onclick="AjaxCart.quickview_product('@quickviewurl')">
+                        <span class="mdi mdi-magnify"></span>
+                    </button>
                 </div>
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_after", additionalData = Model.Id })
             </div>
         </div>
     </div>

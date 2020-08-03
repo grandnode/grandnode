@@ -1,35 +1,37 @@
 ﻿@model HomePageNewsItemsModel
 @inject DisplayOrderHomePage order
-<div class="news-list-homepage my-3 order-@order.HomePageNews">
+<div class="news-list-homepage customGrid text-center my-3 order-@order.HomePageNews">
     <h2 class="generalTitle text-center mb-3">
         @T("News")
     </h2>
-    <div class="row">
-        @foreach (var item in Model.NewsItems)
-        {
-            <div class="col-xl-@order.Pn_Xl col-lg-@order.Pn_Lg col-md-@order.Pn_Md col-sm-@order.Pn_Sm col-@order.Pn_Col mb-3">
-                <div class="card">
-                    <div class="card-header border-bottom-0 p-0">
-                        <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
-                            @if (item.PictureModel != null && !string.IsNullOrEmpty(item.PictureModel.ImageUrl))
-                            {
-                                <div class="img-container">
-                                    <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
-                                </div>
-                            }
-                            <h3 class="h5">@item.Title</h3>
-                        </a>
-                        <span class="news-date d-inline-flex align-items-center text-muted"><span class="mdi mdi-alarm mr-2"></span>@item.CreatedOn.ToString("D")</span>
-                    </div>
-                    <div class="card-body p-0">
-                        @Html.Raw(item.Short)
-                    </div>
-                    <div class="card-footer text-center border-top-0">
-                        <a class="btn btn-sm btn-info read-more text-capitalize" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo")</a>
+    <div class="col-12 px-0">
+        <div class="flex-grid form-row">
+            @foreach (var item in Model.NewsItems)
+            {
+                <div class="col-xl-@order.Pn_Xl col-lg-@order.Pn_Lg col-md-@order.Pn_Md col-sm-@order.Pn_Sm col-@order.Pn_Col mb-3">
+                    <div class="card text-lg-left text-center">
+                        <div class="card-header border-bottom-0 p-0">
+                            <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                                @if (item.PictureModel != null && !string.IsNullOrEmpty(item.PictureModel.ImageUrl))
+                                {
+                                    <div class="img-container">
+                                        <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                                    </div>
+                                }
+                                <h3 class="h5">@item.Title</h3>
+                            </a>
+                            <span class="news-date d-inline-flex align-items-center text-muted"><span class="mdi mdi-alarm mr-2"></span>@item.CreatedOn.ToString("D")</span>
+                        </div>
+                        <div class="card-body p-0">
+                            @Html.Raw(item.Short)
+                        </div>
+                        <div class="card-footer text-center border-top-0">
+                            <a class="btn btn-sm btn-info read-more text-capitalize" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo")</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
     <div class="view-all text-center">
         <a class="btn btn-outline-secondary" href="@Url.RouteUrl("NewsArchive")">@T("News.ViewAll")</a>

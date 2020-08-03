@@ -1,39 +1,19 @@
-﻿using Grand.Core;
-using Grand.Core.Domain;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Knowledgebase;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Media;
-using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.News;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Tax;
-using Grand.Core.Domain.Vendors;
-using Grand.Services.Catalog;
-using Grand.Services.Common;
-using Grand.Services.Customers;
-using Grand.Services.Directory;
-using Grand.Services.Helpers;
-using Grand.Services.Localization;
-using Grand.Services.Media;
+﻿using Grand.Domain.Blogs;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Forums;
+using Grand.Domain.Knowledgebase;
+using Grand.Domain.Localization;
+using Grand.Domain.Messages;
+using Grand.Domain.News;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
+using Grand.Domain.Stores;
+using Grand.Domain.Vendors;
+using Grand.Services.Commands.Models.Messages;
+using Grand.Services.Events.Extensions;
 using Grand.Services.Messages.DotLiquidDrops;
-using Grand.Services.Orders;
-using Grand.Services.Payments;
-using Grand.Services.Stores;
-using Grand.Services.Vendors;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
@@ -42,86 +22,15 @@ namespace Grand.Services.Messages
     {
         #region Fields
 
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICurrencyService _currencyService;
-        private readonly IWorkContext _workContext;
-        private readonly IDownloadService _downloadService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IStoreService _storeService;
-        private readonly IStoreContext _storeContext;
-        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly ICountryService _countryService;
-        private readonly MessageTemplatesSettings _templatesSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly MediaSettings _mediaSettings;
         private readonly IMediator _mediator;
-        private readonly IServiceProvider _serviceProvider;
+
         #endregion
 
         #region Ctor
 
-        public MessageTokenProvider(ILanguageService languageService,
-            ILocalizationService localizationService,
-            IDateTimeHelper dateTimeHelper,
-            IPriceFormatter priceFormatter,
-            ICurrencyService currencyService,
-            IWorkContext workContext,
-            IDownloadService downloadService,
-            IOrderService orderService,
-            IPaymentService paymentService,
-            IStoreService storeService,
-            IStoreContext storeContext,
-            IProductAttributeParser productAttributeParser,
-            IAddressAttributeFormatter addressAttributeFormatter,
-            ICustomerAttributeFormatter customerAttributeFormatter,
-            ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            MessageTemplatesSettings templatesSettings,
-            CatalogSettings catalogSettings,
-            TaxSettings taxSettings,
-            CurrencySettings currencySettings,
-            ShippingSettings shippingSettings,
-            StoreInformationSettings storeInformationSettings,
-            MediaSettings mediaSettings,
-            IMediator mediator,
-            IServiceProvider serviceProvider)
+        public MessageTokenProvider(IMediator mediator)
         {
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._workContext = workContext;
-            this._downloadService = downloadService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._productAttributeParser = productAttributeParser;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._customerAttributeFormatter = customerAttributeFormatter;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._shippingSettings = shippingSettings;
-            this._templatesSettings = templatesSettings;
-            this._catalogSettings = catalogSettings;
-            this._taxSettings = taxSettings;
-            this._currencySettings = currencySettings;
-            this._storeInformationSettings = storeInformationSettings;
-            this._mediaSettings = mediaSettings;
-            this._mediator = mediator;
-            this._serviceProvider = serviceProvider;
+            _mediator = mediator;
         }
 
         #endregion
@@ -198,284 +107,28 @@ namespace Grand.Services.Messages
 
         public async Task AddStoreTokens(LiquidObject liquidObject, Store store, Language language, EmailAccount emailAccount)
         {
-            var liquidStore = new LiquidStore(store, language, emailAccount);
-            liquidStore.TwitterLink = _storeInformationSettings.TwitterLink;
-            liquidStore.FacebookLink = _storeInformationSettings.FacebookLink;
-            liquidStore.YoutubeLink = _storeInformationSettings.YoutubeLink;
-            liquidStore.InstagramLink = _storeInformationSettings.InstagramLink;
-            liquidStore.LinkedInLink = _storeInformationSettings.LinkedInLink;
-            liquidStore.PinterestLink = _storeInformationSettings.PinterestLink;
-
+            var liquidStore = await _mediator.Send(new GetStoreTokensCommand() { Store = store, Language = language, EmailAccount = emailAccount });
             liquidObject.Store = liquidStore;
-
             await _mediator.EntityTokensAdded(store, liquidStore, liquidObject);
         }
 
         public async Task AddOrderTokens(LiquidObject liquidObject, Order order, Customer customer, Store store, OrderNote orderNote = null, Vendor vendor = null, decimal refundedAmount = 0)
         {
-            var language = await _languageService.GetLanguageById(order.CustomerLanguageId);
-            var currency = await _currencyService.GetCurrencyByCode(order.CustomerCurrencyCode);
-            var productService = _serviceProvider.GetRequiredService<IProductService>();
-            var downloadService = _serviceProvider.GetRequiredService<IDownloadService>();
-            var vendorService = _serviceProvider.GetRequiredService<IVendorService>();
-
-            var liquidOrder = new LiquidOrder(order, customer, language, currency, store, orderNote, vendor);
-            foreach (var item in order.OrderItems.Where(x => x.VendorId == vendor?.Id || vendor == null))
-            {
-                var product = await productService.GetProductById(item.ProductId);
-                var vendorItem = await vendorService.GetVendorById(item.VendorId);
-                var liqitem = new LiquidOrderItem(item, product, order, language, currency, store, vendorItem);
-
-                #region Download
-
-                liqitem.IsDownloadAllowed = await downloadService.IsDownloadAllowed(item);
-                liqitem.IsLicenseDownloadAllowed = await downloadService.IsLicenseDownloadAllowed(item);
-
-                #endregion
-
-                #region Unit price
-                string unitPriceStr;
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    //including tax
-                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(item.UnitPriceInclTax, order.CurrencyRate);
-                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, currency, language, true);
-                }
-                else
-                {
-                    //excluding tax
-                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(item.UnitPriceExclTax, order.CurrencyRate);
-                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, currency, language, false);
-                }
-                liqitem.UnitPrice = unitPriceStr;
-
-                #endregion
-
-                #region total price
-                string priceStr;
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    //including tax
-                    var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(item.PriceInclTax, order.CurrencyRate);
-                    priceStr = _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, currency, language, true);
-                }
-                else
-                {
-                    //excluding tax
-                    var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(item.PriceExclTax, order.CurrencyRate);
-                    priceStr = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, currency, language, false);
-                }
-                liqitem.TotalPrice = priceStr;
-
-                #endregion
-
-                string sku = "";
-                if (product != null)
-                    sku = product.FormatSku(item.AttributesXml, _productAttributeParser);
-
-                liqitem.ProductSku = WebUtility.HtmlEncode(sku);
-                liqitem.ShowSkuOnProductDetailsPage = _catalogSettings.ShowSkuOnProductDetailsPage;
-                liqitem.ProductOldPrice = _priceFormatter.FormatPrice(product.OldPrice, true, currency, language, true);
-
-                liquidOrder.OrderItems.Add(liqitem);
-            }
-
-            liquidOrder.BillingCustomAttributes = await _addressAttributeFormatter.FormatAttributes(order.BillingAddress?.CustomAttributes);
-            liquidOrder.BillingCountry = order.BillingAddress != null && !string.IsNullOrEmpty(order.BillingAddress.CountryId) ? (await _countryService.GetCountryById(order.BillingAddress.CountryId))?.GetLocalized(x => x.Name, order.CustomerLanguageId) : "";
-            liquidOrder.BillingStateProvince = !string.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? (await _stateProvinceService.GetStateProvinceById(order.BillingAddress.StateProvinceId))?.GetLocalized(x => x.Name, order.CustomerLanguageId) : "";
-
-            liquidOrder.ShippingCountry = order.ShippingAddress != null && !string.IsNullOrEmpty(order.ShippingAddress.CountryId) ? (await _countryService.GetCountryById(order.ShippingAddress.CountryId))?.GetLocalized(x => x.Name, order.CustomerLanguageId) : "";
-            liquidOrder.ShippingStateProvince = order.ShippingAddress != null && !string.IsNullOrEmpty(order.ShippingAddress.StateProvinceId) ? (await _stateProvinceService.GetStateProvinceById(order.ShippingAddress.StateProvinceId)).GetLocalized(x => x.Name, order.CustomerLanguageId) : "";
-            liquidOrder.ShippingCustomAttributes = await _addressAttributeFormatter.FormatAttributes(order.ShippingAddress != null ? order.ShippingAddress.CustomAttributes : "");
-
-            var paymentMethod = _serviceProvider.GetRequiredService<IPaymentService>().LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
-            liquidOrder.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, language.Id) : order.PaymentMethodSystemName;
-            liquidOrder.AmountRefunded = _priceFormatter.FormatPrice(refundedAmount, true, currency, language, false);
-
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-            foreach (var item in order.TaxRatesDictionary)
-            {
-                string taxRate = string.Format(_localizationService.GetResource("Messages.Order.TaxRateLine"), _priceFormatter.FormatTaxRate(item.Key));
-                string taxValue = _priceFormatter.FormatPrice(item.Value, true, currency, language, false);
-                dict.Add(taxRate, taxValue);
-            }
-            liquidOrder.TaxRates = dict;
-
-            Dictionary<string, string> cards = new Dictionary<string, string>();
-            var servicegiftCard = _serviceProvider.GetRequiredService<IGiftCardService>();
-            var gcuhC = await servicegiftCard.GetAllGiftCardUsageHistory(order.Id);
-            foreach (var gcuh in gcuhC)
-            {
-                var giftCard = await servicegiftCard.GetGiftCardById(gcuh.GiftCardId);
-                string giftCardText = string.Format(_localizationService.GetResource("Messages.Order.GiftCardInfo", language.Id), WebUtility.HtmlEncode(giftCard.GiftCardCouponCode));
-                string giftCardAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, currency, language, false);
-                cards.Add(giftCardText, giftCardAmount);
-            }
-            liquidOrder.GiftCards = cards;
-            if (order.RedeemedRewardPointsEntry != null)
-            {
-                liquidOrder.RPTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", language.Id), -order.RedeemedRewardPointsEntry?.Points);
-                liquidOrder.RPAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, currency, language, false);
-            }
-            void CalculateSubTotals()
-            {
-                string _cusSubTotal;
-                bool _displaySubTotalDiscount;
-                string _cusSubTotalDiscount;
-                string _cusShipTotal;
-                string _cusPaymentMethodAdditionalFee;
-                bool _displayTax;
-                string _cusTaxTotal;
-                bool _displayTaxRates;
-                bool _displayDiscount;
-                string _cusDiscount;
-                string _cusTotal;
-
-                _displaySubTotalDiscount = false;
-                _cusSubTotalDiscount = string.Empty;
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
-                {
-                    //including tax
-
-                    //subtotal
-                    var orderSubtotalInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate);
-                    _cusSubTotal = _priceFormatter.FormatPrice(orderSubtotalInclTaxInCustomerCurrency, true, currency, language, true);
-                    //discount (applied to order subtotal)
-                    var orderSubTotalDiscountInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate);
-                    if (orderSubTotalDiscountInclTaxInCustomerCurrency > decimal.Zero)
-                    {
-                        _cusSubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, currency, language, true);
-                        _displaySubTotalDiscount = true;
-                    }
-                }
-                else
-                {
-                    //exсluding tax
-
-                    //subtotal
-                    var orderSubtotalExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
-                    _cusSubTotal = _priceFormatter.FormatPrice(orderSubtotalExclTaxInCustomerCurrency, true, currency, language, false);
-                    //discount (applied to order subtotal)
-                    var orderSubTotalDiscountExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountExclTax, order.CurrencyRate);
-                    if (orderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
-                    {
-                        _cusSubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, currency, language, false);
-                        _displaySubTotalDiscount = true;
-                    }
-                }
-
-                //shipping, payment method fee
-                _cusTaxTotal = string.Empty;
-                _cusDiscount = string.Empty;
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    //including tax
-
-                    //shipping
-                    var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
-                    _cusShipTotal = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, currency, language, true);
-                    //payment method additional fee
-                    var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
-                    _cusPaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, currency, language, true);
-                }
-                else
-                {
-                    //excluding tax
-
-                    //shipping
-                    var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
-                    _cusShipTotal = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, currency, language, false);
-                    //payment method additional fee
-                    var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
-                    _cusPaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, currency, language, false);
-                }
-
-                //shipping
-                bool displayShipping = order.ShippingStatus != ShippingStatus.ShippingNotRequired;
-
-                //payment method fee
-                bool displayPaymentMethodFee = order.PaymentMethodAdditionalFeeExclTax > decimal.Zero;
-
-                //tax
-                _displayTax = true;
-                _displayTaxRates = true;
-                if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    _displayTax = false;
-                    _displayTaxRates = false;
-                }
-                else
-                {
-                    if (order.OrderTax == 0 && _taxSettings.HideZeroTax)
-                    {
-                        _displayTax = false;
-                        _displayTaxRates = false;
-                    }
-                    else
-                    {
-                        var _taxRates = new SortedDictionary<decimal, decimal>();
-                        foreach (var tr in order.TaxRatesDictionary)
-                            _taxRates.Add(tr.Key, _currencyService.ConvertCurrency(tr.Value, order.CurrencyRate));
-
-                        _displayTaxRates = _taxSettings.DisplayTaxRates && _taxRates.Any();
-                        _displayTax = !_displayTaxRates;
-
-                        var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
-                        string taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, currency, language, order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
-                        _cusTaxTotal = taxStr;
-                    }
-                }
-
-                //discount
-                _displayDiscount = false;
-                if (order.OrderDiscount > decimal.Zero)
-                {
-                    var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
-                    _cusDiscount = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, currency, language, order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
-                    _displayDiscount = true;
-                }
-
-                //total
-                var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-                _cusTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, currency, language, order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
-
-
-                liquidOrder.SubTotal = _cusSubTotal;
-                liquidOrder.DisplaySubTotalDiscount = _displaySubTotalDiscount;
-                liquidOrder.SubTotalDiscount = _cusSubTotalDiscount;
-                liquidOrder.Shipping = _cusShipTotal;
-                liquidOrder.Tax = _cusTaxTotal;
-                liquidOrder.Total = _cusTotal;
-                liquidOrder.DisplayDiscount = _displayDiscount;
-                liquidOrder.DisplayTaxRates = _displayTaxRates;
-
-            }
-
-            CalculateSubTotals();
-
+            var liquidOrder = await _mediator.Send(new GetOrderTokensCommand() {
+                Order = order,
+                Customer = customer,
+                Vendor = vendor,
+                Store = store,
+                OrderNote = orderNote,
+                RefundedAmount = refundedAmount
+            });
             liquidObject.Order = liquidOrder;
-
             await _mediator.EntityTokensAdded(order, liquidOrder, liquidObject);
         }
 
         public async Task AddShipmentTokens(LiquidObject liquidObject, Shipment shipment, Order order, Store store, Language language)
         {
-            var liquidShipment = new LiquidShipment(shipment, order, store, language);
-            var productService = _serviceProvider.GetRequiredService<IProductService>();
-            foreach (var shipmentItem in shipment.ShipmentItems)
-            {
-                var orderitem = order.OrderItems.FirstOrDefault(x => x.Id == shipmentItem.OrderItemId);
-                var product = await productService.GetProductById(shipmentItem.ProductId);
-                var liquidshipmentItems = new LiquidShipmentItem(shipmentItem, shipment, order, orderitem, product, language);
-                liquidshipmentItems.ShowSkuOnProductDetailsPage = _catalogSettings.ShowSkuOnProductDetailsPage;
-                string sku = "";
-                if (product != null)
-                    sku = product.FormatSku(orderitem.AttributesXml, _productAttributeParser);
-
-                liquidshipmentItems.ProductSku = WebUtility.HtmlEncode(sku);
-
-                liquidShipment.ShipmentItems.Add(liquidshipmentItems);
-            }
+            var liquidShipment = await _mediator.Send(new GetShipmentTokensCommand() { Shipment = shipment, Order = order, Store = store, Language = language });
             liquidObject.Shipment = liquidShipment;
             await _mediator.EntityTokensAdded(shipment, liquidShipment, liquidObject);
         }
@@ -484,73 +137,12 @@ namespace Grand.Services.Messages
         {
             var liquidRecurringPayment = new LiquidRecurringPayment(recurringPayment);
             liquidObject.RecurringPayment = liquidRecurringPayment;
-
             await _mediator.EntityTokensAdded(recurringPayment, liquidRecurringPayment, liquidObject);
         }
 
-        public async Task AddReturnRequestTokens(LiquidObject liquidObject, ReturnRequest returnRequest, Order order, Language language)
+        public async Task AddReturnRequestTokens(LiquidObject liquidObject, ReturnRequest returnRequest, Store store, Order order, Language language, ReturnRequestNote returnRequestNote = null)
         {
-            var liquidReturnRequest = new LiquidReturnRequest(returnRequest, order);
-
-            liquidReturnRequest.Status = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext);
-            liquidReturnRequest.Products = await ProductListToHtmlTable();
-            liquidReturnRequest.PickupAddressStateProvince =
-                            !string.IsNullOrEmpty(returnRequest.PickupAddress.StateProvinceId) ?
-                            (await _stateProvinceService.GetStateProvinceById(returnRequest.PickupAddress.StateProvinceId))?.GetLocalized(x => x.Name, language.Id) : "";
-
-            liquidReturnRequest.PickupAddressCountry =
-                            !string.IsNullOrEmpty(returnRequest.PickupAddress.CountryId) ?
-                            (await _countryService.GetCountryById(returnRequest.PickupAddress.CountryId))?.GetLocalized(x => x.Name, language.Id) : "";
-
-            async Task<string> ProductListToHtmlTable()
-            {
-                var sb = new StringBuilder();
-                sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
-
-                sb.AppendLine(string.Format("<tr style=\"text-align:center;\">"));
-                sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Name")));
-                sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Price")));
-                sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Quantity")));
-                sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).ReturnReason")));
-                sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).ReturnAction")));
-                sb.AppendLine("</tr>");
-
-                IProductService _productService = _serviceProvider.GetRequiredService<IProductService>();
-                var currency = await _currencyService.GetCurrencyByCode(order.CustomerCurrencyCode);
-                foreach (var rrItem in returnRequest.ReturnRequestItems)
-                {
-                    var orderItem = order.OrderItems.Where(x => x.Id == rrItem.OrderItemId).First();
-
-                    sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
-                    string productName = (await _productService.GetProductById(orderItem.ProductId))?.GetLocalized(x => x.Name, order.CustomerLanguageId);
-
-                    sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
-
-                    sb.AppendLine("</td>");
-
-                    string unitPriceStr;
-                    if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                    {
-                        //including tax
-                        var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                        unitPriceStr = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, currency, language, true);
-                    }
-                    else
-                    {
-                        //excluding tax
-                        var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                        unitPriceStr = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, currency, language, false);
-                    }
-                    sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: right;\">{0}</td>", unitPriceStr));
-                    sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", orderItem.Quantity));
-                    sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", rrItem.ReasonForReturn));
-                    sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", rrItem.RequestedAction));
-                }
-
-                sb.AppendLine("</table>");
-                return sb.ToString();
-            }
-
+            var liquidReturnRequest = await _mediator.Send(new GetReturnRequestTokensCommand() { Order = order, Language = language, ReturnRequest = returnRequest, ReturnRequestNote = returnRequestNote, Store = store });
             liquidObject.ReturnRequest = liquidReturnRequest;
 
             await _mediator.EntityTokensAdded(returnRequest, liquidReturnRequest, liquidObject);
@@ -558,90 +150,31 @@ namespace Grand.Services.Messages
 
         public async Task AddGiftCardTokens(LiquidObject liquidObject, GiftCard giftCard)
         {
-            var liquidGiftCart = new LiquidGiftCard(giftCard);
-            liquidGiftCart.Amount = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
+            var liquidGiftCart = await _mediator.Send(new GetGiftCardTokensCommand() { GiftCard = giftCard });
             liquidObject.GiftCard = liquidGiftCart;
-
             await _mediator.EntityTokensAdded(giftCard, liquidGiftCart, liquidObject);
         }
 
         public async Task AddCustomerTokens(LiquidObject liquidObject, Customer customer, Store store, Language language, CustomerNote customerNote = null)
         {
-            var liquidCustomer = new LiquidCustomer(customer, store, language, customerNote);
+            var liquidCustomer = new LiquidCustomer(customer, store, customerNote);
             liquidObject.Customer = liquidCustomer;
 
             await _mediator.EntityTokensAdded(customer, liquidCustomer, liquidObject);
-            await _mediator.EntityTokensAdded(customerNote, liquidCustomer, liquidObject);
+            if (customerNote != null)
+                await _mediator.EntityTokensAdded(customerNote, liquidCustomer, liquidObject);
         }
 
         public async Task AddShoppingCartTokens(LiquidObject liquidObject, Customer customer, Store store, Language language,
             string personalMessage = "", string customerEmail = "")
         {
-            var liquidShoppingCart = new LiquidShoppingCart(customer, store, language, personalMessage, customerEmail);
-            liquidShoppingCart.ShoppingCartProducts = await ShoppingCartWishListProductListToHtmlTable(true, false);
-            liquidShoppingCart.ShoppingCartProductsWithPictures = await ShoppingCartWishListProductListToHtmlTable(true, true);
-            liquidShoppingCart.WishlistProducts = await ShoppingCartWishListProductListToHtmlTable(false, false);
-            liquidShoppingCart.WishlistProductsWithPictures = await ShoppingCartWishListProductListToHtmlTable(false, true);
-
-            async Task<string> ShoppingCartWishListProductListToHtmlTable(bool cart, bool withPicture)
-            {
-                string result;
-
-                var sb = new StringBuilder();
-                sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
-
-                #region Products
-                sb.AppendLine(string.Format("<tr style=\"background-color:{0};text-align:center;\">", _templatesSettings.Color1));
-                if (withPicture)
-                    sb.AppendLine(string.Format("<th>{0}</th>", cart ? _localizationService.GetResource("Messages.ShoppingCart.Product(s).Picture", language.Id) : _localizationService.GetResource("Messages.Wishlist.Product(s).Picture", language.Id)));
-                sb.AppendLine(string.Format("<th>{0}</th>", cart ? _localizationService.GetResource("Messages.ShoppingCart.Product(s).Name", language.Id) : _localizationService.GetResource("Messages.Wishlist.Product(s).Name", language.Id)));
-                sb.AppendLine(string.Format("<th>{0}</th>", cart ? _localizationService.GetResource("Messages.ShoppingCart.Product(s).Quantity", language.Id) : _localizationService.GetResource("Messages.Wishlist.Product(s).Quantity", language.Id)));
-                sb.AppendLine("</tr>");
-                var productService = _serviceProvider.GetRequiredService<IProductService>();
-                var productAttributeFormatter = _serviceProvider.GetRequiredService<IProductAttributeFormatter>();
-                var pictureService = _serviceProvider.GetRequiredService<IPictureService>();
-
-                foreach (var item in cart ? customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart) :
-                    customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist))
-                {
-                    var product = await productService.GetProductById(item.ProductId);
-                    sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
-                    //product name
-                    string productName = product.GetLocalized(x => x.Name, language.Id);
-                    if (withPicture)
-                    {
-                        string pictureUrl = "";
-                        if (product.ProductPictures.Any())
-                        {
-                            var picture = await pictureService.GetPictureById(product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId);
-                            if (picture != null)
-                            {
-                                pictureUrl = await pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize, storeLocation: store.SslEnabled ? store.SecureUrl : store.Url);
-                            }
-                        }
-                        sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));
-                    }
-                    sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
-                    //attributes
-                    if (!string.IsNullOrEmpty(item.AttributesXml))
-                    {
-                        sb.AppendLine("<br />");
-                        string attributeDescription = await productAttributeFormatter.FormatAttributes(product, item.AttributesXml, customer);
-                        sb.AppendLine(attributeDescription);
-                    }
-                    sb.AppendLine("</td>");
-
-                    sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", item.Quantity));
-
-                    sb.AppendLine("</tr>");
-                }
-                #endregion
-
-                sb.AppendLine("</table>");
-                result = sb.ToString();
-                return result;
-            }
-
+            var liquidShoppingCart = await _mediator.Send(new GetShoppingCartTokensCommand() {
+                Customer = customer,
+                CustomerEmail = customerEmail,
+                Language = language,
+                PersonalMessage = personalMessage,
+                Store = store
+            });
             liquidObject.ShoppingCart = liquidShoppingCart;
 
             await _mediator.EntityTokensAdded(customer, liquidShoppingCart, liquidObject);
@@ -649,16 +182,8 @@ namespace Grand.Services.Messages
 
         public async Task AddVendorTokens(LiquidObject liquidObject, Vendor vendor, Language language)
         {
-            var liquidVendor = new LiquidVendor(vendor);
-            liquidVendor.StateProvince = !string.IsNullOrEmpty(vendor.Address?.StateProvinceId) ?
-                (await _stateProvinceService.GetStateProvinceById(vendor.Address.StateProvinceId))?
-                .GetLocalized(x => x.Name, language.Id) : "";
-            liquidVendor.Country = !string.IsNullOrEmpty(vendor.Address?.CountryId) ?
-                (await _countryService.GetCountryById(vendor.Address.CountryId))?
-                .GetLocalized(x => x.Name, language.Id) : "";
-
+            var liquidVendor = await _mediator.Send(new GetVendorTokensCommand() { Vendor = vendor, Language = language });
             liquidObject.Vendor = liquidVendor;
-
             await _mediator.EntityTokensAdded(vendor, liquidVendor, liquidObject);
         }
 
@@ -666,7 +191,6 @@ namespace Grand.Services.Messages
         {
             var liquidNewsletterSubscription = new LiquidNewsLetterSubscription(subscription, store);
             liquidObject.NewsLetterSubscription = liquidNewsletterSubscription;
-
             await _mediator.EntityTokensAdded(subscription, liquidNewsletterSubscription, liquidObject);
         }
 
@@ -674,7 +198,6 @@ namespace Grand.Services.Messages
         {
             var liquidProductReview = new LiquidProductReview(product, productReview);
             liquidObject.ProductReview = liquidProductReview;
-
             await _mediator.EntityTokensAdded(productReview, liquidProductReview, liquidObject);
         }
 
@@ -682,7 +205,6 @@ namespace Grand.Services.Messages
         {
             var liquidVendorReview = new LiquidVendorReview(vendor, vendorReview);
             liquidObject.VendorReview = liquidVendorReview;
-
             await _mediator.EntityTokensAdded(vendorReview, liquidVendorReview, liquidObject);
         }
 
@@ -690,7 +212,6 @@ namespace Grand.Services.Messages
         {
             var liquidBlogComment = new LiquidBlogComment(blogComment, blogPost, store, language);
             liquidObject.BlogComment = liquidBlogComment;
-
             await _mediator.EntityTokensAdded(blogComment, liquidBlogComment, liquidObject);
         }
 
@@ -698,7 +219,6 @@ namespace Grand.Services.Messages
         {
             var liquidKnowledgebase = new LiquidKnowledgebase(article, articleComment, store, language);
             liquidObject.Knowledgebase = liquidKnowledgebase;
-
             await _mediator.EntityTokensAdded(articleComment, liquidKnowledgebase, liquidObject);
         }
 
@@ -706,7 +226,6 @@ namespace Grand.Services.Messages
         {
             var liquidNewsComment = new LiquidNewsComment(newsItem, newsComment, store, language);
             liquidObject.NewsComment = liquidNewsComment;
-
             await _mediator.EntityTokensAdded(newsComment, liquidNewsComment, liquidObject);
         }
 
@@ -714,18 +233,13 @@ namespace Grand.Services.Messages
         {
             var liquidProduct = new LiquidProduct(product, language, store);
             liquidObject.Product = liquidProduct;
-
             await _mediator.EntityTokensAdded(product, liquidProduct, liquidObject);
         }
 
-        public async Task AddAttributeCombinationTokens(LiquidObject liquidObject, Customer customer, Product product, ProductAttributeCombination combination)
+        public async Task AddAttributeCombinationTokens(LiquidObject liquidObject, Product product, ProductAttributeCombination combination)
         {
-            var liquidAttributeCombination = new LiquidAttributeCombination(customer, product, combination);
-            var productAttributeFormatter = _serviceProvider.GetRequiredService<IProductAttributeFormatter>();
-            liquidAttributeCombination.Formatted = await productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, customer, renderPrices: false);
-            liquidAttributeCombination.SKU = product.FormatSku(combination.AttributesXml, _productAttributeParser);
+            var liquidAttributeCombination = await _mediator.Send(new GetAttributeCombinationTokensCommand() { Product = product, Combination = combination });
             liquidObject.AttributeCombination = liquidAttributeCombination;
-
             await _mediator.EntityTokensAdded(combination, liquidAttributeCombination, liquidObject);
         }
 
@@ -734,7 +248,6 @@ namespace Grand.Services.Messages
         {
             var liquidForum = new LiquidForums(forum, forumTopic, forumPost, customer, store, friendlyForumTopicPageIndex, appendedPostIdentifierAnchor);
             liquidObject.Forums = liquidForum;
-
             await _mediator.EntityTokensAdded(forum, liquidForum, liquidObject);
             await _mediator.EntityTokensAdded(forumTopic, liquidForum, liquidObject);
             await _mediator.EntityTokensAdded(forumPost, liquidForum, liquidObject);
@@ -752,19 +265,13 @@ namespace Grand.Services.Messages
         {
             var liquidBackInStockSubscription = new LiquidBackInStockSubscription(product, subscription, store, language);
             liquidObject.BackInStockSubscription = liquidBackInStockSubscription;
-
             await _mediator.EntityTokensAdded(subscription, liquidBackInStockSubscription, liquidObject);
         }
 
         public async Task AddAuctionTokens(LiquidObject liquidObject, Product product, Bid bid)
         {
-            var liquidAuctions = new LiquidAuctions(product, bid);
-            var defaultCurrency = await _currencyService.GetPrimaryStoreCurrency();
-            liquidAuctions.Price = _priceFormatter.FormatPrice(bid.Amount, true, defaultCurrency);
-            liquidAuctions.EndTime = _dateTimeHelper.ConvertToUserTime(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc).ToString();
-
+            var liquidAuctions = await _mediator.Send(new GetAuctionTokensCommand() { Product = product, Bid = bid });
             liquidObject.Auctions = liquidAuctions;
-
             await _mediator.EntityTokensAdded(bid, liquidAuctions, liquidObject);
         }
 

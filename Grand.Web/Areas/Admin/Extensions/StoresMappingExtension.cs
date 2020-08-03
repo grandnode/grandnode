@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Stores;
+﻿using Grand.Domain.Stores;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.Models;
 using Grand.Services.Stores;
@@ -14,7 +14,7 @@ namespace Grand.Web.Areas.Admin.Extensions
         {
             baseGrandEntityModel.AvailableStores = (await _storeService
                .GetAllStores()).Where(x=>x.Id == storeId || string.IsNullOrEmpty(storeId))
-               .Select(s => new StoreModel { Id = s.Id, Name = s.Name })
+               .Select(s => new StoreModel { Id = s.Id, Name = s.Shortcut })
                .ToList();
             if (!excludeProperties)
             {

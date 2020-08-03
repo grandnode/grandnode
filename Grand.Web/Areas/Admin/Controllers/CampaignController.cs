@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Messages;
+using Grand.Domain.Messages;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
@@ -26,31 +26,31 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICampaignService _campaignService;
         private readonly ICampaignViewModelService _campaignViewModelService;
         private readonly IEmailAccountService _emailAccountService;
-        private readonly EmailAccountSettings _emailAccountSettings;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IExportManager _exportManager;
+        private readonly EmailAccountSettings _emailAccountSettings;
 
         public CampaignController(ICampaignService campaignService, ICampaignViewModelService campaignViewModelService,
             IEmailAccountService emailAccountService,
-            EmailAccountSettings emailAccountSettings,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ILocalizationService localizationService, 
             IStoreContext storeContext,
             IStoreService storeService,
-            IExportManager exportManager)
-		{
-            this._campaignService = campaignService;
-            this._campaignViewModelService = campaignViewModelService;
-            this._emailAccountService = emailAccountService;
-            this._emailAccountSettings = emailAccountSettings;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._localizationService = localizationService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._exportManager = exportManager;
+            IExportManager exportManager,
+            EmailAccountSettings emailAccountSettings)
+        {
+            _campaignService = campaignService;
+            _campaignViewModelService = campaignViewModelService;
+            _emailAccountService = emailAccountService;
+            _emailAccountSettings = emailAccountSettings;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _localizationService = localizationService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _exportManager = exportManager;
         }
 
         public IActionResult Index() => RedirectToAction("List");
@@ -167,7 +167,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 campaign = await _campaignViewModelService.UpdateCampaignModel(campaign, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
                 //selected tab
-                SaveSelectedTabIndex();
+                await SaveSelectedTabIndex();
 
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }

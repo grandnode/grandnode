@@ -1,13 +1,10 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Catalog;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    [Validator(typeof(ProductAttributeValidator))]
     public partial class ProductAttributeModel : BaseGrandEntityModel, ILocalizedModel<ProductAttributeLocalizedModel>
     {
         public ProductAttributeModel()
@@ -16,13 +13,14 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")]
-        
         public string Name { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.SeName")]
+        public string SeName { get; set; }
+
         [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
-        
-        public string Description {get;set;}
-        
+        public string Description { get; set; }
+
 
 
         public IList<ProductAttributeLocalizedModel> Locales { get; set; }
@@ -45,16 +43,14 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
-        
-        public string Description {get;set;}
+
+        public string Description { get; set; }
     }
 
-
-    [Validator(typeof(PredefinedProductAttributeValueModelValidator))]
     public partial class PredefinedProductAttributeValueModel : BaseGrandEntityModel, ILocalizedModel<PredefinedProductAttributeValueLocalizedModel>
     {
         public PredefinedProductAttributeValueModel()
@@ -65,7 +61,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string ProductAttributeId { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")]
@@ -96,7 +92,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")]
-        
+
         public string Name { get; set; }
     }
 }

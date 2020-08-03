@@ -1,4 +1,5 @@
-using Grand.Core.Domain.Customers;
+using Grand.Domain.Customers;
+using System;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Authentication
@@ -25,5 +26,19 @@ namespace Grand.Services.Authentication
         /// </summary>
         /// <returns>Customer</returns>
         Task<Customer> GetAuthenticatedCustomer();
+
+        /// <summary>
+        /// Get customer guid
+        /// </summary>
+        /// <returns>Customer</returns>
+        Task<string> GetCustomerGuid();
+
+        /// <summary>
+        /// Set customer guid
+        /// </summary>
+        /// <param name="customerGuid">Guid of the customer</param>
+        Task SetCustomerGuid(Guid customerGuid);
+
+
     }
 }

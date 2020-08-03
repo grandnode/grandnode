@@ -1,8 +1,8 @@
-using Grand.Core;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Stores;
+using Grand.Domain;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
+using Grand.Domain.Stores;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,6 +24,7 @@ namespace Grand.Services.Customers
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="ownerId">Owner identifier</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="email">Email; null to load all customers</param>
         /// <param name="username">Username; null to load all customers</param>
@@ -40,7 +41,7 @@ namespace Grand.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
         Task<IPagedList<Customer>> GetAllCustomers(DateTime? createdFromUtc = null,
-            DateTime? createdToUtc = null, string affiliateId = "", string vendorId = "", string storeId = "",
+            DateTime? createdToUtc = null, string affiliateId = "", string vendorId = "", string storeId = "", string ownerId = "",
             string[] customerRoleIds = null, string[] customerTagIds = null, string email = null, string username = null,
             string firstName = null, string lastName = null,
             string company = null, string phone = null, string zipPostalCode = null,
@@ -71,7 +72,8 @@ namespace Grand.Services.Customers
         /// Delete a customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        Task DeleteCustomer(Customer customer);
+        /// <param name="hard">Hard delete from database</param>
+        Task DeleteCustomer(Customer customer, bool hard = false);
 
         /// <summary>
         /// Gets a customer
@@ -224,15 +226,7 @@ namespace Grand.Services.Customers
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true);
-
-        /// <summary>
-        /// Update Customer Reminder History
-        /// </summary>
-        /// <param name="customerId"></param>
-        /// <param name="orderId"></param>
-        Task UpdateCustomerReminderHistory(string customerId, string orderId);
-
-
+        
         /// <summary>
         /// Delete guest customer records
         /// </summary>
@@ -372,91 +366,6 @@ namespace Grand.Services.Customers
         Task DeleteShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         Task InsertShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         Task UpdateShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
-        #endregion
-
-        #region Customer Product Price
-
-        /// <summary>
-        /// Gets a customer product price
-        /// </summary>
-        /// <param name="id">Identifier</param>
-        /// <returns>Customer product price</returns>
-        Task<CustomerProductPrice> GetCustomerProductPriceById(string id);
-
-        /// <summary>
-        /// Gets a price
-        /// </summary>
-        /// <param name="customerId">Customer Identifier</param>
-        /// <param name="productId">Product Identifier</param>
-        /// <returns>Customer product price</returns>
-        Task<decimal?> GetPriceByCustomerProduct(string customerId, string productId);
-
-        /// <summary>
-        /// Gets a customer product 
-        /// </summary>
-        /// <param name="id">Identifier</param>
-        /// <returns>Customer product</returns>
-        Task<CustomerProduct> GetCustomerProduct(string id);
-
-        /// <summary>
-        /// Gets a customer product 
-        /// </summary>
-        /// <param name="customerId">Customer Identifier</param>
-        /// <param name="productId">Product Identifier</param>
-        /// <returns>Customer product</returns>
-        Task<CustomerProduct> GetCustomerProduct(string customerId, string productId);
-
-        /// <summary>
-        /// Inserts a customer product price
-        /// </summary>
-        /// <param name="customerProductPrice">Customer product price</param>
-        Task InsertCustomerProductPrice(CustomerProductPrice customerProductPrice);
-
-        /// <summary>
-        /// Updates the customer product price
-        /// </summary>
-        /// <param name="customerProductPrice">Customer product price</param>
-        Task UpdateCustomerProductPrice(CustomerProductPrice customerProductPrice);
-
-        /// <summary>
-        /// Delete a customer product price
-        /// </summary>
-        /// <param name="customerProductPrice">Customer product price</param>
-        Task DeleteCustomerProductPrice(CustomerProductPrice customerProductPrice);
-
-
-
-        /// <summary>
-        /// Gets products price for customer
-        /// </summary>
-        /// <param name="customerId">Customer id</param>
-        /// <returns>Customer products price</returns>
-        Task<IPagedList<CustomerProductPrice>> GetProductsPriceByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue);
-
-        #endregion
-
-        #region Customer product
-
-        /// <summary>
-        /// Inserts a customer product 
-        /// </summary>
-        /// <param name="customerProduct">Customer product</param>
-        Task InsertCustomerProduct(CustomerProduct customerProduct);
-
-        /// <summary>
-        /// Updates the customer product
-        /// </summary>
-        /// <param name="customerProduct">Customer product </param>
-        Task UpdateCustomerProduct(CustomerProduct customerProduct);
-
-        /// <summary>
-        /// Delete a customer product 
-        /// </summary>
-        /// <param name="customerProduct">Customer product </param>
-        Task DeleteCustomerProduct(CustomerProduct customerProduct);
-
-        Task<IPagedList<CustomerProduct>> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue);
-
         #endregion
 
         #region Customer note

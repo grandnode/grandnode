@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Languages.EditLanguageDetails").Text;
 }
-<form asp-controller="Language" asp-action="Edit" method="post" >
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="Language" asp-action="Edit" method="post" >
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -36,9 +36,9 @@
 
     @*import resources form*@
     <div class="modal-dialog" id="importxml-window" style="display:none; padding: 0 10px;">
-        <form asp-controller="Language" asp-action="ImportXml" method="post" enctype="multipart/form-data" asp-route-id="Id">
+        <form asp-area="Admin" asp-controller="Language" asp-action="ImportXml" method="post" enctype="multipart/form-data" asp-route-id="Id">
             <input type="hidden" asp-for="Id" />
-            <antiforgery-token />
+            
             <ul class="common-list">
                 <li>
                     <strong>NOTE: It can take up to several minutes.</strong>
@@ -70,7 +70,7 @@
             </div>
         </form>
     </div>
-    <script type="text/javascript">
+    <script>
     $(document).ready(function () {
         $("#importxml").click(function (e) {
             e.preventDefault();

@@ -1,7 +1,6 @@
 ﻿@model InstallModel
-@using Grand.Core.Infrastructure;
 @using Grand.Web.Models.Install;
-@using Grand.Web.Infrastructure.Installation;
+@using Grand.Services.Installation;
 @inject IInstallationLocalizationService ILS
 @{
     Layout = null;
@@ -25,7 +24,7 @@
     <div class="container">
         @if (!Model.Installed)
         {
-            <form asp-action="Index" asp-controller="Install" id="installation-form" method="post">
+            <form asp-action="Index" asp-controller="Install" id="installation-form" method="post" autocomplete="off">
                 <script>
                 $(document).ready(function () {
                     $('#installation').click(function (e) {

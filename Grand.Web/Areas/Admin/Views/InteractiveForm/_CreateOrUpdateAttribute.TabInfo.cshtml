@@ -1,5 +1,5 @@
 ﻿@model InteractiveFormAttributeModel
-<script type="text/javascript">
+<script>
 
         $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.FormControlTypeId)").change(toggleAttributeControlType);
@@ -8,13 +8,13 @@
 
             function toggleAttributeControlType() {
                 var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.FormControlTypeId)").val();
-                if (selectedAttributeControlTypeId == @(((int)Grand.Core.Domain.Messages.FormControlType.TextBox).ToString())) {
+                if (selectedAttributeControlTypeId == @(((int)Grand.Domain.Messages.FormControlType.TextBox).ToString())) {
                     $('#pnlValidationMinLength').show();
                     $('#pnlValidationMaxLength').show();
                     $('#pnlDefaultValue').show();
                     $('#pnlRegexValidation').show();
                     $('#tab-values').hide();
-                } else if (selectedAttributeControlTypeId == @(((int)Grand.Core.Domain.Messages.FormControlType.MultilineTextbox).ToString())) {
+                } else if (selectedAttributeControlTypeId == @(((int)Grand.Domain.Messages.FormControlType.MultilineTextbox).ToString())) {
                     $('#pnlValidationMinLength').show();
                     $('#pnlValidationMaxLength').show();
                     $('#pnlDefaultValue').show();
@@ -32,7 +32,7 @@
         });
 
 </script>
-@(Html.LocalizedEditor<InteractiveFormAttributeModel, InteractiveFormAttributeLocalizedModel>("attribute-localized",
+@(await Html.LocalizedEditor<InteractiveFormAttributeModel, InteractiveFormAttributeLocalizedModel>("attribute-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -94,7 +94,7 @@
         <div class="form-group">
             <admin-label asp-for="FormControlTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="FormControlTypeId" asp-items="((Grand.Core.Domain.Messages.FormControlType)Model.FormControlTypeId).ToSelectList()" />
+                <admin-select asp-for="FormControlTypeId" asp-items="((Grand.Domain.Messages.FormControlType)Model.FormControlTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="FormControlTypeId"></span>
             </div>
         </div>

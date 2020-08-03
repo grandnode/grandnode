@@ -24,7 +24,7 @@
             </li>
         </ul>
         <div class="tab-content mt-3">
-            <div class="tab-pane active" id="ongoing" role="tabpanel">
+            <div class="tab-pane active table-responsive" id="ongoing" role="tabpanel">
                 @if (Model.ProductBidList.Where(x => !x.Ended).Any())
                 {
                     <table class="table table-striped">

@@ -1,20 +1,20 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Domain;
+using Grand.Domain.Data;
+using Grand.Domain.Customers;
+using Grand.Domain.Messages;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages.DotLiquidDrops;
+using Grand.Services.Stores;
+using MediatR;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using Microsoft.Extensions.DependencyInjection;
-using MediatR;
 
 namespace Grand.Services.Messages
 {
@@ -26,41 +26,39 @@ namespace Grand.Services.Messages
         private readonly IRepository<Customer> _customerRepository;
         private readonly IEmailSender _emailSender;
         private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly ITokenizer _tokenizer;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ICustomerService _customerService;
-        private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
         private readonly IMediator _mediator;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILanguageService _languageService;
 
         public CampaignService(IRepository<Campaign> campaignRepository,
             IRepository<CampaignHistory> campaignHistoryRepository,
             IRepository<NewsLetterSubscription> newsLetterSubscriptionRepository,
             IRepository<Customer> customerRepository,
             IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
-            ITokenizer tokenizer, IQueuedEmailService queuedEmailService,
-            ICustomerService customerService, IStoreContext storeContext,
+            IQueuedEmailService queuedEmailService,
+            ICustomerService customerService, IStoreService storeService,
             IMediator mediator,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
-            IServiceProvider serviceProvider)
+            ILanguageService languageService)
         {
-            this._campaignRepository = campaignRepository;
-            this._campaignHistoryRepository = campaignHistoryRepository;
-            this._newsLetterSubscriptionRepository = newsLetterSubscriptionRepository;
-            this._customerRepository = customerRepository;
-            this._emailSender = emailSender;
-            this._messageTokenProvider = messageTokenProvider;
-            this._tokenizer = tokenizer;
-            this._queuedEmailService = queuedEmailService;
-            this._storeContext = storeContext;
-            this._customerService = customerService;
-            this._mediator = mediator;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._serviceProvider = serviceProvider;
+            _campaignRepository = campaignRepository;
+            _campaignHistoryRepository = campaignHistoryRepository;
+            _newsLetterSubscriptionRepository = newsLetterSubscriptionRepository;
+            _customerRepository = customerRepository;
+            _emailSender = emailSender;
+            _messageTokenProvider = messageTokenProvider;
+            _queuedEmailService = queuedEmailService;
+            _storeService = storeService;
+            _customerService = customerService;
+            _mediator = mediator;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _languageService = languageService;
         }
 
         /// <summary>
@@ -173,8 +171,7 @@ namespace Grand.Services.Messages
                             where o.Active && o.CustomerId != "" && (o.StoreId == campaign.StoreId || String.IsNullOrEmpty(campaign.StoreId))
                             join c in _customerRepository.Table on o.CustomerId equals c.Id into joined
                             from customers in joined
-                            select new CampaignCustomerHelp()
-                            {
+                            select new CampaignCustomerHelp() {
                                 CustomerEmail = customers.Email,
                                 Email = o.Email,
                                 CustomerId = customers.Id,
@@ -300,7 +297,10 @@ namespace Grand.Services.Messages
                 throw new ArgumentNullException("emailAccount");
 
             int totalEmailsSent = 0;
-            var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
+            var language = await _languageService.GetLanguageById(campaign.LanguageId);
+            if (language == null)
+                language = (await _languageService.GetAllLanguages()).FirstOrDefault();
+
             foreach (var subscription in subscriptions)
             {
                 Customer customer = null;
@@ -319,20 +319,23 @@ namespace Grand.Services.Messages
                 if (customer != null && (!customer.Active || customer.Deleted))
                     continue;
 
-                LiquidObject liquidObject = new LiquidObject();
-                await _messageTokenProvider.AddStoreTokens(liquidObject, _storeContext.CurrentStore, language, emailAccount);
-                await _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription, _storeContext.CurrentStore);
+                var liquidObject = new LiquidObject();
+                var store = await _storeService.GetStoreById(campaign.StoreId);
+                if (store == null)
+                    store = (await _storeService.GetAllStores()).FirstOrDefault();
+
+                await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+                await _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription, store);
                 if (customer != null)
                 {
-                    await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, _storeContext.CurrentStore, language);
-                    await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, _storeContext.CurrentStore, language);
+                    await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+                    await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, store, language);
                 }
 
                 var body = LiquidExtensions.Render(liquidObject, campaign.Body);
                 var subject = LiquidExtensions.Render(liquidObject, campaign.Subject);
 
-                var email = new QueuedEmail
-                {
+                var email = new QueuedEmail {
                     Priority = QueuedEmailPriority.Low,
                     From = emailAccount.Email,
                     FromName = emailAccount.DisplayName,
@@ -370,14 +373,21 @@ namespace Grand.Services.Messages
             if (emailAccount == null)
                 throw new ArgumentNullException("emailAccount");
 
-            var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
-            LiquidObject liquidObject = new LiquidObject();
-            await _messageTokenProvider.AddStoreTokens(liquidObject, _storeContext.CurrentStore, language, emailAccount);
+            var language = await _languageService.GetLanguageById(campaign.LanguageId);
+            if (language == null)
+                language = (await _languageService.GetAllLanguages()).FirstOrDefault();
+
+            var store = await _storeService.GetStoreById(campaign.StoreId);
+            if (store == null)
+                store = (await _storeService.GetAllStores()).FirstOrDefault();
+
+            var liquidObject = new LiquidObject();
+            await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             var customer = await _customerService.GetCustomerByEmail(email);
             if (customer != null)
             {
-                await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, _storeContext.CurrentStore, language);
-                await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, _storeContext.CurrentStore, language);
+                await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+                await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, store, language);
             }
 
             var body = LiquidExtensions.Render(liquidObject, campaign.Body);

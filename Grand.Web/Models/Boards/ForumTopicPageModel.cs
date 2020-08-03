@@ -6,7 +6,7 @@ namespace Grand.Web.Models.Boards
     {
         public ForumTopicPageModel()
         {
-            this.ForumPostModels = new List<ForumPostModel>();
+            ForumPostModels = new List<ForumPostModel>();
         }
 
         public string Id { get; set; }

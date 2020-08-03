@@ -3,9 +3,9 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerReminder.Edit").Text;
 }
-<form asp-controller="CustomerReminder" 
+<form asp-area="Admin" asp-controller="CustomerReminder" 
       asp-action="Edit" method="post" id="customer-reminder-form">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -34,12 +34,12 @@
 <admin-delete-confirmation button-id="customerreminder-delete"/>
 
 @*run report*@
-<form asp-controller="CustomerReminder" asp-action="Run" method="post" id="run-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="CustomerReminder" asp-action="Run" method="post" id="run-form">
+    
     <input asp-for="Id" type="hidden" />
 </form>
 
-<script type="text/javascript">
+<script>
 
     $(document).ready(function () {
         $('#run').click(function (e) {

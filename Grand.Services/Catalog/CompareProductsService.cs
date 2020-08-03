@@ -1,4 +1,5 @@
-using Grand.Core.Domain.Catalog;
+using Grand.Core;
+using Grand.Domain.Catalog;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -43,10 +44,9 @@ namespace Grand.Services.Catalog
             var comparedProductIdsCookie = string.Join(",", comparedProductIds);
 
             //create cookie options 
-            var cookieExpires = 24 * 10; //TODO make configurable
             var cookieOptions = new CookieOptions
             {
-                Expires = DateTime.Now.AddHours(cookieExpires),
+                Expires = DateTime.UtcNow.AddHours(CommonHelper.CookieAuthExpires),
                 HttpOnly = true
             };
 
@@ -65,9 +65,9 @@ namespace Grand.Services.Catalog
         public CompareProductsService(IHttpContextAccessor httpContextAccessor, IProductService productService,
             CatalogSettings catalogSettings)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._productService = productService;
-            this._catalogSettings = catalogSettings;
+            _httpContextAccessor = httpContextAccessor;
+            _productService = productService;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion

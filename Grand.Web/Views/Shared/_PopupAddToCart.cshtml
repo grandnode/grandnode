@@ -14,11 +14,12 @@
         text = string.Format(T("Addtocart.Auctions.Ongoing").Text, Model.TotalItems);
     }
 }
-<div class="modal-dialog d-flex flex-column justify-content-center my-0" role="document">
-    <div class="modal-content rounded-0 p-3">
+@await Component.InvokeAsync("Widget", new { widgetZone = "popup_add_to_cart_content_before", additionalData = Model })
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content rounded-0 p-2 p-xl-3">
         <div class="modal-header bg-info rounded-0">
             <h5 class="text-center text-white w-100 mb-0">
-                @if (Model.CartType == ShoppingCartType.ShoppingCart)
+                @if (Model.CartType == ShoppingCartType.ShoppingCart || Model.CartType == ShoppingCartType.OnHoldCart)
                 {
                     @T("AddToCart.ShoppingCart")
                 }
@@ -35,13 +36,13 @@
                 <span class="mdi mdi-close"></span>
             </button>
         </div>
-        <div class="modal-body px-0 pt-md-3 pt-0 pb-0">
+        <div class="modal-body px-0 pt-xl-3 pt-2 pb-0">
             <div class="col-12">
                 <div class="row">
-                    <div class="col-md-3 col-12 mb-3 d-none d-md-block pl-0">
+                    <div class="col-md-3 col-12 mb-xl-3 mb-2 d-none d-md-block pl-0">
                         <img class="img-fluid" alt="@Model.Picture.AlternateText" src="@Model.Picture.ImageUrl" title="@Model.Picture.Title" />
                     </div>
-                    <div class="col-md-9 col-12 mb-3 modal-border d-flex">
+                    <div class="col-md-9 col-12 mb-xl-3 mb-2 modal-border d-flex">
                         <div class="row">
                             <div class="form-group mb-0">
                                 <h4 class="mb-0">
@@ -86,7 +87,7 @@
                                             }
                                             else
                                             {
-                                                <label>@T("ShoppingCart.Auctionends"): @Model.EndTime.Value.ToLocalTime()</label>
+                                                <label>@T("ShoppingCart.Auctionends"): @Model.EndTime.Value.ToString()</label>
                                             }
                                         </div>
                                         <script asp-location="Footer">
@@ -119,7 +120,7 @@
                                     <label class="pl-3 mb-0">@Model.Price</label>
                                 }
                             </div>
-                            <div class="text-center modal-padding-off w-100 p-3">
+                            <div class="text-center modal-padding-off d-sm-block d-none w-100 p-3">
                                 <h5 class="w-100 mb-0">@text</h5>
                                 @if (!string.IsNullOrEmpty(Model.SubTotalDiscount))
                                 {
@@ -140,10 +141,17 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer px-0 pb-0">
+            <div class="modal-footer pt-xl-3 pt-2 px-0 pb-0">
                 <div class="btn-group offset-md-5 col-md-7 col-12 px-0">
-                    <button type="button" class="btn btn-outline-info w-100 text-uppercase mr-1 d-flex justify-content-center" data-dismiss="modal">@T("AddToCart.Continue")</button>
-                    @if (Model.CartType == ShoppingCartType.ShoppingCart)
+                    @if (Model.CartType == ShoppingCartType.Auctions)
+                    {
+                        <button type="button" class="btn btn-outline-info w-100 text-uppercase mr-1 d-flex justify-content-center" onclick="javascript:window.location.reload()" data-dismiss="modal">@T("AddToCart.Continue")</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-outline-info w-100 text-uppercase mr-1 d-flex justify-content-center" data-dismiss="modal">@T("AddToCart.Continue")</button>
+                    }
+                    @if (Model.CartType == ShoppingCartType.ShoppingCart || Model.CartType == ShoppingCartType.OnHoldCart)
                     {
                         <button type="button" class="btn btn-info w-100 d-flex justify-content-center text-uppercase ml-0 border-left-0" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')">@T("AddToCart.ViewCart")</button>
                     }
@@ -157,9 +165,7 @@
                     }
                 </div>
             </div>
-            <div class="col-12 cross-sell-container">
-                @await Component.InvokeAsync("CrossSellProducts")
-            </div>
+            @await Component.InvokeAsync("CrossSellProducts")
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Customers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Threading.Tasks;
 

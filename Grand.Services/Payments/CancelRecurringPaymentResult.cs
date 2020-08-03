@@ -12,7 +12,7 @@ namespace Grand.Services.Payments
         /// </summary>
         public CancelRecurringPaymentResult() 
         {
-            this.Errors = new List<string>();
+            Errors = new List<string>();
         }
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Grand.Services.Payments
         /// </summary>
         public bool Success
         {
-            get { return (this.Errors.Count == 0); }
+            get { return (Errors.Count == 0); }
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Grand.Services.Payments
         /// <param name="error">Error</param>
         public void AddError(string error) 
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
 
         /// <summary>

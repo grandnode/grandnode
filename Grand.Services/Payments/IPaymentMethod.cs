@@ -1,4 +1,4 @@
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Orders;
 using Grand.Core.Plugins;
 using Microsoft.AspNetCore.Http;
 using System;

@@ -42,9 +42,9 @@ namespace Grand.Framework.Mvc.Filters
                 IWebHelper webHelper,
                 IWorkContext workContext)
             {
-                this._customerService = customerService;
-                this._webHelper = webHelper;
-                this._workContext = workContext;
+                _customerService = customerService;
+                _webHelper = webHelper;
+                _workContext = workContext;
             }
 
             #endregion

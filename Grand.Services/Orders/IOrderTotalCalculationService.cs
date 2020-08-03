@@ -1,5 +1,5 @@
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
 using Grand.Services.Discounts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -112,12 +112,5 @@ namespace Grand.Services.Orders
         /// <returns>true - reward points could use; false - cannot be used.</returns>
         bool CheckMinimumRewardPointsToUseRequirement(int rewardPoints);
 
-        /// <summary>
-        /// Calculate how much reward points will be earned/reduced based on certain amount spent
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="amount">Amount (in primary store currency)</param>
-        /// <returns>umber of reward points</returns>
-        int CalculateRewardPoints(Customer customer, decimal amount);
     }
 }

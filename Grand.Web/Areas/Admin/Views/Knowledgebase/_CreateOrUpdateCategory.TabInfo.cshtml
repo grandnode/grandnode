@@ -1,6 +1,6 @@
 ﻿@model KnowledgebaseCategoryModel
 <input asp-for="Id" type="hidden" />
-@(Html.LocalizedEditor<KnowledgebaseCategoryModel, KnowledgebaseCategoryLocalizedModel>("knowledbasecategory-info-localized",
+@(await Html.LocalizedEditor<KnowledgebaseCategoryModel, KnowledgebaseCategoryLocalizedModel>("knowledbasecategory-info-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">

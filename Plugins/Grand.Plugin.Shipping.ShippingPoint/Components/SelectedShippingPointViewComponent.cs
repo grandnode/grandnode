@@ -1,7 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Plugin.Shipping.ShippingPoint.Services;
-using Grand.Services.Catalog;
-using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,18 +15,13 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Components
         private readonly ILocalizationService _localizationService;
         private readonly IShippingPointService _shippingPointService;
         private readonly IStoreContext _storeContext;
-        private readonly ICountryService _countryService;
-        private readonly IPriceFormatter _priceFormatter;
 
         public SelectedShippingPointViewComponent(ILocalizationService localizationService,
-            IShippingPointService shippingPointService, IStoreContext storeContext,
-            ICountryService countryService, IPriceFormatter priceFormatter)
+            IShippingPointService shippingPointService, IStoreContext storeContext)
         {
-            this._localizationService = localizationService;
-            this._shippingPointService = shippingPointService;
-            this._storeContext = storeContext;
-            this._countryService = countryService;
-            this._priceFormatter = priceFormatter;
+            _localizationService = localizationService;
+            _shippingPointService = shippingPointService;
+            _storeContext = storeContext;
         }
         public async Task<IViewComponentResult> InvokeAsync(string shippingOption)
         {

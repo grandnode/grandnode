@@ -1,5 +1,5 @@
 ﻿@model CustomerInfoModel
-@inject Grand.Core.Domain.Customers.CustomerSettings customerSettings
+@inject Grand.Domain.Customers.CustomerSettings customerSettings
 @using Grand.Web.Models.Customer;
 @using Grand.Core;
 @{
@@ -76,23 +76,19 @@
                     <legend class="sr-only">@T("Account.Fields.Gender")</legend>
                     @if (Model.GenderEnabled)
                     {
-                        <div class="row">
-                            <div class="col-12">
-                                @T("Account.Fields.Gender"):
-                            </div>
-                        </div>
-                        <div class="gender">
+                        <label class="col-form-label">
+                            @T("Account.Fields.Gender"):
+                        </label>
+                        <div class="form-group gender">
                             <div class="flex-row">
-                                <label class="custom-control custom-radio male d-inline-block">
+                                <div class="custom-control custom-radio male custom-control-inline">
                                     <input type="radio" asp-for="Gender" value="M" checked="@(Model.Gender == "M")" id="gender-male" class="custom-control-input" />
-                                    <span class="custom-control-label"></span>
-                                    <span class="custom-control-description forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</span>
-                                </label>
-                                <label class="custom-control custom-radio female d-inline-block">
+                                    <label class="custom-control-label" for="gender-male">@T("Account.Fields.Gender.Male")</label>
+                                </div>
+                                <div class="custom-control custom-radio female custom-control-inline">
                                     <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" class="custom-control-input" />
-                                    <span class="custom-control-label"></span>
-                                    <span class="custom-control-description forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</span>
-                                </label>
+                                    <label class="custom-control-label" for="gender-female">@T("Account.Fields.Gender.Female")</label>
+                                </div>
                             </div>
                         </div>
                     }
@@ -133,7 +129,7 @@
                                                   selected-day="(Model.DateOfBirthDay.HasValue ? Model.DateOfBirthDay.Value : 0)"
                                                   selected-month="(Model.DateOfBirthMonth.HasValue ? Model.DateOfBirthMonth.Value : 0)"
                                                   selected-year="(Model.DateOfBirthYear.HasValue ? Model.DateOfBirthYear.Value : 0)"
-                                                  class="col-12 input-group" />
+                                                  class="col-12 input-group px-0" />
 
                             <span asp-validation-for="DateOfBirthDay"></span>
                             <span asp-validation-for="DateOfBirthMonth"></span>
@@ -173,7 +169,7 @@
                         <fieldset class="form-group row mb-0">
                             <legend class="sr-only">@T("account.fields.username")</legend>
                             <label asp-for="Username" class="col-form-label px-3">@T("Account.Fields.Username"):</label>
-                            <span class="readonly-username">@Model.Username</span>
+                            <span class="readonly-username px-3">@Model.Username</span>
                         </fieldset>
                     }
                 }
@@ -211,10 +207,10 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-       Model.StreetAddress2Enabled ||
-       Model.ZipPostalCodeEnabled ||
-       Model.CityEnabled ||
-       Model.CountryEnabled)
+      Model.StreetAddress2Enabled ||
+      Model.ZipPostalCodeEnabled ||
+      Model.CityEnabled ||
+      Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">
@@ -356,11 +352,11 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="form-group">
-                                <label class="custom-control custom-checkbox">
+                                <div class="custom-control custom-checkbox">
                                     <input class="custom-control-input" asp-for="Newsletter" />
                                     <span class="custom-control-label"></span>
                                     <label asp-for="Newsletter" class="custom-control-description">@T("Account.Fields.Newsletter")</label>
-                                </label>
+                                </div>
                             </div>
                             <partial name="_NewsLetterCategories" model="Model.NewsletterCategories" />
                         }
@@ -458,14 +454,27 @@
                     {
                         //we can add more external records
                         <div class="form-fields add-more-external-records">
-                            @T("Account.AssociatedExternalAuth.AddMoreRecords") <a href="@Url.RouteUrl("Login", null, "http")">@Url.RouteUrl("Login", null, "http")</a>
+                            @T("Account.AssociatedExternalAuth.AddMoreRecords") <a href="@Url.RouteUrl("Login", null, Context.Request.Scheme)">@Url.RouteUrl("Login", null, Context.Request.Scheme)</a>
                         </div>
                     }
                 </div>
             </div>
         }
 
-
+        @if (customerSettings.TwoFactorAuthenticationEnabled)
+        {
+            <div class="card mb-3">
+                <h3 class="card-header">@T("Account.TwoFactorAuth")</h3>
+                @if (Model.Is2faEnabled)
+                {
+                    @Html.ActionLink(T("Account.TwoFactorAuth.Disable").Text, "DisableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
+                }
+                else
+                {
+                    @Html.ActionLink(T("Account.TwoFactorAuth.Enable").Text, "EnableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
+                }
+            </div>
+        }
         <div class="generalMarginSupporter">
             <input type="submit" value="@T("Common.Save")" name="save-info-button" class="btn btn-secondary save-customer-info-button" />
         </div>

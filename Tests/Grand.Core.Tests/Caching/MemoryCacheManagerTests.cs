@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System.Threading.Tasks;
 
 namespace Grand.Core.Caching.Tests
@@ -13,17 +15,21 @@ namespace Grand.Core.Caching.Tests
             string key = "exampleKey01";
             byte data = 255;
             int cacheTime = int.MaxValue;
-            MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
+            var eventPublisher = new Mock<IMediator>();
 
-            await memoryCacheManager.Set(key, data, cacheTime);
-            Assert.AreEqual(await memoryCacheManager.Get<byte>(key), data);
+            MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }), eventPublisher.Object);
+
+            await memoryCacheManager.SetAsync(key, data, cacheTime);
+            Assert.AreEqual(await memoryCacheManager.GetAsync<byte>(key, async () => { return await Task.FromResult(new byte()); }),data);
         }
 
         [TestMethod()]
         public async Task IsSetTest()
         {
-            MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            await memoryCacheManager.Set("exampleKey05", 0, int.MaxValue);
+            var eventPublisher = new Mock<IMediator>();
+
+            MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }), eventPublisher.Object);
+            await memoryCacheManager.SetAsync("exampleKey05", 0, int.MaxValue);
 
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey05"));
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey08"));
@@ -32,20 +38,24 @@ namespace Grand.Core.Caching.Tests
         [TestMethod()]
         public async Task Removing_one_item_of_Cache()
         {
-            MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            await memoryCacheManager.Set("exampleKey15", 5, int.MaxValue);
+            var eventPublisher = new Mock<IMediator>();
+
+            MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }), eventPublisher.Object);
+            await memoryCacheManager.SetAsync("exampleKey15", 5, int.MaxValue);
 
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey15"));
-            await memoryCacheManager.Remove("exampleKey15");
+            await memoryCacheManager.RemoveAsync("exampleKey15");
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey15"));
         }
 
         [TestMethod()]
         public async Task Clearing_whole_Cache()
         {
-            MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            await memoryCacheManager.Set("exampleKey25", 5, int.MaxValue);
-            await memoryCacheManager.Set("exampleKey35", 5, int.MaxValue);
+            var eventPublisher = new Mock<IMediator>();
+
+            MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }), eventPublisher.Object);
+            await memoryCacheManager.SetAsync("exampleKey25", 5, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey35", 5, int.MaxValue);
 
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey25"));
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey35"));
@@ -57,17 +67,19 @@ namespace Grand.Core.Caching.Tests
         }
 
         [TestMethod()]
-        public async Task RemoveByPatternTest()
+        public async Task RemoveByPrefixTest()
         {
-            MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            await memoryCacheManager.Set("exampleKey025", 5, int.MaxValue);
-            await memoryCacheManager.Set("exampleKey026", 5, int.MaxValue);
-            await memoryCacheManager.Set("exampleKey027", 5, int.MaxValue);
+            var eventPublisher = new Mock<IMediator>();
 
-            await memoryCacheManager.Set("exampleKey127", 5, int.MaxValue);
+            MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }), eventPublisher.Object);
+            await memoryCacheManager.SetAsync("exampleKey025", 5, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey026", 5, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey027", 5, int.MaxValue);
 
-            string pattern = @"exampleKey0\d\d";
-            await memoryCacheManager.RemoveByPattern(pattern);
+            await memoryCacheManager.SetAsync("exampleKey127", 5, int.MaxValue);
+
+            string pattern = @"exampleKey0";
+            await memoryCacheManager.RemoveByPrefix(pattern);
 
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey025"));
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey026"));

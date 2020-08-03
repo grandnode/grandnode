@@ -6,12 +6,12 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.BundleProducts.AddNew").Text;
 }
-<form asp-controller="Product" asp-action="BundleProductAddPopup"
+<form asp-area="Admin" asp-controller="Product" asp-action="BundleProductAddPopup"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
 
-    <antiforgery-token />
+    
 
     <div class="row">
         <div class="col-md-12">
@@ -75,7 +75,7 @@
 
     @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+        <script>
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
@@ -140,7 +140,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $('#search-products').click(function () {
                 var grid = $('#products-grid').data('kendoGrid');

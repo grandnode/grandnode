@@ -1,9 +1,10 @@
-## How to contribute code ##
+# How to contribute code #
 
-GrandNode is an open source, cross-platform each developer is welcome and encouraged to contribute with their own improvements and enhancements. 
+GrandNode is an open source, cross-platform each developer is welcome and encouraged to contribute with their own improvements and enhancements.
 
 GrandNode is mostly written in ASP.NET. Other languages used in the project are HTML, CSS, JavaScript, MongoDB. 
 To start with us, you should do this few steps:
+
 1. Create your own GitHub account. 
 2. Fork the GrandNode to your GitHub account
 3. Clone the forked project to your local machine. 

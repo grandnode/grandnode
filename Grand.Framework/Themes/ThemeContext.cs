@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Grand.Core;
+using Grand.Domain.Customers;
+using Grand.Domain.Stores;
+using Grand.Services.Common;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Grand.Core;
-using Grand.Core.Domain;
-using Grand.Core.Domain.Customers;
-using Grand.Services.Common;
 
 namespace Grand.Framework.Themes
 {
@@ -24,8 +24,8 @@ namespace Grand.Framework.Themes
 
         public ThemeContext(IWorkContext workContext,
             IStoreContext storeContext,
-            IGenericAttributeService genericAttributeService, 
-            StoreInformationSettings storeInformationSettings, 
+            IGenericAttributeService genericAttributeService,
+            StoreInformationSettings storeInformationSettings,
             IThemeProvider themeProvider)
         {
             _workContext = workContext;
@@ -38,10 +38,8 @@ namespace Grand.Framework.Themes
         /// <summary>
         /// Get current theme system name
         /// </summary>
-        public string WorkingThemeName
-        {
-            get
-            {
+        public string WorkingThemeName {
+            get {
                 if (_themeIsCached)
                     return _cachedThemeName;
 
@@ -65,7 +63,7 @@ namespace Grand.Framework.Themes
                         throw new Exception("No theme could be loaded");
                     theme = themeInstance.ThemeName;
                 }
-                
+
                 //cache theme
                 _cachedThemeName = theme;
                 _themeIsCached = true;

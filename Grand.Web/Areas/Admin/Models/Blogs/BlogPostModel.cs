@@ -1,16 +1,13 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Validators.Blogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Blogs
 {
-    [Validator(typeof(BlogPostValidator))]
     public partial class BlogPostModel : BaseGrandEntityModel, ILocalizedModel<BlogLocalizedModel>, IStoreMappingModel
     {
         public BlogPostModel()
@@ -27,22 +24,26 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         public string PictureId { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
-        
+
         public string Body { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview")]
-        
+
         public string BodyOverview { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AllowComments")]
         public bool AllowComments { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags")]
-        
+
         public string Tags { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")]
         public int Comments { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreateDate")]
+        [UIHint("DateTime")]
+        public DateTime CreateDate { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")]
         [UIHint("DateTimeNullable")]
@@ -53,19 +54,19 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         public DateTime? EndDate { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords")]
-        
+
         public string MetaKeywords { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription")]
-        
+
         public string MetaDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle")]
-        
+
         public string MetaTitle { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.SeName")]
-        
+
         public string SeName { get; set; }
 
         public IList<BlogLocalizedModel> Locales { get; set; }
@@ -91,27 +92,27 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         public string Title { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview")]
-        
+
         public string BodyOverview { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
-        
+
         public string Body { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords")]
-        
+
         public string MetaKeywords { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription")]
-        
+
         public string MetaDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle")]
-        
+
         public string MetaTitle { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.SeName")]
-        
+
         public string SeName { get; set; }
 
     }

@@ -3,9 +3,9 @@
     //page title
     ViewBag.Title = T("Admin.Courses.Course.Lesson.AddNew").Text;
 }
-<form asp-controller="Course" asp-action="CreateLesson" method="post" id="course-lesson-form">
+<form asp-area="Admin" asp-controller="Course" asp-action="CreateLesson" method="post" id="course-lesson-form">
     <input asp-for="CourseId" type="hidden" />
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

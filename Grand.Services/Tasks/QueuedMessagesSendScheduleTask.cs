@@ -19,10 +19,10 @@ namespace Grand.Services.Tasks
         public QueuedMessagesSendScheduleTask(IQueuedEmailService queuedEmailService,
             IEmailSender emailSender, ILogger logger, IEmailAccountService emailAccountService)
         {
-            this._queuedEmailService = queuedEmailService;
-            this._emailSender = emailSender;
-            this._logger = logger;
-            this._emailAccountService = emailAccountService;
+            _queuedEmailService = queuedEmailService;
+            _emailSender = emailSender;
+            _logger = logger;
+            _emailAccountService = emailAccountService;
         }
 
         /// <summary>

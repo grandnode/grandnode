@@ -1,5 +1,5 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.Orders;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
@@ -46,15 +46,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService)
         {
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._storeService = storeService;
-            this._taxService = taxService;
-            this._priceCalculationService = priceCalculationService;
-            this._localizationService = localizationService;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._productService = productService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _priceFormatter = priceFormatter;
+            _storeService = storeService;
+            _taxService = taxService;
+            _priceCalculationService = priceCalculationService;
+            _localizationService = localizationService;
+            _productAttributeFormatter = productAttributeFormatter;
+            _productService = productService;
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var sciModel = new ShoppingCartItemModel
                 {
                     Id = sci.Id,
-                    Store = store != null ? store.Name : "Unknown",
+                    Store = store != null ? store.Shortcut : "Unknown",
                     ProductId = sci.ProductId,
                     Quantity = sci.Quantity,
                     ProductName = product.Name,
@@ -156,7 +156,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var sciModel = new ShoppingCartItemModel
                 {
                     Id = sci.Id,
-                    Store = store != null ? store.Name : "Unknown",
+                    Store = store != null ? store.Shortcut : "Unknown",
                     ProductId = sci.ProductId,
                     Quantity = sci.Quantity,
                     ProductName = product.Name,

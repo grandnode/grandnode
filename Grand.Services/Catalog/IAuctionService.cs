@@ -1,8 +1,8 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Stores;
+﻿using Grand.Domain;
+using Grand.Domain.Catalog;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
+using Grand.Domain.Stores;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -86,9 +86,10 @@ namespace Grand.Services.Catalog
         /// <param name="customer"></param>
         /// <param name="product"></param>
         /// <param name="store"></param>
+        /// <param name="warehouseId"></param>
         /// <param name="language"></param>
         /// <param name="amount"></param>
-        Task NewBid(Customer customer, Product product, Store store, Language language, decimal amount);
+        Task NewBid(Customer customer, Product product, Store store, Language language, string warehouseId, decimal amount);
 
         /// <summary>
         /// Cancel bid for product

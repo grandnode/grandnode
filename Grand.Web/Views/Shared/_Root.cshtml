@@ -5,15 +5,8 @@
 <partial name="_Notifications" />
 <partial name="_JavaScriptDisabledWarning" />
 <partial name="_OldInternetExplorerWarning" />
-<main class="c-offcanvas-content-wrap" role="main">
+<main class="c-offcanvas-content-wrap">
     <partial name="Header" />
-    <nav class="navbar mainNav navbar-expand-sm offcanvas-desktop">
-        <div class="navbar-collapse container">
-            <ul class="navbar-nav">
-                @await Component.InvokeAsync("TopMenu")
-            </ul>
-        </div>
-    </nav>
     <div class="container page-container">
         @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
         @if (IsSectionDefined("Breadcrumb"))
@@ -25,28 +18,37 @@
     </div>
     @await Component.InvokeAsync("Footer")
 </main>
-<aside class="js-offcanvas mobile-menu" id="left" role="complementary">
-    <ul class="nav nav-pills" id="pills-mobile-tab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="pills-menu-tab" data-toggle="pill" href="#pills-menu" role="tab" aria-controls="pills-menu" aria-selected="true">@T("Mobile.Menu")</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="pills-manufacturers-tab" data-toggle="pill" href="#pills-manufacturers" role="tab" aria-controls="pills-manufacturers" aria-selected="false">@T("Manufacturers")</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="pills-links-tab" data-toggle="pill" href="#pills-links" role="tab" aria-controls="pills-links" aria-selected="false">@T("Menu.Links")</a>
-        </li>
-    </ul>
-    <div class="tab-content" id="pills-mobile-tabContent">
-        <div class="tab-pane fade show active" id="pills-menu" role="tabpanel" aria-labelledby="pills-menu-tab"></div>
-        <div class="tab-pane fade" id="pills-manufacturers" role="tabpanel" aria-labelledby="pills-manufacturers-tab"></div>
-        <div class="tab-pane fade" id="pills-links" role="tabpanel" aria-labelledby="pills-links-tab">
-            <ul class="dropdown-menu links-dropdown first-level"></ul>
+<a class="js-offcanvas-trigger filter-button d-none" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("catalog.selectors.fiters")</span></a>
+<aside class="js-offcanvas mobile-filters d-lg-none d-flex flex-column" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":false}' id="leftSide">
+    <div class="user-panel-head d-lg-none d-flex order-1">
+        <div class="text-center w-100">
+            <div class="offcanvas-close js-offcanvas-close" data-button-options='{"modifiers":"close-left"}'>
+                <span class="mdi mdi-close"></span>
+            </div>
         </div>
     </div>
 </aside>
-<a class="js-offcanvas-trigger filter-button btn btn-outline-info d-none mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("catalog.selectors.fiters")</span></a>
-<aside class="js-offcanvas mobile-filters" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":true}' id="leftSide" role="complementary"></aside>
+<aside class="js-offcanvas" data-offcanvas-options='{"modifiers":"right,overlay","modal":true,"resize":false}' id="user_panel">
+    <div class="user-panel-head">
+        <div class="text-center w-100">
+            @T("Account.MyAccount")
+            <div class="offcanvas-close js-offcanvas-close" data-button-options='{"modifiers":"close-right"}'>
+                <span class="mdi mdi-close"></span>
+            </div>
+        </div>
+    </div>
+    <ul class="user-panel-content">
+        <li class="selectors-container mb-3">
+            @await Component.InvokeAsync("TaxTypeSelector")
+            @await Component.InvokeAsync("CurrencySelector")
+            @await Component.InvokeAsync("LanguageSelector")
+            @await Component.InvokeAsync("StoreSelector")
+        </li>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
+        @await Component.InvokeAsync("HeaderLinks")
+    </ul>
+</aside>
+<aside class="js-offcanvas" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":false}' id="mobile_menu"></aside>
 @await Component.InvokeAsync("FlyoutShoppingCart")
 <!-- Search Modal -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">

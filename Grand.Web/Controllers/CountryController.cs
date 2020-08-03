@@ -1,7 +1,8 @@
 ﻿using Grand.Framework.Mvc.Filters;
 using Grand.Services.Localization;
-using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
+using Grand.Web.Features.Models.Common;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,18 +13,17 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly ICountryViewModelService _countryViewModelService;
+        private readonly IMediator _mediator;
         private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Constructors
 
-        public CountryController(ICountryViewModelService countryViewModelService, ILocalizationService localizationService)
+        public CountryController(IMediator mediator, ILocalizationService localizationService)
         {
-            _countryViewModelService = countryViewModelService;
+            _mediator = mediator;
             _localizationService = localizationService;
-
         }
 
         #endregion
@@ -39,7 +39,7 @@ namespace Grand.Web.Controllers
             {
                 return Json(new List<StateProvinceModel>() { new StateProvinceModel { id = "", name = _localizationService.GetResource("Address.SelectState") } });
             }
-            var model = await _countryViewModelService.PrepareModel(countryId, addSelectStateItem);
+            var model = await _mediator.Send(new GetStatesProvince() { CountryId = countryId, AddSelectStateItem = addSelectStateItem });
             return Json(model);
         }
 

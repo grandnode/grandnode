@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Directory;
+using Grand.Domain.Data;
+using Grand.Domain.Directory;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Events;
 using MediatR;
@@ -156,8 +156,8 @@ namespace Grand.Services.Directory.Tests
                 _eventPublisher = tempEventPublisher.Object;
             }
             _serviceProvider = new Mock<IServiceProvider>().Object;
-            _measureService = new MeasureService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _measureDimensionRepository,
-                _measureWeightRepository, _measureUnitRepository, _measureSettings, _eventPublisher, _serviceProvider);
+            _measureService = new MeasureService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher), _measureDimensionRepository,
+                _measureWeightRepository, _measureUnitRepository, _measureSettings, _eventPublisher);
         }
 
         [TestMethod()]

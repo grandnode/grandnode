@@ -10,7 +10,7 @@
     <h1 class="h4 text-xs-center generalTitle">@T("Products.EmailAFriend.Title")</h1>
     <div class="card">
         <h4 class="card-header"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">@Model.ProductName</a></h4>
-        <div class="card-body">
+        <div class="card-body pb-0">
             @if (Model.SuccessfullySent)
             {
                 <section class="result">

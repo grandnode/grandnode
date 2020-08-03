@@ -1,5 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Vendors;
+using Grand.Domain.Vendors;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -28,7 +28,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IVendorService _vendorService;
         private readonly ILanguageService _languageService;
-        private readonly VendorSettings _vendorSettings;
         #endregion
 
         #region Constructors
@@ -37,14 +36,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             IVendorViewModelService vendorViewModelService,
             ILocalizationService localizationService,
             IVendorService vendorService,
-            ILanguageService languageService,
-            VendorSettings vendorSettings)
+            ILanguageService languageService)
         {
-            this._vendorViewModelService = vendorViewModelService;
-            this._localizationService = localizationService;
-            this._vendorService = vendorService;
-            this._languageService = languageService;
-            this._vendorSettings = vendorSettings;
+            _vendorViewModelService = vendorViewModelService;
+            _localizationService = localizationService;
+            _vendorService = vendorService;
+            _languageService = languageService;
         }
 
         #endregion
@@ -154,7 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = vendor.Id });
                 }

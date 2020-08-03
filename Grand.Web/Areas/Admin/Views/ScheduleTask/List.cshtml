@@ -2,7 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
 }
-<antiforgery-token />
+
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">
@@ -28,7 +28,7 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#schedule-tasks-grid").on("click", ".run-now", function (e) {
             showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.System.ScheduleTasks.RunNow.Progress").Text))');
@@ -37,7 +37,7 @@
 </script>
 <div id="schedule-tasks-grid"></div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#schedule-tasks-grid").kendoGrid({
             dataSource: {

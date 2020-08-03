@@ -1,12 +1,7 @@
-﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Media;
+﻿using Grand.Domain.Customers;
+using Grand.Domain.Forums;
 using Grand.Services.Customers;
-using Grand.Services.Directory;
-using Grand.Services.Forums;
-using Grand.Services.Helpers;
 using Grand.Services.Localization;
-using Grand.Services.Media;
 using Grand.Services.Security;
 using Grand.Web.Models.Profile;
 using Microsoft.AspNetCore.Mvc;
@@ -17,38 +12,24 @@ namespace Grand.Web.Controllers
 {
     public partial class ProfileController : BasePublicController
     {
-        private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPictureService _pictureService;
-        private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPermissionService _permissionService;
         private readonly ForumSettings _forumSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly MediaSettings _mediaSettings;
 
-        public ProfileController(IForumService forumService,
+        public ProfileController(
             ILocalizationService localizationService,
-            IPictureService pictureService,
-            ICountryService countryService,
             ICustomerService customerService,
-            IDateTimeHelper dateTimeHelper,
             IPermissionService permissionService,
             ForumSettings forumSettings,
-            CustomerSettings customerSettings,
-            MediaSettings mediaSettings)
+            CustomerSettings customerSettings)
         {
-            this._forumService = forumService;
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
-            this._countryService = countryService;
-            this._customerService = customerService;
-            this._permissionService = permissionService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._forumSettings = forumSettings;
-            this._customerSettings = customerSettings;
-            this._mediaSettings = mediaSettings;
+            _localizationService = localizationService;
+            _customerService = customerService;
+            _permissionService = permissionService;
+            _forumSettings = forumSettings;
+            _customerSettings = customerSettings;
         }
 
         public virtual async Task<IActionResult> Index(string id, int? pageNumber)
@@ -82,8 +63,7 @@ namespace Grand.Web.Controllers
             var name = customer.FormatUserName(_customerSettings.CustomerNameFormat);
             var title = string.Format(_localizationService.GetResource("Profile.ProfileOf"), name);
 
-            var model = new ProfileIndexModel
-            {
+            var model = new ProfileIndexModel {
                 ProfileTitle = title,
                 PostsPage = postsPage,
                 PagingPosts = pagingPosts,

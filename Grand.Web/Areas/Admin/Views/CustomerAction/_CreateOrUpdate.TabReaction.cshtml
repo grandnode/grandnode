@@ -5,7 +5,7 @@
         <div class="form-group">
             <admin-label asp-for="ReactionTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ReactionTypeId" asp-items="((Grand.Core.Domain.Customers.CustomerReactionTypeEnum)Model.ReactionTypeId).ToSelectList()" />
+                <admin-select asp-for="ReactionTypeId" asp-items="((Grand.Domain.Customers.CustomerReactionTypeEnum)Model.ReactionTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="ReactionTypeId"></span>
                 <div class="note note-info margin-top-10">
                     <p>@T("admin.customers.actiontype.helpText.Banner")</p>

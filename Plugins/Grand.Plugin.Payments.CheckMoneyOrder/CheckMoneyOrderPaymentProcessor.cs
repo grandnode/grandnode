@@ -1,8 +1,7 @@
 using Grand.Core;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Payments;
+using Grand.Domain.Orders;
+using Grand.Domain.Payments;
 using Grand.Core.Plugins;
-using Grand.Plugin.Payments.CheckMoneyOrder.Controllers;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
@@ -26,21 +25,21 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILanguageService _languageService;
         #endregion
 
         #region Ctor
 
         public CheckMoneyOrderPaymentProcessor(CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings,
             ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService, 
-            ILocalizationService localizationService, IWebHelper webHelper, IServiceProvider serviceProvider)
+            ILocalizationService localizationService, IWebHelper webHelper, ILanguageService languageService)
         {
-            this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
-            this._settingService = settingService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
+            _checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
+            _settingService = settingService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _languageService = languageService;
         }
 
         #endregion
@@ -216,15 +215,15 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder
             await _settingService.SaveSetting(settings);
 
             //locales
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.DescriptionText", "Description");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription", "Pay by check or money order");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.AdditionalFee", "Additional fee");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint", "The additional fee.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage", "Additional fee. Use percentage");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.ShippableProductRequired", "Shippable product required");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint", "An option indicating whether shippable products are required in order to display this payment method during checkout.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.DescriptionText", "Description");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription", "Pay by check or money order");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.AdditionalFee", "Additional fee");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint", "The additional fee.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage", "Additional fee. Use percentage");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.ShippableProductRequired", "Shippable product required");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint", "An option indicating whether shippable products are required in order to display this payment method during checkout.");
 
             
             await base.Install();
@@ -236,15 +235,15 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder
             await _settingService.DeleteSetting<CheckMoneyOrderPaymentSettings>();
 
             //locales
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.DescriptionText");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.AdditionalFee");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.ShippableProductRequired");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.DescriptionText");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.AdditionalFee");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.ShippableProductRequired");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint");
             
             await base.Uninstall();
         }

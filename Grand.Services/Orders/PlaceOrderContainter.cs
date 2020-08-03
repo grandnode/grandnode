@@ -1,9 +1,9 @@
-﻿using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Tax;
+﻿using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Localization;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
+using Grand.Domain.Tax;
 using Grand.Services.Discounts;
 using System.Collections.Generic;
 
@@ -13,9 +13,9 @@ namespace Grand.Services.Orders
     {
         public PlaceOrderContainter()
         {
-            this.Cart = new List<ShoppingCartItem>();
-            this.AppliedDiscounts = new List<AppliedDiscount>();
-            this.AppliedGiftCards = new List<AppliedGiftCard>();
+            Cart = new List<ShoppingCartItem>();
+            AppliedDiscounts = new List<AppliedDiscount>();
+            AppliedGiftCards = new List<AppliedGiftCard>();
         }
 
         public Customer Customer { get; set; }

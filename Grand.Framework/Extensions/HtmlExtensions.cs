@@ -1,11 +1,11 @@
-﻿using Grand.Core.Infrastructure;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace Grand.Framework
 {
@@ -20,7 +21,7 @@ namespace Grand.Framework
     {
         #region Admin area extensions
 
-        public static IHtmlContent LocalizedEditor<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
+        public static async Task<IHtmlContent> LocalizedEditor<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
             string name,
             Func<int, HelperResult> localizedTemplate,
             Func<T, HelperResult> standardTemplate,
@@ -28,12 +29,12 @@ namespace Grand.Framework
             where T : ILocalizedModel<TLocalizedModelLocal>
             where TLocalizedModelLocal : ILocalizedModelLocal
         {
-            
+
             var localizationSupported = helper.ViewData.Model.Locales.Count > 1;
             if (ignoreIfSeveralStores)
             {
-                var storeService = EngineContext.Current.Resolve<IStoreService>();
-                if (storeService.GetAllStores().GetAwaiter().GetResult().Count >= 2)
+                var storeService = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<IStoreService>();
+                if ((await storeService.GetAllStores()).Count >= 2)
                 {
                     localizationSupported = false;
                 }
@@ -49,11 +50,11 @@ namespace Grand.Framework
                 tabStrip.AppendLine("Standard");
                 tabStrip.AppendLine("</li>");
 
-                var languageService = EngineContext.Current.Resolve<ILanguageService>();
+                var languageService = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<ILanguageService>();
                 foreach (var locale in helper.ViewData.Model.Locales)
                 {
                     //languages
-                    var language = languageService.GetLanguageById(locale.LanguageId).GetAwaiter().GetResult();
+                    var language = await languageService.GetLanguageById(locale.LanguageId);
 
                     tabStrip.AppendLine("<li>");
                     var urlHelper = new UrlHelper(helper.ViewContext);
@@ -63,8 +64,6 @@ namespace Grand.Framework
                     tabStrip.AppendLine("</li>");
                 }
                 tabStrip.AppendLine("</ul>");
-
-
 
                 //default tab
                 tabStrip.AppendLine("<div>");

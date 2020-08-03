@@ -3,11 +3,11 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     ViewBag.Title = T("Admin.Address.AddressAttributes.Values.AddNew").Text;
 }
-<form asp-controller="AddressAttribute" asp-action="ValueCreatePopup"
+<form asp-area="Admin" asp-controller="AddressAttribute" asp-action="ValueCreatePopup"
       asp-route-addressAttributeId="@Context.Request.Query["addressAttributeId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

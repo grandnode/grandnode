@@ -3,8 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerAction.AddCustomerActionCondition").Text;
 }
-<form asp-controller="CustomerAction" asp-action="AddCondition" method="post" id="customer-action-condition-form">
-    <antiforgery-token />
+<form asp-area="Admin" asp-controller="CustomerAction" asp-action="AddCondition" method="post" id="customer-action-condition-form">
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

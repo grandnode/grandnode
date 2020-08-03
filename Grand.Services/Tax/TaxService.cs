@@ -1,20 +1,17 @@
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Tax;
 using Grand.Core.Plugins;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Directory;
+using Grand.Domain.Orders;
+using Grand.Domain.Tax;
 using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Logging;
-using Grand.Services.Orders;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Tax
@@ -28,12 +25,11 @@ namespace Grand.Services.Tax
 
         private readonly IAddressService _addressService;
         private readonly IWorkContext _workContext;
-        private readonly TaxSettings _taxSettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ICountryService _countryService;
-        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger _logger;
+        private readonly TaxSettings _taxSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly AddressSettings _addressSettings;
 
@@ -46,34 +42,32 @@ namespace Grand.Services.Tax
         /// </summary>
         /// <param name="addressService">Address service</param>
         /// <param name="workContext">Work context</param>
-        /// <param name="taxSettings">Tax settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="geoLookupService">GEO lookup service</param>
         /// <param name="countryService">Country service</param>
         /// <param name="logger">Logger service</param>
+        /// <param name="taxSettings">Tax settings</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="addressSettings">Address settings</param>
         public TaxService(IAddressService addressService,
             IWorkContext workContext,
-            TaxSettings taxSettings,
             IPluginFinder pluginFinder,
             IGeoLookupService geoLookupService,
             ICountryService countryService,
-            IServiceProvider serviceProvider,
             ILogger logger,
+            TaxSettings taxSettings,
             CustomerSettings customerSettings,
             AddressSettings addressSettings)
         {
-            this._addressService = addressService;
-            this._workContext = workContext;
-            this._taxSettings = taxSettings;
-            this._pluginFinder = pluginFinder;
-            this._geoLookupService = geoLookupService;
-            this._serviceProvider = serviceProvider;
-            this._logger = logger;
-            this._countryService = countryService;
-            this._customerSettings = customerSettings;
-            this._addressSettings = addressSettings;
+            _addressService = addressService;
+            _workContext = workContext;
+            _taxSettings = taxSettings;
+            _pluginFinder = pluginFinder;
+            _geoLookupService = geoLookupService;
+            _logger = logger;
+            _countryService = countryService;
+            _customerSettings = customerSettings;
+            _addressSettings = addressSettings;
         }
 
         #endregion
@@ -106,7 +100,7 @@ namespace Grand.Services.Tax
             }
 
             //get country by IP address
-            if (country == null)
+            if (country == null && _taxSettings.GetCountryByIPAddress)
             {
                 var ipAddress = customer.LastIpAddress;
                 var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
@@ -139,7 +133,7 @@ namespace Grand.Services.Tax
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
         /// <returns>Package for tax calculation</returns>
-        protected virtual async Task<CalculateTaxRequest> CreateCalculateTaxRequest(Product product, 
+        protected virtual async Task<CalculateTaxRequest> CreateCalculateTaxRequest(Product product,
             string taxCategoryId, Customer customer, decimal price)
         {
             if (customer == null)
@@ -150,7 +144,7 @@ namespace Grand.Services.Tax
             calculateTaxRequest.Product = product;
             calculateTaxRequest.Price = price;
 
-            if (!String.IsNullOrEmpty(taxCategoryId))
+            if (!string.IsNullOrEmpty(taxCategoryId))
             {
                 calculateTaxRequest.TaxCategoryId = taxCategoryId;
             }
@@ -167,17 +161,13 @@ namespace Grand.Services.Tax
             if (_taxSettings.EuVatEnabled)
             {
                 //telecommunications, broadcasting and electronic services?
-                if (product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                if (product != null && product.IsTele)
                 {
-                    //January 1st 2015 passed?
-                    if (DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+                    //Europe Union consumer?
+                    if (await IsEuConsumer(customer))
                     {
-                        //Europe Union consumer?
-                        if (await IsEuConsumer(customer))
-                        {
-                            //We must charge VAT in the EU country where the customer belongs (not where the business is based)
-                            basedOn = TaxBasedOn.BillingAddress;
-                        }
+                        //We must charge VAT in the EU country where the customer belongs (not where the business is based)
+                        basedOn = TaxBasedOn.BillingAddress;
                     }
                 }
             }
@@ -224,15 +214,8 @@ namespace Grand.Services.Tax
             if (percent == decimal.Zero)
                 return price;
 
-            decimal result;
-            if (increase)
-            {
-                result = price * (1 + percent / 100);
-            }
-            else
-            {
-                result = price - (price) / (100 + percent) * percent;
-            }
+            var result = increase ? price * (1 + percent / 100) : price / (1 + percent / 100);
+
             if (result == decimal.Zero)
                 return 0;
 
@@ -248,7 +231,7 @@ namespace Grand.Services.Tax
         /// <param name="price">Price (taxable value)</param>
         /// <param name="taxRate">Calculated tax rate</param>
         /// <param name="isTaxable">A value indicating whether a request is taxable</param>
-        protected virtual async Task<(decimal taxRate, bool isTaxable)> GetTaxRate(Product product, string taxCategoryId, 
+        protected virtual async Task<(decimal taxRate, bool isTaxable)> GetTaxRate(Product product, string taxCategoryId,
             Customer customer, decimal price)
         {
             decimal taxRate = decimal.Zero;
@@ -268,7 +251,7 @@ namespace Grand.Services.Tax
                 isTaxable = false;
             }
             //make EU VAT exempt validation (the European Union Value Added Tax)
-            if (isTaxable && 
+            if (isTaxable &&
                 _taxSettings.EuVatEnabled &&
                 await IsVatExempt(calculateTaxRequest.Address, calculateTaxRequest.Customer))
             {
@@ -283,19 +266,27 @@ namespace Grand.Services.Tax
                 //ensure that tax is equal or greater than zero
                 if (calculateTaxResult.TaxRate < decimal.Zero)
                     calculateTaxResult.TaxRate = decimal.Zero;
-                
+
                 taxRate = calculateTaxResult.TaxRate;
             }
             else
             {
                 foreach (var error in calculateTaxResult.Errors)
                 {
-                    _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
+                    if (activeTaxProvider.PluginDescriptor == null)
+                    {
+                        _logger.Error(string.Format("{0} - {1}", "PluginDescriptor is NULL!!", error), null, customer);
+                    }
+                    else
+                    {
+                        _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
+                    }
+
                 }
             }
             return (taxRate, isTaxable);
         }
-        
+
 
         #endregion
 
@@ -320,11 +311,7 @@ namespace Grand.Services.Tax
         /// <returns>Found tax provider</returns>
         public virtual ITaxProvider LoadTaxProviderBySystemName(string systemName)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
-            if (descriptor != null)
-                return _serviceProvider.GetRequiredService(descriptor.PluginType) as ITaxProvider;
-
-            return null;
+            return _pluginFinder.GetPluginBySystemName<ITaxProvider>(systemName);
         }
 
         /// <summary>
@@ -350,7 +337,7 @@ namespace Grand.Services.Tax
             var customer = _workContext.CurrentCustomer;
             return await GetProductPrice(product, price, customer);
         }
-        
+
         /// <summary>
         /// Gets price
         /// </summary>
@@ -380,7 +367,7 @@ namespace Grand.Services.Tax
         {
             bool priceIncludesTax = _taxSettings.PricesIncludeTax;
             string taxCategoryId = "";
-            return await GetProductPrice(product, taxCategoryId, price, includingTax, 
+            return await GetProductPrice(product, taxCategoryId, price, includingTax,
                 customer, priceIncludesTax);
         }
 
@@ -399,7 +386,7 @@ namespace Grand.Services.Tax
             decimal price, bool includingTax, Customer customer,
             bool priceIncludesTax)
         {
-            
+
             //no need to calculate tax rate if passed "price" is 0
             if (price == decimal.Zero)
             {
@@ -465,11 +452,9 @@ namespace Grand.Services.Tax
             )
         {
 
-            string taxCategoryId = ""; //it seems to be strange, but this way was used above
             var productPrice = new TaxProductPrice();
 
-            //----------------------------------------------------------------------------------------------------
-            var taxrates = await GetTaxRate(product, taxCategoryId, customer, 0);
+            var taxrates = await GetTaxRate(product, product.TaxCategoryId, customer, 0);
             productPrice.taxRate = taxrates.taxRate;
             if (priceIncludesTax)
             {
@@ -533,7 +518,7 @@ namespace Grand.Services.Tax
                     productPrice.discountAmountExclTax = discountAmount;
                 }
             }
-           
+
             if (!taxrates.isTaxable)
             {
                 //we return 0% tax rate in case a request is not taxable
@@ -612,169 +597,60 @@ namespace Grand.Services.Tax
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <returns>Price</returns>
-        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttributeValue cav)
+        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav)
         {
             var customer = _workContext.CurrentCustomer;
-            return await GetCheckoutAttributePrice(cav, customer);
+            return await GetCheckoutAttributePrice(ca, cav, customer);
         }
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttributeValue cav, Customer customer)
+        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav, Customer customer)
         {
             bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return await GetCheckoutAttributePrice(cav, includingTax, customer);
+            return await GetCheckoutAttributePrice(ca, cav, includingTax, customer);
         }
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttributeValue cav, bool includingTax, Customer customer)
+        public virtual async Task<(decimal checkoutPrice, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav, bool includingTax, Customer customer)
         {
+            if (ca == null)
+                throw new ArgumentNullException("ca");
+
             if (cav == null)
                 throw new ArgumentNullException("cav");
 
-            var checkoutAttribute = await _serviceProvider.GetRequiredService<ICheckoutAttributeService>().GetCheckoutAttributeById(cav.CheckoutAttributeId);
             decimal price = cav.PriceAdjustment;
-            if (checkoutAttribute.IsTaxExempt)
+            if (ca.IsTaxExempt)
             {
                 return (price, 0);
             }
 
             bool priceIncludesTax = _taxSettings.PricesIncludeTax;
-            string taxClassId = checkoutAttribute.TaxCategoryId;
+            string taxClassId = ca.TaxCategoryId;
             var prices = await GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax);
 
             return (prices.productprice, prices.taxRate);
         }
 
-        
-        /// <summary>
-        /// Gets VAT Number status
-        /// </summary>
-        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
-        /// <param name="name">Name (if received)</param>
-        /// <param name="address">Address (if received)</param>
-        /// <returns>VAT Number status</returns>
-        public virtual async Task<(VatNumberStatus status, string name, string address, Exception exception)> GetVatNumberStatus(string fullVatNumber)
-        {
-            string name = string.Empty;
-            string address = string.Empty;
 
-            if (String.IsNullOrWhiteSpace(fullVatNumber))
-                return (VatNumberStatus.Empty, name, address, null);
-
-            fullVatNumber = fullVatNumber.Trim();
-            
-            //GB 111 1111 111 or GB 1111111111
-            //more advanced regex - http://codeigniter.com/wiki/European_Vat_Checker
-            var r = new Regex(@"^(\w{2})(.*)");
-            var match = r.Match(fullVatNumber);
-            if (!match.Success)
-                return (VatNumberStatus.Invalid, name, address, null);
-            var twoLetterIsoCode = match.Groups[1].Value;
-            var vatNumber = match.Groups[2].Value;
-
-            return await GetVatNumberStatus(twoLetterIsoCode, vatNumber);
-        }
-       
-        
-        /// <summary>
-        /// Gets VAT Number status
-        /// </summary>
-        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
-        /// <param name="vatNumber">VAT number</param>
-        /// <param name="name">Name (if received)</param>
-        /// <param name="address">Address (if received)</param>
-        /// <returns>VAT Number status</returns>
-        public virtual async Task<(VatNumberStatus status, string name, string address, Exception exception)> GetVatNumberStatus(string twoLetterIsoCode, string vatNumber)
-        {
-            string name = string.Empty;
-            string address = string.Empty;
-
-            if (String.IsNullOrEmpty(twoLetterIsoCode))
-                return (VatNumberStatus.Empty, name, address, null);
-
-            if (String.IsNullOrEmpty(vatNumber))
-                return (VatNumberStatus.Empty, name, address, null);
-
-            if (_taxSettings.EuVatAssumeValid)
-                return (VatNumberStatus.Valid, name, address, null);
-
-            if (!_taxSettings.EuVatUseWebService)
-                return (VatNumberStatus.Unknown, name, address, null);
-
-            return await DoVatCheck(twoLetterIsoCode, vatNumber);
-        }
-
-        /// <summary>
-        /// Performs a basic check of a VAT number for validity
-        /// </summary>
-        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
-        /// <param name="vatNumber">VAT number</param>
-        /// <param name="name">Company name</param>
-        /// <param name="address">Address</param>
-        /// <param name="exception">Exception</param>
-        /// <returns>VAT number status</returns>
-        public virtual async Task<(VatNumberStatus status, string name, string address, Exception exception)> 
-            DoVatCheck(string twoLetterIsoCode, string vatNumber)
-        {
-            var name = string.Empty;
-            var address = string.Empty;
-
-            if (vatNumber == null)
-                vatNumber = string.Empty;
-            vatNumber = vatNumber.Trim().Replace(" ", "");
-
-            if (twoLetterIsoCode == null)
-                twoLetterIsoCode = string.Empty;
-            if (!String.IsNullOrEmpty(twoLetterIsoCode))
-                //The service returns INVALID_INPUT for country codes that are not uppercase.
-                twoLetterIsoCode = twoLetterIsoCode.ToUpper();
-
-            EuropaCheckVatService.checkVatPortTypeClient s = null;
-
-            try
-            {
-                s = new EuropaCheckVatService.checkVatPortTypeClient();
-                var result = await s.checkVatAsync(new EuropaCheckVatService.checkVatRequest
-                {
-                    vatNumber = vatNumber,
-                    countryCode = twoLetterIsoCode
-                });
-
-                var valid = result.valid;
-                name = result.name;
-                address = result.address;
-
-                return (valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid, name, address, null);
-            }
-            catch (Exception ex)
-            {
-                return (VatNumberStatus.Unknown, string.Empty, string.Empty, ex);
-            }
-            finally
-            {
-                if (name == null)
-                    name = string.Empty;
-
-                if (address == null)
-                    address = string.Empty;
-            }
-
-        }
 
         /// <summary>
         /// Gets a value indicating whether a product is tax exempt

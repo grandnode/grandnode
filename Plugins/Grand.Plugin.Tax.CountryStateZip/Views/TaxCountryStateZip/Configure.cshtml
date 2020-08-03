@@ -2,13 +2,13 @@
 @using Grand.Framework;
 @using Grand.Plugin.Tax.CountryStateZip.Models;
 @using Grand.Core.Infrastructure;
-@using Grand.Core.Domain.Common;
+@using Grand.Domain.Common;
 @inject AdminAreaSettings adminAreaSettings
 @{
     Layout = "_ConfigurePlugin";
 }
 <div id="tax-countrystatezip-grid"></div>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         $("#tax-countrystatezip-grid").kendoGrid({
             dataSource: {
@@ -118,7 +118,7 @@
         });
     });
 </script>
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#@Html.FieldIdFor(model => model.AddCountryId)").change(function() {
             var selectedItem = $(this).val();
@@ -142,7 +142,7 @@
     });
 </script>
 <form asp-controller="TaxCountryStateZip" asp-action="Configure" method="post">
-    <antiforgery-token />
+    
     <div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -213,7 +213,7 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
+    <script>
         $(function () {
             $('#addtaxrate').click(function () {
 

@@ -1,16 +1,14 @@
-﻿using FluentValidation.Attributes;
-using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Validators.Customer;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Customer
 {
-    [Validator(typeof(LoginValidator))]
     public partial class LoginModel : BaseGrandModel
     {
         public bool CheckoutAsGuest { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [GrandResourceDisplayName("Account.Login.Fields.Email")]
         public string Email { get; set; }
 
@@ -26,5 +24,6 @@ namespace Grand.Web.Models.Customer
         public bool RememberMe { get; set; }
 
         public bool DisplayCaptcha { get; set; }
+
     }
 }

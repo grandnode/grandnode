@@ -1,6 +1,6 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Web.Areas.Admin.Models.Customers;
@@ -21,6 +21,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task<Customer> InsertCustomerModel(CustomerModel model);
         Task<Customer> UpdateCustomerModel(Customer customer, CustomerModel model);
         Task DeleteCustomer(Customer customer);
+        Task DeleteSelected(IList<string> selectedIds);
         Task SendEmail(Customer customer, CustomerModel.SendEmailModel model);
         Task SendPM(Customer customer, CustomerModel.SendPmModel model);
         Task<IEnumerable<CustomerModel.RewardPointsHistoryModel>> PrepareRewardPointsHistoryModel(string customerId);

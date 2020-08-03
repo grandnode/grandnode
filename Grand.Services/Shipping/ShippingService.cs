@@ -1,12 +1,12 @@
 using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Shipping;
-using Grand.Core.Domain.Stores;
+using Grand.Domain.Data;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Customers;
+using Grand.Domain.Orders;
+using Grand.Domain.Shipping;
+using Grand.Domain.Stores;
 using Grand.Core.Plugins;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -16,7 +16,6 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
 using MediatR;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -56,6 +55,21 @@ namespace Grand.Services.Shipping
         private const string PICKUPPOINTS_PATTERN_KEY = "Grand.pickuppoint.";
 
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : delivery date ID
+        /// </remarks>
+        private const string DELIVERYDATE_BY_ID_KEY = "Grand.deliverydate.id-{0}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        private const string DELIVERYDATE_PATTERN_KEY = "Grand.deliverydate.";
+
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
@@ -68,19 +82,16 @@ namespace Grand.Services.Shipping
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IRepository<PickupPoint> _pickupPointsRepository;
-        private readonly IRepository<Product> _productRepository;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IPluginFinder _pluginFinder;
-        private readonly IStoreContext _storeContext;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly ShippingSettings _shippingSettings;
@@ -93,7 +104,8 @@ namespace Grand.Services.Shipping
         /// <summary>
         /// Ctor
         /// </summary>
-        public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
+        public ShippingService(
+            IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<Warehouse> warehouseRepository,
             IRepository<PickupPoint> pickupPointsRepository,
@@ -101,41 +113,35 @@ namespace Grand.Services.Shipping
             IProductService productService,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
-            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IAddressService addressService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
             IPluginFinder pluginFinder,
-            IStoreContext storeContext,
             IMediator mediator,
             ICurrencyService currencyService,
             ICacheManager cacheManager,
-            IRepository<Product> productRepository,
             ShoppingCartSettings shoppingCartSettings,
             ShippingSettings shippingSettings)
         {
-            this._shippingMethodRepository = shippingMethodRepository;
-            this._deliveryDateRepository = deliveryDateRepository;
-            this._warehouseRepository = warehouseRepository;
-            this._pickupPointsRepository = pickupPointsRepository;
-            this._logger = logger;
-            this._productService = productService;
-            this._productAttributeParser = productAttributeParser;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._pluginFinder = pluginFinder;
-            this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._mediator = mediator;
-            this._cacheManager = cacheManager;
-            this._productRepository = productRepository;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._shippingSettings = shippingSettings;
+            _shippingMethodRepository = shippingMethodRepository;
+            _deliveryDateRepository = deliveryDateRepository;
+            _warehouseRepository = warehouseRepository;
+            _pickupPointsRepository = pickupPointsRepository;
+            _logger = logger;
+            _productService = productService;
+            _productAttributeParser = productAttributeParser;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _localizationService = localizationService;
+            _addressService = addressService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _pluginFinder = pluginFinder;
+            _currencyService = currencyService;
+            _mediator = mediator;
+            _cacheManager = cacheManager;
+            _shoppingCartSettings = shoppingCartSettings;
+            _shippingSettings = shippingSettings;
         }
 
         #endregion
@@ -205,7 +211,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.DeleteAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(shippingMethod);
@@ -262,7 +268,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.InsertAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(shippingMethod);
@@ -280,7 +286,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.UpdateAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(shippingMethod);
@@ -299,14 +305,13 @@ namespace Grand.Services.Shipping
             if (deliveryDate == null)
                 throw new ArgumentNullException("deliveryDate");
 
-            var builder = Builders<Product>.Filter;
-            var filter = builder.Eq(x => x.DeliveryDateId, deliveryDate.Id);
-            var update = Builders<Product>.Update
-                .Set(x => x.DeliveryDateId, "");
-            await _productRepository.Collection.UpdateManyAsync(filter, update);
-
             await _deliveryDateRepository.DeleteAsync(deliveryDate);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+
+            //clear cache
+            await _cacheManager.RemoveByPrefix(DELIVERYDATE_PATTERN_KEY);
+
+            //clear product cache
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(deliveryDate);
@@ -319,7 +324,8 @@ namespace Grand.Services.Shipping
         /// <returns>Delivery date</returns>
         public virtual Task<DeliveryDate> GetDeliveryDateById(string deliveryDateId)
         {
-            return _deliveryDateRepository.GetByIdAsync(deliveryDateId);
+            string key = string.Format(DELIVERYDATE_BY_ID_KEY, deliveryDateId);
+            return _cacheManager.GetAsync(key, () => _deliveryDateRepository.GetByIdAsync(deliveryDateId));
         }
 
         /// <summary>
@@ -360,6 +366,9 @@ namespace Grand.Services.Shipping
 
             await _deliveryDateRepository.UpdateAsync(deliveryDate);
 
+            //clear cache
+            await _cacheManager.RemoveByPrefix(DELIVERYDATE_PATTERN_KEY);
+
             //event notification
             await _mediator.EntityUpdated(deliveryDate);
         }
@@ -377,21 +386,12 @@ namespace Grand.Services.Shipping
             if (warehouse == null)
                 throw new ArgumentNullException("warehouse");
 
-            var builder = Builders<Product>.Update;
-            var updatefilter = builder.PullFilter(x => x.ProductWarehouseInventory, y => y.WarehouseId == warehouse.Id);
-            await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-
-            var builder2 = Builders<Product>.Filter;
-            var filter2 = builder2.Eq(x => x.WarehouseId, warehouse.Id);
-            var update2 = Builders<Product>.Update
-                .Set(x => x.WarehouseId, "");
-            await _productRepository.Collection.UpdateManyAsync(filter2, update2);
-
             await _warehouseRepository.DeleteAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
+            //clear product cache
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(warehouse);
@@ -432,7 +432,7 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.InsertAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(warehouse);
@@ -450,7 +450,7 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.UpdateAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(warehouse);
@@ -510,7 +510,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.InsertAsync(pickupPoint);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(pickupPoint);
@@ -528,7 +528,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.UpdateAsync(pickupPoint);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(pickupPoint);
@@ -544,7 +544,7 @@ namespace Grand.Services.Shipping
                 throw new ArgumentNullException("pickupPoint");
 
             await _pickupPointsRepository.DeleteAsync(pickupPoint);
-            await _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(pickupPoint);
@@ -621,8 +621,8 @@ namespace Grand.Services.Shipping
             //checkout attributes
             if (customer != null && includeCheckoutAttributes)
             {
-                var checkoutAttributesXml = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
-                if (!String.IsNullOrEmpty(checkoutAttributesXml))
+                var checkoutAttributesXml = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, request.StoreId);
+                if (!string.IsNullOrEmpty(checkoutAttributesXml))
                 {
                     var attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
                     foreach (var attributeValue in attributeValues)
@@ -890,6 +890,8 @@ namespace Grand.Services.Shipping
                     var request = new GetShippingOptionRequest();
                     //store
                     request.StoreId = store?.Id;
+                    //customer
+                    request.Customer = customer;
                     //add item
                     request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
                     //ship to

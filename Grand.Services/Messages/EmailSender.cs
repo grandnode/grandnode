@@ -1,5 +1,4 @@
-﻿using Grand.Core.Domain.Messages;
-using Grand.Services.Logging;
+﻿using Grand.Domain.Messages;
 using Grand.Services.Media;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -17,15 +16,13 @@ namespace Grand.Services.Messages
     /// </summary>
     public partial class EmailSender : IEmailSender
     {
-        private readonly ILogger _logger;
         private readonly IDownloadService _downloadService;
         private readonly IMimeMappingService _mimeMappingService;
 
-        public EmailSender(ILogger logger, IDownloadService downloadService, IMimeMappingService mimeMappingService)
+        public EmailSender(IDownloadService downloadService, IMimeMappingService mimeMappingService)
         {
-            this._downloadService = downloadService;
-            this._mimeMappingService = mimeMappingService;
-            this._logger = logger;
+            _downloadService = downloadService;
+            _mimeMappingService = mimeMappingService;
         }
 
         /// <summary>
@@ -38,13 +35,13 @@ namespace Grand.Services.Messages
         /// <param name="fromName">From display name</param>
         /// <param name="toAddress">To address</param>
         /// <param name="toName">To display name</param>
-        /// <param name="replyTo">ReplyTo address</param>
+        /// <param name="replyToAddress">ReplyTo address</param>
         /// <param name="replyToName">ReplyTo display name</param>
-        /// <param name="bcc">BCC addresses list</param>
-        /// <param name="cc">CC addresses list</param>
+        /// <param name="bccAddresses">BCC addresses list</param>
+        /// <param name="ccAddresses">CC addresses list</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
+        /// <param name="attachedDownloads">Attachment download ID (another attachedment)</param>
         public virtual async Task SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
              string replyToAddress = null, string replyToName = null,
@@ -67,7 +64,7 @@ namespace Grand.Services.Messages
             {
                 foreach (var address in bccAddresses.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
                 {
-                    message.Bcc.Add(new MailboxAddress(address.Trim()));
+                    message.Bcc.Add(MailboxAddress.Parse(address.Trim()));
                 }
             }
 
@@ -76,7 +73,7 @@ namespace Grand.Services.Messages
             {
                 foreach (var address in ccAddresses.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
                 {
-                    message.Cc.Add(new MailboxAddress(address.Trim()));
+                    message.Cc.Add(MailboxAddress.Parse(address.Trim()));
                 }
             }
 

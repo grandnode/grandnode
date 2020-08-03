@@ -1,6 +1,6 @@
-﻿using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Domain.Directory;
+using Grand.Domain.Localization;
+using Grand.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
@@ -156,7 +156,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 languageId = _localizationSettings.DefaultAdminLanguageId;
             }
-            int queuedEmailId = await _workflowMessageService.SendGiftCardNotification(giftCard, languageId);
+            int queuedEmailId = await _workflowMessageService.SendGiftCardNotification(giftCard, order, languageId);
             if (queuedEmailId > 0)
             {
                 giftCard.IsRecipientNotified = true;
