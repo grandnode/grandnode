@@ -71,8 +71,9 @@ namespace Grand.Services.Orders
         /// <param name="customerId">Customer identifier; null to load all orders</param>
         /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
         /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
-        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="warehouseId">Warehouse identifier, only orders with products from a specified warehouse will be loaded; 0 to load all orders</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
+        /// <param name="ownerId">Owner identifier</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
@@ -88,7 +89,7 @@ namespace Grand.Services.Orders
         Task<IPagedList<Order>> SearchOrders(string storeId = "",
             string vendorId = "", string customerId = "",
             string productId = "", string affiliateId = "", string warehouseId = "",
-            string billingCountryId = "", string paymentMethodSystemName = null,
+            string billingCountryId = "", string ownerId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,

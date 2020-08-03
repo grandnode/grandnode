@@ -127,6 +127,17 @@ namespace Grand.Domain.Customers
         {
             return IsInCustomerRole(customer, SystemCustomerRoleNames.Vendors, onlyActiveCustomerRoles);
         }
+
+        /// <summary>
+        /// Gets a value indicating whether customer is owner subaccount
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public static bool IsOwner(this Customer customer)
+        {
+            return string.IsNullOrEmpty(customer.OwnerId);
+        }
+
         #endregion
 
         #region Addresses

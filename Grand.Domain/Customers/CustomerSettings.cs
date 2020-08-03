@@ -205,6 +205,11 @@ namespace Grand.Domain.Customers
         public bool HideCoursesTab { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to hide 'SubAccounts' tab on 'My account' page
+        /// </summary>
+        public bool HideSubAccountsTab { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Two factor authentication'  is enabled
         /// </summary>
         public bool TwoFactorAuthenticationEnabled { get; set; }

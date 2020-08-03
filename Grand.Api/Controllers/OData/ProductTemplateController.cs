@@ -21,7 +21,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from ProductTemplate by key")]
+        [SwaggerOperation(summary: "Get entity from ProductTemplate by key", OperationId = "GetProductTemplateById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -36,7 +36,7 @@ namespace Grand.Api.Controllers.OData
 
         }
 
-        [SwaggerOperation(summary: "Get entities from ProductTemplate")]
+        [SwaggerOperation(summary: "Get entities from ProductTemplate", OperationId = "GetProductTemplates")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()

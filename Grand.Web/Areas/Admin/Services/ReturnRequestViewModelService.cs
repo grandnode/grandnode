@@ -165,6 +165,7 @@ namespace Grand.Web.Areas.Admin.Services
                 customerId,
                 "",
                 _workContext.CurrentVendor?.Id,
+                "",
                 (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null),
                 pageIndex - 1,
                 pageSize,

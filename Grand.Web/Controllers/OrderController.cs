@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Web.Extensions;
 
 namespace Grand.Web.Controllers
 {
@@ -139,7 +140,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> Details(string orderId)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = await _mediator.Send(new GetOrderDetails() { Order = order, Language = _workContext.WorkingLanguage });
@@ -151,7 +152,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> PrintOrderDetails(string orderId)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = await _mediator.Send(new GetOrderDetails() { Order = order, Language = _workContext.WorkingLanguage });
@@ -164,10 +165,9 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> CancelOrder(string orderId)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.PaymentStatus != Domain.Payments.PaymentStatus.Pending
+            if (!order.Access(_workContext.CurrentCustomer) || order.PaymentStatus != Domain.Payments.PaymentStatus.Pending
                 || (order.ShippingStatus != ShippingStatus.ShippingNotRequired && order.ShippingStatus != ShippingStatus.NotYetShipped)
                 || order.OrderStatus != OrderStatus.Pending
-                || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId
                 || !_orderSettings.UserCanCancelUnpaidOrder)
 
                 return Challenge();
@@ -181,7 +181,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> GetPdfInvoice(string orderId, [FromServices] IPdfService pdfService)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             var orders = new List<Order>();
@@ -202,7 +202,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = new AddOrderNoteModel();
@@ -224,7 +224,7 @@ namespace Grand.Web.Controllers
             }
 
             var order = await _orderService.GetOrderById(model.OrderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             await _mediator.Send(new InsertOrderNoteCommand() { Order = order, OrderNote = model, Language = _workContext.WorkingLanguage });
@@ -240,7 +240,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> ReOrder(string orderId)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             var warnings = await _mediator.Send(new ReOrderCommand() { Order = order });
@@ -257,7 +257,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> RePostPayment(string orderId, [FromServices] IWebHelper webHelper)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!await _paymentService.CanRePostProcessPayment(order))
@@ -287,7 +287,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             var order = await _orderService.GetOrderById(shipment.OrderId);
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            if (!order.Access(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = await _mediator.Send(new GetShipmentDetails() {

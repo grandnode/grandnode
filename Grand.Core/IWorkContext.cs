@@ -13,9 +13,9 @@ namespace Grand.Core
     public interface IWorkContext
     {
         /// <summary>
-        /// Gets or sets the current customer
+        /// Gets the current customer
         /// </summary>
-        Customer CurrentCustomer { get; set; }
+        Customer CurrentCustomer { get; }
 
         /// <summary>
         /// Set the current customer by Middleware

@@ -32,6 +32,11 @@ namespace Grand.Domain.Orders
         public string OrderId { get; set; }
 
         /// <summary>
+        /// Gets or sets the owner item identifier
+        /// </summary>
+        public string OwnerId { get; set; }
+
+        /// <summary>
         /// Gets or sets the return request items
         /// </summary>
         public IList<ReturnRequestItem> ReturnRequestItems { get; set; }

@@ -187,17 +187,7 @@ namespace Grand.Services.Configuration
         /// </summary>
         /// <param name="settingId">Setting identifier</param>
         /// <returns>Setting</returns>
-        public virtual Setting GetSettingById(string settingId)
-        {
-            return _settingRepository.GetById(settingId);
-        }
-
-        /// <summary>
-        /// Gets a setting by identifier
-        /// </summary>
-        /// <param name="settingId">Setting identifier</param>
-        /// <returns>Setting</returns>
-        public virtual Task<Setting> GetSettingByIdAsync(string settingId)
+        public virtual Task<Setting> GetSettingById(string settingId)
         {
             return _settingRepository.GetByIdAsync(settingId);
         }
@@ -209,7 +199,7 @@ namespace Grand.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting</returns>
-        public virtual Setting GetSetting(string key, string storeId = "", bool loadSharedValueIfNotFound = false)
+        public virtual async Task<Setting> GetSetting(string key, string storeId = "", bool loadSharedValueIfNotFound = false)
         {
             if (String.IsNullOrEmpty(key))
                 return null;
@@ -226,7 +216,7 @@ namespace Grand.Services.Configuration
                     setting = settingsByKey.FirstOrDefault(x => x.StoreId == "");
 
                 if (setting != null)
-                    return GetSettingById(setting.Id);
+                    return await GetSettingById(setting.Id);
             }
 
             return null;
@@ -286,7 +276,7 @@ namespace Grand.Services.Configuration
             if (settingForCaching != null)
             {
                 //update
-                var setting = await GetSettingByIdAsync(settingForCaching.Id);
+                var setting = await GetSettingById(settingForCaching.Id);
                 setting.Value = valueStr;
                 await UpdateSetting(setting, clearCache);
             }
@@ -487,7 +477,7 @@ namespace Grand.Services.Configuration
             if (settingForCaching != null)
             {
                 //update
-                var setting = await GetSettingByIdAsync(settingForCaching.Id);
+                var setting = await GetSettingById(settingForCaching.Id);
                 await DeleteSetting(setting);
             }
         }
