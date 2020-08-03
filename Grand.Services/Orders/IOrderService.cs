@@ -94,7 +94,7 @@ namespace Grand.Services.Orders
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
             string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue);
-        
+
         /// <summary>
         /// Inserts an order
         /// </summary>
@@ -120,11 +120,11 @@ namespace Grand.Services.Orders
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
         Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, string paymentMethodSystemName);
-        
+
         #endregion
 
         #region Orders items
-        
+
         /// <summary>
         /// Gets an order item
         /// </summary>
@@ -185,6 +185,13 @@ namespace Grand.Services.Orders
         /// <param name="ordernoteId">Order note identifier</param>
         /// <returns>OrderNote</returns>
         Task<OrderNote> GetOrderNote(string ordernoteId);
+
+
+        /// <summary>
+        /// Delete Expired UnPaid Orders
+        /// </summary>
+        /// <param name="expirationDateUTC">Date at which all unPaid orders Would be deleted</param>
+        Task DeleteExpiredOrders(DateTime expirationDateUTC);
 
         #endregion
 

@@ -1,5 +1,7 @@
 ﻿using Autofac.Extensions.DependencyInjection;
+using Grand.Services.ScheduledJob;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
@@ -34,6 +36,10 @@ namespace Grand.Web
                     webBuilder.CaptureStartupErrors(true);
                     webBuilder.UseSetting(WebHostDefaults.PreventHostingStartupKey, "true");
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddHostedService<IScheduledJobService>();
                 });
 
     }

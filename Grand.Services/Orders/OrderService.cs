@@ -311,6 +311,21 @@ namespace Grand.Services.Orders
             return query.FirstOrDefaultAsync();
         }
 
+
+        /// <summary>
+        /// Delete Expired UnPaid Orders
+        /// </summary>
+        /// <param name="expirationDateUTC">Date at which all unPaid orders Would be deleted</param>
+        public async Task DeleteExpiredOrders(DateTime expirationDateUTC)
+        {
+            var orders = await _orderRepository.Table
+              .Where(o => o.PaymentStatusId == (int)PaymentStatus.Pending && o.CreatedOnUtc.Date <= expirationDateUTC.Date)
+              .ToListAsync();
+
+            foreach (var order in orders)
+                await DeleteOrder(order);
+        }
+
         #endregion
 
         #region Orders items
@@ -556,8 +571,10 @@ namespace Grand.Services.Orders
             return await PagedList<RecurringPayment>.Create(query2, pageIndex, pageSize);
         }
 
+
+
         #endregion
 
-        #endregion      
+        #endregion
     }
 }

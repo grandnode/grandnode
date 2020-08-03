@@ -143,5 +143,10 @@ namespace Grand.Domain.Orders
         /// Gets or sets a length for order code
         /// </summary>
         public int LengthCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets Number of Days after which order would automatically deleted - if not paid
+        /// </summary>
+        public int? DaysToDeleteUnpaidOrder { get; set; }
     }
 }

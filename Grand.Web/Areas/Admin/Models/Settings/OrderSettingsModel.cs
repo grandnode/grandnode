@@ -115,5 +115,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.AllowCustomerToAddOrderNote")]
         public bool AllowCustomerToAddOrderNote { get; set; }
         public bool AllowCustomerToAddOrderNote_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.DaysToDeleteUnpaidOrder")]
+        public int? DaysToDeleteUnpaidOrder { get; set; }
+
     }
 }
