@@ -39,7 +39,7 @@ namespace Grand.Web
                 })
                 .ConfigureServices(services =>
                 {
-                    services.AddHostedService<IScheduledJobService>();
+                    services.AddHostedService<ScheduledDeleteOrderService>();
                 });
 
     }

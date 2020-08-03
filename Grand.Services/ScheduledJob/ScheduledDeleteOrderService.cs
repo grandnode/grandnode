@@ -25,33 +25,26 @@ namespace Grand.Services.ScheduledJob
             await ScheduleAsync(cancellationToken);
         }
 
-        public  Task ScheduleAsync(CancellationToken cancellationToken)
+        public Task ScheduleAsync(CancellationToken cancellationToken)
         {
-            try
+            var nowDateTime = DateTime.UtcNow;
+            var nextEventDateTime = nowDateTime.Date.AddDays(1);
+            var milliSecondsToFireEvent = (int)((nextEventDateTime - nowDateTime).TotalMilliseconds);
+            _timer = new System.Timers.Timer(milliSecondsToFireEvent);
+
+            _timer.Elapsed += async (sender, args) =>
             {
-                var todayDateTime = DateTime.UtcNow;
-                var firEventDateTime = todayDateTime.Date.AddMinutes(3);
-                var milliSecondsToFireEvent = (int)((firEventDateTime - todayDateTime).TotalMilliseconds);
-                _timer = new System.Timers.Timer(milliSecondsToFireEvent);
+                _timer.Dispose();
+                _timer = null;
 
-                _timer.Elapsed += async (sender, args) =>
-                {
-                    _timer.Dispose();
-                    _timer = null;
+                if (!cancellationToken.IsCancellationRequested)
+                    await DeleteOrdersAsync(nowDateTime, cancellationToken);
 
-                    if (!cancellationToken.IsCancellationRequested)
-                        await DeleteOrdersAsync(todayDateTime, cancellationToken);
-
-                    if (!cancellationToken.IsCancellationRequested)
-                        await ScheduleAsync(cancellationToken);
-                };
-                _timer.Start();
-                return Task.CompletedTask;
-            }
-            catch (Exception e)
-            {
-                return Task.CompletedTask;
-            }
+                if (!cancellationToken.IsCancellationRequested)
+                    await ScheduleAsync(cancellationToken);
+            };
+            _timer.Start();
+            return Task.CompletedTask;
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
@@ -76,7 +69,7 @@ namespace Grand.Services.ScheduledJob
                     return;
 
                 int DaysToDeleteUnpaidOrder = orderSetting.DaysToDeleteUnpaidOrder.Value;
-                DateTime startDeletionDate = todayDate.AddDays(-1 * DaysToDeleteUnpaidOrder);
+                DateTime startDeletionDate = todayDate.Date.AddDays(-1 * (DaysToDeleteUnpaidOrder - 1)); // -1 avoid dateTime.Date in Mongo IQueryable 
 
                 var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
                 await orderService.DeleteExpiredOrders(startDeletionDate);

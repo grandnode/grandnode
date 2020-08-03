@@ -319,7 +319,7 @@ namespace Grand.Services.Orders
         public async Task DeleteExpiredOrders(DateTime expirationDateUTC)
         {
             var orders = await _orderRepository.Table
-              .Where(o => o.PaymentStatusId == (int)PaymentStatus.Pending && o.CreatedOnUtc.Date <= expirationDateUTC.Date)
+              .Where(o => o.PaymentStatusId == (int)PaymentStatus.Pending && o.CreatedOnUtc < expirationDateUTC)
               .ToListAsync();
 
             foreach (var order in orders)
