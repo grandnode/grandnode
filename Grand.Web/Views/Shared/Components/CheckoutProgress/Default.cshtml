@@ -2,7 +2,7 @@
 <div class="row order-progress mb-2 mt-4 d-none d-md-flex">
             @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_progress_before" })
             <div class="col-12 col-md-4 col-lg-2 mb-1 active-step">
-                <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"btn btn-block btn-info p-3 col-sm-12\"", Url.RouteUrl("ShoppingCart"))) : @Html.Raw(string.Format("ddddd class=\"btn btn-block btn-info p-3 col-sm-12 disabled\"")))>
+                <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"btn btn-block btn-info p-3 col-sm-12\"", Url.RouteUrl("ShoppingCart"))) : @Html.Raw(string.Format("class=\"btn btn-block btn-secondary p-3 col-sm-12 disabled\"")))>
                     <span class="mdi mdi-cart" aria-hidden="true"></span> 
                     <span class="ml-2">1. @T("Checkout.Progress.Cart")</span>
                 </a>
