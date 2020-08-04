@@ -30,6 +30,10 @@ namespace Grand.Services.ScheduledJob
             var nowDateTime = DateTime.UtcNow;
             var nextEventDateTime = nowDateTime.Date.AddDays(1);
             var milliSecondsToFireEvent = (int)((nextEventDateTime - nowDateTime).TotalMilliseconds);
+
+            if (milliSecondsToFireEvent < 1)
+                milliSecondsToFireEvent = 10;
+
             _timer = new System.Timers.Timer(milliSecondsToFireEvent);
 
             _timer.Elapsed += async (sender, args) =>
