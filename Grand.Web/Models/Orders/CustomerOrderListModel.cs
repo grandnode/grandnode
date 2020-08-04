@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Orders;
+﻿using Grand.Domain.Common;
+using Grand.Domain.Orders;
 using Grand.Framework.Mvc.Models;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace Grand.Web.Models.Orders
             public DateTime CreatedOn { get; set; }
             public int OrderNumber { get; set; }
             public string OrderCode { get; set; }
+            public string CustomerEmail { get; set; }
         }
 
         public partial class RecurringOrderModel : BaseGrandEntityModel

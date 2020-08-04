@@ -10,6 +10,7 @@ namespace Grand.Services.Queries.Models.Orders
         public string StoreId { get; set; } = "";
         public string CustomerId { get; set; } = "";
         public string VendorId { get; set; } = "";
+        public string OwnerId { get; set; } = "";
         public string OrderItemId { get; set; } = "";
         public ReturnRequestStatus? Rs { get; set; } = null;
         public int PageIndex { get; set; } = 0;

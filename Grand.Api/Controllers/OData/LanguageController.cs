@@ -22,7 +22,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Languages by key")]
+        [SwaggerOperation(summary: "Get entity from Languages by key", OperationId = "GetLanguageById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -36,7 +36,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(language.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from Languages")]
+        [SwaggerOperation(summary: "Get entities from Languages", OperationId = "GetLanguages")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()

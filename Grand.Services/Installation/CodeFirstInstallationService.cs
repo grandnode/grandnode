@@ -5104,6 +5104,7 @@ namespace Grand.Services.Installation
                 AllowUsersToExportData = false,
                 HideReviewsTab = false,
                 HideCoursesTab = true,
+                HideSubAccountsTab = true,
                 TwoFactorAuthenticationEnabled = false,
             });
 

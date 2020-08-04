@@ -1,4 +1,5 @@
-﻿using Grand.Services.Catalog;
+﻿using Grand.Domain.Customers;
+using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -24,9 +25,9 @@ namespace Grand.Web.Features.Handlers.Orders
         private readonly IMediator _mediator;
 
         public GetCustomerOrderListHandler(
-            IOrderService orderService, 
+            IOrderService orderService,
             IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
             IOrderProcessingService orderProcessingService,
             ICurrencyService currencyService,
             IMediator mediator,
@@ -51,8 +52,16 @@ namespace Grand.Web.Features.Handlers.Orders
 
         private async Task PrepareOrder(CustomerOrderListModel model, GetCustomerOrderList request)
         {
-            var orders = await _orderService.SearchOrders(storeId: request.Store.Id,
-                customerId: request.Customer.Id);
+            var query = new GetOrderQuery {
+                StoreId = request.Store.Id
+            };
+
+            if (!request.Customer.IsOwner())
+                query.CustomerId = request.Customer.Id;
+            else
+                query.OwnerId = request.Customer.Id;
+
+            var orders = await _mediator.Send(query);
 
             foreach (var order in orders)
             {
@@ -60,6 +69,7 @@ namespace Grand.Web.Features.Handlers.Orders
                     Id = order.Id,
                     OrderNumber = order.OrderNumber,
                     OrderCode = order.Code,
+                    CustomerEmail = order.BillingAddress?.Email,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                     OrderStatusEnum = order.OrderStatus,
                     OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, request.Language.Id),

@@ -2271,7 +2271,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
-            var setting = _settingService.GetSettingById(model.Id);
+            var setting = await _settingService.GetSettingById(model.Id);
             if (setting == null)
                 return Content("No setting could be loaded with the specified ID");
 
@@ -2327,7 +2327,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> SettingDelete(string id)
         {
-            var setting = _settingService.GetSettingById(id);
+            var setting = await _settingService.GetSettingById(id);
             if (setting == null)
                 throw new ArgumentException("No setting found with the specified id");
             await _settingService.DeleteSetting(setting);

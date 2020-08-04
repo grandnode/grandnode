@@ -206,6 +206,13 @@ namespace Grand.Web.Areas.Admin.Services
                     item.Selected = true;
             }
 
+            //order's tags
+            model.AvailableOrderTags.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var s in (await _orderTagService.GetAllOrderTags()))
+            {
+                model.AvailableOrderTags.Add(new SelectListItem { Text = s.Name, Value = s.Name });
+            }
+            
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
@@ -265,6 +272,7 @@ namespace Grand.Web.Areas.Admin.Services
             OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            
 
             var filterByProductId = "";
             var product = await _productService.GetProductById(model.ProductId);
@@ -288,7 +296,8 @@ namespace Grand.Web.Areas.Admin.Services
                 orderGuid: model.OrderGuid,
                 orderCode: model.GoDirectlyToNumber,
                 pageIndex: pageIndex - 1,
-                pageSize: pageSize);
+                pageSize: pageSize,
+                orderTag: model.OrderTag);
 
             //summary report
             //currently we do not support productId and warehouseId parameters for this report
@@ -1355,7 +1364,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            string[] orderTags = ParseOrderTags(tags);
+            string[] newOrderTags = ParseOrderTags(tags);
 
             //order's tags
             var existingOrderTags = order.OrderTags.ToList();
@@ -1364,7 +1373,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 var existingOderTagText = await _orderTagService.GetOrderTagByName(existingOrderTag.ToLowerInvariant());
                 var found = false;
-                foreach (var newOrderTag in orderTags)
+                foreach (var newOrderTag in newOrderTags)
                 {
                     if (existingOderTagText != null)
                         if (existingOderTagText.Name.Equals(newOrderTag, StringComparison.OrdinalIgnoreCase))
@@ -1386,7 +1395,7 @@ namespace Grand.Web.Areas.Admin.Services
                     await _orderTagService.DetachOrderTag(orderTag);
                 }
             }
-            foreach (var orderTagName in orderTags)
+            foreach (var orderTagName in newOrderTags)
             {
                 OrderTag orderTag;
                 var orderTag2 = await _orderTagService.GetOrderTagByName(orderTagName);

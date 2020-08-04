@@ -5,6 +5,7 @@ using Grand.Services.Security;
 using MediatR;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from ProductAttribute by key")]
+        [SwaggerOperation(summary: "Get entity from ProductAttribute by key", OperationId = "GetProductAttributeById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -39,7 +40,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(productAttribute.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from ProductAttribute")]
+        [SwaggerOperation(summary: "Get entities from ProductAttribute", OperationId = "GetProductAttributes")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
@@ -50,7 +51,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(await _mediator.Send(new GetQuery<ProductAttributeDto>()));
         }
 
-        [SwaggerOperation(summary: "Add new entity to ProductAttribute")]
+        [SwaggerOperation(summary: "Add new entity to ProductAttribute", OperationId = "InsertProductAttribute")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProductAttributeDto model)
         {
@@ -65,7 +66,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Update entity in ProductAttribute")]
+        [SwaggerOperation(summary: "Update entity in ProductAttribute", OperationId = "UpdateProductAttribute")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] ProductAttributeDto model)
         {
@@ -80,9 +81,9 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Partially update entity in ProductAttribute")]
+        [SwaggerOperation(summary: "Partially update entity in ProductAttribute", OperationId = "PartiallyUpdateProductAttribute")]
         [HttpPatch]
-        public async Task<IActionResult> Patch([FromODataUri] string key, Delta<ProductAttributeDto> model)
+        public async Task<IActionResult> Patch([FromODataUri] string key, JsonPatchDocument<ProductAttributeDto> model)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
@@ -92,7 +93,7 @@ namespace Grand.Api.Controllers.OData
                 return NotFound();
 
             var pa = productAttribute.FirstOrDefault();
-            model.Patch(pa);
+            model.ApplyTo(pa);
 
             if (ModelState.IsValid)
             {
@@ -102,7 +103,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Delete entity from ProductAttribute")]
+        [SwaggerOperation(summary: "Delete entity from ProductAttribute", OperationId = "DeleteProductAttribute")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {

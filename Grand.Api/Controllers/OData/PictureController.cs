@@ -20,7 +20,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entities from Picture by key")]
+        [SwaggerOperation(summary: "Get entities from Picture by key", OperationId = "GetPictureById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -34,7 +34,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(picture);
         }
 
-        [SwaggerOperation(summary: "Add new entity in Picture")]
+        [SwaggerOperation(summary: "Add new entity in Picture", OperationId = "InsertPicture")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PictureDto model)
         {
@@ -49,7 +49,7 @@ namespace Grand.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
-        [SwaggerOperation(summary: "Delete entity in Picture")]
+        [SwaggerOperation(summary: "Delete entity in Picture", OperationId = "DeletePicture")]
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {

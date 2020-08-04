@@ -110,7 +110,7 @@ namespace Grand.Services.Localization
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
-        public static string GetLocalizedSetting<T>(this T settings, ISettingService settingService,
+        public static async Task<string> GetLocalizedSetting<T>(this T settings, ISettingService settingService,
             Expression<Func<T, string>> keySelector, string languageId, string storeId,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where T : ISettings, new()
@@ -118,7 +118,7 @@ namespace Grand.Services.Localization
             string key = settings.GetSettingKey(keySelector);
 
             //we do not support localized settings per store (overridden store settings)
-            var setting = settingService.GetSetting(key, storeId: storeId, loadSharedValueIfNotFound: true);
+            var setting = await settingService.GetSetting(key, storeId: storeId, loadSharedValueIfNotFound: true);
             if (setting == null)
                 return null;
 

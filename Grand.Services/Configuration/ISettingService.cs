@@ -11,19 +11,13 @@ namespace Grand.Services.Configuration
     /// </summary>
     public partial interface ISettingService
     {
+        
         /// <summary>
         /// Gets a setting by identifier
         /// </summary>
         /// <param name="settingId">Setting identifier</param>
         /// <returns>Setting</returns>
-        Setting GetSettingById(string settingId);
-
-        /// <summary>
-        /// Gets a setting by identifier
-        /// </summary>
-        /// <param name="settingId">Setting identifier</param>
-        /// <returns>Setting</returns>
-        Task<Setting> GetSettingByIdAsync(string settingId);
+        Task<Setting> GetSettingById(string settingId);
 
         /// <summary>
         /// Deletes a setting
@@ -38,7 +32,7 @@ namespace Grand.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting</returns>
-        Setting GetSetting(string key, string storeId = "", bool loadSharedValueIfNotFound = false);
+        Task<Setting> GetSetting(string key, string storeId = "", bool loadSharedValueIfNotFound = false);
 
         /// <summary>
         /// Get setting value by key

@@ -151,7 +151,7 @@
                         <text>
                         {
                             Id: '@(manufacturerItem.Value)',
-                            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(manufacturerItem.Text)))"
+                            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(string.IsNullOrEmpty(manufacturerItem.Text) ? "" : manufacturerItem.Text)))"
                         }
                         </text>
                         if (i != Model.AvailableManufacturers.Count - 1)

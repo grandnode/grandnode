@@ -46,9 +46,9 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Controllers
             var model = new ConfigurationModel();
             model.DescriptionText = checkMoneyOrderPaymentSettings.DescriptionText;
             //locales
-            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, async (locale, languageId) =>
             {
-                locale.DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, languageId, "", false, false);
+                locale.DescriptionText = await checkMoneyOrderPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, languageId, "", false, false);
             });
             model.AdditionalFee = checkMoneyOrderPaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = checkMoneyOrderPaymentSettings.AdditionalFeePercentage;

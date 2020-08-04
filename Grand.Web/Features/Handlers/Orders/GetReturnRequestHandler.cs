@@ -7,6 +7,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
@@ -131,7 +132,12 @@ namespace Grand.Web.Features.Handlers.Orders
             foreach (var orderItem in request.Order.OrderItems)
             {
                 var qtyDelivery = shipments.Where(x => x.DeliveryDateUtc.HasValue).SelectMany(x => x.ShipmentItems).Where(x => x.OrderItemId == orderItem.Id).Sum(x => x.Quantity);
-                var returnRequests = await _returnRequestService.SearchReturnRequests(customerId: request.Order.CustomerId, orderItemId: orderItem.Id);
+
+                var query = new GetReturnRequestQuery() {
+                    StoreId = request.Store.Id,
+                };
+
+                var returnRequests = await _returnRequestService.SearchReturnRequests(orderItemId: orderItem.Id);
                 int qtyReturn = 0;
 
                 foreach (var rr in returnRequests)

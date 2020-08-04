@@ -495,7 +495,7 @@ namespace Grand.Web.Areas.Admin.Services
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.FreeShipping = customer.FreeShipping;
                     model.Active = customer.Active;
-                    model.Owner = string.IsNullOrEmpty(customer.OwnerId) ? "" : (await _customerService.GetCustomerById(customer.OwnerId))?.Email;
+                    model.Owner = customer.IsOwner() ? "" : (await _customerService.GetCustomerById(customer.OwnerId))?.Email;
                     var result = new StringBuilder();
                     foreach (var item in customer.CustomerTags)
                     {

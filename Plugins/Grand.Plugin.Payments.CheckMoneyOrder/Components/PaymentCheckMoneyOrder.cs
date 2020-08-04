@@ -28,7 +28,7 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Components
 
             var model = new PaymentInfoModel
             {
-                DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
+                DescriptionText = await checkMoneyOrderPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
             };
 
             return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/PaymentInfo.cshtml", await Task.FromResult(model));

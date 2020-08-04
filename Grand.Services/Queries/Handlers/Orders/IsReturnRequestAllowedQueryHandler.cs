@@ -53,7 +53,7 @@ namespace Grand.Services.Queries.Handlers.Orders
                     return false;
 
                 var qtyDelivery = shipments.Where(x => x.DeliveryDateUtc.HasValue).SelectMany(x => x.ShipmentItems).Where(x => x.OrderItemId == item.Id).Sum(x => x.Quantity);
-                var returnRequests = (await _mediator.Send(new GetReturnRequestQuery() { CustomerId = request.Order.CustomerId, OrderItemId = item.Id })).ToList();
+                var returnRequests = (await _mediator.Send(new GetReturnRequestQuery() { OrderItemId = item.Id })).ToList();
                 int qtyReturn = 0;
                 foreach (var rr in returnRequests)
                 {

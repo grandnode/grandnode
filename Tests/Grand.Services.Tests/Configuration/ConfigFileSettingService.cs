@@ -26,11 +26,7 @@ namespace Grand.Services.Tests.Configuration
         {
             _cacheManager = cacheManager;
         }
-        public override Setting GetSettingById(string settingId)
-        {
-            throw new InvalidOperationException("Get setting by id is not supported");
-        }
-
+        
         public override T GetSettingByKey<T>(string key, T defaultValue = default(T),
             string storeId = "", bool loadSharedValueIfNotFound = false)
         {
