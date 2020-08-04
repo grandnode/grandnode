@@ -1,10 +1,10 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
-using Grand.Core.Data;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
 using Grand.Domain.Catalog;
+using Grand.Domain.Data;
 using Grand.Domain.Directory;
 using Grand.Domain.Media;
 using Grand.Domain.Seo;
