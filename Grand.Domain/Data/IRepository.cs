@@ -1,8 +1,6 @@
 ﻿using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Grand.Domain.Data
@@ -13,8 +11,14 @@ namespace Grand.Domain.Data
     public partial interface IRepository<T> where T : BaseEntity
     {
 
+        /// <summary>
+        /// Gets a collection
+        /// </summary>
         IMongoCollection<T> Collection { get; }
 
+        /// <summary>
+        /// Gets a database
+        /// </summary>
         IMongoDatabase Database { get; }
 
         /// <summary>
@@ -103,67 +107,9 @@ namespace Grand.Domain.Data
         Task<IEnumerable<T>> DeleteAsync(IEnumerable<T> entities);
 
         /// <summary>
-        /// Determines whether a list contains any elements
-        /// </summary>
-        /// <returns></returns>
-        bool Any();
-
-        /// <summary>
-        /// Determines whether any element of a list satisfies a condition.
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        bool Any(Expression<Func<T, bool>> where);
-
-        /// <summary>
-        /// Async determines whether a list contains any elements
-        /// </summary>
-        /// <returns></returns>
-        Task<bool> AnyAsync();
-
-        /// <summary>
-        /// Async determines whether any element of a list satisfies a condition.
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        Task<bool> AnyAsync(Expression<Func<T, bool>> where);
-
-        /// <summary>
-        /// Returns the number of elements in the specified sequence.
-        /// </summary>
-        /// <returns></returns>
-        long Count();
-
-        /// <summary>
-        /// Returns the number of elements in the specified sequence that satisfies a condition.
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        long Count(Expression<Func<T, bool>> where);
-
-        /// <summary>
-        /// Async returns the number of elements in the specified sequence
-        /// </summary>
-        /// <returns></returns>
-        Task<long> CountAsync();
-
-        /// <summary>
-        /// Async returns the number of elements in the specified sequence that satisfies a condition.
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        Task<long> CountAsync(Expression<Func<T, bool>> where);
-
-        /// <summary>
         /// Gets a table
         /// </summary>
         IMongoQueryable<T> Table { get; }
 
-        /// <summary>
-        /// Get collection by filter definitions
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        IList<T> FindByFilterDefinition(FilterDefinition<T> query);
     }
 }
