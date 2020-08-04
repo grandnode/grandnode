@@ -1,5 +1,5 @@
 ﻿
-namespace Grand.Core.Data
+namespace Grand.Domain.Data
 {
     /// <summary>
     /// Data provider interface

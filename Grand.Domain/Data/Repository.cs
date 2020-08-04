@@ -1,11 +1,7 @@
-using Grand.Core.Data;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Grand.Domain.Data
@@ -20,11 +16,9 @@ namespace Grand.Domain.Data
         /// <summary>
         /// Gets the collection
         /// </summary>
-        protected IMongoCollection<T> _collection;       
-        public IMongoCollection<T>  Collection
-        {
-            get
-            {
+        protected IMongoCollection<T> _collection;
+        public IMongoCollection<T> Collection {
+            get {
                 return _collection;
             }
         }
@@ -33,10 +27,8 @@ namespace Grand.Domain.Data
         /// Mongo Database
         /// </summary>
         protected IMongoDatabase _database;
-        public IMongoDatabase Database
-        {
-            get
-            {
+        public IMongoDatabase Database {
+            get {
                 return _database;
             }
         }
@@ -65,7 +57,7 @@ namespace Grand.Domain.Data
             _collection = _database.GetCollection<T>(typeof(T).Name);
         }
 
-       
+
         public Repository(IMongoDatabase database)
         {
             _database = database;
@@ -142,7 +134,7 @@ namespace Grand.Domain.Data
         /// <param name="entity">Entity</param>
         public virtual T Update(T entity)
         {
-            _collection.ReplaceOne(x=>x.Id == entity.Id, entity, new ReplaceOptions() { IsUpsert = false });
+            _collection.ReplaceOne(x => x.Id == entity.Id, entity, new ReplaceOptions() { IsUpsert = false });
             return entity;
 
         }
@@ -189,7 +181,7 @@ namespace Grand.Domain.Data
         /// <param name="entity">Entity</param>
         public virtual void Delete(T entity)
         {
-            _collection.FindOneAndDelete(e => e.Id == entity.Id); 
+            _collection.FindOneAndDelete(e => e.Id == entity.Id);
         }
 
         /// <summary>
@@ -198,7 +190,7 @@ namespace Grand.Domain.Data
         /// <param name="entity">Entity</param>
         public virtual async Task<T> DeleteAsync(T entity)
         {
-            await _collection.DeleteOneAsync(e=>e.Id == entity.Id);
+            await _collection.DeleteOneAsync(e => e.Id == entity.Id);
             return entity;
         }
 
@@ -235,8 +227,7 @@ namespace Grand.Domain.Data
         /// <summary>
         /// Gets a table
         /// </summary>
-        public virtual IMongoQueryable<T> Table
-        {
+        public virtual IMongoQueryable<T> Table {
             get { return _collection.AsQueryable(); }
         }
 
