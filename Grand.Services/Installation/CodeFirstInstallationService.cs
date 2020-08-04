@@ -10816,7 +10816,12 @@ namespace Grand.Services.Installation
                 options.Collation = collation;
                 var dataSettingsManager = new DataSettingsManager();
                 var connectionString = dataSettingsManager.LoadSettings().DataConnectionString;
-                var mongoDBContext = new MongoDBContext(connectionString);
+
+                var mongourl = new MongoUrl(connectionString);
+                var databaseName = mongourl.DatabaseName;
+                var mongodb = new MongoClient(connectionString).GetDatabase(databaseName);
+                var mongoDBContext = new MongoDBContext(mongodb);
+
                 var typeFinder = _serviceProvider.GetRequiredService<ITypeFinder>();
                 var q = typeFinder.GetAssemblies().FirstOrDefault(x => x.GetName().Name == "Grand.Core");
                 foreach (var item in q.GetTypes().Where(x => x.Namespace != null && x.Namespace.StartsWith("Grand.Domain")))

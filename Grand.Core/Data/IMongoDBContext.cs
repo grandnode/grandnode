@@ -8,7 +8,6 @@ namespace Grand.Core.Data
     public interface IMongoDBContext
     {
         IMongoDatabase Database();
-        IMongoClient Client();
         TResult RunCommand<TResult>(string command);
         TResult RunCommand<TResult>(string command, ReadPreference readpreference);
         BsonValue RunScript(string command, CancellationToken cancellationToken);
