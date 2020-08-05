@@ -21333,6 +21333,6 @@
     <Value>Automatically Delete Unpaid Orders After X Days</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToDeleteUnpaidOrder.Validator">
-    <Value>Value Must Be Greater Than Zero</Value>
+    <Value>Days To Delete Unpaid Orders Must Be Greater Than Zero</Value>
   </LocaleResource>
 </Language>

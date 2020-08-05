@@ -73,7 +73,7 @@ namespace Grand.Services.ScheduledJob
                     return;
 
                 int DaysToDeleteUnpaidOrder = orderSetting.DaysToDeleteUnpaidOrder.Value;
-                DateTime startDeletionDate = todayDate.Date.AddDays(-1 * (DaysToDeleteUnpaidOrder - 1)); // -1 avoid dateTime.Date in Mongo IQueryable 
+                DateTime startDeletionDate = todayDate.Date.AddDays(-1 * (DaysToDeleteUnpaidOrder - 1)); // -1 avoid query dateTime.Date in Mongo IQueryable 
 
                 var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
                 await orderService.DeleteExpiredOrders(startDeletionDate);

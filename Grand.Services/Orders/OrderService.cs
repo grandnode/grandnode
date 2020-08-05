@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Commands.Models.Orders;
 
 namespace Grand.Services.Orders
 {
@@ -319,11 +320,12 @@ namespace Grand.Services.Orders
         public async Task DeleteExpiredOrders(DateTime expirationDateUTC)
         {
             var orders = await _orderRepository.Table
-              .Where(o => o.PaymentStatusId == (int)PaymentStatus.Pending && o.CreatedOnUtc < expirationDateUTC)
+              .Where(o => o.CreatedOnUtc < expirationDateUTC && 
+              (o.PaymentStatusId == (int)PaymentStatus.Pending || !o.PaidDateUtc.HasValue || o.OrderStatusId == (int)OrderStatus.Pending))
               .ToListAsync();
 
             foreach (var order in orders)
-                await DeleteOrder(order);
+                await _mediator.Send(new CancelOrderCommand() { Order = order, NotifyCustomer = true });
         }
 
         #endregion
