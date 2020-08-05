@@ -1011,7 +1011,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.IsReOrderAllowed_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.IsReOrderAllowed, storeScope);
                 model.MinOrderSubtotalAmount_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.MinOrderSubtotalAmount, storeScope);
-                model.MinOrderTotalAmount_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.MinOrderTotalAmount, storeScope);
                 model.MinOrderSubtotalAmountIncludingTax_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.MinOrderSubtotalAmountIncludingTax, storeScope);
                 model.AnonymousCheckoutAllowed_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.AnonymousCheckoutAllowed, storeScope);
                 model.TermsOfServiceOnShoppingCartPage_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.TermsOfServiceOnShoppingCartPage, storeScope);
@@ -1054,7 +1053,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await UpdateOverrideForStore(storeScope, model.IsReOrderAllowed_OverrideForStore, orderSettings, x => x.IsReOrderAllowed);
                 await UpdateOverrideForStore(storeScope, model.MinOrderSubtotalAmount_OverrideForStore, orderSettings, x => x.MinOrderSubtotalAmount);
                 await UpdateOverrideForStore(storeScope, model.MinOrderSubtotalAmountIncludingTax_OverrideForStore, orderSettings, x => x.MinOrderSubtotalAmountIncludingTax);
-                await UpdateOverrideForStore(storeScope, model.MinOrderTotalAmount_OverrideForStore, orderSettings, x => x.MinOrderTotalAmount);
                 await UpdateOverrideForStore(storeScope, model.AnonymousCheckoutAllowed_OverrideForStore, orderSettings, x => x.AnonymousCheckoutAllowed);
                 await UpdateOverrideForStore(storeScope, model.TermsOfServiceOnShoppingCartPage_OverrideForStore, orderSettings, x => x.TermsOfServiceOnShoppingCartPage);
                 await UpdateOverrideForStore(storeScope, model.TermsOfServiceOnOrderConfirmPage_OverrideForStore, orderSettings, x => x.TermsOfServiceOnOrderConfirmPage);

@@ -20,7 +20,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="FreeShipping" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="FreeShipping"></span>
             </div>
@@ -30,7 +30,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="TaxExempt" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="TaxExempt"></span>
             </div>
@@ -40,7 +40,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="Active" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="Active"></span>
             </div>
@@ -50,9 +50,23 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="EnablePasswordLifetime" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="EnablePasswordLifetime"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="MinOrderAmount" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="MinOrderAmount" />
+                <span asp-validation-for="MinOrderAmount"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="MaxOrderAmount" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="MaxOrderAmount" />
+                <span asp-validation-for="MaxOrderAmount"></span>
             </div>
         </div>
         <div class="form-group">
