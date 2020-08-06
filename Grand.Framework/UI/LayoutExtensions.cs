@@ -1,5 +1,4 @@
-﻿using Grand.Core.Infrastructure;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,30 +20,6 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AddTitleParts(part);
         }
-        /// <summary>
-        /// Append title element to the <![CDATA[<head>]]>
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">Title part</param>
-        public static void AppendTitleParts(this IHtmlHelper html, string part)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            pageHeadBuilder.AppendTitleParts(part);
-        }
-        /// <summary>
-        /// Generate all title parts
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="addDefaultTitle">A value indicating whether to insert a default title</param>
-        /// <param name="part">Title part</param>
-        /// <returns>Generated string</returns>
-        public static IHtmlContent GrandTitle(this IHtmlHelper html, bool addDefaultTitle = true, string part = "")
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            html.AppendTitleParts(part);
-            return new HtmlString(html.Encode(pageHeadBuilder.GenerateTitle(addDefaultTitle)));
-        }
-
 
         /// <summary>
         /// Add meta description element to the <![CDATA[<head>]]>
@@ -204,7 +179,7 @@ namespace Grand.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public static void AddCssFileParts(this IHtmlHelper html, ResourceLocation location, 
+        public static void AddCssFileParts(this IHtmlHelper html, ResourceLocation location,
             string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
@@ -229,7 +204,7 @@ namespace Grand.Framework.UI
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
         /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public static void AppendCssFileParts(this IHtmlHelper html, ResourceLocation location, 
+        public static void AppendCssFileParts(this IHtmlHelper html, ResourceLocation location,
             string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();

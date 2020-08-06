@@ -17,7 +17,7 @@
 <!DOCTYPE html>
 <html lang="@(this.WorkingLanguage())" @(this.ShouldUseRtlTheme() ? Html.Raw("dir=\"rtl\"") : null)>
 <head>
-    <title>@Html.GrandTitle(true)</title>
+    <title asp-default-title="true"></title>
     <meta charset="utf-8">
     <meta name="description" content="@(Html.GrandMetaDescription())">
     <meta name="keywords" content="@(Html.GrandMetaKeywords())">
