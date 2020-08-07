@@ -27,13 +27,13 @@
     @Html.GrandHeadCustom()
     @*This is used so that themes can inject content into the header*@
     <partial name="Head" />
-    @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag" })
+    <vc:widget widget-zone="head_html_tag" additional-data="null"></vc:widget>
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
     @Html.GrandCanonicalUrls()
-    @await Component.InvokeAsync("NewsRssHeaderLink")
-    @await Component.InvokeAsync("BlogRssHeaderLink")
+    <vc:news-rss-header-link></vc:news-rss-header-link>
+    <vc:blog-rss-header-link></vc:blog-rss-header-link>
     @*Favicon - upload favicon.ico file to the root directory*@
-    @await Component.InvokeAsync("Favicon")
+    <vc:favicon></vc:favicon>
     @if (displayMiniProfiler)
     {
         <mini-profiler />
