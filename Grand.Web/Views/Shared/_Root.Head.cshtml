@@ -10,7 +10,7 @@
     }
 }
 <!DOCTYPE html>
-<html lang="@(this.WorkingLanguage())" @(this.ShouldUseRtlTheme() ? Html.Raw("dir=\"rtl\"") : null)>
+<html use-lang="true">
 <head>
     <title asp-default-title="true"></title>
     <meta charset="utf-8">
