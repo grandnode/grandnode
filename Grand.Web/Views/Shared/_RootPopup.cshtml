@@ -10,7 +10,7 @@
     <partial name="Head" />
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
     @Html.GrandScripts(this.Url, ResourceLocation.Head)
-    @Html.GrandCanonicalUrls()
+    <canonical-urls> 
     @*Favicon - upload favicon.ico file to the root directory*@
     <vc:favicon></vc:favicon>
     <vc:widget widget-zone="head_html_tag" additional-data="null"></vc:widget>

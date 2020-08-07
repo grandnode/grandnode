@@ -208,20 +208,7 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AppendCanonicalUrlParts(part);
         }
-        /// <summary>
-        /// Generate all canonical URL parts
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">Canonical URL part</param>
-        /// <returns>Generated string</returns>
-        public static IHtmlContent GrandCanonicalUrls(this IHtmlHelper html, string part = "")
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            html.AppendCanonicalUrlParts(part);
-            return new HtmlString(pageHeadBuilder.GenerateCanonicalUrls());
-        }
-
-
+        
         /// <summary>
         /// Add any custom element to the <![CDATA[<head>]]> element
         /// </summary>

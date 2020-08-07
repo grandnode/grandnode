@@ -14,7 +14,7 @@
     <partial name="Head" />
     <vc:widget widget-zone="head_html_tag" additional-data="null"></vc:widget>
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
-    @Html.GrandCanonicalUrls()
+    <canonical-urls> 
     <vc:news-rss-header-link></vc:news-rss-header-link>
     <vc:blog-rss-header-link></vc:blog-rss-header-link>
     @*Favicon - upload favicon.ico file to the root directory*@
