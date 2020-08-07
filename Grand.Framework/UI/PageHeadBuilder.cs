@@ -61,6 +61,12 @@ namespace Grand.Framework.UI
             _canonicalUrlParts = new List<string>();
             _headCustomParts = new List<string>();
             _pageCssClassParts = new List<string>();
+
+            if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
+            {
+                AppendHeadCustomParts(seoSettings.CustomHeadTags);
+            }
+
         }
 
         #endregion

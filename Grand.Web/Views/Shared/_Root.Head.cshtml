@@ -1,14 +1,4 @@
-﻿@inject SeoSettings seoSettings
-@inject Grand.Core.Configuration.GrandConfig config
-@{
-    var displayMiniProfiler = config.DisplayMiniProfilerInPublicStore;
-
-    //custom tag(s);
-    if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
-    {
-        Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
-    }
-}
+﻿@inject Grand.Core.Configuration.GrandConfig config
 <!DOCTYPE html>
 <html use-lang="true">
 <head>
@@ -29,7 +19,7 @@
     <vc:blog-rss-header-link></vc:blog-rss-header-link>
     @*Favicon - upload favicon.ico file to the root directory*@
     <vc:favicon></vc:favicon>
-    @if (displayMiniProfiler)
+    @if (config.DisplayMiniProfilerInPublicStore)
     {
         <mini-profiler />
     }
