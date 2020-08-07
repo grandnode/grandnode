@@ -31,29 +31,6 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AddMetaDescriptionParts(part);
         }
-        /// <summary>
-        /// Append meta description element to the <![CDATA[<head>]]>
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">Meta description part</param>
-        public static void AppendMetaDescriptionParts(this IHtmlHelper html, string part)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            pageHeadBuilder.AppendMetaDescriptionParts(part);
-        }
-        /// <summary>
-        /// Generate all description parts
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">Meta description part</param>
-        /// <returns>Generated string</returns>
-        public static IHtmlContent GrandMetaDescription(this IHtmlHelper html, string part = "")
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            html.AppendMetaDescriptionParts(part);
-            return new HtmlString(html.Encode(pageHeadBuilder.GenerateMetaDescription()));
-        }
-
 
         /// <summary>
         /// Add meta keyword element to the <![CDATA[<head>]]>
