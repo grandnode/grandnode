@@ -52,20 +52,7 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AppendMetaKeywordParts(part);
         }
-        /// <summary>
-        /// Generate all keyword parts
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">Meta keyword part</param>
-        /// <returns>Generated string</returns>
-        public static IHtmlContent GrandMetaKeywords(this IHtmlHelper html, string part = "")
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            html.AppendMetaKeywordParts(part);
-            return new HtmlString(html.Encode(pageHeadBuilder.GenerateMetaKeywords()));
-        }
-
-
+        
         /// <summary>
         /// Add script element
         /// </summary>
