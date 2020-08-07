@@ -242,18 +242,7 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AppendHeadCustomParts(part);
         }
-        /// <summary>
-        /// Generate all custom elements
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <returns>Generated string</returns>
-        public static IHtmlContent GrandHeadCustom(this IHtmlHelper html)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            return new HtmlString(pageHeadBuilder.GenerateHeadCustom());
-        }
-
-
+        
         /// <summary>
         /// Add CSS class to the <![CDATA[<head>]]> element
         /// </summary>
