@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Framework.UI
@@ -42,17 +40,7 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AddMetaKeywordParts(part);
         }
-        /// <summary>
-        /// Append meta keyword element to the <![CDATA[<head>]]>
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">Meta keyword part</param>
-        public static void AppendMetaKeywordParts(this IHtmlHelper html, string part)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            pageHeadBuilder.AppendMetaKeywordParts(part);
-        }
-        
+
         /// <summary>
         /// Add script element
         /// </summary>
@@ -109,7 +97,7 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AppendScriptParts(location, src, debugSrc, excludeFromBundle, isAsync);
         }
-        
+
         /// <summary>
         /// Add CSS element
         /// </summary>
@@ -160,7 +148,7 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AppendCssFileParts(location, src, debugSrc, excludeFromBundle);
         }
-       
+
         /// <summary>
         /// Add canonical URL element to the <![CDATA[<head>]]>
         /// </summary>
@@ -171,17 +159,7 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AddCanonicalUrlParts(part);
         }
-        /// <summary>
-        /// Append canonical URL element to the <![CDATA[<head>]]>
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">Canonical URL part</param>
-        public static void AppendCanonicalUrlParts(this IHtmlHelper html, string part)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            pageHeadBuilder.AppendCanonicalUrlParts(part);
-        }
-        
+
         /// <summary>
         /// Add any custom element to the <![CDATA[<head>]]> element
         /// </summary>
@@ -191,56 +169,6 @@ namespace Grand.Framework.UI
         {
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AddHeadCustomParts(part);
-        }
-        /// <summary>
-        /// Append any custom element to the <![CDATA[<head>]]> element
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">The entire element. For example, <![CDATA[<meta name="msvalidate.01" content="123121231231313123123" />]]></param>
-        public static void AppendHeadCustomParts(this IHtmlHelper html, string part)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            pageHeadBuilder.AppendHeadCustomParts(part);
-        }
-        
-        /// <summary>
-        /// Add CSS class to the <![CDATA[<head>]]> element
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">CSS class</param>
-        public static void AddPageCssClassParts(this IHtmlHelper html, string part)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            pageHeadBuilder.AddPageCssClassParts(part);
-        }
-        /// <summary>
-        /// Append CSS class to the <![CDATA[<head>]]> element
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">CSS class</param>
-        public static void AppendPageCssClassParts(this IHtmlHelper html, string part)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            pageHeadBuilder.AppendPageCssClassParts(part);
-        }
-        /// <summary>
-        /// Generate all title parts
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="part">CSS class</param>
-        /// <param name="includeClassElement">A value indicating whether to include "class" attributes</param>
-        /// <returns>Generated string</returns>
-        public static IHtmlContent GrandPageCssClasses(this IHtmlHelper html, string part = "", bool includeClassElement = true)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            html.AppendPageCssClassParts(part);
-            var classes = pageHeadBuilder.GeneratePageCssClasses();
-
-            if (string.IsNullOrEmpty(classes))
-                return null;
-
-            var result = includeClassElement ? string.Format("class=\"{0}\"", classes) : classes;
-            return new HtmlString(result);
         }
 
     }
