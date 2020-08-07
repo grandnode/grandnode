@@ -2,18 +2,16 @@
 using Grand.Domain.Seo;
 using Grand.Services.Seo;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Grand.Framework.UI
 {
@@ -41,7 +39,6 @@ namespace Grand.Framework.UI
         private readonly List<string> _headCustomParts;
         private readonly List<string> _pageCssClassParts;
         private string _editPageUrl;
-        private string _activeAdminMenuSystemName;
 
         #endregion
 
@@ -220,8 +217,7 @@ namespace Grand.Framework.UI
             if (String.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
-            _scriptParts[location].Add(new ScriptReferenceMeta
-            {
+            _scriptParts[location].Add(new ScriptReferenceMeta {
                 ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
                 Src = src,
@@ -240,8 +236,7 @@ namespace Grand.Framework.UI
             if (String.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
-            _scriptParts[location].Insert(0, new ScriptReferenceMeta
-            {
+            _scriptParts[location].Insert(0, new ScriptReferenceMeta {
                 ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
                 Src = src,
@@ -294,7 +289,7 @@ namespace Grand.Framework.UI
                         var src = debugModel ? item.DebugSrc : item.Src;
                         src = urlHelper.Content(src);
                         //check whether this file exists. 
-                        if(Grand.Core.OperatingSystem.IsWindows())
+                        if (Grand.Core.OperatingSystem.IsWindows())
                             srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
                         else
                             srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1));
@@ -310,7 +305,7 @@ namespace Grand.Framework.UI
                         {
                             //if not, it should be stored into /wwwroot directory
                             src = "wwwroot/" + src;
-                            if(Grand.Core.OperatingSystem.IsWindows())
+                            if (Grand.Core.OperatingSystem.IsWindows())
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
                             else
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src);
@@ -331,7 +326,7 @@ namespace Grand.Framework.UI
                     var filePaths = Directory.EnumerateFiles(bundleDirectory);
                     var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf((Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/")) + 1));
 
-                    if (!fileNames.Any(x=>x.Contains(outputFileName)))
+                    if (!fileNames.Any(x => x.Contains(outputFileName)))
                     {
                         lock (s_lock)
                         {
@@ -384,8 +379,7 @@ namespace Grand.Framework.UI
             if (String.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
-            _cssParts[location].Add(new CssReferenceMeta
-            {
+            _cssParts[location].Add(new CssReferenceMeta {
                 ExcludeFromBundle = excludeFromBundle,
                 Src = src,
                 DebugSrc = debugSrc
@@ -403,8 +397,7 @@ namespace Grand.Framework.UI
             if (String.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
-            _cssParts[location].Insert(0, new CssReferenceMeta
-            {
+            _cssParts[location].Insert(0, new CssReferenceMeta {
                 ExcludeFromBundle = excludeFromBundle,
                 Src = src,
                 DebugSrc = debugSrc
@@ -474,7 +467,7 @@ namespace Grand.Framework.UI
                         {
                             //if not, it should be stored into /wwwroot directory
                             src = "wwwroot" + src;
-                            if(Grand.Core.OperatingSystem.IsWindows())
+                            if (Grand.Core.OperatingSystem.IsWindows())
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
                             else
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src);
@@ -497,7 +490,7 @@ namespace Grand.Framework.UI
                     var filePaths = Directory.EnumerateFiles(bundleDirectory);
                     var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf((Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/")) + 1));
 
-                    if (!fileNames.Any(x=>x.Contains(outputFileName)))
+                    if (!fileNames.Any(x => x.Contains(outputFileName)))
                     {
                         lock (s_lock)
                         {
@@ -506,7 +499,7 @@ namespace Grand.Framework.UI
                         }
                     }
                     //render
-                    if (File.Exists(bundleDirectory+ (Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/") + outputFileName + ".min.css"))
+                    if (File.Exists(bundleDirectory + (Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/") + outputFileName + ".min.css"))
                         result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content("~/bundles/" + outputFileName + ".min.css"), "text/css");
                     else
                         result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content("~/bundles/" + outputFileName + ".css"), "text/css");
@@ -634,24 +627,6 @@ namespace Grand.Framework.UI
         public virtual string GetEditPageUrl()
         {
             return _editPageUrl;
-        }
-
-        /// <summary>
-        /// Specify system name of admin menu item that should be selected (expanded)
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        public virtual void SetActiveMenuItemSystemName(string systemName)
-        {
-            _activeAdminMenuSystemName = systemName;
-        }
-
-        /// <summary>
-        /// Get system name of admin menu item that should be selected (expanded)
-        /// </summary>
-        /// <returns>System name</returns>
-        public virtual string GetActiveMenuItemSystemName()
-        {
-            return _activeAdminMenuSystemName;
         }
 
         #endregion

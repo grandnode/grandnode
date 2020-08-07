@@ -243,26 +243,5 @@ namespace Grand.Framework.UI
             return new HtmlString(result);
         }
 
-
-        /// <summary>
-        /// Specify system name of admin menu item that should be selected (expanded)
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="systemName">System name</param>
-        public static void SetActiveMenuItemSystemName(this IHtmlHelper html, string systemName)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            pageHeadBuilder.SetActiveMenuItemSystemName(systemName);
-        }
-        /// <summary>
-        /// Get system name of admin menu item that should be selected (expanded)
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <returns>System name</returns>
-        public static string GetActiveMenuItemSystemName(this IHtmlHelper html)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            return pageHeadBuilder.GetActiveMenuItemSystemName();
-        }
     }
 }

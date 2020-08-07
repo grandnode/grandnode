@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Grand.Framework.UI
+﻿namespace Grand.Framework.UI
 {
     /// <summary>
     /// Page head builder
@@ -34,7 +32,7 @@ namespace Grand.Framework.UI
         void AddHeadCustomParts(string part);
         void AppendHeadCustomParts(string part);
         string GenerateHeadCustom();
-        
+
         void AddPageCssClassParts(string part);
         void AppendPageCssClassParts(string part);
         string GeneratePageCssClasses();
@@ -50,15 +48,5 @@ namespace Grand.Framework.UI
         /// <returns>URL</returns>
         string GetEditPageUrl();
 
-        /// <summary>
-        /// Specify system name of admin menu item that should be selected (expanded)
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        void SetActiveMenuItemSystemName(string systemName);
-        /// <summary>
-        /// Get system name of admin menu item that should be selected (expanded)
-        /// </summary>
-        /// <returns>System name</returns>
-        string GetActiveMenuItemSystemName();
     }
 }
