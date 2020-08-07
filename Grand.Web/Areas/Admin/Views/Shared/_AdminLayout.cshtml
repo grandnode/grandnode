@@ -88,8 +88,8 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <head-custom>
-    @Html.GrandCssFiles(this.Url, ResourceLocation.Head, false)
-    @Html.GrandScripts(this.Url, ResourceLocation.Head, false)
+    <css-files asp-location="Head" bundle-files="false">
+    <script-files asp-location="Head" bundle-files="false">
 </head>
 <body>
     @Html.AntiForgeryToken()
@@ -279,9 +279,9 @@
             </div>
         </div>
     </div>
+    <css-files asp-location="Footer">
+    <script-files asp-location="Footer">
 
-    @Html.GrandCssFiles(this.Url, ResourceLocation.Footer)
-    @Html.GrandScripts(this.Url, ResourceLocation.Footer)
     <div class="page-footer">
         <div class="page-footer-inner">
             <a href="https://grandnode.com/" target="_blank">2019 © Powered by GrandNode.</a>

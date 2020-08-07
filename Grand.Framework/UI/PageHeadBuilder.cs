@@ -11,6 +11,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Grand.Framework.UI
 {
@@ -25,6 +28,8 @@ namespace Grand.Framework.UI
 
         private readonly SeoSettings _seoSettings;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IActionContextAccessor _actionContextAccessor;
+
         private BundleFileProcessor _processor;
 
         private readonly List<string> _titleParts;
@@ -47,10 +52,12 @@ namespace Grand.Framework.UI
         /// </summary>
         /// <param name="seoSettings">SEO settings</param>
         /// <param name="hostingEnvironment">Hosting environment</param>
-        public PageHeadBuilder(SeoSettings seoSettings, IWebHostEnvironment hostingEnvironment)
+        public PageHeadBuilder(SeoSettings seoSettings, IWebHostEnvironment hostingEnvironment, IActionContextAccessor actionContextAccessor)
         {
             _seoSettings = seoSettings;
             _hostingEnvironment = hostingEnvironment;
+            _actionContextAccessor = actionContextAccessor;
+
             _processor = new BundleFileProcessor();
 
             _titleParts = new List<string>();
@@ -242,7 +249,7 @@ namespace Grand.Framework.UI
             });
         }
 
-        public virtual string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
+        public virtual string GenerateScripts(ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
                 return "";
@@ -257,6 +264,8 @@ namespace Grand.Framework.UI
                 //use setting if no value is specified
                 bundleFiles = _seoSettings.EnableJsBundling;
             }
+
+            var urlHelper = new UrlHelper(_actionContextAccessor.ActionContext);
 
             if (bundleFiles.Value)
             {
@@ -402,7 +411,7 @@ namespace Grand.Framework.UI
             });
         }
 
-        public virtual string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
+        public virtual string GenerateCssFiles(ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
                 return "";
@@ -418,6 +427,8 @@ namespace Grand.Framework.UI
                 //use setting if no value is specified
                 bundleFiles = _seoSettings.EnableCssBundling;
             }
+
+            var urlHelper = new UrlHelper(_actionContextAccessor.ActionContext);
 
             //CSS bundling is not allowed in virtual directories
             if (urlHelper.ActionContext.HttpContext.Request.PathBase.HasValue)

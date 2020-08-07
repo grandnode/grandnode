@@ -109,21 +109,7 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AppendScriptParts(location, src, debugSrc, excludeFromBundle, isAsync);
         }
-        /// <summary>
-        /// Generate all script parts
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="urlHelper">URL Helper</param>
-        /// <param name="location">A location of the script element</param>
-        /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
-        /// <returns>Generated string</returns>
-        public static IHtmlContent GrandScripts(this IHtmlHelper html, IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            return new HtmlString(pageHeadBuilder.GenerateScripts(urlHelper, location, bundleFiles));
-        }
-
-
+        
         /// <summary>
         /// Add CSS element
         /// </summary>
@@ -174,20 +160,7 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
             pageHeadBuilder.AppendCssFileParts(location, src, debugSrc, excludeFromBundle);
         }
-        /// <summary>
-        /// Generate all CSS parts
-        /// </summary>
-        /// <param name="html">HTML helper</param>
-        /// <param name="urlHelper">URL Helper</param>
-        /// <param name="location">A location of the script element</param>
-        /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
-        /// <returns>Generated string</returns>
-        public static IHtmlContent GrandCssFiles(this IHtmlHelper html, IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
-        {
-            var pageHeadBuilder = html.ViewContext.HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
-            return new HtmlString(pageHeadBuilder.GenerateCssFiles(urlHelper, location, bundleFiles));
-        }
-
+       
         /// <summary>
         /// Add canonical URL element to the <![CDATA[<head>]]>
         /// </summary>

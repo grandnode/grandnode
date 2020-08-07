@@ -8,8 +8,8 @@
     <head-custom>
     @*This is used so that themes can inject content into the header*@
     <partial name="Head" />
-    @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
-    @Html.GrandScripts(this.Url, ResourceLocation.Head)
+    <css-files asp-location="Head">
+    <script-files asp-location="Head">
     <canonical-urls> 
     @*Favicon - upload favicon.ico file to the root directory*@
     <vc:favicon></vc:favicon>
@@ -19,7 +19,7 @@
     <vc:widget widget-zone="body_start_html_tag_after" additional-data="null"></vc:widget>
     @RenderBody()
     <vc:widget widget-zone="body_end_html_tag_before" additional-data="null"></vc:widget>
-    @Html.GrandCssFiles(this.Url, ResourceLocation.Footer)
-    @Html.GrandScripts(this.Url, ResourceLocation.Footer)
+    <css-files asp-location="Footer">
+    <script-files asp-location="Footer">
 </body>
 </html>

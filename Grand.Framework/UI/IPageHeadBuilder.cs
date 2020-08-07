@@ -21,11 +21,11 @@ namespace Grand.Framework.UI
 
         void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAync);
         void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync);
-        string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
+        string GenerateScripts(ResourceLocation location, bool? bundleFiles = null);
 
         void AddCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false);
         void AppendCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false);
-        string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
+        string GenerateCssFiles(ResourceLocation location, bool? bundleFiles = null);
 
         void AddCanonicalUrlParts(string part);
         void AppendCanonicalUrlParts(string part);
