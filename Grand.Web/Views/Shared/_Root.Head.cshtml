@@ -1,13 +1,8 @@
-﻿@inject CommonSettings commonSettings
-@inject SeoSettings seoSettings
+﻿@inject SeoSettings seoSettings
 @inject Grand.Core.Configuration.GrandConfig config
 @{
     var displayMiniProfiler = config.DisplayMiniProfilerInPublicStore;
-    //X-UA-Compatible tag
-    if (commonSettings.RenderXuaCompatible)
-    {
-        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\">", commonSettings.XuaCompatibleValue));
-    }
+
     //custom tag(s);
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
     {

@@ -4835,8 +4835,6 @@ namespace Grand.Services.Installation
                 FullTextMode = FulltextSearchMode.ExactMatch,
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
-                RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge",
                 DeleteGuestTaskOlderThanMinutes = 1440,
                 PopupForTermsOfServiceLinks = true,
                 AllowToSelectStore = false,

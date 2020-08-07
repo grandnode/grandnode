@@ -80,12 +80,6 @@
     //has "Manage Maintenance" permission?
     var canManageMaintenance = await permissionService.Authorize(StandardPermissionProvider.ManageMaintenance);
 
-    //X-UA-Compatible tag
-    if (commonSettings.RenderXuaCompatible)
-    {
-        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
-    }
-
 }
 <!DOCTYPE html>
 <html @if (supportRtl) { <text> dir="rtl" </text> } onloadstart="myFunction()">
