@@ -45,9 +45,9 @@
     <partial name="_ProductBreadcrumb" model="Model.Breadcrumb" />
 }
 
-@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
+<vc:widget widget-zone="productdetails_after_breadcrumb" additional-data="@Model.Id"></vc:widget>
 <div class="page product-details-page product-standard">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
+    <vc:widget widget-zone="productdetails_top" additional-data="@Model.Id"></vc:widget>
     <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
         <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
             <div class="item-container col d-md-inline-flex d-md-flex px-0">
@@ -57,10 +57,10 @@
                         <span class="product-label badge bg-info text-white">@Model.Flag</span>
                     </div>
                 }
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
+                <vc:widget widget-zone="productdetails_before_pictures" additional-data="@Model.Id"></vc:widget>
                 <!--product pictures-->
                 <partial name="_ProductDetailsPictures" model="Model" />
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_pictures", additionalData = Model.Id })
+                <vc:widget widget-zone="productdetails_after_pictures" additional-data="@Model.Id"></vc:widget>
                 <div class="overview col-12 col-md-6">
                     <partial name="_Discontinued" model="Model" />
                     <h2 class="generalTitle" itemprop="name">
@@ -71,7 +71,7 @@
                     {
                         <partial name="_ProductReviewOverview" model="Model.ProductReviewOverview" />
                     }
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })
+                    <vc:widget widget-zone="productdetails_overview_top" additional-data="@Model.Id"></vc:widget>
                     @if (!String.IsNullOrEmpty(Model.ShortDescription))
                     {
                         <div class="short-description generalMarginSupporter">
@@ -80,7 +80,7 @@
                     }
                     <!--manufacturers-->
                     @if (Model.ProductManufacturers.Any())
-                    { 
+                    {
                         <partial name="_ProductManufacturers" model="Model.ProductManufacturers" />
                     }
                     <!--availability-->
@@ -92,7 +92,7 @@
                     <partial name="_SKU_Man_GTIN_Ven" model="Model" />
                     <!--delivery-->
                     @if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !string.IsNullOrWhiteSpace(Model.DeliveryDate)
-                     || Model.NotReturnable || Model.AdditionalShippingCharge > 0)
+              || Model.NotReturnable || Model.AdditionalShippingCharge > 0)
                     {
                         <partial name="_DeliveryInfo" model="Model" />
                     }
@@ -138,10 +138,10 @@
                     }
                     <!--price & add to cart-->
                     <div class="overview-buttons generalMarginSupporter">
-                        @if (Model.TierPrices.Any() &&  !(Model.TierPrices.Count == 1))
+                        @if (Model.TierPrices.Any() && !(Model.TierPrices.Count == 1))
                         {
                             <div class="col-lg-12 px-0">
-                                    <partial name="_ProductTierPrices" model="Model.TierPrices" />
+                                <partial name="_ProductTierPrices" model="Model.TierPrices" />
                             </div>
                         }
                         <div class="col-lg-12 px-0">
@@ -165,22 +165,22 @@
                                 var dataDictAddToCart = new ViewDataDictionary(ViewData);
                                 dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
                             }
-                        <div class="btn-group product-simple-share my-2 d-inline-flex flex-wrap w-100">
-                            <partial name="_AddToCart" model="Model.AddToCart" view-data="dataDictAddToCart" />
-                            @if (Model.ProductType == ProductType.SimpleProduct || Model.ProductType == ProductType.BundledProduct)
-                            {
-                                <partial name="_AddToWishlist" model="Model.AddToCart" view-data="dataDictAddToWishlist" />
-                                <partial name="_CompareProductsButton" model="Model" />
-                            }
-                            @if (Model.EmailAFriendEnabled)
-                            {
-                                <partial name="_ProductEmailAFriendButton" model="Model" />
-                            }
-                            @if (Model.AskQuestionEnabled)
-                            {
-                                <partial name="_ProductAskQuestionButton" model="Model" />
-                            }
-                        </div>
+                            <div class="btn-group product-simple-share my-2 d-inline-flex flex-wrap w-100">
+                                <partial name="_AddToCart" model="Model.AddToCart" view-data="dataDictAddToCart" />
+                                @if (Model.ProductType == ProductType.SimpleProduct || Model.ProductType == ProductType.BundledProduct)
+                                {
+                                    <partial name="_AddToWishlist" model="Model.AddToCart" view-data="dataDictAddToWishlist" />
+                                    <partial name="_CompareProductsButton" model="Model" />
+                                }
+                                @if (Model.EmailAFriendEnabled)
+                                {
+                                    <partial name="_ProductEmailAFriendButton" model="Model" />
+                                }
+                                @if (Model.AskQuestionEnabled)
+                                {
+                                    <partial name="_ProductAskQuestionButton" model="Model" />
+                                }
+                            </div>
                         </div>
                     </div>
                     @if (!String.IsNullOrWhiteSpace(Model.PageShareCode))
@@ -189,7 +189,7 @@
                             <partial name="_ShareButton" model="Model" />
                         </div>
                     }
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_bottom", additionalData = Model.Id })
+                    <vc:widget widget-zone="productdetails_overview_bottom" additional-data="@Model.Id"></vc:widget>
                 </div>
 
             </div>
@@ -246,13 +246,12 @@
                     }
                 </div>
             </div>
-            <!--wishlist, compare, email a friend-->
-            @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })
-            @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
-            @await Component.InvokeAsync("SimilarProducts", new { productId = Model.Id })
+            <vc:products-also-purchased product-id="@Model.Id" product-thumb-picture-size="null"></vc:products-also-purchased>
+            <vc:related-products product-id="@Model.Id" product-thumb-picture-size="null"></vc:related-products>
+            <vc:similar-products product-id="@Model.Id" product-thumb-picture-size="null"></vc:similar-products>
         </div>
     </form>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
+    <vc:widget widget-zone="productdetails_bottom" additional-data="@Model.Id"></vc:widget>
 </div>
 <script asp-location="Footer">
     $('.product-simple-share .btn').tooltip({
