@@ -81,11 +81,11 @@
                             <span class="custom-control-description">@T("Vendors.ApplyAccount.AcceptTermsOfService")</span>
                             @if (Model.TermsOfServicePopup)
                             {
-                                <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "VendorTermsOfService" })', 450, 500, true)">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
+                                <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = TopicSeNameConstants.VendorTermsOfService })', 450, 500, true)">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
                             }
                             else
                             {
-                                <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new {SeName = await Html.GetTopicSeName("VendorTermsOfService", Context) })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new {SeName = TopicSeNameConstants.VendorTermsOfService })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
                             }
                         </label>
 

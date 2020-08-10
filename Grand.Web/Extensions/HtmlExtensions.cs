@@ -2,17 +2,12 @@
 using Grand.Framework;
 using Grand.Framework.UI.Paging;
 using Grand.Services.Localization;
-using Grand.Services.Seo;
-using Grand.Services.Topics;
 using Grand.Web.Models.Boards;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Grand.Web.Extensions
 {
@@ -220,24 +215,6 @@ namespace Grand.Web.Extensions
             return new Pager(pagination, helper.ViewContext);
         }
 
-        ///// <summary>
-        ///// Get topic system name
-        ///// </summary>
-        ///// <typeparam name="T">T</typeparam>
-        ///// <param name="html">HTML helper</param>
-        ///// <param name="systemName">System name</param>
-        ///// <returns>Topic SEO Name</returns>
-        public static async Task<string> GetTopicSeName<T>(this IHtmlHelper<T> html, string systemName, HttpContext httpContext)
-        {
-            var storeContext = httpContext.RequestServices.GetRequiredService<IStoreContext>();
-            var topicService = httpContext.RequestServices.GetRequiredService<ITopicService>();
-            var topic = await topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
-            if (topic == null)
-                return "";
-
-            var workContext = httpContext.RequestServices.GetRequiredService<IWorkContext>();
-            return topic.GetSeName(workContext.WorkingLanguage.Id);
-        }
 
     }
 }
