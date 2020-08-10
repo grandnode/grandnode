@@ -1,10 +1,10 @@
 ﻿@model AddOrderNoteModel
-
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.OrderDetails").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.OrderDetails").Text);
 }
 <div class="page order-details-page mb-3">
     <h2 class="generalTitle text-center">@T("Order.AddOrdernote")</h2>

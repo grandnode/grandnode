@@ -1,17 +1,18 @@
 ﻿@model ProductsByTagModel
 @inject SeoSettings seoSettings
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
+    pagebuilder.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
 
     //canonical URL
     var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var productsByTagUrl = Url.RouteUrl("ProductsByTag", new { productTagId = Model.Id, SeName = Model.TagSeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(productsByTagUrl);
+        pagebuilder.AddCanonicalUrlParts(productsByTagUrl);
     }
 }
 @using Grand.Domain.Seo

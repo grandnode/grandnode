@@ -1,9 +1,10 @@
 ﻿@model SendPrivateMessageModel
 @inject IWebHelper webHelper
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
-    Html.AddTitleParts(T("PageTitle.SendPM").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.SendPM").Text);
 }
 <form asp-route="SendPM" method="post">
     <div class="page private-messages private-message-send-page">
@@ -38,9 +39,9 @@
                 </div>
             </div>
         </div>
-            <div class="btn-group text-center mb-2 mt-3 text-center">
-                <input type="submit" class="btn btn-info send-pm-button" value="@T("PrivateMessages.Send.SendButton")" />
-                <input type="button" class="btn btn-secondary cancel-pm-button" value="@T("PrivateMessages.Send.CancelButton")" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')" />
-            </div>
+        <div class="btn-group text-center mb-2 mt-3 text-center">
+            <input type="submit" class="btn btn-info send-pm-button" value="@T("PrivateMessages.Send.SendButton")" />
+            <input type="button" class="btn btn-secondary cancel-pm-button" value="@T("PrivateMessages.Send.CancelButton")" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')" />
+        </div>
     </div>
 </form>

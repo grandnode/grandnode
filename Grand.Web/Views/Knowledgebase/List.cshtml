@@ -1,9 +1,10 @@
 ﻿@model KnowledgebaseHomePageModel
 @inject CommonSettings commonSettings
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
     var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/bootstrap-treeview.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/bootstrap-treeview.js");
 }
 
 @*breadcrumb*@
@@ -48,7 +49,7 @@
 
     @if (string.IsNullOrEmpty(Model.CurrentCategoryId))
     {
-        Html.AddTitleParts(T("PageTitle.Knowledgebase").Text);
+        pagebuilder.AddTitleParts(T("PageTitle.Knowledgebase").Text);
         <form method="get" id="small-search-box-form" asp-action="ItemsByKeyword" asp-controller="knowledgebase" novalidate="novalidate">
             <div class="input-group">
                 <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
@@ -72,15 +73,15 @@
         @inject SeoSettings seoSettings
         {
             Layout = "_ColumnsTwo";
-            Html.AddTitleParts(!String.IsNullOrEmpty(Model.CurrentCategoryMetaTitle) ? Model.CurrentCategoryMetaTitle : Model.CurrentCategoryName);
-            Html.AddMetaDescriptionParts(Model.CurrentCategoryMetaDescription);
-            Html.AddMetaKeywordParts(Model.CurrentCategoryMetaKeywords);
+            pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.CurrentCategoryMetaTitle) ? Model.CurrentCategoryMetaTitle : Model.CurrentCategoryName);
+            pagebuilder.AddMetaDescriptionParts(Model.CurrentCategoryMetaDescription);
+            pagebuilder.AddMetaKeywordParts(Model.CurrentCategoryMetaKeywords);
 
             var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
             if (canonicalUrlsEnabled)
             {
                 var categoryUrl = Url.RouteUrl("ArticlesByCategory", new { SeName = Model.CurrentCategorySeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-                Html.AddCanonicalUrlParts(categoryUrl);
+                pagebuilder.AddCanonicalUrlParts(categoryUrl);
             }
         }
 

@@ -1,42 +1,43 @@
 ﻿@model ProductDetailsModel
 @using Microsoft.AspNetCore.Http.Extensions
 @inject SeoSettings seoSettings
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title, meta
-    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
-    Html.AddMetaDescriptionParts(Model.MetaDescription);
-    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+    pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
 
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {
         var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(productUrl);
+        pagebuilder.AddCanonicalUrlParts(productUrl);
     }
 
     //open graph META tags
     if (seoSettings.OpenGraphMetaTags)
     {
-        Html.AddHeadCustomParts("<meta property=\"og:type\" content=\"product\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(Model.MetaDescription) + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:image:url\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:site_name\" content=\"" + Html.Encode(Model.CurrentStoreName) + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:type\" content=\"product\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(Model.MetaDescription) + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:image:url\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:site_name\" content=\"" + Html.Encode(Model.CurrentStoreName) + "\" />");
     }
 
     //Twitter META tags
     if (seoSettings.TwitterMetaTags)
     {
-        Html.AddHeadCustomParts("<meta property=\"twitter:card\" content=\"summary\" />");
-        Html.AddHeadCustomParts("<meta property=\"twitter:site\" content=\"" + Html.Encode(Model.CurrentStoreName) + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"twitter:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"twitter:description\" content=\"" + Html.Encode(Model.MetaDescription) + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:card\" content=\"summary\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:site\" content=\"" + Html.Encode(Model.CurrentStoreName) + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:description\" content=\"" + Html.Encode(Model.MetaDescription) + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
     }
 }
 <!--product breadcrumb-->

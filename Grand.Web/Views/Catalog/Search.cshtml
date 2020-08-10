@@ -1,9 +1,10 @@
 ﻿@model Grand.Web.Models.Catalog.SearchModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Search").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Search").Text);
 }
 <script asp-location="Footer">
     $(document).ready(function () {

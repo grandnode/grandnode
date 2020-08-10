@@ -1,8 +1,9 @@
-﻿@{
+﻿@inject IPageHeadBuilder pagebuilder
+@{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.StoreClosed").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.StoreClosed").Text);
 }
 <div class="page store-closed-page">
     <h1 class="h2 generalTitle">@T("StoreClosed")</h1>

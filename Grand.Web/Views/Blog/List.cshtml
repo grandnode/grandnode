@@ -1,10 +1,11 @@
 ﻿@model BlogPostListModel
 @using Grand.Web.Models.Blogs;
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Blog").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Blog").Text);
 }
 @section left {
     @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_before" })

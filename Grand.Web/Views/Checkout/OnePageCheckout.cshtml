@@ -1,15 +1,17 @@
 ﻿@model OnePageCheckoutModel
-@inject IWebHelper webHelper;
+@inject IWebHelper webHelper
+@inject IPageHeadBuilder pagebuilder
+
 @{
     Layout = "_ColumnsOneClean";
 
-    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/public.accordion.js");
-    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/public.onepagecheckout.js");
+    pagebuilder.AddScriptParts(ResourceLocation.Footer, "~/scripts/public.accordion.js");
+    pagebuilder.AddScriptParts(ResourceLocation.Footer, "~/scripts/public.onepagecheckout.js");
 
     var storeLocation = webHelper.GetStoreLocation();
 
     //title
-    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Checkout").Text);
 }
 @{
     //step numbers
@@ -70,7 +72,7 @@
             </div>
         </li>
         @if (Model.ShippingRequired)
-            {
+        {
             <li id="opc-shipping" class="tab-section">
                 <div class="step-title card card-grey mb-1 text-left p-0 col-12 rounded-0">
                     <div class="card-body p-2">
@@ -102,31 +104,31 @@
                     </div>
                 </div>
             </li>
-                <li id="opc-shipping_method" class="tab-section">
+            <li id="opc-shipping_method" class="tab-section">
 
-                    <div class="step-title card card-grey mb-1 text-left p-0 col-12 rounded-0">
-                        <div class="card-body p-2">
-                            <blockquote class="card-bodyquote">
-                                <span>@shippingMethodStepNumber. @T("Checkout.ShippingMethod")</span>
-                            </blockquote>
+                <div class="step-title card card-grey mb-1 text-left p-0 col-12 rounded-0">
+                    <div class="card-body p-2">
+                        <blockquote class="card-bodyquote">
+                            <span>@shippingMethodStepNumber. @T("Checkout.ShippingMethod")</span>
+                        </blockquote>
+                    </div>
+                </div>
+                <div id="checkout-step-shipping-method" class="step mt-2 mb-2 a-item" style="display: none;">
+                    <form id="co-shipping-method-form" action="">
+                        <div id="checkout-shipping-method-load">
+                            @*shipping methods content will be loaded here*@
                         </div>
-                    </div>
-                    <div id="checkout-step-shipping-method" class="step mt-2 mb-2 a-item" style="display: none;">
-                        <form id="co-shipping-method-form" action="">
-                            <div id="checkout-shipping-method-load">
-                                @*shipping methods content will be loaded here*@
-                            </div>
-                            <script asp-location="Footer">
+                        <script asp-location="Footer">
                                 ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/');
-                            </script>
-                            <div class="col-12 buttons pt-1 pb-1 px-0 my-3" id="shipping-method-buttons-container">
-                                <a class="btn btn-secondary" href="#" onclick="Checkout.back(); return false;">@T("Common.Back")</a>
-                                <input type="button" class="btn btn-info shipping-method-next-step-button" onclick="ShippingMethod.save()" value="@T("Common.Continue")" />
-                                <span id="shipping-method-please-wait" class="please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
-                            </div>
-                        </form>
-                    </div>
-                </li>
+                        </script>
+                        <div class="col-12 buttons pt-1 pb-1 px-0 my-3" id="shipping-method-buttons-container">
+                            <a class="btn btn-secondary" href="#" onclick="Checkout.back(); return false;">@T("Common.Back")</a>
+                            <input type="button" class="btn btn-info shipping-method-next-step-button" onclick="ShippingMethod.save()" value="@T("Common.Continue")" />
+                            <span id="shipping-method-please-wait" class="please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
+                        </div>
+                    </form>
+                </div>
+            </li>
         }
         <li id="opc-payment_method" class="tab-section">
             <div class="step-title card card-grey mb-1 text-left p-0 col-12 rounded-0">
@@ -177,7 +179,7 @@
                     {
                         <a class="btn btn-secondary" href="#" onclick="Checkout.back();return false;">@T("Common.Back")</a>
                     }
-                    <input type="button" class="btn btn-info payment-info-next-step-button" onclick="PaymentInfo.save()" value="@T("Common.Continue")"/>
+                    <input type="button" class="btn btn-info payment-info-next-step-button" onclick="PaymentInfo.save()" value="@T("Common.Continue")" />
                     <span class="please-wait" id="payment-info-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
                 </div>
             </div>

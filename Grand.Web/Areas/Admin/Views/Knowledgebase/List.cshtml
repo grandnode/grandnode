@@ -1,7 +1,8 @@
-﻿@{
+﻿@inject IPageHeadBuilder pagebuilder
+@{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Knowledgebase.Manage").Text;
-    Html.AppendScriptParts("~/scripts/bootstrap-treeview.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/bootstrap-treeview.js");
 }
 
 <div class="row">

@@ -1,9 +1,10 @@
 ﻿@model ShoppingCartModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOneClean";
 
     //title
-    Html.AddTitleParts(T("PageTitle.ShoppingCart").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.ShoppingCart").Text);
 }
 @if (!Model.OnePageCheckoutEnabled)
 {

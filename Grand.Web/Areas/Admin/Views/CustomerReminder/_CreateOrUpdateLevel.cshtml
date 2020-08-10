@@ -1,7 +1,7 @@
 ﻿@model CustomerReminderModel.ReminderLevelModel
 <input asp-for="Id" type="hidden" />
 <input asp-for="CustomerReminderId" type="hidden" />
-
+@inject IPageHeadBuilder pagebuilder
 @{
     var validationSummary = Html.ValidationSummary(false);
     if (!string.IsNullOrEmpty(validationSummary.ToString()))
@@ -9,9 +9,9 @@
         <div class="message-error">@validationSummary</div>
     }
 
-    Html.AddScriptParts("~/content/codemirror/codemirror.js", excludeFromBundle: true);
-    Html.AddScriptParts("~/content/codemirror/mode/xml/xml.js", excludeFromBundle: true);
-    Html.AddCssFileParts("~/content/codemirror/codemirror.css", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/codemirror.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/mode/xml/xml.js", excludeFromBundle: true);
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/codemirror/codemirror.css", excludeFromBundle: true);
 }
 
 <div class="form-horizontal">

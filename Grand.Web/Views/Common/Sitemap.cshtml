@@ -1,10 +1,11 @@
 ﻿@model SitemapModel
 @using Grand.Web.Models.Common;
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Sitemap").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Sitemap").Text);
 }
 <div class="sitemap-page generalMarginSupporter">
     <h1 class="generalTitle">@T("Sitemap")</h1>

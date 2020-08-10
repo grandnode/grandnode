@@ -1,9 +1,10 @@
 ﻿@model CheckoutBillingAddressModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOneClean";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Checkout").Text);
 }
 <div class="page checkout-page billing-address-page">
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Address })

@@ -1,16 +1,17 @@
 ﻿@model Grand.Web.Models.Knowledgebase.KnowledgebaseArticleModel
 @inject SeoSettings seoSettings
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
-    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
-    Html.AddMetaDescriptionParts(Model.MetaDescription);
-    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+    pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
 
     var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var articleUrl = Url.RouteUrl("KnowledgebaseArticle", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(articleUrl);
+        pagebuilder.AddCanonicalUrlParts(articleUrl);
     }
 }
 

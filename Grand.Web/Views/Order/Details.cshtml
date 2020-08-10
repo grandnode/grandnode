@@ -1,4 +1,5 @@
 @model OrderDetailsModel
+@inject IPageHeadBuilder pagebuilder
 @{
     if (!Model.PrintMode)
     {
@@ -9,7 +10,7 @@
         Layout = "_Print";
     }
     //title
-    Html.AddTitleParts(T("PageTitle.OrderDetails").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.OrderDetails").Text);
 }
 @if (Model.PrintMode)
 {
@@ -49,7 +50,7 @@
         <h5 class="order-number">
             <strong>@T("Order.Order#")@Model.OrderNumber</strong>
         </h5>
-        @if(!string.IsNullOrEmpty(Model.OrderCode))
+        @if (!string.IsNullOrEmpty(Model.OrderCode))
         {
             <div class="order-code">
                 @T("Order.OrderCode"): @Model.OrderCode
@@ -642,21 +643,21 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                             <tr>
                                 <th>
                                     <div class="row">
-                                            <div class="shipment-id col-md-2 col-sm-12">
-                                                @T("Order.Shipments.ID")
-                                            </div>
-                                            <div class="tracking-number col-sm-2 d-none d-md-block">
-                                                @T("Order.Shipments.TrackingNumber")
-                                            </div>
-                                            <div class="shipping-date col-sm-3 d-none d-md-block">
-                                                @T("Order.Shipments.ShippedDate")
-                                            </div>
-                                            <div class="delivery-date col-sm-3 d-none d-md-block">
-                                                @T("Order.Shipments.DeliveryDate")
-                                            </div>
-                                            <div class="view-details col-sm-2 d-none d-md-block">
-                                                @T("Order.Shipments.ViewDetails")
-                                            </div>
+                                        <div class="shipment-id col-md-2 col-sm-12">
+                                            @T("Order.Shipments.ID")
+                                        </div>
+                                        <div class="tracking-number col-sm-2 d-none d-md-block">
+                                            @T("Order.Shipments.TrackingNumber")
+                                        </div>
+                                        <div class="shipping-date col-sm-3 d-none d-md-block">
+                                            @T("Order.Shipments.ShippedDate")
+                                        </div>
+                                        <div class="delivery-date col-sm-3 d-none d-md-block">
+                                            @T("Order.Shipments.DeliveryDate")
+                                        </div>
+                                        <div class="view-details col-sm-2 d-none d-md-block">
+                                            @T("Order.Shipments.ViewDetails")
+                                        </div>
                                     </div>
                                 </th>
                             </tr>
@@ -666,42 +667,42 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                             {
                                 <tr>
                                     <td>
-                                            <div class="row">
-                                                <div class="shipment-id col-md-2 col-sm-12">
-                                                    <strong class="d-lg-none">@T("Order.Shipments.ID"): </strong>
-                                                    <span>@item.ShipmentNumber.ToString()</span>
-                                                </div>
-                                                <div class="tracking-number col-md-2 col-sm-12">
-                                                    <strong class="d-lg-none">@T("Order.Shipments.TrackingNumber"): </strong>
-                                                    @item.TrackingNumber
-                                                </div>
-                                                <div class="shipped-date col-md-3 col-sm-12">
-                                                    @if (item.ShippedDate.HasValue)
-                                                    {
-                                                        <strong class="d-lg-none">@T("Order.Shipments.ShippedDate"): </strong>
-                                                        <span>@item.ShippedDate.Value.ToString("D")</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <strong class="d-lg-none">@T("Order.Shipments.ShippedDate"): </strong>
-                                                        <span>@T("Order.Shipments.ShippedDate.NotYet")</span>
-                                                    }
-                                                </div>
-                                                <div class="delivery-date col-md-3 col-sm-12">
-                                                    @if (item.DeliveryDate.HasValue)
-                                                    {
-                                                        <strong class="d-lg-none">@T("Order.Shipments.DeliveryDate"): </strong>
-                                                        <span>@item.DeliveryDate.Value.ToString("D")</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="d-lg-none">@T("Order.Shipments.ViewDetails")</span>
-                                                        <span>@T("Order.Shipments.DeliveryDate.NotYet")</span>
-                                                    }
-                                                </div>
-                                                <div class="view-details col-md-2 col-sm-12">
-                                                    <a class="btn btn-sm btn-secondary" href="@Url.RouteUrl("ShipmentDetails", new { shipmentId = item.Id })" title="@T("Order.Shipments.ViewDetails")">@T("Order.Shipments.ViewDetails")</a>
-                                                </div>
+                                        <div class="row">
+                                            <div class="shipment-id col-md-2 col-sm-12">
+                                                <strong class="d-lg-none">@T("Order.Shipments.ID"): </strong>
+                                                <span>@item.ShipmentNumber.ToString()</span>
+                                            </div>
+                                            <div class="tracking-number col-md-2 col-sm-12">
+                                                <strong class="d-lg-none">@T("Order.Shipments.TrackingNumber"): </strong>
+                                                @item.TrackingNumber
+                                            </div>
+                                            <div class="shipped-date col-md-3 col-sm-12">
+                                                @if (item.ShippedDate.HasValue)
+                                                {
+                                                    <strong class="d-lg-none">@T("Order.Shipments.ShippedDate"): </strong>
+                                                    <span>@item.ShippedDate.Value.ToString("D")</span>
+                                                }
+                                                else
+                                                {
+                                                    <strong class="d-lg-none">@T("Order.Shipments.ShippedDate"): </strong>
+                                                    <span>@T("Order.Shipments.ShippedDate.NotYet")</span>
+                                                }
+                                            </div>
+                                            <div class="delivery-date col-md-3 col-sm-12">
+                                                @if (item.DeliveryDate.HasValue)
+                                                {
+                                                    <strong class="d-lg-none">@T("Order.Shipments.DeliveryDate"): </strong>
+                                                    <span>@item.DeliveryDate.Value.ToString("D")</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="d-lg-none">@T("Order.Shipments.ViewDetails")</span>
+                                                    <span>@T("Order.Shipments.DeliveryDate.NotYet")</span>
+                                                }
+                                            </div>
+                                            <div class="view-details col-md-2 col-sm-12">
+                                                <a class="btn btn-sm btn-secondary" href="@Url.RouteUrl("ShipmentDetails", new { shipmentId = item.Id })" title="@T("Order.Shipments.ViewDetails")">@T("Order.Shipments.ViewDetails")</a>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

@@ -1,9 +1,10 @@
 ﻿@model CheckoutCompletedModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOneClean";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Checkout").Text);
 }
 <div class="page checkout-page order-completed-page text-xs-center">
     @if (!Model.OnePageCheckoutEnabled)
@@ -21,7 +22,7 @@
                 </div>
                 <div class="buttons text-center">
                     <a class="btn btn-secondary mb-1" href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
-                    <button type="button" class="btn btn-info order-completed-continue-button mb-1" onclick="setLocation('@Url.RouteUrl("HomePage")')" >
+                    <button type="button" class="btn btn-info order-completed-continue-button mb-1" onclick="setLocation('@Url.RouteUrl("HomePage")')">
                         @T("Checkout.ThankYou.Continue")
                     </button>
                 </div>

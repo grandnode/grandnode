@@ -2,10 +2,11 @@
 @using Grand.Domain.Forums;
 @using Grand.Web.Models.Common;
 @inject Grand.Services.Localization.ILocalizationService localizationService
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
-    Html.AddTitleParts(T("Forum.PageTitle.Search").Text);
+    pagebuilder.AddTitleParts(T("Forum.PageTitle.Search").Text);
 }
 <script asp-location="Footer">
     $(document).ready(function () {

@@ -1,8 +1,8 @@
 ﻿@model DiscountModel
-
+@inject IPageHeadBuilder pagebuilder
 @using Grand.Framework.UI;
 @{
-    Html.AddScriptParts("~/scripts/jquery.tmpl.min.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/scripts/jquery.tmpl.min.js", excludeFromBundle: true);
 }
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
