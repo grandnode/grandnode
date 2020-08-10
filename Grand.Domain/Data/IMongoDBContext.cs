@@ -3,12 +3,11 @@ using MongoDB.Driver;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grand.Core.Data
+namespace Grand.Domain.Data
 {
     public interface IMongoDBContext
     {
         IMongoDatabase Database();
-        IMongoClient Client();
         TResult RunCommand<TResult>(string command);
         TResult RunCommand<TResult>(string command, ReadPreference readpreference);
         BsonValue RunScript(string command, CancellationToken cancellationToken);

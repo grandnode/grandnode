@@ -85,4 +85,19 @@
   <LocalesResource Name="Admin.Orders.List.OrderTagId">
     Order's tag
   </LocalesResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MinOrderAmount">
+    <Value>Min order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MinOrderAmount.Hint">
+    <Value>Enter minimum order total amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MaxOrderAmount">
+    <Value>Max order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MaxOrderAmount.Hint">
+    <Value>Enter maximum order total amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.MinMaxOrderTotalAmount">
+    <Value>Order total amount does not meet the requirements.</Value>
+  </LocaleResource>
 </Language>

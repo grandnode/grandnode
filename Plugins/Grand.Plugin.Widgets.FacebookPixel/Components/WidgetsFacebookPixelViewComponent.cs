@@ -1,7 +1,8 @@
 ﻿using Grand.Core;
+using Grand.Plugin.Widgets.FacebookPixel.Models;
 using Grand.Services.Orders;
-using Grand.Web.Models.ShoppingCart;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Globalization;
 using System.Threading.Tasks;
 
@@ -35,7 +36,7 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Components
             //add to cart
             if (widgetZone == FacebookPixelWidgetZone.AddToCart)
             {
-                var model = additionalData as AddToCartModel;
+                var model = JsonConvert.DeserializeObject<FacebookAddToCartModelModel>(JsonConvert.SerializeObject(additionalData));
                 if (model != null)
                 {
                     return View("~/Plugins/Widgets.FacebookPixel/Views/PublicInfo.cshtml", GetAddToCartScript(model));
@@ -61,7 +62,7 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Components
             return trackingScript;
         }
 
-        private string GetAddToCartScript(AddToCartModel model)
+        private string GetAddToCartScript(FacebookAddToCartModelModel model)
         {
             var trackingScript = _facebookPixelSettings.AddToCartScript + "\n";
             trackingScript = trackingScript.Replace("{PRODUCTID}", model.ProductId);

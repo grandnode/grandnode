@@ -5,41 +5,19 @@ using MongoDB.Driver.Core.Operations;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grand.Core.Data
+namespace Grand.Domain.Data
 {
     public class MongoDBContext : IMongoDBContext
     {
         protected IMongoDatabase _database;
-        protected IMongoClient _client;
-
         public MongoDBContext()
         {
 
         }
-        public MongoDBContext(string connectionString)
-        {
-            _client = new MongoClient(connectionString);
-            var databaseName = new MongoUrl(connectionString).DatabaseName;
-            _database = _client.GetDatabase(databaseName);
-        }
 
-        public MongoDBContext(IMongoClient client)
-        {
-            string connectionString = DataSettingsHelper.ConnectionString();
-            var databaseName = new MongoUrl(connectionString).DatabaseName;
-            _database = client.GetDatabase(databaseName);
-            _client = client;
-        }
-
-        public MongoDBContext(IMongoClient client, IMongoDatabase mongodatabase)
+        public MongoDBContext(IMongoDatabase mongodatabase)
         {
             _database = mongodatabase;
-            _client = client;
-        }
-
-        public IMongoClient Client()
-        {
-            return _client;
         }
 
         public IMongoDatabase Database()
@@ -61,7 +39,7 @@ namespace Grand.Core.Data
         {
             var script = new BsonJavaScript(command);
             var operation = new EvalOperation(_database.DatabaseNamespace, script, null);
-            var writeBinding = new WritableServerBinding(_client.Cluster, NoCoreSession.NewHandle());
+            var writeBinding = new WritableServerBinding(_database.Client.Cluster, NoCoreSession.NewHandle());
             return operation.Execute(writeBinding, CancellationToken.None);
         }
 
@@ -69,9 +47,8 @@ namespace Grand.Core.Data
         {
             var script = new BsonJavaScript(command);
             var operation = new EvalOperation(_database.DatabaseNamespace, script, null);
-            var writeBinding = new WritableServerBinding(_client.Cluster, NoCoreSession.NewHandle());
+            var writeBinding = new WritableServerBinding(_database.Client.Cluster, NoCoreSession.NewHandle());
             return operation.ExecuteAsync(writeBinding, CancellationToken.None);
-
         }
     }
 }

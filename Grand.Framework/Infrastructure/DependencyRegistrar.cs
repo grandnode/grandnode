@@ -176,12 +176,8 @@ namespace Grand.Framework.Infrastructure
                 var mongourl = new MongoUrl(connectionString);
                 var databaseName = mongourl.DatabaseName;
                 builder.Register(c => new MongoClient(mongourl).GetDatabase(databaseName)).InstancePerLifetimeScope();
-                builder.Register<IMongoDBContext>(c => new MongoDBContext(connectionString)).InstancePerLifetimeScope();
             }
-            else
-            {
-                builder.RegisterType<MongoDBContext>().As<IMongoDBContext>().InstancePerLifetimeScope();
-            }
+            builder.RegisterType<MongoDBContext>().As<IMongoDBContext>().InstancePerLifetimeScope();
 
             //MongoDbRepository
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();

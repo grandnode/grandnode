@@ -350,17 +350,16 @@ namespace Grand.Services.Vendors
         /// <returns>Vendors</returns>
         public virtual async Task<IList<Vendor>> SearchVendors(
             string vendorId = "",
-            string keywords = null
-            )
+            string keywords = null)
         {
             //vendors
             var builder = Builders<Vendor>.Filter;
             var filter = FilterDefinition<Vendor>.Empty;
 
             //searching by keyword
-            if (!String.IsNullOrWhiteSpace(keywords))
+            if (!string.IsNullOrWhiteSpace(keywords))
             {
-                filter = filter & builder.Where(p =>
+                filter &= builder.Where(p =>
                         p.Name.ToLower().Contains(keywords.ToLower())
                         ||
                         p.Locales.Any(x => x.LocaleKey == "Name" && x.LocaleValue != null && x.LocaleValue.ToLower().Contains(keywords.ToLower()))
@@ -368,12 +367,11 @@ namespace Grand.Services.Vendors
             }
 
             //vendor filtering
-            if (!String.IsNullOrEmpty(vendorId))
+            if (!string.IsNullOrEmpty(vendorId))
             {
-                filter = filter & builder.Where(x => x.Id == vendorId);
+                filter &= builder.Where(x => x.Id == vendorId);
             }
-            var vendors = _vendorRepository.FindByFilterDefinition(filter);
-            return await Task.FromResult(vendors);
+            return await _vendorRepository.Collection.Find(filter).ToListAsync();
         }
 
         #endregion

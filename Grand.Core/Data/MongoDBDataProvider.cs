@@ -1,4 +1,6 @@
 ﻿
+using Grand.Domain.Data;
+
 namespace Grand.Core.Data
 {
     public class MongoDBDataProvider : IDataProvider

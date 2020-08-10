@@ -8178,12 +8178,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.MinOrderSubtotalAmountIncludingTax.Hint">
     <Value>Check to calculate 'Min order sub-total amount' value including tax; otherwise excluding tax.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.MinOrderTotalAmount">
-    <Value>Min order total amount</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.MinOrderTotalAmount.Hint">
-    <Value>Enter minimum order total amount.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.NumberOfDaysReturnRequestAvailable">
     <Value>Number of days that the return request is available</Value>
   </LocaleResource>
@@ -11905,6 +11899,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.IsSystemRole.Hint">
     <Value>A value indicating whether it's a system role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MaxOrderAmount">
+    <Value>Max order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MaxOrderAmount.Hint">
+    <Value>Enter maximum order total amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MinOrderAmount">
+    <Value>Min order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MinOrderAmount.Hint">
+    <Value>Enter minimum order total amount.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.Name">
     <Value>Name</Value>
@@ -17467,6 +17473,9 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.EnterShippingAddress">
     <Value>Enter shipping address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.MinMaxOrderTotalAmount">
+    <Value>Order total amount does not meet the requirements.</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.MinOrderPlacementInterval">
     <Value>Please wait several seconds before placing a new order (already placed another order several seconds ago).</Value>

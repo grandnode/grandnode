@@ -1,6 +1,7 @@
 ﻿using Grand.Domain.Tasks;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security.Authorization;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Tasks;
@@ -20,16 +21,19 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         private readonly IScheduleTaskService _scheduleTaskService;
         private readonly ILocalizationService _localizationService;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
 
         #region Constructors
         public ScheduleTaskController(
             IScheduleTaskService scheduleTaskService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IDateTimeHelper dateTimeHelper)
         {
             _scheduleTaskService = scheduleTaskService;
             _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
         }
         #endregion
 
@@ -44,9 +48,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Type = task.Type,
                 Enabled = task.Enabled,
                 StopOnError = task.StopOnError,
-                LastStartUtc = task.LastStartUtc,
-                LastEndUtc = task.LastNonSuccessEndUtc,
-                LastSuccessUtc = task.LastSuccessUtc,
+                LastStartUtc = task.LastStartUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastStartUtc.Value, DateTimeKind.Utc) : default(DateTime?),
+                LastEndUtc = task.LastNonSuccessEndUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastNonSuccessEndUtc.Value, DateTimeKind.Utc) : default(DateTime?),
+                LastSuccessUtc = task.LastSuccessUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastSuccessUtc.Value, DateTimeKind.Utc) : default(DateTime?),
                 TimeInterval = task.TimeInterval,
             };
             return model;
