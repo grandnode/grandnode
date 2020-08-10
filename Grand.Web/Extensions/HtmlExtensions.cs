@@ -1,5 +1,4 @@
-﻿using Grand.Core;
-using Grand.Framework;
+﻿using Grand.Framework;
 using Grand.Framework.UI.Paging;
 using Grand.Services.Localization;
 using Grand.Web.Models.Boards;
@@ -13,31 +12,6 @@ namespace Grand.Web.Extensions
 {
     public static class HtmlExtensions
     {
-        /// <summary>
-        /// BBCode editor
-        /// </summary>
-        /// <typeparam name="TModel">Model</typeparam>
-        /// <param name="html">HTML Helper</param>
-        /// <param name="name">Name</param>
-        /// <returns>Editor</returns>
-        public static IHtmlContent BBCodeEditor<TModel>(this IHtmlHelper<TModel> html, IWebHelper webHelper, string name)
-        {
-            var sb = new StringBuilder();
-
-            var storeLocation = webHelper.GetStoreLocation();
-            string bbEditorWebRoot = String.Format("{0}content/", storeLocation);
-
-            sb.AppendFormat("<script src=\"{0}content/bbeditor/ed.js\" ></script>", storeLocation);
-            sb.Append(Environment.NewLine);
-            sb.Append("<script language=\"javascript\" type=\"text/javascript\">");
-            sb.Append(Environment.NewLine);
-            sb.AppendFormat("edToolbar('{0}','{1}');", name, bbEditorWebRoot);
-            sb.Append(Environment.NewLine);
-            sb.Append("</script>");
-            sb.Append(Environment.NewLine);
-
-            return new HtmlString(sb.ToString());
-        }
 
         //we have two pagers:
         //The first one can have custom routes

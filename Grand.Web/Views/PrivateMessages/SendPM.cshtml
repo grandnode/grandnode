@@ -1,5 +1,4 @@
 ﻿@model SendPrivateMessageModel
-@inject IWebHelper webHelper
 @inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
@@ -33,7 +32,7 @@
                 </div>
                 <div class="form-group message">
                     <label>@T("PrivateMessages.Send.Message")</label>
-                    @Html.BBCodeEditor(webHelper, "Message")
+                    <bbc-code asp-name="Message" />
                     <textarea asp-for="Message" class="form-control bb-editor-text"></textarea>
                     <span asp-validation-for="Message"></span>
                 </div>
