@@ -1,0 +1,99 @@
+﻿@model IList<Order>
+@inject Grand.Services.Catalog.IProductService _productService;
+@inject Grand.Services.Directory.ICountryService _countryService;
+
+
+<style>
+    html{
+        font-size:30px;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+
+    .addresses {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+
+    .column {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        flex: 1;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+
+    @foreach (var order in Model)
+    {
+        <div class="addresses">
+            <div class="billing column">
+                <ul>
+                    <li>Company : @order.BillingAddress.Company</li>
+                    <li>Name: @order.BillingAddress.FirstName  @order.BillingAddress.LastName</li>
+                    <li>Phone : @order.BillingAddress.PhoneNumber</li>
+                    <li>Address :@order.BillingAddress.Address1 @order.BillingAddress.City  @order.BillingAddress.ZipPostalCode  @((await _countryService.GetCountryById(order.BillingAddress.CountryId)).Name)</li>
+                    <li>Payment method : @order.PaymentMethodSystemName</li>
+                </ul>
+            </div>
+            <div class="shipping column">
+                <ul>
+                    <li>Company : @order.ShippingAddress.Company</li>
+                    <li>Name: @order.ShippingAddress.FirstName  @order.ShippingAddress.LastName</li>
+                    <li>Phone : @order.ShippingAddress.PhoneNumber</li>
+                    <li>Address :@order.ShippingAddress.Address1 @order.ShippingAddress.City  @order.ShippingAddress.ZipPostalCode  @((await _countryService.GetCountryById(order.ShippingAddress.CountryId)).Name)</li>
+                    <li>Shipping method  : @order.ShippingMethod</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <h5>Product(s)</h5>
+        <table style="width:100%">
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+            @foreach (var item in order.OrderItems)
+            {
+                <tr>
+                    <td>@((await _productService.GetProductByIdIncludeArch(item.ProductId)).Name)</td>
+                    <td>@item.UnitPriceInclTax</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.PriceInclTax</td>
+                </tr>
+            }
+
+
+        </table>
+
+        <div class="summary">
+            <ul>
+                <li>Sub total : @order.OrderSubtotalInclTax</li>
+                <li>Shipping  : @order.OrderShippingInclTax</li>
+                <li>Tax: @order.OrderTax</li>
+            </ul>
+        </div>
+        <div style="display:block; clear:both; page-break-after:always;"></div>
+    }
+</body>
+</html>

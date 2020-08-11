@@ -235,7 +235,9 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerLifetimeScope();
             builder.RegisterType<GenericAttributeService>().As<IGenericAttributeService>().InstancePerLifetimeScope();
             builder.RegisterType<HistoryService>().As<IHistoryService>().InstancePerLifetimeScope();
-            builder.RegisterType<PdfService>().As<IPdfService>().InstancePerLifetimeScope();
+            builder.RegisterType<WkPdfService>().As<IPdfService>().InstancePerLifetimeScope();
+            builder.RegisterType<ViewRenderService>().As<IViewRenderService>().InstancePerLifetimeScope();
+            //builder.RegisterType<PdfService>().As<IPdfService>().InstancePerLifetimeScope();
             builder.RegisterType<SearchTermService>().As<ISearchTermService>().InstancePerLifetimeScope();
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerLifetimeScope();
 

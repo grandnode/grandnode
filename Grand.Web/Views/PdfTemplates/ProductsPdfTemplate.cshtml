@@ -1,0 +1,41 @@
+﻿@model IList<Product>
+@inject Grand.Services.Media.IPictureService _pictureService;
+@inject IWebHelper _webHelper;
+
+@{ 
+    var storyLocation = _webHelper.GetStoreLocation();
+    var pictureLocation=storyLocation.Remove(storyLocation.Length - 1);
+    // Use absolute url for images
+    //If you want divide content for page use    <div style="display:block; clear:both; page-break-after:always;"></div>
+}
+    <style>
+
+
+   @@media print {
+        .new-page {
+    page-break-before: always;
+  }
+}
+    </style>
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+    </head>
+    <body>
+        @for (int i = 0; i < Model.Count; i++)
+			{
+            <div class="product">
+                <h1>@(i+1). @Model[i].Name</h1>
+                <p>@Model[i].ShortDescription</p>
+                <h4>Price @Model[i].Price</h4>
+                <h4>Sku @Model[i].Sku</h4>
+                <h4>Weight @Model[i].Weight</h4>
+            </div>
+            foreach (var pic in Model[i].ProductPictures)
+            {
+                <img src=" @(pictureLocation+(await _pictureService.GetPictureUrl(pic.PictureId))) " width="100" height="100" />
+            }
+         <div style="display:block; clear:both; page-break-after:always;"></div>
+        }
+    </body>
+    </html>

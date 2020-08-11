@@ -22,6 +22,7 @@
     <PackageReference Include="Microsoft.Azure.Storage.Common" Version="11.2.0" />
     <PackageReference Include="SkiaSharp" Version="2.80.1" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.1" />
+    <PackageReference Include="Wkhtmltopdf.NetCore" Version="3.0.1" />
 
     <!-- For support Raspberry pi 4 
       <PackageReference Include="SkiaSharp" Version="1.68.0" />
