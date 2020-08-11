@@ -1,2 +1,62 @@
 ﻿@using  Grand.Domain.Shipping
 @model IList<Shipment>
+@inject Grand.Services.Orders.IOrderService _orderService ;
+@inject Grand.Services.Directory.ICountryService _cournyService;
+@inject Grand.Services.Catalog.IProductService _productService;
+
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    @for (int i = 0; i < Model.Count; i++)
+    {
+
+        var order = await _orderService.GetOrderById(Model[i].OrderId);
+
+
+        <h1>Shipment @(i+1)#</h1>
+
+        <ul>
+            <li>Comapany : @order.ShippingAddress.Company</li>
+            <li>Name: @order.ShippingAddress.FirstName @order.ShippingAddress.LastName</li>
+            <li>Phone @order.ShippingAddress.PhoneNumber</li>
+            <li>Address @order.ShippingAddress.Address1  @order.ShippingAddress.City @((await _cournyService.GetCountryById(order.ShippingAddress.CountryId)).Name)  @order.ShippingAddress.ZipPostalCode</li>
+
+        </ul>
+        <h6>Shipping method: @order.ShippingMethod</h6>
+        <h5>Product(s)</h5>
+        <table style="width:100%">
+            <tr>
+                <th>Name</th>
+                <th>Sku</th>
+                <th>Quantity</th>
+
+            </tr>
+            @foreach (var item in order.OrderItems)
+            {
+                <tr>
+                    <td>@((await _productService.GetProductByIdIncludeArch(item.ProductId)).Name)</td>
+                    <td>@((await _productService.GetProductByIdIncludeArch(item.ProductId)).Sku)</td>
+                    <td>@item.Quantity</td>
+                </tr>
+            }
+
+
+        </table>
+
+        if (Model.Count - 1 > i)
+        {
+
+            <div style="display:block; clear:both; page-break-after:always;"></div>
+        }
+    }
+</body>
+</html>

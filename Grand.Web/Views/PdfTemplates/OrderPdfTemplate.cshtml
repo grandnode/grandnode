@@ -37,10 +37,14 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+
     <title></title>
 </head>
 <body>
+    @{
+        var i = 0;
 
+    }
     @foreach (var order in Model)
     {
         <div class="addresses">
@@ -93,7 +97,13 @@
                 <li>Tax: @order.OrderTax</li>
             </ul>
         </div>
-        <div style="display:block; clear:both; page-break-after:always;"></div>
+        if (Model.Count - 1 > i)
+        {
+
+            <div style="display:block; clear:both; page-break-after:always;"></div>
+        }
+        i++;
     }
+
 </body>
 </html>

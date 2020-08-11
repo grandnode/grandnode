@@ -25,7 +25,6 @@
     <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.65" />
     <PackageReference Include="WebMarkupMin.AspNetCore3" Version="2.8.8" />
     <PackageReference Include="WebMarkupMin.Core" Version="2.8.6" />
-    <PackageReference Include="Wkhtmltopdf.NetCore" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
