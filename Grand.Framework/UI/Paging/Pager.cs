@@ -1,5 +1,4 @@
 using Grand.Core;
-using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,7 +17,7 @@ namespace Grand.Framework.UI.Paging
     /// Renders a pager component from an IPageableModel datasource.
     /// </summary>
     public partial class Pager : IHtmlContent
-	{
+    {
         protected readonly IPageableModel model;
         protected readonly ViewContext viewContext;
         protected string pageQueryName = "page";
@@ -33,23 +32,22 @@ namespace Grand.Framework.UI.Paging
         protected int individualPagesDisplayedCount = 5;
         protected IList<string> booleanParameterNames;
 
-		public Pager(IPageableModel model, ViewContext context)
-		{
+        public Pager(IPageableModel model, ViewContext context)
+        {
             this.model = model;
             this.viewContext = context;
             this.booleanParameterNames = new List<string>();
-		}
+        }
 
-		protected ViewContext ViewContext 
-		{
-			get { return viewContext; }
-		}
-        
+        protected ViewContext ViewContext {
+            get { return viewContext; }
+        }
+
         public Pager QueryParam(string value)
-		{
+        {
             this.pageQueryName = value;
-			return this;
-		}
+            return this;
+        }
         public Pager ShowTotalSummary(bool value)
         {
             this.showTotalSummary = value;
@@ -103,17 +101,17 @@ namespace Grand.Framework.UI.Paging
             return this;
         }
 
-	    public void WriteTo(TextWriter writer, HtmlEncoder encoder)
-	    {
+        public void WriteTo(TextWriter writer, HtmlEncoder encoder)
+        {
             var htmlString = GenerateHtmlString();
-	        writer.Write(htmlString);
-	    }
-	    public override string ToString()
-	    {
-	        return GenerateHtmlString();
-	    }
+            writer.Write(htmlString);
+        }
+        public override string ToString()
+        {
+            return GenerateHtmlString();
+        }
         public virtual string GenerateHtmlString()
-		{
+        {
             if (model.TotalItems == 0)
                 return null;
             var localizationService = viewContext.HttpContext.RequestServices.GetRequiredService<ILocalizationService>();
@@ -185,11 +183,11 @@ namespace Grand.Framework.UI.Paging
             }
             return result;
         }
-	    public virtual bool IsEmpty()
-	    {
+        public virtual bool IsEmpty()
+        {
             var html = GenerateHtmlString();
-	        return string.IsNullOrEmpty(html);
-	    }
+            return string.IsNullOrEmpty(html);
+        }
 
         protected virtual int GetFirstIndividualPageIndex()
         {
@@ -222,8 +220,8 @@ namespace Grand.Framework.UI.Paging
             }
             return (model.PageIndex + num);
         }
-		protected virtual string CreatePageLink(int pageNumber, string text, string cssClass)
-		{
+        protected virtual string CreatePageLink(int pageNumber, string text, string cssClass)
+        {
             var liBuilder = new TagBuilder("li");
             if (!String.IsNullOrWhiteSpace(cssClass))
                 liBuilder.AddCssClass(cssClass);
@@ -234,24 +232,24 @@ namespace Grand.Framework.UI.Paging
             aBuilder.MergeAttribute("href", CreateDefaultUrl(pageNumber));
 
             liBuilder.InnerHtml.AppendHtml(aBuilder);
-		    return liBuilder.RenderHtmlContent();
-		}
+            return liBuilder.RenderHtmlContent();
+        }
         protected virtual string CreateDefaultUrl(int pageNumber)
-		{
+        {
             var routeValues = new RouteValueDictionary();
 
             var parametersWithEmptyValues = new List<string>();
-			foreach (var key in viewContext.HttpContext.Request.Query.Keys.Where(key => key != null))
-			{
-			    //TODO test new implementation (QueryString, keys). And ensure no null exception is thrown when invoking ToString(). Is "StringValues.IsNullOrEmpty" required?
+            foreach (var key in viewContext.HttpContext.Request.Query.Keys.Where(key => key != null))
+            {
+                //TODO test new implementation (QueryString, keys). And ensure no null exception is thrown when invoking ToString(). Is "StringValues.IsNullOrEmpty" required?
                 var value = viewContext.HttpContext.Request.Query[key].ToString();
                 if (renderEmptyParameters && String.IsNullOrEmpty(value))
-			    {
+                {
                     //we store query string parameters with empty values separately
                     //we need to do it because they are not properly processed in the UrlHelper.GenerateUrl method (dropped for some reasons)
                     parametersWithEmptyValues.Add(key);
-			    }
-			    else
+                }
+                else
                 {
                     if (booleanParameterNames.Contains(key, StringComparer.OrdinalIgnoreCase))
                     {
@@ -263,8 +261,8 @@ namespace Grand.Framework.UI.Paging
                         }
                     }
                     routeValues[key] = value;
-			    }
-			}
+                }
+            }
 
             if (pageNumber > 1)
             {
@@ -279,12 +277,12 @@ namespace Grand.Framework.UI.Paging
                 }
             }
 
-		    var webHelper = viewContext.HttpContext.RequestServices.GetRequiredService<IWebHelper>();
-		    var url = webHelper.GetThisPageUrl(false);
-		    foreach (var routeValue in routeValues)
-		    {
-		        url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString());
-		    }
+            var webHelper = viewContext.HttpContext.RequestServices.GetRequiredService<IWebHelper>();
+            var url = webHelper.GetThisPageUrl(false);
+            foreach (var routeValue in routeValues)
+            {
+                url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString());
+            }
             if (renderEmptyParameters && parametersWithEmptyValues.Any())
             {
                 foreach (var key in parametersWithEmptyValues)
@@ -292,8 +290,8 @@ namespace Grand.Framework.UI.Paging
                     url = webHelper.ModifyQueryString(url, key, null);
                 }
             }
-			return url;
-		}
+            return url;
+        }
 
     }
 }
