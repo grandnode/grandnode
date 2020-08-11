@@ -36,15 +36,8 @@
                 </div>
             </div>
         }
-        @{
-            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-        }
-        @if (!pager.IsEmpty())
-        {
-            <div class="pager">
-                @pager
-            </div>
-        }
+        <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
+        
         @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_after_items" })
     </div>
 

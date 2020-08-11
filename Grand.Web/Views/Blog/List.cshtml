@@ -103,14 +103,7 @@
             @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post", additionalData = item.Id })
         }
     </div>
-    @{
-        var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-    }
-    @if (!pager.IsEmpty())
-    {
-        <div class="pager">
-            @pager
-        </div>
-    }
+    <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
+
     @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_posts" })
 </div>

@@ -160,15 +160,11 @@
                 </div>
             }
         }
-        @{
-            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid").RenderEmptyParameters(true);
-        }
-        @if (!pager.IsEmpty())
-        {
-            <div class="pager">
-                @pager
-            </div>
-        }
+        <page-navigation 
+                         asp-query-param="pagenumber" 
+                         asp-pagination="Model.PagingFilteringContext" 
+                         asp-boolean-params=@(new List<string> { "adv", "isc", "sid" }) 
+                         asp-render-empty-parameters="true" />
     </div>
 </div>
 @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_after_results" })

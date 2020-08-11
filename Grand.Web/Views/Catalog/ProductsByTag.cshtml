@@ -50,15 +50,7 @@
             </div>
         }
     }
-    @{
-        var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-    }
-    @if (!pager.IsEmpty())
-    {
-        <div class="pager">
-            @pager
-        </div>
-    }
+    <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
 </div>
 @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_bottom", additionalData = Model.Id })
 

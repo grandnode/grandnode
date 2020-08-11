@@ -79,15 +79,8 @@
             </div>
         }
     }
-    @{
-        var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-    }
-    @if (!pager.IsEmpty())
-    {
-        <nav aria-label="Page navigation">
-            @pager
-        </nav>
-    }
+    <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
+    
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_bottom", additionalData = Model.Id })
 </div>
 

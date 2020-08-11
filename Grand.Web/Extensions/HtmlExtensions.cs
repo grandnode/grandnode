@@ -183,13 +183,7 @@ namespace Grand.Web.Extensions
                 return new HtmlString(String.Format(localizationService.GetResource("Forum.Topics.GotoPostPager"), links));
             }
             return new HtmlString(string.Empty);
-        }
-        public static Pager Pager(this IHtmlHelper helper, IPageableModel pagination)
-        {
-            return new Pager(pagination, helper.ViewContext);
-        }
-
-
+        }        
     }
 }
 

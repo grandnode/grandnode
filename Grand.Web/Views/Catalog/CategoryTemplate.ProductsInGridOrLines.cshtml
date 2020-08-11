@@ -134,16 +134,7 @@
                         </div>
                     }
                 </div>
-
-                @{
-                    var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-                }
-                @if (!pager.IsEmpty())
-                {
-                    <nav aria-label="Page navigation">
-                        @pager
-                    </nav>
-                }
+                <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
                 @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
             </div>
         }
@@ -156,15 +147,7 @@
                         {
                             <partial name="_ProductBoxList" model="product" />
                         }
-                        @{
-                            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-                        }
-                        @if (!pager.IsEmpty())
-                        {
-                            <nav aria-label="Page navigation">
-                                @pager
-                            </nav>
-                        }
+                        <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
                         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
                     </div>
                 </div>
