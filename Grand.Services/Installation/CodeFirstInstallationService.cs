@@ -4832,7 +4832,6 @@ namespace Grand.Services.Installation
                 SitemapIncludeProducts = false,
                 DisplayJavaScriptDisabledWarning = false,
                 UseFullTextSearch = false,
-                FullTextMode = FulltextSearchMode.ExactMatch,
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
                 DeleteGuestTaskOlderThanMinutes = 1440,

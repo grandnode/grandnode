@@ -1691,8 +1691,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             //full-text support
             model.FullTextSettings.Supported = true;
             model.FullTextSettings.Enabled = commonSettings.UseFullTextSearch;
-            model.FullTextSettings.SearchMode = (int)commonSettings.FullTextMode;
-            model.FullTextSettings.SearchModeValues = commonSettings.FullTextMode.ToSelectList(HttpContext);
 
             //google analytics
             model.GoogleAnalyticsSettings.gaprivateKey = googleAnalyticsSettings.gaprivateKey;
@@ -1871,10 +1869,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             localizationSettings.LoadAllLocaleRecordsOnStartup = model.LocalizationSettings.LoadAllLocaleRecordsOnStartup;
             localizationSettings.LoadAllLocalizedPropertiesOnStartup = model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup;
             await _settingService.SaveSetting(localizationSettings);
-
-            //full-text
-            commonSettings.FullTextMode = (FulltextSearchMode)model.FullTextSettings.SearchMode;
-            await _settingService.SaveSetting(commonSettings);
 
             //admin settings
             var adminareasettings = _settingService.LoadSetting<AdminAreaSettings>(storeScope);

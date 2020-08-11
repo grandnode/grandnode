@@ -302,9 +302,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
             public bool Enabled { get; set; }
 
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode")]
-            public int SearchMode { get; set; }
-            public SelectList SearchModeValues { get; set; }
         }
 
         public partial class GoogleAnalyticsSettingsModel : BaseGrandModel

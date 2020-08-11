@@ -7534,12 +7534,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported">
     <Value>Full-Text is not supported by your database</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode">
-    <Value>Search mode</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode.Hint">
-    <Value>Choose Full-Text search mode</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Supported">
     <Value>Full-Text is supported by your database</Value>
   </LocaleResource>
