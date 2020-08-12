@@ -145,8 +145,8 @@ namespace Grand.Domain.Orders
         public int LengthCode { get; set; }
 
         /// <summary>
-        /// Gets or sets Number of Days after which order would automatically deleted - if not paid
+        /// Gets or sets Number of Days after which order would automatically Canceled - if not paid and has pending status
         /// </summary>
-        public int? DaysToDeleteUnpaidOrder { get; set; }
+        public int? DaysToCancelUnpaidOrder { get; set; }
     }
 }

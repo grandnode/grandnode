@@ -314,14 +314,15 @@ namespace Grand.Services.Orders
 
 
         /// <summary>
-        /// Delete Expired UnPaid Orders
+        /// Cancel UnPaid Orders and has pending status
         /// </summary>
-        /// <param name="expirationDateUTC">Date at which all unPaid orders Would be deleted</param>
-        public async Task DeleteExpiredOrders(DateTime expirationDateUTC)
+        /// <param name="expirationDateUTC">Date at which all unPaid orders and has pending status Would be Canceled</param>
+        public async Task CancelExpiredOrders(DateTime expirationDateUTC)
         {
             var orders = await _orderRepository.Table
               .Where(o => o.CreatedOnUtc < expirationDateUTC && 
-              (o.PaymentStatusId == (int)PaymentStatus.Pending || !o.PaidDateUtc.HasValue || o.OrderStatusId == (int)OrderStatus.Pending))
+              (o.PaymentStatusId == (int)PaymentStatus.Pending || !o.PaidDateUtc.HasValue || o.OrderStatusId == (int)OrderStatus.Pending) && 
+              o.OrderStatusId != (int)OrderStatus.Cancelled)
               .ToListAsync();
 
             foreach (var order in orders)

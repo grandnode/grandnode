@@ -5,17 +5,18 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Grand.Services.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Grand.Services.ScheduledJob
 {
-    public class ScheduledDeleteOrderService : IScheduledJobService
+    public class ScheduledCancelOrderService : IScheduledJobService
     {
         private System.Timers.Timer _timer;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public ScheduledDeleteOrderService(IServiceScopeFactory scopeFactory)
+        public ScheduledCancelOrderService(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
         }
@@ -42,7 +43,7 @@ namespace Grand.Services.ScheduledJob
                 _timer = null;
 
                 if (!cancellationToken.IsCancellationRequested)
-                    await DeleteOrdersAsync(nowDateTime, cancellationToken);
+                    await CancelOrdersAsync(nowDateTime);
 
                 if (!cancellationToken.IsCancellationRequested)
                     await ScheduleAsync(cancellationToken);
@@ -62,21 +63,29 @@ namespace Grand.Services.ScheduledJob
             _timer?.Dispose();
         }
 
-        private async Task DeleteOrdersAsync(DateTime todayDate, CancellationToken cancellationToken)
+        private async Task CancelOrdersAsync(DateTime todayDate)
         {
             using (var scope = _scopeFactory.CreateScope())
             {
-                // load order setting
-                var _settingService = scope.ServiceProvider.GetRequiredService<ISettingService>();
-                var orderSetting = _settingService.LoadSetting<OrderSettings>(string.Empty);
-                if (!orderSetting.DaysToDeleteUnpaidOrder.HasValue)
-                    return;
+                var _serviceProvider = scope.ServiceProvider;
+                var logger = _serviceProvider.GetService<ILogger>();
+                try
+                {
+                    // load order setting
+                    var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
+                    var orderSetting = _settingService.LoadSetting<OrderSettings>(string.Empty);
+                    if (!orderSetting.DaysToCancelUnpaidOrder.HasValue)
+                        return;
 
-                int DaysToDeleteUnpaidOrder = orderSetting.DaysToDeleteUnpaidOrder.Value;
-                DateTime startDeletionDate = todayDate.Date.AddDays(-1 * (DaysToDeleteUnpaidOrder - 1)); // -1 avoid query dateTime.Date in Mongo IQueryable 
-
-                var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
-                await orderService.DeleteExpiredOrders(startDeletionDate);
+                    int DaysToCancelUnpaidOrder = orderSetting.DaysToCancelUnpaidOrder.Value;
+                    DateTime startCancelDate = todayDate.Date.AddDays(-1 * (DaysToCancelUnpaidOrder - 1)); // -1 avoid query dateTime.Date in Mongo IQueryable 
+                    var orderService = _serviceProvider.GetRequiredService<IOrderService>();
+                    await orderService.CancelExpiredOrders(startCancelDate);
+                }
+                catch (Exception exc)
+                {
+                    await logger.InsertLog(Domain.Logging.LogLevel.Error, $"Error while running the CancelExpiredOrders scheduled task", exc.Message);
+                }
             }
         }
     }

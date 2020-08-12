@@ -188,10 +188,10 @@ namespace Grand.Services.Orders
 
 
         /// <summary>
-        /// Delete Expired UnPaid Orders
+        /// Cancel Expired UnPaid Orders
         /// </summary>
-        /// <param name="expirationDateUTC">Date at which all unPaid orders Would be deleted</param>
-        Task DeleteExpiredOrders(DateTime expirationDateUTC);
+        /// <param name="expirationDateUTC">Date at which all unPaid  orders and has pending status Would be Canceled</param>
+        Task CancelExpiredOrders(DateTime expirationDateUTC);
 
         #endregion
 

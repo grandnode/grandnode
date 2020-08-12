@@ -17,9 +17,10 @@ namespace Grand.Web.Areas.Admin.Validators.Settings
             RuleFor(x => x.GiftCards_Activated_OrderStatusId).NotEqual((int)OrderStatus.Pending)
                 .WithMessage(localizationService.GetResource("Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Awarded.Pending"));
 
-            RuleFor(x => x.DaysToDeleteUnpaidOrder).GreaterThan(0)
-                .When(x => x.DaysToDeleteUnpaidOrder.HasValue)
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Settings.Order.DaysToDeleteUnpaidOrder.Validator"));
+            RuleFor(x => x.DaysToCancelUnpaidOrder)
+                .GreaterThan(0)
+                .When(x => x.DaysToCancelUnpaidOrder.HasValue)
+                .WithMessage(localizationService.GetResource("Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder.Validator"));
         }
     }
 }

@@ -1076,7 +1076,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _settingService.SaveSetting(orderSettings, x => x.CompleteOrderWhenDelivered, "", false);
                 await _settingService.SaveSetting(orderSettings, x => x.GiftCards_Activated_OrderStatusId, "", false);
                 await _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterCancelOrder, "", false);
-                await _settingService.SaveSetting(orderSettings, x => x.DaysToDeleteUnpaidOrder, "", false);
+                await _settingService.SaveSetting(orderSettings, x => x.DaysToCancelUnpaidOrder, "", false);
 
                 //now clear cache
                 await ClearCache();

@@ -21329,10 +21329,10 @@
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToDeleteUnpaidOrder">
-    <Value>Automatically Delete Unpaid Orders After X Days</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder">
+    <Value>Automatically Cancel Unpaid and pending Orders After X Days</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToDeleteUnpaidOrder.Validator">
-    <Value>Days To Delete Unpaid Orders Must Be Greater Than Zero</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder.Validator">
+    <Value>Days To Cancel Unpaid and pending Orders Must Be Greater Than Zero</Value>
   </LocaleResource>
 </Language>
