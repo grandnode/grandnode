@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Wkhtmltopdf.NetCore;
@@ -23,20 +24,26 @@ namespace Grand.Services.Common
         private const string _orderTemaplate = "~/Views/PdfTemplates/OrderPdfTemplate.cshtml";
         private const string _productsTemaplate = "~/Views/PdfTemplates/ProductsPdfTemplate.cshtml";
         private const string _shipmentsTemaplate = "~/Views/PdfTemplates/ShipmentPdfTemplate.cshtml";
+        private const string _orderFooter = "pdf/footers/orderFooter.html";
+        private const string _productsFooter = "pdf/footers/productsFooter.html";
+        private const string _shipmentFooter = "pdf/footers/shipmentFooter.html";
         private readonly IGeneratePdf _generatePdf;
         private readonly IViewRenderService _viewRenderService;
         private readonly IDownloadService _downloadService;
         private readonly ILanguageService _languageService;
+        private readonly IWebHelper _webHelper;
+        private string OrderFooter => _webHelper.GetStoreLocation() + _orderFooter;
+        private string ProductsFooter => _webHelper.GetStoreLocation() + _productsFooter;
+        private string ShipmentFooter => _webHelper.GetStoreLocation() + _shipmentFooter;
 
-        public WkPdfService(IGeneratePdf generatePdf,IViewRenderService viewRenderService,IDownloadService downloadService,ILanguageService languageService)
+        public WkPdfService(IGeneratePdf generatePdf,IViewRenderService viewRenderService,IDownloadService downloadService,
+            ILanguageService languageService,IWebHelper webHelper)
         {
             _generatePdf = generatePdf;
             _viewRenderService = viewRenderService;
             _downloadService = downloadService;
             _languageService = languageService;
-            _generatePdf.SetConvertOptions(new ConvertOptions() {
-                PageSize = Wkhtmltopdf.NetCore.Options.Size.A4
-            });
+            _webHelper = webHelper;
         }
 
         public async Task PrintOrdersToPdf(Stream stream, IList<Order> orders, string languageId = "", string vendorId = "")
@@ -46,6 +53,11 @@ namespace Grand.Services.Common
 
             if (orders == null)
                 throw new ArgumentNullException("orders");
+
+            _generatePdf.SetConvertOptions(new ConvertOptions() {
+                PageSize = Wkhtmltopdf.NetCore.Options.Size.A4,
+                FooterHtml=OrderFooter
+            });
 
             var html = await _viewRenderService.RenderToStringAsync<IList<Order>>(_orderTemaplate, orders);
             var pdfBytes = _generatePdf.GetPDF(html);
@@ -88,6 +100,11 @@ namespace Grand.Services.Common
             if (lang == null)
                 throw new ArgumentException(string.Format("Cannot load language. ID={0}", languageId));
 
+            _generatePdf.SetConvertOptions(new ConvertOptions() {
+                PageSize = Wkhtmltopdf.NetCore.Options.Size.A4,
+                FooterHtml = ShipmentFooter
+            });
+
             var html = await _viewRenderService.RenderToStringAsync<IList<Shipment>>(_shipmentsTemaplate, shipments);
             var pdfBytes = _generatePdf.GetPDF(html);
             stream.Write(pdfBytes);
@@ -101,6 +118,12 @@ namespace Grand.Services.Common
 
             if (products == null)
                 throw new ArgumentNullException("products");
+
+            _generatePdf.SetConvertOptions(new ConvertOptions() {
+                PageSize = Wkhtmltopdf.NetCore.Options.Size.A4,
+                FooterHtml = ProductsFooter
+            });
+
 
             var html = await _viewRenderService.RenderToStringAsync<IList<Product>>(_productsTemaplate, products);
             var pdfBytes = _generatePdf.GetPDF(html);
@@ -133,4 +156,5 @@ namespace Grand.Services.Common
             return downloadId;
         }
     }
+
 }
