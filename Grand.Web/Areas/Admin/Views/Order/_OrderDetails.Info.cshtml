@@ -141,15 +141,18 @@
                 </div>
             </div>
         }
-        <div class="form-group" id="trEditOrderTags">
-            <admin-label asp-for="OrderTags" />
-            <div class="col-md-9 col-sm-9">
-                <span asp-validation-for="OrderTags"></span>
-                <admin-input asp-for="OrderTags" />
-                <input type="submit" name="btnSaveOrderTags" value="@T("Admin.Orders.Fields.SaveOrderTags")" id="btnSaveOrderTags" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-            </div>
-        </div>
 
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <div class="form-group" id="trEditOrderTags">
+                <admin-label asp-for="OrderTags" />
+                <div class="col-md-9 col-sm-9">
+                    <span asp-validation-for="OrderTags"></span>
+                    <admin-input asp-for="OrderTags" />
+                    <input type="submit" name="btnSaveOrderTags" value="@T("Admin.Orders.Fields.SaveOrderTags")" id="btnSaveOrderTags" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                </div>
+            </div>
+        }
         @if (Model.IsLoggedInAsVendor && Model.OrderStatusId == (int)OrderStatus.Cancelled)
         {
             <div class="form-group">

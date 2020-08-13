@@ -35,7 +35,7 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string ORDERTAG_PATTERN_KEY = "Grand.orderttag.";
+        private const string ORDERTAG_PATTERN_KEY = "Grand.ordertag.";
 
         /// <summary>
         /// Key for caching
@@ -126,7 +126,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("orderTag");
 
             var builder = Builders<Order>.Update;
-            var updatefilter = builder.Pull(x => x.OrderTags, orderTag.Name);
+            var updatefilter = builder.PullFilter(x => x.OrderTags, y => y.OrderId == orderTag.Id );
             await _orderRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
             await _orderTagRepository.DeleteAsync(orderTag);
@@ -160,6 +160,17 @@ namespace Grand.Services.Orders
         public virtual Task<OrderTag> GetOrderTagById(string orderTagId)
         {
             return _orderTagRepository.GetByIdAsync(orderTagId);
+        }
+
+        /// <summary>
+        /// Gets order's tags by order
+        /// </summary>
+        /// <param name="orderId">Order's identifier</param>
+        /// <returns>Order's tag</returns>
+        public virtual async Task<IList<OrderTag>> GetOrderTagsByOrder(string orderId)
+        {
+            var result = await _orderTagRepository.Collection.FindAsync(p => p.Orders.Contains(orderId));
+            return result.ToList();
         }
 
         /// <summary>
@@ -207,15 +218,12 @@ namespace Grand.Services.Orders
 
             await _orderTagRepository.UpdateAsync(orderTag);
 
-            //update name on products
+            //update name on orders
             var filter = new BsonDocument
             {
-                new BsonElement("ProductTags", previouse.Name)
+                new BsonElement("OrderTags", previouse.Name)
             };
-            var update = Builders<Order>.Update
-                .Set(x => x.OrderTags.ElementAt(-1), orderTag.Name);
-            await _orderRepository.Collection.UpdateManyAsync(filter, update);
-
+                        
             //cache
             await _cacheManager.RemoveByPrefix(ORDERTAG_PATTERN_KEY);
 
@@ -227,15 +235,17 @@ namespace Grand.Services.Orders
         /// Attach a tag to the order
         /// </summary>
         /// <param name="orderTag">Order's picture</param>
-        public virtual async Task AttachOrderTag(OrderTag orderTag)
+        public virtual async Task AttachOrderTag(OrderTag orderTag, Order order)
         {
             if (orderTag == null)
                 throw new ArgumentNullException("orderTag");
 
+            // update  order with tags
             var updatebuilder = Builders<Order>.Update;
-            var update = updatebuilder.AddToSet(p => p.OrderTags, orderTag.Name);
-            await _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderTag.OrderId), update);
+            var update = updatebuilder.AddToSet(p => p.OrderTags, new OrderOrderTags { OrderId = order.Id, OrderTagId = orderTag.Id });
+            await _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", order.Id), update);
 
+            // update ordertag with count's order and new order id
             var builder = Builders<OrderTag>.Filter;
             var filter = builder.Eq(x => x.Id, orderTag.Id);
             var updateTag = Builders<OrderTag>.Update
@@ -243,7 +253,7 @@ namespace Grand.Services.Orders
             await _orderTagRepository.Collection.UpdateManyAsync(filter, updateTag);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, orderTag.OrderId));
+            await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, order.Id));
 
             //event notification
             await _mediator.EntityInserted(orderTag);
@@ -253,19 +263,19 @@ namespace Grand.Services.Orders
         /// Detach a tag from the order
         /// </summary>
         /// <param name="orderTag">Order Tag</param>
-        public virtual async Task DetachOrderTag(OrderTag orderTag)
+        public virtual async Task DetachOrderTag(OrderTag orderTag, Order order)
         {
             if (orderTag == null)
                 throw new ArgumentNullException("orderTag");
 
-            var updatebuilder = Builders<Order>.Update;
-            var update = updatebuilder.Pull(p => p.OrderTags, orderTag.Name);
-            await _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderTag.OrderId), update);
+            var filterOrder = Builders<Order>.Filter.Where(o => o.Id == order.Id);
+            var updateOrder = Builders<Order>.Update.PullFilter(p => p.OrderTags, Builders<OrderOrderTags>.Filter.Where(y => y.OrderTagId == orderTag.Id && y.OrderId == order.Id)); //y.OrderTagId == orderTag.Id && y.OrderId == order.Id);
+            await _orderRepository.Collection.UpdateManyAsync(filterOrder, updateOrder);
 
             var builder = Builders<OrderTag>.Filter;
             var filter = builder.Eq(x => x.Id, orderTag.Id);
             var updateTag = Builders<OrderTag>.Update
-                .Inc(x => x.Count, -1);
+                .Inc(x => x.Count, -1).PullFilter(p => p.Orders, y => y == order.Id);
             await _orderTagRepository.Collection.UpdateManyAsync(filter, updateTag);
 
             //cache

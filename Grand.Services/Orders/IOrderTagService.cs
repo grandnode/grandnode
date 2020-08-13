@@ -22,6 +22,12 @@ namespace Grand.Services.Orders
         Task<IList<OrderTag>> GetAllOrderTags();
 
         /// <summary>
+        /// Gets order's tags by order
+        /// </summary>
+        /// <returns>order's tags</returns>
+        Task<IList<OrderTag>> GetOrderTagsByOrder(string orderId);
+
+        /// <summary>
         /// Gets order's tag
         /// </summary>
         /// <param name="orderTagId">order's tag identifier</param>
@@ -51,13 +57,13 @@ namespace Grand.Services.Orders
         /// Assign a tag to the order
         /// </summary>
         /// <param name="orderTag">order Tag</param>
-        Task AttachOrderTag(OrderTag orderTag);
+        Task AttachOrderTag(OrderTag orderTag, Order order);
 
         /// <summary>
         /// Detach a tag from the order
         /// </summary>
         /// <param name="orderTag">order Tag</param>
-        Task DetachOrderTag(OrderTag orderTag);
+        Task DetachOrderTag(OrderTag orderTag, Order order);
 
         /// <summary>
         /// Get number of orders

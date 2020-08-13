@@ -17,7 +17,7 @@ namespace Grand.Domain.Orders
     {
 
         private ICollection<OrderItem> _orderItems;
-        private ICollection<string> _orderTags;
+        private ICollection<OrderOrderTags> _orderTags;
 
 
 
@@ -394,9 +394,9 @@ namespace Grand.Domain.Orders
         /// <summary>
         /// Gets or sets the order's tags
         /// </summary>
-        public virtual ICollection<string> OrderTags 
+        public virtual ICollection<OrderOrderTags> OrderTags 
         {
-            get { return _orderTags ?? (_orderTags = new List<string>()); }
+            get { return _orderTags ?? (_orderTags = new List<OrderOrderTags>()); }
             protected set { _orderTags = value; }
 
         }
@@ -477,5 +477,11 @@ namespace Grand.Domain.Orders
         }
         
         #endregion
+    }
+
+    public class OrderOrderTags
+    {
+        public string OrderId { get; set; }
+        public string OrderTagId { get; set; }
     }
 }
