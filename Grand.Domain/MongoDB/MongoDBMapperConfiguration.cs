@@ -430,7 +430,6 @@ namespace Grand.Domain.MongoDB
             BsonClassMap.RegisterClassMap<OrderTag>(cm =>
             {
                 cm.AutoMap();
-                cm.UnmapMember(c => c.OrderId);
             });
         }
     }

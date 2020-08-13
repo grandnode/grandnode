@@ -62,7 +62,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var tag = await _orderTagService.GetOrderTagById(tagId);
 
-            var orders = (await _orderService.SearchOrders(pageIndex: command.Page - 1, pageSize: command.PageSize, orderTag: tag.Name)).ToList();
+            var orders = (await _orderService.SearchOrders(pageIndex: command.Page - 1, pageSize: command.PageSize, orderTagId: tag.Id)).ToList();
             var gridModel = new DataSourceResult {
                 Data = orders.Select(x => new
                 {

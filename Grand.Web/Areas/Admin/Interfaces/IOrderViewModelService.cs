@@ -27,5 +27,6 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task<IList<Order>> PrepareOrders(OrderListModel model);
         Task SaveOrderTags(Order order, string tags);
         string[] ParseOrderTags(string orderTags);
+        List<OrderTag> ParseOrderTagsToList(string orderTags);
     }
 }

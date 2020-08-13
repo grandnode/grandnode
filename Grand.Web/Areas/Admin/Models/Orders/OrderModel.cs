@@ -1,4 +1,5 @@
 using Grand.Domain.Catalog;
+using Grand.Domain.Orders;
 using Grand.Domain.Payments;
 using Grand.Domain.Tax;
 using Grand.Framework.Mvc.ModelBinding;

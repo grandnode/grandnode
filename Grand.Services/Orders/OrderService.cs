@@ -195,6 +195,7 @@ namespace Grand.Services.Orders
         /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="orderTagId">Order tag identifier</param>
         /// <returns>Orders</returns>
         public virtual async Task<IPagedList<Order>> SearchOrders(string storeId = "",
             string vendorId = "", string customerId = "",
@@ -203,7 +204,7 @@ namespace Grand.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
-            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue, string orderTag = "")
+            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue, string orderTagId = "")
         {
             var querymodel = new GetOrderQuery() {
                 AffiliateId = affiliateId,
@@ -225,7 +226,7 @@ namespace Grand.Services.Orders
                 StoreId = storeId,
                 VendorId = vendorId,
                 WarehouseId = warehouseId,
-                OrderTag = orderTag,
+                OrderTagId = orderTagId,
                 OwnerId = ownerId
             };
             var query = await _mediator.Send(querymodel);

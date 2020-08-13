@@ -210,7 +210,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableOrderTags.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             foreach (var s in (await _orderTagService.GetAllOrderTags()))
             {
-                model.AvailableOrderTags.Add(new SelectListItem { Text = s.Name, Value = s.Name });
+                model.AvailableOrderTags.Add(new SelectListItem { Text = s.Name, Value = s.Id });
             }
             
             //shipping statuses
@@ -297,7 +297,7 @@ namespace Grand.Web.Areas.Admin.Services
                 orderCode: model.GoDirectlyToNumber,
                 pageIndex: pageIndex - 1,
                 pageSize: pageSize,
-                orderTag: model.OrderTag);
+                orderTagId: model.OrderTag);
 
             //summary report
             //currently we do not support productId and warehouseId parameters for this report
@@ -393,7 +393,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.GenericAttributes = order.GenericAttributes;
 
             var customer = await _customerService.GetCustomerById(order.CustomerId);
-            if(customer != null)
+            if (customer != null)
                 model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
 
             model.CustomerIp = order.CustomerIp;
@@ -416,22 +416,12 @@ namespace Grand.Web.Areas.Admin.Services
             model.CustomValues = order.DeserializeCustomValues();
 
             //order's tags
-            if (order != null)
+            var orderTags = await _orderTagService.GetOrderTagsByOrder(order.Id);
+            if (order != null && orderTags.Count != 0)
             {
-                var result = new StringBuilder();
-                for (var i = 0; i < order.OrderTags.Count; i++)
-                {
-                    var ot = order.OrderTags.ToList()[i];
-                    var productTag = await _orderTagService.GetOrderTagByName(ot);
-                    if (productTag != null)
-                    {
-                        result.Append(productTag.Name);
-                        if (i != order.OrderTags.Count - 1)
-                            result.Append(", ");
-                    }
-                }
-                model.OrderTags = result.ToString();
+               model.OrderTags = order.ToStringOrderTagsNames(orderTags.ToList());
             }
+        
 
             #region Order totals
 
@@ -1359,63 +1349,46 @@ namespace Grand.Web.Areas.Admin.Services
         /// <param name="order">Order identifier</param>
         /// <param name="orderTags">Order's tag identifier</param>
         /// <returns>Order's tag</returns>
-        public virtual async Task SaveOrderTags(Order order, string tags)
+        public virtual async Task SaveOrderTags(Order order, string orderTags)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            string[] newOrderTags = ParseOrderTags(tags);
-
             //order's tags
-            var existingOrderTags = order.OrderTags.ToList();
+            var existingOrderTags =  await _orderTagService.GetOrderTagsByOrder(order.Id);
+            List<OrderTag> newOrderTags = ParseOrderTagsToList(orderTags);
             var orderTagsToRemove = new List<OrderTag>();
-            foreach (var existingOrderTag in existingOrderTags)
-            {
-                var existingOderTagText = await _orderTagService.GetOrderTagByName(existingOrderTag.ToLowerInvariant());
-                var found = false;
-                foreach (var newOrderTag in newOrderTags)
-                {
-                    if (existingOderTagText != null)
-                        if (existingOderTagText.Name.Equals(newOrderTag, StringComparison.OrdinalIgnoreCase))
-                        {
-                            found = true;
-                            break;
-                        }
-                }
-                if (!found)
-                {
-                    orderTagsToRemove.Add(existingOderTagText);
-                }
-            }
+            if (newOrderTags.Count != 0)
+                orderTagsToRemove = existingOrderTags.Where(a => newOrderTags.Any(b => b.Name == a.Name)).ToList();
+            else
+                orderTagsToRemove = existingOrderTags.ToList();
+            
+
             foreach (var orderTag in orderTagsToRemove)
             {
                 if (orderTag != null)
                 {
                     orderTag.OrderId = order.Id;
-                    await _orderTagService.DetachOrderTag(orderTag);
+                    await _orderTagService.DetachOrderTag(orderTag, order);
                 }
             }
-            foreach (var orderTagName in newOrderTags)
+
+            var allOrderTags = await _orderTagService.GetAllOrderTags();
+            foreach (var newOrderTag in newOrderTags)
             {
-                OrderTag orderTag;
-                var orderTag2 = await _orderTagService.GetOrderTagByName(orderTagName);
-                if (orderTag2 == null)
+                var orderTag = allOrderTags.ToList().Find(o => o.Name == newOrderTag.Name);
+                if (orderTag == null)
                 {
-                    //add new order's tag
-                     orderTag = new OrderTag {
-                        Name = orderTagName,
-                        Count = 0,
-                    };
+                    orderTag = new OrderTag { Name = newOrderTag.Name, Count = 0 };
                     await _orderTagService.InsertOrderTag(orderTag);
+
                 }
-                else
+                
+                if (!order.OrderTagExists(orderTag))
                 {
-                    orderTag = orderTag2;
-                }
-                if (!order.OrderTagExists(orderTag.Name))
-                {
-                    orderTag.OrderId = order.Id;
-                    await _orderTagService.AttachOrderTag(orderTag);
+                    orderTag.Orders.Add(order.Id);
+                    //await _orderTagService.UpdateOrderTag(orderTag);
+                    await _orderTagService.AttachOrderTag(orderTag, order);
                 }
             }
         }
@@ -1433,5 +1406,19 @@ namespace Grand.Web.Areas.Admin.Services
             return result.ToArray();
         }
 
+        public List<OrderTag> ParseOrderTagsToList(string orderTags)
+        {
+            var result = new List<OrderTag>();
+            if (!string.IsNullOrWhiteSpace(orderTags))
+            {
+                var values = orderTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var val1 in values)
+                {
+                    if (!string.IsNullOrEmpty(val1.Trim()))
+                        result.Add(new OrderTag { Name = val1.Trim() });
+                }
+            }
+            return result;
+        }
     }
 }
