@@ -4,13 +4,9 @@ using Grand.Domain.Orders;
 using Grand.Domain.Shipping;
 using Grand.Services.Localization;
 using Grand.Services.Media;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using Wkhtmltopdf.NetCore;
 
@@ -36,8 +32,8 @@ namespace Grand.Services.Common
         private string ProductsFooter => _webHelper.GetStoreLocation() + _productsFooter;
         private string ShipmentFooter => _webHelper.GetStoreLocation() + _shipmentFooter;
 
-        public WkPdfService(IGeneratePdf generatePdf,IViewRenderService viewRenderService,IDownloadService downloadService,
-            ILanguageService languageService,IWebHelper webHelper)
+        public WkPdfService(IGeneratePdf generatePdf, IViewRenderService viewRenderService, IDownloadService downloadService,
+            ILanguageService languageService, IWebHelper webHelper)
         {
             _generatePdf = generatePdf;
             _viewRenderService = viewRenderService;
@@ -56,7 +52,7 @@ namespace Grand.Services.Common
 
             _generatePdf.SetConvertOptions(new ConvertOptions() {
                 PageSize = Wkhtmltopdf.NetCore.Options.Size.A4,
-                FooterHtml=OrderFooter
+                FooterHtml = OrderFooter
             });
 
             var html = await _viewRenderService.RenderToStringAsync<IList<Order>>(_orderTemaplate, orders);
