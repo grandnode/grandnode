@@ -20,26 +20,21 @@ namespace Grand.Services.Common
         private const string _orderTemaplate = "~/Views/PdfTemplates/OrderPdfTemplate.cshtml";
         private const string _productsTemaplate = "~/Views/PdfTemplates/ProductsPdfTemplate.cshtml";
         private const string _shipmentsTemaplate = "~/Views/PdfTemplates/ShipmentPdfTemplate.cshtml";
-        private const string _orderFooter = "pdf/footers/orderFooter.html";
-        private const string _productsFooter = "pdf/footers/productsFooter.html";
-        private const string _shipmentFooter = "pdf/footers/shipmentFooter.html";
+        private const string _orderFooter = "pdf/footers/order.html";
+        private const string _productsFooter = "pdf/footers/products.html";
+        private const string _shipmentFooter = "pdf/footers/shipment.html";
         private readonly IGeneratePdf _generatePdf;
         private readonly IViewRenderService _viewRenderService;
         private readonly IDownloadService _downloadService;
         private readonly ILanguageService _languageService;
-        private readonly IWebHelper _webHelper;
-        private string OrderFooter => _webHelper.GetStoreLocation() + _orderFooter;
-        private string ProductsFooter => _webHelper.GetStoreLocation() + _productsFooter;
-        private string ShipmentFooter => _webHelper.GetStoreLocation() + _shipmentFooter;
 
         public WkPdfService(IGeneratePdf generatePdf, IViewRenderService viewRenderService, IDownloadService downloadService,
-            ILanguageService languageService, IWebHelper webHelper)
+            ILanguageService languageService)
         {
             _generatePdf = generatePdf;
             _viewRenderService = viewRenderService;
             _downloadService = downloadService;
             _languageService = languageService;
-            _webHelper = webHelper;
         }
 
         public async Task PrintOrdersToPdf(Stream stream, IList<Order> orders, string languageId = "", string vendorId = "")
@@ -53,7 +48,7 @@ namespace Grand.Services.Common
             _generatePdf.SetConvertOptions(new ConvertOptions() {
                 PageSize = Wkhtmltopdf.NetCore.Options.Size.A4,
                 PageMargins = new Wkhtmltopdf.NetCore.Options.Margins() { Bottom = 10, Left = 10, Right = 10, Top = 10 },
-                FooterHtml = OrderFooter
+                FooterHtml = CommonHelper.WebMapPath(_orderFooter)
             });
 
             var html = await _viewRenderService.RenderToStringAsync<IList<Order>>(_orderTemaplate, orders);
@@ -100,7 +95,7 @@ namespace Grand.Services.Common
             _generatePdf.SetConvertOptions(new ConvertOptions() {
                 PageSize = Wkhtmltopdf.NetCore.Options.Size.A4,
                 PageMargins = new Wkhtmltopdf.NetCore.Options.Margins() { Bottom = 10, Left = 10, Right = 10, Top = 10 },
-                FooterHtml = ShipmentFooter
+                FooterHtml = CommonHelper.WebMapPath(_shipmentFooter)
             });
 
             var html = await _viewRenderService.RenderToStringAsync<IList<Shipment>>(_shipmentsTemaplate, shipments);
@@ -120,7 +115,7 @@ namespace Grand.Services.Common
             _generatePdf.SetConvertOptions(new ConvertOptions() {
                 PageSize = Wkhtmltopdf.NetCore.Options.Size.A4,
                 PageMargins = new Wkhtmltopdf.NetCore.Options.Margins() { Bottom = 10, Left = 10, Right = 10, Top = 10 },
-                FooterHtml = ProductsFooter
+                FooterHtml = CommonHelper.WebMapPath(_productsFooter)
             });
 
 
