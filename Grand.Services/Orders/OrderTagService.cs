@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using Grand.Services.Events;
 
 namespace Grand.Services.Orders
@@ -169,7 +167,7 @@ namespace Grand.Services.Orders
         /// <returns>Order's tag</returns>
         public virtual async Task<IList<OrderTag>> GetOrderTagsByOrder(string orderId)
         {
-            var result = await _orderTagRepository.Collection.FindAsync(p => p.Orders.Contains(orderId));
+            var result = await _orderTagRepository.Collection.FindAsync(p => p.Orders.Any(p => p.OrderId == orderId));
             return result.ToList();
         }
 
@@ -269,14 +267,13 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("orderTag");
 
             var filterOrder = Builders<Order>.Filter.Where(o => o.Id == order.Id);
-            var updateOrder = Builders<Order>.Update.PullFilter(p => p.OrderTags, Builders<OrderOrderTags>.Filter.Where(y => y.OrderTagId == orderTag.Id && y.OrderId == order.Id)); //y.OrderTagId == orderTag.Id && y.OrderId == order.Id);
+            var updateOrder = Builders<Order>.Update.PullFilter(p => p.OrderTags, Builders<OrderOrderTags>.Filter.Where(y => y.OrderTagId == orderTag.Id && y.OrderId == order.Id));
             await _orderRepository.Collection.UpdateManyAsync(filterOrder, updateOrder);
 
-            var builder = Builders<OrderTag>.Filter;
-            var filter = builder.Eq(x => x.Id, orderTag.Id);
+            var filterOrderTag = Builders<OrderTag>.Filter.Where(x => x.Id == orderTag.Id);
             var updateTag = Builders<OrderTag>.Update
-                .Inc(x => x.Count, -1).PullFilter(p => p.Orders, y => y == order.Id);
-            await _orderTagRepository.Collection.UpdateManyAsync(filter, updateTag);
+                .Inc(x => x.Count, -1).PullFilter(p => p.Orders, Builders<OrderIds>.Filter.Where(y => y.OrderId == order.Id));
+            await _orderTagRepository.Collection.UpdateManyAsync(filterOrderTag, updateTag);
 
             //cache
             await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, orderTag.OrderId));

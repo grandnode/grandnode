@@ -8,7 +8,7 @@ namespace Grand.Domain.Orders
 {
     public partial class OrderTag : BaseEntity
     {
-        private ICollection<string> _orders;
+        private ICollection<OrderIds> _orders;
 
         /// <summary>
         /// Gets or sets the name
@@ -28,19 +28,30 @@ namespace Grand.Domain.Orders
         /// <summary>
         /// Gets or sets the order's tags
         /// </summary>
-        public virtual ICollection<string> Orders {
-            get { return _orders ?? (_orders = new List<string>()); }
+        public virtual ICollection<OrderIds> Orders
+        {
+            get { return _orders ?? (_orders = new List<OrderIds>()); }
             protected set { _orders = value; }
 
         }
+    }        
+    
+    public class OrderIds
+    {
+        public string OrderId { get; set; }
+    }
 
-        public override bool Equals(object obj)
+    public class OrderTagComparer : IEqualityComparer<OrderTag>
+    {
+        public bool Equals(OrderTag x, OrderTag y)
         {
-            if (obj == null)
-                return false;
+            return x.Name == y.Name;
+        }
 
-            OrderTag tag = (OrderTag)obj;
-            return ( Name == tag.Name);
+
+        public int GetHashCode(OrderTag obj)
+        {
+            return 0;
         }
     }
 }

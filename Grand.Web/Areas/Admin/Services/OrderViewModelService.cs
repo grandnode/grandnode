@@ -1357,13 +1357,20 @@ namespace Grand.Web.Areas.Admin.Services
             //order's tags
             var existingOrderTags =  await _orderTagService.GetOrderTagsByOrder(order.Id);
             List<OrderTag> newOrderTags = ParseOrderTagsToList(orderTags);
+
+            // remove duplicates
+            existingOrderTags = existingOrderTags.Distinct(new OrderTagComparer()).ToList();
+            newOrderTags = newOrderTags.Distinct(new OrderTagComparer()).ToList();
+
+            // compare 
             var orderTagsToRemove = new List<OrderTag>();
+            
             if (newOrderTags.Count != 0)
-                orderTagsToRemove = existingOrderTags.Where(a => newOrderTags.Any(b => b.Name == a.Name)).ToList();
+                orderTagsToRemove = existingOrderTags.Where(o => !newOrderTags.Contains(o, new OrderTagComparer())).ToList();
             else
                 orderTagsToRemove = existingOrderTags.ToList();
             
-
+            
             foreach (var orderTag in orderTagsToRemove)
             {
                 if (orderTag != null)
@@ -1386,8 +1393,8 @@ namespace Grand.Web.Areas.Admin.Services
                 
                 if (!order.OrderTagExists(orderTag))
                 {
-                    orderTag.Orders.Add(order.Id);
-                    //await _orderTagService.UpdateOrderTag(orderTag);
+                    orderTag.Orders.Add(new OrderIds {OrderId = order.Id });
+                    await _orderTagService.UpdateOrderTag(orderTag);
                     await _orderTagService.AttachOrderTag(orderTag, order);
                 }
             }
