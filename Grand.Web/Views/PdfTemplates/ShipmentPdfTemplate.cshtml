@@ -1,0 +1,171 @@
+﻿@using  Grand.Domain.Shipping
+@model IList<Shipment>
+@inject Grand.Services.Orders.IOrderService _orderService ;
+@inject Grand.Services.Shipping.IShipmentService _shipmentService;
+@inject Grand.Services.Directory.ICountryService _cournyService;
+@inject Grand.Services.Catalog.IProductService _productService;
+@inject Grand.Services.Directory.ICountryService _countryService;
+@inject Grand.Services.Configuration.ISettingService _settingService;
+@inject Grand.Services.Stores.IStoreService _storeService;
+@inject Grand.Core.IWorkContext _workContext;
+@inject IStoreContext _storeContext;
+@inject Grand.Services.Media.IPictureService _pictureService;
+@inject PdfSettings _pdfSettings;
+@inject Grand.Services.Localization.ILocalizationService _localizationService;
+@inject Grand.Services.Payments.IPaymentService _paymentService;
+@inject Grand.Services.Directory.ICurrencyService _currencyService;
+@inject Grand.Services.Orders.IGiftCardService _giftCardService;
+
+@{
+    var logoPicture = await _pictureService.GetPictureById(_pdfSettings.LogoPictureId);
+    var logoExists = logoPicture != null;
+    var companyName = _storeContext.CurrentStore.CompanyName;
+}
+
+<style>
+    html {
+        font-size: 18px;
+    }
+
+    .column {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        flex: 1;
+    }
+
+    .col-container {
+        display: table;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+        .col-container .column {
+            display: table-cell;
+        }
+
+        .col-container .right.column {
+            margin-top: 15px;
+        }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .addresses .shipping {
+        width: 50%;
+        float: left;
+    }
+
+    .addresses .logo {
+        width: 50%;
+        float: right;
+        text-align: right;
+    }
+
+    .orderItems {
+        width: 100%;
+        border: 1px solid black;
+    }
+
+        .orderItems tr th {
+            background-color: #f5f5f5;
+            text-align: left;
+            padding: 0 5px 0 5px;
+        }
+
+        .orderItems tr,
+        .orderItems tr td,
+        .orderItems tr th {
+            border: 1px solid black;
+            padding: 0 5px 0 5px;
+        }
+
+    .summary {
+        margin-top: 20px;
+    }
+
+    .right {
+        float: right;
+    }
+</style>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        var order = await _orderService.GetOrderById(Model[i].OrderId);
+        var shipments = await _shipmentService.GetShipmentsByOrder(Model[i].OrderId);
+        foreach (var shipment in shipments)
+        {
+            <div class="col-container">
+                <div class="left column">
+                    <h2>@(string.Format(_localizationService.GetResource("PDFPackagingSlip.Shipment", order.CustomerLanguageId), shipment.ShipmentNumber))</h2>
+                </div>
+                <div class="right column"><h2>@companyName</h2></div>
+            </div>
+
+
+
+            <div class="addresses">
+                <div class="shipping column">
+                    <h3>@(_localizationService.GetResource("PDFInvoice.ShippingInformation", order.CustomerLanguageId))</h3>
+                    <ul>
+                        @if (!string.IsNullOrEmpty(order.ShippingAddress.Company))
+                        {
+                            <li>@(string.Format(_localizationService.GetResource("PDFPackagingSlip.Company", order.CustomerLanguageId), order.ShippingAddress.Company))</li>
+                        }
+                        <li>@(string.Format(_localizationService.GetResource("PDFPackagingSlip.Name", order.CustomerLanguageId), order.ShippingAddress.FirstName + " " + order.ShippingAddress.LastName))</li>
+                        <li>@(string.Format(_localizationService.GetResource("PDFPackagingSlip.Phone", order.CustomerLanguageId), order.ShippingAddress.PhoneNumber))</li>
+                        <li>@(string.Format(_localizationService.GetResource("PDFPackagingSlip.Address", order.CustomerLanguageId), order.ShippingAddress.Address1))</li>
+                        <li>@(order.ShippingAddress.City + ", " + order.ShippingAddress.ZipPostalCode)</li>
+                        <li>@((await _countryService.GetCountryById(order.ShippingAddress.CountryId)).Name)</li>
+                    </ul>
+                </div>
+                <div class="logo column"><img src="@(logoExists ? await _pictureService.GetThumbLocalPath(logoPicture, 0, false) : "" )" /></div>
+            </div>
+
+            <div style="display:block; clear:both;"></div>
+            <h5>@(string.Format(_localizationService.GetResource("PDFPackagingSlip.ShippingMethod", order.CustomerLanguageId), order.ShippingMethod))</h5>
+            <div class="summary">
+                <h3>@(_localizationService.GetResource("PDFInvoice.Product(s)", order.CustomerLanguageId))</h3>
+            </div>
+            <table class="orderItems">
+                <tr>
+                    <th>@(_localizationService.GetResource("PDFPackagingSlip.ProductName", order.CustomerLanguageId))</th>
+                    <th>@(_localizationService.GetResource("PDFPackagingSlip.SKU", order.CustomerLanguageId))</th>
+                    <th>@(_localizationService.GetResource("PDFPackagingSlip.QTY", order.CustomerLanguageId))</th>
+                </tr>
+                @foreach (var item in shipment.ShipmentItems)
+                {
+                    var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
+                    <tr>
+                        <td>
+                            @((await _productService.GetProductByIdIncludeArch(item.ProductId)).Name)
+                            @if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
+                            {
+                                <br />
+                                <small>@(Html.Raw(orderItem.AttributeDescription))</small>
+                            }
+                        </td>
+
+                        <td>@((await _productService.GetProductByIdIncludeArch(item.ProductId)).Sku)</td>
+                        <td>@item.Quantity</td>
+                    </tr>
+                }
+            </table>
+
+            if (Model.Count - 1 > i)
+            {
+
+                <div style="display:block; clear:both; page-break-after:always;"></div>
+            }
+        }
+    }
+</body>
+</html>

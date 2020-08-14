@@ -255,10 +255,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
         public partial class PdfSettingsModel : BaseGrandModel
         {
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLetterPageSizeEnabled")]
-            public bool LetterPageSizeEnabled { get; set; }
-            public bool LetterPageSizeEnabled_OverrideForStore { get; set; }
-
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLogo")]
             [UIHint("Picture")]
             public string LogoPictureId { get; set; }
@@ -268,15 +264,13 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool DisablePdfInvoicesForPendingOrders { get; set; }
             public bool DisablePdfInvoicesForPendingOrders_OverrideForStore { get; set; }
 
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1")]
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceHeaderText")]
+            public string InvoiceHeaderText { get; set; }
+            public bool InvoiceHeaderText_OverrideForStore { get; set; }
 
-            public string InvoiceFooterTextColumn1 { get; set; }
-            public bool InvoiceFooterTextColumn1_OverrideForStore { get; set; }
-
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2")]
-
-            public string InvoiceFooterTextColumn2 { get; set; }
-            public bool InvoiceFooterTextColumn2_OverrideForStore { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterText")]
+            public string InvoiceFooterText { get; set; }
+            public bool InvoiceFooterText_OverrideForStore { get; set; }
 
         }
 
