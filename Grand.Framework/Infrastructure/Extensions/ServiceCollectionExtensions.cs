@@ -62,7 +62,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
             //add wkhtmltopdf
-            services.AddWkhtmltopdf(@"App_Data\wkhtmltopdf");
+            services.AddWkhtmltopdf(@"App_Data/wkhtmltopdf");
 
             //create, initialize and configure the engine
             var engine = EngineContext.Create();
