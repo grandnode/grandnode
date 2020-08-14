@@ -3,6 +3,11 @@ version: '3.4'
 services:
   grand.web:
     image: ${DOCKER_REGISTRY-}grandweb
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65536
+        hard: 65536
     build:
       context: .
       dockerfile: Grand.Web/Dockerfile

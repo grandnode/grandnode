@@ -18,6 +18,10 @@ RUN dotnet build "Grand.Web.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "Grand.Web.csproj" -c Release -o /app/publish
 
+RUN apt-get update && \
+  apt-get -y install libgdiplus
+RUN ln -s /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libdl.so
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
