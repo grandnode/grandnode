@@ -4815,11 +4815,8 @@ namespace Grand.Services.Installation
 
             await _settingService.SaveSetting(new PdfSettings {
                 LogoPictureId = "",
-                LetterPageSizeEnabled = false,
-                RenderOrderNotes = true,
-                FontFileName = "FreeSerif.ttf",
-                InvoiceFooterTextColumn1 = null,
-                InvoiceFooterTextColumn2 = null,
+                InvoiceHeaderText = null,
+                InvoiceFooterText = null,
             });
 
             await _settingService.SaveSetting(new CommonSettings {

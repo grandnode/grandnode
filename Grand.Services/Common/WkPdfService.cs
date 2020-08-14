@@ -52,6 +52,7 @@ namespace Grand.Services.Common
 
             _generatePdf.SetConvertOptions(new ConvertOptions() {
                 PageSize = Wkhtmltopdf.NetCore.Options.Size.A4,
+                PageMargins = new Wkhtmltopdf.NetCore.Options.Margins() { Bottom = 10, Left = 10, Right = 10, Top = 10 },
                 FooterHtml = OrderFooter
             });
 
@@ -98,6 +99,7 @@ namespace Grand.Services.Common
 
             _generatePdf.SetConvertOptions(new ConvertOptions() {
                 PageSize = Wkhtmltopdf.NetCore.Options.Size.A4,
+                PageMargins = new Wkhtmltopdf.NetCore.Options.Margins() { Bottom = 10, Left = 10, Right = 10, Top = 10 },
                 FooterHtml = ShipmentFooter
             });
 
@@ -117,6 +119,7 @@ namespace Grand.Services.Common
 
             _generatePdf.SetConvertOptions(new ConvertOptions() {
                 PageSize = Wkhtmltopdf.NetCore.Options.Size.A4,
+                PageMargins = new Wkhtmltopdf.NetCore.Options.Margins() { Bottom = 10, Left = 10, Right = 10, Top = 10 },
                 FooterHtml = ProductsFooter
             });
 
