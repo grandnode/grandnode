@@ -94,7 +94,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
             //file paths
             foreach (var store in await _storeService.GetAllStores())
             {
-                var appPath = CommonHelper.MapPath("wwwroot/content/files/exportimport");
+                var appPath = CommonHelper.WebMapPath("content/files/exportimport");
                 var localFilePath = System.IO.Path.Combine(appPath, store.Id + "-" + _GoogleShoppingSettings.StaticFileName);
                 if (System.IO.File.Exists(localFilePath))
                     model.GeneratedFiles.Add(new FeedGoogleShoppingModel.GeneratedFileModel

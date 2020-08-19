@@ -45,6 +45,16 @@ namespace Grand.Domain.Customers
         /// Gets or sets a value indicating whether the customers must change passwords after a specified time
         /// </summary>
         public bool EnablePasswordLifetime { get; set; }
+
+        /// <summary>
+        /// Gets or sets a minimum order total amount
+        /// </summary>
+        public decimal? MinOrderAmount { get; set; }
+
+        /// <summary>
+        /// Gets or sets a maximum order total amount
+        /// </summary>
+        public decimal? MaxOrderAmount { get; set; }
     }
 
 }

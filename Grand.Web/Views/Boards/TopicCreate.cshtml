@@ -1,9 +1,10 @@
 ﻿@model EditForumTopicModel
 @using Grand.Web.Models.Boards;
-@{    
+@inject IPageHeadBuilder pagebuilder
+@{
     Layout = "_ColumnsOne";
 
-    Html.AddTitleParts(T("Forum.PageTitle.TopicNew").Text);    
+    pagebuilder.AddTitleParts(T("Forum.PageTitle.TopicNew").Text);
 }
 <form asp-route="TopicCreate" method="post">
     <partial name="_CreateUpdateTopic" model="Model" />

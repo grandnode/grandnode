@@ -72,7 +72,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Widgets.Facebo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Domain", "Grand.Domain\Grand.Domain.csproj", "{2E42CE7C-1183-45AB-A995-1E23C4DCB5F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Misc.EuropaCheckVat", "Plugins\Grand.Plugin.Misc.EuropaCheckVat\Grand.Plugin.Misc.EuropaCheckVat.csproj", "{9CD87657-5E7C-4511-A3A0-E7266720AA30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Misc.EuropaCheckVat", "Plugins\Grand.Plugin.Misc.EuropaCheckVat\Grand.Plugin.Misc.EuropaCheckVat.csproj", "{9CD87657-5E7C-4511-A3A0-E7266720AA30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

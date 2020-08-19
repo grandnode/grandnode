@@ -35,6 +35,7 @@ using System.Text.Unicode;
 using WebMarkupMin.AspNet.Common.UrlMatchers;
 using WebMarkupMin.AspNetCore3;
 using Grand.Domain.Configuration;
+using Wkhtmltopdf.NetCore;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -60,6 +61,8 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
+            //add wkhtmltopdf
+            services.AddWkhtmltopdf();
 
             //create, initialize and configure the engine
             var engine = EngineContext.Create();

@@ -1,19 +1,18 @@
 ﻿@model CategoryModel
 @inject SeoSettings seoSettings
-@inject CommonSettings commonSettings
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
-    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
-    Html.AddMetaDescriptionParts(Model.MetaDescription);
-    Html.AddMetaKeywordParts(Model.MetaKeywords);
-
+    pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+    pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
     var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(categoryUrl);
+        pagebuilder.AddCanonicalUrlParts(categoryUrl);
     }
-    
+
 }
 
 @*category breadcrumb*@
@@ -21,9 +20,9 @@
     {
     @if (Model.DisplayCategoryBreadcrumb)
     {
-        
+
         var count = 0;
-        
+
         <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
             <li class="breadcrumb-item">
                 <a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
@@ -44,7 +43,7 @@
                     {
                         <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name" itemprop="item">
                             <span itemprop="name">@cat.Name</span>
-                        </a>                        
+                        </a>
                     }
                     <meta itemprop="position" content="@count" />
                 </li>
@@ -135,16 +134,7 @@
                         </div>
                     }
                 </div>
-
-                @{
-                    var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-                }
-                @if (!pager.IsEmpty())
-                {
-                    <nav aria-label="Page navigation">
-                        @pager
-                    </nav>
-                }
+                <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
                 @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
             </div>
         }
@@ -157,15 +147,7 @@
                         {
                             <partial name="_ProductBoxList" model="product" />
                         }
-                        @{
-                            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-                        }
-                        @if (!pager.IsEmpty())
-                        {
-                            <nav aria-label="Page navigation">
-                                @pager
-                            </nav>
-                        }
+                        <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
                         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
                     </div>
                 </div>

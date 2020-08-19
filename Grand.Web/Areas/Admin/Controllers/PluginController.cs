@@ -172,6 +172,36 @@ namespace Grand.Web.Areas.Admin.Controllers
             return pluginModel;
         }
 
+        /// <summary>
+        ///  Depth-first recursive delete, with handling for descendant directories open in Windows Explorer.
+        /// </summary>
+        /// <param name="path">Directory path</param>
+        protected void DeleteDirectory(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(path);
+
+            //find more info about directory deletion
+            //and why we use this approach at https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
+
+            foreach (var directory in Directory.GetDirectories(path))
+            {
+                DeleteDirectory(directory);
+            }
+
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (IOException)
+            {
+                Directory.Delete(path, true);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Directory.Delete(path, true);
+            }
+        }
         #endregion
 
         #region Methods
@@ -305,7 +335,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     if (Path.GetFileName(folder) != "bin" && Directory.GetFiles(folder).Select(x => Path.GetFileName(x)).Contains(pluginDescriptor.PluginFileName))
                     {
-                        CommonHelper.DeleteDirectory(folder);
+                        DeleteDirectory(folder);
                     }
                 }
 
@@ -498,7 +528,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             try
             {
                 if (System.IO.Directory.Exists(pathToUpload))
-                    CommonHelper.DeleteDirectory(pathToUpload);
+                    DeleteDirectory(pathToUpload);
             }
             catch { }
 

@@ -1,10 +1,10 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
-using Grand.Core.Data;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
 using Grand.Domain.Catalog;
+using Grand.Domain.Data;
 using Grand.Domain.Directory;
 using Grand.Domain.Media;
 using Grand.Domain.Seo;
@@ -685,7 +685,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CustomCss()
         {
             var model = new Editor();
-            var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", "style.css");
+            var file = Path.Combine(CommonHelper.WebRootPath, "content", "custom", "style.css");
             if (System.IO.File.Exists(file))
             {
                 model.Content = await System.IO.File.ReadAllTextAsync(file);
@@ -700,7 +700,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CustomJs()
         {
             var model = new Editor();
-            var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", "script.js");
+            var file = Path.Combine(CommonHelper.WebRootPath, "content", "custom", "script.js");
             if (System.IO.File.Exists(file))
             {
                 model.Content = await System.IO.File.ReadAllTextAsync(file);
@@ -714,7 +714,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             try
             {
-                var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", css ? "style.css" : "script.js");
+                var file = Path.Combine(CommonHelper.WebRootPath, "content", "custom", css ? "style.css" : "script.js");
 
                 if (System.IO.File.Exists(file))
                     System.IO.File.WriteAllText(file, content, Encoding.UTF8);

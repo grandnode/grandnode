@@ -1011,7 +1011,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.IsReOrderAllowed_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.IsReOrderAllowed, storeScope);
                 model.MinOrderSubtotalAmount_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.MinOrderSubtotalAmount, storeScope);
-                model.MinOrderTotalAmount_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.MinOrderTotalAmount, storeScope);
                 model.MinOrderSubtotalAmountIncludingTax_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.MinOrderSubtotalAmountIncludingTax, storeScope);
                 model.AnonymousCheckoutAllowed_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.AnonymousCheckoutAllowed, storeScope);
                 model.TermsOfServiceOnShoppingCartPage_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.TermsOfServiceOnShoppingCartPage, storeScope);
@@ -1054,7 +1053,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await UpdateOverrideForStore(storeScope, model.IsReOrderAllowed_OverrideForStore, orderSettings, x => x.IsReOrderAllowed);
                 await UpdateOverrideForStore(storeScope, model.MinOrderSubtotalAmount_OverrideForStore, orderSettings, x => x.MinOrderSubtotalAmount);
                 await UpdateOverrideForStore(storeScope, model.MinOrderSubtotalAmountIncludingTax_OverrideForStore, orderSettings, x => x.MinOrderSubtotalAmountIncludingTax);
-                await UpdateOverrideForStore(storeScope, model.MinOrderTotalAmount_OverrideForStore, orderSettings, x => x.MinOrderTotalAmount);
                 await UpdateOverrideForStore(storeScope, model.AnonymousCheckoutAllowed_OverrideForStore, orderSettings, x => x.AnonymousCheckoutAllowed);
                 await UpdateOverrideForStore(storeScope, model.TermsOfServiceOnShoppingCartPage_OverrideForStore, orderSettings, x => x.TermsOfServiceOnShoppingCartPage);
                 await UpdateOverrideForStore(storeScope, model.TermsOfServiceOnOrderConfirmPage_OverrideForStore, orderSettings, x => x.TermsOfServiceOnOrderConfirmPage);
@@ -1668,19 +1666,17 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //PDF settings
             var pdfSettings = _settingService.LoadSetting<PdfSettings>(storeScope);
-            model.PdfSettings.LetterPageSizeEnabled = pdfSettings.LetterPageSizeEnabled;
             model.PdfSettings.LogoPictureId = pdfSettings.LogoPictureId;
             model.PdfSettings.DisablePdfInvoicesForPendingOrders = pdfSettings.DisablePdfInvoicesForPendingOrders;
-            model.PdfSettings.InvoiceFooterTextColumn1 = pdfSettings.InvoiceFooterTextColumn1;
-            model.PdfSettings.InvoiceFooterTextColumn2 = pdfSettings.InvoiceFooterTextColumn2;
+            model.PdfSettings.InvoiceHeaderText = pdfSettings.InvoiceHeaderText;
+            model.PdfSettings.InvoiceFooterText = pdfSettings.InvoiceFooterText;
             //override settings
             if (!String.IsNullOrEmpty(storeScope))
             {
-                model.PdfSettings.LetterPageSizeEnabled_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.LetterPageSizeEnabled, storeScope);
                 model.PdfSettings.LogoPictureId_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.LogoPictureId, storeScope);
                 model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.DisablePdfInvoicesForPendingOrders, storeScope);
-                model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.InvoiceFooterTextColumn1, storeScope);
-                model.PdfSettings.InvoiceFooterTextColumn2_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.InvoiceFooterTextColumn2, storeScope);
+                model.PdfSettings.InvoiceHeaderText_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.InvoiceHeaderText, storeScope);
+                model.PdfSettings.InvoiceFooterText_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.InvoiceFooterText, storeScope);
             }
 
             //localization
@@ -1693,8 +1689,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             //full-text support
             model.FullTextSettings.Supported = true;
             model.FullTextSettings.Enabled = commonSettings.UseFullTextSearch;
-            model.FullTextSettings.SearchMode = (int)commonSettings.FullTextMode;
-            model.FullTextSettings.SearchModeValues = commonSettings.FullTextMode.ToSelectList(HttpContext);
 
             //google analytics
             model.GoogleAnalyticsSettings.gaprivateKey = googleAnalyticsSettings.gaprivateKey;
@@ -1854,17 +1848,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //PDF settings
             var pdfSettings = _settingService.LoadSetting<PdfSettings>(storeScope);
-            pdfSettings.LetterPageSizeEnabled = model.PdfSettings.LetterPageSizeEnabled;
             pdfSettings.LogoPictureId = model.PdfSettings.LogoPictureId;
             pdfSettings.DisablePdfInvoicesForPendingOrders = model.PdfSettings.DisablePdfInvoicesForPendingOrders;
-            pdfSettings.InvoiceFooterTextColumn1 = model.PdfSettings.InvoiceFooterTextColumn1;
-            pdfSettings.InvoiceFooterTextColumn2 = model.PdfSettings.InvoiceFooterTextColumn2;
+            pdfSettings.InvoiceHeaderText = model.PdfSettings.InvoiceHeaderText;
+            pdfSettings.InvoiceFooterText = model.PdfSettings.InvoiceFooterText;
 
-            await UpdateOverrideForStore(storeScope, model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, pdfSettings, x => x.LetterPageSizeEnabled);
             await UpdateOverrideForStore(storeScope, model.PdfSettings.LogoPictureId_OverrideForStore, pdfSettings, x => x.LogoPictureId);
             await UpdateOverrideForStore(storeScope, model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, pdfSettings, x => x.DisablePdfInvoicesForPendingOrders);
-            await UpdateOverrideForStore(storeScope, model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore, pdfSettings, x => x.InvoiceFooterTextColumn1);
-            await UpdateOverrideForStore(storeScope, model.PdfSettings.InvoiceFooterTextColumn2_OverrideForStore, pdfSettings, x => x.InvoiceFooterTextColumn2);
+            await UpdateOverrideForStore(storeScope, model.PdfSettings.InvoiceHeaderText_OverrideForStore, pdfSettings, x => x.InvoiceHeaderText);
+            await UpdateOverrideForStore(storeScope, model.PdfSettings.InvoiceFooterText_OverrideForStore, pdfSettings, x => x.InvoiceFooterText);
 
             //localization settings
             var localizationSettings = _settingService.LoadSetting<LocalizationSettings>(storeScope);
@@ -1873,10 +1865,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             localizationSettings.LoadAllLocaleRecordsOnStartup = model.LocalizationSettings.LoadAllLocaleRecordsOnStartup;
             localizationSettings.LoadAllLocalizedPropertiesOnStartup = model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup;
             await _settingService.SaveSetting(localizationSettings);
-
-            //full-text
-            commonSettings.FullTextMode = (FulltextSearchMode)model.FullTextSettings.SearchMode;
-            await _settingService.SaveSetting(commonSettings);
 
             //admin settings
             var adminareasettings = _settingService.LoadSetting<AdminAreaSettings>(storeScope);
@@ -2124,7 +2112,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> PushNotifications(DataSourceRequest command, ConfigurationModel model)
+        public async Task<IActionResult> PushNotifications(ConfigurationModel model)
         {
             var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
@@ -2140,7 +2128,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _settingService.SaveSetting(settings);
 
             //edit js file needed by firebase
-            var jsFilePath = CommonHelper.MapPath("~/wwwroot/firebase-messaging-sw.js");
+            var jsFilePath = CommonHelper.WebMapPath("firebase-messaging-sw.js");
             if (System.IO.File.Exists(jsFilePath))
             {
                 string[] lines = System.IO.File.ReadAllLines(jsFilePath);

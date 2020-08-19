@@ -17,7 +17,6 @@
     //friendly name
     var friendlyName = plugin?.PluginDescriptor.FriendlyName;
 
-    var activeMenuSystemName = string.Empty;
     var configureLocale = string.Empty;
     var backToLocale = string.Empty;
     var listActionMethodName = string.Empty;
@@ -26,7 +25,6 @@
     if (plugin is IPaymentMethod)
     {
         //payment plugin
-        activeMenuSystemName = "Payment methods";
         configureLocale = "Admin.Configuration.Payment.Methods.Configure";
         backToLocale = "Admin.Configuration.Payment.Methods.BackToList";
         listActionMethodName = "Methods";
@@ -36,7 +34,6 @@
     else if (plugin is IShippingRateComputationMethod)
     {
         //shipping rate computation method
-        activeMenuSystemName = "Shipping providers";
         configureLocale = "Admin.Configuration.Shipping.Providers.Configure";
         backToLocale = "Admin.Configuration.Shipping.Providers.BackToList";
         listActionMethodName = "Providers";
@@ -46,7 +43,6 @@
     else if (plugin is ITaxProvider)
     {
         //tax provider
-        activeMenuSystemName = "Tax providers";
         configureLocale = "Admin.Configuration.Tax.Providers.Configure";
         backToLocale = "Admin.Configuration.Tax.Providers.BackToList";
         listActionMethodName = "Providers";
@@ -56,7 +52,6 @@
     else if (plugin is IExternalAuthenticationMethod)
     {
         //external auth method
-        activeMenuSystemName = "External authentication methods";
         configureLocale = "Admin.Configuration.ExternalAuthenticationMethods.Configure";
         backToLocale = "Admin.Configuration.ExternalAuthenticationMethods.BackToList";
         listActionMethodName = "Methods";
@@ -66,7 +61,6 @@
     else if (plugin is IWidgetPlugin)
     {
         //widgets
-        activeMenuSystemName = "Widgets";
         configureLocale = "Admin.ContentManagement.Widgets.Configure";
         backToLocale = "Admin.ContentManagement.Widgets.BackToList";
         listActionMethodName = "List";
@@ -76,7 +70,6 @@
     else if (plugin is IMiscPlugin)
     {
         //Misc plugins
-        activeMenuSystemName = "Local plugins";
         configureLocale = "Admin.Configuration.Plugins.Misc.Configure";
         backToLocale = "Admin.Configuration.Plugins.Misc.BackToList";
         listActionMethodName = "List";
@@ -87,9 +80,7 @@
     Layout = "_AdminLayout";
     //page title
     ViewBag.Title = T(configureLocale).Text + " - " + friendlyName;
-    //active menu item (system name)
-    Html.SetActiveMenuItemSystemName(activeMenuSystemName);
-
+    
 }
 <input id="active-menu-item" type="hidden" value="@menuitem" />
 <div class="row">

@@ -1,11 +1,13 @@
 ﻿@model IList<VendorModel>
+@using Grand.Web.Models.Catalog
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Vendors").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Vendors").Text);
 }
-@using Grand.Web.Models.Catalog;
+
 <div class="page vendor-list-page">
     <h2 class="generalTitle">@T("Vendors.List")</h2>
     <div class="vendor-grid customGrid text-center">

@@ -1,14 +1,15 @@
 ﻿@model NewsItemListModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.NewsArchive").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.NewsArchive").Text);
 }
 <div class="page news-list-page pt-lg-0 pt-3">
     <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("News") @T("catalog.selectors.fiters")</span></a>
-        <h2 class="generalTitle"><a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-info link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a> @T("News")</h2>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_before_items"})
+    <h2 class="generalTitle"><a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-info link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a> @T("News")</h2>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_before_items" })
 
     <div class="news-items row">
         @foreach (var item in Model.NewsItems)
@@ -16,13 +17,13 @@
             <div class="col-xl-6 col-12">
                 <div class="card mb-3">
                     <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
-                    @if (!string.IsNullOrEmpty(item.PictureModel.ImageUrl))
-                    {
-                        <div class="img-container mt-3 mx-3 mb-0">
-                            <img class="card-img-top img-fluid rounded-0" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
-                        </div>
-                    }
-                    <h4 class="card-header border-bottom-0 pb-0">@item.Title</h4>
+                        @if (!string.IsNullOrEmpty(item.PictureModel.ImageUrl))
+                        {
+                            <div class="img-container mt-3 mx-3 mb-0">
+                                <img class="card-img-top img-fluid rounded-0" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                            </div>
+                        }
+                        <h4 class="card-header border-bottom-0 pb-0">@item.Title</h4>
                     </a>
                     <div class="card-body pt-0">
                         <h6 class="card-subtitle text-muted d-flex align-items-center"><span class="mdi mdi-alarm mr-2"></span>@item.CreatedOn.ToString("D")</h6>
@@ -35,15 +36,8 @@
                 </div>
             </div>
         }
-        @{
-            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-        }
-        @if (!pager.IsEmpty())
-        {
-            <div class="pager">
-                @pager
-            </div>
-        }
+        <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
+        
         @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_after_items" })
     </div>
 

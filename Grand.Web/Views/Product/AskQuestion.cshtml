@@ -1,54 +1,55 @@
 ﻿@model ProductAskQuestionModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(Model.ProductName);
-    Html.AddTitleParts(T("PageTitle.ProductAskQuestion").Text);
+    pagebuilder.AddTitleParts(Model.ProductName);
+    pagebuilder.AddTitleParts(T("PageTitle.ProductAskQuestion").Text);
 }
 <div class="page ask-a-question-page">
-        <h2 class="text-xs-center generalTitle">@T("Products.AskQuestion.Title")</h2>
-            <h2 class="h4 text-xs-center"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">@Model.ProductName</a></h2>
-        @if (Model.SuccessfullySent)
-        {
-            <section class="result">
-                @Model.Result
-            </section>
-        }
-        else
-        {
-            <form asp-route="AskQuestion" method="post">
-                <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                        <fieldset class="form-group">
-                            <label asp-for="Email" class="col-form-label">@T("Products.AskQuestion.Email"):</label>
-                            <input asp-for="Email" placeholder="@T("Products.AskQuestion.Email.Hint")" class="form-control ask-question-email" />
-                            <span asp-validation-for="Email"></span>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <label asp-for="FullName" class="col-form-label">@T("Products.AskQuestion.FullName"):</label>
-                            <input asp-for="FullName" placeholder="@T("Products.AskQuestion.FullName.Hint")" class="form-control ask-question-fullname" />
-                            <span asp-validation-for="FullName"></span>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <label asp-for="Phone" class="col-form-label">@T("Products.AskQuestion.Phone"):</label>
-                            <input asp-for="Phone" placeholder="@T("Products.AskQuestion.Phone.Hint")" class="form-control ask-question-phone" />
-                            <span asp-validation-for="Phone"></span>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <label asp-for="Message" class="col-form-label">@T("Products.AskQuestion.Message"):</label>
-                            <textarea asp-for="Message" placeholder="@T("Products.AskQuestion.Message.Hint")" class="form-control ask-question-message"></textarea>
-                            <span asp-validation-for="Message"></span>
-                        </fieldset>
-                        @if (Model.DisplayCaptcha)
-                        {
-                            <div class="captcha-box">
-                                <captcha />
-                            </div>
-                        }
-                <div class="buttons generalMarginSupporter pt-1 pb-1">
-                    <input type="submit" name="send-email" class="btn btn-info send-ask-question-button" value="@T("Products.AskQuestion.Button")" />
-                    <span class="sr-only">@T("Products.AskQuestion.Button")</span>
+    <h2 class="text-xs-center generalTitle">@T("Products.AskQuestion.Title")</h2>
+    <h2 class="h4 text-xs-center"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">@Model.ProductName</a></h2>
+    @if (Model.SuccessfullySent)
+    {
+        <section class="result">
+            @Model.Result
+        </section>
+    }
+    else
+    {
+        <form asp-route="AskQuestion" method="post">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <fieldset class="form-group">
+                <label asp-for="Email" class="col-form-label">@T("Products.AskQuestion.Email"):</label>
+                <input asp-for="Email" placeholder="@T("Products.AskQuestion.Email.Hint")" class="form-control ask-question-email" />
+                <span asp-validation-for="Email"></span>
+            </fieldset>
+            <fieldset class="form-group">
+                <label asp-for="FullName" class="col-form-label">@T("Products.AskQuestion.FullName"):</label>
+                <input asp-for="FullName" placeholder="@T("Products.AskQuestion.FullName.Hint")" class="form-control ask-question-fullname" />
+                <span asp-validation-for="FullName"></span>
+            </fieldset>
+            <fieldset class="form-group">
+                <label asp-for="Phone" class="col-form-label">@T("Products.AskQuestion.Phone"):</label>
+                <input asp-for="Phone" placeholder="@T("Products.AskQuestion.Phone.Hint")" class="form-control ask-question-phone" />
+                <span asp-validation-for="Phone"></span>
+            </fieldset>
+            <fieldset class="form-group">
+                <label asp-for="Message" class="col-form-label">@T("Products.AskQuestion.Message"):</label>
+                <textarea asp-for="Message" placeholder="@T("Products.AskQuestion.Message.Hint")" class="form-control ask-question-message"></textarea>
+                <span asp-validation-for="Message"></span>
+            </fieldset>
+            @if (Model.DisplayCaptcha)
+            {
+                <div class="captcha-box">
+                    <captcha />
                 </div>
-            </form>
-        }
+            }
+            <div class="buttons generalMarginSupporter pt-1 pb-1">
+                <input type="submit" name="send-email" class="btn btn-info send-ask-question-button" value="@T("Products.AskQuestion.Button")" />
+                <span class="sr-only">@T("Products.AskQuestion.Button")</span>
+            </div>
+        </form>
+    }
 </div>

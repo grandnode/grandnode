@@ -185,10 +185,11 @@ namespace Grand.Services.Orders
         Task<bool> ValidateMinOrderSubtotalAmount(IList<ShoppingCartItem> cart);
 
         /// <summary>
-        /// Valdiate minimum order total amount
+        /// Validate order total amount
         /// </summary>
+        /// <param name="customer">Customer</param>
         /// <param name="cart">Shopping cart</param>
-        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
-        Task<bool> ValidateMinOrderTotalAmount(IList<ShoppingCartItem> cart);
+        /// <returns>true - OK; false - minimum/maximum order total amount is not reached</returns>
+        Task<bool> ValidateOrderTotalAmount(Customer customer, IList<ShoppingCartItem> cart);
     }
 }

@@ -2,10 +2,11 @@
 @using Grand.Web.Models.Catalog
 @using Grand.Web.Models.Customer
 @inject Grand.Services.Localization.ILocalizationService localizationService
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
-    Html.AddTitleParts(T("PageTitle.BackInStockSubscriptions").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.BackInStockSubscriptions").Text);
 }
 @section left
     {
@@ -69,7 +70,7 @@
                                         @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
                                         @if (!string.IsNullOrEmpty(item.AttributeDescription))
                                         {
-                                            <br/>
+                                            <br />
                                             @Html.Raw(item.AttributeDescription)
                                         }
                                     </td>

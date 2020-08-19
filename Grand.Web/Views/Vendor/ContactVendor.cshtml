@@ -1,63 +1,63 @@
 ﻿@model ContactVendorModel
-@using Grand.Web.Models.Common;
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.ContactVendor", Model.VendorName).Text);
+    pagebuilder.AddTitleParts(T("PageTitle.ContactVendor", Model.VendorName).Text);
 }
 <div class="page vendor-page">
-        <h1 class="h2 generalTitle text-xs-center">@T("PageTitle.ContactVendor", Model.VendorName)</h1>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "contactvendor_top" })
-        @if (Model.SuccessfullySent)
-        {
-            <div class="result">
-                <div class="result card bg-info p-3 text-white">@Model.Result</div>
-            </div>
-        }
-        else
-        {
-            <form asp-route="ContactVendor" method="post">
-                <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                <div class="form-fields d-flex row">
-                    <div class="form-group col-12 col-sm-6">
-                        <label asp-for="FullName" class="col-form-label">@T("ContactVendor.FullName"):</label>
-                        <span class="required">*</span>
-                        <input asp-for="FullName" placeholder="@T("ContactVendor.FullName.Hint")" class="form-control fullname" />
-                        <span asp-validation-for="FullName"></span>
-                    </div>
-                    <div class="form-group col-12 col-sm-6">
-                        <label asp-for="Email" class="col-form-label">@T("ContactVendor.Email"):</label>
-                        <span class="required">*</span>
-                        <input asp-for="Email" placeholder="@T("ContactVendor.Email.Hint")" class="form-control email" />
-                        <span asp-validation-for="Email"></span>
-                    </div>
-                    @if (Model.SubjectEnabled)
-                        {
-                        <div class="form-group col-12">
-                            <label asp-for="Subject" class="col-form-label">@T("ContactVendor.Subject"):</label>
-                            <span class="required">*</span>
-                            <input asp-for="Subject" placeholder="@T("ContactVendor.Subject.Hint")" class="form-control subject" />
-                            <span asp-validation-for="Subject"></span>
-                        </div>
-                        }
+    <h1 class="h2 generalTitle text-xs-center">@T("PageTitle.ContactVendor", Model.VendorName)</h1>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "contactvendor_top" })
+    @if (Model.SuccessfullySent)
+    {
+        <div class="result">
+            <div class="result card bg-info p-3 text-white">@Model.Result</div>
+        </div>
+    }
+    else
+    {
+        <form asp-route="ContactVendor" method="post">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <div class="form-fields d-flex row">
+                <div class="form-group col-12 col-sm-6">
+                    <label asp-for="FullName" class="col-form-label">@T("ContactVendor.FullName"):</label>
+                    <span class="required">*</span>
+                    <input asp-for="FullName" placeholder="@T("ContactVendor.FullName.Hint")" class="form-control fullname" />
+                    <span asp-validation-for="FullName"></span>
+                </div>
+                <div class="form-group col-12 col-sm-6">
+                    <label asp-for="Email" class="col-form-label">@T("ContactVendor.Email"):</label>
+                    <span class="required">*</span>
+                    <input asp-for="Email" placeholder="@T("ContactVendor.Email.Hint")" class="form-control email" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+                @if (Model.SubjectEnabled)
+                {
                     <div class="form-group col-12">
-                        <label asp-for="Enquiry" class="col-form-label">@T("ContactVendor.Enquiry"):</label>
+                        <label asp-for="Subject" class="col-form-label">@T("ContactVendor.Subject"):</label>
                         <span class="required">*</span>
-                        <textarea asp-for="Enquiry" placeholder="@T("ContactVendor.Enquiry.Hint")" class="form-control enquiry"></textarea>
-                        <span asp-validation-for="Enquiry"></span>
+                        <input asp-for="Subject" placeholder="@T("ContactVendor.Subject.Hint")" class="form-control subject" />
+                        <span asp-validation-for="Subject"></span>
                     </div>
-                    @if (Model.DisplayCaptcha)
-                        {
-                        <div class="captcha-box px-3">
-                            <captcha />
-                        </div>
-                        }
+                }
+                <div class="form-group col-12">
+                    <label asp-for="Enquiry" class="col-form-label">@T("ContactVendor.Enquiry"):</label>
+                    <span class="required">*</span>
+                    <textarea asp-for="Enquiry" placeholder="@T("ContactVendor.Enquiry.Hint")" class="form-control enquiry"></textarea>
+                    <span asp-validation-for="Enquiry"></span>
                 </div>
-                <div class="btn-group text-sm-center pt-3 pb-3">
-                    <input type="submit" name="send-email" class="btn btn-info contact-us-button" value="@T("ContactVendor.Button")" />
-                </div>
-            </form>
-        }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "contactvendor_bottom" })
+                @if (Model.DisplayCaptcha)
+                {
+                    <div class="captcha-box px-3">
+                        <captcha />
+                    </div>
+                }
+            </div>
+            <div class="btn-group text-sm-center pt-3 pb-3">
+                <input type="submit" name="send-email" class="btn btn-info contact-us-button" value="@T("ContactVendor.Button")" />
+            </div>
+        </form>
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "contactvendor_bottom" })
 </div>

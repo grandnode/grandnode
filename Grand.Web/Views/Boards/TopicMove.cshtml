@@ -1,9 +1,10 @@
 ﻿@model TopicMoveModel
 @using Grand.Web.Models.Boards;
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
-    Html.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
+    pagebuilder.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
 }
 @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
 

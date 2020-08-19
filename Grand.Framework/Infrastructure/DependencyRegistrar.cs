@@ -176,12 +176,8 @@ namespace Grand.Framework.Infrastructure
                 var mongourl = new MongoUrl(connectionString);
                 var databaseName = mongourl.DatabaseName;
                 builder.Register(c => new MongoClient(mongourl).GetDatabase(databaseName)).InstancePerLifetimeScope();
-                builder.Register<IMongoDBContext>(c => new MongoDBContext(connectionString)).InstancePerLifetimeScope();
             }
-            else
-            {
-                builder.RegisterType<MongoDBContext>().As<IMongoDBContext>().InstancePerLifetimeScope();
-            }
+            builder.RegisterType<MongoDBContext>().As<IMongoDBContext>().InstancePerLifetimeScope();
 
             //MongoDbRepository
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
@@ -239,7 +235,8 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerLifetimeScope();
             builder.RegisterType<GenericAttributeService>().As<IGenericAttributeService>().InstancePerLifetimeScope();
             builder.RegisterType<HistoryService>().As<IHistoryService>().InstancePerLifetimeScope();
-            builder.RegisterType<PdfService>().As<IPdfService>().InstancePerLifetimeScope();
+            builder.RegisterType<WkPdfService>().As<IPdfService>().InstancePerLifetimeScope();
+            builder.RegisterType<ViewRenderService>().As<IViewRenderService>().InstancePerLifetimeScope();
             builder.RegisterType<SearchTermService>().As<ISearchTermService>().InstancePerLifetimeScope();
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerLifetimeScope();
 

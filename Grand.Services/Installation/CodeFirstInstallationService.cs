@@ -4815,11 +4815,8 @@ namespace Grand.Services.Installation
 
             await _settingService.SaveSetting(new PdfSettings {
                 LogoPictureId = "",
-                LetterPageSizeEnabled = false,
-                RenderOrderNotes = true,
-                FontFileName = "FreeSerif.ttf",
-                InvoiceFooterTextColumn1 = null,
-                InvoiceFooterTextColumn2 = null,
+                InvoiceHeaderText = null,
+                InvoiceFooterText = null,
             });
 
             await _settingService.SaveSetting(new CommonSettings {
@@ -4832,11 +4829,8 @@ namespace Grand.Services.Installation
                 SitemapIncludeProducts = false,
                 DisplayJavaScriptDisabledWarning = false,
                 UseFullTextSearch = false,
-                FullTextMode = FulltextSearchMode.ExactMatch,
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
-                RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge",
                 DeleteGuestTaskOlderThanMinutes = 1440,
                 PopupForTermsOfServiceLinks = true,
                 AllowToSelectStore = false,
@@ -10816,7 +10810,12 @@ namespace Grand.Services.Installation
                 options.Collation = collation;
                 var dataSettingsManager = new DataSettingsManager();
                 var connectionString = dataSettingsManager.LoadSettings().DataConnectionString;
-                var mongoDBContext = new MongoDBContext(connectionString);
+
+                var mongourl = new MongoUrl(connectionString);
+                var databaseName = mongourl.DatabaseName;
+                var mongodb = new MongoClient(connectionString).GetDatabase(databaseName);
+                var mongoDBContext = new MongoDBContext(mongodb);
+
                 var typeFinder = _serviceProvider.GetRequiredService<ITypeFinder>();
                 var q = typeFinder.GetAssemblies().FirstOrDefault(x => x.GetName().Name == "Grand.Core");
                 foreach (var item in q.GetTypes().Where(x => x.Namespace != null && x.Namespace.StartsWith("Grand.Domain")))

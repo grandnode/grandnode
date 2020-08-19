@@ -1,5 +1,6 @@
-﻿@{ 
-    Html.AddScriptParts(ResourceLocation.Footer, "https://js.braintreegateway.com/web/3.52.0/js/client.min.js", excludeFromBundle: true);
-    Html.AddScriptParts(ResourceLocation.Footer, "https://js.braintreegateway.com/web/3.52.0/js/hosted-fields.min.js", excludeFromBundle: true);
-    Html.AddScriptParts(ResourceLocation.Footer, "https://js.braintreegateway.com/web/3.52.0/js/three-d-secure.min.js", excludeFromBundle: true);
+﻿@inject IPageHeadBuilder pagebuilder
+@{
+    pagebuilder.AddScriptParts(ResourceLocation.Footer, "https://js.braintreegateway.com/web/3.52.0/js/client.min.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Footer, "https://js.braintreegateway.com/web/3.52.0/js/hosted-fields.min.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Footer, "https://js.braintreegateway.com/web/3.52.0/js/three-d-secure.min.js", excludeFromBundle: true);
 }

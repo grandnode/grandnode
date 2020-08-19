@@ -1,8 +1,9 @@
 ﻿@model ProfileIndexModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
-    Html.AddTitleParts(T("PageTitle.Profile").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Profile").Text);
 }
 <div class="page profile-page">
     <h1 class="h2 text-xs-center generalTitle">@Model.ProfileTitle</h1>
@@ -15,15 +16,15 @@
             }
         </ul>
         <div class="tab-content col-sm-12 px-0">
-                <div id="tab1" class="tab-pane" role="tabpanel">
-                    @await Component.InvokeAsync("ProfileInfo", new { customerProfileId = Model.CustomerProfileId })
+            <div id="tab1" class="tab-pane" role="tabpanel">
+                @await Component.InvokeAsync("ProfileInfo", new { customerProfileId = Model.CustomerProfileId })
+            </div>
+            @if (Model.ForumsEnabled)
+            {
+                <div id="tab2" class="tab-pane active" role="tabpanel">
+                    @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, pageNumber = Model.PostsPage })
                 </div>
-                @if (Model.ForumsEnabled)
-                {
-                    <div id="tab2" class="tab-pane active" role="tabpanel">
-                        @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, pageNumber = Model.PostsPage })
-                    </div>
-                }
+            }
         </div>
     </div>
 </div>
