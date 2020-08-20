@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Configuration;
 using Grand.Domain.Customers;
 using Grand.Services.Customers;
 using Microsoft.AspNetCore.Authentication;
@@ -17,7 +18,7 @@ namespace Grand.Services.Authentication
     {
         #region Const
 
-        private const string CUSTOMER_COOKIE_NAME = ".Grand.Customer";
+        private string CUSTOMER_COOKIE_NAME => $"{_grandConfig.CookiePrefix}Customer";
 
         #endregion
         #region Fields
@@ -25,6 +26,7 @@ namespace Grand.Services.Authentication
         private readonly CustomerSettings _customerSettings;
         private readonly ICustomerService _customerService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly GrandConfig _grandConfig;
         private Customer _cachedCustomer;
 
         #endregion
@@ -39,11 +41,14 @@ namespace Grand.Services.Authentication
         /// <param name="httpContextAccessor">HTTP context accessor</param>
         public CookieAuthenticationService(CustomerSettings customerSettings,
             ICustomerService customerService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            GrandConfig grandConfig)
         {
             _customerSettings = customerSettings;
             _customerService = customerService;
             _httpContextAccessor = httpContextAccessor;
+            _grandConfig = grandConfig;
+
         }
 
         #endregion

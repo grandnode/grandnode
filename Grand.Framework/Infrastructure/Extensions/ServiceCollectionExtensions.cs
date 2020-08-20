@@ -118,7 +118,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             services.AddAntiforgery(options =>
             {
                 options.Cookie = new CookieBuilder() {
-                    Name = ".Grand.Antiforgery"
+                    Name = $"{config.CookiePrefix}Antiforgery"
                 };
                 if (DataSettingsHelper.DatabaseIsInstalled())
                 {
@@ -138,7 +138,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             services.AddSession(options =>
             {
                 options.Cookie = new CookieBuilder() {
-                    Name = ".Grand.Session",
+                    Name = $"{config.CookiePrefix}Session",
                     HttpOnly = true,
                 };
                 if (DataSettingsHelper.DatabaseIsInstalled())
@@ -203,7 +203,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add main cookie authentication
             authenticationBuilder.AddCookie(GrandCookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.Cookie.Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme;
+                options.Cookie.Name = config.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme;
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
@@ -214,7 +214,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add external authentication
             authenticationBuilder.AddCookie(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme, options =>
             {
-                options.Cookie.Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.Cookie.Name = config.CookiePrefix + GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
