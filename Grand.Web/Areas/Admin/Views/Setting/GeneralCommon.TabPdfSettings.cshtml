@@ -3,6 +3,9 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
+            <div class="note note-info">
+                If you are using GrandNode on Linux, additional configuration is required to export PDF files and use the WKHTMLTOPDF library. <a href="https://docs.grandnode.com/how-to-make-wkhtmltopdf-working-on-linux" target="_blank">Check the documentation</a> for more details.
+            </div>
             <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LogoPictureId_OverrideForStore, "pdf-logo-picture", Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="PdfSettings.LogoPictureId" class="control-label" />
