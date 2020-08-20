@@ -606,7 +606,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     pluginDescriptor.LimitedToStores = model.SelectedStoreIds.ToList();
                 }
-                PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+                PluginFileParser.SavePluginConfigFile(pluginDescriptor);
                 //reset plugin cache
                 _pluginFinder.ReloadPlugins();
                 //locales

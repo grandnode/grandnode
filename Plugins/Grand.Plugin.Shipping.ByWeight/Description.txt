@@ -1,8 +1,0 @@
-﻿Group: Shipping rate computation
-FriendlyName: Shipping by weight
-SystemName: Shipping.ByWeight
-Version: 1.46
-SupportedVersions: 4.80
-Author: grandnode team
-DisplayOrder: 1
-FileName: Grand.Plugin.Shipping.ByWeight.dll

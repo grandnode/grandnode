@@ -38,9 +38,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Description.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

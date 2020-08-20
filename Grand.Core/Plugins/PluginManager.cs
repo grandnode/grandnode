@@ -54,7 +54,7 @@ namespace Grand.Core.Plugins
         {
             if (mvcCoreBuilder == null)
                 throw new ArgumentNullException("mvcCoreBuilder");
-            
+
             if (config == null)
                 throw new ArgumentNullException("config");
 
@@ -100,11 +100,8 @@ namespace Grand.Core.Plugins
                     }
 
                     //load description files
-                    foreach (var dfd in GetDescriptionFilesAndDescriptors(pluginFolder))
+                    foreach (var pluginDescriptor in GetDescriptions(pluginFolder))
                     {
-                        var descriptionFile = dfd.Key;
-                        var pluginDescriptor = dfd.Value;
-
                         //ensure that version of plugin is valid
                         if (!pluginDescriptor.SupportedVersions.Contains(GrandVersion.CurrentVersion, StringComparer.OrdinalIgnoreCase))
                         {
@@ -114,7 +111,7 @@ namespace Grand.Core.Plugins
 
                         //some validation
                         if (String.IsNullOrWhiteSpace(pluginDescriptor.SystemName))
-                            throw new Exception(string.Format("A plugin '{0}' has no system name. Try assigning the plugin a unique name and recompiling.", descriptionFile.FullName));
+                            throw new Exception(string.Format("A plugin '{0}' has no system name. Try assigning the plugin a unique name and recompiling.", pluginDescriptor.SystemName));
                         if (referencedPlugins.Contains(pluginDescriptor))
                             throw new Exception(string.Format("A plugin with '{0}' system name is already defined", pluginDescriptor.SystemName));
 
@@ -124,11 +121,8 @@ namespace Grand.Core.Plugins
 
                         try
                         {
-                            if (descriptionFile.Directory == null)
-                                throw new Exception(string.Format("Directory cannot be resolved for '{0}' description file", descriptionFile.Name));
-
                             //get list of all DLLs in plugins (not in bin!)
-                            var pluginFiles = descriptionFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
+                            var pluginFiles = pluginDescriptor.OriginalAssemblyFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
                                 //just make sure we're not registering shadow copied plugins
                                 .Where(x => !binFiles.Select(q => q.FullName).Contains(x.FullName))
                                 .Where(x => IsPackagePluginFolder(x.Directory))
@@ -137,7 +131,7 @@ namespace Grand.Core.Plugins
                             if (!config.PluginShadowCopy)
                             {
                                 //remove deps.json files 
-                                var depsFiles = descriptionFile.Directory.GetFiles("*.deps.json", SearchOption.TopDirectoryOnly);
+                                var depsFiles = pluginDescriptor.OriginalAssemblyFile.Directory.GetFiles("*.deps.json", SearchOption.TopDirectoryOnly);
                                 foreach (var f in depsFiles)
                                 {
                                     try
@@ -298,28 +292,30 @@ namespace Grand.Core.Plugins
         /// </summary>
         /// <param name="pluginFolder">Plugin directory info</param>
         /// <returns>Original and parsed description files</returns>
-        private static IEnumerable<KeyValuePair<FileInfo, PluginDescriptor>> GetDescriptionFilesAndDescriptors(DirectoryInfo pluginFolder)
+        private static IList<PluginDescriptor> GetDescriptions(DirectoryInfo pluginFolder)
         {
             if (pluginFolder == null)
                 throw new ArgumentNullException("pluginFolder");
 
             //create list (<file info, parsed plugin descritor>)
-            var result = new List<KeyValuePair<FileInfo, PluginDescriptor>>();
+            var result = new List<PluginDescriptor>();
             //add display order and path to list
-            foreach (var descriptionFile in pluginFolder.GetFiles("Description.txt", SearchOption.AllDirectories))
+            foreach (var pluginFile in pluginFolder.GetFiles("*.dll", SearchOption.AllDirectories))
             {
-                if (!IsPackagePluginFolder(descriptionFile.Directory))
+                if (!IsPackagePluginFolder(pluginFile.Directory))
                     continue;
 
                 //parse file
-                var pluginDescriptor = PluginFileParser.ParsePluginDescriptionFile(descriptionFile.FullName);
+                var pluginDescriptor = PluginFileParser.PreparePluginDescriptor(pluginFile);
+                if (pluginDescriptor == null)
+                    continue;
 
                 //populate list
-                result.Add(new KeyValuePair<FileInfo, PluginDescriptor>(descriptionFile, pluginDescriptor));
+                result.Add(pluginDescriptor);
             }
 
-            //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
-            result.Sort((firstPair, nextPair) => firstPair.Value.DisplayOrder.CompareTo(nextPair.Value.DisplayOrder));
+            //sort list by display order.
+            result = result.OrderBy(x => x.DisplayOrder).ToList();
             return result;
         }
 
@@ -329,7 +325,7 @@ namespace Grand.Core.Plugins
         /// <param name="fileInfo">File info</param>
         /// <returns>Result</returns>
         private static bool IsAlreadyLoaded(FileInfo fileInfo)
-        {            
+        {
             try
             {
                 string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
@@ -363,7 +359,7 @@ namespace Grand.Core.Plugins
             var _plug = config.PluginShadowCopy ? ShadowCopyFile(plug, Directory.CreateDirectory(_shadowCopyFolder.FullName)) : plug;
 
             try
-            {                
+            {
                 Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(_plug.FullName);
                 //we can now register the plugin definition
                 Log.Information("Adding to ApplicationParts: '{0}'", assembly.FullName);
@@ -376,7 +372,7 @@ namespace Grand.Core.Plugins
                 throw new InvalidOperationException($"The plugin directory for the {plug.Name} file exists in a folder outside of the allowed grandnode folder hierarchy - exception because of {plug.FullName} - exception: {ex.Message}");
             }
         }
-       
+
         /// <summary>
         /// Used to initialize plugins when running in Medium Trust
         /// </summary>
@@ -407,7 +403,7 @@ namespace Grand.Core.Plugins
                     {
                         File.Delete(shadowCopiedPlug.FullName);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         shouldCopy = false;
                         Log.Error(ex, "PluginManager");

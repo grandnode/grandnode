@@ -103,7 +103,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var pluginDescriptor = widget.PluginDescriptor;
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
-            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+            PluginFileParser.SavePluginConfigFile(pluginDescriptor);
             //reset plugin cache
             _pluginFinder.ReloadPlugins();
 
