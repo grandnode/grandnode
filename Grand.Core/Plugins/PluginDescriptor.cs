@@ -1,9 +1,8 @@
-﻿using Grand.Core.Infrastructure;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Core.Plugins
 {
@@ -11,17 +10,17 @@ namespace Grand.Core.Plugins
     {
         public PluginDescriptor()
         {
-            this.SupportedVersions = new List<string>();
-            this.LimitedToStores = new List<string>();
+            SupportedVersions = new List<string>();
+            LimitedToStores = new List<string>();
         }
 
         public PluginDescriptor(Assembly referencedAssembly, FileInfo originalAssemblyFile,
             Type pluginType)
             : this()
         {
-            this.ReferencedAssembly = referencedAssembly;
-            this.OriginalAssemblyFile = originalAssemblyFile;
-            this.PluginType = pluginType;
+            ReferencedAssembly = referencedAssembly;
+            OriginalAssemblyFile = originalAssemblyFile;
+            PluginType = pluginType;
         }
         /// <summary>
         /// Plugin type
@@ -114,7 +113,7 @@ namespace Grand.Core.Plugins
         {
             if (DisplayOrder != other.DisplayOrder)
                 return DisplayOrder.CompareTo(other.DisplayOrder);
-            
+
             return FriendlyName.CompareTo(other.FriendlyName);
         }
 
@@ -126,7 +125,7 @@ namespace Grand.Core.Plugins
         public override bool Equals(object obj)
         {
             var other = obj as PluginDescriptor;
-            return other != null && 
+            return other != null &&
                 SystemName != null &&
                 SystemName.Equals(other.SystemName);
         }

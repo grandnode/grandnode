@@ -63,7 +63,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var tmp1 = widget.ToModel();
                 tmp1.IsActive = widget.IsWidgetActive(_widgetSettings);
-                tmp1.ConfigurationUrl = widget.PluginDescriptor.Instance(_serviceProvider).GetConfigurationPageUrl();
                 tmp1.ConfigurationUrl = widget.GetConfigurationPageUrl();
                 widgetsModel.Add(tmp1);
             }
