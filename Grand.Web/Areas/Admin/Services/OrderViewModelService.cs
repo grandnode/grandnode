@@ -1355,12 +1355,8 @@ namespace Grand.Web.Areas.Admin.Services
                 throw new ArgumentNullException("order");
 
             //order's tags
-            var existingOrderTags =  await _orderTagService.GetOrderTagsByOrder(order.Id);
+            var existingOrderTags = await _orderTagService.GetOrderTagsByOrder(order.Id);
             List<OrderTag> newOrderTags = ParseOrderTagsToList(orderTags);
-
-            // remove duplicates
-            existingOrderTags = existingOrderTags.Distinct(new OrderTagComparer()).ToList();
-            newOrderTags = newOrderTags.Distinct(new OrderTagComparer()).ToList();
 
             // compare 
             var orderTagsToRemove = new List<OrderTag>();
@@ -1376,26 +1372,30 @@ namespace Grand.Web.Areas.Admin.Services
                 if (orderTag != null)
                 {
                     orderTag.OrderId = order.Id;
-                    await _orderTagService.DetachOrderTag(orderTag, order);
+                    await _orderTagService.DetachOrderTag(orderTag.Id, order.Id);
                 }
             }
 
             var allOrderTags = await _orderTagService.GetAllOrderTags();
             foreach (var newOrderTag in newOrderTags)
             {
-                var orderTag = allOrderTags.ToList().Find(o => o.Name == newOrderTag.Name);
-                if (orderTag == null)
+                OrderTag orderTag;
+                var orderTag2 = allOrderTags.ToList().Find(o => o.Name == newOrderTag.Name);
+                
+                if (orderTag2 == null)
                 {
                     orderTag = new OrderTag { Name = newOrderTag.Name, Count = 0 };
                     await _orderTagService.InsertOrderTag(orderTag);
-
+                }
+                else
+                {
+                    orderTag = orderTag2;
                 }
                 
                 if (!order.OrderTagExists(orderTag))
                 {
-                    orderTag.Orders.Add(new OrderIds {OrderId = order.Id });
-                    await _orderTagService.UpdateOrderTag(orderTag);
-                    await _orderTagService.AttachOrderTag(orderTag, order);
+                    orderTag.Orders.Add(order.Id);
+                    await _orderTagService.AttachOrderTag(orderTag.Id, order.Id);
                 }
             }
         }

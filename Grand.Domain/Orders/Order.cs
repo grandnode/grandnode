@@ -15,9 +15,8 @@ namespace Grand.Domain.Orders
     /// </summary>
     public partial class Order : BaseEntity
     {
-
         private ICollection<OrderItem> _orderItems;
-        private ICollection<OrderOrderTags> _orderTags;
+        private ICollection<string> _orderTags;
 
 
 
@@ -394,9 +393,9 @@ namespace Grand.Domain.Orders
         /// <summary>
         /// Gets or sets the order's tags
         /// </summary>
-        public virtual ICollection<OrderOrderTags> OrderTags 
+        public virtual ICollection<string> OrderTags 
         {
-            get { return _orderTags ?? (_orderTags = new List<OrderOrderTags>()); }
+            get { return _orderTags ?? (_orderTags = new List<string>()); }
             protected set { _orderTags = value; }
 
         }
@@ -477,11 +476,5 @@ namespace Grand.Domain.Orders
         }
         
         #endregion
-    }
-
-    public class OrderOrderTags
-    {
-        public string OrderId { get; set; }
-        public string OrderTagId { get; set; }
     }
 }

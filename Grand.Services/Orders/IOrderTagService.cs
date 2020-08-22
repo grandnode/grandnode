@@ -57,13 +57,13 @@ namespace Grand.Services.Orders
         /// Assign a tag to the order
         /// </summary>
         /// <param name="orderTag">order Tag</param>
-        Task AttachOrderTag(OrderTag orderTag, Order order);
+        Task AttachOrderTag(string orderTagId, string orderId);
 
         /// <summary>
         /// Detach a tag from the order
         /// </summary>
         /// <param name="orderTag">order Tag</param>
-        Task DetachOrderTag(OrderTag orderTag, Order order);
+        Task DetachOrderTag(string orderTagId, string orderId);
 
         /// <summary>
         /// Get number of orders

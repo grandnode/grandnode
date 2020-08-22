@@ -124,7 +124,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("orderTag");
 
             var builder = Builders<Order>.Update;
-            var updatefilter = builder.PullFilter(x => x.OrderTags, y => y.OrderId == orderTag.Id );
+            var updatefilter = builder.Pull(x => x.OrderTags, orderTag.Id);
             await _orderRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
             await _orderTagRepository.DeleteAsync(orderTag);
@@ -143,11 +143,11 @@ namespace Grand.Services.Orders
         /// <returns>Order tags</returns>
         public virtual async Task<IList<OrderTag>> GetAllOrderTags()
         {
-            //return await _cacheManager.GetAsync(ORDERTAG_ALL_KEY, async () =>
-            //{
+            return await _cacheManager.GetAsync(ORDERTAG_ALL_KEY, async () =>
+            {
                 var query = _orderTagRepository.Table;
                 return await query.ToListAsync();
-            //});
+            });
         }
 
         /// <summary>
@@ -167,8 +167,10 @@ namespace Grand.Services.Orders
         /// <returns>Order's tag</returns>
         public virtual async Task<IList<OrderTag>> GetOrderTagsByOrder(string orderId)
         {
-            var result = await _orderTagRepository.Collection.FindAsync(p => p.Orders.Any(p => p.OrderId == orderId));
-            return result.ToList();
+            // получим все объекты, у которых определены английский и французский языки
+            var filter = Builders<OrderTag>.Filter.All("Orders", new List<string>() { orderId });
+            var result = await _orderTagRepository.Collection.Find(filter).ToListAsync();
+            return result;
         }
 
         /// <summary>
@@ -212,16 +214,8 @@ namespace Grand.Services.Orders
             if (orderTag == null)
                 throw new ArgumentNullException("orderTag");
 
-            var previouse = await GetOrderTagById(orderTag.Id);
-
             await _orderTagRepository.UpdateAsync(orderTag);
 
-            //update name on orders
-            var filter = new BsonDocument
-            {
-                new BsonElement("OrderTags", previouse.Name)
-            };
-                        
             //cache
             await _cacheManager.RemoveByPrefix(ORDERTAG_PATTERN_KEY);
 
@@ -232,54 +226,40 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Attach a tag to the order
         /// </summary>
-        /// <param name="orderTag">Order's picture</param>
-        public virtual async Task AttachOrderTag(OrderTag orderTag, Order order)
+        /// <param name="orderTag">Order's identification</param>
+        public virtual async Task AttachOrderTag(string orderTagId, string orderId)
         {
-            if (orderTag == null)
-                throw new ArgumentNullException("orderTag");
-
-            // update  order with tags
-            var updatebuilder = Builders<Order>.Update;
-            var update = updatebuilder.AddToSet(p => p.OrderTags, new OrderOrderTags { OrderId = order.Id, OrderTagId = orderTag.Id });
-            await _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", order.Id), update);
-
+            var updateBuilder = Builders<Order>.Update;
+            var update = updateBuilder.AddToSet(p => p.OrderTags, orderTagId);
+            await _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderId), update);
+            
             // update ordertag with count's order and new order id
-            var builder = Builders<OrderTag>.Filter;
-            var filter = builder.Eq(x => x.Id, orderTag.Id);
-            var updateTag = Builders<OrderTag>.Update
+            var updateBuilderTag = Builders<OrderTag>.Update
+                .AddToSet(p => p.Orders, orderId)
                 .Inc(x => x.Count, 1);
-            await _orderTagRepository.Collection.UpdateManyAsync(filter, updateTag);
+            await _orderTagRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderTagId), updateBuilderTag);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, order.Id));
-
-            //event notification
-            await _mediator.EntityInserted(orderTag);
+            await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, orderId));
         }
 
         // <summary>
         /// Detach a tag from the order
         /// </summary>
         /// <param name="orderTag">Order Tag</param>
-        public virtual async Task DetachOrderTag(OrderTag orderTag, Order order)
+        public virtual async Task DetachOrderTag(string orderTagId, string orderId)
         {
-            if (orderTag == null)
-                throw new ArgumentNullException("orderTag");
-
-            var filterOrder = Builders<Order>.Filter.Where(o => o.Id == order.Id);
-            var updateOrder = Builders<Order>.Update.PullFilter(p => p.OrderTags, Builders<OrderOrderTags>.Filter.Where(y => y.OrderTagId == orderTag.Id && y.OrderId == order.Id));
-            await _orderRepository.Collection.UpdateManyAsync(filterOrder, updateOrder);
-
-            var filterOrderTag = Builders<OrderTag>.Filter.Where(x => x.Id == orderTag.Id);
+            var updateBuilder = Builders<Order>.Update;
+            var update = updateBuilder.Pull(p => p.OrderTags, orderTagId);
+            await _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderId), update);
+            
             var updateTag = Builders<OrderTag>.Update
-                .Inc(x => x.Count, -1).PullFilter(p => p.Orders, Builders<OrderIds>.Filter.Where(y => y.OrderId == order.Id));
-            await _orderTagRepository.Collection.UpdateManyAsync(filterOrderTag, updateTag);
+                .Pull(p => p.Orders, orderId)
+                .Inc(x => x.Count, -1);
+            await _orderTagRepository.Collection.UpdateManyAsync(new BsonDocument("_id", orderTagId), updateTag);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, orderTag.OrderId));
-
-            //event notification
-            await _mediator.EntityDeleted(orderTag);
+            await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, orderId));
         }
 
         /// <summary>

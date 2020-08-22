@@ -265,7 +265,7 @@ namespace Grand.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            bool result = order.OrderTags.FirstOrDefault(t => t.OrderTagId == orderTag.Id) != null;
+            bool result = order.OrderTags.FirstOrDefault(t => t == orderTag.Id) != null;
             return result;
         }
 

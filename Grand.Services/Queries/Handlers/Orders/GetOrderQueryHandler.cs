@@ -111,7 +111,7 @@ namespace Grand.Services.Queries.Handlers.Orders
 
             //tag filtering 
             if (!string.IsNullOrEmpty(request.OrderTagId))
-                query = query.Where(o => o.OrderTags.Any(y => y.OrderTagId == request.OrderTagId));
+                query = query.Where(o => o.OrderTags.Any(y => y == request.OrderTagId));
 
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
