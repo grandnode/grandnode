@@ -232,7 +232,7 @@ namespace Grand.Core.Plugins
             descriptor.OriginalAssemblyFile = pluginFile;
             descriptor.ReferencedAssembly = assembly;
 
-            var cfgfile = Path.Combine(_plug.Directory.FullName, "config.cfg");
+            var cfgfile = Path.Combine(pluginFile.Directory.FullName, "config.cfg");
             if (File.Exists(cfgfile))
             {
                 var pluginConfiguration = JsonConvert.DeserializeObject<PluginConfiguration>(File.ReadAllText(cfgfile));
