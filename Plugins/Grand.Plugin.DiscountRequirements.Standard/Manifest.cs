@@ -8,4 +8,4 @@
     Author = "grandnode team",
     Version = "1.01",
     FileName = "Grand.Plugin.DiscountRequirements.Standard.dll"
-)] 
+)]

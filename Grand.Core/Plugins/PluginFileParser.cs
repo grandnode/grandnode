@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Grand.Core.Plugins
@@ -46,35 +45,6 @@ namespace Grand.Core.Plugins
             await Task.CompletedTask;
         }
 
-        public static PluginDescriptor PreparePluginDescriptor(FileInfo pluginFile)
-        {
-            var descriptor = new PluginDescriptor();
-            var assembly = Assembly.LoadFrom(pluginFile.FullName);
-            var pluginInfo = assembly.GetCustomAttribute<PluginInfoAttribute>();
-            if (pluginInfo == null)
-                return null;
-
-            descriptor.FriendlyName = pluginInfo.FriendlyName;
-            descriptor.Group = pluginInfo.Group;
-            descriptor.SystemName = pluginInfo.SystemName;
-            descriptor.Version = pluginInfo.Version;
-            descriptor.SupportedVersions = new List<string> { pluginInfo.SupportedVersion };
-            descriptor.Author = pluginInfo.Author;
-            descriptor.PluginFileName = pluginInfo.FileName;
-            descriptor.OriginalAssemblyFile = pluginFile;
-
-            var cfgfile = Path.Combine(pluginFile.Directory.FullName, "config.cfg");
-            if (File.Exists(cfgfile))
-            {
-                var config = JsonConvert.DeserializeObject<PluginConfiguration>(File.ReadAllText(cfgfile));
-                if (!string.IsNullOrEmpty(config.FriendlyName))
-                    descriptor.FriendlyName = config.FriendlyName;
-                descriptor.DisplayOrder = config.DisplayOrder;
-                descriptor.LimitedToStores = config.LimitedToStore;
-            }
-
-            return descriptor;
-        }
 
         public static void SavePluginConfigFile(PluginDescriptor plugin)
         {
