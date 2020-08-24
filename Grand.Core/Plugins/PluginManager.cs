@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -212,25 +213,25 @@ namespace Grand.Core.Plugins
         {
             var _plug = config.PluginShadowCopy ? ShadowCopyFile(pluginFile, Directory.CreateDirectory(_shadowCopyFolder.FullName)) : pluginFile;
 
-            var descriptor = new PluginDescriptor();
-
             Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(_plug.FullName);
 
-            //var assembly = Assembly.LoadFrom()
             var pluginInfo = assembly.GetCustomAttribute<PluginInfoAttribute>();
             if (pluginInfo == null)
             {
                 return null;
             }
-            descriptor.FriendlyName = pluginInfo.FriendlyName;
-            descriptor.Group = pluginInfo.Group;
-            descriptor.SystemName = pluginInfo.SystemName;
-            descriptor.Version = pluginInfo.Version;
-            descriptor.SupportedVersions = new List<string> { pluginInfo.SupportedVersion };
-            descriptor.Author = pluginInfo.Author;
-            descriptor.PluginFileName = _plug.Name;
-            descriptor.OriginalAssemblyFile = pluginFile;
-            descriptor.ReferencedAssembly = assembly;
+
+            var descriptor = new PluginDescriptor {
+                FriendlyName = pluginInfo.FriendlyName,
+                Group = pluginInfo.Group,
+                SystemName = pluginInfo.SystemName,
+                Version = pluginInfo.Version,
+                SupportedVersions = new List<string> { pluginInfo.SupportedVersion },
+                Author = pluginInfo.Author,
+                PluginFileName = _plug.Name,
+                OriginalAssemblyFile = pluginFile,
+                ReferencedAssembly = assembly
+            };
 
             var cfgfile = Path.Combine(pluginFile.Directory.FullName, "config.cfg");
             if (File.Exists(cfgfile))
@@ -412,7 +413,11 @@ namespace Grand.Core.Plugins
                 if (!IsPackagePluginFolder(pluginFile.Directory))
                     continue;
 
-                //parse file
+                if(!string.IsNullOrEmpty(config.PluginSkipLoadingPattern) 
+                    && Matches(pluginFile.Name, config.PluginSkipLoadingPattern))
+                    continue;
+
+                //prepare plugin descriptor
                 var pluginDescriptor = PreparePluginDescriptor(pluginFile, _shadowCopyFolder, config);
                 if (pluginDescriptor == null)
                     continue;
@@ -424,6 +429,10 @@ namespace Grand.Core.Plugins
             //sort list by display order.
             result = result.OrderBy(x => x.DisplayOrder).ToList();
             return result;
+        }
+        private static bool Matches(string fullName, string pattern)
+        {
+            return Regex.IsMatch(fullName, pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
         }
 
         private static void AddApplicationPart(IMvcCoreBuilder mvcCoreBuilder,
