@@ -59,7 +59,7 @@
     <Value>Admin area. Manage Order Tags</Value>
   </LocaleResource>
   <LocalResource Name="Admin.Orders.Fields.SaveOrderTags">
-    Edit
+    Save
   </LocalResource>
   <LocalResource Name="Admin.Orders.Fields.CancelOrderTags">
     Cancel
