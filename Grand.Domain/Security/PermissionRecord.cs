@@ -39,7 +39,7 @@ namespace Grand.Domain.Security
         /// </summary>
         public virtual ICollection<string> Actions {
             get { return _actions ?? (_actions = new List<string>()); }
-            protected set { _actions = value; }
+            set { _actions = value; }
         }
     }
 }
