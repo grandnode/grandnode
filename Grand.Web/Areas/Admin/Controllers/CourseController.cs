@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Courses;
 using Grand.Domain.Customers;
-using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
@@ -60,6 +59,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Level() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> Levels(DataSourceRequest command)
         {
@@ -73,6 +73,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> LevelUpdate(CourseLevelModel model)
         {
@@ -88,6 +89,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         [HttpPost]
         public async Task<IActionResult> LevelAdd(CourseLevelModel model)
         {
@@ -103,6 +105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> LevelDelete(string id)
         {
@@ -121,6 +124,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
@@ -133,6 +137,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = await _courseViewModelService.PrepareCourseModel();
@@ -146,6 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(CourseModel model, bool continueEditing)
         {
@@ -174,6 +180,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var course = await _courseService.GetById(id);
@@ -214,6 +221,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(CourseModel model, bool continueEditing)
         {
@@ -259,6 +267,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -281,12 +290,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> AssociateProductToCoursePopup()
         {
             var model = await _courseViewModelService.PrepareAssociateProductToCourseModel();
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AssociateProductToCoursePopupList(DataSourceRequest command,
             CourseModel.AssociateProductToCourseModel model, [FromServices] IWorkContext workContext)
@@ -305,6 +316,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AssociateProductToCoursePopup(string btnId, string productIdInput,
             string productNameInput, CourseModel.AssociateProductToCourseModel model, [FromServices] IProductService productService, [FromServices] IWorkContext workContext)
@@ -332,6 +344,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Subjects
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> Subjects(DataSourceRequest command, string courseId)
         {
@@ -345,6 +358,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> SubjectUpdate(CourseSubjectModel model)
         {
@@ -360,6 +374,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         [HttpPost]
         public async Task<IActionResult> SubjectAdd(CourseSubjectModel model)
         {
@@ -375,6 +390,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> SubjectDelete(string id)
         {
@@ -391,6 +407,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Lessons
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> Lessons(string courseId)
         {
@@ -403,6 +420,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
+
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> CreateLesson(string courseId)
         {
             var course = await _courseService.GetById(courseId);
@@ -426,6 +445,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> CreateLesson(CourseLessonModel model, bool continueEditing)
         {
@@ -459,6 +479,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> EditLesson(string id)
         {
             var lesson = await _courseLessonService.GetById(id);
@@ -486,6 +507,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> EditLesson(CourseLessonModel model, bool continueEditing)
         {
@@ -523,6 +545,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> DeleteLesson(string id)
         {
