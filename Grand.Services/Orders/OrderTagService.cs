@@ -11,6 +11,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Grand.Services.Events;
 
+
 namespace Grand.Services.Orders
 {
     public partial class OrderTagService : IOrderTagService
@@ -75,16 +76,7 @@ namespace Grand.Services.Orders
         }
 
         #endregion
-
-        #region Nested classes
-
-        private class OrderTagWithCount
-        {
-            public int OrderTagId { get; set; }
-            public int OrderCount { get; set; }
-        }
-
-        #endregion
+                
 
         #region Utilities
 
@@ -93,9 +85,9 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Dictionary of "order's tag ID : order's count"</returns>
-        private async Task<Dictionary<string, int>> GetOrderCount(string storeId)
+        private async Task<Dictionary<string, int>> GetOrderCount(string orderTagId)
         {
-            string key = string.Format(ORDERTAG_COUNT_KEY, storeId);
+            string key = string.Format(ORDERTAG_COUNT_KEY, orderTagId);
             return await _cacheManager.GetAsync(key, async () => 
             {
                 var query = from ot in _orderTagRepository.Table
@@ -143,11 +135,8 @@ namespace Grand.Services.Orders
         /// <returns>Order tags</returns>
         public virtual async Task<IList<OrderTag>> GetAllOrderTags()
         {
-            return await _cacheManager.GetAsync(ORDERTAG_ALL_KEY, async () =>
-            {
-                var query = _orderTagRepository.Table;
-                return await query.ToListAsync();
-            });
+            var query = _orderTagRepository.Table;
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -238,9 +227,14 @@ namespace Grand.Services.Orders
                 .AddToSet(p => p.Orders, orderId)
                 .Inc(x => x.Count, 1);
             await _orderTagRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderTagId), updateBuilderTag);
+            var orderTag =   await _orderTagRepository.GetByIdAsync(orderTagId);
 
             //cache
             await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, orderId));
+            await _cacheManager.RemoveAsync(string.Format(ORDERTAG_COUNT_KEY, orderTagId));
+
+            //event notification
+            await _mediator.EntityUpdated(orderTag);
         }
 
         // <summary>
@@ -260,6 +254,7 @@ namespace Grand.Services.Orders
 
             //cache
             await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, orderId));
+            await _cacheManager.RemoveAsync(string.Format(ORDERTAG_COUNT_KEY, orderTagId));
         }
 
         /// <summary>
@@ -270,7 +265,7 @@ namespace Grand.Services.Orders
         /// <returns>Number of orders</returns>
         public virtual async Task<int> GetOrderCount(string orderTagId, string storeId)
         {
-            var dictionary = await GetOrderCount(storeId);
+            var dictionary = await GetOrderCount(orderTagId);
             if (dictionary.ContainsKey(orderTagId))
                 return dictionary[orderTagId];
 
