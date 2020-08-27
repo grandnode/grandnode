@@ -64,6 +64,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ListCategoryActivityLog(DataSourceRequest command, string categoryId)
         {
@@ -78,6 +79,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ListArticleActivityLog(DataSourceRequest command, string articleId)
         {
@@ -91,6 +93,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> CreateCategory()
         {
             var model = await _knowledgebaseViewModelService.PrepareKnowledgebaseCategoryModel();
@@ -100,6 +103,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> CreateCategory(KnowledgebaseCategoryModel model, bool continueEditing)
         {
@@ -118,6 +122,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> EditCategory(string id)
         {
             var knowledgebaseCategory = await _knowledgebaseService.GetKnowledgebaseCategory(id);
@@ -146,6 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> EditCategory(KnowledgebaseCategoryModel model, bool continueEditing)
         {
@@ -170,6 +176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> DeleteCategory(string id)
         {
@@ -193,6 +200,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("EditCategory", new { id });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> CreateArticle(string parentCategoryId)
         {
             var model = await _knowledgebaseViewModelService.PrepareKnowledgebaseArticleModel();
@@ -208,6 +216,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> CreateArticle(KnowledgebaseArticleModel model, bool continueEditing)
         {
@@ -228,6 +237,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> EditArticle(string id)
         {
             var knowledgebaseArticle = await _knowledgebaseService.GetKnowledgebaseArticle(id);
@@ -257,6 +267,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> EditArticle(KnowledgebaseArticleModel model, bool continueEditing)
         {
@@ -281,6 +292,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> DeleteArticle(string id)
         {
@@ -298,6 +310,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("EditArticle", new { knowledgebaseArticle.Id });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ArticlesPopup(string articleId)
         {
             var model = new KnowledgebaseArticleModel.AddRelatedArticleModel
@@ -312,6 +325,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> RelatedArticlesAddPopupList(DataSourceRequest command, KnowledgebaseArticleModel.AddRelatedArticleModel model)
         {
@@ -325,6 +339,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> RelatedArticlesList(DataSourceRequest command, string articleId)
         {
             var articles = await _knowledgebaseService.GetRelatedKnowledgebaseArticles(articleId, command.Page - 1, command.PageSize);
@@ -344,6 +359,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> ArticlesPopup(KnowledgebaseArticleModel.AddRelatedArticleModel model)
@@ -356,6 +372,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> RelatedArticleDelete(KnowledgebaseArticleModel.AddRelatedArticleModel model)
         {
