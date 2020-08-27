@@ -58,12 +58,12 @@
   <LocaleResource Name="Permission.ManageOrderTags">
     <Value>Admin area. Manage Order Tags</Value>
   </LocaleResource>
-  <LocalResource Name="Admin.Orders.Fields.SaveOrderTags">
+  <LocaleResource Name="Admin.Orders.Fields.SaveOrderTags">
     Save
-  </LocalResource>
-  <LocalResource Name="Admin.Orders.Fields.CancelOrderTags">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CancelOrderTags">
     Cancel
-  </LocalResource>
+  </LocaleResource>
   <LocaleResource Name="PageTitle.SubAccounts">
     <Value>Subaccounts</Value>
   </LocaleResource>

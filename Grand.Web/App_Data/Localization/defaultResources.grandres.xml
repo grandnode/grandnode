@@ -369,9 +369,9 @@
   <LocaleResource Name="Account.EmailUsernameErrors.UsernameTooLong">
     <Value>Username is too long</Value>
   </LocaleResource>
-  <LocalResource Name="Account.EnableTwoFactorAuth">
+  <LocaleResource Name="Account.EnableTwoFactorAuth">
     <value>Enable Two Factor Authentication</value>
-  </LocalResource>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.AcceptPrivacyPolicy">
     <Value>I accept privacy policy</Value>
   </LocaleResource>
@@ -21379,13 +21379,13 @@
 <LocaleResource Name="Permission.ManageOrderTags">
     <Value>Admin area. Manage Order Tags</Value>
   </LocaleResource>
-  <LocalResource Name="Admin.Orders.Fields.SaveOrderTags">
+  <LocaleResource Name="Admin.Orders.Fields.SaveOrderTags">
     Save
-  </LocalResource>
-  <LocalResource Name="Admin.Orders.Fields.CancelOrderTags">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CancelOrderTags">
     Cancel
-  </LocalResource>
-  <LocalesResource Name="Admin.Orders.List.OrderTagId">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderTagId">
     Order's tag
-  </LocalesResource>
+  </LocaleResource>
 </Language>
