@@ -167,6 +167,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> BestsellersBriefReportByQuantityList(DataSourceRequest command)
         {
@@ -178,6 +179,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> BestsellersBriefReportByAmountList(DataSourceRequest command)
         {
@@ -190,6 +193,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> BestsellersReport()
         {
             var model = new BestsellersReportModel
@@ -230,6 +234,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> BestsellersReportList(DataSourceRequest command, BestsellersReportModel model)
         {
@@ -293,6 +299,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ReportOrderPeriodList(DataSourceRequest command)
         {
@@ -309,6 +316,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ReportOrderTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
@@ -332,6 +340,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new NeverSoldReportModel();
             return View(model);
         }
+
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> NeverSoldReportList(DataSourceRequest command, NeverSoldReportModel model)
         {
@@ -367,6 +377,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> OrderAverageReportList(DataSourceRequest command)
         {
@@ -407,6 +418,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ReportLatestOrder(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
@@ -455,6 +467,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> OrderIncompleteReportList(DataSourceRequest command)
         {
@@ -508,6 +521,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> CountryReport()
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -531,6 +545,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> CountryReportList(DataSourceRequest command, CountryReportModel model)
         {
@@ -580,6 +595,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             return View();
         }
+
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> LowStockReportList(DataSourceRequest command)
         {
@@ -633,7 +650,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> PopularSearchTermsReport(DataSourceRequest command)
         {
@@ -664,6 +681,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ReportBestCustomersByOrderTotalList(DataSourceRequest command, BestCustomersReportModel model)
         {
@@ -677,6 +695,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
+
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ReportBestCustomersByNumberOfOrdersList(DataSourceRequest command, BestCustomersReportModel model)
         {
@@ -691,6 +711,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ReportRegisteredCustomersList(DataSourceRequest command)
         {
@@ -707,6 +728,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ReportCustomerTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
