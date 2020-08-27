@@ -53,6 +53,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ForumList(string forumGroupId)
         {
@@ -77,13 +78,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
+        [PermissionAuthorizeAction(PermissionActionName.Create )]
         #region Create
-
         public IActionResult CreateForumGroup()
         {
             return View(new ForumGroupModel { DisplayOrder = 1 });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> CreateForumGroup(ForumGroupModel model, bool continueEditing)
         {
@@ -102,6 +104,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> CreateForum()
         {
             var model = new ForumModel();
@@ -114,6 +117,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> CreateForum(ForumModel model, bool continueEditing)
         {
@@ -141,6 +145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Edit
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> EditForumGroup(string id)
         {
             var forumGroup = await _forumService.GetForumGroupById(id);
@@ -152,6 +157,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> EditForumGroup(ForumGroupModel model, bool continueEditing)
         {
@@ -174,6 +180,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> EditForum(string id)
         {
             var forum = await _forumService.GetForumById(id);
@@ -190,6 +197,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> EditForum(ForumModel model, bool continueEditing)
         {
@@ -221,6 +229,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Delete
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> DeleteForumGroup(string id)
         {
@@ -235,6 +244,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> DeleteForum(string id)
         {
