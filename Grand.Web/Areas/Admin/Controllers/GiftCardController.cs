@@ -188,7 +188,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //Gif card usage history
 
-        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> UsageHistoryList(string giftCardId, DataSourceRequest command)
         {
