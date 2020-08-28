@@ -76,10 +76,10 @@ namespace Grand.Services.Authentication
             var claims = new List<Claim>();
 
             if (!string.IsNullOrEmpty(customer.Username))
-                claims.Add(new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, GrandCookieAuthenticationDefaults.ClaimsIssuer));
+                claims.Add(new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, _grandConfig.CookieClaimsIssuer));
 
             if (!string.IsNullOrEmpty(customer.Email))
-                claims.Add(new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, GrandCookieAuthenticationDefaults.ClaimsIssuer));
+                claims.Add(new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, _grandConfig.CookieClaimsIssuer));
 
             //add token
             var passwordtoken = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.PasswordToken);
@@ -87,10 +87,10 @@ namespace Grand.Services.Authentication
             {
                 var passwordguid = Guid.NewGuid().ToString();
                 await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordToken, passwordguid);
-                claims.Add(new Claim(ClaimTypes.UserData, passwordguid, ClaimValueTypes.String, GrandCookieAuthenticationDefaults.ClaimsIssuer));
+                claims.Add(new Claim(ClaimTypes.UserData, passwordguid, ClaimValueTypes.String, _grandConfig.CookieClaimsIssuer));
             }
             else
-                claims.Add(new Claim(ClaimTypes.UserData, passwordtoken, ClaimValueTypes.String, GrandCookieAuthenticationDefaults.ClaimsIssuer));
+                claims.Add(new Claim(ClaimTypes.UserData, passwordtoken, ClaimValueTypes.String, _grandConfig.CookieClaimsIssuer));
 
             //create principal for the current authentication scheme
             var userIdentity = new ClaimsIdentity(claims, GrandCookieAuthenticationDefaults.AuthenticationScheme);
@@ -142,7 +142,7 @@ namespace Grand.Services.Authentication
             {
                 //try to get customer by username
                 var usernameClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name
-                    && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
+                    && claim.Issuer.Equals(_grandConfig.CookieClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (usernameClaim != null)
                     customer = await _customerService.GetCustomerByUsername(usernameClaim.Value);
             }
@@ -150,7 +150,7 @@ namespace Grand.Services.Authentication
             {
                 //try to get customer by email
                 var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email
-                    && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
+                    && claim.Issuer.Equals(_grandConfig.CookieClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (emailClaim != null)
                     customer = await _customerService.GetCustomerByEmail(emailClaim.Value);
             }
@@ -161,7 +161,7 @@ namespace Grand.Services.Authentication
                 if (!string.IsNullOrEmpty(passwordtoken))
                 {
                     var tokenClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.UserData
-                        && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
+                        && claim.Issuer.Equals(_grandConfig.CookieClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                     if (tokenClaim == null || tokenClaim.Value != passwordtoken)
                     {
                         customer = null;
