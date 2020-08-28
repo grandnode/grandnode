@@ -19,7 +19,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             _pictureService = pictureService;
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         //do not validate request token (XSRF)
         [IgnoreAntiforgeryToken]
