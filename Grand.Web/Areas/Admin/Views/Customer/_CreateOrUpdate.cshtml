@@ -1,18 +1,19 @@
 ﻿@model CustomerModel
 @inject Grand.Services.Security.IPermissionService permissionService
-@{ 
+@{
     //has "Manage Documents" permission?
     var canManageDocuments = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageDocuments);
 }
-    <div asp-validation-summary="All"></div>
-    <input asp-for="Id" type="hidden" />
-    @{
-        //resources for product tags input
-        Html.AppendCssFileParts("~/content/tagEditor/jquery.tag-editor.css", excludeFromBundle: true);
-        Html.AppendScriptParts("~/scripts/tagEditor/jquery.tag-editor.min.js", excludeFromBundle: true);
-        Html.AppendScriptParts("~/scripts/tagEditor/jquery.caret.min.js", excludeFromBundle: true);
-    }
-    <script>
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+@{
+//resources for product tags input
+    @inject IPageHeadBuilder pagebuilder
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/content/tagEditor/jquery.tag-editor.css", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/tagEditor/jquery.tag-editor.min.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/tagEditor/jquery.caret.min.js", excludeFromBundle: true);
+}
+<script>
     //tags
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.CustomerTags)").tagEditor({
@@ -29,105 +30,105 @@
     });
 
 
-    </script>
+</script>
 
-    <admin-tabstrip name="customer-edit" SetTabPos="true">
-        <items>
-            <tabstrip-item text="@T("Admin.Customers.Customers.Info")" tab-index="0">
+<admin-tabstrip name="customer-edit" SetTabPos="true">
+    <items>
+        <tabstrip-item text="@T("Admin.Customers.Customers.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.Customers.CustomerRoles")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabCustomerRoles" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        @if (!String.IsNullOrEmpty(Model.Id))
+        {
+            <tabstrip-item text="@T("Admin.Customers.Customers.Orders")" tab-index="2">
                 <content>
                     <div>
-                        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                        <partial name="_CreateOrUpdate.TabOrders" model="Model" />
                     </div>
                 </content>
             </tabstrip-item>
-            <tabstrip-item text="@T("Admin.Customers.Customers.CustomerRoles")" tab-index="1">
+            <tabstrip-item text="@T("Admin.Customers.Customers.Reviews")" tab-index="3">
                 <content>
                     <div>
-                        <partial name="_CreateOrUpdate.TabCustomerRoles" model="Model" />
+                        <partial name="_CreateOrUpdate.TabReviews" model="Model" />
                     </div>
                 </content>
             </tabstrip-item>
-            @if (!String.IsNullOrEmpty(Model.Id))
+            <tabstrip-item text="@T("Admin.Customers.Customers.Addresses")" tab-index="4">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabAddresses" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.ShoppingCartWishlist")" tab-index="5">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabCurrentShoppingCart" model="Model" />
+                        <partial name="_CreateOrUpdate.TabCurrentWishlist" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.PersonalizedProduct")" tab-index="6">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabProduct" model="Model" />
+                        <partial name="_CreateOrUpdate.TabProductPrice" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.CustomerNotes")" tab-index="8">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabNotes" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.ActivityLog")" tab-index="9">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.BackInStockSubscriptions")" tab-index="10">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabBackInStockSubscriptions" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            @if (Model.DisplayRewardPointsHistory)
             {
-                <tabstrip-item text="@T("Admin.Customers.Customers.Orders")" tab-index="2">
+                <tabstrip-item text="@T("Admin.Customers.Customers.RewardPoints")" tab-index="11">
                     <content>
                         <div>
-                            <partial name="_CreateOrUpdate.TabOrders" model="Model" />
+                            <partial name="_CreateOrUpdate.TabRewardPoints" model="Model" />
                         </div>
                     </content>
                 </tabstrip-item>
-                <tabstrip-item text="@T("Admin.Customers.Customers.Reviews")" tab-index="3">
-                    <content>
-                        <div>
-                            <partial name="_CreateOrUpdate.TabReviews" model="Model" />
-                        </div>
-                    </content>
-                </tabstrip-item>
-                <tabstrip-item text="@T("Admin.Customers.Customers.Addresses")" tab-index="4">
-                    <content>
-                        <div>
-                            <partial name="_CreateOrUpdate.TabAddresses" model="Model" />
-                        </div>
-                    </content>
-                </tabstrip-item>
-                <tabstrip-item text="@T("Admin.Customers.Customers.ShoppingCartWishlist")" tab-index="5">
-                    <content>
-                        <div>
-                            <partial name="_CreateOrUpdate.TabCurrentShoppingCart" model="Model" />
-                            <partial name="_CreateOrUpdate.TabCurrentWishlist" model="Model" />
-                        </div>
-                    </content>
-                </tabstrip-item>
-                <tabstrip-item text="@T("Admin.Customers.Customers.PersonalizedProduct")" tab-index="6">
-                    <content>
-                        <div>
-                            <partial name="_CreateOrUpdate.TabProduct" model="Model" />
-                            <partial name="_CreateOrUpdate.TabProductPrice" model="Model" />
-                        </div>
-                    </content>
-                </tabstrip-item>
-                <tabstrip-item text="@T("Admin.Customers.Customers.CustomerNotes")" tab-index="8">
-                    <content>
-                        <div>
-                            <partial name="_CreateOrUpdate.TabNotes" model="Model" />
-                        </div>
-                    </content>
-                </tabstrip-item>
-                <tabstrip-item text="@T("Admin.Customers.Customers.ActivityLog")" tab-index="9">
-                    <content>
-                        <div>
-                            <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
-                        </div>
-                    </content>
-                </tabstrip-item>
-                <tabstrip-item text="@T("Admin.Customers.Customers.BackInStockSubscriptions")" tab-index="10">
-                    <content>
-                        <div>
-                            <partial name="_CreateOrUpdate.TabBackInStockSubscriptions" model="Model" />
-                        </div>
-                    </content>
-                </tabstrip-item>
-                @if (Model.DisplayRewardPointsHistory)
-                {
-                    <tabstrip-item text="@T("Admin.Customers.Customers.RewardPoints")" tab-index="11">
-                        <content>
-                            <div>
-                                <partial name="_CreateOrUpdate.TabRewardPoints" model="Model" />
-                            </div>
-                        </content>
-                    </tabstrip-item>
-                }
-                @if (canManageDocuments)
-                {
-                    <tabstrip-item text="@T("Admin.Customers.Customers.Documents")" tab-index="12">
-                        <content>
-                            <div>
-                                <partial name="_CreateOrUpdate.Documents" model="Model" />
-                            </div>
-                        </content>
-                    </tabstrip-item>
-                }
             }
-            <vc:admin-widget widget-zone="customer_details_tabs" additional-data="Model" />
-        </items>
-    </admin-tabstrip>
+            @if (canManageDocuments)
+            {
+                <tabstrip-item text="@T("Admin.Customers.Customers.Documents")" tab-index="12">
+                    <content>
+                        <div>
+                            <partial name="_CreateOrUpdate.Documents" model="Model" />
+                        </div>
+                    </content>
+                </tabstrip-item>
+            }
+        }
+        <vc:admin-widget widget-zone="customer_details_tabs" additional-data="Model" />
+    </items>
+</admin-tabstrip>

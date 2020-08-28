@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace Grand.Framework.Validators
+﻿namespace Grand.Framework.Validators
 {
     public interface IValidatorConsumer<T> where T : class
     {

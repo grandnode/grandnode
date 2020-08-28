@@ -1,10 +1,11 @@
 ﻿@model BlogPostListModel
 @using Grand.Web.Models.Blogs;
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Blog").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Blog").Text);
 }
 @section left {
     @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_before" })
@@ -102,14 +103,7 @@
             @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post", additionalData = item.Id })
         }
     </div>
-    @{
-        var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-    }
-    @if (!pager.IsEmpty())
-    {
-        <div class="pager">
-            @pager
-        </div>
-    }
+    <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
+
     @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_posts" })
 </div>

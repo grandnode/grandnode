@@ -198,7 +198,7 @@
                     @if (Model.DisplayTaxShippingInfoFooter)
                     {
                         <span class="footer-tax-shipping">
-                            @T(Model.InclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
+                            @T(Model.InclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = TopicSeNameConstants.Shippinginfo }))
                         </span>
                     }
                 </div>

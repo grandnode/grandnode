@@ -1,9 +1,10 @@
 ﻿@model DocumentsModel
 @using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
     //title
-    Html.AddTitleParts(T("PageTitle.Documents").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Documents").Text);
 }
 @section left
 {

@@ -1,12 +1,13 @@
 ﻿@model BlogPostModel
 @using Grand.Web.Models.Blogs;
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
-    Html.AddMetaDescriptionParts(Model.MetaDescription);
-    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+    pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
 }
 @section left {
     @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_before" })
@@ -40,7 +41,7 @@
     </div>
 
     @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_products", additionalData = Model.Id })
-    
+
     @await Component.InvokeAsync("BlogPostProducts", new { blogPostId = Model.Id })
 
     @if (Model.Tags.Any())

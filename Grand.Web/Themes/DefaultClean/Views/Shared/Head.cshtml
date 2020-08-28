@@ -3,42 +3,44 @@
 @using Grand.Framework.UI
 @inject IWorkContext workContext
 @inject IThemeContext themeContext
+@inject IPageHeadBuilder pagebuilder
 @{
     var supportRtl = workContext.WorkingLanguage.Rtl;
     var themeName = themeContext.WorkingThemeName;
 
-    Html.AppendCssFileParts(ResourceLocation.Head, "~/content/custom/style.css");
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/content/custom/style.css");
     //add browser specific CSS files
     if (supportRtl)
     {
-        Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/style.rtl.css", themeName));
-    } else
-    {
-        Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/style.css", themeName));
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/style.rtl.css", themeName));
     }
-    Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/materialdesigniconsSlim.min.css", themeName));
-    Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/js-offcanvas.css", themeName));
-    Html.AppendCssFileParts(ResourceLocation.Head, "~/content/magnific-popup/magnific-popup.css");
-    Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/animate.min.css", themeName));
-    Html.AppendCssFileParts(ResourceLocation.Head, "~/content/bootstrap/bootstrap.min.css");
+    else
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/style.css", themeName));
+    }
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/materialdesigniconsSlim.min.css", themeName));
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/js-offcanvas.css", themeName));
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/content/magnific-popup/magnific-popup.css");
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/animate.min.css", themeName));
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/content/bootstrap/bootstrap.min.css");
 
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/content/custom/script.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/content/custom/script.js");
 
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.magnific-popup.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.actions.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.search.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/content/bootstrap/bootstrap.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/content/bootstrap/popper.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.ajaxcart.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.countdown.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.common.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.zoom.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.smooth-scroll.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, string.Format("~/Themes/{0}/Content/js/js-offcanvas.pkgd.min.js", themeName));
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery-migrate-3.0.1.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.validate.min.js");
-    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery-3.3.1.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.magnific-popup.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.actions.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.search.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/content/bootstrap/bootstrap.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/content/bootstrap/popper.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.ajaxcart.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.countdown.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.common.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.zoom.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.smooth-scroll.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, string.Format("~/Themes/{0}/Content/js/js-offcanvas.pkgd.min.js", themeName));
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery-migrate-3.0.1.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.validate.unobtrusive.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.validate.min.js");
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery-3.3.1.min.js");
 
 }

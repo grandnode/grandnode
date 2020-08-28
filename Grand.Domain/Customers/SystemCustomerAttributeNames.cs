@@ -20,7 +20,7 @@ namespace Grand.Domain.Customers
         public static string VatNumberStatusId { get { return "VatNumberStatusId"; } }
         public static string TimeZoneId { get { return "TimeZoneId"; } }
         public static string CustomCustomerAttributes { get { return "CustomCustomerAttributes"; } }
-
+        public static string PasswordToken { get { return "PasswordToken"; } }
         //Other attributes
         public static string DiscountCoupons { get { return "DiscountCoupons"; } }
         public static string GiftCardCoupons { get { return "GiftCardCoupons"; } }

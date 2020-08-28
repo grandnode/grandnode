@@ -31,7 +31,7 @@ namespace Grand.Services.Customers
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly IRewardPointsService _rewardPointsService;
-
+        private readonly IGenericAttributeService _genericAttributeService;
         #endregion
 
         #region Ctor
@@ -48,6 +48,7 @@ namespace Grand.Services.Customers
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="rewardPointsService">Reward points service</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
         public CustomerRegistrationService(ICustomerService customerService, 
             IEncryptionService encryptionService, 
             INewsLetterSubscriptionService newsLetterSubscriptionService,
@@ -56,7 +57,8 @@ namespace Grand.Services.Customers
             IMediator mediator,
             RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings,
-            IRewardPointsService rewardPointsService)
+            IRewardPointsService rewardPointsService,
+            IGenericAttributeService genericAttributeService)
         {
             _customerService = customerService;
             _encryptionService = encryptionService;
@@ -67,6 +69,7 @@ namespace Grand.Services.Customers
             _rewardPointsSettings = rewardPointsSettings;
             _customerSettings = customerSettings;
             _rewardPointsService = rewardPointsService;
+            _genericAttributeService = genericAttributeService;
         }
 
         #endregion
@@ -390,6 +393,9 @@ namespace Grand.Services.Customers
             customer.PasswordFormat = request.NewPasswordFormat;
             await _customerService.UpdateCustomer(customer);
             await _customerService.InsertCustomerPassword(customer);
+
+            //create new login token
+            await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordToken, Guid.NewGuid().ToString());
 
             return result;
         }

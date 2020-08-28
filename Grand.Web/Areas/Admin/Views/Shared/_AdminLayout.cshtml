@@ -6,6 +6,7 @@
 @inject LocalizationSettings localizationSettings
 @inject AdminAreaSettings adminAreaSettings
 @inject Grand.Core.Configuration.GrandConfig grandConfig
+@inject IPageHeadBuilder pagebuilder
 
 @using System.Text.Encodings.Web
 @using Grand.Domain.Customers
@@ -25,49 +26,49 @@
     //CSS
     if (supportRtl)
     {
-        Html.AppendCssFileParts(string.Format("~/content/kendo/{0}/kendo.rtl.min.css", kendoVersion), excludeFromBundle: true);
-        Html.AppendCssFileParts("~/administration/build/css/custom-rtl.css", excludeFromBundle: true);
-        Html.AppendCssFileParts("~/administration/bootstrap/css/bootstrap-rtl.min.css", excludeFromBundle: true);
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/content/kendo/{0}/kendo.rtl.min.css", kendoVersion), excludeFromBundle: true);
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/build/css/custom-rtl.css", excludeFromBundle: true);
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/bootstrap/css/bootstrap-rtl.min.css", excludeFromBundle: true);
     }
     else
     {
-        Html.AppendCssFileParts("~/administration/build/css/custom.css", excludeFromBundle: true);
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/build/css/custom.css", excludeFromBundle: true);
     }
-    Html.AppendCssFileParts(string.Format("~/content/kendo/{0}/kendo.common-material.min.css", kendoVersion), excludeFromBundle: true);
-    Html.AppendCssFileParts($"~/content/kendo/{kendoVersion}/kendo.material.min.css", excludeFromBundle: true);
-    Html.AppendCssFileParts($"~/content/kendo/{kendoVersion}/kendo.material.mobile.min.css", excludeFromBundle: true);
-    Html.AppendCssFileParts("~/content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css", excludeFromBundle: true);
-    Html.AddScriptParts(location: ResourceLocation.Footer, src: "~/content/tinymce/tinymce.min.js", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/content/kendo/{0}/kendo.common-material.min.css", kendoVersion), excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, $"~/content/kendo/{kendoVersion}/kendo.material.min.css", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, $"~/content/kendo/{kendoVersion}/kendo.material.mobile.min.css", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(location: ResourceLocation.Footer, src: "~/content/tinymce/tinymce.min.js", excludeFromBundle: true);
 
     //administration
 
-    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/build/js/custom.js", excludeFromBundle: true);
-    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/build/js/smartresize.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/build/js/custom.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/build/js/smartresize.js", excludeFromBundle: true);
 
     //vendors
 
-    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/bootstrap/js/bootstrap.min.js", excludeFromBundle: true);
-    Html.AppendCssFileParts("~/administration/bootstrap/css/bootstrap.min.css", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/bootstrap/js/bootstrap.min.js", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/bootstrap/css/bootstrap.min.css", excludeFromBundle: true);
 
 
     //js
     //available list of culture https://github.com/telerik/kendo-ui-core/tree/master/src/cultures
-    Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, "en-US"), excludeFromBundle: true);
-    Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/kendo.grid.js", kendoVersion), excludeFromBundle: true);
-    Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/kendo.ui.core.min.js", kendoVersion), excludeFromBundle: true);
-    Html.AppendScriptParts("~/scripts/admin.common.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/scripts/jquery.validate.unobtrusive.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/scripts/jquery.validate.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/scripts/admin.search.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/scripts/typeahead.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, "en-US"), excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/scripts/kendo/{0}/kendo.grid.js", kendoVersion), excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/scripts/kendo/{0}/kendo.ui.core.min.js", kendoVersion), excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/admin.common.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/jquery.validate.unobtrusive.min.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/jquery.validate.min.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/admin.search.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/typeahead.js", excludeFromBundle: true);
 
-    Html.AppendCssFileParts("~/administration/simple-line-icons/simple-line-icons.min.css", excludeFromBundle: true);
-    Html.AppendCssFileParts("~/administration/build/css/font-awesome.min.css", excludeFromBundle: true);
-    Html.AppendScriptParts(location: ResourceLocation.Head, src: "~/administration/bootstrap/js/daterangepicker.min.js", excludeFromBundle: true);
-    Html.AppendCssFileParts("~/administration/bootstrap/css/daterangepicker.min.css", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/build/js/moment.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/build/js/jquery.min.js", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/simple-line-icons/simple-line-icons.min.css", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/build/css/font-awesome.min.css", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/administration/bootstrap/js/daterangepicker.min.js", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/bootstrap/css/daterangepicker.min.css", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/administration/build/js/moment.min.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/administration/build/js/jquery.min.js", excludeFromBundle: true);
 
     //page title
     string adminPageTitle = "";
@@ -88,8 +89,8 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <head-custom>
-    <css-files asp-location="Head" bundle-files="false">
-    <script-files asp-location="Head" bundle-files="false">
+        <css-files asp-location="Head" bundle-files="false">
+            <script-files asp-location="Head" bundle-files="false">
 </head>
 <body>
     @Html.AntiForgeryToken()
@@ -202,56 +203,56 @@
                                                     @T("Admin.Header.ClearCacheMemory")
                                                 </a>
                                             </li>
-                                            
+
                                             <li>
                                                 <a href="@Url.Action("RestartApplication", "Common", new { returnurl = webHelper.GetRawUrl(this.Context.Request) })" id="restart-application">
                                                     <i class="icon-reload"></i>
                                                     @T("Admin.Header.RestartApplication")
                                                 </a>
                                             </li>
-                                            
+
                                         </ul>
                                     </li>
                                 }
-                                    <li>
-                                        <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                            <img src="~/administration/build/images/avatar.png" alt="">
+                                <li>
+                                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <img src="~/administration/build/images/avatar.png" alt="">
 
-                                            @if (currentCustomer != null && currentCustomer.IsRegistered())
-                                            {
-                                                <div class="username-hide-on-mobile">
-                                                    @(usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
-                                                </div>
+                                        @if (currentCustomer != null && currentCustomer.IsRegistered())
+                                        {
+                                            <div class="username-hide-on-mobile">
+                                                @(usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
+                                            </div>
 
-                                            }
-                                            <span class="fa fa-angle-down"></span>
-                                        </a>
+                                        }
+                                        <span class="fa fa-angle-down"></span>
+                                    </a>
 
-                                        <ul class="dropdown-menu dropdown-menu-default">
-                                            @if (currentCustomer.IsAdmin())
-                                            {
-                                                <li>
-                                                    <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
-                                                        <i class="icon-user"></i> @T("Admin.Header.Profile")
-                                                    </a>
-                                                </li>
-                                            }
+                                    <ul class="dropdown-menu dropdown-menu-default">
+                                        @if (currentCustomer.IsAdmin())
+                                        {
                                             <li>
-                                                <a href="@Url.Action("Logout", "Customer", new { area = "" }, null)">
-                                                    <i class="icon-logout"></i> @T("Admin.Header.Logout")
+                                                <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
+                                                    <i class="icon-user"></i> @T("Admin.Header.Profile")
                                                 </a>
                                             </li>
-                                        </ul>
-                                    </li>
+                                        }
+                                        <li>
+                                            <a href="@Url.Action("Logout", "Customer", new { area = "" }, null)">
+                                                <i class="icon-logout"></i> @T("Admin.Header.Logout")
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
 
 
-                                    @await Component.InvokeAsync("CommonLanguageSelector")
-                                    <li class="dropdown" role="presentation">
-                                        <span id="searchIcon" class="searchIcon dropdown-toggle">
-                                            <i class="icon-magnifier"></i>
-                                        </span>
-                                    </li>
-                                </ul>
+                                @await Component.InvokeAsync("CommonLanguageSelector")
+                                <li class="dropdown" role="presentation">
+                                    <span id="searchIcon" class="searchIcon dropdown-toggle">
+                                        <i class="icon-magnifier"></i>
+                                    </span>
+                                </li>
+                            </ul>
                         </nav>
                     </div>
                     <div class="clear"></div>
@@ -280,17 +281,17 @@
         </div>
     </div>
     <css-files asp-location="Footer">
-    <script-files asp-location="Footer">
+        <script-files asp-location="Footer">
 
-    <div class="page-footer">
-        <div class="page-footer-inner">
-            <a href="https://grandnode.com/" target="_blank">2019 © Powered by GrandNode.</a>
-        </div>
-        <div class="scroll-to-top">
-            <i class="icon-arrow-up"></i>
-        </div>
-    </div>
-    <script>
+            <div class="page-footer">
+                <div class="page-footer-inner">
+                    <a href="https://grandnode.com/" target="_blank">@DateTime.UtcNow.Year Powered by GrandNode ®</a>
+                </div>
+                <div class="scroll-to-top">
+                    <i class="icon-arrow-up"></i>
+                </div>
+            </div>
+            <script>
             $(document).ready(function () {
                 $("#restart-application").click(function (e) {
                     event.preventDefault();
@@ -302,6 +303,6 @@
                     }, 10000);
                 });
             });
-    </script>
+            </script>
 </body>
 </html>

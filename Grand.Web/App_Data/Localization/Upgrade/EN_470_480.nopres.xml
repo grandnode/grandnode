@@ -100,4 +100,7 @@
   <LocaleResource Name="Checkout.MinMaxOrderTotalAmount">
     <Value>Order total amount does not meet the requirements.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.Actions">
+    <Value>Actions</Value>
+  </LocaleResource>
 </Language>

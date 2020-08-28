@@ -43,6 +43,7 @@ namespace Grand.Services.Commands.Handlers.Security
                         Name = permission.Name,
                         SystemName = permission.SystemName,
                         Category = permission.Category,
+                        Actions = permission.Actions
                     };
 
 

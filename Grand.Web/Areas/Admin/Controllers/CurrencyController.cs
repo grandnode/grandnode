@@ -159,6 +159,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Create / Edit / Delete
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = _currencyViewModelService.PrepareCurrencyModel();
@@ -170,6 +171,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(CurrencyModel model, bool continueEditing)
         {
@@ -186,7 +188,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return View(model);
         }
-        
+
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var currency = await _currencyService.GetCurrencyById(id);
@@ -207,6 +210,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(CurrencyModel model, bool continueEditing)
         {
@@ -243,7 +247,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             await model.PrepareStoresMappingModel(currency, _storeService, true);
             return View(model);
         }
-        
+
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {

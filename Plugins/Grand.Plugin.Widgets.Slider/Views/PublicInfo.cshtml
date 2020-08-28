@@ -1,16 +1,18 @@
 ﻿@using Grand.Core;
 @model PublicInfoModel
 @inject IWorkContext workContext
+@inject IPageHeadBuilder pagebuilder
 @{
     var supportRtl = workContext.WorkingLanguage.Rtl;
     if (supportRtl)
     {
-        Html.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.Slider/Content/slider.rtl.js");
-        Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.Slider/Content/style.rtl.css");
-    } else
+        pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.Slider/Content/slider.rtl.js");
+        pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.Slider/Content/style.rtl.css");
+    }
+    else
     {
-        Html.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.Slider/Content/slider.js");
-        Html.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.Slider/Content/style.css");
+        pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Widgets.Slider/Content/slider.js");
+        pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.Slider/Content/style.css");
     }
 }
 <div id="GrandCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">

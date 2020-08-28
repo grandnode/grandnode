@@ -1,9 +1,10 @@
-﻿@model CustomerRewardPointsModel
+﻿@inject IPageHeadBuilder pagebuilder
+@model CustomerRewardPointsModel
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Account").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
 }
 @section left
 {

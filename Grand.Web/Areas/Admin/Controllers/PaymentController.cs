@@ -117,7 +117,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var pluginDescriptor = pm.PluginDescriptor;
             pluginDescriptor.FriendlyName = model.FriendlyName;
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
-            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+            PluginFileParser.SavePluginConfigFile(pluginDescriptor);
             //reset plugin cache
             _pluginFinder.ReloadPlugins();
 

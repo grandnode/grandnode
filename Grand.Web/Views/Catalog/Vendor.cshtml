@@ -1,16 +1,17 @@
 ﻿@model VendorModel
 @inject SeoSettings seoSettings
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
-    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
-    Html.AddMetaDescriptionParts(Model.MetaDescription);
-    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+    pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
 
     var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var vendorUrl = Url.RouteUrl("Vendor", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(vendorUrl);
+        pagebuilder.AddCanonicalUrlParts(vendorUrl);
     }
 }
 
@@ -166,15 +167,8 @@
         }
     }
 </div>
-@{
-    var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-}
-@if (!pager.IsEmpty())
-{
-    <div class="pager">
-        @pager
-    </div>
-}
+<page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
+
 @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_bottom", additionalData = Model.Id })
 
 @section filters

@@ -178,6 +178,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+
         [HttpPost]
         public async Task<IActionResult> BestsellersBriefReportByAmountList(DataSourceRequest command)
         {
@@ -230,6 +231,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> BestsellersReportList(DataSourceRequest command, BestsellersReportModel model)
         {
@@ -332,6 +334,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new NeverSoldReportModel();
             return View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> NeverSoldReportList(DataSourceRequest command, NeverSoldReportModel model)
         {
@@ -580,6 +583,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> LowStockReportList(DataSourceRequest command)
         {
@@ -633,7 +637,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
         [HttpPost]
         public async Task<IActionResult> PopularSearchTermsReport(DataSourceRequest command)
         {
@@ -677,6 +680,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
+
         [HttpPost]
         public async Task<IActionResult> ReportBestCustomersByNumberOfOrdersList(DataSourceRequest command, BestCustomersReportModel model)
         {

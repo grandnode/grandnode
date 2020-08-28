@@ -49,6 +49,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> GiftCardList(DataSourceRequest command, GiftCardListModel model)
         {
@@ -62,12 +63,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = await _giftCardViewModelService.PrepareGiftCardModel();
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(GiftCardModel model, bool continueEditing)
         {
@@ -83,6 +86,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var giftCard = await _giftCardService.GetGiftCardById(id);
@@ -94,6 +98,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
         public async Task<IActionResult> Edit(GiftCardModel model, bool continueEditing)
@@ -123,12 +128,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public IActionResult GenerateCouponCode()
         {
             return Json(new { CouponCode = _giftCardService.GenerateGiftCardCode() });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("notifyRecipient")]
         public async Task<IActionResult> NotifyRecipient(GiftCardModel model)
@@ -157,6 +164,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -179,6 +187,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //Gif card usage history
+
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> UsageHistoryList(string giftCardId, DataSourceRequest command)
         {

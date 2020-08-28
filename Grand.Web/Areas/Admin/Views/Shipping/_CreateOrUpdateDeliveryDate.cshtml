@@ -1,7 +1,8 @@
 ﻿@model DeliveryDateModel
+@inject IPageHeadBuilder pagebuilder
 @{
-    Html.AddScriptParts("~/scripts/farbtastic.js", excludeFromBundle: true);
-    Html.AddCssFileParts("~/content/farbtastic/farbtastic.css", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/scripts/farbtastic.js", excludeFromBundle: true);
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/farbtastic/farbtastic.css", excludeFromBundle: true);
 }
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />

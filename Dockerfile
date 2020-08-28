@@ -53,14 +53,16 @@ RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.0
-RUN apt-get update && \
-  apt-get -y install libgdiplus
-RUN ln -s /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libdl.so
+
+RUN apt-get update -qq && apt-get -y install libgdiplus libc6-dev
+
 
 WORKDIR /app
 COPY --from=build-env /app/out/ .
 COPY --from=build-env /app/Grand.Web/Plugins/ ./Plugins/
 
 VOLUME /app/App_Data /app/wwwroot /app/Plugins /app/Themes
+
+RUN chmod 755 /app/Rotativa/Linux/wkhtmltopdf
 
 CMD ["dotnet", "Grand.Web.dll"]

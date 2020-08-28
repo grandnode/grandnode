@@ -1,7 +1,7 @@
 using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Domain.Data;
 using Grand.Domain.Customers;
+using Grand.Domain.Data;
 using Grand.Domain.Security;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -18,6 +18,7 @@ namespace Grand.Services.Security
     public partial class PermissionService : IPermissionService
     {
         #region Constants
+
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -26,6 +27,17 @@ namespace Grand.Services.Security
         /// {1} : permission system name
         /// </remarks>
         private const string PERMISSIONS_ALLOWED_KEY = "Grand.permission.allowed-{0}-{1}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer role ID
+        /// {1} : permission system name
+        /// {2} : permission action name
+        /// </remarks>
+        private const string PERMISSIONS_ALLOWED_ACTION_KEY = "Grand.permission.allowed-{0}-{1}-{2}";
+
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -35,6 +47,7 @@ namespace Grand.Services.Security
         #region Fields
 
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
+        private readonly IRepository<PermissionAction> _permissionActionRepository;
         private readonly IWorkContext _workContext;
         private readonly ICacheManager _cacheManager;
 
@@ -46,13 +59,17 @@ namespace Grand.Services.Security
         /// Ctor
         /// </summary>
         /// <param name="permissionRecordRepository">Permission repository</param>
+        /// <param name="permissionActionRepository">Permission action repository</param>
         /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
-        public PermissionService(IRepository<PermissionRecord> permissionRecordRepository,
+        public PermissionService(
+            IRepository<PermissionRecord> permissionRecordRepository,
+            IRepository<PermissionAction> permissionActionRepository,
             IWorkContext workContext,
             ICacheManager cacheManager)
         {
             _permissionRecordRepository = permissionRecordRepository;
+            _permissionActionRepository = permissionActionRepository;
             _workContext = workContext;
             _cacheManager = cacheManager;
         }
@@ -222,6 +239,75 @@ namespace Grand.Services.Security
 
             //no permission found
             return false;
+        }
+
+        /// <summary>
+        /// Gets a permission action
+        /// </summary>
+        /// <param name="systemName">Permission system name</param>
+        /// <param name="customeroleId">Customer role ident</param>
+        /// <returns>Permission action</returns>
+        public virtual async Task<IList<PermissionAction>> GetPermissionActions(string systemName, string customeroleId)
+        {
+            return await _permissionActionRepository.Table
+                    .Where(x => x.SystemName == systemName && x.CustomerRoleId == customeroleId).ToListAsync();
+        }
+
+        /// <summary>
+        /// Inserts a permission action record
+        /// </summary>
+        /// <param name="permission">Permission</param>
+        public virtual async Task InsertPermissionActionRecord(PermissionAction permissionAction)
+        {
+            if (permissionAction == null)
+                throw new ArgumentNullException("permissionAction");
+
+            //insert
+            await _permissionActionRepository.InsertAsync(permissionAction);
+            //clear cache
+            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
+        }
+
+        /// <summary>
+        /// Inserts a permission action record
+        /// </summary>
+        /// <param name="permission">Permission</param>
+        public virtual async Task DeletePermissionActionRecord(PermissionAction permissionAction)
+        {
+            if (permissionAction == null)
+                throw new ArgumentNullException("permissionAction");
+
+            //delete
+            await _permissionActionRepository.DeleteAsync(permissionAction);
+            //clear cache
+            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
+        }
+
+        /// <summary>
+        /// Authorize permission for action
+        /// </summary>
+        /// <param name="permissionRecordSystemName">Permission record system name</param>
+        /// <param name="permissionActionName">Permission action name</param>
+        /// <returns>true - authorized; otherwise, false</returns>
+        public virtual async Task<bool> AuthorizeAction(string permissionRecordSystemName, string permissionActionName)
+        {
+            if (string.IsNullOrEmpty(permissionRecordSystemName) || string.IsNullOrEmpty(permissionActionName))
+                return false;
+
+            var customerRoles = _workContext.CurrentCustomer.CustomerRoles.Where(cr => cr.Active);
+            foreach (var role in customerRoles)
+            {
+                string key = string.Format(PERMISSIONS_ALLOWED_ACTION_KEY, role.Id, permissionRecordSystemName, permissionActionName);
+                var permissionAction = await _cacheManager.GetAsync(key, async () =>
+                {
+                    return await _permissionActionRepository.Table
+                        .FirstOrDefaultAsync(x => x.SystemName == permissionRecordSystemName && x.CustomerRoleId == role.Id && x.Action == permissionActionName);
+                });
+                if (permissionAction != null)
+                    return false;
+            }
+
+            return true;
         }
 
         #endregion

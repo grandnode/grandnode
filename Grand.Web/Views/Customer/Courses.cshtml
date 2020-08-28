@@ -1,9 +1,10 @@
 ﻿@model CoursesModel
 @using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
     //title
-    Html.AddTitleParts(T("PageTitle.Courses").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Courses").Text);
 }
 @section left
 {
@@ -24,20 +25,20 @@
                     </div>
                 </div>
                 <div class="d-inline-flex flex-column align-items-end">
-                        @if (item.Approved)
-                        {
-                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                <input type="checkbox" class="custom-control-input" id="customControlInline" checked disabled>
-                                <label class="custom-control-label" for="customControlInline"></label>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="custom-control disabled custom-checkbox my-1 mr-sm-2">
-                                <input type="checkbox" class="custom-control-input" id="customControlInline" disabled>
-                                <label class="custom-control-label" for="customControlInline"></label>
-                            </div>
-                        }
+                    @if (item.Approved)
+                    {
+                        <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                            <input type="checkbox" class="custom-control-input" id="customControlInline" checked disabled>
+                            <label class="custom-control-label" for="customControlInline"></label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="custom-control disabled custom-checkbox my-1 mr-sm-2">
+                            <input type="checkbox" class="custom-control-input" id="customControlInline" disabled>
+                            <label class="custom-control-label" for="customControlInline"></label>
+                        </div>
+                    }
                 </div>
                 @if (!string.IsNullOrEmpty(item.ShortDescription))
                 {

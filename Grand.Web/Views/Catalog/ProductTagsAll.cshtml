@@ -1,11 +1,12 @@
 ﻿@model PopularProductTagsModel
+@using Grand.Web.Models.Catalog
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.AllProductTags").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.AllProductTags").Text);
 }
-@using Grand.Web.Models.Catalog;
 <div class="page product-tags-all-page">
     <h2 class="generalTitle">@T("Products.Tags.All")</h2>
     @if (Model.Tags.Any())

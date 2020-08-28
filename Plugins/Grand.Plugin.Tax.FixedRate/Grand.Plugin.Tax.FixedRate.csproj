@@ -52,9 +52,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Description.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="logo.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

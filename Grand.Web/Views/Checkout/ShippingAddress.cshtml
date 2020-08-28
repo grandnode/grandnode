@@ -1,9 +1,10 @@
 ﻿@model CheckoutShippingAddressModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOneClean";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Checkout").Text);
 }
 <div class="page checkout-page shipping-address-page">
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Address })
@@ -15,7 +16,7 @@
                 <div class="selector">
 
                     <label class="custom-control custom-checkbox">
-                        <input asp-for="PickUpInStore" class="custom-control-input"/>
+                        <input asp-for="PickUpInStore" class="custom-control-input" />
                         <span class="custom-control-label"></span>
                         <span for="@Html.IdFor(model => model.PickUpInStore)" class="custom-control-description">@T("Checkout.PickupPoints").Text</span>
                     </label>

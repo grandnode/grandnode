@@ -1,21 +1,22 @@
 ﻿@model NewsItemModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
-    Html.AddMetaDescriptionParts(Model.MetaDescription);
-    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+    pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
 }
 <div class="page news-item-page pt-3 pt-lg-0">
-       <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("News") @T("catalog.selectors.fiters")</span></a>
-       <div class="card border-0 px-0 pb-3 pt-0">
-            @if (!string.IsNullOrEmpty(Model.PictureModel.ImageUrl))
-            {
-                <div class="img-container mb-2">
-                     <img class="card-img-top img-fluid py-0" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
-                </div>
-            }
+    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("News") @T("catalog.selectors.fiters")</span></a>
+    <div class="card border-0 px-0 pb-3 pt-0">
+        @if (!string.IsNullOrEmpty(Model.PictureModel.ImageUrl))
+        {
+            <div class="img-container mb-2">
+                <img class="card-img-top img-fluid py-0" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
+            </div>
+        }
         <h1 class="h2 generalTitle mt-0">@Model.Title</h1>
         <div class="news-date">
             <h5 class="text-muted d-inline-flex align-items-center"><span class="mdi mdi-alarm mr-2"></span>@Model.CreatedOn.ToString("D")</h5>
@@ -25,100 +26,100 @@
             @Html.Raw(Model.Full)
         </div>
     </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_comments", additionalData = Model.Id })
-        @if (Model.AllowComments)
-        {
-            <fieldset class="new-comment py-3 px-0" id="comments">
-                    <h5><strong>@T("News.Comments.LeaveYourComment")</strong></h5>
-                <div class="notifications">
-                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                    @{
-                        var result = TempData["Grand.news.addcomment.result"] as string;
-                    }
-                    @if (!String.IsNullOrEmpty(result))
-                    {
+    @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_comments", additionalData = Model.Id })
+    @if (Model.AllowComments)
+    {
+        <fieldset class="new-comment py-3 px-0" id="comments">
+            <h5><strong>@T("News.Comments.LeaveYourComment")</strong></h5>
+            <div class="notifications">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                @{
+                    var result = TempData["Grand.news.addcomment.result"] as string;
+                }
+                @if (!String.IsNullOrEmpty(result))
+                {
                     <div class="result card bg-info p-3 text-white">@result</div>
-                    }
-                </div>
-                <form asp-route="NewsItem" asp-route-sename="@Model.SeName" method="post">
-                        <fieldset class="form-group">
-                            <label asp-for="AddNewComment.CommentTitle" class="col-form-label">@T("News.Comments.CommentTitle"):</label>
-                            <input asp-for="AddNewComment.CommentTitle" class="form-control enter-comment-title" />
-                            <span asp-validation-for="AddNewComment.CommentTitle"></span>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <label asp-for="AddNewComment.CommentText" class="col-form-label">@T("News.Comments.CommentText"):</label>
-                            <textarea asp-for="AddNewComment.CommentText" class="form-control enter-comment-text"></textarea>
-                            <span asp-validation-for="AddNewComment.CommentText"></span>
-                        </fieldset>
-                        @if (Model.AddNewComment.DisplayCaptcha)
-                        {
-                            <div class="captcha-box">
-                                <captcha />
-                            </div>
-                        }
-                    <div class="buttons pt-1 pb-1">
-                        <input type="submit" name="add-comment" class="btn btn-sm btn-info news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
+                }
+            </div>
+            <form asp-route="NewsItem" asp-route-sename="@Model.SeName" method="post">
+                <fieldset class="form-group">
+                    <label asp-for="AddNewComment.CommentTitle" class="col-form-label">@T("News.Comments.CommentTitle"):</label>
+                    <input asp-for="AddNewComment.CommentTitle" class="form-control enter-comment-title" />
+                    <span asp-validation-for="AddNewComment.CommentTitle"></span>
+                </fieldset>
+                <fieldset class="form-group">
+                    <label asp-for="AddNewComment.CommentText" class="col-form-label">@T("News.Comments.CommentText"):</label>
+                    <textarea asp-for="AddNewComment.CommentText" class="form-control enter-comment-text"></textarea>
+                    <span asp-validation-for="AddNewComment.CommentText"></span>
+                </fieldset>
+                @if (Model.AddNewComment.DisplayCaptcha)
+                {
+                    <div class="captcha-box">
+                        <captcha />
                     </div>
-                </form>
-            </fieldset>
-                        if (Model.Comments.Any())
-                        {
-                            <div class="comment-list py-3 px-0 text-xs-center text-md-left">
-                                <h5><strong>@T("News.Comments")</strong></h5>
-                                <div class="comments">
-                                    @foreach (var comment in Model.Comments)
-                                    {
-                                        <div class="card comment news-comment mb-3">
-                                            @if (comment.AllowViewingProfiles)
-                                            {
-                                                <h5 class="card-header"><a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a></h5>
-                                            }
-                                            else
-                                            {
-                                                <h5 class="card-header">
-                                                    <span class="username">@(comment.CustomerName)</span>
-                                                </h5>
-                                            }
-                                            <div class="card-body flex-row row">
-                                                @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                }
+                <div class="buttons pt-1 pb-1">
+                    <input type="submit" name="add-comment" class="btn btn-sm btn-info news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
+                </div>
+            </form>
+        </fieldset>
+        if (Model.Comments.Any())
+        {
+            <div class="comment-list py-3 px-0 text-xs-center text-md-left">
+                <h5><strong>@T("News.Comments")</strong></h5>
+                <div class="comments">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <div class="card comment news-comment mb-3">
+                            @if (comment.AllowViewingProfiles)
+                            {
+                                <h5 class="card-header"><a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a></h5>
+                            }
+                            else
+                            {
+                                <h5 class="card-header">
+                                    <span class="username">@(comment.CustomerName)</span>
+                                </h5>
+                            }
+                            <div class="card-body flex-row row">
+                                @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                {
+                                    <div class="col-sm-3 col-12 d-flex justify-content-center comment-info">
+                                        <div class="user-info">
+                                            <div class="avatar">
+                                                @if (comment.AllowViewingProfiles)
                                                 {
-                                                    <div class="col-sm-3 col-12 d-flex justify-content-center comment-info">
-                                                        <div class="user-info">
-                                                                <div class="avatar">
-                                                                    @if (comment.AllowViewingProfiles)
-                                                                    {
-                                                                        <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="avatar-img-link">
-                                                                            <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
-                                                                        </a>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
-                                                                    }
-                                                                </div>
-                                                        </div>
-                                                    </div>
+                                                    <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="avatar-img-link">
+                                                        <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
+                                                    </a>
                                                 }
-                                                <div class="col-sm-9 col-12 comment-content">
-                                                    <div class="comment-time">
-                                                        <label>@T("News.Comments.CreatedOn"):</label>
-                                                        <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
-                                                    </div>
-                                                    <div class="comment-title text-xs-left">
-                                                        <strong class="comment-text">@comment.CommentTitle</strong>
-                                                    </div>
-                                                    <div class="comment-body text-xs-left">
-                                                        <p class="comment-text">@Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
-                                                    </div>
-                                                </div>
-                                                @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_inside_comment", additionalData = Model.Id })
+                                                else
+                                                {
+                                                    <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
+                                                }
                                             </div>
                                         </div>
-                                    }
+                                    </div>
+                                }
+                                <div class="col-sm-9 col-12 comment-content">
+                                    <div class="comment-time">
+                                        <label>@T("News.Comments.CreatedOn"):</label>
+                                        <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
+                                    </div>
+                                    <div class="comment-title text-xs-left">
+                                        <strong class="comment-text">@comment.CommentTitle</strong>
+                                    </div>
+                                    <div class="comment-body text-xs-left">
+                                        <p class="comment-text">@Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
+                                    </div>
                                 </div>
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_inside_comment", additionalData = Model.Id })
                             </div>
-                            }
-                        }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_after_comments", additionalData = Model.Id })
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_after_comments", additionalData = Model.Id })
 </div>

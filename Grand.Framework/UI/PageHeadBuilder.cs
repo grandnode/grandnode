@@ -206,7 +206,7 @@ namespace Grand.Framework.UI
             return result;
         }
 
-        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
+        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -225,7 +225,7 @@ namespace Grand.Framework.UI
             });
         }
 
-        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
+        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
@@ -368,7 +368,7 @@ namespace Grand.Framework.UI
             }
         }
 
-        public virtual void AddCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
+        public virtual void AddCssFileParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
                 _cssParts.Add(location, new List<CssReferenceMeta>());
@@ -386,7 +386,7 @@ namespace Grand.Framework.UI
             });
         }
 
-        public virtual void AppendCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
+        public virtual void AppendCssFileParts(ResourceLocation location, string src, string debugSrc = "", bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
                 _cssParts.Add(location, new List<CssReferenceMeta>());
