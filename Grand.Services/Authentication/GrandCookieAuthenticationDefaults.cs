@@ -15,11 +15,6 @@ namespace Grand.Services.Authentication
         public const string ExternalAuthenticationScheme = "ExternalAuthentication";
         
         /// <summary>
-        /// The issuer that should be used for any claims that are created
-        /// </summary>
-        public static readonly string ClaimsIssuer = "grandnode";
-
-        /// <summary>
         /// The default value for the login path
         /// </summary>
         public static readonly PathString LoginPath = new PathString("/login");

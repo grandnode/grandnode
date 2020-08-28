@@ -128,6 +128,11 @@ namespace Grand.Core.Configuration
         public string CookiePrefix { get; set; }
 
         /// <summary>
+        /// Gets or sets a value for Cookie claim issuer 
+        /// </summary>
+        public string CookieClaimsIssuer { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether mini profiler should be displayed in public store (used for debugging)
         /// </summary>
         public bool DisplayMiniProfilerInPublicStore { get; set; }
