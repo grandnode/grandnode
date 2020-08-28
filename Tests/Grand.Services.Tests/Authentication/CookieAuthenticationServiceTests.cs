@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Configuration;
 using Grand.Domain.Customers;
 using Grand.Services.Authentication;
+using Grand.Services.Common;
 using Grand.Services.Customers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -25,15 +26,18 @@ namespace Grand.Services.Tests.Authentication
         private Mock<IServiceProvider> serviceProviderMock;
         private DefaultHttpContext _httpContext;
         private GrandConfig _config;
+        private IGenericAttributeService _genericAttributeService;
+
         [TestInitialize()]
         public void Init()
         {
             _customerServiceMock = new Mock<ICustomerService>();
+            _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _httpAccessorMock = new Mock<IHttpContextAccessor>();
             _customerSettings = new CustomerSettings();
             _config = new GrandConfig();
             _config.CookiePrefix = ".Grand.";
-            _cookieAuthService = new CookieAuthenticationService(_customerSettings, _customerServiceMock.Object, _httpAccessorMock.Object, _config);
+            _cookieAuthService = new CookieAuthenticationService(_customerSettings, _customerServiceMock.Object, _genericAttributeService, _httpAccessorMock.Object, _config);
             //For mock HttpContext extension methods like SignOutAsync ,SignInAsync etc..
             _authServiceMock = new Mock<IAuthenticationService>();
             serviceProviderMock = new Mock<IServiceProvider>();

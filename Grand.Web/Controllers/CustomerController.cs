@@ -376,7 +376,7 @@ namespace Grand.Web.Controllers
                 if (response.Success)
                 {
                     await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");
-
+                    
                     model.DisablePasswordChanging = true;
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordHasBeenChanged");
                 }
@@ -971,6 +971,9 @@ namespace Grand.Web.Controllers
                 var changePasswordResult = await _customerRegistrationService.ChangePassword(changePasswordRequest);
                 if (changePasswordResult.Success)
                 {
+                    //sign in
+                    await _authenticationService.SignIn(customer, true);
+
                     model.Result = _localizationService.GetResource("Account.ChangePassword.Success");
                     return View(model);
                 }
@@ -1109,13 +1112,7 @@ namespace Grand.Web.Controllers
 
             return View(model);
         }
-        private bool ValidContentType(IFormFile uploadedFile)
-        {
-            return true;
-
-        }
-
-
+        
         [HttpPost, ActionName("Avatar")]
         [AutoValidateAntiforgeryToken]
         [FormValueRequired("remove-avatar")]
