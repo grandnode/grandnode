@@ -123,6 +123,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IRepository<PickupPoint> _pickupPointsRepository;
         private readonly IRepository<PermissionRecord> _permissionRepository;
+        private readonly IRepository<PermissionAction> _permissionAction;
         private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
@@ -214,6 +215,7 @@ namespace Grand.Services.Installation
             _warehouseRepository = serviceProvider.GetRequiredService<IRepository<Warehouse>>();
             _pickupPointsRepository = serviceProvider.GetRequiredService<IRepository<PickupPoint>>();
             _permissionRepository = serviceProvider.GetRequiredService<IRepository<PermissionRecord>>();
+            _permissionAction = serviceProvider.GetRequiredService<IRepository<PermissionAction>>();
             _vendorRepository = serviceProvider.GetRequiredService<IRepository<Vendor>>();
             _externalAuthenticationRepository = serviceProvider.GetRequiredService<IRepository<ExternalAuthenticationRecord>>();
             _discountusageRepository = serviceProvider.GetRequiredService<IRepository<DiscountUsageHistory>>();
@@ -10774,6 +10776,7 @@ namespace Grand.Services.Installation
 
             //permision
             await _permissionRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<PermissionRecord>((Builders<PermissionRecord>.IndexKeys.Ascending(x => x.SystemName)), new CreateIndexOptions() { Name = "SystemName", Unique = true }));
+            await _permissionAction.Collection.Indexes.CreateOneAsync(new CreateIndexModel<PermissionAction>((Builders<PermissionAction>.IndexKeys.Ascending(x => x.SystemName)), new CreateIndexOptions() { Name = "SystemName", Unique = false }));
 
             //externalauth
             await _externalAuthenticationRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ExternalAuthenticationRecord>((Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.CustomerId)), new CreateIndexOptions() { Name = "CustomerId" }));

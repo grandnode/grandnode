@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Grand.Core.Plugins
@@ -21,7 +20,7 @@ namespace Grand.Core.Plugins
             var text = File.ReadAllText(filePath);
             if (String.IsNullOrEmpty(text))
                 return new List<string>();
-            
+
             var lines = new List<string>();
             using (var reader = new StringReader(text))
             {
@@ -46,126 +45,21 @@ namespace Grand.Core.Plugins
             await Task.CompletedTask;
         }
 
-        public static PluginDescriptor ParsePluginDescriptionFile(string filePath)
-        {
-            var descriptor = new PluginDescriptor();
-            var text = File.ReadAllText(filePath);
-            if (String.IsNullOrEmpty(text))
-                return descriptor;
 
-            var settings = new List<string>();
-            using (var reader = new StringReader(text))
-            {
-                string str;
-                while ((str = reader.ReadLine()) != null)
-                {
-                    if (String.IsNullOrWhiteSpace(str))
-                        continue;
-                    settings.Add(str.Trim());
-                }
-            }
-
-            foreach (var setting in settings)
-            {
-                var separatorIndex = setting.IndexOf(':');
-                if (separatorIndex == -1)
-                {
-                    continue;
-                }
-                string key = setting.Substring(0, separatorIndex).Trim();
-                string value = setting.Substring(separatorIndex + 1).Trim();
-
-                switch (key)
-                {
-                    case "Group":
-                        descriptor.Group = value;
-                        break;
-                    case "FriendlyName":
-                        descriptor.FriendlyName = value;
-                        break;
-                    case "SystemName":
-                        descriptor.SystemName = value;
-                        break;
-                    case "Version":
-                        descriptor.Version = value;
-                        break;
-                    case "SupportedVersions":
-                        {
-                            //parse supported versions
-                            descriptor.SupportedVersions = value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(x => x.Trim())
-                                .ToList();
-                        }
-                        break;
-                    case "Author":
-                        descriptor.Author = value;
-                        break;
-                    case "DisplayOrder":
-                        {
-                            int displayOrder;
-                            int.TryParse(value, out displayOrder);
-                            descriptor.DisplayOrder = displayOrder;
-                        }
-                        break;
-                    case "FileName":
-                        descriptor.PluginFileName = value;
-                        break;
-                    case "LimitedToStores":
-                        {
-                            //parse list of store IDs
-                            foreach (var str1 in value.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
-                                                      .Select(x => x.Trim()))
-                            {
-                                descriptor.LimitedToStores.Add(str1);
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            return descriptor;
-        }
-        
-        public static void SavePluginDescriptionFile(PluginDescriptor plugin)
+        public static void SavePluginConfigFile(PluginDescriptor plugin)
         {
             if (plugin == null)
                 throw new ArgumentException("plugin");
+            var filePath = Path.Combine(plugin.OriginalAssemblyFile.Directory.FullName, "config.cfg");
 
-            //get the Description.txt file path
-            if (plugin.OriginalAssemblyFile == null)
-                throw new Exception(string.Format("Cannot load original assembly path for {0} plugin.", plugin.SystemName));
-            var filePath = Path.Combine(plugin.OriginalAssemblyFile.Directory.FullName, "Description.txt");
-            if (!File.Exists(filePath))
-                throw new Exception(string.Format("Description file for {0} plugin does not exist. {1}", plugin.SystemName, filePath));
+            var config = new PluginConfiguration() {
+                FriendlyName = plugin.FriendlyName,
+                DisplayOrder = plugin.DisplayOrder,
+                LimitedToStore = plugin.LimitedToStores
+            };
 
-            var keyValues = new List<KeyValuePair<string, string>>();
-            keyValues.Add(new KeyValuePair<string, string>("Group", plugin.Group));
-            keyValues.Add(new KeyValuePair<string, string>("FriendlyName", plugin.FriendlyName));
-            keyValues.Add(new KeyValuePair<string, string>("SystemName", plugin.SystemName));
-            keyValues.Add(new KeyValuePair<string, string>("Version", plugin.Version));
-            keyValues.Add(new KeyValuePair<string, string>("SupportedVersions", string.Join(",", plugin.SupportedVersions)));
-            keyValues.Add(new KeyValuePair<string, string>("Author", plugin.Author));
-            keyValues.Add(new KeyValuePair<string, string>("DisplayOrder", plugin.DisplayOrder.ToString()));
-            keyValues.Add(new KeyValuePair<string, string>("FileName", plugin.PluginFileName));
-            if (plugin.LimitedToStores.Any())
-            {
-                var storeList = string.Join(",", plugin.LimitedToStores);
-                keyValues.Add(new KeyValuePair<string, string>("LimitedToStores", storeList));
-            }
-            
-            var sb = new StringBuilder();
-            for (int i = 0; i < keyValues.Count; i++)
-            {
-                var key = keyValues[i].Key;
-                var value = keyValues[i].Value;
-                sb.AppendFormat("{0}: {1}", key, value);
-                if (i != keyValues.Count -1)
-                    sb.Append(Environment.NewLine);
-            }
-            //save the file
-            File.WriteAllText(filePath, sb.ToString());
+            var content = JsonConvert.SerializeObject(config);
+            File.WriteAllText(filePath, content);
         }
     }
 }

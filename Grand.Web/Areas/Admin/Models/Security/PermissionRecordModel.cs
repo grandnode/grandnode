@@ -6,5 +6,6 @@ namespace Grand.Web.Areas.Admin.Models.Security
     {
         public string Name { get; set; }
         public string SystemName { get; set; }
+        public bool Actions { get; set; }
     }
 }

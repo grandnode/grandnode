@@ -1,8 +1,0 @@
-﻿Group: Discount requirements
-FriendlyName: Standard discount requirements
-SystemName: DiscountRequirements.Standard
-Version: 1.01
-SupportedVersions: 4.80
-Author: grandnode team
-DisplayOrder: 1
-FileName: Grand.Plugin.DiscountRequirements.Standard.dll

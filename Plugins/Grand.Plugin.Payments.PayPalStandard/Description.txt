@@ -1,8 +1,0 @@
-﻿Group: Payment methods
-FriendlyName: PayPal Standard
-SystemName: Payments.PayPalStandard
-Version: 1.33
-SupportedVersions: 4.80
-Author: grandnode team
-DisplayOrder: 1
-FileName: Grand.Plugin.Payments.PayPalStandard.dll

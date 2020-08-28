@@ -4957,6 +4957,9 @@
   <LocaleResource Name="Admin.Configuration.ACL">
     <Value>Access control list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.Actions">
+    <Value>Actions</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ACL.Installed">
     <Value>Missing permissions has been installed</Value>
   </LocaleResource>

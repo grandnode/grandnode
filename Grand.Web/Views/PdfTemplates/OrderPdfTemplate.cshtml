@@ -107,7 +107,7 @@
         }
         <div class="col-container">
             <div class="left column"><h2>@companyName</h2></div>
-            <div class="right column"><img src="@(logoExists ? await _pictureService.GetThumbLocalPath(logoPicture, 0, false) : "" )" /></div>
+            <div class="right column"><img src="@(logoExists ? await _pictureService.GetPictureUrl(logoPicture, 0, false, _storeContext.CurrentStore.Url) : "" )" /></div>
         </div>
         <h2>@(string.Format(_localizationService.GetResource("PDFInvoice.Order#", order.CustomerLanguageId), order.OrderNumber))</h2>
         <div class="addresses">

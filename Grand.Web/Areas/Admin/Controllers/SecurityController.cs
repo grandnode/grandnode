@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Customers;
+using Grand.Domain.Security;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Models;
 using Grand.Services.Commands.Models.Security;
@@ -19,8 +20,8 @@ using System.Threading.Tasks;
 namespace Grand.Web.Areas.Admin.Controllers
 {
     public partial class SecurityController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
         private readonly ILogger _logger;
         private readonly IWorkContext _workContext;
@@ -34,13 +35,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public SecurityController(
-            ILogger logger, 
+            ILogger logger,
             IWorkContext workContext,
             IPermissionService permissionService,
-            ICustomerService customerService, 
+            ICustomerService customerService,
             ILocalizationService localizationService,
             IMediator mediator)
-		{
+        {
             _logger = logger;
             _workContext = workContext;
             _permissionService = permissionService;
@@ -49,7 +50,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _mediator = mediator;
         }
 
-		#endregion 
+        #endregion
 
         #region Methods
 
@@ -79,11 +80,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             var customerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             foreach (var pr in permissionRecords)
             {
-                model.AvailablePermissions.Add(new PermissionRecordModel
-                {
-                    //Name = pr.Name,
+                model.AvailablePermissions.Add(new PermissionRecordModel {
                     Name = pr.GetLocalizedPermissionName(_localizationService, _workContext),
-                    SystemName = pr.SystemName
+                    SystemName = pr.SystemName,
+                    Actions = pr.Actions.Any()
                 });
             }
             foreach (var cr in customerRoles)
@@ -152,6 +152,59 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Permissions");
         }
 
+        public async Task<IActionResult> PermissionsAction(string systemName, string customeRoleId)
+        {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+                return AccessDeniedView();
+
+            var model = new PermissionActionModel() {
+                SystemName = systemName,
+                CustomerRoleId = customeRoleId,
+            };
+
+            var permissionRecord = await _permissionService.GetPermissionRecordBySystemName(systemName);
+            if (permissionRecord != null)
+            {
+                model.AvailableActions = permissionRecord.Actions.ToList();
+            }
+            model.DeniedActions = (await _permissionService.GetPermissionActions(systemName, customeRoleId)).Select(x => x.Action).ToList();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PermissionsAction(IFormCollection form)
+        {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+                return AccessDeniedView();
+
+            var systemname = form["SystemName"].ToString();
+            var customerroleId = form["CustomerRoleId"].ToString();
+
+            var selected = form["SelectedActions"].ToList();
+
+            //remove denied actions
+            var deniedActions = await _permissionService.GetPermissionActions(systemname, customerroleId);
+            foreach (var action in deniedActions)
+            {
+                await _permissionService.DeletePermissionActionRecord(action);
+            }
+
+            //insert denied actions
+            var permissionRecord = await _permissionService.GetPermissionRecordBySystemName(systemname);
+            var insertActions = permissionRecord.Actions.Except(selected);
+
+            foreach (var item in insertActions)
+            {
+                await _permissionService.InsertPermissionActionRecord(new PermissionAction() {
+                    Action = item,
+                    CustomerRoleId = customerroleId,
+                    SystemName = systemname
+                });
+            }
+            ViewBag.ClosePage = true;
+            return await PermissionsAction(systemname, customerroleId);
+        }
         #endregion
     }
 }
