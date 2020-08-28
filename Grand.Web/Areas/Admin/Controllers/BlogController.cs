@@ -66,6 +66,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
@@ -77,6 +78,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
@@ -87,6 +89,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(BlogPostModel model, bool continueEditing)
         {
@@ -108,6 +111,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var blogPost = await _blogService.GetBlogPostById(id);
@@ -141,6 +145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(BlogPostModel model, bool continueEditing)
         {
@@ -194,6 +199,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -224,6 +230,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Categories
         public IActionResult CategoryList() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> CategoryList(DataSourceRequest command)
         {
@@ -235,6 +242,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> CategoryCreate()
         {
             ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
@@ -247,6 +255,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> CategoryCreate(BlogCategoryModel model, bool continueEditing)
         {
@@ -276,6 +285,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> CategoryEdit(string id)
         {
             var blogCategory = await _blogService.GetBlogCategoryById(id);
@@ -306,6 +316,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> CategoryEdit(BlogCategoryModel model, bool continueEditing)
         {
@@ -356,6 +367,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> CategoryDelete(string id)
         {
@@ -381,6 +393,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("CategoryEdit", new { id = blogcategory.Id });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> CategoryPostList(string categoryId)
         {
@@ -407,6 +420,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> CategoryPostDelete(string categoryId, string id)
         {
             var blogCategory = await _blogService.GetBlogCategoryById(categoryId);
@@ -432,6 +446,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> BlogPostAddPopup(string categoryId)
         {
             var model = new AddBlogPostCategoryModel();
@@ -444,7 +459,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.CategoryId = categoryId;
             return View(model);
         }
-
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> BlogPostAddPopupList(DataSourceRequest command, AddBlogPostCategoryModel model)
         {
@@ -462,6 +477,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> BlogPostAddPopup(AddBlogPostCategoryModel model)
@@ -497,6 +513,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> Comments(string filterByBlogPostId, DataSourceRequest command)
         {
@@ -508,6 +525,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> CommentDelete(string id)
         {
             var comment = await _blogService.GetBlogCommentById(id);
@@ -536,6 +554,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Products
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> Products(string blogPostId, DataSourceRequest command)
         {
@@ -547,12 +566,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAddPopup(string blogPostId)
         {
             var model = await _blogViewModelService.PrepareBlogModelAddProductModel(blogPostId);
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, BlogProductModel.AddProductModel model)
         {
@@ -566,6 +587,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> ProductAddPopup(string blogPostId, BlogProductModel.AddProductModel model)
@@ -579,6 +601,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> UpdateProduct(BlogProductModel model)
         {
             if (ModelState.IsValid)
@@ -589,6 +612,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> DeleteProduct(string id)
         {
             if (ModelState.IsValid)

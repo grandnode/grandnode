@@ -64,6 +64,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         //shopping carts
         public IActionResult CurrentCarts() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> CurrentCarts(DataSourceRequest command)
         {
@@ -87,6 +88,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> GetCartDetails(string customerId)
         {
@@ -120,6 +122,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //wishlists
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> CurrentWishlists(DataSourceRequest command)
         {
@@ -143,6 +146,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> GetWishlistDetails(string customerId)
         {

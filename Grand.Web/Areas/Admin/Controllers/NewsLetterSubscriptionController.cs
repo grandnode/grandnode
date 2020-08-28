@@ -102,6 +102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> SubscriptionList(DataSourceRequest command, NewsLetterSubscriptionListModel model, string[] searchCategoryIds)
         {
@@ -131,6 +132,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> SubscriptionUpdate(NewsLetterSubscriptionModel model)
         {
@@ -147,6 +149,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> SubscriptionDelete(string id)
         {
@@ -158,6 +161,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportcsv")]
         public async Task<IActionResult> ExportCsv(NewsLetterSubscriptionListModel model, string[] searchCategoryIds)
@@ -177,6 +181,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Import)]
         [HttpPost]
         public async Task<IActionResult> ImportCsv(IFormFile importcsvfile)
         {
