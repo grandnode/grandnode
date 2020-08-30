@@ -5,6 +5,9 @@ using Grand.Services.Shipping;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
+using iTextSharp.text;
+using System.Collections.Generic;
 
 namespace Grand.Services.Orders
 {
@@ -249,6 +252,39 @@ namespace Grand.Services.Orders
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Indicates whether a order's tag exists
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="orderTagId">Order tag identifier</param>
+        /// <returns>Result</returns>
+        public static bool OrderTagExists(this Order order, OrderTag orderTag)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            bool result = order.OrderTags.FirstOrDefault(t => t == orderTag.Id) != null;
+            return result;
+        }
+
+        public static string ToStringOrderTagsNames(this Order order, List<OrderTag> orderTags)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            var result = new StringBuilder();
+            var last = orderTags.Last();
+
+            foreach (var orderTag in orderTags)
+            {
+                result.Append(orderTag.Name);
+                if (orderTag != last)
+                    result.Append(", ");
+            }
+
+            return result.ToString();
         }
     }
 }

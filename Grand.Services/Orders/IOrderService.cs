@@ -85,6 +85,7 @@ namespace Grand.Services.Orders
         /// <param name="orderCode">Search by order code.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="orderTagId">Order tag identifier</param>
         /// <returns>Orders</returns>
         Task<IPagedList<Order>> SearchOrders(string storeId = "",
             string vendorId = "", string customerId = "",
@@ -93,7 +94,7 @@ namespace Grand.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
-            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue);
+            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue, string orderTagId = "");
         
         /// <summary>
         /// Inserts an order

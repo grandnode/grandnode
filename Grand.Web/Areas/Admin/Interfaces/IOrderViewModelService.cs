@@ -25,5 +25,8 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task<IList<string>> AddProductToOrderDetails(string orderId, string productId, IFormCollection form);
         Task EditCreditCardInfo(Order order, OrderModel model);
         Task<IList<Order>> PrepareOrders(OrderListModel model);
+        Task SaveOrderTags(Order order, string tags);
+        string[] ParseOrderTags(string orderTags);
+        List<OrderTag> ParseOrderTagsToList(string orderTags);
     }
 }

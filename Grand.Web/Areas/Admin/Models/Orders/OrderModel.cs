@@ -1,4 +1,5 @@
 using Grand.Domain.Catalog;
+using Grand.Domain.Orders;
 using Grand.Domain.Payments;
 using Grand.Domain.Tax;
 using Grand.Framework.Mvc.ModelBinding;
@@ -244,6 +245,10 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public bool CanPartiallyRefundOffline { get; set; }
         public bool CanVoid { get; set; }
         public bool CanVoidOffline { get; set; }
+
+        //order's tags
+        [GrandResourceDisplayName("Admin.Orders.Fields.OrderTags")]
+        public string OrderTags { get; set; }
 
         #region Nested Classes
 
