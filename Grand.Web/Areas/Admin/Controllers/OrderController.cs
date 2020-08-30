@@ -16,7 +16,6 @@ using Grand.Services.Logging;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
-using Grand.Web.Areas.Admin.Components;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Orders;
@@ -45,6 +44,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPdfService _pdfService;
         private readonly IExportManager _exportManager;
         private readonly IMediator _mediator;
+
         #endregion
 
         #region Ctor
@@ -76,7 +76,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Index() => RedirectToAction("List");
 
         public async Task<IActionResult> List(int? orderStatusId = null,
-            int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null, string code = null)
+            int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null, string code = null, string tagid = null)
         {
             var model = await _orderViewModelService.PrepareOrderListModel(orderStatusId, paymentStatusId, shippingStatusId, startDate, _workContext.CurrentCustomer.StaffStoreId, code);
             return View(model);
@@ -91,7 +91,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var storeId = string.Empty;
             if (_workContext.CurrentCustomer.IsStaff())
                 storeId = _workContext.CurrentCustomer.StaffStoreId;
-            
+
             string vendorId = string.Empty;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -383,7 +383,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _orderViewModelService.PrepareOrderDetailsModel(model, order);
                 return View(model);
             }
-            catch (Exception exception) 
+            catch (Exception exception)
             {
                 //error
                 var model = new OrderModel();

@@ -36,7 +36,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
@@ -174,11 +173,27 @@ namespace Grand.Web.Areas.Admin.Services
 
         #endregion
 
+        private IList<string> ParseOrderTagsToList(string orderTags)
+        {
+            var result = new List<string>();
+            if (!string.IsNullOrWhiteSpace(orderTags))
+            {
+                var values = orderTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var val1 in values)
+                {
+                    if (!string.IsNullOrEmpty(val1.Trim()))
+                        result.Add(val1.Trim());
+                }
+            }
+            return result;
+        }
+
+
         public virtual async Task<OrderListModel> PrepareOrderListModel(
-            int? orderStatusId = null, 
-            int? paymentStatusId = null, 
-            int? shippingStatusId = null, 
-            DateTime? startDate = null, 
+            int? orderStatusId = null,
+            int? paymentStatusId = null,
+            int? shippingStatusId = null,
+            DateTime? startDate = null,
             string storeId = null,
             string code = null)
         {
@@ -212,7 +227,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 model.AvailableOrderTags.Add(new SelectListItem { Text = s.Name, Value = s.Id });
             }
-            
+
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
@@ -272,7 +287,7 @@ namespace Grand.Web.Areas.Admin.Services
             OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
-            
+
 
             var filterByProductId = "";
             var product = await _productService.GetProductById(model.ProductId);
@@ -313,7 +328,8 @@ namespace Grand.Web.Areas.Admin.Services
                 endTimeUtc: endDateValue,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
-                billingCountryId: model.BillingCountryId
+                billingCountryId: model.BillingCountryId,
+                tagid: model.OrderTag
                 );
             var profit = await _orderReportService.ProfitReport(
                 storeId: model.StoreId,
@@ -326,7 +342,8 @@ namespace Grand.Web.Areas.Admin.Services
                 endTimeUtc: endDateValue,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
-                billingCountryId: model.BillingCountryId
+                billingCountryId: model.BillingCountryId,
+                tagid: model.OrderTag
                 );
             var primaryStoreCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             if (primaryStoreCurrency == null)
@@ -416,12 +433,17 @@ namespace Grand.Web.Areas.Admin.Services
             model.CustomValues = order.DeserializeCustomValues();
 
             //order's tags
-            var orderTags = await _orderTagService.GetOrderTagsByOrder(order.Id);
-            if (order != null && orderTags.Count != 0)
+            if (order != null && order.OrderTags.Any())
             {
-               model.OrderTags = order.ToStringOrderTagsNames(orderTags.ToList());
+                var tagsName = new List<string>();
+                foreach (var item in order.OrderTags)
+                {
+                    var tag = await _orderTagService.GetOrderTagById(item);
+                    if (tag != null)
+                        tagsName.Add(tag.Name);
+                }
+                model.OrderTags = string.Join(",", tagsName);
             }
-        
 
             #region Order totals
 
@@ -1355,24 +1377,24 @@ namespace Grand.Web.Areas.Admin.Services
                 throw new ArgumentNullException("order");
 
             //order's tags
-            var existingOrderTags = await _orderTagService.GetOrderTagsByOrder(order.Id);
-            List<OrderTag> newOrderTags = ParseOrderTagsToList(orderTags);
+            var existingOrderTags = new List<string>();
+            foreach (var item in order.OrderTags)
+            {
+                var tag = await _orderTagService.GetOrderTagById(item);
+                if (tag != null)
+                    existingOrderTags.Add(tag.Name);
+            }
+            var newOrderTags = ParseOrderTagsToList(orderTags);
 
             // compare 
-            var orderTagsToRemove = new List<OrderTag>();
-            
-            if (newOrderTags.Count != 0)
-                orderTagsToRemove = existingOrderTags.Where(o => !newOrderTags.Contains(o, new OrderTagComparer())).ToList();
-            else
-                orderTagsToRemove = existingOrderTags.ToList();
-            
-            
+            var orderTagsToRemove = existingOrderTags.Except(newOrderTags);
+
             foreach (var orderTag in orderTagsToRemove)
             {
-                if (orderTag != null)
+                var ot = await _orderTagService.GetOrderTagByName(orderTag);
+                if (ot != null)
                 {
-                    orderTag.OrderId = order.Id;
-                    await _orderTagService.DetachOrderTag(orderTag.Id, order.Id);
+                    await _orderTagService.DetachOrderTag(ot.Id, order.Id);
                 }
             }
 
@@ -1380,52 +1402,24 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var newOrderTag in newOrderTags)
             {
                 OrderTag orderTag;
-                var orderTag2 = allOrderTags.ToList().Find(o => o.Name == newOrderTag.Name);
-                
+                var orderTag2 = allOrderTags.ToList().Find(o => o.Name == newOrderTag);
+
                 if (orderTag2 == null)
                 {
-                    orderTag = new OrderTag { Name = newOrderTag.Name, Count = 0 };
+                    orderTag = new OrderTag { Name = newOrderTag, Count = 0 };
                     await _orderTagService.InsertOrderTag(orderTag);
                 }
                 else
                 {
                     orderTag = orderTag2;
                 }
-                
+
                 if (!order.OrderTagExists(orderTag))
                 {
-                    orderTag.Orders.Add(order.Id);
                     await _orderTagService.AttachOrderTag(orderTag.Id, order.Id);
                 }
             }
         }
 
-        public string[] ParseOrderTags(string orderTags)
-        {
-            var result = new List<string>();
-            if (!string.IsNullOrWhiteSpace(orderTags))
-            {
-                var values = orderTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var val1 in values)
-                    if (!string.IsNullOrEmpty(val1.Trim()))
-                        result.Add(val1.Trim());
-            }
-            return result.ToArray();
-        }
-
-        public List<OrderTag> ParseOrderTagsToList(string orderTags)
-        {
-            var result = new List<OrderTag>();
-            if (!string.IsNullOrWhiteSpace(orderTags))
-            {
-                var values = orderTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var val1 in values)
-                {
-                    if (!string.IsNullOrEmpty(val1.Trim()))
-                        result.Add(new OrderTag { Name = val1.Trim() });
-                }
-            }
-            return result;
-        }
     }
 }

@@ -21344,7 +21344,7 @@
     </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderTags">
-    Order's tags
+    <Value>Order's tags</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderTags.BackToList">
     <Value>Back to tag list</Value>
@@ -21373,16 +21373,16 @@
   <LocaleResource Name="Admin.Orders.OrderTags.Orders">
     <Value>Orders</Value>
   </LocaleResource>
-<LocaleResource Name="Permission.ManageOrderTags">
+  <LocaleResource Name="Permission.ManageOrderTags">
     <Value>Admin area. Manage Order Tags</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.SaveOrderTags">
-    Save
+    <Value>Save</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.CancelOrderTags">
-    Cancel
+    <Value>Cancel</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.OrderTagId">
-    Order's tag
+    <Value>Order's tag</Value>
   </LocaleResource>
 </Language>

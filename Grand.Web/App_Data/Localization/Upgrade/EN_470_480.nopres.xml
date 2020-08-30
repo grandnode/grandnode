@@ -26,7 +26,7 @@
     </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderTags">
-    Order's tags
+    <Value>Order's tags</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderTags.BackToList">
     <Value>Back to tag list</Value>
@@ -59,10 +59,10 @@
     <Value>Admin area. Manage Order Tags</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.SaveOrderTags">
-    Save
+    <Value>Save</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.CancelOrderTags">
-    Cancel
+    <Value>Cancel</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.SubAccounts">
     <Value>Subaccounts</Value>
@@ -82,9 +82,9 @@
   <LocaleResource Name="Account.SubAccount.Edit">
     <Value>Edit account</Value>
   </LocaleResource>
-  <LocalesResource Name="Admin.Orders.List.OrderTagId">
-    Order's tag
-  </LocalesResource>
+  <LocaleResource Name="Admin.Orders.List.OrderTagId">
+    <Value>Order's tag</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MinOrderAmount">
     <Value>Min order total amount</Value>
   </LocaleResource>

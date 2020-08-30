@@ -1,5 +1,6 @@
 ﻿@model OrderModel
 @inject IOrderTagService orderTagService
+@inject IPageHeadBuilder pageHeadBuilder
 @using Grand.Domain.Tax;
 @using Grand.Domain.Orders;
 @using Grand.Services.Orders;
@@ -7,9 +8,9 @@
 
 @{
     //resources for product tags input
-    Html.AppendCssFileParts("~/content/tagEditor/jquery.tag-editor.css", excludeFromBundle: true);
-    Html.AppendScriptParts("~/scripts/tagEditor/jquery.tag-editor.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/scripts/tagEditor/jquery.caret.min.js", excludeFromBundle: true);
+    pageHeadBuilder.AppendCssFileParts(ResourceLocation.Head, "~/content/tagEditor/jquery.tag-editor.css", excludeFromBundle: true);
+    pageHeadBuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/tagEditor/jquery.tag-editor.min.js", excludeFromBundle: true);
+    pageHeadBuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/tagEditor/jquery.caret.min.js", excludeFromBundle: true);
 }
 
 @{

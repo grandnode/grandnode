@@ -55,14 +55,15 @@ namespace Grand.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
-        /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
+        /// <param name="tagid">Tag ident</param>
         /// <returns>Result</returns>
         Task<OrderAverageReportLine> GetOrderAverageReportLine(string storeId = "", string vendorId = "",
             string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, string billingLastName = "",
-            bool ignoreCancelledOrders = false);
+            bool ignoreCancelledOrders = false,
+            string tagid = null);
 
 
         /// <summary>
@@ -150,11 +151,12 @@ namespace Grand.Services.Orders
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
+        /// <param name="tagid">tag ident</param>
         /// <returns>Result</returns>
         Task<decimal> ProfitReport(string storeId = "", string vendorId = "",
             string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, string billingLastName = "");
+            string billingEmail = null, string billingLastName = "", string tagid = null);
     }
 }

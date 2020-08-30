@@ -11,7 +11,6 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Grand.Services.Events;
 
-
 namespace Grand.Services.Orders
 {
     public partial class OrderTagService : IOrderTagService
@@ -77,7 +76,6 @@ namespace Grand.Services.Orders
 
         #endregion
                 
-
         #region Utilities
 
         /// <summary>
@@ -150,19 +148,6 @@ namespace Grand.Services.Orders
         }
 
         /// <summary>
-        /// Gets order's tags by order
-        /// </summary>
-        /// <param name="orderId">Order's identifier</param>
-        /// <returns>Order's tag</returns>
-        public virtual async Task<IList<OrderTag>> GetOrderTagsByOrder(string orderId)
-        {
-            // получим все объекты, у которых определены английский и французский языки
-            var filter = Builders<OrderTag>.Filter.All("Orders", new List<string>() { orderId });
-            var result = await _orderTagRepository.Collection.Find(filter).ToListAsync();
-            return result;
-        }
-
-        /// <summary>
         /// Gets order's tag by name
         /// </summary>
         /// <param name="name">Order's tag name</param>
@@ -224,8 +209,8 @@ namespace Grand.Services.Orders
             
             // update ordertag with count's order and new order id
             var updateBuilderTag = Builders<OrderTag>.Update
-                .AddToSet(p => p.Orders, orderId)
                 .Inc(x => x.Count, 1);
+
             await _orderTagRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderTagId), updateBuilderTag);
             var orderTag =   await _orderTagRepository.GetByIdAsync(orderTagId);
 
@@ -248,7 +233,6 @@ namespace Grand.Services.Orders
             await _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderId), update);
             
             var updateTag = Builders<OrderTag>.Update
-                .Pull(p => p.Orders, orderId)
                 .Inc(x => x.Count, -1);
             await _orderTagRepository.Collection.UpdateManyAsync(new BsonDocument("_id", orderTagId), updateTag);
 

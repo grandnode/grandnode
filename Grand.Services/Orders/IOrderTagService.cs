@@ -22,12 +22,6 @@ namespace Grand.Services.Orders
         Task<IList<OrderTag>> GetAllOrderTags();
 
         /// <summary>
-        /// Gets order's tags by order
-        /// </summary>
-        /// <returns>order's tags</returns>
-        Task<IList<OrderTag>> GetOrderTagsByOrder(string orderId);
-
-        /// <summary>
         /// Gets order's tag
         /// </summary>
         /// <param name="orderTagId">order's tag identifier</param>
