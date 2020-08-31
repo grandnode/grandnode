@@ -54,6 +54,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command, ProductReviewListModel model)
         {
@@ -71,6 +72,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var productReview = await _productReviewService.GetProductReviewById(id);
@@ -89,6 +91,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(ProductReviewModel model, bool continueEditing)
         {
@@ -115,6 +118,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //delete
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -138,6 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Edit", new { id = productReview.Id });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ApproveSelected(ICollection<string> selectedIds)
         {
@@ -149,6 +154,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> DisapproveSelected(ICollection<string> selectedIds)
         {
@@ -160,7 +166,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
-
+        
         public async Task<IActionResult> ProductSearchAutoComplete(string term, [FromServices] IProductService productService)
         {
             const int searchTermMinimumLength = 3;

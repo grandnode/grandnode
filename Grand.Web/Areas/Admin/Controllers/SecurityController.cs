@@ -162,11 +162,29 @@ namespace Grand.Web.Areas.Admin.Controllers
                 CustomerRoleId = customeRoleId,
             };
 
+            var customerRole = await _customerService.GetCustomerRoleById(customeRoleId);
+            if (customerRole != null)
+            {
+                model.CustomerRoleName = customerRole.Name;
+            }
+            else
+            {
+                ViewBag.ClosePage = true;
+                return await PermissionsAction(systemName, customeRoleId);
+            }
+
             var permissionRecord = await _permissionService.GetPermissionRecordBySystemName(systemName);
             if (permissionRecord != null)
             {
                 model.AvailableActions = permissionRecord.Actions.ToList();
+                model.PermissionName = permissionRecord.GetLocalizedPermissionName(_localizationService, _workContext);
             }
+            else
+            {
+                ViewBag.ClosePage = true;
+                return await PermissionsAction(systemName, customeRoleId);
+            }
+
             model.DeniedActions = (await _permissionService.GetPermissionActions(systemName, customeRoleId)).Select(x => x.Action).ToList();
 
             return View(model);

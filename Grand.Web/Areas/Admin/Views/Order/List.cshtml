@@ -189,6 +189,12 @@
                                     <admin-select asp-for="PaymentMethodSystemName" asp-items="Model.AvailablePaymentMethods" />
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <admin-label asp-for="OrderTag" class="col-xs-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                    <admin-select asp-for="OrderTag" asp-items="Model.AvailableOrderTags" />
+                                </div>
+                            </div>
                         </div>
                         <div class="form-actions">
                             <div class="row">
@@ -512,6 +518,7 @@
                 ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
                 OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val(),
                 GoDirectlyToNumber: $('#@Html.FieldIdFor(model => model.GoDirectlyToNumber)').val(),
+                OrderTag: $('#@Html.FieldIdFor(model => model.OrderTag)').val(),
             };
             addAntiForgeryToken(data);
             return data;

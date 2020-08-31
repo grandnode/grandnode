@@ -11,7 +11,9 @@ namespace Grand.Web.Areas.Admin.Models.Security
             DeniedActions = new List<string>();
         }
         public string SystemName { get; set; }
+        public string PermissionName { get; set; }
         public string CustomerRoleId { get; set; }
+        public string CustomerRoleName { get; set; }
         public IList<string> AvailableActions { get; set; }
         public IList<string> DeniedActions { get; set; }
     }

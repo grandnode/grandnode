@@ -169,7 +169,8 @@ namespace Grand.Services.Customers.Tests
                 _eventPublisher,
                 _rewardPointsSettings,
                 _customerSettings,
-                _rewardPointsService);
+                _rewardPointsService,
+                _genericAttributeService);
         }
 
         [TestMethod()]

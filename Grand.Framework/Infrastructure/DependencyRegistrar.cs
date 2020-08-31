@@ -265,6 +265,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<ManufacturerTemplateService>().As<IManufacturerTemplateService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductTagService>().As<IProductTagService>().InstancePerLifetimeScope();
             builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderTagService>().As<IOrderTagService>().InstancePerLifetimeScope();
 
         }
         private void RegisterCoursesService(ContainerBuilder builder)

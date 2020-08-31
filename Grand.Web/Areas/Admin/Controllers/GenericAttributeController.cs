@@ -257,7 +257,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        [PermissionAuthorizeAction(PermissionActionName.Create)]
         [HttpPost]
         public async Task<IActionResult> Add(GenericAttributeModel model)
         {
@@ -290,7 +289,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             });
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(GenericAttributeModel model)
         {

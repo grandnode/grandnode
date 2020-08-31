@@ -650,7 +650,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return File(bytes, "application/pdf", string.Format("packagingslip_{0}.pdf", shipment.Id));
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Preview)]
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportpackagingslips-all")]
         public async Task<IActionResult> PdfPackagingSlipAll(ShipmentListModel model)
@@ -679,7 +679,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return File(bytes, "application/pdf", "packagingslips.pdf");
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Preview)]
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost]
         public async Task<IActionResult> PdfPackagingSlipSelected(string selectedIds)
         {

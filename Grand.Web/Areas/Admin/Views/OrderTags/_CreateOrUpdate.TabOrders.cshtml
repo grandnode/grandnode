@@ -1,0 +1,64 @@
+﻿@inject AdminAreaSettings adminAreaSettings
+@model OrderTagModel
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="order-tags-grid"></div>
+    </div>
+</div>
+<script>
+        $(document).ready(function () {
+            $("#order-tags-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("Orders", "OrderTags", new { tagId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                OrderNumber: { editable: true, type: "string" },
+                                Id: { editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                editable: {
+                    confirmation: true,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "OrderNumber",
+                    title: "@T("Admin.Orders.OrderTags.Fields.OrderNumber")",
+                    width: 300,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=kendo.htmlEncode(OrderNumber)#</a>',
+                }]
+            });
+        });
+</script>
