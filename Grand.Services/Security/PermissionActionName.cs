@@ -9,5 +9,7 @@
         public const string Delete = "Delete";
         public const string Export = "Export";
         public const string Import = "Import";
+        public const string Payments = "Payments";
+        public const string Cancel = "Cancel";
     }
 }
