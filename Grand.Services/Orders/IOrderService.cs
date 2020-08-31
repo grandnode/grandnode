@@ -134,23 +134,6 @@ namespace Grand.Services.Orders
         Task<OrderItem> GetOrderItemByGuid(Guid orderItemGuid);
 
         /// <summary>
-        /// Gets all order items
-        /// </summary>
-        /// <param name="orderId">Order identifier; null to load all records</param>
-        /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
-        /// <param name="ss">Order shipment status; null to load all records</param>
-        /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
-        /// <returns>Order items</returns>
-        Task<IList<OrderItem>> GetAllOrderItems(string orderId,
-           string customerId, DateTime? createdFromUtc, DateTime? createdToUtc,
-           OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-           bool loadDownloableProductsOnly = false);
-
-        /// <summary>
         /// Delete an order item
         /// </summary>
         /// <param name="orderItem">The order item</param>

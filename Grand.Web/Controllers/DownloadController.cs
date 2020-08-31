@@ -85,7 +85,7 @@ namespace Grand.Web.Controllers
                 if (_workContext.CurrentCustomer == null)
                     return Challenge();
 
-                if (order.CustomerId != _workContext.CurrentCustomer.Id)
+                if (order.CustomerId != _workContext.CurrentCustomer.Id && order.OwnerId != _workContext.CurrentCustomer.Id)
                     return Content("This is not your order");
             }
 
@@ -187,7 +187,7 @@ namespace Grand.Web.Controllers
 
             if (_customerSettings.DownloadableProductsValidateUser)
             {
-                if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
+                if (order.CustomerId != _workContext.CurrentCustomer.Id && order.OwnerId != _workContext.CurrentCustomer.Id)
                     return Challenge();
             }
 
@@ -237,7 +237,7 @@ namespace Grand.Web.Controllers
             if (order == null)
                 return InvokeHttp404();
 
-            if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
+            if (_workContext.CurrentCustomer == null || (order.CustomerId != _workContext.CurrentCustomer.Id && order.OwnerId != _workContext.CurrentCustomer.Id))
                 return Challenge();
 
             var download = await _downloadService.GetDownloadById(orderNote.DownloadId);
@@ -272,7 +272,7 @@ namespace Grand.Web.Controllers
             if (order == null)
                 return InvokeHttp404();
 
-            if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
+            if (_workContext.CurrentCustomer == null || (order.CustomerId != _workContext.CurrentCustomer.Id && order.OwnerId != _workContext.CurrentCustomer.Id))
                 return Challenge();
 
             var download = await _downloadService.GetDownloadById(shipmentNote.DownloadId);
