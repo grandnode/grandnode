@@ -117,6 +117,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(result);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> OrderList(DataSourceRequest command, OrderListModel model)
         {
@@ -141,6 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-order-by-number")]
         public async Task<IActionResult> GoToOrderId(OrderListModel model)
@@ -175,6 +177,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Export / Import
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportxml-all")]
         public async Task<IActionResult> ExportXmlAll(OrderListModel model)
@@ -201,6 +204,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost]
         public async Task<IActionResult> ExportXmlSelected(string selectedIds)
         {
@@ -225,6 +229,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return File(Encoding.UTF8.GetBytes(xml), "application/xml", "orders.xml");
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportexcel-all")]
         public async Task<IActionResult> ExportExcelAll(OrderListModel model)
@@ -252,6 +257,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost]
         public async Task<IActionResult> ExportExcelSelected(string selectedIds)
         {
@@ -282,6 +288,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Payments and other order workflow
 
+        [PermissionAuthorizeAction(PermissionActionName.Cancel)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("cancelorder")]
         public async Task<IActionResult> CancelOrder(string id)
@@ -318,6 +325,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Payments)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("captureorder")]
         public async Task<IActionResult> CaptureOrder(string id)
@@ -357,6 +365,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("btnSaveOrderTags")]
         public async Task<IActionResult> SaveOrderTags(OrderModel orderModel)
@@ -393,6 +402,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Payments)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("markorderaspaid")]
         public async Task<IActionResult> MarkOrderAsPaid(string id)
@@ -429,6 +439,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Payments)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("refundorder")]
         public async Task<IActionResult> RefundOrder(string id)
@@ -467,6 +478,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Payments)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("refundorderoffline")]
         public async Task<IActionResult> RefundOrderOffline(string id)
@@ -503,6 +515,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Payments)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("voidorder")]
         public async Task<IActionResult> VoidOrder(string id)
@@ -541,6 +554,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Payments)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("voidorderoffline")]
         public async Task<IActionResult> VoidOrderOffline(string id)
@@ -577,6 +591,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Payments)]
         public async Task<IActionResult> PartiallyRefundOrderPopup(string id, bool online)
         {
             var order = await _orderService.GetOrderById(id);
@@ -599,6 +614,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Payments)]
         [HttpPost]
         [FormValueRequired("partialrefundorder")]
         public async Task<IActionResult> PartiallyRefundOrderPopup(string id, bool online, OrderModel model)
@@ -656,6 +672,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("btnSaveOrderStatus")]
         public async Task<IActionResult> ChangeOrderStatus(string id, OrderModel model)
@@ -706,6 +723,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Edit, delete
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var order = await _orderService.GetOrderById(id);
@@ -728,6 +746,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
         {
@@ -750,6 +769,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Edit", "Order", new { id = id });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> DeleteSelected(ICollection<string> selectedIds, [FromServices] ICustomerActivityService customerActivityService)
         {
@@ -800,6 +820,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("pdf-invoice-all")]
         public async Task<IActionResult> PdfInvoiceAll(OrderListModel model)
@@ -825,6 +846,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return File(bytes, "application/pdf", "orders.pdf");
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost]
         public async Task<IActionResult> PdfInvoiceSelected(string selectedIds)
         {
@@ -865,6 +887,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return File(bytes, "application/pdf", "orders.pdf");
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Payments)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("btnSaveCC")]
         public async Task<IActionResult> EditCreditCardInfo(string id, OrderModel model)
@@ -900,6 +923,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("btnSaveOrderTotals")]
         public async Task<IActionResult> EditOrderTotals(string id, OrderModel model)
@@ -946,6 +970,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("save-shipping-method")]
         public async Task<IActionResult> EditShippingMethod(string id, OrderModel model)
@@ -1014,7 +1039,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
         public async Task<IActionResult> EditOrderItem(string id, IFormCollection form, [FromServices] IProductService productService)
@@ -1102,6 +1127,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnDeleteOrderItem")]
         public async Task<IActionResult> DeleteOrderItem(string id, IFormCollection form,
@@ -1190,6 +1216,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnResetDownloadCount")]
         public async Task<IActionResult> ResetDownloadCount(string id, IFormCollection form)
@@ -1231,6 +1258,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnPvActivateDownload")]
 
@@ -1272,6 +1300,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> UploadLicenseFilePopup(string id, string orderItemId, [FromServices] IProductService productService)
         {
             var order = await _orderService.GetOrderById(id);
@@ -1306,6 +1335,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("uploadlicense")]
         public async Task<IActionResult> UploadLicenseFilePopup(OrderModel.UploadLicenseModel model)
@@ -1342,6 +1372,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("UploadLicenseFilePopup")]
         [FormValueRequired("deletelicense")]
         public async Task<IActionResult> DeleteLicenseFilePopup(OrderModel.UploadLicenseModel model)
@@ -1375,6 +1406,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> AddProductToOrder(string orderId)
         {
             //a vendor does not have access to this functionality
@@ -1390,6 +1422,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AddProductToOrder(DataSourceRequest command, OrderModel.AddOrderProductModel model, [FromServices] IProductService productService)
         {
@@ -1431,6 +1464,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> AddProductToOrderDetails(string orderId, string productId)
         {
             //a vendor does not have access to this functionality
@@ -1453,6 +1487,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AddProductToOrderDetails(string orderId, string productId, IFormCollection form)
         {
@@ -1485,6 +1520,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Addresses
+
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> AddressEdit(string addressId, string orderId)
         {
             var order = await _orderService.GetOrderById(orderId);
@@ -1516,6 +1553,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AddressEdit(OrderAddressModel model, IFormCollection form,
             [FromServices] IAddressAttributeService addressAttributeService,
@@ -1570,6 +1608,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Order notes
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> OrderNotesSelect(string orderId, DataSourceRequest command)
         {
@@ -1594,6 +1633,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> OrderNoteAdd(string orderId, string downloadId, bool displayToCustomer, string message)
         {
             var order = await _orderService.GetOrderById(orderId);
@@ -1613,6 +1653,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> OrderNoteDelete(string id, string orderId)
         {
