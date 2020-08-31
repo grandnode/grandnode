@@ -96,6 +96,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command, CategoryListModel model)
         {
@@ -124,6 +125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Create / Edit / Delete
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = await _categoryViewModelService.PrepareCategoryModel(_workContext.CurrentCustomer.StaffStoreId);
@@ -133,6 +135,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(CategoryModel model, bool continueEditing)
         {
@@ -159,6 +162,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var category = await _categoryService.GetCategoryById(id);
@@ -198,6 +202,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(CategoryModel model, bool continueEditing)
         {
@@ -243,6 +248,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -270,6 +276,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Export / Import
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         public async Task<IActionResult> ExportXml()
         {
             try
@@ -284,6 +291,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         public async Task<IActionResult> ExportXlsx()
         {
             try
@@ -298,6 +306,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Import)]
         [HttpPost]
         public async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile)
         {
@@ -329,6 +338,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Products
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ProductList(DataSourceRequest command, string categoryId)
         {
@@ -346,6 +356,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductUpdate(CategoryModel.CategoryProductModel model)
         {
             if (ModelState.IsValid)
@@ -356,6 +367,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductDelete(CategoryModel.CategoryProductModel model)
         {
             if (ModelState.IsValid)
@@ -366,6 +378,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAddPopup(string categoryId)
         {
             var model = await _categoryViewModelService.PrepareAddCategoryProductModel(_workContext.CurrentCustomer.StaffStoreId);
@@ -373,6 +386,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, CategoryModel.AddCategoryProductModel model)
         {
@@ -388,6 +402,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> ProductAddPopup(CategoryModel.AddCategoryProductModel model)
@@ -410,6 +425,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Activity log
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ListActivityLog(DataSourceRequest command, string categoryId)
         {
