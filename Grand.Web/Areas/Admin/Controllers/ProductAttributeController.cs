@@ -58,6 +58,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
@@ -71,8 +72,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         //create
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = new ProductAttributeModel();
@@ -81,6 +83,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(ProductAttributeModel model, bool continueEditing)
         {
@@ -102,6 +105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var productAttribute = await _productAttributeService.GetProductAttributeById(id);
@@ -120,6 +124,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(ProductAttributeModel model, bool continueEditing)
         {
@@ -154,6 +159,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //delete
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -180,6 +186,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Used by products
 
         //used by products
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> UsedByProducts(DataSourceRequest command, string productAttributeId)
         {
@@ -202,10 +209,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
-        
+
         #endregion
 
         #region Predefined values
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> PredefinedProductAttributeValueList(string productAttributeId, DataSourceRequest command)
         {
@@ -220,6 +228,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> PredefinedProductAttributeValueCreatePopup(string productAttributeId)
         {
             var productAttribute = await _productAttributeService.GetProductAttributeById(productAttributeId);
@@ -237,6 +246,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> PredefinedProductAttributeValueCreatePopup(PredefinedProductAttributeValueModel model)
         {
@@ -258,6 +268,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> PredefinedProductAttributeValueEditPopup(string id, string productAttributeId)
         {
             var ppav = (await _productAttributeService.GetProductAttributeById(productAttributeId)).PredefinedProductAttributeValues.Where(x=>x.Id == id).FirstOrDefault();
@@ -273,6 +284,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> PredefinedProductAttributeValueEditPopup(PredefinedProductAttributeValueModel model)
         {
@@ -294,6 +306,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //delete
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> PredefinedProductAttributeValueDelete(string id)
         {
