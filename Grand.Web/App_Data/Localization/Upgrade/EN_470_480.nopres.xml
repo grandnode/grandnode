@@ -103,4 +103,19 @@
   <LocaleResource Name="Admin.Configuration.ACL.Actions">
     <Value>Actions</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Acl.Fields.Access">
+    <Value>Access</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Acl.Fields.Actions">
+    <Value>Actions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Acl.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Acl.SaveBeforeEdit">
+    <Value>You need to save before you can edit access control list.</Value>
+  </LocaleResource>
 </Language>

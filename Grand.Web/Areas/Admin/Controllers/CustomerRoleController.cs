@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Domain.Security;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -10,8 +11,10 @@ using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Customers;
+using Grand.Web.Areas.Admin.Models.Security;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,9 +24,13 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class CustomerRoleController : BaseAdminController
     {
         #region Fields
+
         private readonly ICustomerRoleViewModelService _customerRoleViewModelService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+        private readonly IWorkContext _workContext;
+
         #endregion
 
         #region Constructors
@@ -31,11 +38,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         public CustomerRoleController(
             ICustomerRoleViewModelService customerRoleViewModelService,
             ICustomerService customerService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            IWorkContext workContext)
         {
             _customerRoleViewModelService = customerRoleViewModelService;
             _customerService = customerService;
             _localizationService = localizationService;
+            _permissionService = permissionService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -235,6 +246,69 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.RefreshPage = true;
             return View(model);
         }
+        #endregion
+
+        #region Acl
+
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
+        [HttpPost]
+        public async Task<IActionResult> Acl(string customerRoleId)
+        {
+            var permissionRecords = await _permissionService.GetAllPermissionRecords();
+            var model = new List<CustomerRolePermissionModel>();
+
+            foreach (var pr in permissionRecords)
+            {
+                model.Add(new CustomerRolePermissionModel {
+                    Id = pr.Id,
+                    Name = pr.GetLocalizedPermissionName(_localizationService, _workContext),
+                    SystemName = pr.SystemName,
+                    Actions = pr.Actions.ToList(),
+                    Access = pr.CustomerRoles.Contains(customerRoleId)
+                });
+            }
+
+            var gridModel = new DataSourceResult {
+                Data = model,
+                Total = model.Count()
+            };
+            return Json(gridModel);
+        }
+
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [HttpPost]
+        public async Task<IActionResult> AclUpdate(string customerRoleId, string id, bool access)
+        {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+                ModelState.AddModelError("", "You don't have permission to the update");
+
+            var cr = await _customerService.GetCustomerRoleById(customerRoleId);
+            if (cr == null)
+                throw new ArgumentException("No customer role found with the specified id");
+
+            var permissionRecord = await _permissionService.GetPermissionRecordById(id);
+            if (permissionRecord == null)
+                throw new ArgumentException("No permission found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                if(access)
+                {
+                    if (!permissionRecord.CustomerRoles.Contains(customerRoleId))
+                        permissionRecord.CustomerRoles.Add(customerRoleId);
+                }
+                else
+                    if (permissionRecord.CustomerRoles.Contains(customerRoleId))
+                        permissionRecord.CustomerRoles.Remove(customerRoleId);
+
+                await _permissionService.UpdatePermissionRecord(permissionRecord);
+
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
+        }
+
+
         #endregion
     }
 }
