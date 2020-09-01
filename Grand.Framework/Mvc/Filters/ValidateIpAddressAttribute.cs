@@ -81,7 +81,7 @@ namespace Grand.Framework.Mvc.Filters
                     actionName.Equals("AccessDenied", StringComparison.OrdinalIgnoreCase)))
                 {
                     //redirect to 'Access denied' page
-                    context.Result = new RedirectToActionResult("AccessDenied", "Security", context.RouteData.Values);
+                    context.Result = new RedirectToActionResult("AccessDenied", "Home", context.RouteData.Values);
                 }
             }
 

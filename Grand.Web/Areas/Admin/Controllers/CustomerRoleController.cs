@@ -1,5 +1,4 @@
 ﻿using Grand.Core;
-using Grand.Domain.Security;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -11,7 +10,6 @@ using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Customers;
-using Grand.Web.Areas.Admin.Models.Security;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -292,14 +290,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                if(access)
+                if (access)
                 {
                     if (!permissionRecord.CustomerRoles.Contains(customerRoleId))
                         permissionRecord.CustomerRoles.Add(customerRoleId);
                 }
                 else
                     if (permissionRecord.CustomerRoles.Contains(customerRoleId))
-                        permissionRecord.CustomerRoles.Remove(customerRoleId);
+                    permissionRecord.CustomerRoles.Remove(customerRoleId);
 
                 await _permissionService.UpdatePermissionRecord(permissionRecord);
 
