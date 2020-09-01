@@ -76,7 +76,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Index() => RedirectToAction("List");
 
         public async Task<IActionResult> List(int? orderStatusId = null,
-            int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null, string code = null, string tagid = null)
+            int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null, string code = null)
         {
             var model = await _orderViewModelService.PrepareOrderListModel(orderStatusId, paymentStatusId, shippingStatusId, startDate, _workContext.CurrentCustomer.StaffStoreId, code);
             return View(model);
