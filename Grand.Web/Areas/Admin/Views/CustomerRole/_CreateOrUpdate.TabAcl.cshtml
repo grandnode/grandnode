@@ -1,0 +1,109 @@
+﻿@model CustomerRoleModel
+
+@if (String.IsNullOrEmpty(Model.Id))
+{
+    <div class="note note-info">
+        @T("Admin.Customers.CustomerRoles.Acl.SaveBeforeEdit")
+    </div>
+}
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="acl-grid"></div>
+        </div>
+    </div>
+
+    <script>
+                $(document).ready(function () {
+                    $("#acl-grid").kendoGrid({
+                        dataSource: {
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("Acl", "CustomerRole", new {customerRoleId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                update: {
+                                    url: "@Html.Raw(Url.Action("AclUpdate", "CustomerRole", new { customerRoleId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Name: { editable: false, type: "string" },
+                                        SystemName: { editable: false },
+                                        Access: { editable: true, type: "boolean" },
+                                        Actions: { editable: false }
+                                    }
+                                }
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: true,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                        {
+                            field: "Name",
+                            title: "@T("Admin.Customers.CustomerRoles.Acl.Fields.Name")",
+                            width: 300,
+                        },
+                        {
+                            field: "Access",
+                            title: "@T("Admin.Customers.CustomerRoles.Acl.Fields.Access")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '# if(Access) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                        },
+                        {
+                            field: "Actions",
+                            title: "@T("Admin.Customers.CustomerRoles.Acl.Fields.Actions")",
+                            width: 10,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '# if(Actions.length > 0) {# <a class="k-link" onclick="javascript:OpenWindow(\'@Url.Content("~/Admin/Security/PermissionsAction")?systemname=#=SystemName#&customeRoleId=@Model.Id\', 600, 400, true); return false;"><i class="icon-settings"></i></a> #} #'
+
+                        },
+                        {
+                            command: [
+                                {
+                                    name: "edit",
+                                    text: {
+                                        edit: "@T("Admin.Common.Edit")",
+                                        update: "@T("Admin.Common.Update")",
+                                        cancel: "@T("Admin.Common.Cancel")"
+                                    }
+                                }
+                            ],
+                            width: 200,
+                            filterable: false
+                        }]
+                    });
+                });
+    </script>
+}

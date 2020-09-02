@@ -29,7 +29,6 @@ namespace Grand.Web.Features.Handlers.News
         private readonly IStoreContext _storeContext;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPictureService _pictureService;
-        private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
 
@@ -38,7 +37,7 @@ namespace Grand.Web.Features.Handlers.News
         private readonly CustomerSettings _customerSettings;
 
         public GetNewsItemHandler(ICacheManager cacheManager, IWorkContext workContext, IStoreContext storeContext, IDateTimeHelper dateTimeHelper,
-            IPictureService pictureService, IWebHelper webHelper, ILocalizationService localizationService, ICustomerService customerService,
+            IPictureService pictureService, ILocalizationService localizationService, ICustomerService customerService,
             MediaSettings mediaSettings, CaptchaSettings captchaSettings, CustomerSettings customerSettings)
         {
             _cacheManager = cacheManager;
@@ -46,7 +45,6 @@ namespace Grand.Web.Features.Handlers.News
             _storeContext = storeContext;
             _dateTimeHelper = dateTimeHelper;
             _pictureService = pictureService;
-            _webHelper = webHelper;
             _localizationService = localizationService;
             _customerService = customerService;
 

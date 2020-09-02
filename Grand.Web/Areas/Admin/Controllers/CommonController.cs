@@ -419,12 +419,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-exported-files")]
         public IActionResult MaintenanceDeleteFiles(MaintenanceModel model)
         {
-            DateTime? startDateValue = (model.DeleteExportedFiles.StartDate == null) ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
-
-            DateTime? endDateValue = (model.DeleteExportedFiles.EndDate == null) ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
             //TO DO
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
             return View(model);

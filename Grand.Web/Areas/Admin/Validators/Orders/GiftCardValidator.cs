@@ -11,7 +11,7 @@ namespace Grand.Web.Areas.Admin.Validators.Orders
     {
         public GiftCardValidator(
             IEnumerable<IValidatorConsumer<GiftCardModel>> validators,
-            ILocalizationService localizationService, IGiftCardService giftCardService)
+            ILocalizationService localizationService)
             : base(validators)
         {
             RuleFor(x => x.GiftCardCouponCode).NotEmpty().WithMessage(localizationService.GetResource("Admin.GiftCards.Fields.GiftCardCouponCode.Required"));

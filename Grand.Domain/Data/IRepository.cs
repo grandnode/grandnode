@@ -60,6 +60,12 @@ namespace Grand.Domain.Data
         Task<IEnumerable<T>> InsertAsync(IEnumerable<T> entities);
 
         /// <summary>
+        /// Async Insert many entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        Task InsertManyAsync(IEnumerable<T> entities);
+
+        /// <summary>
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>

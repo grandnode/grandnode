@@ -2013,7 +2013,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("togglefulltext")]
-        public async Task<IActionResult> ToggleFullText(GeneralCommonSettingsModel model)
+        public async Task<IActionResult> ToggleFullText()
         {
             //https://docs.mongodb.com/manual/reference/text-search-languages/#text-search-languages
             var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);

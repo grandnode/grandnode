@@ -107,6 +107,14 @@ namespace Grand.Domain.Data
             return entity;
         }
 
+        /// <summary>
+        /// Async Insert many entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        public virtual async Task InsertManyAsync(IEnumerable<T> entities)
+        {
+            await _collection.InsertManyAsync(entities);
+        }
 
         /// <summary>
         /// Insert entities

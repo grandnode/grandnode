@@ -231,12 +231,6 @@ namespace Grand.Web.Models.Catalog
 
         public partial class SpecificationFilterModel : BaseGrandModel
         {
-            #region Const
-
-            private const string QUERYSTRINGPARAM = "specs";
-
-            #endregion
-
             #region Ctor
 
             public SpecificationFilterModel()

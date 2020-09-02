@@ -394,6 +394,8 @@ namespace Grand.Services.Localization
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xml);
 
+            var localeStringResources = new List<LocaleStringResource>();
+
             var nodes = xmlDoc.SelectNodes(@"//Language/LocaleResource");
             foreach (XmlNode node in nodes)
             {
@@ -406,15 +408,16 @@ namespace Grand.Services.Localization
                 if (string.IsNullOrEmpty(name))
                     continue;
 
-                var lsr = (
+                localeStringResources.Add(
                     new LocaleStringResource
                     {
                         LanguageId = language.Id,
                         ResourceName = name.ToLowerInvariant(),
                         ResourceValue = value
-                    });
-                await _lsrRepository.InsertAsync(lsr);
+                });
             }
+
+            await _lsrRepository.InsertManyAsync(localeStringResources);
 
             //clear cache
             await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
