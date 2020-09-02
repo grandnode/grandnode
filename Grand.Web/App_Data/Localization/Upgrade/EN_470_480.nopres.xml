@@ -118,4 +118,7 @@
   <LocaleResource Name="Admin.Customers.CustomerRoles.Acl.SaveBeforeEdit">
     <Value>You need to save before you can edit access control list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.CustomRobotTxt">
+    Custom robot.txt
+  </LocaleResource>
 </Language>

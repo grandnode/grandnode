@@ -21400,4 +21400,7 @@
   <LocaleResource Name="Admin.Orders.List.OrderTagId">
     <Value>Order's tag</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.CustomRobotTxt">
+    Custom robot.txt
+  </LocaleResource>
 </Language>
