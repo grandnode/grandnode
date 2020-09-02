@@ -321,7 +321,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.IgnoredPaths.Add("/api");
                 options.IgnoredPaths.Add("/odata");
                 options.IgnoredPaths.Add("/health/live");
-                options.IgnoredPaths.Add("/.well-known/acme-challenge");
+                options.IgnoredPaths.Add("/.well-known/pki-validation");
                 //determine who can access the MiniProfiler results
                 options.ResultsAuthorize = request =>
                     !request.HttpContext.RequestServices.GetRequiredService<GrandConfig>().DisplayMiniProfilerInPublicStore ||

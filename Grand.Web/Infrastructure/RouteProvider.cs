@@ -427,7 +427,7 @@ namespace Grand.Web.Infrastructure
 
             //lets encrypt
             routeBuilder.MapControllerRoute("well-known",
-                            ".well-known/acme-challenge/{fileName}",
+                            ".well-known/pki-validation/{fileName}",
                             new { controller = "LetsEncrypt", action = "Index" });
 
 
