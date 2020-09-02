@@ -26,14 +26,13 @@ namespace Grand.Web.Features.Handlers.News
         private readonly INewsService _newsService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPictureService _pictureService;
-        private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
 
         private readonly NewsSettings _newsSettings;
         private readonly MediaSettings _mediaSettings;
 
         public GetHomePageNewsItemsHandler(ICacheManager cacheManager, IWorkContext workContext, IStoreContext storeContext,
-            INewsService newsService, IDateTimeHelper dateTimeHelper, IPictureService pictureService, IWebHelper webHelper,
+            INewsService newsService, IDateTimeHelper dateTimeHelper, IPictureService pictureService, 
             ILocalizationService localizationService, NewsSettings newsSettings, MediaSettings mediaSettings)
         {
             _cacheManager = cacheManager;
@@ -42,8 +41,6 @@ namespace Grand.Web.Features.Handlers.News
             _newsService = newsService;
             _dateTimeHelper = dateTimeHelper;
             _pictureService = pictureService;
-            _webHelper = webHelper;
-
             _localizationService = localizationService;
             _newsSettings = newsSettings;
             _mediaSettings = mediaSettings;

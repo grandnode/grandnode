@@ -24,7 +24,7 @@ namespace Grand.Web.ViewComponents
             _workContext = workContext;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData)
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart);
 

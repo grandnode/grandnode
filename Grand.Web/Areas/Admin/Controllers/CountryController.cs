@@ -277,7 +277,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var sp = await _countryViewModelService.InsertStateProvinceModel(model);
+                await _countryViewModelService.InsertStateProvinceModel(model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -316,7 +316,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                sp = await _countryViewModelService.UpdateStateProvinceModel(sp, model);
+                await _countryViewModelService.UpdateStateProvinceModel(sp, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }

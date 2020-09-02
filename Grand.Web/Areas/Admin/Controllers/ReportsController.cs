@@ -516,10 +516,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            string storeId = "";
-            if (_workContext.CurrentCustomer.IsStaff())
-                storeId = _workContext.CurrentCustomer.StaffStoreId;
-
             var model = new CountryReportModel
             {
                 //order statuses

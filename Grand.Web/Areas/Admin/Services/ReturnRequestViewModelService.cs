@@ -238,8 +238,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task NotifyCustomer(ReturnRequest returnRequest)
         {
             var order = await _orderService.GetOrderById(returnRequest.OrderId);
-            int queuedEmailId = await _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, order, _localizationSettings.DefaultAdminLanguageId);
-
+            await _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, order, _localizationSettings.DefaultAdminLanguageId);
         }
         public virtual ReturnReqestListModel PrepareReturnReqestListModel()
         {

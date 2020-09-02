@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Domain.Customers;
 using Grand.Domain.Security;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Models;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Commands.Models.Security;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Acl)]
     public partial class SecurityController : BaseAdminController
     {
         #region Fields
@@ -54,26 +55,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public IActionResult AccessDenied(string pageUrl)
-        {
-            var currentCustomer = _workContext.CurrentCustomer;
-            if (currentCustomer == null || currentCustomer.IsGuest())
-            {
-                _logger.Information(string.Format("Access denied to anonymous request on {0}", pageUrl));
-                return View();
-            }
-
-            _logger.Information(string.Format("Access denied to user #{0} '{1}' on {2}", currentCustomer.Email, currentCustomer.Email, pageUrl));
-
-
-            return View();
-        }
-
         public async Task<IActionResult> Permissions()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
-                return AccessDeniedView();
-
             var model = new PermissionMappingModel();
 
             var permissionRecords = await _permissionService.GetAllPermissionRecords();
@@ -105,9 +88,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("Permissions"), ParameterBasedOnFormName("save-continue", "install")]
         public async Task<IActionResult> PermissionsSave(IFormCollection form, bool install)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
-                return AccessDeniedView();
-
             if (!install)
             {
                 var permissionRecords = await _permissionService.GetAllPermissionRecords();
@@ -154,19 +134,34 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> PermissionsAction(string systemName, string customeRoleId)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
-                return AccessDeniedView();
-
             var model = new PermissionActionModel() {
                 SystemName = systemName,
                 CustomerRoleId = customeRoleId,
             };
 
+            var customerRole = await _customerService.GetCustomerRoleById(customeRoleId);
+            if (customerRole != null)
+            {
+                model.CustomerRoleName = customerRole.Name;
+            }
+            else
+            {
+                ViewBag.ClosePage = true;
+                return await PermissionsAction(systemName, customeRoleId);
+            }
+
             var permissionRecord = await _permissionService.GetPermissionRecordBySystemName(systemName);
             if (permissionRecord != null)
             {
                 model.AvailableActions = permissionRecord.Actions.ToList();
+                model.PermissionName = permissionRecord.GetLocalizedPermissionName(_localizationService, _workContext);
             }
+            else
+            {
+                ViewBag.ClosePage = true;
+                return await PermissionsAction(systemName, customeRoleId);
+            }
+
             model.DeniedActions = (await _permissionService.GetPermissionActions(systemName, customeRoleId)).Select(x => x.Action).ToList();
 
             return View(model);
@@ -175,9 +170,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> PermissionsAction(IFormCollection form)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
-                return AccessDeniedView();
-
             var systemname = form["SystemName"].ToString();
             var customerroleId = form["CustomerRoleId"].ToString();
 

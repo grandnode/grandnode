@@ -45,7 +45,7 @@ namespace Grand.Framework.Security.Authorization
             if (!await permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
                 context.Result = new ChallengeResult();
             else
-                context.Result = new RedirectToActionResult("AccessDenied", "Security", new { pageUrl = context.HttpContext.Request.Path });
+                context.Result = new RedirectToActionResult("AccessDenied", "Home", new { pageUrl = context.HttpContext.Request.Path });
 
             return;
         }
