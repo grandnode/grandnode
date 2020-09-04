@@ -6,6 +6,5 @@
     SystemName = "PromotionFeed.GoogleShopping",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.79",
-    FileName = "Grand.Plugin.Feed.GoogleShopping.dll"
+    Version = "1.80"
 )]

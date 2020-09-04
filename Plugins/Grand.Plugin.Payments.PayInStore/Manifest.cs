@@ -6,6 +6,5 @@
     SystemName = "Payments.PayInStore",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.08",
-    FileName = "Grand.Plugin.Payments.PayInStore.dll"
+    Version = "1.09"
 )]

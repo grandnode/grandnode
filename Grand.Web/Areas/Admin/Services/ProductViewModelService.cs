@@ -295,7 +295,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (_workContext.CurrentCustomer.IsStaff())
                 storeId = _workContext.CurrentCustomer.StaffStoreId;
 
-            if(string.IsNullOrEmpty(storeId))
+            if (string.IsNullOrEmpty(storeId))
                 model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
 
             foreach (var store in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
@@ -1872,7 +1872,7 @@ namespace Grand.Web.Areas.Admin.Services
             var model = new BulkEditListModel();
 
             var storeId = string.Empty;
-                            
+
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = await _categoryService.GetAllCategories(showHidden: true, storeId: storeId);
@@ -1893,7 +1893,8 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 storeId = _workContext.CurrentCustomer.StaffStoreId;
                 var store = (await _storeService.GetAllStores()).Where(x => x.Id == storeId).FirstOrDefault();
-                model.AvailableStores.Add(new SelectListItem { Text = store.Shortcut, Value = store.Id.ToString() });
+                if (store != null)
+                    model.AvailableStores.Add(new SelectListItem { Text = store.Shortcut, Value = store.Id.ToString() });
             }
             else
             {
@@ -2034,7 +2035,7 @@ namespace Grand.Web.Areas.Admin.Services
                 }
                 else
                     storeName = _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.Store.All");
-                
+
                 items.Add(new ProductModel.TierPriceModel {
                     Id = x.Id,
                     StoreId = x.StoreId,

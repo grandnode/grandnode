@@ -6,6 +6,5 @@
     SystemName = "Widgets.FacebookPixel",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.02",
-    FileName = "Grand.Plugin.Widgets.FacebookPixel.dll"
+    Version = "1.03"
 )]

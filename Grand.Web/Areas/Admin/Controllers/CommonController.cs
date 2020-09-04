@@ -674,7 +674,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Custom css/js
+        #region Custom css/js/robots.txt
 
         public async Task<IActionResult> CustomCss()
         {
@@ -703,6 +703,19 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> CustomRobotsTxt()
+        {
+            var model = new Editor();
+            var file = Path.Combine(CommonHelper.WebRootPath, "robots.custom.txt");
+            if (System.IO.File.Exists(file))
+            {
+                model.Content = await System.IO.File.ReadAllTextAsync(file);
+            }
+
+            return View(model);
+        }
+
+
         [HttpPost]
         public IActionResult SaveEditor(string content = "", bool css = true)
         {
@@ -720,6 +733,23 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
                     System.IO.File.WriteAllText(file, content, Encoding.UTF8);
                 }
+                return Json(_localizationService.GetResource("Admin.Common.Content.Saved"));
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult SaveRobotsTxt(string content = "")
+        {
+            try
+            {
+                var file = Path.Combine(CommonHelper.WebRootPath, "robots.custom.txt");
+
+                System.IO.File.WriteAllText(file, content, Encoding.UTF8);
+
                 return Json(_localizationService.GetResource("Admin.Common.Content.Saved"));
             }
             catch (Exception ex)

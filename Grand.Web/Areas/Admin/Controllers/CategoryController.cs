@@ -187,6 +187,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 locale.Name = category.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Description = category.GetLocalized(x => x.Description, languageId, false, false);
+                locale.BottomDescription = category.GetLocalized(x => x.BottomDescription, languageId, false, false);
                 locale.MetaKeywords = category.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = category.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = category.GetLocalized(x => x.MetaTitle, languageId, false, false);

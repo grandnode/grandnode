@@ -19,7 +19,7 @@ namespace Grand.Core.Infrastructure
         #region Fields
 
         private bool loadAppDomainAssemblies = true;
-        private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^Autofac|^AutoMapper|^Wkhtmltopdf|^FluentValidation|^itextsharp|^Serilog|^Swashbuckle|^MiniProfiler|^MongoDB|^MvcContrib|^Newtonsoft|^nunit|^dotliquid|^netstandard|^Google.Apis|^AWSSDK|^Braintree|^MediatR|^WebMarkupMin|^HealthChecks|^WebEssentials|^NWebsec|^NetEscapades|^Wangkanai|^dotnet-bundle|^MailKit|^MimeKit|^SkiaSharp|^StackExchange.Redis|^Google.Authenticator|^QRCoder";
+        private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^Autofac|^AutoMapper|^Wkhtmltopdf|^FluentValidation|^Serilog|^Swashbuckle|^MiniProfiler|^MongoDB|^MvcContrib|^Newtonsoft|^nunit|^dotliquid|^netstandard|^Google.Apis|^AWSSDK|^Braintree|^MediatR|^WebMarkupMin|^HealthChecks|^WebEssentials|^NWebsec|^NetEscapades|^Wangkanai|^dotnet-bundle|^MailKit|^MimeKit|^SkiaSharp|^StackExchange.Redis|^Google.Authenticator|^QRCoder";
         private string assemblyRestrictToLoadingPattern = ".*";
         private IList<string> assemblyNames = new List<string>();
 

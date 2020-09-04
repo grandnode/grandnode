@@ -243,26 +243,28 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
-            var result = await _mediator.Send(new ContactUsSendCommand() {
-                CaptchaValid = captchaValid,
-                Form = form,
-                Model = model,
-                Store = _storeContext.CurrentStore
-            });
-
-            if (result.errors.Any())
+            if (ModelState.IsValid)
             {
-                foreach (var item in result.errors)
+                var result = await _mediator.Send(new ContactUsSendCommand() {
+                    CaptchaValid = captchaValid,
+                    Form = form,
+                    Model = model,
+                    Store = _storeContext.CurrentStore
+                });
+
+                if (result.errors.Any())
                 {
-                    ModelState.AddModelError("", item);
+                    foreach (var item in result.errors)
+                    {
+                        ModelState.AddModelError("", item);
+                    }
+                }
+                else
+                {
+                    model = result.model;
+                    return View(model);
                 }
             }
-            else
-            {
-                model = result.model;
-                return View(model);
-            }
-
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
 
             return View(model);

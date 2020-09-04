@@ -33,6 +33,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         public string Description { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.BottomDescription")]
+
+        public string BottomDescription { get; set; }
+
         [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate")]
         public string ManufacturerTemplateId { get; set; }
         public IList<SelectListItem> AvailableManufacturerTemplates { get; set; }
@@ -199,6 +203,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Description")]
 
         public string Description { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.BottomDescription")]
+
+        public string BottomDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.MetaKeywords")]
 

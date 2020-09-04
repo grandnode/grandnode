@@ -6,6 +6,5 @@
     SystemName = "Tax.CountryStateZip",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.46",
-    FileName = "Grand.Plugin.Tax.CountryStateZip.dll"
+    Version = "1.47"
 )]

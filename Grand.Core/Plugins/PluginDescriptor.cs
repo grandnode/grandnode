@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Grand.Core.Plugins
 {
-    public class PluginDescriptor : IDescriptor, IComparable<PluginDescriptor>
+    public class PluginDescriptor : IDescriptor
     {
         public PluginDescriptor()
         {
@@ -89,7 +89,7 @@ namespace Grand.Core.Plugins
 
         public virtual T Instance<T>(IServiceProvider serviceProvider) where T : class, IPlugin
         {
-            object instance = null;
+            object instance;
             try
             {
                 instance = serviceProvider.GetRequiredService(PluginType);
@@ -109,30 +109,10 @@ namespace Grand.Core.Plugins
             return Instance<IPlugin>(serviceProvider);
         }
 
-        public int CompareTo(PluginDescriptor other)
-        {
-            if (DisplayOrder != other.DisplayOrder)
-                return DisplayOrder.CompareTo(other.DisplayOrder);
-
-            return FriendlyName.CompareTo(other.FriendlyName);
-        }
-
         public override string ToString()
         {
             return FriendlyName;
         }
 
-        public override bool Equals(object obj)
-        {
-            var other = obj as PluginDescriptor;
-            return other != null &&
-                SystemName != null &&
-                SystemName.Equals(other.SystemName);
-        }
-
-        public override int GetHashCode()
-        {
-            return SystemName.GetHashCode();
-        }
     }
 }

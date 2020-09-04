@@ -2500,6 +2500,12 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AvailableStores.Hint">
     <Value>Select stores for which the category will be shown.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.BottomDescription">
+    <Value>Bottom description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.BottomDescription.Hint">
+    <Value>Additional category description, which will be visible at the bottom of the page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.CategoryTemplate">
     <Value>Category template</Value>
   </LocaleResource>
@@ -2793,6 +2799,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AvailableStores.Hint">
     <Value>Select stores for which the manufacturer will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.BottomDescription">
+    <Value>Bottom description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.BottomDescription.Hint">
+    <Value>Additional manufacturer description, which will be visible at the bottom of the page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.CreatedOn">
     <Value>Created on</Value>
@@ -16033,6 +16045,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.CustomJs.Tip">
     <Value>Start typing, when you enter first letters of JS code, press CTRL + space and see hints.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.CustomRobotsTxt">
+    <Value>Custom Robots.txt</Value>
   </LocaleResource>
   <LocaleResource Name="admin.system.developertools">
     <Value>Developer Tools</Value>

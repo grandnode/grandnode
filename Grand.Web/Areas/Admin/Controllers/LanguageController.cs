@@ -75,6 +75,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _languageViewModelService.PrepareFlagsModel(model);
             //default values
             model.Published = true;
+            model.DisplayOrder = (await _languageService.GetAllLanguages()).Max(x => x.DisplayOrder) + 1;
             return View(model);
         }
 

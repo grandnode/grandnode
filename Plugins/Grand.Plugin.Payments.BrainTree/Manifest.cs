@@ -6,6 +6,5 @@
     SystemName = "Payments.BrainTree",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.04",
-    FileName = "Grand.Plugin.Payments.BrainTree.dll"
+    Version = "1.05"
 )]

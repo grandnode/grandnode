@@ -2,7 +2,7 @@
 
 namespace Grand.Core.Plugins
 {
-    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Assembly)]
     public class PluginInfoAttribute : Attribute
     {
         public string Group { get; set; } = string.Empty;
@@ -11,6 +11,5 @@ namespace Grand.Core.Plugins
         public string Author { get; set; } = string.Empty;
         public string SupportedVersion { get; set; }
         public string Version { get; set; }
-        public string FileName { get; set; }
     }
 }

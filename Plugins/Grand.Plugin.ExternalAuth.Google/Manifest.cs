@@ -6,6 +6,5 @@
     SystemName = "ExternalAuth.Google",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.04",
-    FileName = "Grand.Plugin.ExternalAuth.Google.dll"
+    Version = "1.05"
 )]
