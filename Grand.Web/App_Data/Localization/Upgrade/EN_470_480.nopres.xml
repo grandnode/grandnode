@@ -119,6 +119,6 @@
     <Value>You need to save before you can edit access control list.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.CustomRobotTxt">
-    Custom robot.txt
+    <Value> Robot.txt </Value>
   </LocaleResource>
 </Language>

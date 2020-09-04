@@ -6,12 +6,8 @@
 }
 @{
     pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/codemirror.js", excludeFromBundle: true);
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/mode/css/css.js", excludeFromBundle: true);
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/hint/show-hint.js", excludeFromBundle: true);
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/hint/css-hint.js", excludeFromBundle: true);
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/edit/matchbrackets.js", excludeFromBundle: true);
     pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/codemirror/codemirror.css", excludeFromBundle: true);
-    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/codemirror/hint/show-hint.css", excludeFromBundle: true);
+    
 }
 <style>
     .CodeMirror {
