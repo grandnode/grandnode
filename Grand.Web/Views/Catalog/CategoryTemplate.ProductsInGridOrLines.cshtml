@@ -155,6 +155,15 @@
 
         }
     }
+    @*bottom description*@
+    @if (!String.IsNullOrWhiteSpace(Model.BottomDescription))
+    {
+        <div class="card category-description">
+            <div class="card-body py-0">
+                @Html.Raw(Model.BottomDescription)
+            </div>
+        </div>
+    }
 </div>
 @section filters
     {

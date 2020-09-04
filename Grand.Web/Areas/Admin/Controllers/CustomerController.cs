@@ -882,7 +882,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Customer Product Personalize / Price
 
-        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ProductsPrice(DataSourceRequest command, string customerId)
         {
@@ -896,7 +896,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> PersonalizedProducts(DataSourceRequest command, string customerId)
         {
