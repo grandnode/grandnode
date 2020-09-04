@@ -31,6 +31,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
 
         public string Description { get; set; }
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.BottomDescription")]
+
+        public string BottomDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.CategoryTemplate")]
         public string CategoryTemplateId { get; set; }
@@ -219,6 +222,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
 
         public string Description { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.BottomDescription")]
+
+        public string BottomDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
 

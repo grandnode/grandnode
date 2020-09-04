@@ -30,6 +30,12 @@ namespace Grand.Domain.Catalog
         /// </summary>
         public string Description { get; set; }
 
+        
+        /// <summary>
+        /// Gets or sets the bottom description
+        /// </summary>
+        public string BottomDescription { get; set; }
+
         /// <summary>
         /// Gets or sets a value of used category template identifier
         /// </summary>
