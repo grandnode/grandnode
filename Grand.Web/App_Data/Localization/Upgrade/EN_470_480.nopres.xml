@@ -118,12 +118,15 @@
   <LocaleResource Name="Admin.Customers.CustomerRoles.Acl.SaveBeforeEdit">
     <Value>You need to save before you can edit access control list.</Value>
   </LocaleResource>
-<LocaleResource Name="Admin.Catalog.Categories.Fields.BottomDescription">
-  <Value>Bottom description</Value>
-</LocaleResource>
-<LocaleResource Name="Admin.Catalog.Categories.Fields.BottomDescription.Hint">
-  <Value>Additional category description, which will be visible at the bottom of the page.</Value>
-</LocaleResource>
+  <LocaleResource Name="Admin.System.CustomRobotTxt">
+    <Value> Robot.txt </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.BottomDescription">
+    <Value>Bottom description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.BottomDescription.Hint">
+    <Value>Additional category description, which will be visible at the bottom of the page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.BottomDescription">
     <Value>Bottom description</Value>
   </LocaleResource>
