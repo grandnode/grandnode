@@ -2800,6 +2800,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AvailableStores.Hint">
     <Value>Select stores for which the manufacturer will be shown.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.BottomDescription">
+    <Value>Bottom description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.BottomDescription.Hint">
+    <Value>Additional manufacturer description, which will be visible at the bottom of the page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
