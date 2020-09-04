@@ -2,7 +2,7 @@
 @inject IPageHeadBuilder pagebuilder
 @{
     //page title
-    ViewBag.Title = T("Admin.System.CustomRobotTxt").Text;
+    ViewBag.Title = T("Admin.System.CustomRobotsTxt").Text;
 }
 @{
     pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/codemirror.js", excludeFromBundle: true);
@@ -23,7 +23,7 @@
             <div class="x_title">
                 <div class="caption level-caption">
                     <i class="fa fa-sitemap"></i>
-                    @T("Admin.System.CustomRobotTxt")
+                    @T("Admin.System.CustomRobotsTxt")
                 </div>
             </div>
             <div class="actions">
@@ -41,15 +41,13 @@
                 <script>
                     $(document).ready(function () {
                         var editor = CodeMirror.fromTextArea(document.getElementById('Content'), {
-                            lineNumbers: true,
-                            matchBrackets: true,
-                            extraKeys: { "Ctrl-Space": "autocomplete" }
+                            lineNumbers: true
                         });
 
                         $('#btnSave').click(function () {
 				            $.ajax({
 					            cache: false,
-					            url: "@Url.Action("SaveRobotTxt", "Common")",
+					            url: "@Url.Action("SaveRobotsTxt", "Common")",
                                 data: additionalData(),
 					            type: 'POST',
 					            success: function (response) {
