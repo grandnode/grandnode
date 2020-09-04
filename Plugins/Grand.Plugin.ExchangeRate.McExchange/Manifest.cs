@@ -6,6 +6,5 @@
     SystemName = "CurrencyExchange.MoneyConverter",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.09",
-    FileName = "Grand.Plugin.ExchangeRate.McExchange.dll"
+    Version = "1.10"
 )]

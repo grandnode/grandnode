@@ -6,6 +6,5 @@
     SystemName = "Misc.EuropaCheckVat",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.00",
-    FileName = "Grand.Plugin.Misc.EuropaCheckVat.dll"
+    Version = "1.01"
 )]

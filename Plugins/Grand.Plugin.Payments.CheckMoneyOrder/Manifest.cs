@@ -6,6 +6,5 @@
     SystemName = "Payments.CheckMoneyOrder",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.18",
-    FileName = "Grand.Plugin.Payments.CheckMoneyOrder.dll"
+    Version = "1.19"
 )]

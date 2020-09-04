@@ -6,6 +6,5 @@
     SystemName = "Tax.FixedRate",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.15",
-    FileName = "Grand.Plugin.Tax.FixedRate.dll"
+    Version = "1.16"
 )]
