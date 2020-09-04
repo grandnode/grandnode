@@ -6,6 +6,5 @@
     SystemName = "Widgets.GoogleAnalytics",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "2.04",
-    FileName = "Grand.Plugin.Widgets.GoogleAnalytics.dll"
+    Version = "2.05"
 )]

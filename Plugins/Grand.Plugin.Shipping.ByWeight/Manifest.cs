@@ -6,6 +6,5 @@
     SystemName = "Shipping.ByWeight",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.46",
-    FileName = "Grand.Plugin.Shipping.ByWeight.dll"
+    Version = "1.47"
 )]
