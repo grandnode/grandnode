@@ -1,5 +1,4 @@
-﻿using Grand.Core.ComponentModel;
-using Grand.Core.Configuration;
+﻿using Grand.Core.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Serilog;
@@ -11,7 +10,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Grand.Core.Plugins
@@ -31,8 +29,9 @@ namespace Grand.Core.Plugins
 
         #region Fields
 
-        private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
         private static DirectoryInfo _shadowCopyFolder;
+        private static DirectoryInfo _pluginFolder;
+        private static GrandConfig _config;
 
         #endregion
 
@@ -57,161 +56,256 @@ namespace Grand.Core.Plugins
             if (mvcCoreBuilder == null)
                 throw new ArgumentNullException("mvcCoreBuilder");
 
-            if (config == null)
-                throw new ArgumentNullException("config");
+            _config = config ?? throw new ArgumentNullException("config");
 
-            using (new WriteLockDisposable(Locker))
+            _pluginFolder = new DirectoryInfo(CommonHelper.MapPath(PluginsPath));
+            _shadowCopyFolder = new DirectoryInfo(CommonHelper.MapPath(ShadowCopyPath));
+
+            var referencedPlugins = new List<PluginDescriptor>();
+            var incompatiblePlugins = new List<string>();
+
+            try
             {
-                var pluginFolder = new DirectoryInfo(CommonHelper.MapPath(PluginsPath));
-                _shadowCopyFolder = new DirectoryInfo(CommonHelper.MapPath(ShadowCopyPath));
+                var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
 
-                var referencedPlugins = new List<PluginDescriptor>();
-                var incompatiblePlugins = new List<string>();
+                Log.Information("Creating shadow copy folder and querying for dlls");
+                //ensure folders are created
+                Directory.CreateDirectory(_pluginFolder.FullName);
+                Directory.CreateDirectory(_shadowCopyFolder.FullName);
 
-                try
+                //get list of all files in bin
+                var binFiles = _shadowCopyFolder.GetFiles("*", SearchOption.AllDirectories);
+                if (config.ClearPluginShadowDirectoryOnStartup)
                 {
-                    var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
-
-                    Log.Information("Creating shadow copy folder and querying for dlls");
-                    //ensure folders are created
-                    Directory.CreateDirectory(pluginFolder.FullName);
-                    Directory.CreateDirectory(_shadowCopyFolder.FullName);
-
-                    //get list of all files in bin
-                    var binFiles = _shadowCopyFolder.GetFiles("*", SearchOption.AllDirectories);
-                    if (config.ClearPluginShadowDirectoryOnStartup)
+                    //clear out shadow copied plugins
+                    foreach (var f in binFiles)
                     {
-                        //clear out shadow copied plugins
-                        foreach (var f in binFiles)
-                        {
-                            Log.Information($"Deleting {f.Name}");
-                            try
-                            {
-                                //ignore index.htm
-                                var fileName = Path.GetFileName(f.FullName);
-                                if (fileName.Equals("index.htm", StringComparison.OrdinalIgnoreCase))
-                                    continue;
-
-                                File.Delete(f.FullName);
-                            }
-                            catch (Exception exc)
-                            {
-                                Log.Error(exc, "PluginManager");
-                            }
-                        }
-                    }
-
-                    //load description files
-                    foreach (var pluginDescriptor in GetDescriptions(pluginFolder, _shadowCopyFolder, config))
-                    {
-                        //ensure that version of plugin is valid
-                        if (!pluginDescriptor.SupportedVersions.Contains(GrandVersion.CurrentVersion, StringComparer.OrdinalIgnoreCase))
-                        {
-                            incompatiblePlugins.Add(pluginDescriptor.SystemName);
-                            continue;
-                        }
-
-                        //some validation
-                        if (string.IsNullOrWhiteSpace(pluginDescriptor.SystemName))
-                            throw new Exception(string.Format("A plugin '{0}' has no system name. Try assigning the plugin a unique name and recompiling.", pluginDescriptor.SystemName));
-                        if (referencedPlugins.Contains(pluginDescriptor))
-                            throw new Exception(string.Format("A plugin with '{0}' system name is already defined", pluginDescriptor.SystemName));
-
-                        //set 'Installed' property
-                        pluginDescriptor.Installed = installedPluginSystemNames
-                            .FirstOrDefault(x => x.Equals(pluginDescriptor.SystemName, StringComparison.OrdinalIgnoreCase)) != null;
-
+                        Log.Information($"Deleting {f.Name}");
                         try
                         {
-                            if (!config.PluginShadowCopy)
-                            {
-                                //remove deps.json files 
-                                var depsFiles = pluginDescriptor.OriginalAssemblyFile.Directory.GetFiles("*.deps.json", SearchOption.TopDirectoryOnly);
-                                foreach (var f in depsFiles)
-                                {
-                                    try
-                                    {
-                                        File.Delete(f.FullName);
-                                    }
-                                    catch (Exception exc)
-                                    {
-                                        Log.Error(exc, "PluginManager");
-                                    }
-                                }
-                            }
+                            //ignore index.htm
+                            var fileName = Path.GetFileName(f.FullName);
+                            if (fileName.Equals("index.htm", StringComparison.OrdinalIgnoreCase))
+                                continue;
 
-                            //main plugin file
-                            AddApplicationPart(mvcCoreBuilder, pluginDescriptor.ReferencedAssembly, pluginDescriptor.SystemName, pluginDescriptor.PluginFileName);
-
-                            //get list of all DLLs in plugins (not in bin!)
-                            /*var pluginFiles = pluginDescriptor.OriginalAssemblyFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
-                                .Where(x => IsPackagePluginFolder(x.Directory))
-                                .Where(x => !x.Name.Equals(pluginDescriptor.PluginFileName, StringComparison.OrdinalIgnoreCase))
-                                .ToList();
-
-                            //load all other referenced assemblies now
-                            foreach (var plugin in pluginFiles)
-                            {
-                                //var assembly = Assembly.LoadFile(plugin.FullName);
-                                var _plug = config.PluginShadowCopy ? ShadowCopyFile(plugin, Directory.CreateDirectory(_shadowCopyFolder.FullName)) : plugin;
-                                Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(_plug.FullName);
-
-                                //Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(_plug.FullName);
-                                //var assembly = Assembly.Load(File.ReadAllBytes(plugin.FullName));
-                                AddApplicationPart(mvcCoreBuilder, assembly, pluginDescriptor.SystemName, plugin.Name);
-                            }
-                            */
-                            //init plugin type (only one plugin per assembly is allowed)
-                            foreach (var t in pluginDescriptor.ReferencedAssembly.GetTypes())
-                                if (typeof(IPlugin).IsAssignableFrom(t))
-                                    if (!t.GetTypeInfo().IsInterface)
-                                        if (t.GetTypeInfo().IsClass && !t.GetTypeInfo().IsAbstract)
-                                        {
-                                            pluginDescriptor.PluginType = t;
-                                            break;
-                                        }
-
-                            referencedPlugins.Add(pluginDescriptor);
+                            File.Delete(f.FullName);
                         }
-                        catch (ReflectionTypeLoadException ex)
+                        catch (Exception exc)
                         {
-                            //add a plugin name. this way we can easily identify a problematic plugin
-                            var msg = string.Format("Plugin '{0}'. ", pluginDescriptor.FriendlyName);
-                            foreach (var e in ex.LoaderExceptions)
-                                msg += e.Message + Environment.NewLine;
-
-                            var fail = new Exception(msg, ex);
-                            throw fail;
-                        }
-                        catch (Exception ex)
-                        {
-                            //add a plugin name. this way we can easily identify a problematic plugin
-                            var msg = string.Format("Plugin '{0}'. {1}", pluginDescriptor.FriendlyName, ex.Message);
-
-                            var fail = new Exception(msg, ex);
-                            throw fail;
+                            Log.Error(exc, "PluginManager");
                         }
                     }
                 }
-                catch (Exception ex)
+
+                //load description files
+                foreach (var pluginDescriptor in GetDescriptions())
                 {
-                    var msg = string.Empty;
-                    for (var e = ex; e != null; e = e.InnerException)
-                        msg += e.Message + Environment.NewLine;
+                    //ensure that version of plugin is valid
+                    if (!pluginDescriptor.SupportedVersions.Contains(GrandVersion.CurrentVersion, StringComparer.OrdinalIgnoreCase))
+                    {
+                        incompatiblePlugins.Add(pluginDescriptor.SystemName);
+                        continue;
+                    }
 
-                    var fail = new Exception(msg, ex);
-                    throw fail;
+                    //some validation
+                    if (string.IsNullOrWhiteSpace(pluginDescriptor.SystemName))
+                        throw new Exception(string.Format("A plugin '{0}' has no system name. Try assigning the plugin a unique name and recompiling.", pluginDescriptor.SystemName));
+                    if (referencedPlugins.Contains(pluginDescriptor))
+                        throw new Exception(string.Format("A plugin with '{0}' system name is already defined", pluginDescriptor.SystemName));
+
+                    //set 'Installed' property
+                    pluginDescriptor.Installed = installedPluginSystemNames
+                        .FirstOrDefault(x => x.Equals(pluginDescriptor.SystemName, StringComparison.OrdinalIgnoreCase)) != null;
+
+                    try
+                    {
+                        if (!config.PluginShadowCopy)
+                        {
+                            //remove deps.json files 
+                            var depsFiles = pluginDescriptor.OriginalAssemblyFile.Directory.GetFiles("*.deps.json", SearchOption.TopDirectoryOnly);
+                            foreach (var f in depsFiles)
+                            {
+                                try
+                                {
+                                    File.Delete(f.FullName);
+                                }
+                                catch (Exception exc)
+                                {
+                                    Log.Error(exc, "PluginManager");
+                                }
+                            }
+                        }
+
+                        //main plugin file
+                        AddApplicationPart(mvcCoreBuilder, pluginDescriptor.ReferencedAssembly, pluginDescriptor.SystemName, pluginDescriptor.PluginFileName);
+
+                        //init plugin type (only one plugin per assembly is allowed)
+                        foreach (var t in pluginDescriptor.ReferencedAssembly.GetTypes())
+                            if (typeof(IPlugin).IsAssignableFrom(t))
+                                if (!t.GetTypeInfo().IsInterface)
+                                    if (t.GetTypeInfo().IsClass && !t.GetTypeInfo().IsAbstract)
+                                    {
+                                        pluginDescriptor.PluginType = t;
+                                        break;
+                                    }
+
+                        referencedPlugins.Add(pluginDescriptor);
+                    }
+                    catch (ReflectionTypeLoadException ex)
+                    {
+                        //add a plugin name. this way we can easily identify a problematic plugin
+                        var msg = string.Format("Plugin '{0}'. ", pluginDescriptor.FriendlyName);
+                        foreach (var e in ex.LoaderExceptions)
+                            msg += e.Message + Environment.NewLine;
+
+                        var fail = new Exception(msg, ex);
+                        throw fail;
+                    }
+                    catch (Exception ex)
+                    {
+                        //add a plugin name. this way we can easily identify a problematic plugin
+                        var msg = string.Format("Plugin '{0}'. {1}", pluginDescriptor.FriendlyName, ex.Message);
+
+                        var fail = new Exception(msg, ex);
+                        throw fail;
+                    }
                 }
-
-                ReferencedPlugins = referencedPlugins;
-                IncompatiblePlugins = incompatiblePlugins;
-
             }
+            catch (Exception ex)
+            {
+                var msg = string.Empty;
+                for (var e = ex; e != null; e = e.InnerException)
+                    msg += e.Message + Environment.NewLine;
+
+                var fail = new Exception(msg, ex);
+                throw fail;
+            }
+
+            ReferencedPlugins = referencedPlugins;
+            IncompatiblePlugins = incompatiblePlugins;
+
         }
 
-        public static PluginDescriptor PreparePluginDescriptor(FileInfo pluginFile, DirectoryInfo _shadowCopyFolder, GrandConfig config)
+        /// <summary>
+        /// Mark plugin as installed
+        /// </summary>
+        /// <param name="systemName">Plugin system name</param>
+        public static async Task MarkPluginAsInstalled(string systemName)
         {
-            var _plug = config.PluginShadowCopy ? ShadowCopyFile(pluginFile, Directory.CreateDirectory(_shadowCopyFolder.FullName)) : pluginFile;
+            if (string.IsNullOrEmpty(systemName))
+                throw new ArgumentNullException("systemName");
+
+            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
+            if (!File.Exists(filePath))
+                using (File.Create(filePath))
+                {
+                    //we use 'using' to close the file after it's created
+                }
+
+
+            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
+            var alreadyMarkedAsInstalled = installedPluginSystemNames
+                                .FirstOrDefault(x => x.Equals(systemName, StringComparison.OrdinalIgnoreCase)) != null;
+            if (!alreadyMarkedAsInstalled)
+                installedPluginSystemNames.Add(systemName);
+            await PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames, filePath);
+        }
+
+        /// <summary>
+        /// Mark plugin as uninstalled
+        /// </summary>
+        /// <param name="systemName">Plugin system name</param>
+        public static async Task MarkPluginAsUninstalled(string systemName)
+        {
+            if (string.IsNullOrEmpty(systemName))
+                throw new ArgumentNullException("systemName");
+
+            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
+            if (!File.Exists(filePath))
+                using (File.Create(filePath))
+                {
+                    //we use 'using' to close the file after it's created
+                }
+
+
+            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
+            var alreadyMarkedAsInstalled = installedPluginSystemNames
+                                .FirstOrDefault(x => x.Equals(systemName, StringComparison.OrdinalIgnoreCase)) != null;
+            if (alreadyMarkedAsInstalled)
+                installedPluginSystemNames.Remove(systemName);
+            await PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames, filePath);
+        }
+
+        /// <summary>
+        /// Mark plugin as uninstalled
+        /// </summary>
+        public static void MarkAllPluginsAsUninstalled()
+        {
+            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+        }
+
+        /// <summary>
+        /// Find a plugin descriptor by some type which is located into the same assembly as plugin
+        /// </summary>
+        /// <param name="typeInAssembly">Type</param>
+        /// <returns>Plugin descriptor if exists; otherwise null</returns>
+        public static PluginDescriptor FindPlugin(Type typeInAssembly)
+        {
+            if (typeInAssembly == null)
+                throw new ArgumentNullException("typeInAssembly");
+
+            if (ReferencedPlugins == null)
+                return null;
+
+            return ReferencedPlugins.FirstOrDefault(plugin => plugin.ReferencedAssembly != null
+                && plugin.ReferencedAssembly.FullName.Equals(typeInAssembly.GetTypeInfo().Assembly.FullName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Get description files
+        /// </summary>
+        /// <param name="pluginFolder">Plugin directory info</param>
+        /// <returns>Original and parsed description files</returns>
+        private static IList<PluginDescriptor> GetDescriptions()
+        {
+            if (_pluginFolder == null)
+                throw new ArgumentNullException("pluginFolder");
+
+            //create list (<file info, parsed plugin descritor>)
+            var result = new List<PluginDescriptor>();
+            //add display order and path to list
+            foreach (var pluginFile in _pluginFolder.GetFiles("*.dll", SearchOption.AllDirectories))
+            {
+                if (!IsPackagePluginFolder(pluginFile.Directory))
+                    continue;
+
+                if (!string.IsNullOrEmpty(_config.PluginSkipLoadingPattern)
+                    && Matches(pluginFile.Name, _config.PluginSkipLoadingPattern))
+                    continue;
+
+                //prepare plugin descriptor
+                var pluginDescriptor = PreparePluginDescriptor(pluginFile);
+                if (pluginDescriptor == null)
+                    continue;
+
+                //populate list
+                result.Add(pluginDescriptor);
+            }
+
+            //sort list by display order.
+            result = result.OrderBy(x => x.DisplayOrder).ToList();
+            return result;
+        }
+
+        private static PluginDescriptor PreparePluginDescriptor(FileInfo pluginFile)
+        {
+            var _plug = _config.PluginShadowCopy ? ShadowCopyFile(pluginFile, Directory.CreateDirectory(_shadowCopyFolder.FullName)) : pluginFile;
 
             Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(_plug.FullName);
 
@@ -313,123 +407,6 @@ namespace Grand.Core.Plugins
             return shadowCopiedPlug;
         }
 
-
-        /// <summary>
-        /// Mark plugin as installed
-        /// </summary>
-        /// <param name="systemName">Plugin system name</param>
-        public static async Task MarkPluginAsInstalled(string systemName)
-        {
-            if (string.IsNullOrEmpty(systemName))
-                throw new ArgumentNullException("systemName");
-
-            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
-            if (!File.Exists(filePath))
-                using (File.Create(filePath))
-                {
-                    //we use 'using' to close the file after it's created
-                }
-
-
-            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
-            var alreadyMarkedAsInstalled = installedPluginSystemNames
-                                .FirstOrDefault(x => x.Equals(systemName, StringComparison.OrdinalIgnoreCase)) != null;
-            if (!alreadyMarkedAsInstalled)
-                installedPluginSystemNames.Add(systemName);
-            await PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames, filePath);
-        }
-
-        /// <summary>
-        /// Mark plugin as uninstalled
-        /// </summary>
-        /// <param name="systemName">Plugin system name</param>
-        public static async Task MarkPluginAsUninstalled(string systemName)
-        {
-            if (string.IsNullOrEmpty(systemName))
-                throw new ArgumentNullException("systemName");
-
-            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
-            if (!File.Exists(filePath))
-                using (File.Create(filePath))
-                {
-                    //we use 'using' to close the file after it's created
-                }
-
-
-            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
-            var alreadyMarkedAsInstalled = installedPluginSystemNames
-                                .FirstOrDefault(x => x.Equals(systemName, StringComparison.OrdinalIgnoreCase)) != null;
-            if (alreadyMarkedAsInstalled)
-                installedPluginSystemNames.Remove(systemName);
-            await PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames, filePath);
-        }
-
-        /// <summary>
-        /// Mark plugin as uninstalled
-        /// </summary>
-        public static void MarkAllPluginsAsUninstalled()
-        {
-            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
-            if (File.Exists(filePath))
-                File.Delete(filePath);
-        }
-
-        /// <summary>
-        /// Find a plugin descriptor by some type which is located into the same assembly as plugin
-        /// </summary>
-        /// <param name="typeInAssembly">Type</param>
-        /// <returns>Plugin descriptor if exists; otherwise null</returns>
-        public static PluginDescriptor FindPlugin(Type typeInAssembly)
-        {
-            if (typeInAssembly == null)
-                throw new ArgumentNullException("typeInAssembly");
-
-            if (ReferencedPlugins == null)
-                return null;
-
-            return ReferencedPlugins.FirstOrDefault(plugin => plugin.ReferencedAssembly != null
-                && plugin.ReferencedAssembly.FullName.Equals(typeInAssembly.GetTypeInfo().Assembly.FullName, StringComparison.OrdinalIgnoreCase));
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Get description files
-        /// </summary>
-        /// <param name="pluginFolder">Plugin directory info</param>
-        /// <returns>Original and parsed description files</returns>
-        private static IList<PluginDescriptor> GetDescriptions(DirectoryInfo pluginFolder, DirectoryInfo _shadowCopyFolder, GrandConfig config)
-        {
-            if (pluginFolder == null)
-                throw new ArgumentNullException("pluginFolder");
-
-            //create list (<file info, parsed plugin descritor>)
-            var result = new List<PluginDescriptor>();
-            //add display order and path to list
-            foreach (var pluginFile in pluginFolder.GetFiles("*.dll", SearchOption.AllDirectories))
-            {
-                if (!IsPackagePluginFolder(pluginFile.Directory))
-                    continue;
-
-                if(!string.IsNullOrEmpty(config.PluginSkipLoadingPattern) 
-                    && Matches(pluginFile.Name, config.PluginSkipLoadingPattern))
-                    continue;
-
-                //prepare plugin descriptor
-                var pluginDescriptor = PreparePluginDescriptor(pluginFile, _shadowCopyFolder, config);
-                if (pluginDescriptor == null)
-                    continue;
-
-                //populate list
-                result.Add(pluginDescriptor);
-            }
-
-            //sort list by display order.
-            result = result.OrderBy(x => x.DisplayOrder).ToList();
-            return result;
-        }
         private static bool Matches(string fullName, string pattern)
         {
             return Regex.IsMatch(fullName, pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
