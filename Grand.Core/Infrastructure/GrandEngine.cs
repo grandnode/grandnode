@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using AutoMapper;
-using Grand.Core.ComponentModel;
 using Grand.Core.Configuration;
 using Grand.Core.Extensions;
 using Grand.Core.Infrastructure.DependencyManagement;
