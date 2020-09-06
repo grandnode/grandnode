@@ -287,12 +287,11 @@ namespace Grand.Framework.Infrastructure.Extensions
             mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             //add fluent validation
+            var typeFinder = new WebAppTypeFinder();
+
             mvcBuilder.AddFluentValidation(configuration =>
             {
-                var assemblies = mvcBuilder.PartManager.ApplicationParts
-                    .OfType<AssemblyPart>()
-                    .Where(part => part.Name.StartsWith("Grand", StringComparison.InvariantCultureIgnoreCase))
-                    .Select(part => part.Assembly);
+                var assemblies = typeFinder.GetAssemblies();
                 configuration.RegisterValidatorsFromAssemblies(assemblies);
                 configuration.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                 //implicit/automatic validation of child properties
