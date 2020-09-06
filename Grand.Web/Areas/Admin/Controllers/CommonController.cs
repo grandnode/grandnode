@@ -172,7 +172,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Value = header.Value
                 });
             }
-            foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().ToList().OrderBy(x=>x.FullName))
             {
                 model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly {
                     FullName = assembly.FullName,
