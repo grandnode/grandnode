@@ -47,15 +47,20 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
             model.EcommerceScript = googleAnalyticsSettings.EcommerceScript;
             model.EcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
             model.IncludingTax = googleAnalyticsSettings.IncludingTax;
-
+            model.AllowToDisableConsentCookie = googleAnalyticsSettings.AllowToDisableConsentCookie;
+            model.ConsentName = googleAnalyticsSettings.ConsentName;
+            model.ConsentDescription = googleAnalyticsSettings.ConsentDescription;
             model.ActiveStoreScopeConfiguration = storeScope;
-            if (!String.IsNullOrEmpty(storeScope))
+            if (!string.IsNullOrEmpty(storeScope))
             {
                 model.GoogleId_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.GoogleId, storeScope);
                 model.TrackingScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.TrackingScript, storeScope);
                 model.EcommerceScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceScript, storeScope);
                 model.EcommerceDetailScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope);
                 model.IncludingTax_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
+                model.AllowToDisableConsentCookie_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.AllowToDisableConsentCookie, storeScope);
+                model.ConsentName_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.ConsentName, storeScope);
+                model.ConsentDescription_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.ConsentDescription, storeScope);
             }
 
             return View("~/Plugins/Widgets.GoogleAnalytics/Views/Configure.cshtml", model);
@@ -72,6 +77,9 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
             googleAnalyticsSettings.EcommerceScript = model.EcommerceScript;
             googleAnalyticsSettings.EcommerceDetailScript = model.EcommerceDetailScript;
             googleAnalyticsSettings.IncludingTax = model.IncludingTax;
+            googleAnalyticsSettings.AllowToDisableConsentCookie = model.AllowToDisableConsentCookie;
+            googleAnalyticsSettings.ConsentName = model.ConsentName;
+            googleAnalyticsSettings.ConsentDescription = model.ConsentDescription;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -100,6 +108,21 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
                 await _settingService.SaveSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
+
+            if (model.AllowToDisableConsentCookie_OverrideForStore || String.IsNullOrEmpty(storeScope))
+                await _settingService.SaveSetting(googleAnalyticsSettings, x => x.AllowToDisableConsentCookie, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.AllowToDisableConsentCookie, storeScope);
+
+            if (model.ConsentName_OverrideForStore || String.IsNullOrEmpty(storeScope))
+                await _settingService.SaveSetting(googleAnalyticsSettings, x => x.ConsentName, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.ConsentName, storeScope);
+
+            if (model.ConsentDescription_OverrideForStore || String.IsNullOrEmpty(storeScope))
+                await _settingService.SaveSetting(googleAnalyticsSettings, x => x.ConsentDescription, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.ConsentDescription, storeScope);
 
             //now clear settings cache
             await _settingService.ClearCache();
