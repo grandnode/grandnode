@@ -23,6 +23,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -345,6 +346,56 @@ namespace Grand.Web.Controllers
             //save setting
             await genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.EuCookieLawAccepted, true, _storeContext.CurrentStore.Id);
             return Json(new { stored = true });
+        }
+
+        [CheckAccessClosedStore(true)]
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
+        public virtual async Task<IActionResult> PrivacyPreference([FromServices] StoreInformationSettings 
+            storeInformationSettings)
+        {
+            if (!storeInformationSettings.DisplayEuCookieLawWarning)
+                //disabled
+                return Content("");
+
+            var model = await _mediator.Send(new GetPrivacyPreference() {
+                Customer = _workContext.CurrentCustomer,
+                Store = _storeContext.CurrentStore
+            });
+
+            return Json(new
+            {
+                html = await RenderPartialViewToString(model)
+            });
+        }
+
+        [HttpPost]
+        [CheckAccessClosedStore(true)]
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
+        public virtual async Task<IActionResult> PrivacyPreference(IFormCollection form,
+            [FromServices] IGenericAttributeService genericAttributeService,
+            [FromServices] ICookiePreference _cookiePreference)
+        {
+            var consent = "ConsentCookies";
+            await genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ConsentCookies, "", _storeContext.CurrentStore.Id);
+            var selectedConsentCookies = new List<string>();
+            foreach (var item in form)
+            {
+                if (item.Key.StartsWith(consent))
+                    selectedConsentCookies.Add(item.Value);
+            }
+            var dictionary = new Dictionary<string, bool>();
+            var consentCookies = _cookiePreference.GetConsentCookies();
+            foreach (var item in consentCookies)
+            {
+                if (item.AllowToDisable)
+                    dictionary.Add(item.SystemName, selectedConsentCookies.Contains(item.SystemName));
+            }
+
+            await genericAttributeService.SaveAttribute<Dictionary<string, bool>>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ConsentCookies, dictionary, _storeContext.CurrentStore.Id);
+
+            return Json(new { success = true });
         }
 
         //robots.txt file

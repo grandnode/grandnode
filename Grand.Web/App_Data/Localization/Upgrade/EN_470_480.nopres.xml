@@ -133,4 +133,19 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.BottomDescription.Hint">
     <Value>Additional manufacturer description, which will be visible at the bottom of the page.</Value>
   </LocaleResource>
+  <LocaleResource Name="PrivacyPreference">
+    <Value>Privacy Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyPreference.Center">
+    <Value>Privacy Preference Center</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyPreference.Description">
+    <Value>Grandnode uses necessary cookies for the correct operation of the website. Other categories of cookies may be used to personalize your experience.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyPreference.System.Name">
+    <Value>Application cookies</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyPreference.System.FullDescription">
+    <Value>These cookies are necessary for the correct functioning of our website and allow the use of essential functionalities during your navigation. </Value>
+  </LocaleResource>
 </Language>

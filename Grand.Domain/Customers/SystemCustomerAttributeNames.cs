@@ -57,5 +57,6 @@ namespace Grand.Domain.Customers
         public static string TaxDisplayTypeId { get { return "TaxDisplayTypeId"; } }
         public static string UseRewardPointsDuringCheckout { get { return "UseRewardPointsDuringCheckout"; } }
         public static string EuCookieLawAccepted { get { return "EuCookieLaw.Accepted"; } }
+        public static string ConsentCookies { get { return "ConsentCookies"; } }
     }
 }

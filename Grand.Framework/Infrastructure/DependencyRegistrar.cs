@@ -239,7 +239,8 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<ViewRenderService>().As<IViewRenderService>().InstancePerLifetimeScope();
             builder.RegisterType<SearchTermService>().As<ISearchTermService>().InstancePerLifetimeScope();
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerLifetimeScope();
-
+            builder.RegisterType<CookiePreference>().As<ICookiePreference>().InstancePerLifetimeScope();
+            builder.RegisterType<SystemConsentCookie>().As<IConsentCookie>().InstancePerLifetimeScope();
 
         }
         private void RegisterCatalogService(ContainerBuilder builder)

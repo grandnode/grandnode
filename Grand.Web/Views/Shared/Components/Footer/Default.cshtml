@@ -15,6 +15,10 @@
                         {
                             <li class="list-group-item"><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
                         }
+                        @if (Model.PrivacyPreference)
+                        {
+                            <li class="list-group-item"><a id="btnPrivacyPreference" href="@Url.RouteUrl("PrivacyPreference")" onclick="GetPrivacyPreference(this.href); return false;">@T("PrivacyPreference")</a></li>
+                        }
                         @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterRow1).ToList())
                         {
                             <li class="list-group-item"><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
