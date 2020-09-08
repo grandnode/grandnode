@@ -7628,17 +7628,17 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InstagramLink.Hint">
     <Value>Specify your Instagram page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1">
-    <Value>Invoice footer text (left column)</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceHeaderText">
+    <Value>Invoice header text</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1.Hint">
-    <Value>Enter the text that will appear at the bottom of generated invoices (left column).</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceHeaderText.Hint">
+    <Value>Enter the text that will appear at the header of generated invoices.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2">
-    <Value>Invoice footer text (right column)</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterText">
+    <Value>Invoice footer text</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2.Hint">
-    <Value>Enter the text that will appear at the bottom of generated invoices (right column).</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterText.Hint">
+    <Value>Enter the text that will appear at the bottom of generated invoices.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.KnowledgebaseSettings.Enabled">
     <Value>Knowledge base enabled</Value>
