@@ -5291,6 +5291,14 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     margin-left: 0;
 }
 
+.tableFixHead td {
+    position: relative;
+}
+.tableFixHead td .mt-checkbox + .k-link {
+    position: absolute;
+    top: 14px;
+}
+
 select.form-control {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;

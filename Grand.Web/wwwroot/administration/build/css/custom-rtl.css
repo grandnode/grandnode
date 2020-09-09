@@ -1410,6 +1410,15 @@ a.hiddenanchor {
     font-weight: 700;
 }
 
+.tableFixHead td {
+    position: relative;
+}
+.tableFixHead td .mt-checkbox + .k-link {
+    position: absolute;
+    top: 16px;
+    padding: 0 5px 0 0;
+}
+
 .navbar {
   margin-bottom: 0;
 }
