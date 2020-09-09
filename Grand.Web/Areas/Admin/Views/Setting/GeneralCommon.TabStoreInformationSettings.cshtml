@@ -49,6 +49,29 @@
         </div>
         <div class="form-group">
             <div class="col-8 col-md-4 col-sm-4 text-right">
+                <label class="control-label">
+                    Premium Theme's list
+                    <i class="help icon-question" data-container="body" data-placement="top" data-toggle="tooltip" title="" data-original-title="You can download themes from the extensions page at www.grandnode.com."></i>
+                </label>
+            </div>
+            <div class="col-4 col-md-8 col-sm-8" id="premium_themes">
+                <script>
+                    $.getJSON("https://grandnode.com/themes.json", function (data) {
+                        var items = [];
+                        $.each(data, function (key, value) {
+                            items.push("<li id='theme-" + key + "'><a href='" + value.Url + "' target='_blank' ><img src='" + value.PictureUrl + "' /><span>" + value.Name + "<span></a></li>");
+                        });
+
+                        $("<ul/>", {
+                            "class": "premium-list",
+                            html: items.join("")
+                        }).appendTo("#premium_themes");
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore, model => model.StoreInformationSettings.AllowCustomerToSelectTheme, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.AllowCustomerToSelectTheme" class="control-label" />
             </div>
