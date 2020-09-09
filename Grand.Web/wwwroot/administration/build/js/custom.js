@@ -73,23 +73,25 @@ function init_sidebar() {
 
         if ($li.is('.active')) {
             $li.removeClass('active active-sm');
-            $('ul:first', $li).slideUp(function () {
+            $('ul:first', $li).each(function () {
+                $(this).hide();
                 setContentHeight();
             });
         } else {
             // prevent closing menu if we are on child menu
             if (!$li.parent().is('.child_menu')) {
                 $SIDEBAR_MENU.find('li').removeClass('active active-sm');
-                $SIDEBAR_MENU.find('li ul').slideUp();
+                $SIDEBAR_MENU.find('li ul').hide();
             } else {
                 if ($BODY.is(".nav-sm")) {
                     $li.parent().find("li").removeClass("active active-sm");
-                    $li.parent().find("li ul").slideUp();
+                    $li.parent().find("li ul").hide();
                 }
             }
             $li.addClass('active');
 
-            $('ul:first', $li).slideDown(function () {
+            $('ul:first', $li).each(function () {
+                $(this).show();
                 setContentHeight();
             });
         }

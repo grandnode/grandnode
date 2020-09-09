@@ -48,6 +48,7 @@
     //vendors
 
     pagebuilder.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/bootstrap/js/bootstrap.min.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/bootstrap/js/popper.min.js", excludeFromBundle: true);
     pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/bootstrap/css/bootstrap.min.css", excludeFromBundle: true);
 
 
@@ -169,7 +170,7 @@
                                     <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                         <i class="icon-info"></i>
                                     </a>
-                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list overflow-h" role="menu">
+                                    <ul id="menu1" class="dropdown-menu dropdown-menu-right list-unstyled msg_list overflow-h" role="menu">
                                         <li>
                                             <a href="http://docs.grandnode.com/" target="_blank">
                                                 <i class="icon-book-open"></i>
@@ -196,7 +197,7 @@
                                         <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                             <i class="icon-settings"></i>
                                         </a>
-                                        <ul id="menu1" class="dropdown-menu list-unstyled msg_list overflow-h" role="menu">
+                                        <ul id="menu1" class="dropdown-menu dropdown-menu-right list-unstyled msg_list overflow-h" role="menu">
                                             <li>
                                                 <a href="@Url.Action("ClearCache", "Common", new { memory = true, returnurl = webHelper.GetRawUrl(this.Context.Request) })">
                                                     <i class="icon-refresh"></i>
@@ -228,7 +229,7 @@
                                         <span class="fa fa-angle-down"></span>
                                     </a>
 
-                                    <ul class="dropdown-menu dropdown-menu-default">
+                                    <ul class="dropdown-menu dropdown-menu-right dropdown-menu-default">
                                         @if (currentCustomer.IsAdmin())
                                         {
                                             <li>

@@ -44,14 +44,14 @@
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="SearchCategoryIds" />
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="SearchCategoryIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCategories" />
                                 </div>
                             </div>
                         </div>
                         <div class="form-actions">
                             <div class="row">
-                                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                <div class="offset-md-3 offset-sm-3 col-md-9 col-sm-9">
                                     <button class="btn btn-success filter-submit" id="search-subscriptions">
                                         <i class="fa fa-search"></i> @T("Admin.Common.Search")
                                     </button>

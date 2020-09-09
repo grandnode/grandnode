@@ -33,11 +33,11 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayCartAfterAddingProduct_OverrideForStore, model => model.DisplayCartAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="DisplayCartAfterAddingProduct" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="DisplayCartAfterAddingProduct" />
                                         <div class="control__indicator"></div>
@@ -46,11 +46,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayWishlistAfterAddingProduct_OverrideForStore, model => model.DisplayWishlistAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="DisplayWishlistAfterAddingProduct" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="DisplayWishlistAfterAddingProduct" />
                                         <div class="control__indicator"></div>
@@ -59,11 +59,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, model => model.AllowOutOfStockItemsToBeAddedToWishlist, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="AllowOutOfStockItemsToBeAddedToWishlist" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowOutOfStockItemsToBeAddedToWishlist" />
                                         <div class="control__indicator"></div>
@@ -72,31 +72,31 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MaximumShoppingCartItems_OverrideForStore, model => model.MaximumShoppingCartItems, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="MaximumShoppingCartItems" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="MaximumShoppingCartItems" />
                                     <span asp-validation-for="MaximumShoppingCartItems"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MaximumWishlistItems_OverrideForStore, model => model.MaximumWishlistItems, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="MaximumWishlistItems" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="MaximumWishlistItems" />
                                     <span asp-validation-for="MaximumWishlistItems"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MoveItemsFromWishlistToCart_OverrideForStore, model => model.MoveItemsFromWishlistToCart, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="MoveItemsFromWishlistToCart" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="MoveItemsFromWishlistToCart" />
                                         <div class="control__indicator"></div>
@@ -105,11 +105,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnShoppingCart_OverrideForStore, model => model.ShowProductImagesOnShoppingCart, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShowProductImagesOnShoppingCart" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShowProductImagesOnShoppingCart" />
                                         <div class="control__indicator"></div>
@@ -118,11 +118,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnWishList_OverrideForStore, model => model.ShowProductImagesOnWishList, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShowProductImagesOnWishList" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShowProductImagesOnWishList" />
                                         <div class="control__indicator"></div>
@@ -131,11 +131,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowDiscountBox_OverrideForStore, model => model.ShowDiscountBox, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShowDiscountBox" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShowDiscountBox" />
                                         <div class="control__indicator"></div>
@@ -144,11 +144,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowGiftCardBox_OverrideForStore, model => model.ShowGiftCardBox, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShowGiftCardBox" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShowGiftCardBox" />
                                         <div class="control__indicator"></div>
@@ -157,21 +157,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.CrossSellsNumber_OverrideForStore, model => model.CrossSellsNumber, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="CrossSellsNumber" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="CrossSellsNumber" />
                                     <span asp-validation-for="CrossSellsNumber"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EmailWishlistEnabled_OverrideForStore, model => model.EmailWishlistEnabled, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="EmailWishlistEnabled" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="EmailWishlistEnabled" />
                                         <div class="control__indicator"></div>
@@ -180,11 +180,11 @@
                                 </div>
                             </div>
                             <div class="form-group" id="pnlAllowAnonymousUsersToEmailWishlist">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToEmailWishlist_OverrideForStore, model => model.AllowAnonymousUsersToEmailWishlist, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="AllowAnonymousUsersToEmailWishlist" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowAnonymousUsersToEmailWishlist" />
                                         <div class="control__indicator"></div>
@@ -193,11 +193,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartEnabled_OverrideForStore, model => model.MiniShoppingCartEnabled, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="MiniShoppingCartEnabled" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="MiniShoppingCartEnabled" />
                                         <div class="control__indicator"></div>
@@ -206,21 +206,21 @@
                                 </div>
                             </div>
                             <div class="form-group" id="pnlMiniShoppingCartProductNumber">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartProductNumber_OverrideForStore, model => model.MiniShoppingCartProductNumber, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="MiniShoppingCartProductNumber" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="MiniShoppingCartProductNumber" />
                                     <span asp-validation-for="MiniShoppingCartProductNumber"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlShowProductImagesInMiniShoppingCart">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInMiniShoppingCart_OverrideForStore, model => model.ShowProductImagesInMiniShoppingCart, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShowProductImagesInMiniShoppingCart" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShowProductImagesInMiniShoppingCart" />
                                         <div class="control__indicator"></div>
@@ -229,11 +229,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowCartItemEditing_OverrideForStore, model => model.AllowCartItemEditing, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="AllowCartItemEditing" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowCartItemEditing" />
                                         <div class="control__indicator"></div>
@@ -242,11 +242,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.CartsSharedBetweenStores_OverrideForStore, model => model.CartsSharedBetweenStores, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="CartsSharedBetweenStores" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="CartsSharedBetweenStores" />
                                         <div class="control__indicator"></div>
@@ -255,11 +255,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowOnHoldCart_OverrideForStore, model => model.AllowOnHoldCart, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="AllowOnHoldCart" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowOnHoldCart" />
                                         <div class="control__indicator"></div>

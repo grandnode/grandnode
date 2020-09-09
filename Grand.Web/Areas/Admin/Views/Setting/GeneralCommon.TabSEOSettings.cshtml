@@ -18,61 +18,61 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeparator_OverrideForStore, model => model.SeoSettings.PageTitleSeparator, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.PageTitleSeparator" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="SeoSettings.PageTitleSeparator" />
                 <span asp-validation-for="SeoSettings.PageTitleSeparator"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, model => model.SeoSettings.PageTitleSeoAdjustment, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.PageTitleSeoAdjustment" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-select asp-for="SeoSettings.PageTitleSeoAdjustment" asp-items="Model.SeoSettings.PageTitleSeoAdjustmentValues" />
                 <span asp-validation-for="SeoSettings.PageTitleSeoAdjustment"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultTitle_OverrideForStore, model => model.SeoSettings.DefaultTitle, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.DefaultTitle" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="SeoSettings.DefaultTitle" />
                 <span asp-validation-for="SeoSettings.DefaultTitle"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaKeywords_OverrideForStore, model => model.SeoSettings.DefaultMetaKeywords, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.DefaultMetaKeywords" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="SeoSettings.DefaultMetaKeywords" />
                 <span asp-validation-for="SeoSettings.DefaultMetaKeywords"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaDescription_OverrideForStore, model => model.SeoSettings.DefaultMetaDescription, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.DefaultMetaDescription" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="SeoSettings.DefaultMetaDescription" />
                 <span asp-validation-for="SeoSettings.DefaultMetaDescription"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.GenerateProductMetaDescription_OverrideForStore, model => model.SeoSettings.GenerateProductMetaDescription, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.GenerateProductMetaDescription" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SeoSettings.GenerateProductMetaDescription" />
                     <div class="control__indicator"></div>
@@ -81,11 +81,11 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.ConvertNonWesternChars_OverrideForStore, model => model.SeoSettings.ConvertNonWesternChars, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.ConvertNonWesternChars" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SeoSettings.ConvertNonWesternChars" />
                     <div class="control__indicator"></div>
@@ -97,21 +97,21 @@
             <div class="note note-warning">
                 <span>@T("Admin.Configuration.Settings.GeneralCommon.SeoCharConversion.Note")</span>
             </div>
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.SeoCharConversion_OverrideForStore, model => model.SeoSettings.SeoCharConversion, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.SeoCharConversion" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="SeoSettings.SeoCharConversion" />
                 <span asp-validation-for="SeoSettings.SeoCharConversion"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, model => model.SeoSettings.CanonicalUrlsEnabled, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.CanonicalUrlsEnabled" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SeoSettings.CanonicalUrlsEnabled" />
                     <div class="control__indicator"></div>
@@ -120,11 +120,11 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableJsBundling_OverrideForStore, model => model.SeoSettings.EnableJsBundling, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.EnableJsBundling" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SeoSettings.EnableJsBundling" />
                     <div class="control__indicator"></div>
@@ -133,11 +133,11 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableCssBundling_OverrideForStore, model => model.SeoSettings.EnableCssBundling, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.EnableCssBundling" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SeoSettings.EnableCssBundling" />
                     <div class="control__indicator"></div>
@@ -146,11 +146,11 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.TwitterMetaTags_OverrideForStore, model => model.SeoSettings.TwitterMetaTags, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.TwitterMetaTags" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SeoSettings.TwitterMetaTags" />
                     <div class="control__indicator"></div>
@@ -159,11 +159,11 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.OpenGraphMetaTags_OverrideForStore, model => model.SeoSettings.OpenGraphMetaTags, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.OpenGraphMetaTags" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SeoSettings.OpenGraphMetaTags" />
                     <div class="control__indicator"></div>

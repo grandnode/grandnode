@@ -16,7 +16,7 @@
                         @T("Admin.Catalog.Products.Manage")
                     </div>
                     <div class="actions btn-group btn-group-devided util-btn-margin-bottom-5">
-                        <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
+                        <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="d-none d-sm-inline"> @T("Admin.Common.AddNew") </span></a>
                         <button type="submit" name="download-catalog-pdf" class="btn purple">
                             <i class="fa fa-file-pdf-o"></i>
                             @T("Admin.Catalog.Products.List.DownloadPDF")
@@ -62,15 +62,15 @@
                     <div class="form-horizontal">
                         <div class="form-body col-md-6 advanced-filter">
                             <div class="form-group">
-                                <admin-label asp-for="SearchProductName" class="control-label col-xs-3 col-md-4 col-sm-4" />
-                                <div class="col-xs-9 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchProductName" class="control-label col-3 col-md-4 col-sm-4" />
+                                <div class="col-9 col-md-8 col-sm-8">
                                     <admin-input asp-for="SearchProductName" />
                                 </div>
                             </div>
                         </div>
                         <div class="form-body col-md-6 advanced-filter">
                             <div class="form-group">
-                                <div class="col-xs-12 col-md-12 col-sm-12">
+                                <div class="col-12 col-md-12 col-sm-12">
                                     <div id="ExtendFilter">
                                         <button class="btn btn-success filter-submit" id="search-products">
                                             <i class="fa fa-search"></i> @T("Admin.Common.Search")
@@ -87,26 +87,26 @@
                         <div class="clearfix"></div>
                         <div class="form-body col-sm-6 extend-collapse">
                             <div class="form-group">
-                                <admin-label asp-for="SearchProductTypeId" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchProductTypeId" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchPublishedId" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchPublishedId" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchWarehouseId" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchWarehouseId" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="GoDirectlyToSku" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="GoDirectlyToSku" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <div class="input-group" style="text-align:left">
                                         <admin-input asp-for="GoDirectlyToSku" />
                                         <span class="input-group-btn">
@@ -118,14 +118,14 @@
                         </div>
                         <div class="form-body col-sm-6 extend-collapse">
                             <div class="form-group">
-                                <admin-label asp-for="SearchCategoryId" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchCategoryId" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchIncludeSubCategories" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchIncludeSubCategories" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="SearchIncludeSubCategories" />
                                          <div class="control__indicator"></div>
@@ -133,20 +133,20 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchManufacturerId" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchManufacturerId" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchStoreId" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchStoreId" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                <admin-label asp-for="SearchVendorId" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchVendorId" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
                                 </div>
                             </div>
