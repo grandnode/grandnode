@@ -7470,6 +7470,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplaySearchMenu.Hint">
     <Value>Check if "Search" menu item should be displayed in the top menu.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayPrivacyPreference">
+    <Value>Display Privacy Preference</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayPrivacyPreference.Hint">
+    <Value>Check this box if you want to display privacy preferences</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayTopMenu">
     <Value>Top menu items</Value>
   </LocaleResource>

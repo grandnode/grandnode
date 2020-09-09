@@ -172,4 +172,10 @@
   <LocaleResource Name="EUCookieLaw.Refuse">
     <Value>I refuse cookies</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayPrivacyPreference">
+    <Value>Display Privacy Preference</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayPrivacyPreference.Hint">
+    <Value>Check this box if you want to display privacy preferences</Value>
+  </LocaleResource>
 </Language>

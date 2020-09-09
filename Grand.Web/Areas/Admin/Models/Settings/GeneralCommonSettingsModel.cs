@@ -65,6 +65,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool DisplayEuCookieLawWarning { get; set; }
             public bool DisplayEuCookieLawWarning_OverrideForStore { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayPrivacyPreference")]
+            public bool DisplayPrivacyPreference { get; set; }
+            public bool DisplayPrivacyPreference_OverrideForStore { get; set; }
+            
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FacebookLink")]
             public string FacebookLink { get; set; }
             public bool FacebookLink_OverrideForStore { get; set; }

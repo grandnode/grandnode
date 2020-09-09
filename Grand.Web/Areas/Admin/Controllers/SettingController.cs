@@ -1567,6 +1567,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.StoreInformationSettings.LogoPictureId = storeInformationSettings.LogoPictureId;
             //EU Cookie law
             model.StoreInformationSettings.DisplayEuCookieLawWarning = storeInformationSettings.DisplayEuCookieLawWarning;
+            model.StoreInformationSettings.DisplayPrivacyPreference = storeInformationSettings.DisplayPrivacyPreference;
             //social pages
             model.StoreInformationSettings.FacebookLink = storeInformationSettings.FacebookLink;
             model.StoreInformationSettings.TwitterLink = storeInformationSettings.TwitterLink;
@@ -1587,6 +1588,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope);
                 model.StoreInformationSettings.LogoPictureId_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.LogoPictureId, storeScope);
                 model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope);
+                model.StoreInformationSettings.DisplayPrivacyPreference_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DisplayPrivacyPreference, storeScope);
                 model.StoreInformationSettings.FacebookLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.FacebookLink, storeScope);
                 model.StoreInformationSettings.TwitterLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.TwitterLink, storeScope);
                 model.StoreInformationSettings.YoutubeLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.YoutubeLink, storeScope);
@@ -1750,6 +1752,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             storeInformationSettings.LogoPictureId = model.StoreInformationSettings.LogoPictureId;
             //EU Cookie law
             storeInformationSettings.DisplayEuCookieLawWarning = model.StoreInformationSettings.DisplayEuCookieLawWarning;
+            storeInformationSettings.DisplayPrivacyPreference = model.StoreInformationSettings.DisplayPrivacyPreference;
             //social pages
             storeInformationSettings.FacebookLink = model.StoreInformationSettings.FacebookLink;
             storeInformationSettings.TwitterLink = model.StoreInformationSettings.TwitterLink;
@@ -1768,6 +1771,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await UpdateOverrideForStore(storeScope, model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore, storeInformationSettings, x => x.AllowCustomerToSelectTheme);
             await UpdateOverrideForStore(storeScope, model.StoreInformationSettings.LogoPictureId_OverrideForStore, storeInformationSettings, x => x.LogoPictureId);
             await UpdateOverrideForStore(storeScope, model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, storeInformationSettings, x => x.DisplayEuCookieLawWarning);
+            await UpdateOverrideForStore(storeScope, model.StoreInformationSettings.DisplayPrivacyPreference_OverrideForStore, storeInformationSettings, x => x.DisplayPrivacyPreference);
             await UpdateOverrideForStore(storeScope, model.StoreInformationSettings.FacebookLink_OverrideForStore, storeInformationSettings, x => x.FacebookLink);
             await UpdateOverrideForStore(storeScope, model.StoreInformationSettings.TwitterLink_OverrideForStore, storeInformationSettings, x => x.TwitterLink);
             await UpdateOverrideForStore(storeScope, model.StoreInformationSettings.YoutubeLink_OverrideForStore, storeInformationSettings, x => x.YoutubeLink);
