@@ -11,8 +11,12 @@
         pagebuilder.AddHeadCustomParts("<meta property=\"og:type\" content=\"website\" />");
         pagebuilder.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + seoSettings.DefaultTitle + "\" />");
         pagebuilder.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(seoSettings.DefaultMetaDescription) + "\" />");
-        pagebuilder.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + await pictureService.GetPictureUrl(seoSettings.StorePictureId) + "\" />");
-        pagebuilder.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");    }
+        @if (!String.IsNullOrWhiteSpace(seoSettings.StorePictureId))
+        {
+            pagebuilder.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + await pictureService.GetPictureUrl(seoSettings.StorePictureId) + "\" />");
+        }
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
+    }
 
     //Twitter META tags
     if (seoSettings.TwitterMetaTags)
@@ -21,7 +25,10 @@
         pagebuilder.AddHeadCustomParts("<meta property=\"twitter:site\" content=\"" + seoSettings.DefaultTitle + "\" />");
         pagebuilder.AddHeadCustomParts("<meta property=\"twitter:title\" content=\"" + seoSettings.DefaultTitle + "\" />");
         pagebuilder.AddHeadCustomParts("<meta property=\"twitter:description\" content=\"" + Html.Encode(seoSettings.DefaultMetaDescription) + "\" />");
-        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + await pictureService.GetPictureUrl(seoSettings.StorePictureId) + "\" />");
+        @if (!String.IsNullOrWhiteSpace(seoSettings.StorePictureId))
+        {
+            pagebuilder.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + await pictureService.GetPictureUrl(seoSettings.StorePictureId) + "\" />");
+        }
         pagebuilder.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
     }
 }
