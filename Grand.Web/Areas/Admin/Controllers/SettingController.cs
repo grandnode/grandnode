@@ -1614,6 +1614,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SeoSettings.EnableCssBundling = seoSettings.EnableCssBundling;
             model.SeoSettings.TwitterMetaTags = seoSettings.TwitterMetaTags;
             model.SeoSettings.OpenGraphMetaTags = seoSettings.OpenGraphMetaTags;
+            model.SeoSettings.StorePictureId = seoSettings.StorePictureId;
             //override settings
             if (!String.IsNullOrEmpty(storeScope))
             {
@@ -1630,6 +1631,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.SeoSettings.EnableCssBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableCssBundling, storeScope);
                 model.SeoSettings.TwitterMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.TwitterMetaTags, storeScope);
                 model.SeoSettings.OpenGraphMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.OpenGraphMetaTags, storeScope);
+                model.SeoSettings.StorePictureId_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.StorePictureId, storeScope);
             }
 
             //security settings
@@ -1792,6 +1794,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             seoSettings.EnableCssBundling = model.SeoSettings.EnableCssBundling;
             seoSettings.TwitterMetaTags = model.SeoSettings.TwitterMetaTags;
             seoSettings.OpenGraphMetaTags = model.SeoSettings.OpenGraphMetaTags;
+            seoSettings.StorePictureId = model.SeoSettings.StorePictureId;
 
 
             await UpdateOverrideForStore(storeScope, model.SeoSettings.PageTitleSeparator_OverrideForStore, seoSettings, x => x.PageTitleSeparator);
@@ -1807,6 +1810,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await UpdateOverrideForStore(storeScope, model.SeoSettings.EnableCssBundling_OverrideForStore, seoSettings, x => x.EnableCssBundling);
             await UpdateOverrideForStore(storeScope, model.SeoSettings.TwitterMetaTags_OverrideForStore, seoSettings, x => x.TwitterMetaTags);
             await UpdateOverrideForStore(storeScope, model.SeoSettings.OpenGraphMetaTags_OverrideForStore, seoSettings, x => x.OpenGraphMetaTags);
+            await UpdateOverrideForStore(storeScope, model.SeoSettings.StorePictureId_OverrideForStore, seoSettings, x => x.StorePictureId);
 
             //security settings
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);

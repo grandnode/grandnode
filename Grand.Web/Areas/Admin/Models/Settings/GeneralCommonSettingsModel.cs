@@ -175,6 +175,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags")]
             public bool OpenGraphMetaTags { get; set; }
             public bool OpenGraphMetaTags_OverrideForStore { get; set; }
+
+            [UIHint("Picture")]
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StorePicture")]
+            public string StorePictureId { get; set; }
+            public bool StorePictureId_OverrideForStore { get; set; }
         }
 
         public partial class SecuritySettingsModel : BaseGrandModel
