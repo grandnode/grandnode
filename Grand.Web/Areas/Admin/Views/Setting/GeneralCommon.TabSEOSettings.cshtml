@@ -171,5 +171,15 @@
                 <span asp-validation-for="SeoSettings.OpenGraphMetaTags"></span>
             </div>
         </div>
+        <div class="form-group">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.StorePictureId_OverrideForStore, model => model.SeoSettings.StorePictureId, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="SeoSettings.StorePictureId" class="control-label" />
+            </div>
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <admin-input asp-for="SeoSettings.StorePictureId" />
+                <span asp-validation-for="SeoSettings.StorePictureId"></span>
+            </div>
+        </div>
     </div>
 </div>

@@ -133,6 +133,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.BottomDescription.Hint">
     <Value>Additional manufacturer description, which will be visible at the bottom of the page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StorePicture">
+    <Value>Open Graph/Twitter Store Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StorePicture.Hint">
+    <Value>Upload the picture of the store. It will be visible as a store preview when you will share your store on social media.</Value>
+  </LocaleResource>
   <LocaleResource Name="PrivacyPreference">
     <Value>Privacy Settings</Value>
   </LocaleResource>

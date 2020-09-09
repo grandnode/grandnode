@@ -7760,6 +7760,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings">
     <Value>Store information</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StorePicture">
+    <Value>Open Graph/Twitter Store Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StorePicture.Hint">
+    <Value>Upload the picture of the store. It will be visible as a store preview when you will share your store on social media.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm">
     <Value>Contact us page. 'Subject' field</Value>
   </LocaleResource>
