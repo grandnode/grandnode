@@ -6,5 +6,5 @@
     SystemName = "Widgets.GoogleAnalytics",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "2.05"
+    Version = "2.06"
 )]

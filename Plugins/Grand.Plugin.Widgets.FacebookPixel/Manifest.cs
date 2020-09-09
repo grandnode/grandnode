@@ -6,5 +6,5 @@
     SystemName = "Widgets.FacebookPixel",
     SupportedVersion = "4.80",
     Author = "grandnode team",
-    Version = "1.03"
+    Version = "1.04"
 )]

@@ -1121,6 +1121,12 @@ ul.ui-autocomplete li {
     padding-right: 0 !important;
 }
 
+#ModalPrivacyPreference {
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 0 !important;
+}
+
 #ModalAddToCart {
     z-index: 9999;
 }

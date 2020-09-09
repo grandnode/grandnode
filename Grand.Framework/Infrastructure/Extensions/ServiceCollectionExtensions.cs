@@ -4,6 +4,7 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
+using Grand.Domain.Configuration;
 using Grand.Framework.Extensions;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Routing;
@@ -17,7 +18,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +34,6 @@ using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using WebMarkupMin.AspNet.Common.UrlMatchers;
 using WebMarkupMin.AspNetCore3;
-using Grand.Domain.Configuration;
 using Wkhtmltopdf.NetCore;
 
 namespace Grand.Framework.Infrastructure.Extensions

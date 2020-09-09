@@ -8,5 +8,8 @@ namespace Grand.Plugin.Widgets.FacebookPixel
         public string PixelScript { get; set; }
         public string AddToCartScript { get; set; }
         public string DetailsOrderScript { get; set; }
+        public bool AllowToDisableConsentCookie { get; set; }
+        public string ConsentName { get; set; }
+        public string ConsentDescription { get; set; }
     }
 }

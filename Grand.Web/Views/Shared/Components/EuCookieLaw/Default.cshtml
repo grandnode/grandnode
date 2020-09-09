@@ -25,6 +25,7 @@
             <p class="mb-0 text-white">@T("EUCookieLaw.Description2")</p>
             <div class="btn-group ml-2 ml-sm-3">
                 <a class="ok-button btn-sm btn btn-light text-dark" id="eu-cookie-ok">@T("Common.OK")</a>
+                <a class="btn btn-sm btn-light text-dark private-preference" id="eu-private-preference" href="@Url.RouteUrl("PrivacyPreference")" onclick="GetPrivacyPreference(this.href);return false;">@T("PrivacyPreference")</a></li>
                 <a class="btn btn-sm btn-info learn-more" href="@Url.RouteUrl("Topic", new { SeName = TopicSeNameConstants.Privacyinfo })">@T("EUCookieLaw.LearnMore")</a>
             </div>
         </blockquote>
