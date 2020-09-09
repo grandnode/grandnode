@@ -5285,7 +5285,7 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 }
 
 .form-horizontal .form-group {
-    display: inline-flex;
+    display: inline-block;
     width: 100%;
     margin-right: 0;
     margin-left: 0;
