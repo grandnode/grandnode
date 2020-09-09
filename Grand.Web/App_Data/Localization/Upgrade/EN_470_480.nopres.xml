@@ -166,4 +166,10 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterText.Hint">
     <Value>Enter the text that will appear at the bottom of generated invoices.</Value>
   </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Accept">
+    <Value>I accept cookies</Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Refuse">
+    <Value>I refuse cookies</Value>
+  </LocaleResource>
 </Language>

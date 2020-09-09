@@ -18439,6 +18439,9 @@
   <LocaleResource Name="Enums.Grand.Services.Payments.RecurringPaymentType.NotSupported">
     <Value>Not supported</Value>
   </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Accept">
+    <Value>I accept cookies</Value>
+  </LocaleResource>
   <LocaleResource Name="EUCookieLaw.CannotBrowse">
     <Value>You cannot browse this site until you accept cookies</Value>
   </LocaleResource>
@@ -18450,6 +18453,9 @@
   </LocaleResource>
   <LocaleResource Name="EUCookieLaw.LearnMore">
     <Value>Learn more</Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Refuse">
+    <Value>I refuse cookies</Value>
   </LocaleResource>
   <LocaleResource Name="EUCookieLaw.Title">
     <Value>Your cookie settings</Value>
