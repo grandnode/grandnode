@@ -90,6 +90,8 @@ namespace Grand.Plugin.Widgets.FacebookPixel
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.DetailsOrderScript.Hint", "Paste the event purchase pixel code. {AMOUNT} and {CURRENCY} will be dynamically replaced.");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.AllowToDisableConsentCookie", "Allow disabling consent cookie");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.AllowToDisableConsentCookie.Hint", "Get or set the value to disable consent cookie");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDefaultState", "Consent default state");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDefaultState.Hint", "Get or set the value to consent default state");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentName", "Consent cookie name");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentName.Hint", "Get or set the value to consent cookie name");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDescription", "Consent cookie description");
@@ -117,6 +119,8 @@ namespace Grand.Plugin.Widgets.FacebookPixel
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.DetailsOrderScript.Hint");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.AllowToDisableConsentCookie");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.AllowToDisableConsentCookie.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDefaultState");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDefaultState.Hint");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentName");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentName.Hint");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDescription");

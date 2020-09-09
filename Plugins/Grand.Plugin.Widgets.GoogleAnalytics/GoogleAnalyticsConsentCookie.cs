@@ -16,7 +16,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics
 
         public bool AllowToDisable => _googleAnalyticsEcommerceSettings.AllowToDisableConsentCookie;
 
-        public bool? DefaultState => GoogleAnalyticConst.ConsentCookieDefaultState;
+        public bool? DefaultState => _googleAnalyticsEcommerceSettings.ConsentDefaultState;
 
         public int DisplayOrder => 10;
 

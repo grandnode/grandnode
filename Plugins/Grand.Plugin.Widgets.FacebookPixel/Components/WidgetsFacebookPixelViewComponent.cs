@@ -39,10 +39,7 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Components
             if (_facebookPixelSettings.AllowToDisableConsentCookie)
             {
                 var enabled = await _cookiePreference.IsEnable(_workContext.CurrentCustomer, _storeContext.CurrentStore, FacebookPixelConst.ConsentCookieSystemName);
-                if (enabled.HasValue && !enabled.Value)
-                    return Content("");
-
-                if (!FacebookPixelConst.ConsentCookieDefaultState)
+                if ((enabled.HasValue && !enabled.Value) || (!enabled.HasValue && !_facebookPixelSettings.ConsentDefaultState))
                     return Content("");
             }
             //page

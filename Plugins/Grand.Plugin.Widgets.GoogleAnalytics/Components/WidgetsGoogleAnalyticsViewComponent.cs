@@ -48,10 +48,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
             if (_googleAnalyticsEcommerceSettings.AllowToDisableConsentCookie)
             {
                 var enabled = await _cookiePreference.IsEnable(_workContext.CurrentCustomer, _storeContext.CurrentStore, GoogleAnalyticConst.ConsentCookieSystemName);
-                if (enabled.HasValue && !enabled.Value)
-                    return Content("");
-
-                if (!GoogleAnalyticConst.ConsentCookieDefaultState)
+                if ((enabled.HasValue && !enabled.Value) || (!enabled.HasValue && !_googleAnalyticsEcommerceSettings.ConsentDefaultState))
                     return Content("");
             }
 

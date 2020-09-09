@@ -335,28 +335,41 @@ namespace Grand.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual async Task<IActionResult> EuCookieLawAccept(
+        public virtual async Task<IActionResult> EuCookieLawAccept(bool accept,
             [FromServices] StoreInformationSettings storeInformationSettings,
-            [FromServices] IGenericAttributeService genericAttributeService)
+            [FromServices] IGenericAttributeService genericAttributeService,
+            [FromServices] ICookiePreference cookiePreference)
         {
             if (!storeInformationSettings.DisplayEuCookieLawWarning)
                 //disabled
                 return Json(new { stored = false });
 
-            //save setting
+            //save consentcookies
+            await genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ConsentCookies, "", _storeContext.CurrentStore.Id);
+            var dictionary = new Dictionary<string, bool>();
+            var consentCookies = cookiePreference.GetConsentCookies();
+            foreach (var item in consentCookies.Where(x=>x.AllowToDisable))
+            {
+                dictionary.Add(item.SystemName, accept);
+            }
+            if(dictionary.Any())
+                await genericAttributeService.SaveAttribute<Dictionary<string, bool>>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ConsentCookies, dictionary, _storeContext.CurrentStore.Id);
+
+            //save setting - EuCookieLawAccepted
             await genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.EuCookieLawAccepted, true, _storeContext.CurrentStore.Id);
+
             return Json(new { stored = true });
         }
 
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual async Task<IActionResult> PrivacyPreference([FromServices] StoreInformationSettings 
+        public virtual async Task<IActionResult> PrivacyPreference([FromServices] StoreInformationSettings
             storeInformationSettings)
         {
-            if (!storeInformationSettings.DisplayEuCookieLawWarning)
+            if (!storeInformationSettings.DisplayPrivacyPreference)
                 //disabled
-                return Content("");
+                return Json(new { html = "" });
 
             var model = await _mediator.Send(new GetPrivacyPreference() {
                 Customer = _workContext.CurrentCustomer,
@@ -374,9 +387,14 @@ namespace Grand.Web.Controllers
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> PrivacyPreference(IFormCollection form,
+            [FromServices] StoreInformationSettings storeInformationSettings,
             [FromServices] IGenericAttributeService genericAttributeService,
             [FromServices] ICookiePreference _cookiePreference)
         {
+
+            if (!storeInformationSettings.DisplayPrivacyPreference)
+                return Json(new { success = false });
+
             var consent = "ConsentCookies";
             await genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ConsentCookies, "", _storeContext.CurrentStore.Id);
             var selectedConsentCookies = new List<string>();

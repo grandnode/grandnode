@@ -85,6 +85,8 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.IncludingTax.Hint", "Check to include tax when generating tracking code for {ECOMMERCE} part.");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.AllowToDisableConsentCookie", "Allow disabling consent cookie");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.AllowToDisableConsentCookie.Hint", "Get or set the value to disable consent cookie");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.ConsentDefaultState", "Consent default state");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.ConsentDefaultState.Hint", "Get or set the value to consent default state");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.ConsentName", "Consent cookie name");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.ConsentName.Hint", "Get or set the value to consent cookie name");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.ConsentDescription", "Consent cookie description");
@@ -114,6 +116,8 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.IncludingTax.Hint");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.AllowToDisableConsentCookie");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.AllowToDisableConsentCookie.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.ConsentDefaultState");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.ConsentDefaultState.Hint");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.ConsentName");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.ConsentName.Hint");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.GoogleAnalytics.ConsentDescription");

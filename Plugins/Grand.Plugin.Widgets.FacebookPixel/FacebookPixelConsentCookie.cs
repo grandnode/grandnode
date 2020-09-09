@@ -16,7 +16,7 @@ namespace Grand.Plugin.Widgets.FacebookPixel
 
         public bool AllowToDisable => _facebookPixelSettings.AllowToDisableConsentCookie;
 
-        public bool? DefaultState => FacebookPixelConst.ConsentCookieDefaultState;
+        public bool? DefaultState => _facebookPixelSettings.ConsentDefaultState;
 
         public int DisplayOrder => 10;
 

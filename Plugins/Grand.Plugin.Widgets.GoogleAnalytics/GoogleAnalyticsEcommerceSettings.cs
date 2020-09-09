@@ -10,6 +10,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics
         public string EcommerceDetailScript { get; set; }
         public bool IncludingTax { get; set; }
         public bool AllowToDisableConsentCookie { get; set; }
+        public bool ConsentDefaultState { get; set; }
         public string ConsentName { get; set; }
         public string ConsentDescription { get; set; }
     }

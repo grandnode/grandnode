@@ -48,6 +48,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
             model.EcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
             model.IncludingTax = googleAnalyticsSettings.IncludingTax;
             model.AllowToDisableConsentCookie = googleAnalyticsSettings.AllowToDisableConsentCookie;
+            model.ConsentDefaultState = googleAnalyticsSettings.ConsentDefaultState;
             model.ConsentName = googleAnalyticsSettings.ConsentName;
             model.ConsentDescription = googleAnalyticsSettings.ConsentDescription;
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -59,6 +60,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
                 model.EcommerceDetailScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope);
                 model.IncludingTax_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
                 model.AllowToDisableConsentCookie_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.AllowToDisableConsentCookie, storeScope);
+                model.ConsentDefaultState_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.ConsentDefaultState, storeScope);
                 model.ConsentName_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.ConsentName, storeScope);
                 model.ConsentDescription_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.ConsentDescription, storeScope);
             }
@@ -78,6 +80,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
             googleAnalyticsSettings.EcommerceDetailScript = model.EcommerceDetailScript;
             googleAnalyticsSettings.IncludingTax = model.IncludingTax;
             googleAnalyticsSettings.AllowToDisableConsentCookie = model.AllowToDisableConsentCookie;
+            googleAnalyticsSettings.ConsentDefaultState = model.ConsentDefaultState;
             googleAnalyticsSettings.ConsentName = model.ConsentName;
             googleAnalyticsSettings.ConsentDescription = model.ConsentDescription;
 
@@ -123,6 +126,11 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
                 await _settingService.SaveSetting(googleAnalyticsSettings, x => x.ConsentDescription, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.ConsentDescription, storeScope);
+
+            if (model.ConsentDefaultState_OverrideForStore || String.IsNullOrEmpty(storeScope))
+                await _settingService.SaveSetting(googleAnalyticsSettings, x => x.ConsentDefaultState, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.ConsentDefaultState, storeScope);
 
             //now clear settings cache
             await _settingService.ClearCache();

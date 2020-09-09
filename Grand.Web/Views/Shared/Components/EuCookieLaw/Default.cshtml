@@ -2,10 +2,14 @@
     $(document).ready(function () {
         $('#eu-cookie-bar-notification').show();
 
-        $('#eu-cookie-ok').click(function () {
+        $('.cookielaw-button').click(function () {
+            var postData = {
+                accept: $(this).attr("data-accept")
+            };
             $.ajax({
                 cache: false,
                 type: 'POST',
+                data: postData,
                 url: '@Url.RouteUrl("EuCookieLawAccept")',
                 dataType: 'json',
                 success: function (data) {
@@ -24,8 +28,8 @@
         <blockquote class="card-bodyquote d-inline-flex justify-content-center align-items-center w-100 mb-0">
             <p class="mb-0 text-white">@T("EUCookieLaw.Description2")</p>
             <div class="btn-group ml-2 ml-sm-3">
-                <a class="ok-button btn-sm btn btn-light text-dark" id="eu-cookie-ok">@T("Common.OK")</a>
-                <a class="btn btn-sm btn-light text-dark private-preference" id="eu-private-preference" href="@Url.RouteUrl("PrivacyPreference")" onclick="GetPrivacyPreference(this.href);return false;">@T("PrivacyPreference")</a></li>
+                <a class="cookielaw-button btn-sm btn btn-light text-dark" id="eu-cookie-ok" data-accept="true">@T("EUCookieLaw.Accept")</a>
+                <a class="cookielaw-button btn-sm btn btn-light text-dark" id="eu-cookie-refuse" data-accept="false">@T("EUCookieLaw.Refuse")</a>
                 <a class="btn btn-sm btn-info learn-more" href="@Url.RouteUrl("Topic", new { SeName = TopicSeNameConstants.Privacyinfo })">@T("EUCookieLaw.LearnMore")</a>
             </div>
         </blockquote>

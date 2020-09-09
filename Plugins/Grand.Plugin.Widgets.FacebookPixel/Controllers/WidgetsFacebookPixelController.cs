@@ -48,6 +48,7 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Controllers
             model.AllowToDisableConsentCookie = facebookPixelSettings.AllowToDisableConsentCookie;
             model.ConsentName = facebookPixelSettings.ConsentName;
             model.ConsentDescription = facebookPixelSettings.ConsentDescription;
+            model.ConsentDefaultState = facebookPixelSettings.ConsentDefaultState;
 
             model.ActiveStoreScopeConfiguration = storeScope;
             if (!string.IsNullOrEmpty(storeScope))
@@ -57,6 +58,7 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Controllers
                 model.AddToCartScript_OverrideForStore = _settingService.SettingExists(facebookPixelSettings, x => x.AddToCartScript, storeScope);
                 model.DetailsOrderScript_OverrideForStore = _settingService.SettingExists(facebookPixelSettings, x => x.DetailsOrderScript, storeScope);
                 model.AllowToDisableConsentCookie_OverrideForStore = _settingService.SettingExists(facebookPixelSettings, x => x.AllowToDisableConsentCookie, storeScope);
+                model.ConsentDefaultState_OverrideForStore = _settingService.SettingExists(facebookPixelSettings, x => x.ConsentDefaultState, storeScope);
                 model.ConsentName_OverrideForStore = _settingService.SettingExists(facebookPixelSettings, x => x.ConsentName, storeScope);
                 model.ConsentDescription_OverrideForStore = _settingService.SettingExists(facebookPixelSettings, x => x.ConsentDescription, storeScope);
 
@@ -78,6 +80,7 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Controllers
             facebookPixelSettings.AllowToDisableConsentCookie = model.AllowToDisableConsentCookie;
             facebookPixelSettings.ConsentName = model.ConsentName;
             facebookPixelSettings.ConsentDescription = model.ConsentDescription;
+            facebookPixelSettings.ConsentDefaultState = model.ConsentDefaultState;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -106,6 +109,11 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Controllers
                 await _settingService.SaveSetting(facebookPixelSettings, x => x.AllowToDisableConsentCookie, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(facebookPixelSettings, x => x.AllowToDisableConsentCookie, storeScope);
+
+            if (model.ConsentDefaultState_OverrideForStore || String.IsNullOrEmpty(storeScope))
+                await _settingService.SaveSetting(facebookPixelSettings, x => x.ConsentDefaultState, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                await _settingService.DeleteSetting(facebookPixelSettings, x => x.ConsentDefaultState, storeScope);
 
             if (model.ConsentName_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 await _settingService.SaveSetting(facebookPixelSettings, x => x.ConsentName, storeScope, false);

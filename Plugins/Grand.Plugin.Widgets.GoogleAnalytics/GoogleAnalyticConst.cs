@@ -3,6 +3,5 @@
     public static class GoogleAnalyticConst
     {
         public static string ConsentCookieSystemName = "GoogleAnalytics";
-        public static bool ConsentCookieDefaultState = true;
     }
 }
