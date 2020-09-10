@@ -1185,7 +1185,7 @@ body.nav-md .nav.side-menu > li.current-page, body.nav-md .nav.side-menu > li.ac
     border-right: 0
 }
 
-.top_search .input-group-btn button {
+.top_search .input-group-append button {
     border-radius: 0px 25px 25px 0px;
     border: 1px solid rgba(221, 226, 232, 0.49);
     border-left: 0;
@@ -5824,6 +5824,7 @@ label {
 .note {
     margin: 0 0 20px;
     padding: 15px 30px 15px 15px;
+    font-weight: 400;
     border-left: 5px solid #eee;
 }
 
@@ -6257,7 +6258,7 @@ form>h4 {
         left: 3px;
         margin-left: 0px;
     }
-    .col-sm-9>.input-group>.input-group-btn>.btn {
+    .col-sm-9>.input-group>.input-group-append>.btn {
         margin-top: -5px;
     }
     .caption {
@@ -6497,6 +6498,9 @@ a.k-link.orderstatuslist:hover {
         z-index: 10;
     }
 
+.tableFixHead thead th strong {
+    font-weight: 500;
+}
 table.tableFixHead {
     border-collapse: collapse;
     width: 100%;

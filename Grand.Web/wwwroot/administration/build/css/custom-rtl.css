@@ -1576,7 +1576,7 @@ a.hiddenanchor {
   border-left: 0;
 }
 
-.top_search .input-group-btn button {
+.top_search .input-group-append button {
   border-radius: 25px 0 0 25px !important;
   border: 1px solid rgba(221, 226, 232, 0.49);
   border-right: 0;

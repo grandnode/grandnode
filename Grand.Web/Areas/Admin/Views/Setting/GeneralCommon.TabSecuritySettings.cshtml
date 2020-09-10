@@ -53,7 +53,7 @@
                 <div class="input-group">
                     <admin-input asp-for="SecuritySettings.EncryptionKey" />
                     <span asp-validation-for="SecuritySettings.EncryptionKey"></span>
-                    <span class="input-group-btn">
+                    <span class="input-group-append">
                         <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="btn default" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                     </span>
                 </div>

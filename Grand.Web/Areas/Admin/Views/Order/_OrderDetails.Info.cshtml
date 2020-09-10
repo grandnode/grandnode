@@ -121,20 +121,22 @@
         @if (!Model.IsLoggedInAsVendor)
         {
             <div class="form-group">
-                <admin-label asp-for="OrderStatus" asp-display-hint="false" class="control-label col-12 col-md-3 col-sm-3"></admin-label>
+                <admin-label asp-for="OrderStatus" asp-display-hint="false" class="control-label col-12 col-md-3 col-sm-3 pt-2"></admin-label>
                 <div class="col-12 col-md-9 col-sm-9 orderEditBtn">
-                    <strong>
-                        @Model.OrderStatus
-                    </strong>&nbsp;
-                    @if (Model.CanCancelOrder)
-                    {
-                        <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="btn red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-                    }
-                    <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn green" />
+                    <div class="d-inline-flex w-100 align-items-center mb-3">
+                        <strong>
+                            @Model.OrderStatus
+                        </strong>&nbsp;&nbsp;&nbsp;&nbsp;
+                        @if (Model.CanCancelOrder)
+                        {
+                            <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="btn red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                        }
+                        <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn green" />
+                    </div>
                     <div id="pnlChangeOrderStatus">
                         <div class="note note-info">@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</div>
                         <admin-select asp-for="OrderStatusId" asp-items="((OrderStatus)Model.OrderStatusId).ToSelectList(Context)" />
-                        <div class="form-actions btn-group btn-group-devided">
+                        <div class="form-actions btn-group btn-group-devided mt-3">
                             <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="k-button" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                             <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="k-button" />
                         </div>
