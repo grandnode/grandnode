@@ -1415,8 +1415,7 @@ a.hiddenanchor {
 }
 .tableFixHead td .mt-checkbox + .k-link {
     position: absolute;
-    top: 16px;
-    padding: 0 5px 0 0;
+    top: 14px;
 }
 
 .navbar {
@@ -3060,6 +3059,7 @@ span.tag a {
 }
 
 .input-group {
+  display: inline-flex;
   margin-bottom: 10px;
 }
 

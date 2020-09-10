@@ -100,13 +100,11 @@ function init_sidebar() {
     // toggle small or large menu 
     $MENU_TOGGLE.on('click', function () {
         if ($BODY.hasClass('nav-md')) {
-
            localStorage.setItem('sideBarCookie', 'true');
             //$(".site_title").css("padding-left", "26px");
             $SIDEBAR_MENU.find('li.active ul').hide();
             $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
         } else {
-
            localStorage.setItem('sideBarCookie', 'false');
             
             $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');

@@ -149,8 +149,10 @@
                 <admin-label asp-for="OrderTags" />
                 <div class="col-md-9 col-sm-9">
                     <span asp-validation-for="OrderTags"></span>
-                    <admin-input asp-for="OrderTags" />
-                    <input type="submit" name="btnSaveOrderTags" value="@T("Admin.Orders.Fields.SaveOrderTags")" id="btnSaveOrderTags" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                    <div class="input-group flex-nowrap w-100">
+                        <admin-input asp-for="OrderTags" />
+                        <input type="submit" name="btnSaveOrderTags" value="@T("Admin.Orders.Fields.SaveOrderTags")" id="btnSaveOrderTags" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                    </div>
                 </div>
             </div>
         }
