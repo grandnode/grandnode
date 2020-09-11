@@ -178,4 +178,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayPrivacyPreference.Hint">
     <Value>Check this box if you want to display privacy preferences</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PremiumThemes">
+    <Value>Customize your store with one of a premium theme</Value>
+  </LocaleResource>
 </Language>
