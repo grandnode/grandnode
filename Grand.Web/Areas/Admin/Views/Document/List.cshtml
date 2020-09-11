@@ -15,7 +15,7 @@
                     @T("Admin.Documents.Document.Manage")
                 </div>
                 <div class="actions btn-group btn-group-devided util-btn-margin-bottom-5">
-                    <a href="@Url.Action("CreateDocument")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
+                    <a href="@Url.Action("CreateDocument")" class="btn green"><i class="fa fa-plus"></i><span class="d-none d-sm-inline"> @T("Admin.Common.AddNew") </span></a>
                     <vc:admin-widget widget-zone="documents_list_buttons" additional-data="null" />
                 </div>
             </div>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="form-actions">
                         <div class="row">
-                            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                            <div class="offset-md-3 offset-sm-3 col-md-9 col-sm-9">
                                 <button class="btn btn-success filter-submit" id="search-documents">
                                     <i class="fa fa-search"></i> @T("Admin.Common.Search")
                                 </button>

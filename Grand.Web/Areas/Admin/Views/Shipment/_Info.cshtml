@@ -17,7 +17,7 @@
                         <div class="input-group-control">
                             <admin-input asp-for="TrackingNumber" />
                         </div>
-                        <div class="input-group-btn">
+                        <div class="input-group-append">
                             <input type="submit" name="settrackingnumber" value="@T("Admin.Orders.Shipments.TrackingNumber.Button")" class="btn default" />
                             @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
                             {
@@ -34,7 +34,7 @@
                         <div class="input-group-control">
                             <admin-input asp-for="AdminComment" />
                         </div>
-                        <div class="input-group-btn">
+                        <div class="input-group-append">
                             <input type="submit" name="setadmincomment" value="@T("Admin.Orders.Shipments.AdminComment.Button")" class="btn default" />
                         </div>
                     </div>

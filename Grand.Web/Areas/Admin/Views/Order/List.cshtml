@@ -60,20 +60,20 @@
 
                         <div class="form-body col-md-6">
                             <div class="form-group">
-                                <admin-label asp-for="BillingEmail" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="BillingEmail" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-input asp-for="BillingEmail" />
                                 </div>
                             </div>
                         </div>
                         <div class="form-body col-md-6">
                             <div class="form-group form-inline">
-                                <admin-label asp-for="GoDirectlyToNumber" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="GoDirectlyToNumber" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <div class="input-group">
                                         <admin-input asp-for="GoDirectlyToNumber" />
-                                    </div>
-                                    <input type="submit" name="go-to-order-by-number" id="gotoorderbynumber" class="input-group k-button" value="@T("Admin.Common.Go")" />
+                                        <input type="submit" name="go-to-order-by-number" id="gotoorderbynumber" class="input-group btn btn-default" value="@T("Admin.Common.Go")" />
+                                    </div>  
                                 </div>
                             </div>
                         </div>
@@ -81,34 +81,34 @@
 
                         <div class="form-body col-md-6 extend-collapse">
                             <div class="form-group">
-                                <admin-label asp-for="StartDate" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="StartDate" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-input asp-for="StartDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="EndDate" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="EndDate" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-input asp-for="EndDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="BillingLastName" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="BillingLastName" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-input asp-for="BillingLastName" />
                                 </div>
                             </div>
 
 
                             <div class="form-group">
-                                <admin-label asp-for="BillingCountryId" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="BillingCountryId" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="ProductId" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="ProductId" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <input class="form-control" type="text" id="search-product-name" autocomplete="off" />
                                     <span id="search-product-friendly-name"></span>
                                     <input type="button" id="search-product-clear" class="k-button" style="display:none;" value="@T("Admin.Common.Clear")" />
@@ -140,65 +140,65 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="OrderGuid" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="OrderGuid" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-input asp-for="OrderGuid" />
                                 </div>
                             </div>
                         </div>
                         <div class="form-body col-md-6 extend-collapse">
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                <admin-label asp-for="OrderStatusId" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="OrderStatusId" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="PaymentStatusId" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="PaymentStatusId" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                <admin-label asp-for="ShippingStatusId" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="ShippingStatusId" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="ShippingStatusId" asp-items="Model.AvailableShippingStatuses" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="StoreId" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="StoreId" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                <admin-label asp-for="VendorId" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="VendorId" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="WarehouseId" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="WarehouseId" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="WarehouseId" asp-items="Model.AvailableWarehouses" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                <admin-label asp-for="PaymentMethodSystemName" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="PaymentMethodSystemName" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="PaymentMethodSystemName" asp-items="Model.AvailablePaymentMethods" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="OrderTag" class="col-xs-4 col-sm-4 col-md-4 control-label" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="OrderTag" class="col-4 col-sm-4 col-md-4 control-label" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-select asp-for="OrderTag" asp-items="Model.AvailableOrderTags" />
                                 </div>
                             </div>
                         </div>
-                        <div class="form-actions">
+                        <div class="form-actions d-flex flex-column w-100">
                             <div class="row">
-                                <div class="col-md-offset-5 col-sm-offset-5 col-md-7 col-sm-7">
+                                <div class="offset-md-5 offset-sm-5 col-md-7 col-sm-7">
                                     <button class="btn btn-success filter-submit" id="search-orders">
                                         <i class="fa fa-search"></i> @T("Admin.Common.Search")
                                     </button>

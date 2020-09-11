@@ -49,11 +49,11 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShipToSameAddress_OverrideForStore, model => model.ShipToSameAddress, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShipToSameAddress" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShipToSameAddress" />
                                          <div class="control__indicator"></div>
@@ -62,11 +62,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowPickUpInStore_OverrideForStore, model => model.AllowPickUpInStore, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="AllowPickUpInStore" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowPickUpInStore" />
                                          <div class="control__indicator"></div>
@@ -75,11 +75,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.UseWarehouseLocation_OverrideForStore, model => model.UseWarehouseLocation, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="UseWarehouseLocation" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="UseWarehouseLocation" />
                                          <div class="control__indicator"></div>
@@ -88,11 +88,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, model => model.NotifyCustomerAboutShippingFromMultipleLocations, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="NotifyCustomerAboutShippingFromMultipleLocations" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="NotifyCustomerAboutShippingFromMultipleLocations" />
                                          <div class="control__indicator"></div>
@@ -101,11 +101,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXEnabled_OverrideForStore, model => model.FreeShippingOverXEnabled, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="FreeShippingOverXEnabled" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="FreeShippingOverXEnabled" />
                                          <div class="control__indicator"></div>
@@ -114,21 +114,21 @@
                                 </div>
                             </div>
                             <div class="form-group" id="pnlValueOfX">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXValue_OverrideForStore, model => model.FreeShippingOverXValue, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="FreeShippingOverXValue" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="FreeShippingOverXValue" />
                                     <span asp-validation-for="FreeShippingOverXValue"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlValueOfXincltax">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXIncludingTax_OverrideForStore, model => model.FreeShippingOverXIncludingTax, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="FreeShippingOverXIncludingTax" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="FreeShippingOverXIncludingTax" />
                                          <div class="control__indicator"></div>
@@ -137,11 +137,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EstimateShippingEnabled_OverrideForStore, model => model.EstimateShippingEnabled, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="EstimateShippingEnabled" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="EstimateShippingEnabled" />
                                          <div class="control__indicator"></div>
@@ -150,11 +150,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToCustomers_OverrideForStore, model => model.DisplayShipmentEventsToCustomers, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="DisplayShipmentEventsToCustomers" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="DisplayShipmentEventsToCustomers" />
                                          <div class="control__indicator"></div>
@@ -163,11 +163,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToStoreOwner_OverrideForStore, model => model.DisplayShipmentEventsToStoreOwner, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="DisplayShipmentEventsToStoreOwner" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="DisplayShipmentEventsToStoreOwner" />
                                          <div class="control__indicator"></div>
@@ -176,11 +176,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, model => model.BypassShippingMethodSelectionIfOnlyOne, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="BypassShippingMethodSelectionIfOnlyOne" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="BypassShippingMethodSelectionIfOnlyOne" />
                                          <div class="control__indicator"></div>
