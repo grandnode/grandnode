@@ -11,7 +11,7 @@
             <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.StoreClosed" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.StoreClosed"></span>
             </div>
@@ -78,7 +78,7 @@
             <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.AllowCustomerToSelectTheme" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.AllowCustomerToSelectTheme"></span>
             </div>
@@ -101,13 +101,26 @@
             <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.DisplayEuCookieLawWarning" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.DisplayEuCookieLawWarning"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-8 col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DisplayPrivacyPreference_OverrideForStore, model => model.StoreInformationSettings.DisplayPrivacyPreference, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="StoreInformationSettings.DisplayPrivacyPreference" class="control-label" />
+            </div>
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="StoreInformationSettings.DisplayPrivacyPreference" />
+                    <div class="control__indicator"></div>
+                </label>
+                <span asp-validation-for="StoreInformationSettings.DisplayPrivacyPreference"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.FacebookLink_OverrideForStore, model => model.StoreInformationSettings.FacebookLink, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.FacebookLink" class="control-label" />
             </div>
@@ -174,7 +187,7 @@
             <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.StoreInDatabaseContactUsForm" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.StoreInDatabaseContactUsForm"></span>
             </div>
@@ -187,7 +200,7 @@
             <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.SubjectFieldOnContactUsForm"></span>
             </div>
@@ -200,7 +213,7 @@
             <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.UseSystemEmailForContactUsForm"></span>
             </div>
@@ -213,7 +226,7 @@
             <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="KnowledgebaseSettings.Enabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="KnowledgebaseSettings.Enabled"></span>
             </div>
@@ -226,7 +239,7 @@
             <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments"></span>
             </div>
@@ -239,7 +252,7 @@
             <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="KnowledgebaseSettings.NotifyAboutNewArticleComments" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="KnowledgebaseSettings.NotifyAboutNewArticleComments"></span>
             </div>

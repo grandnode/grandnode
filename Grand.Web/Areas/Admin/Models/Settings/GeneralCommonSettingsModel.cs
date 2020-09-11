@@ -65,6 +65,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool DisplayEuCookieLawWarning { get; set; }
             public bool DisplayEuCookieLawWarning_OverrideForStore { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayPrivacyPreference")]
+            public bool DisplayPrivacyPreference { get; set; }
+            public bool DisplayPrivacyPreference_OverrideForStore { get; set; }
+            
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FacebookLink")]
             public string FacebookLink { get; set; }
             public bool FacebookLink_OverrideForStore { get; set; }
@@ -175,6 +180,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags")]
             public bool OpenGraphMetaTags { get; set; }
             public bool OpenGraphMetaTags_OverrideForStore { get; set; }
+
+            [UIHint("Picture")]
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StorePicture")]
+            public string StorePictureId { get; set; }
+            public bool StorePictureId_OverrideForStore { get; set; }
         }
 
         public partial class SecuritySettingsModel : BaseGrandModel

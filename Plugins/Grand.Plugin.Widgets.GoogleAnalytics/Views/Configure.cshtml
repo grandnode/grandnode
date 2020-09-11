@@ -148,9 +148,55 @@
                 <div class="col-md-8 col-sm-8">
                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                         <admin-input asp-for="IncludingTax" />
-                         <div class="control__indicator"></div>
+                        <div class="control__indicator"></div>
                     </label>
                     <span asp-validation-for="IncludingTax"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.AllowToDisableConsentCookie_OverrideForStore, model => model.AllowToDisableConsentCookie, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="AllowToDisableConsentCookie" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                        <admin-input asp-for="AllowToDisableConsentCookie" />
+                        <div class="control__indicator"></div>
+                    </label>
+                    <span asp-validation-for="AllowToDisableConsentCookie"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ConsentDefaultState_OverrideForStore, model => model.ConsentDefaultState, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="ConsentDefaultState" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                        <admin-input asp-for="ConsentDefaultState" />
+                        <div class="control__indicator"></div>
+                    </label>
+                    <span asp-validation-for="ConsentDefaultState"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ConsentName_OverrideForStore, model => model.ConsentName, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="ConsentName" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <admin-textarea asp-for="ConsentName"></admin-textarea>
+                    <span asp-validation-for="ConsentName"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ConsentDescription_OverrideForStore, model => model.ConsentDescription, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="ConsentDescription" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <admin-textarea asp-for="ConsentDescription"></admin-textarea>
+                    <span asp-validation-for="ConsentDescription"></span>
                 </div>
             </div>
             <div class="form-group">

@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Plugin.Widgets.FacebookPixel.Models;
+using Grand.Services.Common;
 using Grand.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -13,21 +14,34 @@ namespace Grand.Plugin.Widgets.FacebookPixel.Components
     {
         private readonly IWorkContext _workContext;
         private readonly IOrderService _orderService;
+        private readonly ICookiePreference _cookiePreference;
+        private readonly IStoreContext _storeContext;
         private readonly FacebookPixelSettings _facebookPixelSettings;
 
         public WidgetsFacebookPixelViewComponent(
             IWorkContext workContext,
             IOrderService orderService,
+            IStoreContext storeContext,
+            ICookiePreference cookiePreference,
             FacebookPixelSettings facebookPixelSettings
             )
         {
             _workContext = workContext;
             _orderService = orderService;
+            _cookiePreference = cookiePreference;
+            _storeContext = storeContext;
             _facebookPixelSettings = facebookPixelSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
+
+            if (_facebookPixelSettings.AllowToDisableConsentCookie)
+            {
+                var enabled = await _cookiePreference.IsEnable(_workContext.CurrentCustomer, _storeContext.CurrentStore, FacebookPixelConst.ConsentCookieSystemName);
+                if ((enabled.HasValue && !enabled.Value) || (!enabled.HasValue && !_facebookPixelSettings.ConsentDefaultState))
+                    return Content("");
+            }
             //page
             if (widgetZone == FacebookPixelWidgetZone.Page)
             {

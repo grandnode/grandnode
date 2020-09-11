@@ -23,6 +23,7 @@ namespace Grand.Web.Models.Common
         public string InstagramLink { get; set; }
         public string LinkedInLink { get; set; }
         public string PinterestLink { get; set; }
+        public bool PrivacyPreference { get; set; }
         public bool WishlistEnabled { get; set; }
         public bool ShoppingCartEnabled { get; set; }
         public bool SitemapEnabled { get; set; }
