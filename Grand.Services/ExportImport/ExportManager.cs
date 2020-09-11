@@ -152,7 +152,7 @@ namespace Grand.Services.ExportImport
             var xmlWriter = XmlWriter.Create(stringWriter, xwSettings);
             await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Manufacturers");
-            xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", GrandVersion.FullVersion);
 
             foreach (var manufacturer in manufacturers)
             {
@@ -252,7 +252,7 @@ namespace Grand.Services.ExportImport
             var xmlWriter = XmlWriter.Create(stringWriter, xwSettings);
             await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Categories");
-            xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", GrandVersion.FullVersion);
             await WriteCategories(xmlWriter, categories.ToList());
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
@@ -309,7 +309,7 @@ namespace Grand.Services.ExportImport
             var xmlWriter = XmlWriter.Create(stringWriter, xwSettings);
             await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Products");
-            xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", GrandVersion.FullVersion);
 
             foreach (var product in products)
             {
@@ -700,7 +700,7 @@ namespace Grand.Services.ExportImport
             var xmlWriter = XmlWriter.Create(stringWriter, xwSettings);
             await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Orders");
-            xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", GrandVersion.FullVersion);
 
 
             foreach (var order in orders)
@@ -971,7 +971,7 @@ namespace Grand.Services.ExportImport
             var xmlWriter = XmlWriter.Create(stringWriter, xwSettings);
             await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Customers");
-            xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", GrandVersion.FullVersion);
 
             foreach (var customer in customers)
             {

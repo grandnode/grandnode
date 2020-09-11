@@ -1,10 +1,11 @@
-﻿using Grand.Core.Plugins;
+﻿using Grand.Core;
+using Grand.Core.Plugins;
 
 [assembly: PluginInfo(
     FriendlyName = "Google Analytics or Universal Analytics",
     Group = "Widgets",
     SystemName = "Widgets.GoogleAnalytics",
-    SupportedVersion = "4.80",
+    SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
     Version = "2.07"
 )]

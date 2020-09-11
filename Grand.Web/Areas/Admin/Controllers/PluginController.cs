@@ -493,8 +493,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                                 descriptor = GetPluginDescriptorFromText(reader.ReadToEnd());
 
                                 //ensure that the plugin current version is supported
-                                if (!(descriptor as PluginDescriptor).SupportedVersions.Contains(GrandVersion.CurrentVersion))
-                                    throw new Exception($"This plugin doesn't support the current version - {GrandVersion.CurrentVersion}");
+                                if (!(descriptor as PluginDescriptor).SupportedVersions.Contains(GrandVersion.SupportedPluginVersion))
+                                    throw new Exception($"This plugin doesn't support the current version - {GrandVersion.SupportedPluginVersion}");
                             }
                         }
                     }

@@ -1073,6 +1073,9 @@ namespace Grand.Services.Orders
             //Update field Last purchase date after added a new order
             await _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);
 
+            //Update field Last purchase date after added a new order
+            await _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
+
         }
 
         protected virtual async Task CreateRecurringPayment(ProcessPaymentRequest processPaymentRequest, Order order)

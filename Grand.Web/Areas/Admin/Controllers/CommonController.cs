@@ -147,7 +147,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult SystemInfo()
         {
             var model = new SystemInfoModel();
-            model.GrandVersion = GrandVersion.CurrentVersion;
+            model.GrandVersion = GrandVersion.FullVersion;
             try
             {
                 model.OperatingSystem = RuntimeInformation.OSDescription;

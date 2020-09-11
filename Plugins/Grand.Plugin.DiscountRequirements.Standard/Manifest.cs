@@ -1,10 +1,11 @@
-﻿using Grand.Core.Plugins;
+﻿using Grand.Core;
+using Grand.Core.Plugins;
 
 [assembly: PluginInfo(
     FriendlyName = "Standard discount requirements",
     Group = "Discount requirements",
     SystemName = "DiscountRequirements.Standard",
-    SupportedVersion = "4.80",
+    SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
     Version = "1.02"
 )]
