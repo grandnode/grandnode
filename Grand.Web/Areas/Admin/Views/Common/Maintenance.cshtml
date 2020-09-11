@@ -26,19 +26,19 @@
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="DeleteGuests.StartDate" />
-                                <div class="col-xs-8 col-md-4 col-sm-4">
+                                <div class="col-8 col-md-4 col-sm-4">
                                     <admin-input asp-for="DeleteGuests.StartDate" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="DeleteGuests.EndDate" />
-                                <div class="col-xs-8 col-md-4 col-sm-4">
+                                <div class="col-8 col-md-4 col-sm-4">
                                     <admin-input asp-for="DeleteGuests.EndDate" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="DeleteGuests.OnlyWithoutShoppingCart" />
-                                <div class="col-xs-8 col-md-4 col-sm-4">
+                                <div class="col-8 col-md-4 col-sm-4">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="DeleteGuests.OnlyWithoutShoppingCart" />
                                         <div class="control__indicator"></div>
@@ -46,11 +46,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input type="submit" name="delete-guests" class="btn red col-md-offset-3" value="@T("Admin.Common.Delete")" />
+                                <input type="submit" name="delete-guests" class="btn red offset-md-3" value="@T("Admin.Common.Delete")" />
                             </div>
                             @if (Model.DeleteGuests.NumberOfDeletedCustomers.HasValue)
                             {
-                                <label class="col-md-offset-3">@string.Format(T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)</label>
+                                <label class="offset-md-3">@string.Format(T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)</label>
                             }
                         </div>
                         <div class="form-body panel panel-default">
@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input type="submit" name="clear-most-view" class="btn red col-md-offset-3" value="@T("Admin.Common.Delete")" />
+                                <input type="submit" name="clear-most-view" class="btn red offset-md-3" value="@T("Admin.Common.Delete")" />
                             </div>
                         </div>
                         <div class="form-body panel panel-default">
@@ -71,22 +71,22 @@
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="DeleteExportedFiles.StartDate" />
-                                <div class="col-xs-8 col-md-4 col-sm-4">
+                                <div class="col-8 col-md-4 col-sm-4">
                                     <admin-input asp-for="DeleteExportedFiles.StartDate" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="DeleteExportedFiles.EndDate" />
-                                <div class="col-xs-8 col-md-4 col-sm-4">
+                                <div class="col-8 col-md-4 col-sm-4">
                                     <admin-input asp-for="DeleteExportedFiles.EndDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input type="submit" name="delete-exported-files" class="btn red col-md-offset-3" value="@T("Admin.Common.Delete")" />
+                                <input type="submit" name="delete-exported-files" class="btn red offset-md-3" value="@T("Admin.Common.Delete")" />
                             </div>
                             @if (Model.DeleteExportedFiles.NumberOfDeletedFiles.HasValue)
                             {
-                                <label class="col-md-offset-3">@string.Format(T("Admin.System.Maintenance.DeleteExportedFiles.TotalDeleted").Text, Model.DeleteExportedFiles.NumberOfDeletedFiles.Value)</label>
+                                <label class="offset-md-3">@string.Format(T("Admin.System.Maintenance.DeleteExportedFiles.TotalDeleted").Text, Model.DeleteExportedFiles.NumberOfDeletedFiles.Value)</label>
                             }
                         </div>
                         <div class="form-body panel panel-default">
@@ -94,12 +94,12 @@
                                 <strong>@T("Admin.System.Maintenance.DeleteActivityLog")</strong>
                             </div>
                             <div class="form-group">
-                                <input type="submit" name="delete-activitylog" class="btn red col-md-offset-3" value="@T("Admin.Common.Delete")" />
+                                <input type="submit" name="delete-activitylog" class="btn red offset-md-3" value="@T("Admin.Common.Delete")" />
                             </div>
                             @if (Model.DeleteActivityLog)
                             {
                                 <div class="form-group">
-                                    <label class="col-md-offset-3">@T("Admin.System.Maintenance.DeleteActivityLog.Deleted")</label>
+                                    <label class="offset-md-3">@T("Admin.System.Maintenance.DeleteActivityLog.Deleted")</label>
                                 </div>
                             }
                         </div>
@@ -108,7 +108,7 @@
                                 <strong>@T("Admin.System.Maintenance.ConvertPicture")</strong>
                             </div>
                             <div class="form-group">
-                                <button type="button" class="btn btn-danger red col-md-offset-3" data-toggle="modal" data-target="#convertPicutresConfirmationModal">@T("Admin.System.Maintenance.ConvertPicture.Button")</button>
+                                <button type="button" class="btn btn-danger red offset-md-3" data-toggle="modal" data-target="#convertPicutresConfirmationModal">@T("Admin.System.Maintenance.ConvertPicture.Button")</button>
                                 <div class="modal fade" id="convertPicutresConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -123,7 +123,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">@T("Common.Close")</button>
-                                                <input type="submit" name="convert-picture-webp" class="btn red col-md-offset-3" value="@T("Admin.Common.SaveChanges")" />
+                                                <input type="submit" name="convert-picture-webp" class="btn red offset-md-3" value="@T("Admin.Common.SaveChanges")" />
                                             </div>
                                         </div>
                                     </div>
@@ -132,7 +132,7 @@
                             @if (Model.ConvertedPictureModel.NumberOfConvertItems >= 0)
                             {
                                 <div class="form-group">
-                                    <label class="col-md-offset-3">@T("Admin.System.Maintenance.ConvertPicture.Number") : @Model.ConvertedPictureModel.NumberOfConvertItems</label>
+                                    <label class="offset-md-3">@T("Admin.System.Maintenance.ConvertPicture.Number") : @Model.ConvertedPictureModel.NumberOfConvertItems</label>
                                 </div>
                             }
                         </div>

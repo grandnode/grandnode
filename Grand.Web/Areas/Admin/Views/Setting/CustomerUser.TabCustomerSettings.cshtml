@@ -35,10 +35,10 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.UsernamesEnabled" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.UsernamesEnabled" />
                     <div class="control__indicator"></div>
@@ -47,10 +47,10 @@
             </div>
         </div>
         <div class="form-group" id="pnlAllowUsersToChangeUsernames">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.AllowUsersToChangeUsernames" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
                     <div class="control__indicator"></div>
@@ -59,10 +59,10 @@
             </div>
         </div>
         <div class="form-group" id="pnlCheckUsernameAvailability">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" />
                     <div class="control__indicator"></div>
@@ -71,19 +71,19 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.UserRegistrationType" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-select asp-for="CustomerSettings.UserRegistrationType" asp-items="((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectList(Context)" />
                 <span asp-validation-for="CustomerSettings.UserRegistrationType"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.AllowCustomersToUploadAvatars" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.AllowCustomersToUploadAvatars" />
                     <div class="control__indicator"></div>
@@ -92,10 +92,10 @@
             </div>
         </div>
         <div class="form-group" id="pnlDefaultAvatarEnabled">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.DefaultAvatarEnabled" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.DefaultAvatarEnabled" />
                     <div class="control__indicator"></div>
@@ -104,10 +104,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.ShowCustomersLocation" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.ShowCustomersLocation" />
                     <div class="control__indicator"></div>
@@ -116,10 +116,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.ShowCustomersJoinDate" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.ShowCustomersJoinDate" />
                     <div class="control__indicator"></div>
@@ -128,10 +128,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.AllowViewingProfiles" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.AllowViewingProfiles" />
                     <div class="control__indicator"></div>
@@ -140,10 +140,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.AllowUsersToDeleteAccount" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.AllowUsersToDeleteAccount" />
                     <div class="control__indicator"></div>
@@ -152,10 +152,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.AllowUsersToExportData" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.AllowUsersToExportData" />
                     <div class="control__indicator"></div>
@@ -164,10 +164,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.NotifyNewCustomerRegistration" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.NotifyNewCustomerRegistration" />
                     <div class="control__indicator"></div>
@@ -176,10 +176,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.HideDownloadableProductsTab" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.HideDownloadableProductsTab" />
                     <div class="control__indicator"></div>
@@ -188,10 +188,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.HideBackInStockSubscriptionsTab" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.HideBackInStockSubscriptionsTab" />
                     <div class="control__indicator"></div>
@@ -200,10 +200,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.HideAuctionsTab" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.HideAuctionsTab" />
                     <div class="control__indicator"></div>
@@ -212,10 +212,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.HideNotesTab" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.HideNotesTab" />
                     <div class="control__indicator"></div>
@@ -224,10 +224,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.HideReviewsTab" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.HideReviewsTab" />
                     <div class="control__indicator"></div>
@@ -236,10 +236,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.HideCoursesTab" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.HideCoursesTab" />
                     <div class="control__indicator"></div>
@@ -248,65 +248,65 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.CustomerNameFormat" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-select asp-for="CustomerSettings.CustomerNameFormat" asp-items="((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList(Context)" />
                 <span asp-validation-for="CustomerSettings.CustomerNameFormat"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.DefaultPasswordFormat" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-select asp-for="CustomerSettings.DefaultPasswordFormat" asp-items="((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList(Context)" />
                 <span asp-validation-for="CustomerSettings.DefaultPasswordFormat"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.PasswordMinLength" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="CustomerSettings.PasswordMinLength" />
                 <span asp-validation-for="CustomerSettings.PasswordMinLength"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.PasswordLifetime" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="CustomerSettings.PasswordLifetime" />
                 <span asp-validation-for="CustomerSettings.PasswordLifetime"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.UnduplicatedPasswordsNumber" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="CustomerSettings.UnduplicatedPasswordsNumber" />
                 <span asp-validation-for="CustomerSettings.UnduplicatedPasswordsNumber"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.PasswordRecoveryLinkDaysValid" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="CustomerSettings.PasswordRecoveryLinkDaysValid" />
                 <span asp-validation-for="CustomerSettings.PasswordRecoveryLinkDaysValid"></span>
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.FailedPasswordAllowedAttempts" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="CustomerSettings.FailedPasswordAllowedAttempts" />
                 <span asp-validation-for="CustomerSettings.FailedPasswordAllowedAttempts"></span>
                 <script>
@@ -327,20 +327,20 @@
             </div>
         </div>
         <div class="form-group" id="pnlFailedPasswordLockoutMinutes">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.FailedPasswordLockoutMinutes" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-input asp-for="CustomerSettings.FailedPasswordLockoutMinutes" />
                 <span asp-validation-for="CustomerSettings.FailedPasswordLockoutMinutes"></span>
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.HideNewsletterBlock" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.HideNewsletterBlock" />
                     <div class="control__indicator"></div>
@@ -349,10 +349,10 @@
             </div>
         </div>
         <div class="form-group" id="pnlNewsletterBlockAllowToUnsubscribe">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.NewsletterBlockAllowToUnsubscribe" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.NewsletterBlockAllowToUnsubscribe" />
                     <div class="control__indicator"></div>
@@ -361,10 +361,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.RegistrationFreeShipping" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.RegistrationFreeShipping" />
                     <div class="control__indicator"></div>
@@ -373,10 +373,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.StoreLastVisitedPage" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.StoreLastVisitedPage" />
                     <div class="control__indicator"></div>
@@ -385,10 +385,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.TwoFactorAuthenticationEnabled" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerSettings.TwoFactorAuthenticationEnabled" />
                     <div class="control__indicator"></div>
@@ -397,10 +397,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.TwoFactorAuthenticationType" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <admin-select asp-for="CustomerSettings.TwoFactorAuthenticationType" asp-items="((TwoFactorAuthenticationType)Model.CustomerSettings.TwoFactorAuthenticationType).ToSelectList(Context)" />
                 <span asp-validation-for="CustomerSettings.TwoFactorAuthenticationType"></span>
             </div>
