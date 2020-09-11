@@ -257,6 +257,28 @@
                                         <i class="icon-magnifier"></i>
                                     </span>
                                 </li>
+                                <li class="dropdown version-check" role="presentation" id="version_check">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="icon-bell"></i>
+                                    </a>
+                                    <script>
+                                        $.getJSON("https://grandnode.com/version.json", function (data) {
+                                            var items = [];
+
+                                            if (data == '@currentVersion') {
+                                                items.push("<li><a><span class='badge badge-success'>GrandNode is up to date<span></a></li>");
+                                            } else {
+                                                items.push("<li><a><span class='badge badge-danger'>There is an update available<span></a></li>");
+                                                $("<span class='danger-indicator'></span>").appendTo("#version_check .dropdown-toggle");
+                                            }
+
+                                            $("<ul/>", {
+                                                "class": "dropdown-menu dropdown-menu-right dropdown-menu-default",
+                                                html: items.join("")
+                                            }).appendTo("#version_check");
+                                        });
+                                    </script>
+                                </li>
                                 <li role="presentation">
                                     <a>
                                         <div class="custom-control custom-switch light-dark-switch">
