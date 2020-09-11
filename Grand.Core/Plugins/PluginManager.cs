@@ -101,7 +101,7 @@ namespace Grand.Core.Plugins
                 foreach (var pluginDescriptor in GetDescriptions())
                 {
                     //ensure that version of plugin is valid
-                    if (!pluginDescriptor.SupportedVersions.Contains(GrandVersion.CurrentVersion, StringComparer.OrdinalIgnoreCase))
+                    if (!pluginDescriptor.SupportedVersions.Contains(GrandVersion.SupportedPluginVersion, StringComparer.OrdinalIgnoreCase))
                     {
                         incompatiblePlugins.Add(pluginDescriptor.SystemName);
                         continue;

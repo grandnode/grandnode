@@ -1,10 +1,11 @@
-﻿using Grand.Core.Plugins;
+﻿using Grand.Core;
+using Grand.Core.Plugins;
 
 [assembly: PluginInfo(
     FriendlyName = "Shipping Point",
     Group = "Shipping rate computation",
     SystemName = "Shipping.ShippingPoint",
-    SupportedVersion = "4.80",
+    SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
     Version = "1.03"
 )]

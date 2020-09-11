@@ -126,13 +126,13 @@ namespace Grand.Services.Installation
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
                 if (databaseversion != null)
                 {
-                    databaseversion.DataBaseVersion = GrandVersion.CurrentVersion;
+                    databaseversion.DataBaseVersion = GrandVersion.SupportedDBVersion;
                     await _versionRepository.UpdateAsync(databaseversion);
                 }
                 else
                 {
                     databaseversion = new GrandNodeVersion {
-                        DataBaseVersion = GrandVersion.CurrentVersion
+                        DataBaseVersion = GrandVersion.SupportedDBVersion
                     };
                     await _versionRepository.InsertAsync(databaseversion);
                 }

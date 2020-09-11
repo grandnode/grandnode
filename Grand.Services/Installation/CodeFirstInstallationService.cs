@@ -250,7 +250,7 @@ namespace Grand.Services.Installation
         protected virtual async Task InstallVersion()
         {
             var version = new GrandNodeVersion {
-                DataBaseVersion = GrandVersion.CurrentVersion
+                DataBaseVersion = GrandVersion.SupportedDBVersion
             };
             await _versionRepository.InsertAsync(version);
         }
