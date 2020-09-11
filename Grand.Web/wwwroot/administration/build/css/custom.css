@@ -5472,7 +5472,7 @@ a span.username {
     background: #e6e6e6;
     cursor: pointer;
 }
-.check-box ~ .control__indicator {
+.check-box + .control__indicator {
     position: relative;
     width: auto;
     height: auto;
@@ -5480,7 +5480,7 @@ a span.username {
     background: transparent;
     vertical-align: top;
 }
-.check-box ~ .control__indicator::before {
+.check-box + .control__indicator::before {
     background-color: #fff;
     border: #adb5bd solid 1px;
     left: -2.25rem;
@@ -5495,7 +5495,7 @@ a span.username {
     height: 16px;
     content: "";
 }
-.check-box ~ .control__indicator::after {
+.check-box + .control__indicator::after {
     top: calc(.25rem + 2px);
     left: calc(-2.25rem + 2px);
     width: calc(1rem - 4px);
@@ -5517,17 +5517,17 @@ a span.username {
     width: 12px;
     height: 12px;
 }
-.check-box:checked ~ .control__indicator::before {
+.check-box:checked + .control__indicator::before {
     color: #fff;
     border-color: #26B99A;
     background-color: #26B99A;
 }
-.check-box:checked ~ .control__indicator::after {
+.check-box:checked + .control__indicator::after {
     background-color: #fff;
     -webkit-transform: translateX(15px);
     transform: translateX(15px);
 }
-.check-box:disabled ~ .control__indicator::before, .check-box[disabled] ~ .control__indicator::before {
+.check-box:disabled + .control__indicator::before, .check-box[disabled] + .control__indicator::before {
     background-color: #e9ecef;
 }
 
@@ -5882,7 +5882,7 @@ label {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
-.a, code, div, img, input, label, li, p, pre, select, span, svg, table, td, textarea, th, ul {
+.a, code, div, img, label, li, p, pre, select, span, svg, table, td, textarea, th, ul {
     border-radius: 0!important;
 }
 
@@ -6242,7 +6242,7 @@ form>h4 {
     #searchInput {
         width: 100%;
         max-width: none;
-        margin-bottom: 0;
+        margin: 0;
     }
     .top_nav .navbar-right {
         width: 100%;
@@ -6548,3 +6548,102 @@ table.tableFixHead {
     hyphens: auto;
 }
 
+/* Dark Mode */
+
+.light-dark-switch {
+    display: flex;
+    align-items: center;
+}
+.light-dark-switch .custom-control-label {
+    font-weight: 500;
+    cursor: pointer;
+}
+.light-dark-switch .custom-control-label::after {
+    top: 10px;
+}
+.light-dark-switch .custom-control-label::before {
+    top: 8px;
+}
+.light-dark-switch input:checked ~ .custom-control-label::before {
+    border-color: #1ABB9C !important;
+    background-color: #1ABB9C !important;
+}
+
+[data-theme="dark"] body,
+[data-theme="dark"] .table,
+[data-theme="dark"] .tile-stats .icon,
+[data-theme="dark"] .light-dark-switch {
+    color: #fff;
+}
+[data-theme="dark"] .nav.navbar-nav > li > a {
+    color: #fff !important;
+}
+[data-theme="dark"] .tile-stats:hover .icon i,
+[data-theme="dark"] .k-grid tr td i.fa-check::before {
+    color: #1ABB9C;
+}
+[data-theme="dark"] a,
+[data-theme="dark"] .table-hover tbody tr:hover {
+    color: #f9f9f9;
+}
+[data-theme="dark"] .k-grid table a {
+    color: #fff
+}
+[data-theme="dark"] .toggle a span {
+    background: #1ABB9C;
+}
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,.4);
+}
+[data-theme="dark"] body .container.body .right_col,
+[data-theme="dark"] .x_panel,
+[data-theme="dark"] .top_nav .nav > li > a:focus, [data-theme="dark"] .top_nav .nav > li > a:hover, [data-theme="dark"] .top_nav .nav .open > a, [data-theme="dark"] .top_nav .nav .open > a:focus, [data-theme="dark"] .top_nav .nav .open > a:hover {
+    background: #2F3C48;
+}
+[data-theme="dark"] .whiteBg,
+[data-theme="dark"] canvas,
+[data-theme="dark"] .k-grid-footer, [data-theme="dark"] .k-grid-footer td, [data-theme="dark"] .k-grid-header, [data-theme="dark"] .k-grid-header .k-header, [data-theme="dark"] .k-pager-numbers .k-state-selected, [data-theme="dark"] .k-pager-wrap,
+[data-theme="dark"] .k-tabstrip .k-content.k-state-active,
+[data-theme="dark"] .k-content {
+    background: #475766;
+    color: #fff !important;
+}
+[data-theme="dark"] .container.body .right_col {
+    border-left: 1px solid #666;
+}
+[data-theme="dark"] .tile-stats,
+[data-theme="dark"] .nav_menu {
+    background: #475766;
+    border-color: #666;
+}
+[data-theme="dark"] .k-grid table tr,
+[data-theme="dark"] .panel,
+[data-theme="dark"] .panel-footer,
+[data-theme="dark"] .card,
+[data-theme="dark"] .table {
+    color: #fff;
+    background: #637280;
+}
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+    background: rgba(0,0,0,.15);
+}
+[data-theme="dark"] .treeview .list-group-item {
+    color: #fff !important;
+    background: #637280 !important;
+}
+[data-theme="dark"] .btn.default,
+[data-theme="dark"] .btn-default,
+[data-theme="dark"] a.k-button,
+[data-theme="dark"] .k-grid table a.k-button {
+    color: #666;
+}
+[data-theme="dark"] .k-pager-numbers .k-state-selected {
+    border-color: #1ABB9C;
+}
+[data-theme="dark"] .k-grid-pager .k-link, [data-theme="dark"] .k-grid-pager .k-link:link,
+[data-theme="dark"] .x_title > .caption > i {
+    color: #ccc;
+}
+[data-theme="dark"] .k-pager-wrap .k-link.k-state-disabled .k-icon {
+    opacity: 1;
+}

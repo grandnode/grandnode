@@ -18,7 +18,7 @@
 @{
     var currentCustomer = workContext.CurrentCustomer;
     var usernamesEnabled = customerSettings.UsernamesEnabled;
-    var currentVersion = GrandVersion.FullVersion;
+    var currentVersion = GrandVersion.CurrentVersion;
     var kendoVersion = "2019.2.514";
     var supportRtl = workContext.WorkingLanguage.Rtl &&
         !localizationSettings.IgnoreRtlPropertyForAdminArea;
@@ -256,6 +256,39 @@
                                     <span id="searchIcon" class="searchIcon dropdown-toggle">
                                         <i class="icon-magnifier"></i>
                                     </span>
+                                </li>
+                                <li role="presentation">
+                                    <a>
+                                        <div class="custom-control custom-switch light-dark-switch">
+                                            <input type="checkbox" class="custom-control-input" id="DarkLight">
+                                            <label class="custom-control-label" for="DarkLight">Enable Dark Mode</label>
+                                        </div>
+                                    </a>
+                                    <script>
+                                        const toggleSwitch = document.querySelector('.light-dark-switch input[type="checkbox"]');
+                                        const currentTheme = localStorage.getItem('theme');
+
+                                        if (currentTheme) {
+                                            document.documentElement.setAttribute('data-theme', currentTheme);
+
+                                            if (currentTheme === 'dark') {
+                                                toggleSwitch.checked = true;
+                                            }
+                                        }
+
+                                        function switchTheme(e) {
+                                            if (e.target.checked) {
+                                                document.documentElement.setAttribute('data-theme', 'dark');
+                                                localStorage.setItem('theme', 'dark');
+                                            }
+                                            else {
+                                                document.documentElement.setAttribute('data-theme', 'light');
+                                                localStorage.setItem('theme', 'light');
+                                            }
+                                        }
+
+                                        toggleSwitch.addEventListener('change', switchTheme, false);
+                                    </script>
                                 </li>
                             </ul>
                         </nav>
