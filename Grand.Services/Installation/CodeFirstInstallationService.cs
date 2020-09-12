@@ -10425,6 +10425,14 @@ namespace Grand.Services.Installation
                     StopOnError = false,
                     TimeInterval = 60
                 },
+                new ScheduleTask
+                {
+                    ScheduleTaskName = "Cancel unpaid and pending orders",
+                    Type = "Grand.Services.Tasks.CancelOrderScheduledTask, Grand.Services",
+                    Enabled = false,
+                    StopOnError = false,
+                    TimeInterval = 1440
+                },
             };
             await _scheduleTaskRepository.InsertAsync(tasks);
         }

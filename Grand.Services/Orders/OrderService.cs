@@ -320,8 +320,11 @@ namespace Grand.Services.Orders
         public async Task CancelExpiredOrders(DateTime expirationDateUTC)
         {
             var orders = await _orderRepository.Table
-              .Where(o => o.CreatedOnUtc < expirationDateUTC && 
-              (o.PaymentStatusId == (int)PaymentStatus.Pending || !o.PaidDateUtc.HasValue || o.OrderStatusId == (int)OrderStatus.Pending) && 
+              .Where(o => 
+              o.CreatedOnUtc < expirationDateUTC && 
+              (o.PaymentStatusId == (int)PaymentStatus.Pending || 
+              !o.PaidDateUtc.HasValue ||
+              o.OrderStatusId == (int)OrderStatus.Pending) && 
               o.OrderStatusId != (int)OrderStatus.Cancelled)
               .ToListAsync();
 

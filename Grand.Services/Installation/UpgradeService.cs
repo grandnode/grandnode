@@ -1013,6 +1013,20 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region update cancel order Scheduled Task
+
+            var tasks = _serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
+            var cancelOrderTask = new ScheduleTask {
+                ScheduleTaskName = "Cancel unpaid and pending orders",
+                Type = "Grand.Services.Tasks.CancelOrderScheduledTask, Grand.Services",
+                Enabled = false,
+                StopOnError = false,
+                TimeInterval = 1440
+            };
+            await tasks.InsertAsync(cancelOrderTask);
+
+            #endregion
+
         }
 
         private async Task InstallStringResources(string filenames)
