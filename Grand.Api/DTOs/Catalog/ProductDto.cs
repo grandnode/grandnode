@@ -1,5 +1,5 @@
 ﻿using Grand.Domain.Catalog;
-using Grand.Framework.Mvc.Models;
+using Grand.Api.Models;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;

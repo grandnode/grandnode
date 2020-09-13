@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Api.Models;
 using System;
 
 namespace Grand.Api.DTOs.Common

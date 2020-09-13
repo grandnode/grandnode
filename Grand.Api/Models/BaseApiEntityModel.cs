@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Grand.Framework.Mvc.Models
+namespace Grand.Api.Models
 {
     public partial class BaseApiEntityModel
     {
