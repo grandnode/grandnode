@@ -14,7 +14,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
 
         public int Order
         {
-            get { return 1; }
+            get { return 10; }
         }
     }
 }

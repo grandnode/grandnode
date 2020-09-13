@@ -19,7 +19,7 @@ namespace Grand.Plugin.Shipping.ByWeight
 
         public int Order
         {
-            get { return 1; }
+            get { return 10; }
         }
     }
 }

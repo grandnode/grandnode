@@ -2,6 +2,7 @@ using Autofac;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Plugin.Tax.CountryStateZip.Services;
 
 namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure
 {
@@ -9,12 +10,13 @@ namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.RegisterType<CountryStateZipTaxProvider>();
+            builder.RegisterType<TaxRateService>().As<ITaxRateService>().InstancePerLifetimeScope();
+            builder.RegisterType<CountryStateZipTaxProvider>().InstancePerLifetimeScope();
         }
 
         public int Order
         {
-            get { return 2; }
+            get { return 20; }
         }
     }
 }
