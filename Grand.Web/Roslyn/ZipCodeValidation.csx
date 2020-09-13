@@ -5,7 +5,7 @@
 #r "Grand.Web"
 
 using FluentValidation;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Services.Events;
 using Grand.Web.Models.Common;
 using System.Threading.Tasks;

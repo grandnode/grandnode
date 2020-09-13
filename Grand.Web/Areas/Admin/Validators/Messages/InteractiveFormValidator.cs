@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Messages;
 using System.Collections.Generic;

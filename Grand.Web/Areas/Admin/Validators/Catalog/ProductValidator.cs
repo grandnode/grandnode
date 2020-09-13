@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using System.Collections.Generic;
