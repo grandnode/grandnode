@@ -3,7 +3,6 @@ using Grand.Core.Plugins;
 using Grand.Services.Cms;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -33,7 +32,7 @@ namespace Grand.Plugin.Widgets.FacebookPixel
         public override string GetConfigurationPageUrl()
         {
             return $"{_webHelper.GetStoreLocation()}Admin/WidgetsFacebookPixel/Configure";
-        }       
+        }
 
         /// <summary>
         /// Gets widget zones where this widget should be rendered
@@ -76,7 +75,8 @@ namespace Grand.Plugin.Widgets.FacebookPixel
                                 <!-- End Facebook Pixel Code -->",
                 AddToCartScript = @"<script> fbq('track', 'AddToCart', {contents: [{ id: '{PRODUCTID}', quantity: {QTY} }], content_name: '{PRODUCTNAME}', content_type: 'product', value: {AMOUNT}, currency: '{CURRENCY}'}); </script>",
                 DetailsOrderScript = @"<script> fbq('track', 'Purchase', {currency: '{CURRENCY}', value: {AMOUNT}}); </script>",
-
+                ConsentName = "Facebook pixel",
+                ConsentDescription = "Allows us to identifies visitors from Facebook"
             };
             await _settingService.SaveSetting(settings);
 
@@ -88,7 +88,15 @@ namespace Grand.Plugin.Widgets.FacebookPixel
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.AddToCartScript.Hint", "Paste the event add to cart pixel code. {PRODUCTNAME}, {PRODUCTID}, {QTY}, {AMOUNT}, {CURRENCY} will be dynamically replaced.");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.DetailsOrderScript", "Facebook Event - Purchase");
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.DetailsOrderScript.Hint", "Paste the event purchase pixel code. {AMOUNT} and {CURRENCY} will be dynamically replaced.");
-            
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.AllowToDisableConsentCookie", "Allow disabling consent cookie");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.AllowToDisableConsentCookie.Hint", "Get or set the value to disable consent cookie");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDefaultState", "Consent default state");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDefaultState.Hint", "Get or set the value to consent default state");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentName", "Consent cookie name");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentName.Hint", "Get or set the value to consent cookie name");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDescription", "Consent cookie description");
+            await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDescription.Hint", "Get or set the value to consent cookie description");
+
             await base.Install();
         }
 
@@ -109,6 +117,14 @@ namespace Grand.Plugin.Widgets.FacebookPixel
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.AddToCartScript.Hint");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.DetailsOrderScript");
             await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.DetailsOrderScript.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.AllowToDisableConsentCookie");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.AllowToDisableConsentCookie.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDefaultState");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDefaultState.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentName");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentName.Hint");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDescription");
+            await this.DeletePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.FacebookPixel.ConsentDescription.Hint");
 
             await base.Uninstall();
         }

@@ -1,9 +1,10 @@
 ﻿@model RegisterResultModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Register").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Register").Text);
 
     //continue URL
     var qs = this.Context.Request.Query["ReturnUrl"];
@@ -23,6 +24,6 @@
         @Model.Result
     </section>
     <div class="btn-group generalMarginSupporter">
-        <input type="button" class="btn btn-secondary register-continue-button" onclick="location.href='@continueUrl'" value="@T("Account.Register.Result.Continue")" >
+        <input type="button" class="btn btn-secondary register-continue-button" onclick="location.href='@continueUrl'" value="@T("Account.Register.Result.Continue")">
     </div>
 </div>

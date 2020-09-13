@@ -4,10 +4,12 @@
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
+    <Product>grandnode</Product>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     <ServerGarbageCollection>false</ServerGarbageCollection>
-    <PreserveCompilationReferences>true</PreserveCompilationReferences>    
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Grand.Api\Grand.Api.csproj" />
@@ -16,7 +18,7 @@
     <ProjectReference Include="..\Grand.Services\Grand.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.8" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\appsettings.json;App_Data\sitemap.config;App_Data\DataProtectionKeys\*.xml;App_Data\Settings.txt;App_Data\InstalledPlugins.txt;" />
@@ -42,5 +44,16 @@
     <Content Update="Plugins\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Rotativa\Linux\wkhtmltopdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rotativa\Mac\wkhtmltopdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rotativa\Windows\wkhtmltopdf.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

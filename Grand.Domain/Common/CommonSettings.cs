@@ -40,11 +40,6 @@ namespace Grand.Domain.Common
         public bool UseFullTextSearch { get; set; }
 
         /// <summary>
-        /// Gets or sets a Full-Text search mode
-        /// </summary>
-        public FulltextSearchMode FullTextMode { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether 404 errors (page or file not found) should be logged
         /// </summary>
         public bool Log404Errors { get; set; }
@@ -53,16 +48,6 @@ namespace Grand.Domain.Common
         /// Gets or sets a breadcrumb delimiter used on the site
         /// </summary>
         public string BreadcrumbDelimiter { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether we should render <meta http-equiv="X-UA-Compatible" content="IE=edge"/> tag
-        /// </summary>
-        public bool RenderXuaCompatible { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value of "X-UA-Compatible" META tag
-        /// </summary>
-        public string XuaCompatibleValue { get; set; }
 
         /// <summary>
         /// Gets or sets a ignore words (phrases) to be ignored when logging errors/messages

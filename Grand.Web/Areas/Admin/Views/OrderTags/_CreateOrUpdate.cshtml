@@ -1,0 +1,27 @@
+﻿@model OrderTagModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<vc:admin-widget widget-zone="order_details_tag_top" additional-data="Model" />
+
+<admin-tabstrip name="tag-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Orders.OrderTags.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Orders.OrderTags.Orders")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabOrders" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <vc:admin-widget widget-zone="ordertags_details_tabs" additional-data="Model" />
+    </items>
+</admin-tabstrip>
+<vc:admin-widget widget-zone="order_details_tag_bottom" additional-data="Model" />

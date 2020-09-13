@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
@@ -27,6 +28,14 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime")]
         public bool EnablePasswordLifetime { get; set; }
+
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.MinOrderAmount")]
+        [UIHint("DecimalNullable")]
+        public decimal? MinOrderAmount { get; set; }
+
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.MaxOrderAmount")]
+        [UIHint("DecimalNullable")]
+        public decimal? MaxOrderAmount { get; set; }
 
     }
 }

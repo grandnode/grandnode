@@ -1,9 +1,10 @@
 ﻿@model CheckoutConfirmModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOneClean";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Checkout").Text);
 }
 <div class="page checkout-page order-confirm-page">
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Confirm })
@@ -35,7 +36,7 @@
                     });
                 });
             </script>
-            
+
             <h2 class="text-center generalTitle">@T("Checkout.ConfirmYourOrder")</h2>
             <div class="page-body checkout-data">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_top" })
@@ -52,42 +53,42 @@
             else
             {
                 <div class="row m-0">
-                   
-                        @if (Model.TermsOfServiceOnOrderConfirmPage)
-                        {
 
-                            <div class="modal fade" title="@T("Checkout.TermsOfService")" id="terms-of-service-warning-box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            @T("Checkout.TermsOfService.PleaseAccept")
-                                        </div>
+                    @if (Model.TermsOfServiceOnOrderConfirmPage)
+                    {
+
+                        <div class="modal fade" title="@T("Checkout.TermsOfService")" id="terms-of-service-warning-box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @T("Checkout.TermsOfService.PleaseAccept")
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
 
-                            <div class="col-md-8 col-12 mb-1 terms-of-service">
-                                <div class="row">
-                                    <label class="custom-control custom-checkbox">
-                                        <input id="termsofservice" type="checkbox" name="termsofservice" class="custom-control-input">
-                                        <span class="custom-control-label"></span>
-                                        <span class="custom-control-description">@T("Checkout.TermsOfService.IAccept")<a class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)"> - <strong>@T("Checkout.TermsOfService.Read")</strong></a></span>
-                                    </label>
-                                </div>
-                            </div>
-                        }
-                        <div class="col-lg-1 col-sm-2 col-12  ml-auto mb-1 buttons">
+                        <div class="col-md-8 col-12 mb-1 terms-of-service">
                             <div class="row">
-                                <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="btn btn-info btn-block confirm-order-next-step-button" />
+                                <label class="custom-control custom-checkbox">
+                                    <input id="termsofservice" type="checkbox" name="termsofservice" class="custom-control-input">
+                                    <span class="custom-control-label"></span>
+                                    <span class="custom-control-description">@T("Checkout.TermsOfService.IAccept")<a class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)"> - <strong>@T("Checkout.TermsOfService.Read")</strong></a></span>
+                                </label>
                             </div>
                         </div>
+                    }
+                    <div class="col-lg-1 col-sm-2 col-12  ml-auto mb-1 buttons">
+                        <div class="row">
+                            <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="btn btn-info btn-block confirm-order-next-step-button" />
+                        </div>
                     </div>
+                </div>
                 <script asp-location="Footer">
                     $('#confirm-order-form').on('submit', function () {
                         var button = $(this).find('input[type="submit"][name="nextstep"]');

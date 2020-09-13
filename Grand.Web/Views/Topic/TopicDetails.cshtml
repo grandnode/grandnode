@@ -1,5 +1,6 @@
 ﻿@model TopicModel
 @inject SeoSettings seoSettings
+@inject IPageHeadBuilder pagebuilder
 @{
     var isPopup = ViewBag.IsPopup;
     if (isPopup == null || isPopup == false)
@@ -14,16 +15,16 @@
 
     if (!Model.IsPasswordProtected)
     {
-        Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
-        Html.AddMetaDescriptionParts(Model.MetaDescription);
-        Html.AddMetaKeywordParts(Model.MetaKeywords);
+        pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+        pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+        pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
     }
 
     var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(topicUrl);
+        pagebuilder.AddCanonicalUrlParts(topicUrl);
     }
 }
 @if (Model.IsPasswordProtected)

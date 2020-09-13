@@ -1,11 +1,7 @@
-using Grand.Core.Data;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Grand.Domain.Data
@@ -20,11 +16,9 @@ namespace Grand.Domain.Data
         /// <summary>
         /// Gets the collection
         /// </summary>
-        protected IMongoCollection<T> _collection;       
-        public IMongoCollection<T>  Collection
-        {
-            get
-            {
+        protected IMongoCollection<T> _collection;
+        public IMongoCollection<T> Collection {
+            get {
                 return _collection;
             }
         }
@@ -33,10 +27,8 @@ namespace Grand.Domain.Data
         /// Mongo Database
         /// </summary>
         protected IMongoDatabase _database;
-        public IMongoDatabase Database
-        {
-            get
-            {
+        public IMongoDatabase Database {
+            get {
                 return _database;
             }
         }
@@ -65,7 +57,7 @@ namespace Grand.Domain.Data
             _collection = _database.GetCollection<T>(typeof(T).Name);
         }
 
-       
+
         public Repository(IMongoDatabase database)
         {
             _database = database;
@@ -115,6 +107,14 @@ namespace Grand.Domain.Data
             return entity;
         }
 
+        /// <summary>
+        /// Async Insert many entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        public virtual async Task InsertManyAsync(IEnumerable<T> entities)
+        {
+            await _collection.InsertManyAsync(entities);
+        }
 
         /// <summary>
         /// Insert entities
@@ -142,7 +142,7 @@ namespace Grand.Domain.Data
         /// <param name="entity">Entity</param>
         public virtual T Update(T entity)
         {
-            _collection.ReplaceOne(x=>x.Id == entity.Id, entity, new ReplaceOptions() { IsUpsert = false });
+            _collection.ReplaceOne(x => x.Id == entity.Id, entity, new ReplaceOptions() { IsUpsert = false });
             return entity;
 
         }
@@ -189,7 +189,7 @@ namespace Grand.Domain.Data
         /// <param name="entity">Entity</param>
         public virtual void Delete(T entity)
         {
-            _collection.FindOneAndDelete(e => e.Id == entity.Id); 
+            _collection.FindOneAndDelete(e => e.Id == entity.Id);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace Grand.Domain.Data
         /// <param name="entity">Entity</param>
         public virtual async Task<T> DeleteAsync(T entity)
         {
-            await _collection.DeleteOneAsync(e=>e.Id == entity.Id);
+            await _collection.DeleteOneAsync(e => e.Id == entity.Id);
             return entity;
         }
 
@@ -230,108 +230,15 @@ namespace Grand.Domain.Data
 
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        /// Determines whether a list contains any elements
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool Any()
-        {
-            return _collection.AsQueryable().Any();
-        }
-
-        /// <summary>
-        /// Determines whether any element of a list satisfies a condition.
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public virtual bool Any(Expression<Func<T, bool>> where)
-        {
-            return _collection.Find(where).Any();
-        }
-
-        /// <summary>
-        /// Async determines whether a list contains any elements
-        /// </summary>
-        /// <returns></returns>
-        public virtual async Task<bool> AnyAsync()
-        {
-            return await _collection.AsQueryable().AnyAsync();
-        }
-
-        /// <summary>
-        /// Async determines whether any element of a list satisfies a condition.
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> where)
-        {
-            return await _collection.Find(where).AnyAsync();
-        }
-
-        /// <summary>
-        /// Returns the number of elements in the specified sequence.
-        /// </summary>
-        /// <returns></returns>
-        public virtual long Count()
-        {
-            return _collection.CountDocuments(new BsonDocument());
-        }
-
-        /// <summary>
-        /// Returns the number of elements in the specified sequence that satisfies a condition.
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public virtual long Count(Expression<Func<T, bool>> where)
-        {
-            return _collection.CountDocuments(where);
-        }
-
-        /// <summary>
-        /// Async returns the number of elements in the specified sequence
-        /// </summary>
-        /// <returns></returns>
-        public virtual async Task<long> CountAsync()
-        {
-            return await _collection.CountDocumentsAsync(new BsonDocument());
-        }
-
-        /// <summary>
-        /// Async returns the number of elements in the specified sequence that satisfies a condition.
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public virtual async Task<long> CountAsync(Expression<Func<T, bool>> where)
-        {
-            return await _collection.CountDocumentsAsync(where);
-        }
-
-
-        #endregion
-
         #region Properties
 
         /// <summary>
         /// Gets a table
         /// </summary>
-        public virtual IMongoQueryable<T> Table
-        {
+        public virtual IMongoQueryable<T> Table {
             get { return _collection.AsQueryable(); }
         }
 
-        /// <summary>
-        /// Get collection by filter definitions
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public virtual IList<T> FindByFilterDefinition(FilterDefinition<T> query)
-        {
-            return _collection.Find(query).ToList();
-        }
-
         #endregion
-
     }
 }

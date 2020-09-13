@@ -1,10 +1,11 @@
 ﻿@model AccountActivationModel
 @using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.AccountActivation").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.AccountActivation").Text);
 }
 <div class="page account-activation-page">
     <h1 class="h2 generalTitle">@T("Account.AccountActivation")</h1>

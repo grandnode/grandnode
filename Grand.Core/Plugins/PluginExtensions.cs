@@ -19,14 +19,18 @@ namespace Grand.Core.Plugins
             }
 
             var pluginDirectory = pluginDescriptor.OriginalAssemblyFile.Directory;
-            var logoLocalPath = Path.Combine(pluginDirectory.FullName, "logo.jpg");
-            if (!File.Exists(logoLocalPath))
+            var logoPluginJpg = Path.Combine(pluginDirectory.FullName, "logo.jpg");
+            if (File.Exists(logoPluginJpg))
             {
-                return null;
+                return string.Format("{0}{1}/{2}/logo.jpg", webHelper.GetStoreLocation(), pluginDirectory.Parent.Name, pluginDirectory.Name);
             }
+            var logoPluginPng = Path.Combine(pluginDirectory.FullName, "logo.png");
+            if (File.Exists(logoPluginPng))
+            {
+                return string.Format("{0}{1}/{2}/logo.png", webHelper.GetStoreLocation(), pluginDirectory.Parent.Name, pluginDirectory.Name);
+            }
+            return null;
 
-            string logoUrl = string.Format("{0}{1}/{2}/logo.jpg", webHelper.GetStoreLocation(), pluginDirectory.Parent.Name, pluginDirectory.Name);
-            return logoUrl;
         }
     }
 }

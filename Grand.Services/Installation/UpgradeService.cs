@@ -126,13 +126,13 @@ namespace Grand.Services.Installation
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
                 if (databaseversion != null)
                 {
-                    databaseversion.DataBaseVersion = GrandVersion.CurrentVersion;
+                    databaseversion.DataBaseVersion = GrandVersion.SupportedDBVersion;
                     await _versionRepository.UpdateAsync(databaseversion);
                 }
                 else
                 {
                     databaseversion = new GrandNodeVersion {
-                        DataBaseVersion = GrandVersion.CurrentVersion
+                        DataBaseVersion = GrandVersion.SupportedDBVersion
                     };
                     await _versionRepository.InsertAsync(databaseversion);
                 }
@@ -1013,6 +1013,22 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Update permissions - Actions
+
+            IPermissionProvider provider = new StandardPermissionProvider();
+            var permissions = provider.GetPermissions();
+            var permissionService = _serviceProvider.GetRequiredService<IPermissionService>();
+            foreach (var permission in permissions)
+            {
+                var p = await permissionService.GetPermissionRecordBySystemName(permission.SystemName);
+                if (p != null)
+                {
+                    p.Actions = permission.Actions;
+                    await permissionService.UpdatePermissionRecord(p);
+                }
+            }
+
+            #endregion
             #region update cancel order Scheduled Task
 
             var tasks = _serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();

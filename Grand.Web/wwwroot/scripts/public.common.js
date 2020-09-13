@@ -317,6 +317,9 @@ $(document).ready(function () {
             $('.modal').modal('hide');
         }
     });
+    $('#ModalPrivacyPreference').on('hide.bs.modal', function (e) {
+        $('#ModalPrivacyPreference').empty();
+    });
 });
 
 function OpenWindow(query, w, h, scroll) {
@@ -386,6 +389,11 @@ function displayPopupQuickView(html) {
     dataCountdown();
 }
 
+function displayPopupPrivacyPreference(html) {
+    $('#ModalPrivacyPreference').html(html).modal('show');
+    $("body.modal-open").removeAttr("style");
+    $(".navUp").removeAttr("style");
+}
 
 var barNotificationTimeout;
 function displayBarNotification(message, messagetype, timeout) {
@@ -491,6 +499,32 @@ function sendcontactusform(urladd) {
 }
 
 
+function GetPrivacyPreference(href) {
+    $.ajax({
+        cache: false,
+        url: href,
+        success: function (data) {
+            displayPopupPrivacyPreference(data.html)
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert('Failed to get privacy preference.');
+        }
+    });
+}
+function SavePrivacyPreference(href) {
+    $.ajax({
+        cache: false,
+        url: href,
+        data: $('#frmPrivacyPreference').serialize(),
+        type: 'post',
+        success: function (data) {
+            $('#ModalPrivacyPreference').modal('hide');
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert('Failed to get privacy preference.');
+        }
+    });
+}
 function newAddress(isNew) {
     if (isNew) {
         this.resetSelectedAddress();

@@ -1,8 +1,8 @@
 ﻿@model Grand.Web.Models.PushNotifications.PublicInfoModel
-
+@inject IPageHeadBuilder pagebuilder
 @{
-    Html.AddScriptParts(ResourceLocation.Footer, "https://www.gstatic.com/firebasejs/4.12.1/firebase.js", excludeFromBundle: true);
-    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery.push.notifications.js");
+    pagebuilder.AddScriptParts(ResourceLocation.Footer, "https://www.gstatic.com/firebasejs/4.12.1/firebase.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery.push.notifications.js");
 }
 
 <script asp-location="Footer">

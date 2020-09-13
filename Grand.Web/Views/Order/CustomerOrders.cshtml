@@ -1,13 +1,14 @@
 ﻿@model CustomerOrderListModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Account").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
 }
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Orders})
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Orders })
 }
 <div class="page account-page order-list-page pl-lg-3 pt-lg-0 pt-3">
     <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Account.Navigation")</span></a>

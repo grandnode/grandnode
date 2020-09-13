@@ -62,6 +62,7 @@
         public const string GenericAttributes = "GenericAttributes";
         public const string HtmlEditor = "HtmlEditor.ManagePictures";
         public const string ScheduleTasks = "ManageScheduleTasks";
+        public const string OrderTags = "ManageOrderTags";
 
         //public store permissions
         public const string DisplayPrices = "DisplayPrices";

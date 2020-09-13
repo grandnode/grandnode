@@ -28,10 +28,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public bool MinOrderSubtotalAmountIncludingTax_OverrideForStore { get; set; }
 
 
-        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.MinOrderTotalAmount")]
-        public decimal MinOrderTotalAmount { get; set; }
-        public bool MinOrderTotalAmount_OverrideForStore { get; set; }
-
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.AnonymousCheckoutAllowed")]
         public bool AnonymousCheckoutAllowed { get; set; }
         public bool AnonymousCheckoutAllowed_OverrideForStore { get; set; }

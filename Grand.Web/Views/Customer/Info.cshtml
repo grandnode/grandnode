@@ -1,15 +1,16 @@
 ﻿@model CustomerInfoModel
 @inject Grand.Domain.Customers.CustomerSettings customerSettings
+@inject IPageHeadBuilder pagebuilder
 @using Grand.Web.Models.Customer;
 @using Grand.Core;
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Account").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
 }
 @section left
-    {
+{
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
 }
 
@@ -207,10 +208,10 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-      Model.StreetAddress2Enabled ||
-      Model.ZipPostalCodeEnabled ||
-      Model.CityEnabled ||
-      Model.CountryEnabled)
+     Model.StreetAddress2Enabled ||
+     Model.ZipPostalCodeEnabled ||
+     Model.CityEnabled ||
+     Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">

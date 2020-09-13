@@ -862,7 +862,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //model
-            var model = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
+            var model = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Customer = _workContext.CurrentCustomer });
             return View(model);
         }
 
@@ -882,10 +882,10 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //model
-            var model = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
+            var model = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Customer = _workContext.CurrentCustomer });
             try
             {
-                var processPaymentRequest = this.HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
+                var processPaymentRequest = HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
@@ -1066,7 +1066,7 @@ namespace Grand.Web.Controllers
             await _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
-            var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
+            var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Customer = _workContext.CurrentCustomer });
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel {
@@ -1089,7 +1089,7 @@ namespace Grand.Web.Controllers
                 //session save
                 HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 
-                var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
+                var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Customer = _workContext.CurrentCustomer });
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel {
@@ -1536,7 +1536,7 @@ namespace Grand.Web.Controllers
                     await _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                         SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
-                    var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
+                    var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Customer = _workContext.CurrentCustomer });
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel {
@@ -1591,7 +1591,7 @@ namespace Grand.Web.Controllers
                     //session save
                     HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 
-                    var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Currency = _workContext.WorkingCurrency });
+                    var confirmOrderModel = await _mediator.Send(new GetConfirmOrder() { Cart = cart, Customer = _workContext.CurrentCustomer });
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel {

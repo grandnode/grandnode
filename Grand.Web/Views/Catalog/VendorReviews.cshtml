@@ -1,10 +1,11 @@
 ﻿@model VendorReviewsModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(Model.VendorName);
-    Html.AddTitleParts(T("PageTitle.VendorReviews").Text);
+    pagebuilder.AddTitleParts(Model.VendorName);
+    pagebuilder.AddTitleParts(T("PageTitle.VendorReviews").Text);
 }
 <div class="page vendor-reviews-page">
     <h2 class="generalTitle text-center">@T("Reviews.VendorReviewsFor") <a href="@Url.RouteUrl("Vendor", new { SeName = Model.VendorSeName })">@Model.VendorName</a></h2>
@@ -32,35 +33,35 @@
                         <textarea asp-for="AddVendorReview.ReviewText" class="form-control review-text" asp-disabled="@(!Model.AddVendorReview.CanCurrentCustomerLeaveReview)"></textarea>
                         <span asp-validation-for="AddVendorReview.ReviewText"></span>
                         <div class="form-group review-rating d-flex align-items-center">
-                                    <label asp-for="AddVendorReview.Rating" class="col-form-label d-inline-flex">@T("Reviews.Fields.Rating"):</label>
-                                    <div class="d-inline-flex justify-content-center rating-options text-center ml-3">
-                                            <label class="custom-control pl-0 custom-radio d-flex full-star">
-                                                <input asp-for="AddVendorReview.Rating" value="1" type="radio" id="addvendorrating_1" class="custom-control-input"/>
-                                                <span class="custom-control-label">&#9733;</span>
-                                                <span class="custom-control-description"></span>
-                                            </label>
-                                            <label class="custom-control pl-0 custom-radio d-flex full-star">
-                                                <input asp-for="AddVendorReview.Rating" value="2" type="radio" id="addvendorrating_2" class="custom-control-input" />
-                                                <span class="custom-control-label">&#9733;</span>
-                                                <span class="custom-control-description"></span>
-                                            </label>
-                                            <label class="custom-control pl-0 custom-radio d-flex full-star">
-                                                <input asp-for="AddVendorReview.Rating" value="3" type="radio" id="addvendorrating_3" class="custom-control-input" />
-                                                <span class="custom-control-label">&#9733;</span>
-                                                <span class="custom-control-description"></span>
-                                            </label>
-                                            <label class="custom-control pl-0 custom-radio d-flex full-star">
-                                                <input asp-for="AddVendorReview.Rating" value="4" type="radio" id="addvendorrating_4" class="custom-control-input" />
-                                                <span class="custom-control-label">&#9733;</span>
-                                                <span class="custom-control-description"></span>
-                                            </label>
-                                            <label class="custom-control pl-0 custom-radio d-flex full-star">
-                                                <input asp-for="AddVendorReview.Rating" value="5" type="radio" id="addvendorrating_5" class="custom-control-input" />
-                                                <span class="custom-control-label">&#9733;</span>
-                                                <span class="custom-control-description"></span>
-                                            </label>
-                                        </div>               
-                                </div>
+                            <label asp-for="AddVendorReview.Rating" class="col-form-label d-inline-flex">@T("Reviews.Fields.Rating"):</label>
+                            <div class="d-inline-flex justify-content-center rating-options text-center ml-3">
+                                <label class="custom-control pl-0 custom-radio d-flex full-star">
+                                    <input asp-for="AddVendorReview.Rating" value="1" type="radio" id="addvendorrating_1" class="custom-control-input" />
+                                    <span class="custom-control-label">&#9733;</span>
+                                    <span class="custom-control-description"></span>
+                                </label>
+                                <label class="custom-control pl-0 custom-radio d-flex full-star">
+                                    <input asp-for="AddVendorReview.Rating" value="2" type="radio" id="addvendorrating_2" class="custom-control-input" />
+                                    <span class="custom-control-label">&#9733;</span>
+                                    <span class="custom-control-description"></span>
+                                </label>
+                                <label class="custom-control pl-0 custom-radio d-flex full-star">
+                                    <input asp-for="AddVendorReview.Rating" value="3" type="radio" id="addvendorrating_3" class="custom-control-input" />
+                                    <span class="custom-control-label">&#9733;</span>
+                                    <span class="custom-control-description"></span>
+                                </label>
+                                <label class="custom-control pl-0 custom-radio d-flex full-star">
+                                    <input asp-for="AddVendorReview.Rating" value="4" type="radio" id="addvendorrating_4" class="custom-control-input" />
+                                    <span class="custom-control-label">&#9733;</span>
+                                    <span class="custom-control-description"></span>
+                                </label>
+                                <label class="custom-control pl-0 custom-radio d-flex full-star">
+                                    <input asp-for="AddVendorReview.Rating" value="5" type="radio" id="addvendorrating_5" class="custom-control-input" />
+                                    <span class="custom-control-label">&#9733;</span>
+                                    <span class="custom-control-description"></span>
+                                </label>
+                            </div>
+                        </div>
                         @if (Model.AddVendorReview.DisplayCaptcha)
                         {
                             <div class="captcha-box">
@@ -80,8 +81,8 @@
         <div class="vendor-review-list">
             <h5><strong>@T("Reviews.ExistingReviews")</strong></h5>
             @foreach (var review in Model.Items)
-                {
-                    int ratingPercent = review.Rating * 20;
+            {
+                int ratingPercent = review.Rating * 20;
                 <div class="card comment vendor-review-item pb-3 mb-3">
                     <div class="card-header review-item-head pt-0 pr-0">
                         <div class="ratings justify-content-start">
@@ -132,7 +133,7 @@
 
 <script asp-location="Footer">
     $(document).ready(function () {
-        $('.rating-options .custom-radio').on("click",function () {
+        $('.rating-options .custom-radio').on("click", function () {
             if (!$(this).find('input').is(':checked')) {
                 $(this).find('.custom-control-label').html('&#9733;');
                 $(this).prevAll('.custom-radio').find('.custom-control-label').html('&#9733;');

@@ -20,7 +20,7 @@ namespace Grand.Domain.Customers
         public static string VatNumberStatusId { get { return "VatNumberStatusId"; } }
         public static string TimeZoneId { get { return "TimeZoneId"; } }
         public static string CustomCustomerAttributes { get { return "CustomCustomerAttributes"; } }
-
+        public static string PasswordToken { get { return "PasswordToken"; } }
         //Other attributes
         public static string DiscountCoupons { get { return "DiscountCoupons"; } }
         public static string GiftCardCoupons { get { return "GiftCardCoupons"; } }
@@ -57,5 +57,6 @@ namespace Grand.Domain.Customers
         public static string TaxDisplayTypeId { get { return "TaxDisplayTypeId"; } }
         public static string UseRewardPointsDuringCheckout { get { return "UseRewardPointsDuringCheckout"; } }
         public static string EuCookieLawAccepted { get { return "EuCookieLaw.Accepted"; } }
+        public static string ConsentCookies { get { return "ConsentCookies"; } }
     }
 }

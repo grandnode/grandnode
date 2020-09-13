@@ -193,7 +193,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentException("Initial order is not set for recurring payment");
 
             details.InitialOrder.Code = await _mediator.Send(new PrepareOrderCodeCommand());
-            processPaymentRequest.PaymentMethodSystemName = details.InitialOrder.PaymentMethodSystemName;            
+            processPaymentRequest.PaymentMethodSystemName = details.InitialOrder.PaymentMethodSystemName;
             details.CustomerCurrencyCode = details.InitialOrder.CustomerCurrencyCode;
             details.CustomerCurrencyRate = details.InitialOrder.CurrencyRate;
             details.CustomerLanguage = await _languageService.GetLanguageById(details.InitialOrder.CustomerLanguageId);
@@ -219,7 +219,7 @@ namespace Grand.Services.Orders
             details.PaymentAdditionalFeeExclTax = details.InitialOrder.PaymentMethodAdditionalFeeExclTax;
             details.OrderTaxTotal = details.InitialOrder.OrderTax;
             details.TaxRates = details.InitialOrder.TaxRates;
-            details.IsRecurringShoppingCart = true;            
+            details.IsRecurringShoppingCart = true;
             processPaymentRequest.OrderTotal = details.OrderTotal;
 
             return details;
@@ -491,11 +491,11 @@ namespace Grand.Services.Orders
                 decimal minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, _workContext.WorkingCurrency);
                 throw new GrandException(string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false)));
             }
-            bool minOrderTotalAmountOk = await ValidateMinOrderTotalAmount(details.Cart);
-            if (!minOrderTotalAmountOk)
+
+            bool minmaxOrderTotalAmountOk = await ValidateOrderTotalAmount(details.Customer, details.Cart);
+            if (!minmaxOrderTotalAmountOk)
             {
-                decimal minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
-                throw new GrandException(string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false)));
+                throw new GrandException(_localizationService.GetResource("Checkout.MinMaxOrderTotalAmount"));
             }
 
             //tax display type
@@ -710,7 +710,7 @@ namespace Grand.Services.Orders
                     attributeDescription = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
 
                 var itemWeight = await _shippingService.GetShoppingCartItemWeight(sc);
-                
+
                 var warehouseId = !string.IsNullOrEmpty(sc.WarehouseId) ? sc.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
                 if (!product.UseMultipleWarehouses && string.IsNullOrEmpty(warehouseId))
                 {
@@ -922,7 +922,7 @@ namespace Grand.Services.Orders
 
             //insert order
             await _orderService.InsertOrder(order);
-            
+
             var reserved = await _productReservationService.GetCustomerReservationsHelpers(order.CustomerId);
             foreach (var res in reserved)
             {
@@ -1063,7 +1063,7 @@ namespace Grand.Services.Orders
         }
 
         protected virtual async Task UpdateCustomer(Order order)
-        {           
+        {
             //Update customer reminder history
             await _mediator.Send(new UpdateCustomerReminderHistoryCommand() { CustomerId = order.CustomerId, OrderId = order.Id });
 
@@ -1072,6 +1072,9 @@ namespace Grand.Services.Orders
 
             //Update field Last purchase date after added a new order
             await _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);
+
+            //Update field Last purchase date after added a new order
+            await _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
 
         }
 
@@ -1118,7 +1121,7 @@ namespace Grand.Services.Orders
                     break;
             }
         }
-        
+
         /// <summary>
         /// Return back redeemded reward points to a customer (spent when placing an order)
         /// </summary>
@@ -1302,8 +1305,8 @@ namespace Grand.Services.Orders
                     processPaymentRequest.OrderCode = await _mediator.Send(new PrepareOrderCodeCommand());
 
                 //prepare order details
-                var details = !processPaymentRequest.IsRecurringPayment ? 
-                    await PreparePlaceOrderDetails(processPaymentRequest) : 
+                var details = !processPaymentRequest.IsRecurringPayment ?
+                    await PreparePlaceOrderDetails(processPaymentRequest) :
                     await PreparePlaceOrderDetailsForRecurringPayment(processPaymentRequest);
 
                 //event notification
@@ -1332,7 +1335,7 @@ namespace Grand.Services.Orders
                     else
                     {
                         result.PlacedOrder = await SaveOrderDetailsForReccuringPayment(details, order);
-                        
+
                     }
                     //recurring orders
                     if (details.IsRecurringShoppingCart && !processPaymentRequest.IsRecurringPayment)
@@ -2448,6 +2451,32 @@ namespace Grand.Services.Orders
             return true;
         }
 
+        /// <summary>
+        /// Validate order total amount
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="cart">Shopping cart</param>
+        /// <returns>true - OK; false - minimum/maximum order total amount is not reached</returns>
+        public virtual async Task<bool> ValidateOrderTotalAmount(Customer customer, IList<ShoppingCartItem> cart)
+        {
+            if (cart == null)
+                throw new ArgumentNullException("cart");
+
+            var minroles = customer.CustomerRoles.OrderBy(x => x.MinOrderAmount).FirstOrDefault(x => x.Active && x.MinOrderAmount.HasValue);
+            var minOrderAmount = minroles?.MinOrderAmount ?? decimal.MinValue;
+
+            var maxroles = customer.CustomerRoles.OrderByDescending(x => x.MaxOrderAmount).FirstOrDefault(x => x.Active && x.MaxOrderAmount.HasValue);
+            var maxOrderAmount = maxroles?.MaxOrderAmount ?? decimal.MaxValue;
+
+            if (cart.Any() && (minOrderAmount > decimal.Zero || maxOrderAmount > decimal.Zero))
+            {
+                decimal? shoppingCartTotalBase = (await _orderTotalCalculationService.GetShoppingCartTotal(cart)).shoppingCartTotal;
+                if (shoppingCartTotalBase.HasValue && (shoppingCartTotalBase.Value < minOrderAmount || shoppingCartTotalBase.Value > maxOrderAmount))
+                    return false;
+            }
+
+            return true;
+        }
         #endregion
     }
 }

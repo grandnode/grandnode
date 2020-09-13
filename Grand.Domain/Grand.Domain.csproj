@@ -5,15 +5,16 @@
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
+    <Product>grandnode</Product>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
     <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
 
 <ItemGroup>
-    <PackageReference Include="MongoDB.Bson" Version="2.10.4" />
-    <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
-    <PackageReference Include="MongoDB.Driver.Core" Version="2.10.4" />
-    <PackageReference Include="MongoDB.Driver.GridFS" Version="2.10.4" />
+    <PackageReference Include="MongoDB.Bson" Version="2.11.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.11.1" />
+    <PackageReference Include="MongoDB.Driver.Core" Version="2.11.1" />
+    <PackageReference Include="MongoDB.Driver.GridFS" Version="2.11.1" />
     <PackageReference Include="DotLiquid" Version="2.0.361" />
   </ItemGroup>
 

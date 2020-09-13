@@ -92,6 +92,7 @@ namespace Grand.Web.ViewComponents
                 CompanyAddress = currentstore.CompanyAddress,
                 CompanyPhone = currentstore.CompanyPhoneNumber,
                 CompanyHours = currentstore.CompanyHours,
+                PrivacyPreference = _storeInformationSettings.DisplayPrivacyPreference,
                 WishlistEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 ShoppingCartEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _commonSettings.SitemapEnabled,

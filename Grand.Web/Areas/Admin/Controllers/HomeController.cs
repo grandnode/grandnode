@@ -9,6 +9,7 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
+using Grand.Services.Logging;
 using Grand.Services.Queries.Models.Orders;
 using Grand.Web.Areas.Admin.Models.Home;
 using MediatR;
@@ -30,6 +31,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IOrderReportService _orderReportService;
         private readonly ICustomerService _customerService;
+        private readonly ILogger _logger;
         private readonly IMediator _mediator;
 
         #endregion
@@ -42,6 +44,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             IOrderReportService orderReportService,
             ICustomerService customerService,
+            ILogger logger,
             IMediator mediator)
         {
             _localizationService = localizationService;
@@ -49,6 +52,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _workContext = workContext;
             _orderReportService = orderReportService;
             _customerService = customerService;
+            _logger = logger;
             _mediator = mediator;
         }
 
@@ -179,6 +183,23 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             return Json(result);
         }
+
+        public IActionResult AccessDenied(string pageUrl)
+        {
+            var currentCustomer = _workContext.CurrentCustomer;
+            if (currentCustomer == null || currentCustomer.IsGuest())
+            {
+                _logger.Information(string.Format("Access denied to anonymous request on {0}", pageUrl));
+                return View();
+            }
+
+            _logger.Information(string.Format("Access denied to user #{0} '{1}' on {2}", currentCustomer.Email, currentCustomer.Email, pageUrl));
+
+
+            return View();
+        }
+
+
 
         #endregion
     }

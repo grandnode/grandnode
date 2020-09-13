@@ -51,6 +51,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
@@ -62,6 +63,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = new LanguageModel();
@@ -73,9 +75,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             _languageViewModelService.PrepareFlagsModel(model);
             //default values
             model.Published = true;
+            model.DisplayOrder = (await _languageService.GetAllLanguages()).Max(x => x.DisplayOrder) + 1;
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(LanguageModel model, bool continueEditing)
         {
@@ -97,6 +101,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var language = await _languageService.GetLanguageById(id);
@@ -115,6 +120,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(LanguageModel model, bool continueEditing)
         {
@@ -157,6 +163,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -190,6 +197,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Resources
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Resources(string languageId, DataSourceRequest command,
@@ -204,6 +212,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ResourceUpdate(LanguageResourceModel model)
         {
@@ -218,6 +227,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ResourceAdd(LanguageResourceModel model)
         {
@@ -233,6 +243,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ResourceDelete(string id)
         {
@@ -250,7 +261,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Export / Import
-
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         public async Task<IActionResult> ExportXml(string id)
         {
             var language = await _languageService.GetLanguageById(id);
@@ -270,6 +281,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Import)]
         [HttpPost]
         public async Task<IActionResult> ImportXml(string id, IFormFile importxmlfile)
         {

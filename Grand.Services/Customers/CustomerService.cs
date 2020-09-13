@@ -239,7 +239,9 @@ namespace Grand.Services.Customers
         public virtual Task<int> GetCountOnlineShoppingCart(DateTime lastActivityFromUtc, string storeId)
         {
             var query = _customerRepository.Table;
+            query = query.Where(c => c.Active);
             query = query.Where(c => lastActivityFromUtc <= c.LastUpdateCartDateUtc);
+            query = query.Where(c => c.ShoppingCartItems.Any(y=>y.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart));
             if (!string.IsNullOrEmpty(storeId))
                 query = query.Where(c => c.StoreId == storeId);
 

@@ -5,6 +5,8 @@ using Grand.Services.Shipping;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
+using System.Collections.Generic;
 
 namespace Grand.Services.Orders
 {
@@ -250,5 +252,20 @@ namespace Grand.Services.Orders
             }
             return false;
         }
+
+        /// <summary>
+        /// Indicates whether a order's tag exists
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="orderTagId">Order tag identifier</param>
+        /// <returns>Result</returns>
+        public static bool OrderTagExists(this Order order, OrderTag orderTag)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            bool result = order.OrderTags.FirstOrDefault(t => t == orderTag.Id) != null;
+            return result;
+        }        
     }
 }

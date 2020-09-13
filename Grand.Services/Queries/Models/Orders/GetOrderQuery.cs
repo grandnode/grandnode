@@ -30,5 +30,6 @@ namespace Grand.Services.Queries.Models.Orders
         public string OrderCode { get; set; } = null;
         public int PageIndex { get; set; } = 0;
         public int PageSize { get; set; } = int.MaxValue;
+        public string OrderTagId { get; set; } = "";
     }
 }

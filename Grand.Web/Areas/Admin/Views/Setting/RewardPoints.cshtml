@@ -39,11 +39,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="Enabled" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="Enabled" />
                                          <div class="control__indicator"></div>
@@ -52,11 +52,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ExchangeRate_OverrideForStore, model => model.ExchangeRate, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ExchangeRate" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     @T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")
                                     <admin-input asp-for="ExchangeRate" />
                                     @Model.PrimaryStoreCurrencyCode
@@ -64,11 +64,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MinimumRewardPointsToUse_OverrideForStore, model => model.MinimumRewardPointsToUse, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="MinimumRewardPointsToUse" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="MinimumRewardPointsToUse" />
                                     <span asp-validation-for="MinimumRewardPointsToUse"></span>
                                 </div>
@@ -79,21 +79,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForRegistration_OverrideForStore, model => model.PointsForRegistration, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="PointsForRegistration" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="PointsForRegistration" />
                                     <span asp-validation-for="PointsForRegistration"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_OverrideForStore, model => model.PointsForPurchases_Amount, model => model.PointsForPurchases_Points, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="PointsForPurchases_Amount" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")
                                     <admin-input asp-for="PointsForPurchases_Amount" />
                                     @Model.PrimaryStoreCurrencyCode
@@ -106,21 +106,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Awarded_OverrideForStore, model => model.PointsForPurchases_Awarded, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="PointsForPurchases_Awarded" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <admin-select asp-for="PointsForPurchases_Awarded" asp-items="Model.PointsForPurchases_Awarded_OrderStatuses" />
                                     <span asp-validation-for="PointsForPurchases_Awarded"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ReduceRewardPointsAfterCancelOrder_OverrideForStore, model => model.ReduceRewardPointsAfterCancelOrder, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ReduceRewardPointsAfterCancelOrder" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ReduceRewardPointsAfterCancelOrder" />
                                         <div class="control__indicator"></div>
@@ -129,11 +129,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayHowMuchWillBeEarned_OverrideForStore, model => model.DisplayHowMuchWillBeEarned, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="DisplayHowMuchWillBeEarned" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="DisplayHowMuchWillBeEarned" />
                                          <div class="control__indicator"></div>
@@ -142,10 +142,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     <admin-label asp-for="PointsAccumulatedForAllStores" class="control-label" />
                                 </div>
-                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="PointsAccumulatedForAllStores" />
                                          <div class="control__indicator"></div>

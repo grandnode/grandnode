@@ -1,17 +1,17 @@
 ﻿@model CourseModel
 @inject SeoSettings seoSettings
-@inject CommonSettings commonSettings
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
-    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
-    Html.AddMetaDescriptionParts(Model.MetaDescription);
-    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+    pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
 
     var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var courseUrl = Url.RouteUrl("Course", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(courseUrl);
+        pagebuilder.AddCanonicalUrlParts(courseUrl);
     }
 
 }
@@ -65,7 +65,7 @@
                             <img src="@lesson.PictureUrl" class="mr-3" />
                             <div class="media-body d-inline-flex">
                                 <div class="w-100">
-                                    
+
                                     <h5 class="mt-0 mb-1">@Html.ActionLink(lesson.Name, "Lesson", "Course", new { id = lesson.Id })</h5>
                                     @lesson.ShortDescription
                                 </div>

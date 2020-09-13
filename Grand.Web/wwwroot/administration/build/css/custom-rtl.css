@@ -459,15 +459,15 @@ pre, code {
   padding: 10px 5px;
 }
 
-.nav-sm .container .left_col .navbar .site_title {
-  padding-right: 15px;
-}
-
 .nav-sm .nav.side-menu li a i {
   font-size: 25px !important;
   text-align: center;
   width: 100% !important;
   margin-bottom: 5px;
+}
+
+.nav.side-menu > li.current-page, .nav.side-menu > li.active > ul {
+    /* position: relative; */
 }
 
 .nav-sm .nav.side-menu li a i.toggle-up {
@@ -549,7 +549,7 @@ pre, code {
 }
 
 .nav-sm ul.nav.child_menu {
-  right: 100%;
+  right: calc(100% + 5px);
   position: absolute;
   top: 0;
   width: 210px;
@@ -579,18 +579,15 @@ pre, code {
 }
 
 .site_title {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  font-weight: 400;
-  font-size: 22px;
-  width: 100%;
-  color: #ecf0f1 !important;
-  margin-left: 0 !important;
-  line-height: 59px;
-  display: block;
-  height: 55px;
-  margin: 0;
-  padding-right: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-weight: 400;
+    font-size: 22px;
+    width: 100%;
+    color: #ECF0F1 !important;
+    margin-left: 0 !important;
+    display: block;
+    text-align: center;
 }
 
 .site_title i {
@@ -798,6 +795,7 @@ body .container.body .right_col {
 
 .container {
   width: 100%;
+  max-width: 100%;
   padding: 0;
 }
 
@@ -853,10 +851,14 @@ body .container.body .right_col {
 }
 
 .top_nav .navbar-right {
+  display: inline-block;
   margin: 0;
   width: 60%;
   float: left !important;
   position: relative;
+}
+.top_nav .navbar-right .dropdown-toggle::after {
+    display: none;
 }
 
 .top_nav .navbar-right li {
@@ -1365,6 +1367,57 @@ a.hiddenanchor {
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
+/* premium themes */
+
+#premium_themes {
+    height: 310px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.premium-list {
+    width: 100%;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    list-style-type: none;
+}
+.premium-list::-webkit-scrollbar {
+    display: block !important;
+  width: 1em !important;
+}
+.premium-list::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
+}
+.premium-list::-webkit-scrollbar-thumb {
+  background-color: darkgrey !important;
+  outline: 1px solid slategrey !important;
+}
+.premium-list li {
+    width: 210px;
+    margin: 0 15px 15px 0;
+    text-align: center;
+}
+.premium-list li a {
+    text-decoration: none;
+}
+.premium-list li img {
+    max-width: 100%;
+}
+.premium-list li span {
+    color: #26B99A;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.tableFixHead td {
+    position: relative;
+}
+.tableFixHead td .mt-checkbox + .k-link {
+    position: absolute;
+    top: 14px;
+}
+
 .navbar {
   margin-bottom: 0;
 }
@@ -1430,6 +1483,7 @@ a.hiddenanchor {
   color: rgba(255, 255, 255, 0.75);
   font-size: 12px;
   padding: 9px;
+  text-align: right;
 }
 
 .nav li.current-page {
@@ -1448,12 +1502,14 @@ a.hiddenanchor {
   position: relative;
   display: block;
   cursor: pointer;
+  width: 100%;
 }
 
 .nav.side-menu>li>a {
   margin-bottom: 6px;
   color: #e7e7e7;
   font-weight: 500;
+  text-align: right;
 }
 
 .nav.side-menu>li>a:hover {
@@ -1520,7 +1576,7 @@ a.hiddenanchor {
   border-left: 0;
 }
 
-.top_search .input-group-btn button {
+.top_search .input-group-append button {
   border-radius: 25px 0 0 25px !important;
   border: 1px solid rgba(221, 226, 232, 0.49);
   border-right: 0;
@@ -1532,7 +1588,6 @@ a.hiddenanchor {
 .toggle {
   float: right;
   margin: 0;
-  padding-top: 16px;
   width: 70px;
 }
 
@@ -3004,6 +3059,7 @@ span.tag a {
 }
 
 .input-group {
+  display: inline-flex;
   margin-bottom: 10px;
 }
 
@@ -4810,7 +4866,7 @@ fieldset {
   margin-bottom: 5px;
 }
 
-.progress_summary .row .col-xs-2 {
+.progress_summary .row .col-2 {
   padding: 0;
 }
 
@@ -4986,7 +5042,8 @@ fieldset {
 }
 
 .active a span.fa {
-  text-align: left !important;
+  transform: scaleX(-1);
+  text-align: right;
   margin-left: 4px;
 }
 
@@ -5576,6 +5633,66 @@ body.lock #lock_screen .unlock {
   background: #E6E6E6;
 }
 
+.check-box ~ .control__indicator {
+    position: relative;
+    width: auto;
+    height: auto;
+    margin-bottom: 0;
+    background: transparent;
+    vertical-align: top;
+}
+.check-box ~ .control__indicator::before {
+    background-color: #fff;
+    border: #adb5bd solid 1px;
+    left: -2.25rem;
+    pointer-events: all;
+    border-radius: 8px;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    position: absolute;
+    top: 0px;
+    left: -30px;
+    display: block;
+    width: 32px;
+    height: 16px;
+    content: "";
+    box-sizing: border-box;
+}
+.check-box ~ .control__indicator::after {
+    top: calc(.25rem + 2px);
+    left: calc(-2.25rem + 2px);
+    width: calc(1rem - 4px);
+    height: calc(1rem - 4px);
+    background-color: #adb5bd;
+    border-radius: .5rem;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-transform .15s ease-in-out;
+    transition: transform .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: transform .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-transform .15s ease-in-out;
+    position: absolute;
+    top: .25rem;
+    left: -1.5rem;
+    display: block;
+    width: 12px;
+    height: 12px;
+    content: "";
+    top: 2px;
+    left: -27px;
+    width: 12px;
+    height: 12px;
+}
+.check-box:checked ~ .control__indicator::before {
+    color: #fff;
+    border-color: #26B99A;
+    background-color: #26B99A;
+}
+.check-box:checked ~ .control__indicator::after {
+    background-color: #fff;
+    -webkit-transform: translateX(-15px);
+    transform: translateX(-15px);
+}
+.check-box:disabled ~ .control__indicator::before, .check-box[disabled] ~ .control__indicator::before {
+    background-color: #e9ecef;
+}
+
 .control {
   font-size: 18px;
   position: relative;
@@ -5655,13 +5772,15 @@ body.lock #lock_screen .unlock {
 /* Checkbox tick */
 
 .control-checkbox .control__indicator:after {
-  top: 5px;
-  left: 7px;
-  width: 6px;
-  height: 9px;
+  top: 3px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
   transform: rotate(45deg);
   border: solid #fff;
-  border-width: 0 2px 2px 0;
+  border-width: 0px;
+  border-radius: 100%;
+  box-sizing: border-box;
 }
 
 .input-icon>i {
@@ -5949,7 +6068,7 @@ h2 {
   float: left;
 }
 
-.form-control, .container, .container-fluid, .row, .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+.form-control, .container, .container-fluid, .row, .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-2, .col-sm-2, .col-md-2, .col-lg-2, .col-3, .col-sm-3, .col-md-3, .col-lg-3, .col-4, .col-sm-4, .col-md-4, .col-lg-4, .col-5, .col-sm-5, .col-md-5, .col-lg-5, .col-6, .col-sm-6, .col-md-6, .col-lg-6, .col-7, .col-sm-7, .col-md-7, .col-lg-7, .col-8, .col-sm-8, .col-md-8, .col-lg-8, .col-9, .col-sm-9, .col-md-9, .col-lg-9, .col-10, .col-sm-10, .col-md-10, .col-lg-10, .col-11, .col-sm-11, .col-md-11, .col-lg-11, .col-12, .col-sm-12, .col-md-12, .col-lg-12 {
   box-sizing: border-box!important;
 }
 

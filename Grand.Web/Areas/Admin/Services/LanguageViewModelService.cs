@@ -43,7 +43,7 @@ namespace Grand.Web.Areas.Admin.Services
                 throw new ArgumentNullException("model");
 
             model.FlagFileNames = Directory
-                .EnumerateFiles(CommonHelper.MapPath("~/wwwroot/content/images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
+                .EnumerateFiles(CommonHelper.WebMapPath("/content/images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
                 .Select(Path.GetFileName)
                 .ToList();
         }

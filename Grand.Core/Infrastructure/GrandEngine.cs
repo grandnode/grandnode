@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using AutoMapper;
-using Grand.Core.ComponentModel;
 using Grand.Core.Configuration;
 using Grand.Core.Extensions;
 using Grand.Core.Infrastructure.DependencyManagement;
@@ -89,6 +88,7 @@ namespace Grand.Core.Infrastructure
 
             //dictionaries
             TypeDescriptor.AddAttributes(typeof(Dictionary<int, int>), new TypeConverterAttribute(typeof(GenericDictionaryTypeConverter<int, int>)));
+            TypeDescriptor.AddAttributes(typeof(Dictionary<string, bool>), new TypeConverterAttribute(typeof(GenericDictionaryTypeConverter<string, bool>)));
 
             //shipping option
             TypeDescriptor.AddAttributes(typeof(ShippingOption), new TypeConverterAttribute(typeof(ShippingOptionTypeConverter)));
@@ -112,6 +112,7 @@ namespace Grand.Core.Infrastructure
             var config = new GrandConfig();
             configuration.GetSection("Grand").Bind(config);
 
+            CommonHelper.WebRootPath = hostingEnvironment.WebRootPath;
             CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
             CommonHelper.CacheTimeMinutes = config.DefaultCacheTimeMinutes;
             CommonHelper.CookieAuthExpires = config.CookieAuthExpires > 0 ? config.CookieAuthExpires : 24 * 365;

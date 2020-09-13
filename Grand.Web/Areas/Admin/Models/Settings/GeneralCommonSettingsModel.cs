@@ -65,6 +65,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool DisplayEuCookieLawWarning { get; set; }
             public bool DisplayEuCookieLawWarning_OverrideForStore { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayPrivacyPreference")]
+            public bool DisplayPrivacyPreference { get; set; }
+            public bool DisplayPrivacyPreference_OverrideForStore { get; set; }
+            
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FacebookLink")]
             public string FacebookLink { get; set; }
             public bool FacebookLink_OverrideForStore { get; set; }
@@ -175,6 +180,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags")]
             public bool OpenGraphMetaTags { get; set; }
             public bool OpenGraphMetaTags_OverrideForStore { get; set; }
+
+            [UIHint("Picture")]
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StorePicture")]
+            public string StorePictureId { get; set; }
+            public bool StorePictureId_OverrideForStore { get; set; }
         }
 
         public partial class SecuritySettingsModel : BaseGrandModel
@@ -255,10 +265,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
         public partial class PdfSettingsModel : BaseGrandModel
         {
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLetterPageSizeEnabled")]
-            public bool LetterPageSizeEnabled { get; set; }
-            public bool LetterPageSizeEnabled_OverrideForStore { get; set; }
-
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLogo")]
             [UIHint("Picture")]
             public string LogoPictureId { get; set; }
@@ -268,15 +274,13 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool DisablePdfInvoicesForPendingOrders { get; set; }
             public bool DisablePdfInvoicesForPendingOrders_OverrideForStore { get; set; }
 
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1")]
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceHeaderText")]
+            public string InvoiceHeaderText { get; set; }
+            public bool InvoiceHeaderText_OverrideForStore { get; set; }
 
-            public string InvoiceFooterTextColumn1 { get; set; }
-            public bool InvoiceFooterTextColumn1_OverrideForStore { get; set; }
-
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2")]
-
-            public string InvoiceFooterTextColumn2 { get; set; }
-            public bool InvoiceFooterTextColumn2_OverrideForStore { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterText")]
+            public string InvoiceFooterText { get; set; }
+            public bool InvoiceFooterText_OverrideForStore { get; set; }
 
         }
 
@@ -302,9 +306,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
             public bool Enabled { get; set; }
 
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode")]
-            public int SearchMode { get; set; }
-            public SelectList SearchModeValues { get; set; }
         }
 
         public partial class GoogleAnalyticsSettingsModel : BaseGrandModel

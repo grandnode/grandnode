@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Domain.Orders;
 using Grand.Services.Catalog;
-using Grand.Services.Configuration;
+using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
@@ -20,27 +20,38 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly ISettingService _settingService;
         private readonly ILogger _logger;
+        private readonly GoogleAnalyticsEcommerceSettings _googleAnalyticsEcommerceSettings;
+        private readonly ICookiePreference _cookiePreference;
         private readonly IServiceProvider _serviceProvider;
 
         public WidgetsGoogleAnalyticsViewComponent(IWorkContext workContext,
             IStoreContext storeContext,
-            ISettingService settingService,
             ILogger logger,
+            GoogleAnalyticsEcommerceSettings googleAnalyticsEcommerceSettings,
+            ICookiePreference cookiePreference,
             IServiceProvider serviceProvider
             )
         {
             _workContext = workContext;
             _storeContext = storeContext;
-            _settingService = settingService;
             _logger = logger;
+            _googleAnalyticsEcommerceSettings = googleAnalyticsEcommerceSettings;
+            _cookiePreference = cookiePreference;
             _serviceProvider = serviceProvider;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
             var globalScript = "";
+
+            if (_googleAnalyticsEcommerceSettings.AllowToDisableConsentCookie)
+            {
+                var enabled = await _cookiePreference.IsEnable(_workContext.CurrentCustomer, _storeContext.CurrentStore, GoogleAnalyticConst.ConsentCookieSystemName);
+                if ((enabled.HasValue && !enabled.Value) || (!enabled.HasValue && !_googleAnalyticsEcommerceSettings.ConsentDefaultState))
+                    return Content("");
+            }
+
             var routeData = Url.ActionContext.RouteData;
             try
             {
@@ -80,29 +91,27 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
 
         private string GetTrackingScript()
         {
-            var GoogleAnalyticsEcommerceSettings = _settingService.LoadSetting<GoogleAnalyticsEcommerceSettings>(_storeContext.CurrentStore.Id);
-            var analyticsTrackingScript = GoogleAnalyticsEcommerceSettings.TrackingScript + "\n";
-            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", GoogleAnalyticsEcommerceSettings.GoogleId);
+            var analyticsTrackingScript = _googleAnalyticsEcommerceSettings.TrackingScript + "\n";
+            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", _googleAnalyticsEcommerceSettings.GoogleId);
             analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", "");
             return analyticsTrackingScript;
         }
 
         private async Task<string> GetEcommerceScript(Order order)
         {
-            var GoogleAnalyticsEcommerceSettings = _settingService.LoadSetting<GoogleAnalyticsEcommerceSettings>(_storeContext.CurrentStore.Id);
             var usCulture = new CultureInfo("en-US");
-            var analyticsTrackingScript = GoogleAnalyticsEcommerceSettings.TrackingScript + "\n";
-            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", GoogleAnalyticsEcommerceSettings.GoogleId);
+            var analyticsTrackingScript = _googleAnalyticsEcommerceSettings.TrackingScript + "\n";
+            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", _googleAnalyticsEcommerceSettings.GoogleId);
 
             if (order != null)
             {
-                var analyticsEcommerceScript = GoogleAnalyticsEcommerceSettings.EcommerceScript + "\n";
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{GOOGLEID}", GoogleAnalyticsEcommerceSettings.GoogleId);
+                var analyticsEcommerceScript = _googleAnalyticsEcommerceSettings.EcommerceScript + "\n";
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{GOOGLEID}", _googleAnalyticsEcommerceSettings.GoogleId);
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{ORDERID}", order.Id.ToString());
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SITE}", _storeContext.CurrentStore.Url.Replace("http://", "").Replace("/", ""));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TOTAL}", order.OrderTotal.ToString("0.00", usCulture));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TAX}", order.OrderTax.ToString("0.00", usCulture));
-                var orderShipping = GoogleAnalyticsEcommerceSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
+                var orderShipping = _googleAnalyticsEcommerceSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", orderShipping.ToString("0.00", usCulture));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{CITY}", order.BillingAddress == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.City));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{STATEPROVINCE}", order.BillingAddress == null || String.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? "" : FixIllegalJavaScriptChars((await _serviceProvider.GetRequiredService<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId)).Name));
@@ -117,7 +126,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
                 foreach (var item in order.OrderItems)
                 {
                     var product = await productService.GetProductById(item.ProductId);
-                    string analyticsEcommerceDetailScript = GoogleAnalyticsEcommerceSettings.EcommerceDetailScript;
+                    string analyticsEcommerceDetailScript = _googleAnalyticsEcommerceSettings.EcommerceDetailScript;
                     //get category
                     string category = "";
                     if (product.ProductCategories.Any())
@@ -131,7 +140,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(product.FormatSku(item.AttributesXml, productAttributeParser)));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(product.Name));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
-                    var unitPrice = GoogleAnalyticsEcommerceSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
+                    var unitPrice = _googleAnalyticsEcommerceSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{UNITPRICE}", unitPrice.ToString("0.00", usCulture));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{QUANTITY}", item.Quantity.ToString());
                     sb.AppendLine(analyticsEcommerceDetailScript);

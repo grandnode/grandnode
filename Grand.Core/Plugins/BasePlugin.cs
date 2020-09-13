@@ -22,7 +22,7 @@ namespace Grand.Core.Plugins
         /// </summary>
         public virtual async Task Install() 
         {
-            await PluginManager.MarkPluginAsInstalled(this.PluginDescriptor.SystemName);
+            await PluginManager.MarkPluginAsInstalled(PluginDescriptor.SystemName);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Grand.Core.Plugins
         /// </summary>
         public virtual async Task Uninstall() 
         {
-            await PluginManager.MarkPluginAsUninstalled(this.PluginDescriptor.SystemName);
+            await PluginManager.MarkPluginAsUninstalled(PluginDescriptor.SystemName);
         }
 
     }

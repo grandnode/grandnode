@@ -1,9 +1,10 @@
 ﻿@model CustomerAuctionsModel
 @using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
     //title
-    Html.AddTitleParts(T("PageTitle.Auctions").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Auctions").Text);
 }
 @section left
 {
@@ -56,14 +57,14 @@
                                     </td>
                                     <td>
                                         @item.CurrentBidAmount
-                                    @if (item.CurrentBidAmountValue > item.BidAmountValue)
-                                    {
-                                        <small>(@item.BidAmount)</small>
-                                    }
-                                </td>
-                                <td>@item.EndBidDate</td>
-                            </tr>
-                        }
+                                        @if (item.CurrentBidAmountValue > item.BidAmountValue)
+                                        {
+                                            <small>(@item.BidAmount)</small>
+                                        }
+                                    </td>
+                                    <td>@item.EndBidDate</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 }
@@ -96,28 +97,28 @@
                                     </th>
                                     <td>
                                         @item.CurrentBidAmount
-                                    @if (item.CurrentBidAmountValue > item.BidAmountValue)
-                                    {
-                                        <small>(@item.BidAmount)</small>
-                                    }
-                                </td>
-                                <td>@item.EndBidDate</td>
-                                <td>
-                                    @if (item.HighestBidder)
-                                    {
-                                        <span class="text-success">@T("Account.CustomerAuctions.Status.HighestBidder")</span>
-                                        @if (!string.IsNullOrEmpty(item.OrderId))
+                                        @if (item.CurrentBidAmountValue > item.BidAmountValue)
                                         {
-                                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@T("Account.CustomerOrders.OrderDetails")</a>
+                                            <small>(@item.BidAmount)</small>
                                         }
-                                    }
-                                    else
-                                    {
-                                        <span class="text-danger">@T("Account.CustomerAuctions.Status.Outbid")</span>
-                                    }
-                                </td>
-                            </tr>
-                        }
+                                    </td>
+                                    <td>@item.EndBidDate</td>
+                                    <td>
+                                        @if (item.HighestBidder)
+                                        {
+                                            <span class="text-success">@T("Account.CustomerAuctions.Status.HighestBidder")</span>
+                                            @if (!string.IsNullOrEmpty(item.OrderId))
+                                            {
+                                                <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@T("Account.CustomerOrders.OrderDetails")</a>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">@T("Account.CustomerAuctions.Status.Outbid")</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 }

@@ -1,10 +1,11 @@
 ﻿@model ProductEmailAFriendModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(Model.ProductName);
-    Html.AddTitleParts(T("PageTitle.ProductEmailAFriend").Text);
+    pagebuilder.AddTitleParts(Model.ProductName);
+    pagebuilder.AddTitleParts(T("PageTitle.ProductEmailAFriend").Text);
 }
 <div class="page email-a-friend-page">
     <h1 class="h4 text-xs-center generalTitle">@T("Products.EmailAFriend.Title")</h1>

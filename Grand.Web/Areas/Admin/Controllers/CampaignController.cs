@@ -57,6 +57,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
@@ -69,6 +70,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> Customers(string campaignId, DataSourceRequest command)
         {
@@ -83,6 +85,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> History(string campaignId, DataSourceRequest command)
         {
@@ -101,6 +104,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         public async Task<IActionResult> ExportCsv(string campaignId)
         {
             try
@@ -119,12 +123,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = await _campaignViewModelService.PrepareCampaignModel();
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(CampaignModel model, bool continueEditing)
         {
@@ -141,6 +147,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var campaign = await _campaignService.GetCampaignById(id);
@@ -152,6 +159,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
@@ -175,6 +183,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("send-test-email")]
         public async Task<IActionResult> SendTestEmail(CampaignModel model)
@@ -218,6 +227,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("send-mass-email")]
         public async Task<IActionResult> SendMassEmail(CampaignModel model)
@@ -253,6 +263,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {

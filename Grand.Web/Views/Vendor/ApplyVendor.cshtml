@@ -1,59 +1,60 @@
 ﻿@using System.Text.Encodings.Web
 @model ApplyVendorModel
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Vendors.Apply").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Vendors.Apply").Text);
 }
 <div class="page apply-vendor-page">
-        <h2 class="text-center generalTitle">@T("PageTitle.Vendors.Apply")</h2>
-        @await Component.InvokeAsync("TopicBlock", new { systemName = "ApplyVendor" })
-        @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_top" })
-        @if (Model.DisableFormInput)
-        {
-            <div class="alert alert-success result text-xs-center">
-                @Model.Result
-            </div>
-        }
-        else
-        {
-            <form asp-route="ApplyVendorAccount" method="post" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                <div class="form-fields">
-                    <div class="form-group">
-                        <label asp-for="Name" class="col-form-label">@T("Vendors.ApplyAccount.Name"):</label>
-                        <span class="required">*</span>
-                        <input asp-for="Name" class="form-control name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")" />
-                        <span asp-validation-for="Name"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Email" class="col-form-label">@T("Vendors.ApplyAccount.Email"):</label>
-                        <span class="required">*</span>
-                        <input asp-for="Email" class="form-control name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")" />
-                        <span asp-validation-for="Email"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Description" class="col-form-label">@T("Vendors.ApplyAccount.Description"):</label>
-                        <textarea asp-for="Description" class="form-control description"></textarea>
-                    </div>
+    <h2 class="text-center generalTitle">@T("PageTitle.Vendors.Apply")</h2>
+    @await Component.InvokeAsync("TopicBlock", new { systemName = "ApplyVendor" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_top" })
+    @if (Model.DisableFormInput)
+    {
+        <div class="alert alert-success result text-xs-center">
+            @Model.Result
+        </div>
+    }
+    else
+    {
+        <form asp-route="ApplyVendorAccount" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <div class="form-fields">
+                <div class="form-group">
+                    <label asp-for="Name" class="col-form-label">@T("Vendors.ApplyAccount.Name"):</label>
+                    <span class="required">*</span>
+                    <input asp-for="Name" class="form-control name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")" />
+                    <span asp-validation-for="Name"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="col-form-label">@T("Vendors.ApplyAccount.Email"):</label>
+                    <span class="required">*</span>
+                    <input asp-for="Email" class="form-control name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="col-form-label">@T("Vendors.ApplyAccount.Description"):</label>
+                    <textarea asp-for="Description" class="form-control description"></textarea>
+                </div>
 
-                    <div class="form-group">
-                        <label class="col-form-label">@T("Vendors.ApplyAccount.Picture"):</label>
-                        <div class="custom-file">
-                            <input class="form-control-file custom-file-input" name="uploadedFile" accept="image/*" aria-describedby="uploadedFileAddon01" type="file" />
-                            <label class="custom-file-label" for="uploadedFile"></label>
-                        </div>
+                <div class="form-group">
+                    <label class="col-form-label">@T("Vendors.ApplyAccount.Picture"):</label>
+                    <div class="custom-file">
+                        <input class="form-control-file custom-file-input" name="uploadedFile" accept="image/*" aria-describedby="uploadedFileAddon01" type="file" />
+                        <label class="custom-file-label" for="uploadedFile"></label>
                     </div>
-                    @if (Model.DisplayCaptcha)
-                    {
-                        <div class="captcha-box">
-                            <captcha />
-                        </div>
-                    }
-                    @if (Model.TermsOfServiceEnabled)
-                    {
-                        <script asp-location="Footer">
+                </div>
+                @if (Model.DisplayCaptcha)
+                {
+                    <div class="captcha-box">
+                        <captcha />
+                    </div>
+                }
+                @if (Model.TermsOfServiceEnabled)
+                {
+                    <script asp-location="Footer">
                                 $(document).ready(function() {
                                     $('#apply-vendor').click(function() {
                                         if ($('#accept-terms-of-service').is(':checked')) {
@@ -72,37 +73,37 @@
                                         $(this).next('.custom-file-label').html(fileName);
                                     })
                                 });
-                        </script>
-                        <div class="form-group">
-                            <label class="custom-control custom-checkbox">
-                                <input id="accept-terms-of-service" class="custom-control-input" type="checkbox" name="accept-terms-of-service" />
-                                <span class="custom-control-label"></span>
-                                <span class="custom-control-description">@T("Vendors.ApplyAccount.AcceptTermsOfService")</span>
-                                @if (Model.TermsOfServicePopup)
-                                {
-                                    <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "VendorTermsOfService" })', 450, 500, true)">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
-                                }
-                                else
-                                {
-                                    <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new {SeName = await Html.GetTopicSeName("VendorTermsOfService", Context) })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
-                                }
-                            </label>
+                    </script>
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input id="accept-terms-of-service" class="custom-control-input" type="checkbox" name="accept-terms-of-service" />
+                            <span class="custom-control-label"></span>
+                            <span class="custom-control-description">@T("Vendors.ApplyAccount.AcceptTermsOfService")</span>
+                            @if (Model.TermsOfServicePopup)
+                            {
+                                <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = TopicSeNameConstants.VendorTermsOfService })', 450, 500, true)">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
+                            }
+                            else
+                            {
+                                <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new {SeName = TopicSeNameConstants.VendorTermsOfService })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                            }
+                        </label>
 
-                        </div>
-                    }
-                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                    @{
-                        var dataDictAddress = new ViewDataDictionary(ViewData);
-                        dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
-                        <partial name="_CreateOrUpdateVendorAddress" model="Model.Address" view-data="dataDictAddress" />
-                    }
-                </div>
-                <div class="row">
-                    <div class="col-12 buttons pt-1 pb-1">
-                        <input type="submit" id="apply-vendor" class="btn btn-info apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
                     </div>
+                }
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                @{
+                    var dataDictAddress = new ViewDataDictionary(ViewData);
+                    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+                    <partial name="_CreateOrUpdateVendorAddress" model="Model.Address" view-data="dataDictAddress" />
+                }
+            </div>
+            <div class="row">
+                <div class="col-12 buttons pt-1 pb-1">
+                    <input type="submit" id="apply-vendor" class="btn btn-info apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
                 </div>
-            </form>
-        }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_bottom" })
+            </div>
+        </form>
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_bottom" })
 </div>

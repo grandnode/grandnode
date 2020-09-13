@@ -399,6 +399,11 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("EuCookieLawAccept",
                             pattern + "eucookielawaccept",
                             new { controller = "Common", action = "EuCookieLawAccept" });
+            
+            //Privacy Preference settings
+            routeBuilder.MapControllerRoute("PrivacyPreference",
+                pattern + "privacypreference",
+                new { controller = "Common", action = "PrivacyPreference" });
 
             // contact attributes with "upload file" type
             routeBuilder.MapControllerRoute("UploadFileContactAttribute",
@@ -427,7 +432,7 @@ namespace Grand.Web.Infrastructure
 
             //lets encrypt
             routeBuilder.MapControllerRoute("well-known",
-                            ".well-known/acme-challenge/{fileName}",
+                            ".well-known/pki-validation/{fileName}",
                             new { controller = "LetsEncrypt", action = "Index" });
 
 

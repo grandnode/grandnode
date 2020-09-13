@@ -64,6 +64,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
@@ -84,6 +85,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Update form
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = new InteractiveFormModel();
@@ -96,6 +98,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(InteractiveFormModel model, bool continueEditing)
         {
@@ -118,6 +121,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var form = await _interactiveFormService.GetFormById(id);
@@ -140,6 +144,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
@@ -175,6 +180,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -192,6 +198,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Form attributes
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> FormAttributesList(string formId)
         {
@@ -213,6 +220,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> FormAttributesDelete(string id, string formId)
         {
@@ -229,6 +237,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Form Attributes
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> AddAttribute(string formId)
         {
             InteractiveFormAttributeModel model = new InteractiveFormAttributeModel
@@ -240,6 +249,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> AddAttribute(InteractiveFormAttributeModel model, bool continueEditing)
         {
@@ -263,6 +273,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> EditAttribute(string formId, string aid)
         {
             var form = await _interactiveFormService.GetFormById(formId);
@@ -284,6 +295,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> EditAttribute(string formId, InteractiveFormAttributeModel model, bool continueEditing)
         {
@@ -317,6 +329,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Attribute Value
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AttributeValuesList(string formId, string aId)
         {
@@ -338,6 +351,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ValueCreatePopup(string form, string aId, string btnId, string formId)
         {
             var fo = await _interactiveFormService.GetFormById(form);
@@ -360,7 +374,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             await AddLocales(_languageService, model.Locales);
             return View(model);
         }
-
+        
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ValueCreatePopup(string btnId, string formId, string form, string aId, InteractiveFormAttributeValueModel model)
         {
@@ -388,6 +403,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ValueEditPopup(string id, string form, string aId, string formId, string btnId)
         {
             var fo = await _interactiveFormService.GetFormById(form);
@@ -414,6 +430,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ValueEditPopup(string btnId, string formId, string form, string aId, InteractiveFormAttributeValueModel model)
         {
@@ -442,6 +459,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> AttributeValuesDelete(string id, string formId, string aId)
         {

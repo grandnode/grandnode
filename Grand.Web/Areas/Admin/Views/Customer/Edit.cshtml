@@ -33,7 +33,7 @@
                                 {
                                     <button class="btn btn-primary" type="submit" name="resend-activation-message" onclick="return confirm('@T("Admin.Common.AreYouSure")');"><span class="k-icon k-i-rotate"></span> &nbsp;@T("Admin.Customers.Customers.ReSendActivationMessage") </button>
                                 }
-                                <span id="customer-delete" class="btn red"><i class="fa fa-trash-o"></i><span class="hidden-xs"> @T("Admin.Common.Delete")</span></span>
+                                <span id="customer-delete" class="btn red"><i class="fa fa-trash-o"></i><span class="d-none d-sm-inline"> @T("Admin.Common.Delete")</span></span>
                                 <vc:admin-widget widget-zone="customer_details_buttons" additional-data="Model" />
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                 </div>
             </div>
             <div class="form-actions">
-                <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                <div class="offset-md-3 offset-sm-3 col-md-6 col-sm-6">
                     <button type="submit" class="k-button"><span class="k-icon k-i-email"></span>&nbsp;@T("Admin.Customers.Customers.SendEmail")</button>
                 </div>
             </div>
@@ -118,22 +118,22 @@
                                 <div class="form-horizontal">
                                     <div class="form-body">
                                         <div class="form-group">
-                                            <admin-label asp-for="SendPm.Subject" class="control-label col-xs-8 col-md-4 col-sm-4" />
-                                            <div class="col-xs-4 col-md-8 col-sm-8">
+                                            <admin-label asp-for="SendPm.Subject" class="control-label col-8 col-md-4 col-sm-4" />
+                                            <div class="col-4 col-md-8 col-sm-8">
                                                 <admin-input asp-for="SendPm.Subject" />
                                                 <span asp-validation-for="SendPm.Subject"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <admin-label asp-for="SendPm.Message" class="control-label col-xs-8 col-md-4 col-sm-4" />
-                                            <div class="col-xs-4 col-md-8 col-sm-8">
+                                            <admin-label asp-for="SendPm.Message" class="control-label col-8 col-md-4 col-sm-4" />
+                                            <div class="col-4 col-md-8 col-sm-8">
                                                 <admin-textarea asp-for="SendPm.Message"></admin-textarea>
                                                 <span asp-validation-for="SendPm.Message"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-actions">
-                                        <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                                        <div class="offset-md-3 offset-sm-3 col-md-6 col-sm-6">
                                             <button type="submit" class="k-button"><span class="k-icon k-i-email-box"></span>&nbsp;@T("Admin.Customers.Customers.SendPM")</button>
                                         </div>
                                     </div>

@@ -33,8 +33,7 @@ namespace Grand.Core.Plugins
             if (!_arePluginsLoaded)
             {
                 var foundPlugins = PluginManager.ReferencedPlugins.ToList();
-                foundPlugins.Sort();
-                _plugins = foundPlugins.ToList();
+                _plugins = foundPlugins.OrderBy(x => x.DisplayOrder).ToList();
 
                 _arePluginsLoaded = true;
             }

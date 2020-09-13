@@ -1,10 +1,10 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
-using Grand.Core.Data;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
 using Grand.Domain.Catalog;
+using Grand.Domain.Data;
 using Grand.Domain.Directory;
 using Grand.Domain.Media;
 using Grand.Domain.Seo;
@@ -147,7 +147,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult SystemInfo()
         {
             var model = new SystemInfoModel();
-            model.GrandVersion = GrandVersion.CurrentVersion;
+            model.GrandVersion = GrandVersion.FullVersion;
             try
             {
                 model.OperatingSystem = RuntimeInformation.OSDescription;
@@ -172,7 +172,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Value = header.Value
                 });
             }
-            foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().ToList().OrderBy(x=>x.FullName))
             {
                 model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly {
                     FullName = assembly.FullName,
@@ -419,12 +419,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-exported-files")]
         public IActionResult MaintenanceDeleteFiles(MaintenanceModel model)
         {
-            DateTime? startDateValue = (model.DeleteExportedFiles.StartDate == null) ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
-
-            DateTime? endDateValue = (model.DeleteExportedFiles.EndDate == null) ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
             //TO DO
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
             return View(model);
@@ -680,12 +674,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Custom css/js
+        #region Custom css/js/robots.txt
 
         public async Task<IActionResult> CustomCss()
         {
             var model = new Editor();
-            var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", "style.css");
+            var file = Path.Combine(CommonHelper.WebRootPath, "content", "custom", "style.css");
             if (System.IO.File.Exists(file))
             {
                 model.Content = await System.IO.File.ReadAllTextAsync(file);
@@ -700,7 +694,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CustomJs()
         {
             var model = new Editor();
-            var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", "script.js");
+            var file = Path.Combine(CommonHelper.WebRootPath, "content", "custom", "script.js");
             if (System.IO.File.Exists(file))
             {
                 model.Content = await System.IO.File.ReadAllTextAsync(file);
@@ -709,12 +703,25 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> CustomRobotsTxt()
+        {
+            var model = new Editor();
+            var file = Path.Combine(CommonHelper.WebRootPath, "robots.custom.txt");
+            if (System.IO.File.Exists(file))
+            {
+                model.Content = await System.IO.File.ReadAllTextAsync(file);
+            }
+
+            return View(model);
+        }
+
+
         [HttpPost]
         public IActionResult SaveEditor(string content = "", bool css = true)
         {
             try
             {
-                var file = Path.Combine(CommonHelper.BaseDirectory, "wwwroot", "content", "custom", css ? "style.css" : "script.js");
+                var file = Path.Combine(CommonHelper.WebRootPath, "content", "custom", css ? "style.css" : "script.js");
 
                 if (System.IO.File.Exists(file))
                     System.IO.File.WriteAllText(file, content, Encoding.UTF8);
@@ -726,6 +733,23 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
                     System.IO.File.WriteAllText(file, content, Encoding.UTF8);
                 }
+                return Json(_localizationService.GetResource("Admin.Common.Content.Saved"));
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult SaveRobotsTxt(string content = "")
+        {
+            try
+            {
+                var file = Path.Combine(CommonHelper.WebRootPath, "robots.custom.txt");
+
+                System.IO.File.WriteAllText(file, content, Encoding.UTF8);
+
                 return Json(_localizationService.GetResource("Admin.Common.Content.Saved"));
             }
             catch (Exception ex)

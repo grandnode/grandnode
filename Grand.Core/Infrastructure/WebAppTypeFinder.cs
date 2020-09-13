@@ -42,10 +42,10 @@ namespace Grand.Core.Infrastructure
 
         public override IList<Assembly> GetAssemblies()
         {
-            if (this.EnsureBinFolderAssembliesLoaded && !_binFolderAssembliesLoaded)
+            if (EnsureBinFolderAssembliesLoaded && !_binFolderAssembliesLoaded)
             {
                 _binFolderAssembliesLoaded = true;
-                string binPath = GetBinDirectory();
+                var binPath = GetBinDirectory();
                 LoadMatchingAssemblies(binPath);
             }
             return base.GetAssemblies();

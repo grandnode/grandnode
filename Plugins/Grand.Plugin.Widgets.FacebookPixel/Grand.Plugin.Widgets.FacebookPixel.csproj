@@ -25,9 +25,6 @@
     <ProjectReference Include="..\..\Grand.Domain\Grand.Domain.csproj">
       <Private>false</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Grand.Api\Grand.Api.csproj">
-      <Private>false</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj">
       <Private>false</Private>
     </ProjectReference>
@@ -37,15 +34,9 @@
     <ProjectReference Include="..\..\Grand.Services\Grand.Services.csproj">
       <Private>false</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Grand.Web\Grand.Web.csproj">
-      <Private>false</Private>
-    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Description.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="logo.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

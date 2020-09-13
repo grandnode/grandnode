@@ -36,6 +36,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
@@ -58,6 +59,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> Products(string tagId, DataSourceRequest command)
         {
@@ -78,6 +81,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var productTag = await _productTagService.GetProductTagById(id);
@@ -100,6 +104,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> Edit(ProductTagModel model)
         {
@@ -121,6 +126,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {

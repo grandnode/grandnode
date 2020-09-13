@@ -7,6 +7,7 @@ namespace Grand.Api.DTOs.Catalog
         public string Name { get; set; }
         public string SeName { get; set; }
         public string Description { get; set; }
+        public string BottomDescription { get; set; }
         public string ManufacturerTemplateId { get; set; }
         public string MetaKeywords { get; set; }
         public string MetaDescription { get; set; }
