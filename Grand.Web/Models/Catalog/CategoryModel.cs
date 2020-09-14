@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Media;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class CategoryModel : BaseGrandEntityModel
+    public partial class CategoryModel : BaseEntityModel
     {
         public CategoryModel()
         {
@@ -34,7 +34,7 @@ namespace Grand.Web.Models.Catalog
         public IList<ProductOverviewModel> FeaturedProducts { get; set; }
         public IList<ProductOverviewModel> Products { get; set; }        
 		#region Nested Classes
-        public partial class SubCategoryModel : BaseGrandEntityModel
+        public partial class SubCategoryModel : BaseEntityModel
         {
             public SubCategoryModel()
             {

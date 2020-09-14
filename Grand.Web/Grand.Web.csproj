@@ -12,13 +12,10 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Grand.Api\Grand.Api.csproj" />
     <ProjectReference Include="..\Grand.Core\Grand.Core.csproj" />
     <ProjectReference Include="..\Grand.Framework\Grand.Framework.csproj" />
     <ProjectReference Include="..\Grand.Services\Grand.Services.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.8" />
+    <ProjectReference Include="..\Grand.Api\Grand.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\appsettings.json;App_Data\sitemap.config;App_Data\DataProtectionKeys\*.xml;App_Data\Settings.txt;App_Data\InstalledPlugins.txt;" />

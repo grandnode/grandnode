@@ -1,15 +1,16 @@
 ﻿using Grand.Domain.Catalog;
 using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
-    public partial class CheckoutAttributeModel : BaseGrandEntityModel, ILocalizedModel<CheckoutAttributeLocalizedModel>, IAclMappingModel, IStoreMappingModel
+    public partial class CheckoutAttributeModel : BaseEntityModel, ILocalizedModel<CheckoutAttributeLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public CheckoutAttributeModel()
         {
@@ -89,7 +90,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public string[] SelectedCustomerRoleIds { get; set; }
     }
 
-    public partial class ConditionModel : BaseGrandEntityModel
+    public partial class ConditionModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition")]
         public bool EnableCondition { get; set; }
@@ -99,7 +100,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 
         public IList<AttributeConditionModel> ConditionAttributes { get; set; }
     }
-    public partial class AttributeConditionModel : BaseGrandEntityModel
+    public partial class AttributeConditionModel : BaseEntityModel
     {
         public string Name { get; set; }
 

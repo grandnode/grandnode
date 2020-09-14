@@ -1,11 +1,11 @@
 ﻿using Grand.Framework.Localization;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    public partial class InteractiveFormModel : BaseGrandEntityModel, ILocalizedModel<InteractiveFormLocalizedModel>
+    public partial class InteractiveFormModel : BaseEntityModel, ILocalizedModel<InteractiveFormLocalizedModel>
     {
         public InteractiveFormModel()
         {

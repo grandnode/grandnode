@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.Vendors;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class VendorModel : BaseGrandEntityModel
+    public partial class VendorModel : BaseEntityModel
     {
         public VendorModel()
         {

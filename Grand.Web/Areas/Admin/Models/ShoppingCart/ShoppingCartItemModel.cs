@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.ShoppingCart
 {
-    public partial class ShoppingCartItemModel : BaseGrandEntityModel
+    public partial class ShoppingCartItemModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.CurrentCarts.Store")]
         public string Store { get; set; }

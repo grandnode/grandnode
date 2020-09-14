@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Security
 {
-    public partial class PermissionActionModel : BaseGrandModel
+    public partial class PermissionActionModel : BaseModel
     {
         public PermissionActionModel()
         {

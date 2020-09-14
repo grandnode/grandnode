@@ -2,16 +2,16 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 
-namespace Grand.Framework.Mvc.Models
+namespace Grand.Core.Models
 {
     /// <summary>
     /// Represents base model
     /// </summary>
-    public partial class BaseGrandModel
+    public partial class BaseModel
     {
         #region Ctor
 
-        public BaseGrandModel()
+        public BaseModel()
         {
             GenericAttributes = new List<GenericAttribute>();
             PostInitialize();
@@ -46,16 +46,5 @@ namespace Grand.Framework.Mvc.Models
 
         #endregion
 
-    }
-
-    /// <summary>
-    /// Represents base grandnode entity model
-    /// </summary>
-    public partial class BaseGrandEntityModel : BaseGrandModel
-    {
-        /// <summary>
-        /// Gets or sets model identifier
-        /// </summary>
-        public virtual string Id { get; set; }
     }
 }

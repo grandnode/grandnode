@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.News
 {
-    public partial class NewsCommentModel : BaseGrandEntityModel
+    public partial class NewsCommentModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.NewsItem")]
         public string NewsItemId { get; set; }

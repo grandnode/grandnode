@@ -2,7 +2,7 @@
 using Grand.Api.Infrastructure.DependencyManagement;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
-using Grand.Framework.Mvc.Routing;
+using Grand.Core.Routing;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Routing;

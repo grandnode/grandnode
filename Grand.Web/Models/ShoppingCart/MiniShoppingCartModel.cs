@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Media;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class MiniShoppingCartModel : BaseGrandModel
+    public partial class MiniShoppingCartModel : BaseModel
     {
         public MiniShoppingCartModel()
         {
@@ -23,7 +23,7 @@ namespace Grand.Web.Models.ShoppingCart
 
         #region Nested Classes
 
-        public partial class ShoppingCartItemModel : BaseGrandEntityModel
+        public partial class ShoppingCartItemModel : BaseEntityModel
         {
             public ShoppingCartItemModel()
             {

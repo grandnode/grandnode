@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Plugins
 {
-    public partial class MiscPluginModel : BaseGrandModel
+    public partial class MiscPluginModel : BaseModel
     {
         public string FriendlyName { get; set; }
 

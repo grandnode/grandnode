@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Core.ModelBinding;
 
 namespace Grand.Plugin.Shipping.FixedRateShipping.Models
 {

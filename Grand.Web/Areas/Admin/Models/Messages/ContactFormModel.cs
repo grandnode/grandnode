@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    public partial class ContactFormModel: BaseGrandEntityModel
+    public partial class ContactFormModel: BaseEntityModel
     {
         public override string Id { get; set; }
 

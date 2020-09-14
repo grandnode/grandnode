@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Plugin.Widgets.Slider.Models
 {
-    public class SlideListModel: BaseGrandModel
+    public class SlideListModel : BaseModel
     {
         public string Id { get; set; }
         public string PictureUrl { get; set; }

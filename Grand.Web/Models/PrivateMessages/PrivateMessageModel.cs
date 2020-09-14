@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Models.PrivateMessages
 {
-    public partial class PrivateMessageModel : BaseGrandEntityModel
+    public partial class PrivateMessageModel : BaseEntityModel
     {
         public string FromCustomerId { get; set; }
         public string CustomerFromName { get; set; }

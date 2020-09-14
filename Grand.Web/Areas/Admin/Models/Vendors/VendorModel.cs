@@ -1,6 +1,6 @@
 ﻿using Grand.Framework.Localization;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Vendors
 {
-    public partial class VendorModel : BaseGrandEntityModel, ILocalizedModel<VendorLocalizedModel>
+    public partial class VendorModel : BaseEntityModel, ILocalizedModel<VendorLocalizedModel>
     {
         public VendorModel()
         {
@@ -104,13 +104,13 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
 
         #region Nested classes
 
-        public class AssociatedCustomerInfo : BaseGrandEntityModel
+        public class AssociatedCustomerInfo : BaseEntityModel
         {
             public string Email { get; set; }
         }
 
 
-        public partial class VendorNote : BaseGrandEntityModel
+        public partial class VendorNote : BaseEntityModel
         {
             public string VendorId { get; set; }
             [GrandResourceDisplayName("Admin.Vendors.VendorNotes.Fields.Note")]

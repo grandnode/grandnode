@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.Tasks
 {
-    public partial class ScheduleTaskModel : BaseGrandEntityModel
+    public partial class ScheduleTaskModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.System.ScheduleTasks.ScheduleTaskName")]
         public string ScheduleTaskName { get; set; }

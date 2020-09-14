@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Grand.Web.Areas.Admin.Models.Common;
 
 namespace Grand.Web.Areas.Admin.Models.Shipping
 {
-    public partial class WarehouseModel : BaseGrandEntityModel
+    public partial class WarehouseModel : BaseEntityModel
     {
         public WarehouseModel()
         {

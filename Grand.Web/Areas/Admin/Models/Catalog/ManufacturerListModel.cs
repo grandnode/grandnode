@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class ManufacturerListModel : BaseGrandModel
+    public partial class ManufacturerListModel : BaseModel
     {
         public ManufacturerListModel()
         {

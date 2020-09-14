@@ -1,12 +1,12 @@
 ﻿using Grand.Domain.Orders;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Web.Models.Common;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Orders
 {
-    public class ReturnRequestDetailsModel : BaseGrandModel
+    public class ReturnRequestDetailsModel : BaseModel
     {
         public ReturnRequestDetailsModel()
         {
@@ -42,7 +42,7 @@ namespace Grand.Web.Models.Orders
 
         #region Nested Classes
 
-        public partial class ReturnRequestNote : BaseGrandEntityModel
+        public partial class ReturnRequestNote : BaseEntityModel
         {
             public bool HasDownload { get; set; }
             public string Note { get; set; }
@@ -50,7 +50,7 @@ namespace Grand.Web.Models.Orders
             public string ReturnRequestId { get; set; }
         }
 
-        public class ReturnRequestItemModel : BaseGrandModel
+        public class ReturnRequestItemModel : BaseModel
         {
             public string OrderItemId { get; set; }
 

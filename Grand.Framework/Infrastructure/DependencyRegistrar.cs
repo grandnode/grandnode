@@ -9,6 +9,7 @@ using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Plugins;
+using Grand.Core.Routing;
 using Grand.Core.Validators;
 using Grand.Domain.Data;
 using Grand.Framework.Middleware;

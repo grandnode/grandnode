@@ -1,12 +1,12 @@
 ﻿using Grand.Domain.Catalog;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Common
 {
-    public partial class AddressModel : BaseGrandEntityModel
+    public partial class AddressModel : BaseEntityModel
     {
         public AddressModel()
         {
@@ -114,7 +114,7 @@ namespace Grand.Web.Areas.Admin.Models.Common
 
         #region Nested classes
 
-        public partial class AddressAttributeModel : BaseGrandEntityModel
+        public partial class AddressAttributeModel : BaseEntityModel
         {
             public AddressAttributeModel()
             {
@@ -135,7 +135,7 @@ namespace Grand.Web.Areas.Admin.Models.Common
             public IList<AddressAttributeValueModel> Values { get; set; }
         }
 
-        public partial class AddressAttributeValueModel : BaseGrandEntityModel
+        public partial class AddressAttributeValueModel : BaseEntityModel
         {
             public string Name { get; set; }
 

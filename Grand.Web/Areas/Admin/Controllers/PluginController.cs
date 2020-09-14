@@ -9,7 +9,7 @@ using Grand.Core.Plugins;
 using Grand.Framework.Controllers;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Framework.Security.Authorization;
 using Grand.Framework.Themes;
 using Grand.Services.Authentication.External;
@@ -35,6 +35,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {

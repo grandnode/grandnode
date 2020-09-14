@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Extensions;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
+using Grand.Core.Routing;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.Linq;

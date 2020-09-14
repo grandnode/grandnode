@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public class CategorySimpleModel : BaseGrandEntityModel
+    public class CategorySimpleModel : BaseEntityModel
     {
         public CategorySimpleModel()
         {

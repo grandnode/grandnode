@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Common;
 using System.Collections.Generic;
 
@@ -16,7 +16,7 @@ namespace Grand.Web.Models.Catalog
 
         #region Nested classes
 
-        public partial class BackInStockSubscriptionModel : BaseGrandEntityModel
+        public partial class BackInStockSubscriptionModel : BaseEntityModel
         {
             public string ProductId { get; set; }
             public string ProductName { get; set; }

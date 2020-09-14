@@ -1,18 +1,19 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Blogs
 {
-    public partial class BlogPostModel : BaseGrandEntityModel, ILocalizedModel<BlogLocalizedModel>, IStoreMappingModel
+    public partial class BlogPostModel : BaseEntityModel, ILocalizedModel<BlogLocalizedModel>, IStoreMappingModel
     {
         public BlogPostModel()
         {
-            this.AvailableStores = new List<StoreModel>();
+            AvailableStores = new List<StoreModel>();
             Locales = new List<BlogLocalizedModel>();
         }
 

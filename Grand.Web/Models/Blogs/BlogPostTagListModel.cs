@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Blogs
 {
-    public partial class BlogPostTagListModel : BaseGrandModel
+    public partial class BlogPostTagListModel : BaseModel
     {
         public BlogPostTagListModel()
         {

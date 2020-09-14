@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Customer
 {
-    public class CustomerNotesModel : BaseGrandModel
+    public class CustomerNotesModel : BaseModel
     {
         public CustomerNotesModel()
         {

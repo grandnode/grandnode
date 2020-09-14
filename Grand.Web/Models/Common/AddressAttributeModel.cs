@@ -1,10 +1,10 @@
 ﻿using Grand.Domain.Catalog;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class AddressAttributeModel : BaseGrandEntityModel
+    public partial class AddressAttributeModel : BaseEntityModel
     {
         public AddressAttributeModel()
         {
@@ -25,7 +25,7 @@ namespace Grand.Web.Models.Common
         public IList<AddressAttributeValueModel> Values { get; set; }
     }
 
-    public partial class AddressAttributeValueModel : BaseGrandEntityModel
+    public partial class AddressAttributeValueModel : BaseEntityModel
     {
         public string Name { get; set; }
 

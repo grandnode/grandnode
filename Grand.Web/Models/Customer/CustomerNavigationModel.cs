@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Customer
 {
-    public partial class CustomerNavigationModel : BaseGrandModel
+    public partial class CustomerNavigationModel : BaseModel
     {
         public bool HideInfo { get; set; }
         public bool HideAddresses { get; set; }

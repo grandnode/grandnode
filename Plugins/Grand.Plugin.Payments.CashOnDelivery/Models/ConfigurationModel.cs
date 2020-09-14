@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Localization;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
+using Grand.Framework.Localization;
 using System.Collections.Generic;
 
 namespace Grand.Plugin.Payments.CashOnDelivery.Models
 {
-    public class ConfigurationModel : BaseGrandModel, ILocalizedModel<ConfigurationModel.ConfigurationLocalizedModel>
+    public class ConfigurationModel : BaseModel, ILocalizedModel<ConfigurationModel.ConfigurationLocalizedModel>
     {
         public ConfigurationModel()
         {
@@ -13,7 +13,7 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Models
         }
 
         public string ActiveStoreScopeConfiguration { get; set; }
-        
+
         [GrandResourceDisplayName("Plugins.Payment.CashOnDelivery.DescriptionText")]
         public string DescriptionText { get; set; }
         public bool DescriptionText_OverrideForStore { get; set; }
@@ -37,7 +37,7 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Models
         public partial class ConfigurationLocalizedModel : ILocalizedModelLocal
         {
             public string LanguageId { get; set; }
-            
+
             [GrandResourceDisplayName("Plugins.Payment.CashOnDelivery.DescriptionText")]
             public string DescriptionText { get; set; }
         }

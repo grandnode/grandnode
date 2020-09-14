@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Boards
 {
-    public partial class TopicMoveModel : BaseGrandEntityModel
+    public partial class TopicMoveModel : BaseEntityModel
     {
         public TopicMoveModel()
         {

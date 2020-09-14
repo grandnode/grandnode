@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutCompletedModel : BaseGrandModel
+    public partial class CheckoutCompletedModel : BaseModel
     {
         public string OrderId { get; set; }
         public int OrderNumber { get; set; }

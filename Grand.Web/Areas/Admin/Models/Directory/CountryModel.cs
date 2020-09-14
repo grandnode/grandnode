@@ -1,16 +1,17 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Directory
 {
-    public partial class CountryModel : BaseGrandEntityModel, ILocalizedModel<CountryLocalizedModel>, IStoreMappingModel
+    public partial class CountryModel : BaseEntityModel, ILocalizedModel<CountryLocalizedModel>, IStoreMappingModel
     {
         public CountryModel()
         {
-            this.AvailableStores = new List<StoreModel>();
+            AvailableStores = new List<StoreModel>();
             Locales = new List<CountryLocalizedModel>();
         }
         [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]

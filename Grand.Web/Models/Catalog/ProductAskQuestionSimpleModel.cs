@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class ProductAskQuestionSimpleModel : BaseGrandEntityModel
+    public partial class ProductAskQuestionSimpleModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Products.AskQuestion.Email")]
         public string AskQuestionEmail { get; set; }

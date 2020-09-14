@@ -1,12 +1,12 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Plugin.Widgets.GoogleAnalytics.Models
 {
-    public class ConfigurationModel : BaseGrandModel
+    public class ConfigurationModel : BaseModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
-        
+
         [GrandResourceDisplayName("Plugins.Widgets.GoogleAnalytics.GoogleId")]
         public string GoogleId { get; set; }
         public bool GoogleId_OverrideForStore { get; set; }

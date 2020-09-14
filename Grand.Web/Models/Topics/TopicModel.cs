@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Topics
 {
-    public partial class TopicModel : BaseGrandEntityModel
+    public partial class TopicModel : BaseEntityModel
     {
         public string SystemName { get; set; }
 

@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Models.Vendors
 {
-    public partial class VendorInfoModel : BaseGrandModel
+    public partial class VendorInfoModel : BaseModel
     {
         public VendorInfoModel()
         {

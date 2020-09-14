@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    public partial class CustomerRoleModel : BaseGrandEntityModel
+    public partial class CustomerRoleModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Name")]
 

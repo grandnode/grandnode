@@ -1,13 +1,14 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    public partial class MessageTemplateModel : BaseGrandEntityModel, ILocalizedModel<MessageTemplateLocalizedModel>, IStoreMappingModel
+    public partial class MessageTemplateModel : BaseEntityModel, ILocalizedModel<MessageTemplateLocalizedModel>, IStoreMappingModel
     {
         public MessageTemplateModel()
         {

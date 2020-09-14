@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Models.News
 {
-    public partial class AddNewsCommentModel : BaseGrandModel
+    public partial class AddNewsCommentModel : BaseModel
     {
         [GrandResourceDisplayName("News.Comments.CommentTitle")]
         public string CommentTitle { get; set; }

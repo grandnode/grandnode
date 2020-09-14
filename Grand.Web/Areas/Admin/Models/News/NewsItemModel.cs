@@ -1,14 +1,15 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.News
 {
-    public partial class NewsItemModel : BaseGrandEntityModel, ILocalizedModel<NewsLocalizedModel>, IAclMappingModel, IStoreMappingModel
+    public partial class NewsItemModel : BaseEntityModel, ILocalizedModel<NewsLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public NewsItemModel()
         {

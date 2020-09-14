@@ -1,9 +1,9 @@
 ﻿using Grand.Domain.Tax;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class TaxTypeSelectorModel : BaseGrandModel
+    public partial class TaxTypeSelectorModel : BaseModel
     {
         public TaxDisplayType CurrentTaxType { get; set; }
     }

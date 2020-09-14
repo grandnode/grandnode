@@ -1,12 +1,9 @@
 ﻿using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Domain.Localization;
-using Grand.Framework.Mvc.Routing;
-using Grand.Services.Localization;
+using Grand.Core.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 
 namespace Grand.Web.Infrastructure
 {
@@ -207,7 +204,7 @@ namespace Grand.Web.Infrastructure
                             pattern + "customer/useragreement/{orderItemId}",
                             new { controller = "Customer", action = "UserAgreement" });
 
-            
+
         }
         private void RegisterVendorRoute(IEndpointRouteBuilder routeBuilder, string pattern)
         {
@@ -399,7 +396,7 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("EuCookieLawAccept",
                             pattern + "eucookielawaccept",
                             new { controller = "Common", action = "EuCookieLawAccept" });
-            
+
             //Privacy Preference settings
             routeBuilder.MapControllerRoute("PrivacyPreference",
                 pattern + "privacypreference",
@@ -585,7 +582,7 @@ namespace Grand.Web.Infrastructure
                             pattern + "deletepm/{privateMessageId}",
                             new { controller = "PrivateMessages", action = "DeletePM" });
         }
-        
+
         private void RegisterBoardsRoute(IEndpointRouteBuilder routeBuilder, string pattern)
         {
             //forum

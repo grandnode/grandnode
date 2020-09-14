@@ -1,11 +1,11 @@
 ﻿using System;
 using Grand.Web.Areas.Admin.Models.Common;
-using Grand.Framework.Mvc.Models;
-using Grand.Framework.Mvc.ModelBinding;
+using Grand.Core.Models;
+using Grand.Core.ModelBinding;
 
 namespace Grand.Web.Areas.Admin.Models.Affiliates
 {
-    public partial class AffiliateModel : BaseGrandEntityModel
+    public partial class AffiliateModel : BaseEntityModel
     {
         public AffiliateModel()
         {
@@ -34,7 +34,7 @@ namespace Grand.Web.Areas.Admin.Models.Affiliates
 
         #region Nested classes
         
-        public partial class AffiliatedOrderModel : BaseGrandEntityModel
+        public partial class AffiliatedOrderModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Affiliates.Orders.Order")]
             public override string Id { get; set; }
@@ -58,7 +58,7 @@ namespace Grand.Web.Areas.Admin.Models.Affiliates
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class AffiliatedCustomerModel : BaseGrandEntityModel
+        public partial class AffiliatedCustomerModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Affiliates.Customers.Name")]
             public string Name { get; set; }

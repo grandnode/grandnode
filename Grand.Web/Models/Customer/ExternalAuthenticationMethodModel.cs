@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Customer
 {
-    public partial class ExternalAuthenticationMethodModel : BaseGrandModel
+    public partial class ExternalAuthenticationMethodModel : BaseModel
     {
         public string ViewComponentName { get; set; }
     }

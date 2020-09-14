@@ -1,14 +1,15 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Knowledgebase
 {
-    public class KnowledgebaseCategoryModel : BaseGrandEntityModel, ILocalizedModel<KnowledgebaseCategoryLocalizedModel>, IAclMappingModel, IStoreMappingModel
+    public class KnowledgebaseCategoryModel : BaseEntityModel, ILocalizedModel<KnowledgebaseCategoryLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public KnowledgebaseCategoryModel()
         {
@@ -64,7 +65,7 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
-        public partial class ActivityLogModel : BaseGrandEntityModel
+        public partial class ActivityLogModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.ActivityLogType")]
             public string ActivityLogTypeName { get; set; }

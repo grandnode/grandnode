@@ -3,7 +3,7 @@ using Grand.Domain.Payments;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {

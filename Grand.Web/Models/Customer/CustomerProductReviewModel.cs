@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Customer
 {
-    public partial class CustomerProductReviewModel : BaseGrandEntityModel
+    public partial class CustomerProductReviewModel : BaseEntityModel
     {
         public string ProductId { get; set; }
         public string ProductName { get; set; }
@@ -19,7 +19,7 @@ namespace Grand.Web.Models.Customer
         public DateTime CreatedOn { get; set; }
     }
 
-    public class CustomerProductReviewsModel : BaseGrandEntityModel
+    public class CustomerProductReviewsModel : BaseEntityModel
     {
         public string CustomerId { get; set; }
 

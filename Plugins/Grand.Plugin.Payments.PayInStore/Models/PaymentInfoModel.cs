@@ -1,9 +1,8 @@
-﻿using Grand.Framework.Mvc;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Plugin.Payments.PayInStore.Models
 {
-    public class PaymentInfoModel : BaseGrandModel
+    public class PaymentInfoModel : BaseModel
     {
         public string DescriptionText { get; set; }
     }

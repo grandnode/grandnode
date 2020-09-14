@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Areas.Admin.Models.Localization;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Common
 {
-    public partial class LanguageSelectorModel : BaseGrandModel
+    public partial class LanguageSelectorModel : BaseModel
     {
         public LanguageSelectorModel()
         {

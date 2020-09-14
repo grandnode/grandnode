@@ -1,9 +1,9 @@
 ﻿using Grand.Domain.Common;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutPickupPointModel : BaseGrandModel
+    public partial class CheckoutPickupPointModel : BaseModel
     {
         public string Id { get; set; }
 

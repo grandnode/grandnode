@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class ManufacturerNavigationModel : BaseGrandModel
+    public partial class ManufacturerNavigationModel : BaseModel
     {
         public ManufacturerNavigationModel()
         {
@@ -15,7 +15,7 @@ namespace Grand.Web.Models.Catalog
         public int TotalManufacturers { get; set; }
     }
 
-    public partial class ManufacturerBriefInfoModel : BaseGrandEntityModel
+    public partial class ManufacturerBriefInfoModel : BaseEntityModel
     {
         public string Name { get; set; }
         public string SeName { get; set; }

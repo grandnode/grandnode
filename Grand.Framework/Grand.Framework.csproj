@@ -8,7 +8,6 @@
     <Product>grandnode</Product>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
     <TieredCompilation>true</TieredCompilation>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

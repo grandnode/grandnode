@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    public partial class CustomerActionTypeModel : BaseGrandEntityModel
+    public partial class CustomerActionTypeModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Customer.ActionType.Fields.Name")]
         public string Name { get; set; }

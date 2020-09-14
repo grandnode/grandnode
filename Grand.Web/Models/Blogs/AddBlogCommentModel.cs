@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Models.Blogs
 {
-    public partial class AddBlogCommentModel : BaseGrandEntityModel
+    public partial class AddBlogCommentModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Blog.Comments.CommentText")]
         public string CommentText { get; set; }

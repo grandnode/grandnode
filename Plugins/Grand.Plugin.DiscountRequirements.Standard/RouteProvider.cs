@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Routing;
+﻿using Grand.Core.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -56,10 +56,8 @@ namespace Grand.Plugin.DiscountRequirements
                  new { controller = "HasOneProduct", action = "LoadProductFriendlyNames" }
             );
         }
-        public int Priority
-        {
-            get
-            {
+        public int Priority {
+            get {
                 return 0;
             }
         }

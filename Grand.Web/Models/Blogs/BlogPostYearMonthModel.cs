@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Blogs
 {
-    public partial class BlogPostYearModel : BaseGrandModel
+    public partial class BlogPostYearModel : BaseModel
     {
         public BlogPostYearModel()
         {
@@ -12,7 +12,7 @@ namespace Grand.Web.Models.Blogs
         public int Year { get; set; }
         public IList<BlogPostMonthModel> Months { get; set; }
     }
-    public partial class BlogPostMonthModel : BaseGrandModel
+    public partial class BlogPostMonthModel : BaseModel
     {
         public int Month { get; set; }
 

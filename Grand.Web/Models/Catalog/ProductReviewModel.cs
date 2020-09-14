@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class ProductReviewOverviewModel : BaseGrandModel
+    public partial class ProductReviewOverviewModel : BaseModel
     {
         public string ProductId { get; set; }
 
@@ -15,7 +15,7 @@ namespace Grand.Web.Models.Catalog
         public bool AllowCustomerReviews { get; set; }
     }
 
-    public partial class ProductReviewsModel : BaseGrandModel
+    public partial class ProductReviewsModel : BaseModel
     {
         public ProductReviewsModel()
         {
@@ -32,7 +32,7 @@ namespace Grand.Web.Models.Catalog
         public AddProductReviewModel AddProductReview { get; set; }
     }
 
-    public partial class ProductReviewModel : BaseGrandEntityModel
+    public partial class ProductReviewModel : BaseEntityModel
     {
         public string CustomerId { get; set; }
         public string CustomerName { get; set; }
@@ -47,7 +47,7 @@ namespace Grand.Web.Models.Catalog
     }
 
 
-    public partial class ProductReviewHelpfulnessModel : BaseGrandModel
+    public partial class ProductReviewHelpfulnessModel : BaseModel
     {
         public string ProductReviewId { get; set; }
         public string ProductId { get; set; }
@@ -57,7 +57,7 @@ namespace Grand.Web.Models.Catalog
         public int HelpfulNoTotal { get; set; }
     }
 
-    public partial class AddProductReviewModel : BaseGrandModel
+    public partial class AddProductReviewModel : BaseModel
     {
         [GrandResourceDisplayName("Reviews.Fields.Title")]
         public string Title { get; set; }

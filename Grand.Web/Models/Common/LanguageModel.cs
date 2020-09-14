@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class LanguageModel : BaseGrandEntityModel
+    public partial class LanguageModel : BaseEntityModel
     {
         public string Name { get; set; }
 

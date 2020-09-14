@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class CurrencySelectorModel : BaseGrandModel
+    public partial class CurrencySelectorModel : BaseModel
     {
         public CurrencySelectorModel()
         {

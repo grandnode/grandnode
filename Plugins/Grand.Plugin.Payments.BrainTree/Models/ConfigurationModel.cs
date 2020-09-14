@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Plugin.Payments.BrainTree.Models
 {
-    public class ConfigurationModel : BaseGrandModel
+    public class ConfigurationModel : BaseModel
     {
         [GrandResourceDisplayName("Plugins.Payments.BrainTree.Fields.Use3DS")]
         public bool Use3DS { get; set; }

@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Media;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class WishlistModel : BaseGrandModel
+    public partial class WishlistModel : BaseModel
     {
         public WishlistModel()
         {
@@ -35,7 +35,7 @@ namespace Grand.Web.Models.ShoppingCart
         
 		#region Nested Classes
 
-        public partial class ShoppingCartItemModel : BaseGrandEntityModel
+        public partial class ShoppingCartItemModel : BaseEntityModel
         {
             public ShoppingCartItemModel()
             {

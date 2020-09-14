@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class BackInStockSubscribeModel : BaseGrandModel
+    public partial class BackInStockSubscribeModel : BaseModel
     {
         public string ProductId { get; set; }
         public string ProductName { get; set; }

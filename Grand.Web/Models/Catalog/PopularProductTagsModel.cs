@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class PopularProductTagsModel : BaseGrandModel
+    public partial class PopularProductTagsModel : BaseModel
     {
         public PopularProductTagsModel()
         {
