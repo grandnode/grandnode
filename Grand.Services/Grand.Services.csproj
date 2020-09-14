@@ -11,17 +11,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="3.5.1.7" />
-    <PackageReference Include="AWSSDK.S3" Version="3.5.0.9" />
+    <PackageReference Include="AWSSDK.Core" Version="3.5.1.10" />
+    <PackageReference Include="AWSSDK.S3" Version="3.5.1.1" />
     <PackageReference Include="DotNetCore.NPOI" Version="1.2.2" />
     <PackageReference Include="Google.Apis" Version="1.49.0" />
-    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.49.0.2071" />
-    <PackageReference Include="MailKit" Version="2.8.0" />
+    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.49.0.2074" />
+    <PackageReference Include="MailKit" Version="2.9.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.2.0" />
     <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.2" />
     <PackageReference Include="Microsoft.Azure.Storage.Common" Version="11.2.2" />
-    <PackageReference Include="SkiaSharp" Version="2.80.1" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.1" />
+    <PackageReference Include="SkiaSharp" Version="2.80.2" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.2" />
     <PackageReference Include="Wkhtmltopdf.NetCore" Version="3.0.2" />
 
     <!-- For support Raspberry pi 4 
