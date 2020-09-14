@@ -1,7 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Domain.Catalog;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Framework.UI.Paging;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
@@ -68,7 +68,7 @@ namespace Grand.Web.Models.Catalog
 
         #region Nested classes
 
-        public partial class PriceRangeFilterModel : BaseGrandModel
+        public partial class PriceRangeFilterModel : BaseModel
         {
             #region Const
 
@@ -221,7 +221,7 @@ namespace Grand.Web.Models.Catalog
             #endregion
         }
 
-        public partial class PriceRangeFilterItem : BaseGrandModel
+        public partial class PriceRangeFilterItem : BaseModel
         {
             public string From { get; set; }
             public string To { get; set; }
@@ -229,7 +229,7 @@ namespace Grand.Web.Models.Catalog
             public bool Selected { get; set; }
         }
 
-        public partial class SpecificationFilterModel : BaseGrandModel
+        public partial class SpecificationFilterModel : BaseModel
         {
             #region Ctor
 
@@ -395,7 +395,7 @@ namespace Grand.Web.Models.Catalog
             #endregion
         }
 
-        public partial class SpecificationFilterItem : BaseGrandModel
+        public partial class SpecificationFilterItem : BaseModel
         {
             public string SpecificationAttributeName { get; set; }
             public string SpecificationAttributeSeName { get; set; }

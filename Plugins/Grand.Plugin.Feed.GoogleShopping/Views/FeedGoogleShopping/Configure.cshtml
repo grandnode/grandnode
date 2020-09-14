@@ -1,7 +1,7 @@
 ﻿@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ConfigurePlugin";
-    pagebuilder.AddCssFileParts("~/Plugins/Feed.GoogleShopping/Content/styles.css");
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Feed.GoogleShopping/Content/styles.css");
 }
 @model FeedGoogleShoppingModel
 @using Grand.Plugin.Feed.GoogleShopping.Models;

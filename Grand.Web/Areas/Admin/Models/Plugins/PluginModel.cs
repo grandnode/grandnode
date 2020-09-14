@@ -1,12 +1,13 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Plugins
 {
-    public partial class PluginModel : BaseGrandModel, ILocalizedModel<PluginLocalizedModel>, IStoreMappingModel
+    public partial class PluginModel : BaseModel, ILocalizedModel<PluginLocalizedModel>, IStoreMappingModel
     {
         public PluginModel()
         {

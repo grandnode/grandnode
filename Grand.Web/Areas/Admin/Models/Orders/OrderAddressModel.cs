@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Areas.Admin.Models.Common;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
-    public partial class OrderAddressModel : BaseGrandModel
+    public partial class OrderAddressModel : BaseModel
     {
         public string OrderId { get; set; }
         public AddressModel Address { get; set; }

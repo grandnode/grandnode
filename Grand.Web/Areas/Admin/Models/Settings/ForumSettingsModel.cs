@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
-    public partial class ForumSettingsModel : BaseGrandModel
+    public partial class ForumSettingsModel : BaseModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 

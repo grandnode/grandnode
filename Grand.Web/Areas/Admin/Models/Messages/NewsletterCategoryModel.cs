@@ -1,12 +1,13 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    public partial class NewsletterCategoryModel : BaseGrandEntityModel, ILocalizedModel<NewsletterCategoryLocalizedModel>, IStoreMappingModel
+    public partial class NewsletterCategoryModel : BaseEntityModel, ILocalizedModel<NewsletterCategoryLocalizedModel>, IStoreMappingModel
     {
         public NewsletterCategoryModel()
         {

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Grand.Api.DTOs.Catalog;
-using Grand.Framework.Extensions;
-using Grand.Framework.Validators;
+using Grand.Core.Extensions;
+using Grand.Core.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Media;

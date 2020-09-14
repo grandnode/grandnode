@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.PushNotifications
 {
-    public class ReceiversModel : BaseGrandModel
+    public class ReceiversModel : BaseModel
     {
         public int Allowed { get; set; }
 

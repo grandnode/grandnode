@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Customer
 {
-    public class SubAccountModel : BaseGrandEntityModel
+    public class SubAccountModel : BaseEntityModel
     {
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }

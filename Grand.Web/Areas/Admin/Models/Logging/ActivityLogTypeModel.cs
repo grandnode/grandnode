@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Logging
 {
-    public partial class ActivityLogTypeModel : BaseGrandEntityModel
+    public partial class ActivityLogTypeModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Name")]
         public string Name { get; set; }

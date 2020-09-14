@@ -10,7 +10,7 @@ using Grand.Domain.Payments;
 using Grand.Domain.Shipping;
 using Grand.Domain.Tax;
 using Grand.Framework.Extensions;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Services.Affiliates;
 using Grand.Services.Authentication.External;
 using Grand.Services.Catalog;
@@ -42,6 +42,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Services
 {

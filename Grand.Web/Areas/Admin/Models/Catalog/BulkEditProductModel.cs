@@ -1,13 +1,13 @@
 ﻿
 using Grand.Framework;
 using Grand.Framework.Mvc;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.ModelBinding;
+using Grand.Core.ModelBinding;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class BulkEditProductModel : BaseGrandEntityModel
+    public partial class BulkEditProductModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Catalog.BulkEdit.Fields.Name")]
         

@@ -1,5 +1,5 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    public partial class CustomerTagProductModel: BaseGrandEntityModel
+    public partial class CustomerTagProductModel: BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Customers.CustomerTags.Products.Fields.Name")]
         
@@ -18,7 +18,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
 
 
-        public partial class AddProductModel : BaseGrandModel
+        public partial class AddProductModel : BaseModel
         {
             public AddProductModel()
             {

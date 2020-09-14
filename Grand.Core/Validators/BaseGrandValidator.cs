@@ -1,7 +1,7 @@
 using FluentValidation;
 using System.Collections.Generic;
 
-namespace Grand.Framework.Validators
+namespace Grand.Core.Validators
 {
     public abstract class BaseGrandValidator<T> : AbstractValidator<T> where T : class
     {

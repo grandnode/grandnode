@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Grand.Core.Configuration;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Services.Customers;
 using Grand.Services.Security;
 using Grand.Api.Models.Common;

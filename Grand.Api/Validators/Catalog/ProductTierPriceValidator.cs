@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Grand.Api.DTOs.Catalog;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Stores;

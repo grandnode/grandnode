@@ -1,4 +1,5 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace Grand.Plugin.DiscountRequirements.HasAllProducts.Models
 
         #region Nested classes
 
-        public partial class AddProductModel : BaseGrandModel
+        public partial class AddProductModel : BaseModel
         {
             public AddProductModel()
             {
@@ -83,7 +84,7 @@ namespace Grand.Plugin.DiscountRequirements.HasAllProducts.Models
             public bool IsLoggedInAsVendor { get; set; }
         }
 
-        public partial class ProductModel : BaseGrandEntityModel
+        public partial class ProductModel : BaseEntityModel
         {
             public string Name { get; set; }
 
@@ -106,7 +107,7 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct.Models
 
         #region Nested classes
 
-        public partial class AddProductModel : BaseGrandModel
+        public partial class AddProductModel : BaseModel
         {
             public AddProductModel()
             {
@@ -140,7 +141,7 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct.Models
             public bool IsLoggedInAsVendor { get; set; }
         }
 
-        public partial class ProductModel : BaseGrandEntityModel
+        public partial class ProductModel : BaseEntityModel
         {
             public string Name { get; set; }
 

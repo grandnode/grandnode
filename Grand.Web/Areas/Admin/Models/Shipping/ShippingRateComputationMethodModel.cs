@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Shipping
 {
-    public partial class ShippingRateComputationMethodModel : BaseGrandModel
+    public partial class ShippingRateComputationMethodModel : BaseModel
     {
         [GrandResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.FriendlyName")]
         

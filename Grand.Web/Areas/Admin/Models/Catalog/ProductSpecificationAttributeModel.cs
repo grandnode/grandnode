@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class ProductSpecificationAttributeModel : BaseGrandEntityModel
+    public partial class ProductSpecificationAttributeModel : BaseEntityModel
     {
         public int AttributeTypeId { get; set; }
 

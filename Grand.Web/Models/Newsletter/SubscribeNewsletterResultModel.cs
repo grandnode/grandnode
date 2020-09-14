@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Newsletter
 {
-    public partial class SubscribeNewsletterResultModel: BaseGrandModel
+    public partial class SubscribeNewsletterResultModel: BaseModel
     {
         public string Result { get; set; }
         public string ResultCategory { get; set; }

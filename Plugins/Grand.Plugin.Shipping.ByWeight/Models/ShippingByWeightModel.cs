@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.Models;
-using Grand.Framework.Mvc.ModelBinding;
+using System.Collections.Generic;
 
 namespace Grand.Plugin.Shipping.ByWeight.Models
 {
-    public class ShippingByWeightModel : BaseGrandEntityModel
+    public class ShippingByWeightModel : BaseEntityModel
     {
         public ShippingByWeightModel()
         {

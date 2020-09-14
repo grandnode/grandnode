@@ -1,12 +1,12 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class AddressModel : BaseGrandEntityModel
+    public partial class AddressModel : BaseEntityModel
     {
         public AddressModel()
         {

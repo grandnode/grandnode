@@ -1,9 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
+using Grand.Framework.Mvc.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
-    public partial class StoreScopeConfigurationModel : BaseGrandModel
+    public partial class StoreScopeConfigurationModel : BaseModel
     {
         public StoreScopeConfigurationModel()
         {

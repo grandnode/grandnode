@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Plugin.Shipping.ShippingPoint.Models
 {
-    public class PointModel : BaseGrandEntityModel
+    public class PointModel : BaseEntityModel
     {
         public string ShippingPointName { get; set; }
         public string Description { get; set; }
@@ -13,5 +13,5 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Models
         public string ZipPostalCode { get; set; }
         public string CountryName { get; set; }
     }
-    
+
 }

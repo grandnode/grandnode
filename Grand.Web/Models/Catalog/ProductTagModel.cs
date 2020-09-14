@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class ProductTagModel : BaseGrandEntityModel
+    public partial class ProductTagModel : BaseEntityModel
     {
         public string Name { get; set; }
 

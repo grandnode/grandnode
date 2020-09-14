@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Media;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class ManufacturerModel : BaseGrandEntityModel
+    public partial class ManufacturerModel : BaseEntityModel
     {
         public ManufacturerModel()
         {

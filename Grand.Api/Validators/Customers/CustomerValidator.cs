@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Grand.Api.DTOs.Customers;
+using Grand.Core.Validators;
 using Grand.Domain.Customers;
-using Grand.Framework.Validators;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
@@ -14,7 +14,7 @@ namespace Grand.Api.Validators.Customers
     {
         public CustomerValidator(
             IEnumerable<IValidatorConsumer<CustomerDto>> validators,
-            ILocalizationService localizationService, IStateProvinceService stateProvinceService, 
+            ILocalizationService localizationService, IStateProvinceService stateProvinceService,
             ICustomerService customerService, IStoreService storeService, CustomerSettings customerSettings)
             : base(validators)
         {

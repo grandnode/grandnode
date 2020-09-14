@@ -1,5 +1,5 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Grand.Web.Areas.Admin.Models.Common;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
-    public partial class ReturnRequestModel : BaseGrandEntityModel
+    public partial class ReturnRequestModel : BaseEntityModel
     {
         public ReturnRequestModel()
         {
@@ -74,7 +74,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         [UIHint("Download")]
         public string AddReturnRequestNoteDownloadId { get; set; }
 
-        public class ReturnRequestItemModel : BaseGrandEntityModel
+        public class ReturnRequestItemModel : BaseEntityModel
         {
             public string ProductId { get; set; }
 
@@ -89,7 +89,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             public string RequestedAction { get; set; }
         }
 
-        public partial class ReturnRequestNote : BaseGrandEntityModel
+        public partial class ReturnRequestNote : BaseEntityModel
         {
             public string ReturnRequestId { get; set; }
             [GrandResourceDisplayName("Admin.ReturnRequests.ReturnRequestNotes.Fields.DisplayToCustomer")]

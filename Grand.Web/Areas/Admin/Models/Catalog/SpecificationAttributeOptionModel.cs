@@ -1,11 +1,11 @@
 ﻿using Grand.Framework.Localization;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class SpecificationAttributeOptionModel : BaseGrandEntityModel, ILocalizedModel<SpecificationAttributeOptionLocalizedModel>
+    public partial class SpecificationAttributeOptionModel : BaseEntityModel, ILocalizedModel<SpecificationAttributeOptionLocalizedModel>
     {
         public SpecificationAttributeOptionModel()
         {

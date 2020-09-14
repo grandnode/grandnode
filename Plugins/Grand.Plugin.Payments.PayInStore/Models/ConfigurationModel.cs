@@ -1,12 +1,10 @@
-﻿using Grand.Framework;
-using Grand.Framework.Mvc;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Plugin.Payments.PayInStore.Models
 {
-    public class ConfigurationModel : BaseGrandModel
-    {        
+    public class ConfigurationModel : BaseModel
+    {
         [GrandResourceDisplayName("Plugins.Payment.PayInStore.DescriptionText")]
         public string DescriptionText { get; set; }
 

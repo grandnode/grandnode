@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Areas.Admin.Models.Common;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    public partial class CustomerAddressModel : BaseGrandModel
+    public partial class CustomerAddressModel : BaseModel
     {
         public string CustomerId { get; set; }
 

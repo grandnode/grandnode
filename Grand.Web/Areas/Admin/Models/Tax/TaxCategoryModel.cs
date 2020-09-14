@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Tax
 {
-    public partial class TaxCategoryModel : BaseGrandEntityModel
+    public partial class TaxCategoryModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Configuration.Tax.Categories.Fields.Name")]
 

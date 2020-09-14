@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Grand.Framework.Extensions
+namespace Grand.Core.Extensions
 {
     public static class FluentValidationUtilities
     {

@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Templates
 {
-    public partial class CategoryTemplateModel : BaseGrandEntityModel
+    public partial class CategoryTemplateModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.System.Templates.Category.Name")]
 

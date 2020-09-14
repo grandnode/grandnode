@@ -1,6 +1,8 @@
-﻿namespace Grand.Framework.Mvc.Models
+﻿using Grand.Core.Models;
+
+namespace Grand.Framework.Mvc.Models
 {
-    public class DeleteConfirmationModel : BaseGrandEntityModel
+    public class DeleteConfirmationModel : BaseEntityModel
     {
         public string ControllerName { get; set; }
         public string ActionName { get; set; }

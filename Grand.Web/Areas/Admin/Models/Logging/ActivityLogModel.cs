@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.Logging
 {
-    public partial class ActivityLogModel : BaseGrandEntityModel
+    public partial class ActivityLogModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")]
         public string ActivityLogTypeName { get; set; }
@@ -22,7 +22,7 @@ namespace Grand.Web.Areas.Admin.Models.Logging
         public DateTime CreatedOn { get; set; }
     }
 
-    public partial class ActivityStatsModel : BaseGrandEntityModel
+    public partial class ActivityStatsModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Configuration.ActivityLog.ActivityStats.Fields.ActivityLogType")]
         public string ActivityLogTypeName { get; set; }

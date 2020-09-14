@@ -1,5 +1,5 @@
 ﻿using Grand.Domain.Catalog;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class ShoppingCartModel : BaseGrandModel
+    public partial class ShoppingCartModel : BaseModel
     {
         public ShoppingCartModel()
         {
@@ -47,7 +47,7 @@ namespace Grand.Web.Models.ShoppingCart
 
         #region Nested Classes
 
-        public partial class ShoppingCartItemModel : BaseGrandEntityModel
+        public partial class ShoppingCartItemModel : BaseEntityModel
         {
             public ShoppingCartItemModel()
             {
@@ -88,7 +88,7 @@ namespace Grand.Web.Models.ShoppingCart
             public IList<string> Warnings { get; set; }
         }
 
-        public partial class CheckoutAttributeModel : BaseGrandEntityModel
+        public partial class CheckoutAttributeModel : BaseEntityModel
         {
             public CheckoutAttributeModel()
             {
@@ -127,7 +127,7 @@ namespace Grand.Web.Models.ShoppingCart
             public IList<CheckoutAttributeValueModel> Values { get; set; }
         }
 
-        public partial class CheckoutAttributeValueModel : BaseGrandEntityModel
+        public partial class CheckoutAttributeValueModel : BaseEntityModel
         {
             public string Name { get; set; }
 
@@ -138,7 +138,7 @@ namespace Grand.Web.Models.ShoppingCart
             public bool IsPreSelected { get; set; }
         }
 
-        public partial class DiscountBoxModel: BaseGrandModel
+        public partial class DiscountBoxModel: BaseModel
         {
             public DiscountBoxModel()
             {
@@ -148,20 +148,20 @@ namespace Grand.Web.Models.ShoppingCart
             public bool Display { get; set; }
             public string Message { get; set; }
             public bool IsApplied { get; set; }
-            public class DiscountInfoModel : BaseGrandEntityModel
+            public class DiscountInfoModel : BaseEntityModel
             {
                 public string CouponCode { get; set; }
             }
         }
 
-        public partial class GiftCardBoxModel : BaseGrandModel
+        public partial class GiftCardBoxModel : BaseModel
         {
             public bool Display { get; set; }
             public string Message { get; set; }
             public bool IsApplied { get; set; }
         }
 
-        public partial class OrderReviewDataModel : BaseGrandModel
+        public partial class OrderReviewDataModel : BaseModel
         {
             public OrderReviewDataModel()
             {

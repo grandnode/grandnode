@@ -1,4 +1,4 @@
-﻿namespace Grand.Framework.Mvc.ModelBinding
+﻿namespace Grand.Core.ModelBinding
 {
     /// <summary>
     /// Represents custom model attribute

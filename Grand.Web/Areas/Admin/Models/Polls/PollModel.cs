@@ -1,14 +1,15 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Polls
 {
-    public partial class PollModel : BaseGrandEntityModel, ILocalizedModel<PollLocalizedModel>, IAclMappingModel, IStoreMappingModel
+    public partial class PollModel : BaseEntityModel, ILocalizedModel<PollLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
 
         public PollModel()

@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
-    public partial class NeverSoldReportModel : BaseGrandModel
+    public partial class NeverSoldReportModel : BaseModel
     {
         [GrandResourceDisplayName("Admin.Reports.NeverSold.StartDate")]
         [UIHint("DateNullable")]

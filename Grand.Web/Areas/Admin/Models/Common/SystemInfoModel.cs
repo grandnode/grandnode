@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Common
 {
-    public partial class SystemInfoModel : BaseGrandModel
+    public partial class SystemInfoModel : BaseModel
     {
         public SystemInfoModel()
         {
@@ -50,13 +50,13 @@ namespace Grand.Web.Areas.Admin.Models.Common
         [GrandResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
         public IList<LoadedAssembly> LoadedAssemblies { get; set; }
 
-        public partial class ServerVariableModel : BaseGrandModel
+        public partial class ServerVariableModel : BaseModel
         {
             public string Name { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class LoadedAssembly : BaseGrandModel
+        public partial class LoadedAssembly : BaseModel
         {
             public string FullName { get; set; }
             public string Location { get; set; }

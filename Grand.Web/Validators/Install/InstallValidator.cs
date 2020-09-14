@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Services.Installation;
 using Grand.Web.Models.Install;
 using System.Collections.Generic;

@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Course
 {
-    public partial class CourseModel : BaseGrandEntityModel
+    public partial class CourseModel : BaseEntityModel
     {
         public CourseModel()
         {
@@ -24,13 +24,13 @@ namespace Grand.Web.Models.Course
         public IList<Lesson> Lessons { get; set; }
         public bool Approved { get; set; }
 
-        public partial class Subject : BaseGrandEntityModel
+        public partial class Subject : BaseEntityModel
         {
             public string Name { get; set; }
             public int DisplayOrder { get; set; }
         }
 
-        public partial class Lesson : BaseGrandEntityModel
+        public partial class Lesson : BaseEntityModel
         {
             public string SubjectId { get; set; }
             public string Name { get; set; }

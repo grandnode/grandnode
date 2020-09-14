@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Routing;
+﻿using Grand.Core.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -24,10 +24,8 @@ namespace Grand.Plugin.Payments.PayPalStandard
                  new { controller = "PaymentPayPalStandard", action = "CancelOrder" }
             );
         }
-        public int Priority
-        {
-            get
-            {
+        public int Priority {
+            get {
                 return 0;
             }
         }

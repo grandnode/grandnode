@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Media;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.News
 {
-    public partial class HomePageNewsItemsModel : BaseGrandModel
+    public partial class HomePageNewsItemsModel : BaseModel
     {
         public HomePageNewsItemsModel()
         {
@@ -14,7 +14,7 @@ namespace Grand.Web.Models.News
 
         public IList<NewsItemModel> NewsItems { get; set; }
 
-        public class NewsItemModel : BaseGrandModel
+        public class NewsItemModel : BaseModel
         {
             public NewsItemModel()
             {

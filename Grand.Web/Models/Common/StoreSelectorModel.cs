@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class StoreSelectorModel : BaseGrandModel
+    public partial class StoreSelectorModel : BaseModel
     {
         public StoreSelectorModel()
         {

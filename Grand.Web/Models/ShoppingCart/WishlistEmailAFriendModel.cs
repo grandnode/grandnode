@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class WishlistEmailAFriendModel : BaseGrandModel
+    public partial class WishlistEmailAFriendModel : BaseModel
     {
         [GrandResourceDisplayName("Wishlist.EmailAFriend.FriendEmail")]
         public string FriendEmail { get; set; }

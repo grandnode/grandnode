@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Models.Blogs
 {
-    public partial class BlogCommentModel : BaseGrandEntityModel
+    public partial class BlogCommentModel : BaseEntityModel
     {
         public string CustomerId { get; set; }
 

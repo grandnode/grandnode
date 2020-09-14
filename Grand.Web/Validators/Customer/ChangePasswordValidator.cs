@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Grand.Domain.Customers;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Models.Customer;
 using System.Collections.Generic;

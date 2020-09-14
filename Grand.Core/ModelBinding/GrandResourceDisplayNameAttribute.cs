@@ -1,9 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Infrastructure;
-using Grand.Services.Localization;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
-namespace Grand.Framework.Mvc.ModelBinding
+namespace Grand.Core.ModelBinding
 {
     /// <summary>
     /// Represents model attribute that specifies the display name by passed key of the locale resource
@@ -39,8 +36,7 @@ namespace Grand.Framework.Mvc.ModelBinding
         /// <summary>
         /// Gets name of the attribute
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return nameof(GrandResourceDisplayNameAttribute); }
         }
 

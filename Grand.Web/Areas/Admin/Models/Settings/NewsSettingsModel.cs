@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
-    public partial class NewsSettingsModel : BaseGrandModel
+    public partial class NewsSettingsModel : BaseModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 

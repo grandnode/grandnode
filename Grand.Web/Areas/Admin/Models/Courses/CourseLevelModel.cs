@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Courses
 {
-    public partial class CourseLevelModel : BaseGrandEntityModel
+    public partial class CourseLevelModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Courses.Level.Fields.Name")]
         public string Name { get; set; }

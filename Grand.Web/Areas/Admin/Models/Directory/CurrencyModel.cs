@@ -1,14 +1,15 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Directory
 {
-    public partial class CurrencyModel : BaseGrandEntityModel, ILocalizedModel<CurrencyLocalizedModel>, IStoreMappingModel
+    public partial class CurrencyModel : BaseEntityModel, ILocalizedModel<CurrencyLocalizedModel>, IStoreMappingModel
     {
         public CurrencyModel()
         {

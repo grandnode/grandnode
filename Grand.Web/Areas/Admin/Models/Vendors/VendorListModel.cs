@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Vendors
 {
-    public partial class VendorListModel : BaseGrandModel
+    public partial class VendorListModel : BaseModel
     {
         [GrandResourceDisplayName("Admin.Vendors.List.SearchName")]
         

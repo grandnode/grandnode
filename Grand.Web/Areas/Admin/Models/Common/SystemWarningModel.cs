@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Common
 {
-    public partial class SystemWarningModel : BaseGrandModel
+    public partial class SystemWarningModel : BaseModel
     {
         public SystemWarningLevel Level { get; set; }
 

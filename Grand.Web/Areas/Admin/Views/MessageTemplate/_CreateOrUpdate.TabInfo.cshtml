@@ -147,8 +147,11 @@
                     ViewData["Grand.DownloadEditor.DisableUrl"] = true;
                 }
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="HasAttachedDownload" />@T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
-                    <div class="control__indicator"></div>
+                    <div class="d-inline-flex flex-row-reverse">
+                        <admin-input asp-for="HasAttachedDownload" />
+                        @T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
+                        <div class="control__indicator mr-3"></div>
+                    </div>
                 </label>
                 <div id="pnlAttachedDownload">
                     <admin-input asp-for="AttachedDownloadId" />

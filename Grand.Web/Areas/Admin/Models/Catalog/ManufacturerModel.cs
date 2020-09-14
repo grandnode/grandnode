@@ -1,16 +1,17 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class ManufacturerModel : BaseGrandEntityModel, ILocalizedModel<ManufacturerLocalizedModel>, IAclMappingModel, IStoreMappingModel
+    public partial class ManufacturerModel : BaseEntityModel, ILocalizedModel<ManufacturerLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public ManufacturerModel()
         {
@@ -122,7 +123,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
 
         #region Nested classes
-        public partial class ManufacturerProductModel : BaseGrandEntityModel
+        public partial class ManufacturerProductModel : BaseEntityModel
         {
             public string ManufacturerId { get; set; }
 
@@ -138,7 +139,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
 
-        public partial class AddManufacturerProductModel : BaseGrandModel
+        public partial class AddManufacturerProductModel : BaseModel
         {
             public AddManufacturerProductModel()
             {
@@ -174,7 +175,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string[] SelectedProductIds { get; set; }
         }
 
-        public partial class ActivityLogModel : BaseGrandEntityModel
+        public partial class ActivityLogModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Manufacturers.ActivityLog.ActivityLogType")]
             public string ActivityLogTypeName { get; set; }

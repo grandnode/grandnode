@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Blogs
 {
-    public partial class BlogProductModel : BaseGrandEntityModel
+    public partial class BlogProductModel : BaseEntityModel
     {
         public string ProductId { get; set; }
 
@@ -15,7 +15,7 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.Product.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        public partial class AddProductModel : BaseGrandModel
+        public partial class AddProductModel : BaseModel
         {
             public AddProductModel()
             {

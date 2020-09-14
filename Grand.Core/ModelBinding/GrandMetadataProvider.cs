@@ -1,8 +1,7 @@
-﻿using Grand.Core;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System.Linq;
 
-namespace Grand.Framework.Mvc.ModelBinding
+namespace Grand.Core.ModelBinding
 {
     /// <summary>
     /// Represents metadata provider that adds custom attributes to the model's metadata, so it can be retrieved later

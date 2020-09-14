@@ -1,12 +1,12 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    public partial class CustomerReminderModel : BaseGrandEntityModel
+    public partial class CustomerReminderModel : BaseEntityModel
     {
 
         [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.Name")]
@@ -41,7 +41,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         public int ConditionCount { get; set; }
 
 
-        public partial class ConditionModel : BaseGrandEntityModel
+        public partial class ConditionModel : BaseEntityModel
         {
             public ConditionModel()
             {
@@ -153,7 +153,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         }
 
-        public partial class ReminderLevelModel : BaseGrandEntityModel
+        public partial class ReminderLevelModel : BaseEntityModel
         {
             public ReminderLevelModel()
             {

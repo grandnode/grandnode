@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Install
 {
-    public partial class InstallModel : BaseGrandModel
+    public partial class InstallModel : BaseModel
     {
         public InstallModel()
         {

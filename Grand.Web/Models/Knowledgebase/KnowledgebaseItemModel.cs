@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Knowledgebase
 {
-    public class KnowledgebaseItemModel : BaseGrandEntityModel
+    public class KnowledgebaseItemModel : BaseEntityModel
     {
         public string Name { get; set; }
         public string SeName { get; set; }

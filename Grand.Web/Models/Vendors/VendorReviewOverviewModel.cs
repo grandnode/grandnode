@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Vendors
 {
-    public partial class VendorReviewOverviewModel : BaseGrandModel
+    public partial class VendorReviewOverviewModel : BaseModel
     {
         public string VendorId { get; set; }
 
@@ -15,7 +15,7 @@ namespace Grand.Web.Models.Vendors
         public bool AllowCustomerReviews { get; set; }
     }
 
-    public partial class VendorReviewsModel : BaseGrandModel
+    public partial class VendorReviewsModel : BaseModel
     {
         public VendorReviewsModel()
         {
@@ -32,7 +32,7 @@ namespace Grand.Web.Models.Vendors
         public AddVendorReviewModel AddVendorReview { get; set; }
     }
 
-    public partial class VendorReviewModel : BaseGrandEntityModel
+    public partial class VendorReviewModel : BaseEntityModel
     {
         public string CustomerId { get; set; }
 
@@ -51,7 +51,7 @@ namespace Grand.Web.Models.Vendors
         public string WrittenOnStr { get; set; }
     }
 
-    public partial class VendorReviewHelpfulnessModel : BaseGrandModel
+    public partial class VendorReviewHelpfulnessModel : BaseModel
     {
         public string VendorReviewId { get; set; }
         public string VendorId { get; set; }
@@ -61,7 +61,7 @@ namespace Grand.Web.Models.Vendors
         public int HelpfulNoTotal { get; set; }
     }
 
-    public partial class AddVendorReviewModel : BaseGrandModel
+    public partial class AddVendorReviewModel : BaseModel
     {
         [GrandResourceDisplayName("Reviews.Fields.Title")]
         public string Title { get; set; }

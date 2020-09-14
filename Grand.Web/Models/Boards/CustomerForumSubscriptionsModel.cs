@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Common;
 using System.Collections.Generic;
 
@@ -16,7 +16,7 @@ namespace Grand.Web.Models.Boards
 
         #region Nested classes
 
-        public partial class ForumSubscriptionModel : BaseGrandEntityModel
+        public partial class ForumSubscriptionModel : BaseEntityModel
         {
             public string ForumId { get; set; }
             public string ForumTopicId { get; set; }

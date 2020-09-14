@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Customer
 {
-    public partial class PasswordRecoveryModel : BaseGrandModel
+    public partial class PasswordRecoveryModel : BaseModel
     {
         [DataType(DataType.EmailAddress)]
         [GrandResourceDisplayName("Account.PasswordRecovery.Email")]

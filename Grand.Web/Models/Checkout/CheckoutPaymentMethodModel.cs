@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutPaymentMethodModel : BaseGrandModel
+    public partial class CheckoutPaymentMethodModel : BaseModel
     {
         public CheckoutPaymentMethodModel()
         {
@@ -20,7 +20,7 @@ namespace Grand.Web.Models.Checkout
 
         #region Nested classes
 
-        public partial class PaymentMethodModel : BaseGrandModel
+        public partial class PaymentMethodModel : BaseModel
         {
             public string PaymentMethodSystemName { get; set; }
             public string Name { get; set; }

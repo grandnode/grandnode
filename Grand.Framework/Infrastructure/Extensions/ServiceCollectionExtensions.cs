@@ -6,7 +6,7 @@ using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Domain.Configuration;
 using Grand.Framework.Extensions;
-using Grand.Framework.Mvc.ModelBinding;
+using Grand.Core.ModelBinding;
 using Grand.Framework.Mvc.Routing;
 using Grand.Framework.Themes;
 using Grand.Services.Authentication;

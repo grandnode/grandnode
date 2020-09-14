@@ -1,14 +1,15 @@
 ﻿using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Documents
 {
-    public class DocumentModel : BaseGrandEntityModel, IAclMappingModel, IStoreMappingModel
+    public class DocumentModel : BaseEntityModel, IAclMappingModel, IStoreMappingModel
     {
         public DocumentModel()
         {

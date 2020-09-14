@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Customer
 {
-    public class SubAccountSimpleModel : BaseGrandEntityModel
+    public class SubAccountSimpleModel : BaseEntityModel
     {
         public string Email { get; set; }
         public string FirstName { get; set; }

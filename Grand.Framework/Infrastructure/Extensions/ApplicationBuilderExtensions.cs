@@ -20,6 +20,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WebMarkupMin.AspNetCore3;
+using Grand.Core.Routing;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {

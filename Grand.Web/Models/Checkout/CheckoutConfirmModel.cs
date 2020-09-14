@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutConfirmModel : BaseGrandModel
+    public partial class CheckoutConfirmModel : BaseModel
     {
         public CheckoutConfirmModel()
         {

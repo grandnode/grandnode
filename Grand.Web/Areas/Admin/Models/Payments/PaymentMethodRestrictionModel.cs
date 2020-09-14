@@ -1,11 +1,12 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Directory;
 using Grand.Web.Areas.Admin.Models.Shipping;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Payments
 {
-    public partial class PaymentMethodRestrictionModel : BaseGrandModel
+    public partial class PaymentMethodRestrictionModel : BaseModel
     {
         public PaymentMethodRestrictionModel()
         {

@@ -16,7 +16,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
 
         public int Order
         {
-            get { return 1; }
+            get { return 10; }
         }
     }
 }

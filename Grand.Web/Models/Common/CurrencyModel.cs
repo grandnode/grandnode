@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class CurrencyModel : BaseGrandEntityModel
+    public partial class CurrencyModel : BaseEntityModel
     {
         public string Name { get; set; }
 

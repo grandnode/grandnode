@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 
-namespace Grand.Framework.Mvc.Routing
+namespace Grand.Core.Routing
 {
     /// <summary>
     /// Represents route publisher

@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutPaymentInfoModel : BaseGrandModel
+    public partial class CheckoutPaymentInfoModel : BaseModel
     {
         public string PaymentViewComponentName { get; set; }
 

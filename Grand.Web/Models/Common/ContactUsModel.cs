@@ -1,11 +1,11 @@
 ﻿using Grand.Domain.Catalog;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class ContactUsModel : BaseGrandModel
+    public partial class ContactUsModel : BaseModel
     {
         public ContactUsModel()
         {
@@ -35,7 +35,7 @@ namespace Grand.Web.Models.Common
 
         public IList<ContactAttributeModel> ContactAttributes { get; set; }
 
-        public partial class ContactAttributeModel : BaseGrandEntityModel
+        public partial class ContactAttributeModel : BaseEntityModel
         {
             public ContactAttributeModel()
             {
@@ -74,7 +74,7 @@ namespace Grand.Web.Models.Common
             public IList<ContactAttributeValueModel> Values { get; set; }
         }
 
-        public partial class ContactAttributeValueModel : BaseGrandEntityModel
+        public partial class ContactAttributeValueModel : BaseEntityModel
         {
             public string Name { get; set; }
 

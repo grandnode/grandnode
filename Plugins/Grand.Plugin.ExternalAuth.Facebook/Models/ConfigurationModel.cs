@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Plugin.ExternalAuth.Facebook.Models
 {
-    public class ConfigurationModel : BaseGrandModel
+    public class ConfigurationModel : BaseModel
     {
         [GrandResourceDisplayName("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier")]
         public string ClientId { get; set; }

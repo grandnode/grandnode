@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class FooterCleanModel : BaseGrandModel
+    public partial class FooterCleanModel : BaseModel
     {
         public string StoreName { get; set; }
         public string CompanyName { get; set; }

@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class OrderTotalsModel : BaseGrandModel
+    public partial class OrderTotalsModel : BaseModel
     {
         public OrderTotalsModel()
         {
@@ -40,13 +40,13 @@ namespace Grand.Web.Models.ShoppingCart
 
         #region Nested classes
 
-        public partial class TaxRate: BaseGrandModel
+        public partial class TaxRate: BaseModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class GiftCard : BaseGrandEntityModel
+        public partial class GiftCard : BaseEntityModel
         {
             public string CouponCode { get; set; }
             public string Amount { get; set; }

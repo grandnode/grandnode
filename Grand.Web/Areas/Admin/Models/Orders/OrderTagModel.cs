@@ -1,6 +1,6 @@
 ﻿using Grand.Framework.Localization;
-using Grand.Framework.Mvc.Models;
-using Grand.Framework.Mvc.ModelBinding;
+using Grand.Core.Models;
+using Grand.Core.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using Grand.Domain.Localization;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
-    public class OrderTagModel : BaseGrandEntityModel, ILocalizedModel<OrderTagLocalizedModel>
+    public class OrderTagModel : BaseEntityModel, ILocalizedModel<OrderTagLocalizedModel>
     {
         public OrderTagModel()
         {

@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    public partial class VendorReviewListModel : BaseGrandModel
+    public partial class VendorReviewListModel : BaseModel
     {
         [GrandResourceDisplayName("Admin.VendorReviews.List.CreatedOnFrom")]
         [UIHint("DateNullable")]

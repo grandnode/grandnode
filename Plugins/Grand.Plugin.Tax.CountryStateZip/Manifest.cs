@@ -7,5 +7,5 @@ using Grand.Core.Plugins;
     SystemName = "Tax.CountryStateZip",
     SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
-    Version = "1.47"
+    Version = "1.48"
 )]

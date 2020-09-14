@@ -1,5 +1,5 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Grand.Framework.Security.Captcha;
 using Grand.Web.Areas.Admin.Helpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
-    public partial class GeneralCommonSettingsModel : BaseGrandModel
+    public partial class GeneralCommonSettingsModel : BaseModel
     {
         public GeneralCommonSettingsModel()
         {
@@ -35,7 +35,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
         #region Nested classes
 
-        public partial class StoreInformationSettingsModel : BaseGrandModel
+        public partial class StoreInformationSettingsModel : BaseModel
         {
             public StoreInformationSettingsModel()
             {
@@ -121,7 +121,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             #endregion
         }
 
-        public partial class SeoSettingsModel : BaseGrandModel
+        public partial class SeoSettingsModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
 
@@ -187,7 +187,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool StorePictureId_OverrideForStore { get; set; }
         }
 
-        public partial class SecuritySettingsModel : BaseGrandModel
+        public partial class SecuritySettingsModel : BaseModel
         {
             public SecuritySettingsModel()
             {
@@ -263,7 +263,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public IList<SelectListItem> AvailableReCaptchaVersions { get; set; }
         }
 
-        public partial class PdfSettingsModel : BaseGrandModel
+        public partial class PdfSettingsModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLogo")]
             [UIHint("Picture")]
@@ -284,7 +284,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
         }
 
-        public partial class LocalizationSettingsModel : BaseGrandModel
+        public partial class LocalizationSettingsModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseImagesForLanguageSelection")]
             public bool UseImagesForLanguageSelection { get; set; }
@@ -300,7 +300,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             
         }
 
-        public partial class FullTextSettingsModel : BaseGrandModel
+        public partial class FullTextSettingsModel : BaseModel
         {
             public bool Supported { get; set; }
 
@@ -308,7 +308,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
         }
 
-        public partial class GoogleAnalyticsSettingsModel : BaseGrandModel
+        public partial class GoogleAnalyticsSettingsModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey")]
             public string gaprivateKey { get; set; }
@@ -324,7 +324,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
         }
 
-        public partial class DisplayMenuSettingsModel : BaseGrandModel
+        public partial class DisplayMenuSettingsModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayHomePageMenu")]
             public bool DisplayHomePageMenu { get; set; }
@@ -349,7 +349,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool DisplayContactUsMenu_OverrideForStore { get; set; }
         }
 
-        public partial class KnowledgebaseSettingsModel : BaseGrandModel
+        public partial class KnowledgebaseSettingsModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.KnowledgebaseSettings.Enabled")]
             public bool Enabled { get; set; }

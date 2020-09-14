@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
-    public partial class RecurringPaymentModel : BaseGrandEntityModel
+    public partial class RecurringPaymentModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.RecurringPayments.Fields.ID")]
         public override string Id { get; set; }
@@ -49,7 +49,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         #region Nested classes
 
 
-        public partial class RecurringPaymentHistoryModel : BaseGrandEntityModel
+        public partial class RecurringPaymentHistoryModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.RecurringPayments.History.Order")]
             public string OrderId { get; set; }
