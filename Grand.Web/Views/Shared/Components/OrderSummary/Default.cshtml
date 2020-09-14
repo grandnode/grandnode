@@ -73,10 +73,10 @@
                                 @if (Model.IsEditable && Model.IsAllowOnHold)
                                 {
                                     <td class="onhold-cart text-left">
-                                        <label class="custom-control custom-checkbox mb-0 pl-0">
+                                        <label class="custom-control custom-switch mb-0 pl-0">
                                             <input id="checkbox_@item.Id" type="checkbox" checked="@item.IsCart" class="custom-control-input changeshoppingcartitem" 
                                                    data-href="@Url.RouteUrl("ChangeTypeCartItem", new { id = item.Id, status = !item.IsCart })" />
-                                            <span class="custom-control-label ml-4"></span>
+                                            <span class="custom-control-label ml-5"></span>
                                         </label>
                                     </td>                                   
                                 }
