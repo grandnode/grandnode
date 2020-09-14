@@ -7718,8 +7718,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PinterestLink.Hint">
     <Value>Specify your Pinterest page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PremiumThemes">
-    <Value>Customize your store with one of a premium theme</Value>
+  <LocaleResource Name="admin.configuration.settings.generalcommon.premiumthemes">
+    <Value>Customize your store with one of our premium themes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey">
     <Value>reCAPTCHA private key</Value>
