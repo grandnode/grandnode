@@ -296,6 +296,7 @@
 
                                             if (currentTheme === 'dark') {
                                                 toggleSwitch.checked = true;
+                                                $('#DarkLight ~ label').text('Disable Dark Mode');
                                             }
                                         }
 
@@ -303,10 +304,12 @@
                                             if (e.target.checked) {
                                                 document.documentElement.setAttribute('data-theme', 'dark');
                                                 localStorage.setItem('theme', 'dark');
+                                                $('#DarkLight ~ label').text('Disable Dark Mode');
                                             }
                                             else {
                                                 document.documentElement.setAttribute('data-theme', 'light');
                                                 localStorage.setItem('theme', 'light');
+                                                $('#DarkLight ~ label').text('Enable Dark Mode');
                                             }
                                         }
 

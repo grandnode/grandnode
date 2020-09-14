@@ -95,6 +95,20 @@
                                 <div class="partialContents" data-url="@Url.Action("DashboardActivity")">
                                     <img src="~/administration/build/images/loading.gif" /> Loading ...
                                 </div>
+                                <div id="store_news" class="store-news"></div>
+                                <script>
+                                    $.getJSON("https://grandnode.com/news.json", function (data) {
+                                        var newsitems = [];
+                                        $.each(data, function (key, value) {
+                                            newsitems.push("<li id='news-" + key + "' class='media'><div class='media-body note note-info'><h5><a href='" + value.Url + "' target='_blank' >" + value.Name + "</a></h5>" + value.Message + "</div></li>");
+                                        });
+
+                                        $("<ul/>", {
+                                            "class": "store-news",
+                                            html: newsitems.join("")
+                                        }).appendTo("#store_news");
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>
