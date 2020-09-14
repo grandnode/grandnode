@@ -6606,7 +6606,7 @@ table.tableFixHead {
 [data-theme="dark"] body,
 [data-theme="dark"] .table,
 [data-theme="dark"] .tile-stats .icon,
-[data-theme="dark"] .light-dark-switch {
+[data-theme="dark"] .light-dark-switch, [data-theme="dark"] .k-dropdown .k-state-focused .k-input, [data-theme="dark"] .k-dropdown .k-state-hover .k-input {
     color: #fff;
 }
 [data-theme="dark"] .k-pager-info, [data-theme="dark"] .font-dark, [data-theme="dark"] .nav.navbar-nav > li > a {
@@ -6692,16 +6692,16 @@ table.tableFixHead {
 [data-theme="dark"] .tag-editor,
 [data-theme="dark"] .k-input,[data-theme="dark"] .k-multiselect-wrap,[data-theme="dark"]  .k-textbox > input,[data-theme="dark"]  input.k-textbox,[data-theme="dark"]  input.k-textbox:hover,[data-theme="dark"]  textarea.k-textbox,[data-theme="dark"]  textarea.k-textbox:hover {
     background: #2F3C48;
-    border-color: #666;
+    border-color: #fff;
     color: #f9f9f9;
 }
 [data-theme="dark"] .form-control#searchInput {
     color: #fff;
 }
-[data-theme="dark"] .form-control::-webkit-input-placeholder,
-[data-theme="dark"] .form-control:-ms-input-placeholder,
-[data-theme="dark"] .form-control::placeholder {
-    color: #ddd;
+[data-theme="dark"] input::-webkit-input-placeholder,
+[data-theme="dark"] input:-ms-input-placeholder,
+[data-theme="dark"] input::placeholder {
+    color: #f9f9f9;
 }
 [data-theme="dark"] .tt-menu {
     background-color: #2F3C48;
@@ -6738,4 +6738,10 @@ table.tableFixHead {
 }
 [data-theme="dark"] .store-news .note {
     background: #475766 !important;
+}
+[data-theme="dark"] .top_nav .dropdown-menu li a,
+[data-theme="dark"] .top_nav .dropdown-menu,
+[data-theme="dark"] .top_nav .dropdown-menu li {
+    color: #fff;
+    background: #616F7D;
 }
