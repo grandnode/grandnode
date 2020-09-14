@@ -98,11 +98,6 @@ namespace Grand.Core.Configuration
         public string AmazonRegion { get; set; }
 
         /// <summary>
-        /// A list of plugins ignored during installation
-        /// </summary>
-        public string PluginsIgnoredDuringInstallation { get; set; }
-
-        /// <summary>
         /// A list of plugins to be ignored during start application - pattern
         /// </summary>
         public string PluginSkipLoadingPattern { get; set; }
