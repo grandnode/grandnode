@@ -121,11 +121,11 @@ namespace Grand.Services.Orders
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
         Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, string paymentMethodSystemName);
-        
+
         #endregion
 
         #region Orders items
-        
+
         /// <summary>
         /// Gets an order item
         /// </summary>
@@ -169,6 +169,13 @@ namespace Grand.Services.Orders
         /// <param name="ordernoteId">Order note identifier</param>
         /// <returns>OrderNote</returns>
         Task<OrderNote> GetOrderNote(string ordernoteId);
+
+
+        /// <summary>
+        /// Cancel Expired UnPaid Orders
+        /// </summary>
+        /// <param name="expirationDateUTC">Date at which all unPaid  orders and has pending status Would be Canceled</param>
+        Task CancelExpiredOrders(DateTime expirationDateUTC);
 
         #endregion
 

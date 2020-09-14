@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Commands.Models.Orders;
 
 namespace Grand.Services.Orders
 {
@@ -307,6 +308,26 @@ namespace Grand.Services.Orders
             return query.FirstOrDefaultAsync();
         }
 
+
+        /// <summary>
+        /// Cancel UnPaid Orders and has pending status
+        /// </summary>
+        /// <param name="expirationDateUTC">Date at which all unPaid orders and has pending status Would be Canceled</param>
+        public async Task CancelExpiredOrders(DateTime expirationDateUTC)
+        {
+            var orders = await _orderRepository.Table
+              .Where(o => 
+              o.CreatedOnUtc < expirationDateUTC && 
+              (o.PaymentStatusId == (int)PaymentStatus.Pending || 
+              !o.PaidDateUtc.HasValue ||
+              o.OrderStatusId == (int)OrderStatus.Pending) && 
+              o.OrderStatusId != (int)OrderStatus.Cancelled)
+              .ToListAsync();
+
+            foreach (var order in orders)
+                await _mediator.Send(new CancelOrderCommand() { Order = order, NotifyCustomer = true });
+        }
+
         #endregion
 
         #region Orders items
@@ -499,8 +520,10 @@ namespace Grand.Services.Orders
             return await PagedList<RecurringPayment>.Create(query2, pageIndex, pageSize);
         }
 
+
+
         #endregion
 
-        #endregion      
+        #endregion
     }
 }

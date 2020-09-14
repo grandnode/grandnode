@@ -132,7 +132,7 @@ namespace Grand.Framework.Infrastructure
                     .InstancePerLifetimeScope();
             }
         }
-
+        
         private void RegisterFramework(ContainerBuilder builder)
         {
             builder.RegisterType<PageHeadBuilder>().As<IPageHeadBuilder>().InstancePerLifetimeScope();
