@@ -439,6 +439,7 @@ namespace Grand.Services.Infrastructure
             builder.RegisterType<DeleteGuestsScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
             builder.RegisterType<UpdateExchangeRateScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
             builder.RegisterType<EndAuctionsTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CancelOrderScheduledTask>().As<IScheduleTask>().InstancePerLifetimeScope();
         }
 
 
