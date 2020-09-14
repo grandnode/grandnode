@@ -181,4 +181,16 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PremiumThemes">
     <Value>Customize your store with one of a premium theme</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder">
+    <Value>Automatically cancel unpaid and pending orders after X days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder.Hint">
+    <Value>Enter the number of days after which the unpaid and pending orders will be canceled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder.Validator">
+    <Value>Days To Cancel Unpaid and pending Orders Must Be Greater Than Zero</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.generalcommon.premiumthemes">
+    <Value>Customize your store with one of our premium themes</Value>
+  </LocaleResource>
 </Language>

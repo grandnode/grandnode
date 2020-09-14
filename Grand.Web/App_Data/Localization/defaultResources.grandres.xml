@@ -8147,6 +8147,15 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered.Hint">
     <Value>Check if an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder">
+    <Value>Automatically cancel unpaid and pending orders after X days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder.Hint">
+    <Value>Enter the number of days after which the unpaid and pending orders will be canceled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder.Validator">
+    <Value>Days To Cancel Unpaid and pending Orders Must Be Greater Than Zero</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder">
     <Value>Deactivate gift cards after canceled of an order</Value>
   </LocaleResource>
@@ -21450,11 +21459,5 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder">
-    <Value>Automatically Cancel Unpaid and pending Orders After X Days</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder.Validator">
-    <Value>Days To Cancel Unpaid and pending Orders Must Be Greater Than Zero</Value>
   </LocaleResource>
 </Language>
