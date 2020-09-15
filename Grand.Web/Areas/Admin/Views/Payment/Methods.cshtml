@@ -87,59 +87,53 @@
                 field: "FriendlyName",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.FriendlyName")",
                 template: '<a class="k-link" href="#=ConfigurationUrl#">#=FriendlyName#</a>',
-                width: 250
             }, {
                 field: "SystemName",
-                    title: "@T("Admin.Configuration.Payment.Methods.Fields.SystemName")",
-                    template: '<a class="k-link" href="#=ConfigurationUrl#">#=SystemName#</a>',
-                width: 150
-            }, {
+                title: "@T("Admin.Configuration.Payment.Methods.Fields.SystemName")",
+                template: '<a class="k-link" href="#=ConfigurationUrl#">#=SystemName#</a>',
+            }, @*{
                 field: "LogoUrl",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.Logo")",
-                width: 80,
                 template: '<img src="#=LogoUrl#" />'
-            }, {
+            },*@ {
                 field: "SupportCapture",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportCapture")",
-                width: 50,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: '# if(SupportCapture) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
             }, {
                 field: "SupportRefund",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportRefund")",
-                width: 50,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: '# if(SupportRefund) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
             }, {
                 field: "SupportPartiallyRefund",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportPartiallyRefund")",
-                width: 50,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: '# if(SupportPartiallyRefund) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
             }, {
                 field: "SupportVoid",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportVoid")",
-                width: 50,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: '# if(SupportVoid) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-            }, {
+            }, 
+            @*{
                 field: "RecurringPaymentType",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType")",
-                width: 100
-            }, {
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+            },*@
+            {
                 field: "DisplayOrder",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.DisplayOrder")",
                 //integer format
                 format: "{0:0}",
-                width: 50
             }, {
                 field: "IsActive",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.IsActive")",
-                width: 50,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: '# if(IsActive) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
