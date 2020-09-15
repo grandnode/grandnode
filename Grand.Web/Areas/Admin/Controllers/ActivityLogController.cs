@@ -80,7 +80,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public async Task<IActionResult> AcivityLogDelete(string id)
+        public async Task<IActionResult> ActivityLogDelete(string id)
         {
             var activityLog = await _customerActivityService.GetActivityById(id);
             if (activityLog == null)
