@@ -15,11 +15,13 @@ using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Messages;
+using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Customers;
+using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -194,8 +196,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             string[] searchCustomerRoleIds, string[] searchCustomerTagIds)
         {
             var (customerModelList, totalCount) = await _customerViewModelService.PrepareCustomerList(model, searchCustomerRoleIds, searchCustomerTagIds, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = customerModelList.ToList(),
                 Total = totalCount
             };
@@ -257,7 +258,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.CustomAttributes = await ParseCustomCustomerAttributes(form);
                 var customer = await _customerViewModelService.InsertCustomerModel(model);
-                
+
                 //password
                 if (!string.IsNullOrWhiteSpace(model.Password))
                 {
@@ -275,7 +276,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                 }
 
-                if (newCustomerRoles.Any(x=>x.SystemName == SystemCustomerRoleNames.Vendors) && string.IsNullOrEmpty(model.VendorId))
+                if (newCustomerRoles.Any(x => x.SystemName == SystemCustomerRoleNames.Vendors) && string.IsNullOrEmpty(model.VendorId))
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                 }
@@ -338,7 +339,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (custowner == null)
                     ModelState.AddModelError("", "Owner email is not exists");
 
-                if(model.Owner.ToLower()==model.Email.ToLower())
+                if (model.Owner.ToLower() == model.Email.ToLower())
                     ModelState.AddModelError("", "You can't assign own email");
             }
             if (ModelState.IsValid)
@@ -635,8 +636,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No customer found with the specified id");
 
             var model = (await _customerViewModelService.PrepareRewardPointsHistoryModel(customerId)).ToList();
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = model,
                 Total = model.Count
             };
@@ -669,8 +669,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No customer found with the specified id", "customerId");
 
             var addresses = (await _customerViewModelService.PrepareAddressModel(customer)).ToList();
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = addresses,
                 Total = addresses.Count
             };
@@ -803,11 +802,42 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> OrderList(string customerId, DataSourceRequest command)
         {
             var (orderModels, totalCount) = await _customerViewModelService.PrepareOrderModel(customerId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = orderModels.ToList(),
                 Total = totalCount
             };
+            return Json(gridModel);
+        }
+
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
+        [HttpPost]
+        public async Task<IActionResult> OrderDetails(string orderId, 
+            [FromServices] IOrderService orderService, [FromServices] IOrderViewModelService orderViewModelService)
+        {
+            var order = await orderService.GetOrderById(orderId);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order) && !_workContext.CurrentCustomer.IsStaff())
+                return Json(new DataSourceResult {
+                    Data = null,
+                    Total = 0
+                });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+                return Json(new DataSourceResult {
+                    Data = null,
+                    Total = 0
+                });
+
+            var ordermodel = new OrderModel();
+            await orderViewModelService.PrepareOrderDetailsModel(ordermodel, order);
+            var gridModel = new DataSourceResult {
+                Data = ordermodel.Items,
+                Total = ordermodel.Items.Count
+            };
+
             return Json(gridModel);
         }
 
@@ -828,8 +858,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _productViewModelService.PrepareProductReviewModel(m, x, false, true);
                 items.Add(m);
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = productReviews.TotalCount,
             };
@@ -857,8 +886,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> GetCartList(string customerId, int cartTypeId)
         {
             var cart = await _customerViewModelService.PrepareShoppingCartItemModel(customerId, cartTypeId);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = cart,
                 Total = cart.Count
             };
@@ -887,8 +915,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductsPrice(DataSourceRequest command, string customerId)
         {
             var (productPriceModels, totalCount) = await _customerViewModelService.PrepareProductPriceModel(customerId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = productPriceModels.ToList(),
                 Total = totalCount
             };
@@ -901,8 +928,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> PersonalizedProducts(DataSourceRequest command, string customerId)
         {
             var (productModels, totalCount) = await _customerViewModelService.PreparePersonalizedProducts(customerId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = productModels.ToList(),
                 Total = totalCount
             };
@@ -922,8 +948,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var products = await _customerViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
 
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = products.products.ToList(),
                 Total = products.totalCount
             };
@@ -982,8 +1007,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ListActivityLog(DataSourceRequest command, string customerId)
         {
             var (activityLogModels, totalCount) = await _customerViewModelService.PrepareActivityLogModel(customerId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = activityLogModels.ToList(),
                 Total = totalCount
             };
@@ -1001,8 +1025,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
             }
             var (contactFormModels, totalCount) = await _customerViewModelService.PrepareContactFormModel(customerId, vendorId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = contactFormModels.ToList(),
                 Total = totalCount
             };
@@ -1017,8 +1040,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> BackInStockSubscriptionList(DataSourceRequest command, string customerId)
         {
             var (backInStockSubscriptionModels, totalCount) = await _customerViewModelService.PrepareBackInStockSubscriptionModel(customerId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = backInStockSubscriptionModels.ToList(),
                 Total = totalCount
             };
@@ -1042,8 +1064,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Content("");
 
             var customerNoteModels = await _customerViewModelService.PrepareCustomerNoteList(customerId);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = customerNoteModels,
                 Total = customerNoteModels.Count
             };

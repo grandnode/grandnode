@@ -299,10 +299,13 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string OrderCode { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.OrderStatus")]
             public string OrderStatus { get; set; }
+            public int OrderStatusId { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.PaymentStatus")]
             public string PaymentStatus { get; set; }
+            public int PaymentStatusId { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.ShippingStatus")]
             public string ShippingStatus { get; set; }
+            public int ShippingStatusId { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.OrderTotal")]
             public string OrderTotal { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.Store")]
