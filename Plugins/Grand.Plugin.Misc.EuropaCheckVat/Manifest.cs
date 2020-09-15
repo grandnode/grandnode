@@ -7,5 +7,5 @@ using Grand.Core.Plugins;
     SystemName = "Misc.EuropaCheckVat",
     SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
-    Version = "1.01"
+    Version = "1.02"
 )]
