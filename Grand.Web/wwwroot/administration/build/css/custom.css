@@ -4248,9 +4248,30 @@ ul.project_files li a i {
 /* store news */
 
 .store-news {
+    display: inline-flex;
+    flex-wrap: wrap;
     padding: 0;
-    margin: 15px 0;
+    margin: 15px -10px;
     list-style-type: none;
+}
+.store-news li {
+    width: 33.33%;
+    padding: 0 7.5px;
+}
+.store-news .note {
+    margin: 0 0 10px 0;
+}
+.store-news .media-body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd !important;
+    border-left: 5px solid #8bb4e7 !important;
+}
+.store-news h5 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    color: #fff;
 }
 .store-news img {
     max-width: 75px;
@@ -5876,7 +5897,7 @@ label {
     height: 34px;
 }
 .input-group .input-group-append input {
-    height: 32px;
+    height: 34px;
     padding: 0 18px;
     line-height: 1;
     margin-left: -1px;
@@ -6258,7 +6279,12 @@ form>h4 {
         font-size: 18px;
         margin-top: 12px;
     }
+    .store-news li {
+        width: 100%;
+        margin: 0 0 15px 0;
+    }
 }
+
 
 @media screen and (max-width: 850px) {
     .twitter-typeahead {
@@ -6473,6 +6499,9 @@ form>h4 {
     background: #ccc;
     border-color: #ccc;
 }
+.k-tabstrip-items .k-loading {
+    border-top: 0;
+}
 .k-tabstrip > .k-button.k-bare {
     color: #000
 }
@@ -6620,7 +6649,7 @@ table.tableFixHead {
 [data-theme="dark"] .table-hover tbody tr:hover {
     color: #f9f9f9;
 }
-[data-theme="dark"] .k-grid table a {
+[data-theme="dark"] .k-grid table a, [data-theme="dark"] .premium-list li span {
     color: #fff
 }
 [data-theme="dark"] .toggle a span {
@@ -6738,6 +6767,7 @@ table.tableFixHead {
 }
 [data-theme="dark"] .store-news .note {
     background: #475766 !important;
+    color: #ddd !important;
 }
 [data-theme="dark"] .top_nav .dropdown-menu li a,
 [data-theme="dark"] .top_nav .dropdown-menu,
