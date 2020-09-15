@@ -50,6 +50,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -67,7 +68,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IProductReservationService productReservationService,
             IAuctionService auctionService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            IPermissionService permissionService)
         {
             _productViewModelService = productViewModelService;
             _productService = productService;
@@ -81,6 +83,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _productReservationService = productReservationService;
             _auctionService = auctionService;
             _dateTimeHelper = dateTimeHelper;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -1249,6 +1252,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> PurchasedWithOrders(DataSourceRequest command, string productId)
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Json(new DataSourceResult {
+                    Data = null,
+                    Total = 0
+                });
+
             var product = await _productService.GetProductById(productId);
 
             var permission = CheckAccessToProduct(product);

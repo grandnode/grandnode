@@ -21,17 +21,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IAffiliateService _affiliateService;
         private readonly IAffiliateViewModelService _affiliateViewModelService;
-
+        private readonly IPermissionService _permissionService;
         #endregion
 
         #region Constructors
 
         public AffiliateController(ILocalizationService localizationService,
-            IAffiliateService affiliateService, IAffiliateViewModelService affiliateViewModelService)
+            IAffiliateService affiliateService, IAffiliateViewModelService affiliateViewModelService,
+            IPermissionService permissionService)
         {
             _localizationService = localizationService;
             _affiliateService = affiliateService;
             _affiliateViewModelService = affiliateViewModelService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -153,6 +155,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AffiliatedOrderList(DataSourceRequest command, AffiliatedOrderListModel model)
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Json(new DataSourceResult {
+                    Data = null,
+                    Total = 0
+                });
+
             var affiliate = await _affiliateService.GetAffiliateById(model.AffliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");

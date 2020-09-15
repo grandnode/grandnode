@@ -56,7 +56,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDownloadService _downloadService;
-
+        private readonly IPermissionService _permissionService;
         #endregion
 
         #region Constructors
@@ -79,7 +79,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IWorkflowMessageService workflowMessageService,
-            IDownloadService downloadService)
+            IDownloadService downloadService,
+            IPermissionService permissionService)
         {
             _customerService = customerService;
             _productService = productService;
@@ -100,6 +101,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _addressAttributeService = addressAttributeService;
             _workflowMessageService = workflowMessageService;
             _downloadService = downloadService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -801,6 +803,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> OrderList(string customerId, DataSourceRequest command)
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Json(new DataSourceResult {
+                    Data = null,
+                    Total = 0
+                });
+
             var (orderModels, totalCount) = await _customerViewModelService.PrepareOrderModel(customerId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult {
                 Data = orderModels.ToList(),
@@ -811,9 +819,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
-        public async Task<IActionResult> OrderDetails(string orderId, 
+        public async Task<IActionResult> OrderDetails(string orderId,
             [FromServices] IOrderService orderService, [FromServices] IOrderViewModelService orderViewModelService)
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Json(new DataSourceResult {
+                    Data = null,
+                    Total = 0
+                });
+
             var order = await orderService.GetOrderById(orderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");

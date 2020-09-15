@@ -18,11 +18,13 @@ namespace Grand.Web.Areas.Admin.Controllers
     {
         private readonly IOrderTagService _orderTagService;
         private readonly IOrderService _orderService;
+        private readonly IPermissionService _permissionService;
 
-        public OrderTagsController(IOrderTagService orderTagService, IOrderService orderService)
+        public OrderTagsController(IOrderTagService orderTagService, IOrderService orderService, IPermissionService permissionService)
         {
             _orderTagService = orderTagService;
             _orderService = orderService;
+            _permissionService = permissionService;
         }
 
         public IActionResult Index()
@@ -60,7 +62,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Orders(string tagId, DataSourceRequest command)
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Json(new DataSourceResult {
+                    Data = null,
+                    Total = 0
+                });
+
             var tag = await _orderTagService.GetOrderTagById(tagId);
+            if (tag == null)
+                throw new ArgumentNullException("tag");
 
             var orders = (await _orderService.SearchOrders(pageIndex: command.Page - 1, pageSize: command.PageSize, orderTagId: tag.Id)).ToList();
             var gridModel = new DataSourceResult {
@@ -87,7 +97,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Name = orderTag.Name,
                 OrderCount = await _orderTagService.GetOrderCount(orderTag.Id, "")
             };
-            
+
             return View(model);
         }
 
