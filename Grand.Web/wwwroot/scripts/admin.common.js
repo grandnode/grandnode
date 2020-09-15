@@ -23,6 +23,12 @@ $(document).ready(function () {
         checkOverriddenStoreValue(v, $(v).attr('data-for-input-selector'));
     });
     $('i.help').tooltip();
+
+    var currentT = localStorage.getItem('theme');
+
+    if (currentT == 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
 });
 
 function checkAllOverriddenStoreValue(item) {
