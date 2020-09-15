@@ -9074,6 +9074,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Info">
+    <Value>Info</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Updated">
     <Value>The delivery date has been updated successfully.</Value>
   </LocaleResource>
@@ -13398,7 +13401,7 @@
     <Value>Zip / postal code</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Addresses">
-    <Value>Billing & Shipping</Value>
+    <Value>Billing and Shipping</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.BackToList">
     <Value>back to order list</Value>

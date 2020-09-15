@@ -1,61 +1,92 @@
 ﻿@model DeliveryDateModel
+@inject Grand.Services.Security.IPermissionService permissionService
 @inject IPageHeadBuilder pagebuilder
 @{
     pagebuilder.AddScriptParts(ResourceLocation.Head, "~/scripts/farbtastic.js", excludeFromBundle: true);
     pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/farbtastic/farbtastic.css", excludeFromBundle: true);
+    var canManageGenericAttributes = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageGenericAttributes);
+
 }
-<div asp-validation-summary="All"></div>
-<input asp-for="Id" type="hidden" />
-<vc:admin-widget widget-zone="delivery_date_details_top" additional-data="Model" />
-<input id="active-menu-item" type="hidden" value="/Admin/Shipping/DeliveryDates" />
-@(await Html.LocalizedEditor<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
-@<div class="form-horizontal">
-        <div class="form-body">
-            <div class="form-group">
-                <admin-label asp-for="@Model.Locales[item].Name" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="@Model.Locales[item].Name" />
-                    <span asp-validation-for="@Model.Locales[item].Name"></span>
-                </div>
-            </div>
-            <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
-        </div>
-</div>
-,
-@<div class="form-horizontal">
-        <div class="form-body">
-            <div class="form-group">
-                <admin-label asp-for="Name" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="Name" />
-                    <span asp-validation-for="Name"></span>
-                </div>
-            </div>
-        </div>
-</div>
-))
-<div class="form-horizontal">
-    <div class="form-body">
-        <div class="form-group">
-            <admin-label asp-for="ColorSquaresRgb" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="ColorSquaresRgb" />
-                <div id="color-picker"></div>
-                <script>
+
+<admin-tabstrip name="delivery-date-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Configuration.Shipping.DeliveryDates.Info")" tab-index="0">
+            <content>
+                <div>
+
+                    <div asp-validation-summary="All"></div>
+                    <input asp-for="Id" type="hidden" />
+                    <vc:admin-widget widget-zone="delivery_date_details_top" additional-data="Model" />
+                    <input id="active-menu-item" type="hidden" value="/Admin/Shipping/DeliveryDates" />
+                    @(await Html.LocalizedEditor<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
+                        @<div class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <admin-label asp-for="@Model.Locales[item].Name" />
+                                        <div class="col-md-9 col-sm-9">
+                                            <admin-input asp-for="@Model.Locales[item].Name" />
+                                            <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                        </div>
+                                    </div>
+                                    <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
+                                </div>
+                        </div>
+                        ,
+                        @<div class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <admin-label asp-for="Name" />
+                                        <div class="col-md-9 col-sm-9">
+                                            <admin-input asp-for="Name" />
+                                            <span asp-validation-for="Name"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        ))
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <admin-label asp-for="ColorSquaresRgb" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-input asp-for="ColorSquaresRgb" />
+                                    <div id="color-picker"></div>
+                                    <script>
                     $(document).ready(function () {
                         $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
                     });
-                </script>
-                <span asp-validation-for="ColorSquaresRgb"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="DisplayOrder" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="DisplayOrder" />
-                <span asp-validation-for="DisplayOrder"></span>
-            </div>
-        </div>
-    </div>
-</div>
-<vc:admin-widget widget-zone="delivery_date_details_bottom" additional-data="Model" />
+                                    </script>
+                                    <span asp-validation-for="ColorSquaresRgb"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="DisplayOrder" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-input asp-for="DisplayOrder" />
+                                    <span asp-validation-for="DisplayOrder"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <vc:admin-widget widget-zone="delivery_date_details_bottom" additional-data="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        @if (canManageGenericAttributes)
+        {
+            <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="1">
+                <content>
+                    <div>
+                        <div class="form-horizontal">
+                            @{
+                                ViewData["ObjectType"] = "DeliveryDate";
+                                ViewData["TabIndex"] = 1;
+                            }
+                            <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
+                        </div>
+                    </div>
+                </content>
+            </tabstrip-item>
+        }
+    </items>
+</admin-tabstrip>

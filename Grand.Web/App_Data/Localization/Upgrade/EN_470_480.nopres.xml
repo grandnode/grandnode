@@ -194,6 +194,9 @@
     <Value>Customize your store with one of our premium themes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Addresses">
-    <Value>Billing & Shipping</Value>
+    <Value>Billing and Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Info">
+    <Value>Info</Value>
   </LocaleResource>
 </Language>
