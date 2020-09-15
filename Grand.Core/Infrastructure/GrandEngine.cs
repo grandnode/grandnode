@@ -143,7 +143,7 @@ namespace Grand.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                .Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                //.Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
                 .Select(startup => (IGrandStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
 
@@ -179,7 +179,7 @@ namespace Grand.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                .Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                //.Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
                 .Select(startup => (IGrandStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
 
