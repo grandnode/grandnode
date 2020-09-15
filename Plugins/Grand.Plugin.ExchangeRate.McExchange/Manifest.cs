@@ -7,5 +7,5 @@ using Grand.Core.Plugins;
     SystemName = "CurrencyExchange.MoneyConverter",
     SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
-    Version = "1.10"
+    Version = "1.11"
 )]
