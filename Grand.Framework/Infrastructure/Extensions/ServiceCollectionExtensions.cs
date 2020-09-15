@@ -63,10 +63,9 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add wkhtmltopdf
             services.AddWkhtmltopdf();
 
-            //create, initialize and configure the engine
-            var engine = EngineContext.Create();
-            engine.Initialize(services, configuration);
-            engine.ConfigureServices(services, configuration);
+            //initialize and configure the engine
+            Engine.Initialize(services, configuration);
+            Engine.ConfigureServices(services, configuration);
 
         }
 

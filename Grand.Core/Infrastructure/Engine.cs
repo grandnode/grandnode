@@ -23,7 +23,7 @@ namespace Grand.Core.Infrastructure
     /// <summary>
     /// Represents engine
     /// </summary>
-    public class Engine : IEngine
+    public static class Engine 
     {
         #region Utilities
 
@@ -31,7 +31,7 @@ namespace Grand.Core.Infrastructure
         /// Run startup tasks
         /// </summary>
         /// <param name="typeFinder">Type finder</param>
-        protected virtual void RunStartupTasks(ITypeFinder typeFinder)
+        private static void RunStartupTasks(ITypeFinder typeFinder)
         {
             //find startup tasks provided by other assemblies
             var startupTasks = typeFinder.FindClassesOfType<IStartupTask>();
@@ -50,9 +50,8 @@ namespace Grand.Core.Infrastructure
         /// <summary>
         /// Register and configure AutoMapper
         /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
         /// <param name="typeFinder">Type finder</param>
-        protected virtual void AddAutoMapper(IServiceCollection services, ITypeFinder typeFinder)
+        private static void AddAutoMapper(ITypeFinder typeFinder)
         {
             //find mapper configurations provided by other assemblies
             var mapperConfigurations = typeFinder.FindClassesOfType<IMapperProfile>();
@@ -80,7 +79,7 @@ namespace Grand.Core.Infrastructure
         /// <summary>
         /// Add attributes to convert some classes
         /// </summary>
-        protected virtual void RegisterTypeConverter()
+        private static void RegisterTypeConverter()
         {
             TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
             TypeDescriptor.AddAttributes(typeof(List<decimal>), new TypeConverterAttribute(typeof(GenericListTypeConverter<decimal>)));
@@ -104,7 +103,7 @@ namespace Grand.Core.Infrastructure
         /// Initialize engine
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public void Initialize(IServiceCollection services, IConfiguration configuration)
+        public static void Initialize(IServiceCollection services, IConfiguration configuration)
         {
             //set base application path
             var provider = services.BuildServiceProvider();
@@ -135,7 +134,7 @@ namespace Grand.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Service provider</returns>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
@@ -152,7 +151,7 @@ namespace Grand.Core.Infrastructure
                 instance.ConfigureServices(services, configuration);
 
             //register mapper configurations
-            AddAutoMapper(services, typeFinder);
+            AddAutoMapper(typeFinder);
 
             //Add attributes to register custom type converters
             RegisterTypeConverter();
@@ -171,7 +170,7 @@ namespace Grand.Core.Infrastructure
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         /// <param name="webHostEnvironment">WebHostEnvironment</param>
-        public void ConfigureRequestPipeline(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
+        public static void ConfigureRequestPipeline(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
@@ -195,7 +194,7 @@ namespace Grand.Core.Infrastructure
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="configuration"></param>
-        public void ConfigureContainer(ContainerBuilder builder, IConfiguration configuration)
+        public static void ConfigureContainer(ContainerBuilder builder, IConfiguration configuration)
         {
             var typeFinder = new WebAppTypeFinder();
 
