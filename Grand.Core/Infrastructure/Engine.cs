@@ -79,20 +79,18 @@ namespace Grand.Core.Infrastructure
         /// <summary>
         /// Add attributes to convert some classes
         /// </summary>
-        private static void RegisterTypeConverter()
+        private static void AddTypeConverter(ITypeFinder typeFinder)
         {
-            TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
-            TypeDescriptor.AddAttributes(typeof(List<decimal>), new TypeConverterAttribute(typeof(GenericListTypeConverter<decimal>)));
-            TypeDescriptor.AddAttributes(typeof(List<string>), new TypeConverterAttribute(typeof(GenericListTypeConverter<string>)));
+            //find converters provided by other assemblies
+            var converters = typeFinder.FindClassesOfType<ITypeConverter>();
 
-            //dictionaries
-            TypeDescriptor.AddAttributes(typeof(Dictionary<int, int>), new TypeConverterAttribute(typeof(GenericDictionaryTypeConverter<int, int>)));
-            TypeDescriptor.AddAttributes(typeof(Dictionary<string, bool>), new TypeConverterAttribute(typeof(GenericDictionaryTypeConverter<string, bool>)));
+            //create and sort instances of mapper configurations
+            var instances = converters
+                .Select(converter => (ITypeConverter)Activator.CreateInstance(converter))
+                .OrderBy(converter => converter.Order);
 
-            //shipping option
-            TypeDescriptor.AddAttributes(typeof(ShippingOption), new TypeConverterAttribute(typeof(ShippingOptionTypeConverter)));
-            TypeDescriptor.AddAttributes(typeof(List<ShippingOption>), new TypeConverterAttribute(typeof(ShippingOptionListTypeConverter)));
-            TypeDescriptor.AddAttributes(typeof(IList<ShippingOption>), new TypeConverterAttribute(typeof(ShippingOptionListTypeConverter)));
+            foreach (var item in instances)
+                item.Register();
         }
 
         #endregion
@@ -153,8 +151,8 @@ namespace Grand.Core.Infrastructure
             //register mapper configurations
             AddAutoMapper(typeFinder);
 
-            //Add attributes to register custom type converters
-            RegisterTypeConverter();
+            //Register custom type converters
+            AddTypeConverter(typeFinder);
 
             var config = new GrandConfig();
             configuration.GetSection("Grand").Bind(config);
