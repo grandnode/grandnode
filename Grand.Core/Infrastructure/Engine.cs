@@ -21,9 +21,9 @@ using System.Linq;
 namespace Grand.Core.Infrastructure
 {
     /// <summary>
-    /// Represents Grand engine
+    /// Represents engine
     /// </summary>
-    public class GrandEngine : IEngine
+    public class Engine : IEngine
     {
         #region Utilities
 

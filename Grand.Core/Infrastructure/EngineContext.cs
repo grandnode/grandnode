@@ -3,7 +3,7 @@
 namespace Grand.Core.Infrastructure
 {
     /// <summary>
-    /// Provides access to the singleton instance of the Grand engine.
+    /// Provides access to the singleton instance of the engine.
     /// </summary>
     public static class EngineContext
     {
@@ -17,7 +17,7 @@ namespace Grand.Core.Infrastructure
         {
             //create GrandEngine as engine
             if (Singleton<IEngine>.Instance == null)
-                Singleton<IEngine>.Instance = new GrandEngine();
+                Singleton<IEngine>.Instance = new Engine();
 
             return Singleton<IEngine>.Instance;
         }
