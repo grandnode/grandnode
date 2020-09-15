@@ -193,4 +193,7 @@
   <LocaleResource Name="admin.configuration.settings.generalcommon.premiumthemes">
     <Value>Customize your store with one of our premium themes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Addresses">
+    <Value>Billing & Shipping</Value>
+  </LocaleResource>
 </Language>

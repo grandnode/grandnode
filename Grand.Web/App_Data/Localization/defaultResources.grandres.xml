@@ -13398,7 +13398,7 @@
     <Value>Zip / postal code</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Addresses">
-    <Value>Billing and Shipping info</Value>
+    <Value>Billing & Shipping</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.BackToList">
     <Value>back to order list</Value>

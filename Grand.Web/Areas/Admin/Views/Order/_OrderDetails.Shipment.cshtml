@@ -1,0 +1,163 @@
+﻿@model OrderModel
+@inject Grand.Services.Security.IPermissionService permisionService;
+<vc:admin-widget widget-zone="order_details_address_top" additional-data="Model" />
+@if (Model.IsShippable)
+{
+    @if (await permisionService.Authorize(Grand.Services.Security.PermissionSystemName.Shipments))
+    {
+        <div class="card col-md-12">
+            <div class="card-body">
+                <h4 class="card-title">@T("Admin.Orders.Shipments")</h4>
+                <div class="card-text">
+                    <div class="panel panel-default">
+                        <vc:admin-widget widget-zone="order_details_shipping_top" additional-data="Model" />
+                        <div class="panel-body">
+                            <div id="shipments-grid"></div>
+                        </div>
+                        <div class="panel-footer">
+                            @if (Model.CanAddNewShipments)
+                            {
+                                <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Shipment", new { orderId = Model.Id }))'); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Orders.Shipments.AddNew")</button>
+                            }
+                        </div>
+                        <vc:admin-widget widget-zone="order_details_shipping_bottom" additional-data="Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+        $(document).ready(function () {
+            $("#shipments-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ShipmentsByOrder", "Shipment", new { orderId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                //details grid
+                detailInit: detailInit,
+                scrollable: false,
+                columns: [{
+                    field: "ShipmentNumber",
+                    title: "@T("Admin.Orders.Shipments.ID")",
+                    width: 50,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Shipment/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
+                }, {
+                    field: "TrackingNumber",
+                    title: "@T("Admin.Orders.Shipments.TrackingNumber")",
+                    width: 100,
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Shipment/ShipmentDetails/")#=Id#">#=kendo.htmlEncode(TrackingNumber)#</a>'
+                }, {
+                    field: "TotalWeight",
+                    title: "@T("Admin.Orders.Shipments.TotalWeight")",
+                    width: 100
+                }, {
+                    field: "ShippedDate",
+                    title: "@T("Admin.Orders.Shipments.ShippedDate")",
+                    width: 200,
+                    format: "{0:G}"
+                }, {
+                    field: "DeliveryDate",
+                    title: "@T("Admin.Orders.Shipments.DeliveryDate")",
+                    width: 200,
+                    format: "{0:G}"
+                }]
+            });
+        });
+
+        //details grid
+        function detailInit(e) {
+            $("<div/>").appendTo(e.detailCell).kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Shipment"))?shipmentId="+e.data.Id,
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                scrollable: false,
+                sortable: true,
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                columns: [
+                    {
+                        field: "ProductName",
+                        title: "@T("Admin.Orders.Shipments.Products.ProductName")",
+                        width: 400
+                    },{
+                        field: "ShippedFromWarehouse",
+                        title: "@T("Admin.Orders.Shipments.Products.Warehouse")",
+                        width: 150
+                    },{
+                        field: "QuantityInThisShipment",
+                        title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
+                        width: 150
+                    },{
+                        field: "ItemWeight",
+                        title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
+                        width: 150
+                    },{
+                        field: "ItemDimensions",
+                        title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
+                        width: 150
+                    }
+                ]
+            });
+        }
+        </script>
+    }
+}
+else
+{
+    <div class="card col-md-6">
+        <div class="note note-info">@T("Admin.Orders.ShippingInfo.NotRequired")</div>
+    </div>
+
+}
+
+<vc:admin-widget widget-zone="order_details_address_bottom" additional-data="Model" />
