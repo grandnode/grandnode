@@ -285,6 +285,7 @@
                                         <div class="custom-control custom-switch light-dark-switch">
                                             <input type="checkbox" class="custom-control-input" id="DarkLight">
                                             <label class="custom-control-label" for="DarkLight">Enable Dark Mode</label>
+                                            <i class="help icon-question" data-container="body" data-placement="bottom" data-toggle="tooltip" title="" data-original-title="Switch between dark and light mode"></i>
                                         </div>
                                     </a>
                                     <script>
@@ -305,6 +306,7 @@
                                                 document.documentElement.setAttribute('data-theme', 'dark');
                                                 localStorage.setItem('theme', 'dark');
                                                 $('#DarkLight ~ label').text('Disable Dark Mode');
+
                                             }
                                             else {
                                                 document.documentElement.setAttribute('data-theme', 'light');
