@@ -1197,7 +1197,7 @@ body.nav-md .nav.side-menu > li.current-page, body.nav-md .nav.side-menu > li.ac
 .toggle {
     float: left;
     margin: 0;
-    width: 70px;
+    width: auto;
     padding: 17px 0 0 15px;
 }
 
@@ -6422,11 +6422,8 @@ form>h4 {
         padding:11px 10px 12px;
     }
     .searchIcon > i{
-        
         line-height: 32px;
         font-size:16px;
-        color:#515356;
-
     }
     .user-profile img {
         margin-top: -6px;
@@ -6454,10 +6451,10 @@ form>h4 {
         width: 70%;
     }
     .top_nav .navbar-right li a {
-        padding: 13px 9px 12px;
+        padding: 13px 7px 12px;
     }
     .top_nav .navbar-right {
-        width: 75%;
+        width: calc(100% - 40px);
     }
 }
 
