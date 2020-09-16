@@ -542,7 +542,7 @@ namespace Grand.Web.Controllers
             var result = await _mediator.Send(new PopupInteractiveCommand() { Form = formCollection });
             return Json(new
             {
-                success = result.Any(),
+                success = !result.Any(),
                 errors = result
             });
         }
