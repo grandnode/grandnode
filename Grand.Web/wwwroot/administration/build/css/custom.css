@@ -6621,6 +6621,7 @@ table.tableFixHead {
     font-weight: 500;
     cursor: pointer;
     text-indent: -9999999px;
+    color: transparent;
 }
 .light-dark-switch .custom-control-label::after {
     top: 10px;
