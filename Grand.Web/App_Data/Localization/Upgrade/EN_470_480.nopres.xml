@@ -21,8 +21,9 @@
     <Value>Order's tags</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderTags.Hint">
-    <Value>Order's tags are keywords that this order can also be identified by. 
-    Enter a comma separated list of the tags to be associated with this order. 
+    <Value>
+      Order's tags are keywords that this order can also be identified by.
+      Enter a comma separated list of the tags to be associated with this order.
     </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderTags">
@@ -198,5 +199,8 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Info">
     <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Orders.DaysToCancelUnpaidOrder.Note">
+    <Value>Scheduled task responsible for automatically cancel unpaid and pending orders is disabled by default. Please enable it before use.</Value>
   </LocaleResource>
 </Language>

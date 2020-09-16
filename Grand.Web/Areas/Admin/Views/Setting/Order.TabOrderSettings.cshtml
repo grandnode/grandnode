@@ -260,6 +260,9 @@
                 <span asp-validation-for="AllowCustomerToAddOrderNote"></span>
             </div>
         </div>
+        <div class="note note-warning">
+            <span>@T("Admin.Configuration.Settings.Orders.DaysToCancelUnpaidOrder.Note")</span>
+        </div>
         <div class="form-group">
             <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="DaysToCancelUnpaidOrder" class="control-label" />
