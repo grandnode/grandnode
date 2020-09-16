@@ -5204,7 +5204,7 @@ namespace Grand.Services.Installation
                 TermsOfServiceOnShoppingCartPage = true,
                 TermsOfServiceOnOrderConfirmPage = false,
                 OnePageCheckoutEnabled = true,
-                GiftC = false,
+                OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab = false,
                 DisableBillingAddressCheckoutStep = false,
                 DisableOrderCompletedPage = false,
                 AttachPdfInvoiceToOrderPlacedEmail = false,
