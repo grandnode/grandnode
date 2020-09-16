@@ -5244,9 +5244,9 @@ namespace Grand.Services.Installation
             await _settingService.SaveSetting(new PaymentSettings {
                 ActivePaymentMethodSystemNames = new List<string>
                     {
-                        "Payments.CheckMoneyOrder",
                         "Payments.CashOnDelivery",
-                        "Payments.PayInStore",
+                        "Payments.PayPalStandard",
+                        "Payments.BrainTree",
                     },
                 AllowRePostingPayments = true,
                 BypassPaymentMethodSelectionIfOnlyOne = true,
