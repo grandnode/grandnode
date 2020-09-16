@@ -6,16 +6,12 @@ using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
-using Grand.Core.TypeConverters;
 using Grand.Domain.MongoDB;
-using Grand.Domain.Shipping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace Grand.Core.Infrastructure
@@ -23,7 +19,7 @@ namespace Grand.Core.Infrastructure
     /// <summary>
     /// Represents engine
     /// </summary>
-    public static class Engine 
+    public static class Engine
     {
         #region Utilities
 
@@ -84,7 +80,7 @@ namespace Grand.Core.Infrastructure
             //find converters provided by other assemblies
             var converters = typeFinder.FindClassesOfType<ITypeConverter>();
 
-            //create and sort instances of mapper configurations
+            //create and sort instances of typeConverter 
             var instances = converters
                 .Select(converter => (ITypeConverter)Activator.CreateInstance(converter))
                 .OrderBy(converter => converter.Order);
