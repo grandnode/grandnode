@@ -3918,7 +3918,7 @@ ul.project_files li a i {
 }
 
 .caption {
-    padding: 21px 5px 0px 5px;
+    padding: 5px 5px 0px 5px;
     /* background: #F7F7F7; */
 }
 
@@ -5744,7 +5744,7 @@ a span.username {
 .x_title .actions {
     display: inline-block;
     float: right;
-    padding: 14px 0 10px;
+    padding: 5px 0 5px;
     margin-left: auto;
 }
 
