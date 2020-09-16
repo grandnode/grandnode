@@ -1,5 +1,4 @@
 ﻿using Grand.Framework;
-using Grand.Framework.UI.Paging;
 using Grand.Services.Localization;
 using Grand.Web.Models.Boards;
 using Grand.Web.Models.Common;
@@ -183,7 +182,7 @@ namespace Grand.Web.Extensions
                 return new HtmlString(String.Format(localizationService.GetResource("Forum.Topics.GotoPostPager"), links));
             }
             return new HtmlString(string.Empty);
-        }        
+        }
     }
 }
 
