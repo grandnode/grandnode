@@ -5710,8 +5710,6 @@ a span.username {
     color: #fff;
     background-color: #c49f47;
     border-color: #c49f47;
-    border-radius: 3px !important;
-    padding: 6px 18px;
 }
 
 .btn.yellow:not(.btn-outline):hover {
@@ -6677,7 +6675,7 @@ table.tableFixHead {
     color: #f9f9f9;
 }
 [data-theme="dark"] .k-grid table a, [data-theme="dark"] .premium-list li span {
-    color: #4db2ff;
+    color: #A5D8FE;
     font-weight: 500;
 }
 [data-theme="dark"] .toggle a span {
@@ -6713,7 +6711,7 @@ table.tableFixHead {
 [data-theme="dark"] .card,
 [data-theme="dark"] .table {
     color: #fff;
-    background: #333;
+    background: #475766;
 }
 [data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
     background: rgba(0,0,0,.15);
