@@ -6802,3 +6802,10 @@ table.tableFixHead {
 [data-theme="dark"] .portlet.box.green {
     color: #ffffff;
 }
+
+[data-theme="dark"] #dashboard-report-range {
+    color: #ffffff;
+}
+[data-theme="dark"] .k-widget.k-window {
+    background-color: #475766;
+}
