@@ -28,6 +28,9 @@
                 <span asp-validation-for="IsReOrderAllowed"></span>
             </div>
         </div>
+        <div class="note note-warning">
+            <span>@T("Admin.Configuration.Settings.Orders.MinOrderSubtotalAmount.Note")</span>
+        </div>
         <div class="form-group">
             <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmount_OverrideForStore, model => model.MinOrderSubtotalAmount, Model.ActiveStoreScopeConfiguration)

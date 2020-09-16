@@ -203,4 +203,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.Orders.DaysToCancelUnpaidOrder.Note">
     <Value>Scheduled task responsible for automatically cancel unpaid and pending orders is disabled by default. Please enable it before use.</Value>
   </LocaleResource>
+<LocaleResource Name="Admin.Configuration.Settings.Orders.MinOrderSubtotalAmount.Note">
+  <Value>Min/Max Order subtotal amount can be configured also on a specified customer role.</Value>
+</LocaleResource>
 </Language>

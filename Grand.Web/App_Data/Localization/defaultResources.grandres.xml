@@ -8204,6 +8204,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.MinOrderSubtotalAmount.Hint">
     <Value>Min order total amount.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Orders.MinOrderSubtotalAmount.Note">
+    <Value>Min/Max Order subtotal amount can be configured also on a specified customer role.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.MinOrderSubtotalAmountIncludingTax">
     <Value>Calculate 'Min order sub-total amount' including tax</Value>
   </LocaleResource>
