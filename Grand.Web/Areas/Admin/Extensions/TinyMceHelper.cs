@@ -1,9 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 
-namespace Grand.Web.Areas.Admin.Helpers
+namespace Grand.Web.Areas.Admin.Extensions
 {
     /// <summary>
     /// TinyMCE helper

@@ -3,10 +3,9 @@
 @inject IWorkContext workContext
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment webHostEnvironment
 @inject AdminAreaSettings adminAreaSettings
-@using Grand.Web.Areas.Admin.Helpers
+@using Grand.Web.Areas.Admin.Extensions
 @using Grand.Core
 @using Grand.Services.Security
-@using Grand.Framework.UI
 @{
     // tinyMCE language
     var language = TinyMceHelper.GetTinyMceLanguage(workContext, webHostEnvironment);
