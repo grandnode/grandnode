@@ -175,7 +175,7 @@ namespace Grand.Core.Plugins
         public virtual PluginDescriptor GetPluginDescriptorBySystemName(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
         {
             return GetPluginDescriptors(loadMode)
-                .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(p => p.SystemName.Equals(systemName, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Grand.Core.Plugins
             where T : class, IPlugin
         {
             return GetPluginDescriptors<T>(loadMode)
-                .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(p => p.SystemName.Equals(systemName, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
