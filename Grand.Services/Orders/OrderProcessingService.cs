@@ -913,7 +913,7 @@ namespace Grand.Services.Orders
                 }
                 if (product.ProductType == ProductType.Auction && _orderSettings.UnpublishAuctionProduct)
                 {
-                    await _productService.UnpublishProduct(product.Id);
+                    await _productService.UnpublishProduct(product);
                 }
 
                 //inventory
