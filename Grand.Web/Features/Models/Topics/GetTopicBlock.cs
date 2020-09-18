@@ -7,5 +7,6 @@ namespace Grand.Web.Features.Models.Topics
     {
         public string SystemName { get; set; }
         public string TopicId { get; set; }
+        public string Password { get; set; } 
     }
 }
