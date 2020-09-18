@@ -147,17 +147,18 @@ namespace Grand.Core.Infrastructure
                 }
             }
             //add scripts
-            foreach (var scripts in Roslyn.RoslynCompiler.ReferencedScripts)
-            {
-                if(!string.IsNullOrEmpty(scripts.ReferencedAssembly.FullName))
+            if (Roslyn.RoslynCompiler.ReferencedScripts != null)
+                foreach (var scripts in Roslyn.RoslynCompiler.ReferencedScripts)
                 {
-                    if (!addedAssemblyNames.Contains(scripts.ReferencedAssembly.FullName))
+                    if (!string.IsNullOrEmpty(scripts.ReferencedAssembly.FullName))
                     {
-                        assemblies.Add(scripts.ReferencedAssembly);
-                        addedAssemblyNames.Add(scripts.ReferencedAssembly.FullName);
+                        if (!addedAssemblyNames.Contains(scripts.ReferencedAssembly.FullName))
+                        {
+                            assemblies.Add(scripts.ReferencedAssembly);
+                            addedAssemblyNames.Add(scripts.ReferencedAssembly.FullName);
+                        }
                     }
                 }
-            }
         }
 
         /// <summary>
