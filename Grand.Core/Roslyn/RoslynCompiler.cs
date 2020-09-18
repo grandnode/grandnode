@@ -70,10 +70,11 @@ namespace Grand.Core.Roslyn
                 var ctxFiles = roslynFolder.GetFiles("*.csx", SearchOption.TopDirectoryOnly);
                 foreach (var file in ctxFiles)
                 {
-                    var csxcript = new ResultCompiler();
-                    csxcript.OriginalFile = file.FullName;
+                    var csxcript = new ResultCompiler {
+                        OriginalFile = file.FullName
+                    };
 
-                    string ctxCode = System.IO.File.ReadAllText(file.FullName);
+                    string ctxCode = File.ReadAllText(file.FullName);
                     var sourceFileResolver = new SourceFileResolver(ImmutableArray<string>.Empty, AppContext.BaseDirectory);
                     var opts = ScriptOptions.Default.WithSourceResolver(sourceFileResolver);
                     var script = CSharpScript.Create(ctxCode, opts);
@@ -85,7 +86,7 @@ namespace Grand.Core.Roslyn
                         if (compilationResult.Success)
                         {
                             ms.Seek(0, SeekOrigin.Begin);
-                            var shadowFileName = Path.Combine(_shadowCopyScriptPath.FullName, Guid.NewGuid().ToString("D") + ".dll");
+                            var shadowFileName = Path.Combine(_shadowCopyScriptPath.FullName, file.Name + "-" + Guid.NewGuid().ToString("D") + ".dll");
                             File.WriteAllBytes(shadowFileName, ms.ToArray());
                             Assembly shadowCopiedAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(shadowFileName);
                             csxcript.DLLAssemblyFile = shadowFileName;
