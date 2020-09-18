@@ -5751,6 +5751,9 @@ a span.username {
 .k-input.text-box {
     padding: 6px 12px;
 }
+.form-group.popup .k-input.text-box {
+    height: 40px;
+}
 
 .btn.purple:not(.btn-outline) {
     background-color: #8E44AD;
@@ -5895,7 +5898,7 @@ label {
     height: 34px;
 }
 .input-group .input-group-append input {
-    height: 36px;
+    height: 34px;
     padding: 0 18px;
     line-height: 1;
     margin-left: -1px;
@@ -6801,14 +6804,12 @@ table.tableFixHead {
     color: #fff;
     background: #616F7D;
 }
-
 [data-theme="dark"] .portlet.box.green {
     color: #ffffff;
 }
 [data-theme="dark"] #dashboard-report-range {
     color: #ffffff;
 }
-
 [data-theme="dark"] .k-widget.k-window {
     background-color: #475766;
 }
