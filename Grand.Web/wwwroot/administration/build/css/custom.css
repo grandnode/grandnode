@@ -1286,6 +1286,7 @@ footer {
         margin-left: 0
     }
     .form-horizontal .control-label {
+        display: inline;
         text-align: right;
         margin-bottom: 0;
         padding-top: 5px;
@@ -6214,6 +6215,7 @@ form>h4 {
         width: 300px;
     }
     .light-dark-switch .custom-control-label {
+        width: 0;
         text-indent: -99999px;
     }
 
