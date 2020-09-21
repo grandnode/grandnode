@@ -1,0 +1,23 @@
+﻿@model SubAccountModel
+@using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.SubAccounts })
+}
+<form asp-route="CustomerSubAccountEdit" asp-antiforgery="true" method="post" autocomplete="off">
+    <div class="page account-page subaccount-edit-page pl-lg-3 mb-3 pt-lg-0 pt-3">
+        <h2 class="generalTitle">@T("Account.SubAccount.Edit")</h2>
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        <partial name="_CreateOrUpdateSubAccount" model="Model" />
+        <div class="buttons generalMarginSupporter mt-1 mb-1">
+            <input type="submit" class="btn btn-info save-subaccount-button" value="@T("Common.Save")" />
+        </div>
+    </div>
+</form>

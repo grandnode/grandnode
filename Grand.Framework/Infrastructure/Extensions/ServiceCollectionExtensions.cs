@@ -4,8 +4,9 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
+using Grand.Domain.Configuration;
 using Grand.Framework.Extensions;
-using Grand.Framework.Mvc.ModelBinding;
+using Grand.Core.ModelBinding;
 using Grand.Framework.Mvc.Routing;
 using Grand.Framework.Themes;
 using Grand.Services.Authentication;
@@ -17,7 +18,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +34,7 @@ using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using WebMarkupMin.AspNet.Common.UrlMatchers;
 using WebMarkupMin.AspNetCore3;
-using Grand.Domain.Configuration;
+using Wkhtmltopdf.NetCore;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -60,11 +60,12 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
+            //add wkhtmltopdf
+            services.AddWkhtmltopdf();
 
-            //create, initialize and configure the engine
-            var engine = EngineContext.Create();
-            engine.Initialize(services, configuration);
-            engine.ConfigureServices(services, configuration);
+            //initialize and configure the engine
+            Engine.Initialize(services, configuration);
+            Engine.ConfigureServices(services, configuration);
 
         }
 
@@ -115,7 +116,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             services.AddAntiforgery(options =>
             {
                 options.Cookie = new CookieBuilder() {
-                    Name = ".Grand.Antiforgery"
+                    Name = $"{config.CookiePrefix}Antiforgery"
                 };
                 if (DataSettingsHelper.DatabaseIsInstalled())
                 {
@@ -135,7 +136,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             services.AddSession(options =>
             {
                 options.Cookie = new CookieBuilder() {
-                    Name = ".Grand.Session",
+                    Name = $"{config.CookiePrefix}Session",
                     HttpOnly = true,
                 };
                 if (DataSettingsHelper.DatabaseIsInstalled())
@@ -200,7 +201,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add main cookie authentication
             authenticationBuilder.AddCookie(GrandCookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.Cookie.Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme;
+                options.Cookie.Name = config.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme;
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
@@ -211,7 +212,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add external authentication
             authenticationBuilder.AddCookie(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme, options =>
             {
-                options.Cookie.Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.Cookie.Name = config.CookiePrefix + GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
@@ -284,12 +285,11 @@ namespace Grand.Framework.Infrastructure.Extensions
             mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             //add fluent validation
+            var typeFinder = new WebAppTypeFinder();
+
             mvcBuilder.AddFluentValidation(configuration =>
             {
-                var assemblies = mvcBuilder.PartManager.ApplicationParts
-                    .OfType<AssemblyPart>()
-                    .Where(part => part.Name.StartsWith("Grand", StringComparison.InvariantCultureIgnoreCase))
-                    .Select(part => part.Assembly);
+                var assemblies = typeFinder.GetAssemblies();
                 configuration.RegisterValidatorsFromAssemblies(assemblies);
                 configuration.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                 //implicit/automatic validation of child properties
@@ -318,7 +318,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.IgnoredPaths.Add("/api");
                 options.IgnoredPaths.Add("/odata");
                 options.IgnoredPaths.Add("/health/live");
-                options.IgnoredPaths.Add("/.well-known/acme-challenge");
+                options.IgnoredPaths.Add("/.well-known/pki-validation");
                 //determine who can access the MiniProfiler results
                 options.ResultsAuthorize = request =>
                     !request.HttpContext.RequestServices.GetRequiredService<GrandConfig>().DisplayMiniProfilerInPublicStore ||

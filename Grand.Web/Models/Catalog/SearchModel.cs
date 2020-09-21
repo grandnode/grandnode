@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class SearchModel : BaseGrandModel
+    public partial class SearchModel : BaseModel
     {
         public SearchModel()
         {
@@ -77,7 +77,7 @@ namespace Grand.Web.Models.Catalog
 
         #region Nested classes
 
-        public class CategoryModel : BaseGrandEntityModel
+        public class CategoryModel : BaseEntityModel
         {
             public string Breadcrumb { get; set; }
         }

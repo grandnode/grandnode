@@ -25,7 +25,7 @@ namespace Grand.Web.Areas.Admin.Components
             _permissionService = permissionService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string affiliateId)//original Action name: AffiliatedOrderList
+        public async Task<IViewComponentResult> InvokeAsync(string affiliateId)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return Content("");

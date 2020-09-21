@@ -1,14 +1,15 @@
 ﻿using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Discounts
 {
-    public partial class DiscountModel : BaseGrandEntityModel, IStoreMappingModel
+    public partial class DiscountModel : BaseEntityModel, IStoreMappingModel
     {
         public DiscountModel()
         {
@@ -95,14 +96,14 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
 
         #region Nested classes
 
-        public partial class DiscountRequirementMetaInfo : BaseGrandModel
+        public partial class DiscountRequirementMetaInfo : BaseModel
         {
             public string DiscountRequirementId { get; set; }
             public string RuleName { get; set; }
             public string ConfigurationUrl { get; set; }
         }
 
-        public partial class DiscountUsageHistoryModel : BaseGrandEntityModel
+        public partial class DiscountUsageHistoryModel : BaseEntityModel
         {
             public string DiscountId { get; set; }
 
@@ -118,13 +119,13 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class AppliedToCategoryModel : BaseGrandModel
+        public partial class AppliedToCategoryModel : BaseModel
         {
             public string CategoryId { get; set; }
 
             public string CategoryName { get; set; }
         }
-        public partial class AddCategoryToDiscountModel : BaseGrandModel
+        public partial class AddCategoryToDiscountModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
 
@@ -136,13 +137,13 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         }
 
 
-        public partial class AppliedToManufacturerModel : BaseGrandModel
+        public partial class AppliedToManufacturerModel : BaseModel
         {
             public string ManufacturerId { get; set; }
 
             public string ManufacturerName { get; set; }
         }
-        public partial class AddManufacturerToDiscountModel : BaseGrandModel
+        public partial class AddManufacturerToDiscountModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
 
@@ -154,13 +155,13 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         }
 
 
-        public partial class AppliedToProductModel : BaseGrandModel
+        public partial class AppliedToProductModel : BaseModel
         {
             public string ProductId { get; set; }
 
             public string ProductName { get; set; }
         }
-        public partial class AddProductToDiscountModel : BaseGrandModel
+        public partial class AddProductToDiscountModel : BaseModel
         {
             public AddProductToDiscountModel()
             {
@@ -196,13 +197,13 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
             public string[] SelectedProductIds { get; set; }
         }
 
-        public partial class AppliedToVendorModel : BaseGrandModel
+        public partial class AppliedToVendorModel : BaseModel
         {
             public string VendorId { get; set; }
 
             public string VendorName { get; set; }
         }
-        public partial class AddVendorToDiscountModel : BaseGrandModel
+        public partial class AddVendorToDiscountModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Vendors.List.SearchVendorName")]
 
@@ -218,13 +219,13 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         }
 
 
-        public partial class AppliedToStoreModel : BaseGrandModel
+        public partial class AppliedToStoreModel : BaseModel
         {
             public string StoreId { get; set; }
 
             public string StoreName { get; set; }
         }
-        public partial class AddStoreToDiscountModel : BaseGrandModel
+        public partial class AddStoreToDiscountModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Stores.List.SearchStoreName")]
 

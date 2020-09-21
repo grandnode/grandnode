@@ -13,17 +13,7 @@ namespace Grand.Services.Authentication
         /// The default value used for external authentication scheme
         /// </summary>
         public const string ExternalAuthenticationScheme = "ExternalAuthentication";
-
-        /// <summary>
-        /// The prefix used to provide a default cookie name
-        /// </summary>
-        public static readonly string CookiePrefix = ".Grand.";
-
-        /// <summary>
-        /// The issuer that should be used for any claims that are created
-        /// </summary>
-        public static readonly string ClaimsIssuer = "grandnode";
-
+        
         /// <summary>
         /// The default value for the login path
         /// </summary>

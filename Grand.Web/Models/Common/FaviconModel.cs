@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class FaviconModel : BaseGrandModel
+    public partial class FaviconModel : BaseModel
     {
         public string FaviconUrl { get; set; }
     }

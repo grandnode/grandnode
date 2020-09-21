@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class FooterModel : BaseGrandModel
+    public partial class FooterModel : BaseModel
     {
         public FooterModel()
         {
@@ -23,6 +23,7 @@ namespace Grand.Web.Models.Common
         public string InstagramLink { get; set; }
         public string LinkedInLink { get; set; }
         public string PinterestLink { get; set; }
+        public bool PrivacyPreference { get; set; }
         public bool WishlistEnabled { get; set; }
         public bool ShoppingCartEnabled { get; set; }
         public bool SitemapEnabled { get; set; }
@@ -45,7 +46,7 @@ namespace Grand.Web.Models.Common
 
         #region Nested classes
 
-        public class FooterTopicModel : BaseGrandEntityModel
+        public class FooterTopicModel : BaseEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }

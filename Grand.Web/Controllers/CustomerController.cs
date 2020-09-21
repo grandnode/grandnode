@@ -376,7 +376,7 @@ namespace Grand.Web.Controllers
                 if (response.Success)
                 {
                     await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");
-
+                    
                     model.DisablePasswordChanging = true;
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordHasBeenChanged");
                 }
@@ -404,6 +404,12 @@ namespace Grand.Web.Controllers
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
+            //check if customer is registered. 
+            if (_workContext.CurrentCustomer.IsRegistered())
+            {
+                return RedirectToRoute("HomePage");
+            }
+
             var model = await _mediator.Send(new GetRegister() {
                 Customer = _workContext.CurrentCustomer,
                 ExcludeProperties = false,
@@ -427,14 +433,12 @@ namespace Grand.Web.Controllers
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
+            //check if customer is registered. 
             if (_workContext.CurrentCustomer.IsRegistered())
             {
-                //Already registered customer. 
-                await _authenticationService.SignOut();
-
-                //Save a new record
-                _workContext.CurrentCustomer = await _customerService.InsertGuestCustomer(_storeContext.CurrentStore);
+                return RedirectToRoute("HomePage");
             }
+
             //custom customer attributes
             var customerAttributesXml = await _mediator.Send(new GetParseCustomAttributes() { Form = form });
             var customerAttributeWarnings = await customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
@@ -920,7 +924,7 @@ namespace Grand.Web.Controllers
             if (_customerSettings.HideDownloadableProductsTab)
                 return RedirectToRoute("CustomerInfo");
 
-            var model = await _mediator.Send(new GetDownloadableProducts() { Customer = _workContext.CurrentCustomer, Language = _workContext.WorkingLanguage });
+            var model = await _mediator.Send(new GetDownloadableProducts() { Customer = _workContext.CurrentCustomer, Store = _storeContext.CurrentStore, Language = _workContext.WorkingLanguage });
             return View(model);
         }
 
@@ -967,6 +971,9 @@ namespace Grand.Web.Controllers
                 var changePasswordResult = await _customerRegistrationService.ChangePassword(changePasswordRequest);
                 if (changePasswordResult.Success)
                 {
+                    //sign in
+                    await _authenticationService.SignIn(customer, true);
+
                     model.Result = _localizationService.GetResource("Account.ChangePassword.Success");
                     return View(model);
                 }
@@ -1105,13 +1112,7 @@ namespace Grand.Web.Controllers
 
             return View(model);
         }
-        private bool ValidContentType(IFormFile uploadedFile)
-        {
-            return true;
-
-        }
-
-
+        
         [HttpPost, ActionName("Avatar")]
         [AutoValidateAntiforgeryToken]
         [FormValueRequired("remove-avatar")]
@@ -1293,5 +1294,159 @@ namespace Grand.Web.Controllers
         }
 
         #endregion
+
+        #region My account / Sub accounts
+
+        public virtual async Task<IActionResult> SubAccounts()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_workContext.CurrentCustomer.IsOwner())
+                return Challenge();
+
+            if (_customerSettings.HideSubAccountsTab)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = await _mediator.Send(new GetSubAccounts() { Customer = _workContext.CurrentCustomer });
+
+            return View(model);
+        }
+
+        public virtual IActionResult SubAccountAdd()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_workContext.CurrentCustomer.IsOwner())
+                return Challenge();
+
+            var model = new SubAccountModel() {
+                Active = true,
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public virtual async Task<IActionResult> SubAccountAdd(SubAccountModel model, IFormCollection form)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_workContext.CurrentCustomer.IsOwner())
+                return Challenge();
+
+            if (ModelState.IsValid)
+            {
+                var result = await _mediator.Send(new SubAccountAddCommand() {
+                    Customer = _workContext.CurrentCustomer,
+                    Model = model,
+                    Form = form,
+                    Store = _storeContext.CurrentStore
+                });
+
+                if (result.Success)
+                {
+                    return RedirectToRoute("CustomerSubAccounts");
+                }
+
+                //errors
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public virtual async Task<IActionResult> SubAccountEdit(string id)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_workContext.CurrentCustomer.IsOwner())
+                return Challenge();
+
+            var model = await _mediator.Send(new GetSubAccount() { CustomerId = id, CurrentCustomer = _workContext.CurrentCustomer });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public virtual async Task<IActionResult> SubAccountEdit(SubAccountModel model, IFormCollection form)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_workContext.CurrentCustomer.IsOwner())
+                return Challenge();
+
+            if (ModelState.IsValid)
+            {
+                var result = await _mediator.Send(new SubAccountEditCommand() {
+                    CurrentCustomer = _workContext.CurrentCustomer,
+                    Model = model,
+                    Form = form,
+                    Store = _storeContext.CurrentStore
+                });
+
+                if (result.success)
+                {
+                    return RedirectToRoute("CustomerSubAccounts");
+                }
+
+                //errors
+                ModelState.AddModelError("", result.error);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public virtual async Task<IActionResult> SubAccountDelete(string id)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_workContext.CurrentCustomer.IsOwner())
+                return Challenge();
+
+            //find address (ensure that it belongs to the current customer)
+            if (ModelState.IsValid)
+            {
+                var result = await _mediator.Send(new SubAccountDeleteCommand() {
+                    CurrentCustomer = _workContext.CurrentCustomer,
+                    CustomerId = id,
+                });
+
+                if (result.success)
+                {
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("CustomerSubAccounts"),
+                        success = true,
+                    });
+                }
+
+                //errors
+                ModelState.AddModelError("", result.error);
+            }
+            return Json(new
+            {
+                redirect = Url.RouteUrl("CustomerSubAccounts"),
+                success = false,
+                error = string.Join("; ", ModelState.Values
+                                        .SelectMany(x => x.Errors)
+                                        .Select(x => x.ErrorMessage))
+            });
+        }
+
+
+        #endregion
+
     }
 }

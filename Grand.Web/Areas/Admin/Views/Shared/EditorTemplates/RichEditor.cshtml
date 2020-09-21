@@ -3,10 +3,9 @@
 @inject IWorkContext workContext
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment webHostEnvironment
 @inject AdminAreaSettings adminAreaSettings
-@using Grand.Web.Areas.Admin.Helpers
+@using Grand.Web.Areas.Admin.Extensions
 @using Grand.Core
 @using Grand.Services.Security
-@using Grand.Framework.UI
 @{
     // tinyMCE language
     var language = TinyMceHelper.GetTinyMceLanguage(workContext, webHostEnvironment);
@@ -67,6 +66,13 @@
 
         var defaultEditorSettings@(random) = {
             selector: "#@Html.IdForModel()",
+            setup: function (editor) {
+                if ($('#DarkLight').is(':checked')) {
+                    editor.settings.skin = 'dark';
+                } else {
+                    editor.settings.skin = 'lightgray';
+                }
+            },
             theme: "modern",
             schema: "html5",
             fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
@@ -109,7 +115,6 @@
             //Otherwise, database searches become impossible when words contain a character of this kind
             entity_encoding: "raw"
         };
-
         function getAdditionalEditorSettings@(random)(settings) {
             @Html.Raw(additionalEditorSettings)
             return settings;

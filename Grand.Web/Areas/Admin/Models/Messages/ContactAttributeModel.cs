@@ -1,15 +1,16 @@
 ﻿using Grand.Domain.Catalog;
 using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    public partial class ContactAttributeModel : BaseGrandEntityModel, ILocalizedModel<ContactAttributeLocalizedModel>, IAclMappingModel, IStoreMappingModel
+    public partial class ContactAttributeModel : BaseEntityModel, ILocalizedModel<ContactAttributeLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public ContactAttributeModel()
         {
@@ -78,7 +79,7 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         public string[] SelectedCustomerRoleIds { get; set; }
     }
 
-    public partial class ConditionModel : BaseGrandEntityModel
+    public partial class ConditionModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Catalog.Attributes.ContactAttributes.Condition.EnableCondition")]
         public bool EnableCondition { get; set; }
@@ -88,7 +89,7 @@ namespace Grand.Web.Areas.Admin.Models.Messages
 
         public IList<AttributeConditionModel> ConditionAttributes { get; set; }
     }
-    public partial class AttributeConditionModel : BaseGrandEntityModel
+    public partial class AttributeConditionModel : BaseEntityModel
     {
         public string Name { get; set; }
 

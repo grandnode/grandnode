@@ -1,5 +1,5 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
-    public partial class OrderListModel : BaseGrandModel
+    public partial class OrderListModel : BaseModel
     {
         public OrderListModel()
         {
@@ -19,6 +19,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             AvailableWarehouses = new List<SelectListItem>();
             AvailablePaymentMethods = new List<SelectListItem>();
             AvailableCountries = new List<SelectListItem>();
+            AvailableOrderTags = new List<SelectListItem>();
         }
 
         [GrandResourceDisplayName("Admin.Orders.List.StartDate")]
@@ -76,6 +77,8 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 
         public bool IsLoggedInAsVendor { get; set; }
 
+        [GrandResourceDisplayName("Admin.Orders.List.OrderTagId")]
+        public string OrderTag { get; set; }
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
         public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
@@ -85,5 +88,6 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public IList<SelectListItem> AvailableWarehouses { get; set; }
         public IList<SelectListItem> AvailablePaymentMethods { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
+        public IList<SelectListItem> AvailableOrderTags { get; set; } 
     }
 }

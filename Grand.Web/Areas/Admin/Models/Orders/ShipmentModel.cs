@@ -1,12 +1,12 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
-    public partial class ShipmentModel : BaseGrandEntityModel
+    public partial class ShipmentModel : BaseEntityModel
     {
         public ShipmentModel()
         {
@@ -58,7 +58,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 
         #region Nested classes
 
-        public partial class ShipmentItemModel : BaseGrandEntityModel
+        public partial class ShipmentItemModel : BaseEntityModel
         {
             public ShipmentItemModel()
             {
@@ -93,7 +93,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             public string WarehouseId { get; set; }
 
             #region Nested Classes
-            public class WarehouseInfo : BaseGrandModel
+            public class WarehouseInfo : BaseModel
             {
                 public string WarehouseId { get; set; }
                 public string WarehouseName { get; set; }
@@ -105,7 +105,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             #endregion
         }
 
-        public partial class ShipmentNote : BaseGrandEntityModel
+        public partial class ShipmentNote : BaseEntityModel
         {
             public string ShipmentId { get; set; }
             [GrandResourceDisplayName("Admin.Orders.Shipments.ShipmentNotes.Fields.DisplayToCustomer")]
@@ -122,7 +122,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             public bool CreatedByCustomer { get; set; }
         }
 
-        public partial class ShipmentStatusEventModel : BaseGrandModel
+        public partial class ShipmentStatusEventModel : BaseModel
         {
             public string EventName { get; set; }
             public string Location { get; set; }

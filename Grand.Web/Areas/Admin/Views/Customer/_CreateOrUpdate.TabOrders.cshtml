@@ -8,7 +8,7 @@
     </div>
     <vc:admin-widget widget-zone="customer_details_orders_bottom" additional-data="Model" />
 </div>
-    <script>
+<script>
         $(document).ready(function () {
             $("#order-grid").kendoGrid({
                 dataSource: {
@@ -43,6 +43,8 @@
                     confirmation: false,
                     mode: "inline"
                 },
+                //details grid
+                detailInit: detailInit,
                 scrollable: false,
                 columns: [{
                     field: "OrderNumber",
@@ -57,7 +59,13 @@
                 }, {
                     field: "OrderStatus",
                     title: "@T("Admin.Customers.Customers.Orders.OrderStatus")",
-                    width: 160
+                    width: 160,
+                    template: '<h4><span class="label label-' +
+                            '# if(OrderStatusId == 10) {#warning #} #' +
+                            '# if(OrderStatusId == 20) {#info #} #' +
+                            '# if(OrderStatusId == 30) {#success #} #' +
+                            '# if(OrderStatusId == 40) {#danger #} #' +
+                            '">#=OrderStatus#</span></h4>'
                 }, {
                     field: "PaymentStatus",
                     title: "@T("Admin.Customers.Customers.Orders.PaymentStatus")",
@@ -79,5 +87,64 @@
                 }]
             });
         });
-    </script>
+        //details grid
+        function detailInit(e) {
+            $("<div/>").appendTo(e.detailCell).kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("OrderDetails", "Customer"))?orderId="+e.data.Id,
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                scrollable: false,
+                sortable: false,
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                columns: [
+                    {
+                        field: "ProductName",
+                        title: "@T("Admin.Orders.Products.ProductName")",
+                        width: 400,
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>'
+                    },
+                    {
+                        field: "Quantity",
+                        title: "@T("Admin.Orders.Products.Quantity")",
+                        width: 100
+                    },
+                    {
+                        field: "UnitPriceInclTax",
+                        title: "@T("Admin.Orders.Products.Price")",
+                        width: 200
+                    },
+                    {
+                        field: "SubTotalInclTax",
+                        title: "@T("Admin.Orders.Products.Total")",
+                        width: 200
+                    }
+                ]
+            });
+        }
+</script>
 }

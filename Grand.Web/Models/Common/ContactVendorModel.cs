@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class ContactVendorModel : BaseGrandModel
+    public partial class ContactVendorModel : BaseModel
     {
         public string VendorId { get; set; }
         public string VendorName { get; set; }

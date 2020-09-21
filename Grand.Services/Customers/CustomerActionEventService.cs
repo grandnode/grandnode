@@ -125,6 +125,7 @@ namespace Grand.Services.Customers
                         {
                             if (await _mediator.Send(new CustomerActionEventConditionCommand() {
                                 CustomerActionTypes = actiontypes,
+                                Action = item,
                                 ProductId = orderItem.ProductId,
                                 CustomerId = order.CustomerId,
                                 AttributesXml = orderItem.AttributesXml
@@ -134,7 +135,7 @@ namespace Grand.Services.Customers
                                     CustomerActionTypes = actiontypes,
                                     Action = item,
                                     Order = order,
-                                    CustomerId = order.CustomerId
+                                    CustomerId = order.CustomerId,
                                 });
                                 break;
                             }

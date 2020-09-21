@@ -378,7 +378,7 @@ namespace Grand.Framework.Controllers
         protected virtual IActionResult AccessDeniedView()
         {
             var webHelper = HttpContext.RequestServices.GetRequiredService<IWebHelper>();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(this.Request) });
+            return RedirectToAction("AccessDenied", "Home", new { pageUrl = webHelper.GetRawUrl(this.Request) });
         }
 
         /// <summary>

@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Common;
 
 namespace Grand.Web.Models.Customer
 {
-    public partial class CustomerAddressEditModel : BaseGrandModel
+    public partial class CustomerAddressEditModel : BaseModel
     {
         public CustomerAddressEditModel()
         {

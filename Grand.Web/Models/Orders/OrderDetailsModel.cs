@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Models.Orders
 {
-    public partial class OrderDetailsModel : BaseGrandEntityModel
+    public partial class OrderDetailsModel : BaseEntityModel
     {
         public OrderDetailsModel()
         {
@@ -83,7 +83,7 @@ namespace Grand.Web.Models.Orders
 
         #region Nested Classes
 
-        public partial class OrderItemModel : BaseGrandEntityModel
+        public partial class OrderItemModel : BaseEntityModel
         {
             public OrderItemModel()
             {
@@ -110,19 +110,19 @@ namespace Grand.Web.Models.Orders
             public string LicenseId { get; set; }
         }
 
-        public partial class TaxRate : BaseGrandModel
+        public partial class TaxRate : BaseModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class GiftCard : BaseGrandModel
+        public partial class GiftCard : BaseModel
         {
             public string CouponCode { get; set; }
             public string Amount { get; set; }
         }
 
-        public partial class OrderNote : BaseGrandEntityModel
+        public partial class OrderNote : BaseEntityModel
         {
             public bool HasDownload { get; set; }
             public string Note { get; set; }
@@ -130,7 +130,7 @@ namespace Grand.Web.Models.Orders
             public string OrderId { get; set; }
         }
 
-        public partial class ShipmentBriefModel : BaseGrandEntityModel
+        public partial class ShipmentBriefModel : BaseEntityModel
         {
             public string TrackingNumber { get; set; }
             public int ShipmentNumber { get; set; }

@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    public partial class QueuedEmailModel : BaseGrandEntityModel
+    public partial class QueuedEmailModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.Id")]
         public override string Id { get; set; }

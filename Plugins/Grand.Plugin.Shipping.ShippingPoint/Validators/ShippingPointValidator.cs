@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Grand.Services.Localization;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Plugin.Shipping.ShippingPoint.Models;
 using System.Collections.Generic;
 

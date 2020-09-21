@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Media;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Blogs
 {
-    public partial class BlogPostModel : BaseGrandEntityModel
+    public partial class BlogPostModel : BaseEntityModel
     {
         public BlogPostModel()
         {

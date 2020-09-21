@@ -1,11 +1,11 @@
 ﻿using Grand.Domain.Orders;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Web.Models.Media;
 using System;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class AddToCartModel : BaseGrandModel
+    public partial class AddToCartModel : BaseModel
     {
         public AddToCartModel()
         {

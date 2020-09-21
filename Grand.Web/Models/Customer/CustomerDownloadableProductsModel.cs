@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Customer
 {
-    public partial class CustomerDownloadableProductsModel : BaseGrandModel
+    public partial class CustomerDownloadableProductsModel : BaseModel
     {
         public CustomerDownloadableProductsModel()
         {
@@ -14,7 +14,7 @@ namespace Grand.Web.Models.Customer
         public IList<DownloadableProductsModel> Items { get; set; }
 
         #region Nested classes
-        public partial class DownloadableProductsModel : BaseGrandModel
+        public partial class DownloadableProductsModel : BaseModel
         {
             public Guid OrderItemGuid { get; set; }
 
@@ -34,7 +34,7 @@ namespace Grand.Web.Models.Customer
         #endregion
     }
 
-    public partial class UserAgreementModel : BaseGrandModel
+    public partial class UserAgreementModel : BaseModel
     {
         public Guid OrderItemGuid { get; set; }
         public string UserAgreementText { get; set; }

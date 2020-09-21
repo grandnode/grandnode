@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Knowledgebase
 {
-    public class KnowledgebaseRelatedArticleGridModel : BaseGrandEntityModel
+    public class KnowledgebaseRelatedArticleGridModel : BaseEntityModel
     {
         public string Article2Name { get; set; }
         public bool Published { get; set; }

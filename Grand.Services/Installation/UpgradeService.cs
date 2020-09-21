@@ -126,13 +126,13 @@ namespace Grand.Services.Installation
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
                 if (databaseversion != null)
                 {
-                    databaseversion.DataBaseVersion = GrandVersion.CurrentVersion;
+                    databaseversion.DataBaseVersion = GrandVersion.SupportedDBVersion;
                     await _versionRepository.UpdateAsync(databaseversion);
                 }
                 else
                 {
                     databaseversion = new GrandNodeVersion {
-                        DataBaseVersion = GrandVersion.CurrentVersion
+                        DataBaseVersion = GrandVersion.SupportedDBVersion
                     };
                     await _versionRepository.InsertAsync(databaseversion);
                 }
@@ -954,7 +954,8 @@ namespace Grand.Services.Installation
             foreach (var specificationAttribute in specification.Table.ToList())
             {
                 specificationAttribute.SeName = SeoExtensions.GetSeName(specificationAttribute.Name, false, false);
-                specificationAttribute.SpecificationAttributeOptions.ToList().ForEach(x=>{ 
+                specificationAttribute.SpecificationAttributeOptions.ToList().ForEach(x =>
+                {
                     x.SeName = SeoExtensions.GetSeName(x.Name, false, false);
                 });
                 await specification.UpdateAsync(specificationAttribute);
@@ -997,16 +998,61 @@ namespace Grand.Services.Installation
         private async Task From470To480()
         {
             #region Install String resources
-            
+
             await InstallStringResources("EN_470_480.nopres.xml");
 
             #endregion
+
+
+            #region Update customer settings
+
+            var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
+            var customerSettings = _serviceProvider.GetRequiredService<CustomerSettings>();
+            customerSettings.HideSubAccountsTab = true;
+            await _settingService.SaveSetting(customerSettings);
+
+            #endregion
+
+            #region Update permissions - Actions
+
+            IPermissionProvider provider = new StandardPermissionProvider();
+            var permissions = provider.GetPermissions();
+            var permissionService = _serviceProvider.GetRequiredService<IPermissionService>();
+            foreach (var permission in permissions)
+            {
+                var p = await permissionService.GetPermissionRecordBySystemName(permission.SystemName);
+                if (p != null)
+                {
+                    p.Actions = permission.Actions;
+                    await permissionService.UpdatePermissionRecord(p);
+                }
+            }
+
+            #endregion
+            #region update cancel order Scheduled Task
+
+            var tasks = _serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
+            var cancelOrderTask = new ScheduleTask {
+                ScheduleTaskName = "Cancel unpaid and pending orders",
+                Type = "Grand.Services.Tasks.CancelOrderScheduledTask, Grand.Services",
+                Enabled = false,
+                StopOnError = false,
+                TimeInterval = 1440
+            };
+            await tasks.InsertAsync(cancelOrderTask);
+
+            #endregion
+
         }
 
         private async Task InstallStringResources(string filenames)
         {
             //'English' language            
-            var language = _serviceProvider.GetRequiredService<IRepository<Language>>().Table.Single(l => l.Name == "English");
+            var langRepository = _serviceProvider.GetRequiredService<IRepository<Language>>();
+            var language = langRepository.Table.FirstOrDefault(l => l.Name == "English");
+
+            if (language == null)
+                language = langRepository.Table.FirstOrDefault();
 
             //save resources
             foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/Upgrade"), "*" + filenames, SearchOption.TopDirectoryOnly))

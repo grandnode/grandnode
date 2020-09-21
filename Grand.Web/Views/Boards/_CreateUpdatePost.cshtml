@@ -1,7 +1,6 @@
 ﻿@model EditForumPostModel
 @using Grand.Domain.Forums;
 @using Grand.Web.Models.Boards;
-@inject IWebHelper webHelper;
 @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
 
 <div class="page forum-edit-page">
@@ -36,7 +35,7 @@
                     @if (Model.ForumEditor == EditorType.BBCodeEditor)
                     {
                         <div class="col-12 text-sm-right">
-                            @Html.BBCodeEditor(webHelper, "Text")
+                            <bbc-code asp-name="Text" />
                         </div>
                     }
                     <textarea asp-for="Text" class="form-control card-text" ></textarea>

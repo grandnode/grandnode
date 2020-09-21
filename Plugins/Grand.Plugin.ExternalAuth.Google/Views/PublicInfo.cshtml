@@ -1,6 +1,7 @@
-﻿@{
+﻿@inject IPageHeadBuilder pagebuilder
+@{
     Layout = "";
-    Html.AddCssFileParts("~/Plugins/ExternalAuth.Google/Content/googlestyles.css");    
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/Plugins/ExternalAuth.Google/Content/googlestyles.css");
 }
 <div class="google-login-block">
     <div class="buttons">

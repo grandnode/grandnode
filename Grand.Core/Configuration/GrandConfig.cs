@@ -98,10 +98,10 @@ namespace Grand.Core.Configuration
         public string AmazonRegion { get; set; }
 
         /// <summary>
-        /// A list of plugins ignored during installation
+        /// A list of plugins to be ignored during start application - pattern
         /// </summary>
-        public string PluginsIgnoredDuringInstallation { get; set; }
-      
+        public string PluginSkipLoadingPattern { get; set; }
+
         /// <summary>
         /// Enable scripting C# applications to execute code.
         /// </summary>
@@ -116,6 +116,16 @@ namespace Grand.Core.Configuration
         /// Gets or sets a value indicating for cookie expires in hours - default 24 * 365 = 8760
         /// </summary>
         public int CookieAuthExpires { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value for Cookie prefix
+        /// </summary>
+        public string CookiePrefix { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value for Cookie claim issuer 
+        /// </summary>
+        public string CookieClaimsIssuer { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether mini profiler should be displayed in public store (used for debugging)

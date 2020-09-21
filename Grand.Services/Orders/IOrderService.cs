@@ -71,8 +71,9 @@ namespace Grand.Services.Orders
         /// <param name="customerId">Customer identifier; null to load all orders</param>
         /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
         /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
-        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="warehouseId">Warehouse identifier, only orders with products from a specified warehouse will be loaded; 0 to load all orders</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
+        /// <param name="ownerId">Owner identifier</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
@@ -84,15 +85,16 @@ namespace Grand.Services.Orders
         /// <param name="orderCode">Search by order code.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="orderTagId">Order tag identifier</param>
         /// <returns>Orders</returns>
         Task<IPagedList<Order>> SearchOrders(string storeId = "",
             string vendorId = "", string customerId = "",
             string productId = "", string affiliateId = "", string warehouseId = "",
-            string billingCountryId = "", string paymentMethodSystemName = null,
+            string billingCountryId = "", string ownerId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
-            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue);
+            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue, string orderTagId = "");
         
         /// <summary>
         /// Inserts an order
@@ -119,34 +121,17 @@ namespace Grand.Services.Orders
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
         Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, string paymentMethodSystemName);
-        
+
         #endregion
 
         #region Orders items
-        
+
         /// <summary>
         /// Gets an order item
         /// </summary>
         /// <param name="orderItemGuid">Order item identifier</param>
         /// <returns>Order item</returns>
         Task<OrderItem> GetOrderItemByGuid(Guid orderItemGuid);
-
-        /// <summary>
-        /// Gets all order items
-        /// </summary>
-        /// <param name="orderId">Order identifier; null to load all records</param>
-        /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
-        /// <param name="ss">Order shipment status; null to load all records</param>
-        /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
-        /// <returns>Order items</returns>
-        Task<IList<OrderItem>> GetAllOrderItems(string orderId,
-           string customerId, DateTime? createdFromUtc, DateTime? createdToUtc,
-           OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-           bool loadDownloableProductsOnly = false);
 
         /// <summary>
         /// Delete an order item
@@ -184,6 +169,13 @@ namespace Grand.Services.Orders
         /// <param name="ordernoteId">Order note identifier</param>
         /// <returns>OrderNote</returns>
         Task<OrderNote> GetOrderNote(string ordernoteId);
+
+
+        /// <summary>
+        /// Cancel Expired UnPaid Orders
+        /// </summary>
+        /// <param name="expirationDateUTC">Date at which all unPaid  orders and has pending status Would be Canceled</param>
+        Task CancelExpiredOrders(DateTime expirationDateUTC);
 
         #endregion
 

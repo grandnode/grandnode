@@ -9,7 +9,7 @@ using Grand.Core.Plugins;
 using Grand.Framework.Controllers;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Framework.Security.Authorization;
 using Grand.Framework.Themes;
 using Grand.Services.Authentication.External;
@@ -35,6 +35,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -172,6 +173,36 @@ namespace Grand.Web.Areas.Admin.Controllers
             return pluginModel;
         }
 
+        /// <summary>
+        ///  Depth-first recursive delete, with handling for descendant directories open in Windows Explorer.
+        /// </summary>
+        /// <param name="path">Directory path</param>
+        protected void DeleteDirectory(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(path);
+
+            //find more info about directory deletion
+            //and why we use this approach at https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
+
+            foreach (var directory in Directory.GetDirectories(path))
+            {
+                DeleteDirectory(directory);
+            }
+
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (IOException)
+            {
+                Directory.Delete(path, true);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Directory.Delete(path, true);
+            }
+        }
         #endregion
 
         #region Methods
@@ -305,7 +336,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     if (Path.GetFileName(folder) != "bin" && Directory.GetFiles(folder).Select(x => Path.GetFileName(x)).Contains(pluginDescriptor.PluginFileName))
                     {
-                        CommonHelper.DeleteDirectory(folder);
+                        DeleteDirectory(folder);
                     }
                 }
 
@@ -463,8 +494,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                                 descriptor = GetPluginDescriptorFromText(reader.ReadToEnd());
 
                                 //ensure that the plugin current version is supported
-                                if (!(descriptor as PluginDescriptor).SupportedVersions.Contains(GrandVersion.CurrentVersion))
-                                    throw new Exception($"This plugin doesn't support the current version - {GrandVersion.CurrentVersion}");
+                                if (!(descriptor as PluginDescriptor).SupportedVersions.Contains(GrandVersion.SupportedPluginVersion))
+                                    throw new Exception($"This plugin doesn't support the current version - {GrandVersion.SupportedPluginVersion}");
                             }
                         }
                     }
@@ -498,7 +529,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             try
             {
                 if (System.IO.Directory.Exists(pathToUpload))
-                    CommonHelper.DeleteDirectory(pathToUpload);
+                    DeleteDirectory(pathToUpload);
             }
             catch { }
 
@@ -576,7 +607,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     pluginDescriptor.LimitedToStores = model.SelectedStoreIds.ToList();
                 }
-                PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+                PluginFileParser.SavePluginConfigFile(pluginDescriptor);
                 //reset plugin cache
                 _pluginFinder.ReloadPlugins();
                 //locales

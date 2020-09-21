@@ -1,0 +1,91 @@
+﻿@model IList<Product>
+@inject Grand.Services.Media.IPictureService _pictureService;
+@inject IWebHelper _webHelper;
+@inject IStoreContext _storeContext;
+@inject PdfSettings _pdfSettings;
+@inject Grand.Core.IWorkContext _workContext;
+@inject Grand.Services.Localization.ILocalizationService _localizationService;
+@inject Grand.Services.Directory.ICurrencyService _currencyService;
+@using Grand.Services.Localization;
+@using Grand.Services.Catalog;
+
+@{
+    var logoPicture = await _pictureService.GetPictureById(_pdfSettings.LogoPictureId);
+    var logoExists = logoPicture != null;
+    var companyName = _storeContext.CurrentStore.CompanyName;
+    var lang = _workContext.WorkingLanguage;
+    var storyLocation = _webHelper.GetStoreLocation();
+    var pictureLocation = storyLocation.Remove(storyLocation.Length - 1);
+    var langdir = lang.Rtl ? "rtl" : "ltr";
+    // Use absolute url for images
+    //If you want divide content for page use    <div style="display:block; clear:both; page-break-after:always;"></div>
+}
+<style>
+    .col-container {
+        display: table;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+        .col-container .column {
+            display: table-cell;
+        }
+
+        .col-container .right {
+            text-align: right;
+        }
+
+            .col-container .right.column img {
+                margin-top: 25px;
+            }
+
+    @@media print {
+        .new-page {
+            page-break-before: always;
+        }
+    }
+</style>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="@langdir">
+<head>
+    <title></title>
+</head>
+<body>
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        <div class="col-container">
+            <div class="left column"><h2>@companyName</h2></div>
+            <div class="right column"><img src="@(logoExists ? await _pictureService.GetThumbLocalPath(logoPicture, 0, false) : "" )" /></div>
+        </div>
+
+        <div class="product">
+            @{
+                var fulldesc = Model[i].GetLocalized(x => x.FullDescription, lang.Id);
+                var priceStr = string.Format("{0} {1}", Model[i].Price.ToString("0.00"), (await _currencyService.GetPrimaryStoreCurrency()).CurrencyCode);
+            }
+            <h3>@(i+1). @Model[i].GetLocalized(x => x.Name, lang.Id)</h3>
+            <p>@Html.Raw(fulldesc)</p>
+            <ul>
+                <li>@(string.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), priceStr))</li>
+                <li>@(string.Format(_localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), Model[i].Sku))</li>
+                @if (Model[i].IsShipEnabled && Model[i].Weight > Decimal.Zero)
+                {
+                    <li>@(string.Format(_localizationService.GetResource("PDFProductCatalog.Weight", lang.Id), Model[i].Weight))</li>
+                }
+                @if (Model[i].ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                {
+                    <li>@(string.Format(_localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id), Model[i].GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId)))</li>
+                }
+            </ul>
+        </div>
+        foreach (var pic in Model[i].ProductPictures)
+        {
+            <img src=" @(pictureLocation+(await _pictureService.GetPictureUrl(pic.PictureId))) " width="100" height="100" />
+        }
+        if (Model.Count - 1 > i)
+        {
+
+            <div style="display:block; clear:both; page-break-after:always;"></div>
+        }
+    }
+</body>
+</html>

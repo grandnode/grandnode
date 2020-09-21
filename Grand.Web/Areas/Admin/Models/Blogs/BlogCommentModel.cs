@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.Blogs
 {
-    public partial class BlogCommentModel : BaseGrandEntityModel
+    public partial class BlogCommentModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")]
         public string BlogPostId { get; set; }

@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Commands.Models.Orders;
 
 namespace Grand.Services.Orders
 {
@@ -26,8 +27,6 @@ namespace Grand.Services.Orders
 
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductDeleted> _productDeletedRepository;
         private readonly IRepository<ProductAlsoPurchased> _productAlsoPurchasedRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         private readonly IMediator _mediator;
@@ -41,25 +40,21 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="orderRepository">Order repository</param>
         /// <param name="orderNoteRepository">Order note repository</param>
-        /// <param name="productRepository">Product repository</param>
         /// <param name="recurringPaymentRepository">Recurring payment repository</param>
-        /// <param name="mediator">Mediator</param>
         /// <param name="productAlsoPurchasedRepository">Product also purchased repository</param>
+        /// <param name="mediator">Mediator</param>
         public OrderService(IRepository<Order> orderRepository,
             IRepository<OrderNote> orderNoteRepository,
-            IRepository<Product> productRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
-            IMediator mediator,
             IRepository<ProductAlsoPurchased> productAlsoPurchasedRepository,
-            IRepository<ProductDeleted> productDeletedRepository)
+            IMediator mediator
+            )
         {
             _orderRepository = orderRepository;
             _orderNoteRepository = orderNoteRepository;
-            _productRepository = productRepository;
             _recurringPaymentRepository = recurringPaymentRepository;
             _mediator = mediator;
             _productAlsoPurchasedRepository = productAlsoPurchasedRepository;
-            _productDeletedRepository = productDeletedRepository;
         }
 
         #endregion
@@ -181,8 +176,9 @@ namespace Grand.Services.Orders
         /// <param name="customerId">Customer identifier; 0 to load all orders</param>
         /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
         /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
-        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="warehouseId">Warehouse identifier, only orders with products from a specified warehouse will be loaded; 0 to load all orders</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
+        /// <param name="ownerId">Owner identifier</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
@@ -194,15 +190,16 @@ namespace Grand.Services.Orders
         /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="orderTagId">Order tag identifier</param>
         /// <returns>Orders</returns>
         public virtual async Task<IPagedList<Order>> SearchOrders(string storeId = "",
             string vendorId = "", string customerId = "",
             string productId = "", string affiliateId = "", string warehouseId = "",
-            string billingCountryId = "", string paymentMethodSystemName = null,
+            string billingCountryId = "", string ownerId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
-            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue)
+            string orderCode = null, int pageIndex = 0, int pageSize = int.MaxValue, string orderTagId = "")
         {
             var querymodel = new GetOrderQuery() {
                 AffiliateId = affiliateId,
@@ -223,7 +220,9 @@ namespace Grand.Services.Orders
                 Ss = ss,
                 StoreId = storeId,
                 VendorId = vendorId,
-                WarehouseId = warehouseId
+                WarehouseId = warehouseId,
+                OrderTagId = orderTagId,
+                OwnerId = ownerId
             };
             var query = await _mediator.Send(querymodel);
             return await PagedList<Order>.Create(query, pageIndex, pageSize);
@@ -309,6 +308,26 @@ namespace Grand.Services.Orders
             return query.FirstOrDefaultAsync();
         }
 
+
+        /// <summary>
+        /// Cancel UnPaid Orders and has pending status
+        /// </summary>
+        /// <param name="expirationDateUTC">Date at which all unPaid orders and has pending status Would be Canceled</param>
+        public async Task CancelExpiredOrders(DateTime expirationDateUTC)
+        {
+            var orders = await _orderRepository.Table
+              .Where(o => 
+              o.CreatedOnUtc < expirationDateUTC && 
+              (o.PaymentStatusId == (int)PaymentStatus.Pending || 
+              !o.PaidDateUtc.HasValue ||
+              o.OrderStatusId == (int)OrderStatus.Pending) && 
+              o.OrderStatusId != (int)OrderStatus.Cancelled)
+              .ToListAsync();
+
+            foreach (var order in orders)
+                await _mediator.Send(new CancelOrderCommand() { Order = order, NotifyCustomer = true });
+        }
+
         #endregion
 
         #region Orders items
@@ -329,59 +348,6 @@ namespace Grand.Services.Orders
                     select orderItem;
 
             return query.FirstOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// Gets all order items
-        /// </summary>
-        /// <param name="orderId">Order identifier; null to load all records</param>
-        /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
-        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
-        /// <param name="ss">Order shipment status; null to load all records</param>
-        /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
-        /// <returns>Orders</returns>
-        public virtual async Task<IList<OrderItem>> GetAllOrderItems(string orderId,
-            string customerId, DateTime? createdFromUtc, DateTime? createdToUtc,
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-            bool loadDownloableProductsOnly)
-        {
-            var querymodel = new GetOrderQuery() {
-                CreatedFromUtc = createdFromUtc,
-                CreatedToUtc = createdToUtc,
-                CustomerId = customerId,
-                Os = os,
-                OrderId = orderId,
-                Ps = ps,
-                Ss = ss,
-            };
-            var query = await _mediator.Send(querymodel);
-            var items = new List<OrderItem>();
-            foreach (var order in await query.ToListAsync())
-            {
-                foreach (var orderitem in order.OrderItems)
-                {
-                    if (loadDownloableProductsOnly)
-                    {
-                        var product = await _productRepository.GetByIdAsync(orderitem.ProductId);
-                        if (product == null)
-                            product = await _productDeletedRepository.GetByIdAsync(orderitem.ProductId) as Product;
-                        if (product != null)
-                        {
-                            if (product.IsDownload)
-                            {
-                                items.Add(orderitem);
-                            }
-                        }
-                    }
-                    else
-                        items.Add(orderitem);
-                }
-
-            }
-            return items;
         }
 
         /// <summary>
@@ -554,8 +520,10 @@ namespace Grand.Services.Orders
             return await PagedList<RecurringPayment>.Create(query2, pageIndex, pageSize);
         }
 
+
+
         #endregion
 
-        #endregion      
+        #endregion
     }
 }

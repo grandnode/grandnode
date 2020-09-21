@@ -3,34 +3,24 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
-                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, model => model.PdfSettings.LetterPageSizeEnabled, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="PdfSettings.LetterPageSizeEnabled" class="control-label" />
+            <div class="note note-info">
+                If you are using GrandNode on Linux, additional configuration is required to export PDF files and use the WKHTMLTOPDF library. <a href="https://docs.grandnode.com/how-to-make-wkhtmltopdf-working-on-linux" target="_blank">Check the documentation</a> for more details.
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="PdfSettings.LetterPageSizeEnabled" />
-                     <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="PdfSettings.LetterPageSizeEnabled"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LogoPictureId_OverrideForStore, "pdf-logo-picture", Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="PdfSettings.LogoPictureId" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8" id="pdf-logo-picture">
+            <div class="col-4 col-md-8 col-sm-8" id="pdf-logo-picture">
                 <admin-input asp-for="PdfSettings.LogoPictureId" />
                 <span asp-validation-for="PdfSettings.LogoPictureId"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+            <div class="col-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, model => model.PdfSettings.DisablePdfInvoicesForPendingOrders, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="PdfSettings.DisablePdfInvoicesForPendingOrders" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
+            <div class="col-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="PdfSettings.DisablePdfInvoicesForPendingOrders" />
                      <div class="control__indicator"></div>
@@ -39,23 +29,23 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
-                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn1, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="PdfSettings.InvoiceFooterTextColumn1" class="control-label" />
+            <div class="col-8 col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceHeaderText_OverrideForStore, model => model.PdfSettings.InvoiceHeaderText, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="PdfSettings.InvoiceHeaderText" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
-                <admin-textarea asp-for="PdfSettings.InvoiceFooterTextColumn1"></admin-textarea>
-                <span asp-validation-for="PdfSettings.InvoiceFooterTextColumn1"></span>
+            <div class="col-4 col-md-8 col-sm-8">
+                <admin-textarea asp-for="PdfSettings.InvoiceHeaderText"></admin-textarea>
+                <span asp-validation-for="PdfSettings.InvoiceHeaderText"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
-                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn2_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn2, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="PdfSettings.InvoiceFooterTextColumn2" class="control-label" />
+            <div class="col-8 col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterText_OverrideForStore, model => model.PdfSettings.InvoiceFooterText, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="PdfSettings.InvoiceFooterText" class="control-label" />
             </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
-                <admin-textarea asp-for="PdfSettings.InvoiceFooterTextColumn2"></admin-textarea>
-                <span asp-validation-for="PdfSettings.InvoiceFooterTextColumn2"></span>
+            <div class="col-4 col-md-8 col-sm-8">
+                <admin-textarea asp-for="PdfSettings.InvoiceFooterText"></admin-textarea>
+                <span asp-validation-for="PdfSettings.InvoiceFooterText"></span>
             </div>
         </div>
     </div>

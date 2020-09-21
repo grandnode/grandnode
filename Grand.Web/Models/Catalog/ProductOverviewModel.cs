@@ -1,6 +1,6 @@
 ﻿using Grand.Domain.Catalog;
 using Grand.Domain.Tax;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Services.Discounts;
 using Grand.Web.Models.Media;
 using System;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class ProductOverviewModel : BaseGrandEntityModel
+    public partial class ProductOverviewModel : BaseEntityModel
     {
         public ProductOverviewModel()
         {
@@ -53,7 +53,7 @@ namespace Grand.Web.Models.Catalog
         public ProductReviewOverviewModel ReviewOverviewModel { get; set; }
 
 		#region Nested Classes
-        public partial class ProductPriceModel : BaseGrandModel
+        public partial class ProductPriceModel : BaseModel
         {
             public ProductPriceModel()
             {
@@ -86,7 +86,7 @@ namespace Grand.Web.Models.Catalog
 
         }
         
-        public partial class ProductAttributeModel : BaseGrandModel
+        public partial class ProductAttributeModel : BaseModel
         {
             public ProductAttributeModel()
             {
@@ -100,7 +100,7 @@ namespace Grand.Web.Models.Catalog
             public IList<ProductAttributeValueModel> Values { get; set; }
         }
 
-        public partial class ProductAttributeValueModel : BaseGrandModel
+        public partial class ProductAttributeValueModel : BaseModel
         {
             public ProductAttributeValueModel()
             {

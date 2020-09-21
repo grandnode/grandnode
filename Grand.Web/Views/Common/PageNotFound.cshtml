@@ -1,8 +1,9 @@
-﻿@{
+﻿@inject IPageHeadBuilder pagebuilder
+@{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.PageNotFound").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.PageNotFound").Text);
 }
 <div class="page text-xs-center not-found-page">
     <h2 class="text-xs-center generalTitle">@T("PageTitle.PageNotFound")</h2>

@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Media;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.News
 {
-    public partial class NewsItemListModel : BaseGrandModel
+    public partial class NewsItemListModel : BaseModel
     {
         public NewsItemListModel()
         {
@@ -17,7 +17,7 @@ namespace Grand.Web.Models.News
         public NewsPagingFilteringModel PagingFilteringContext { get; set; }
         public IList<NewsItemModel> NewsItems { get; set; }
 
-        public class NewsItemModel : BaseGrandModel
+        public class NewsItemModel : BaseModel
         {
             public NewsItemModel()
             {

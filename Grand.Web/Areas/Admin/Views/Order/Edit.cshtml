@@ -58,7 +58,14 @@
                                     </div>
                                 </content>
                             </tabstrip-item>
-                            <tabstrip-item text="@T("Admin.Orders.Products")" tab-index="2">
+                            <tabstrip-item text="@T("Admin.Orders.Shipments")" tab-index="2">
+                                <content>
+                                    <div>
+                                        <partial name="_OrderDetails.Shipment" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Orders.Products")" tab-index="3">
                                 <content>
                                     <div>
                                         <partial name="_OrderDetails.Products" model="Model" />
@@ -67,7 +74,7 @@
                             </tabstrip-item>
                             @if (!Model.IsLoggedInAsVendor)
                             {
-                                <tabstrip-item text="@T("Admin.Orders.OrderNotes")" tab-index="3">
+                                <tabstrip-item text="@T("Admin.Orders.OrderNotes")" tab-index="4">
                                     <content>
                                         <div>
                                             <partial name="_OrderDetails.Notes" model="Model" />
@@ -77,7 +84,7 @@
                             }
                             @if (canManageDocuments)
                             {
-                                <tabstrip-item text="@T("Admin.Orders.Documents")" tab-index="4">
+                                <tabstrip-item text="@T("Admin.Orders.Documents")" tab-index="5">
                                     <content>
                                         <div>
                                             <partial name="_OrderDetails.Documents" model="Model" />
@@ -87,7 +94,7 @@
                             }
                             @if (canManageGenericAttributes)
                             {
-                                <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="5">
+                                <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="6">
                                     <content>
                                         <div>
                                             <div class="form-actions">
@@ -97,7 +104,7 @@
                                                 @{
                                                     ViewData["ObjectType"] = "Order";
                                                     ViewData["TabIndex"] = 5;
-                                                 }
+                                                }
                                                 <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
                                             </div>
                                         </div>

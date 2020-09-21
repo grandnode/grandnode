@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Plugin.ExternalAuth.Google.Models
 {
-    public class FailedModel : BaseGrandModel
+    public class FailedModel : BaseModel
     {
         public string ErrorMessage { get; set; }
     }

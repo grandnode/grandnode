@@ -22,7 +22,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Country by key")]
+        [SwaggerOperation(summary: "Get entity from Country by key", OperationId = "GetCountryById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -36,7 +36,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(country.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from Country")]
+        [SwaggerOperation(summary: "Get entities from Country", OperationId = "GetCountries")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()

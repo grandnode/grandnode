@@ -15,6 +15,10 @@
                         {
                             <li class="list-group-item"><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
                         }
+                        @if (Model.PrivacyPreference)
+                        {
+                            <li class="list-group-item"><a id="btnPrivacyPreference" href="@Url.RouteUrl("PrivacyPreference")" onclick="GetPrivacyPreference(this.href); return false;">@T("PrivacyPreference")</a></li>
+                        }
                         @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterRow1).ToList())
                         {
                             <li class="list-group-item"><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
@@ -198,7 +202,7 @@
                     @if (Model.DisplayTaxShippingInfoFooter)
                     {
                         <span class="footer-tax-shipping">
-                            @T(Model.InclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
+                            @T(Model.InclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = TopicSeNameConstants.Shippinginfo }))
                         </span>
                     }
                 </div>

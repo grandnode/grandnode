@@ -1,6 +1,6 @@
 ﻿using Grand.Domain.Customers;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Grand.Web.Models.Newsletter;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Customer
 {
-    public partial class CustomerInfoModel : BaseGrandModel
+    public partial class CustomerInfoModel : BaseModel
     {
         public CustomerInfoModel()
         {
@@ -149,14 +149,14 @@ namespace Grand.Web.Models.Customer
 
         #region Nested classes
 
-        public partial class AssociatedExternalAuthModel : BaseGrandEntityModel
+        public partial class AssociatedExternalAuthModel : BaseEntityModel
         {
             public string Email { get; set; }
             public string ExternalIdentifier { get; set; }
             public string AuthMethodName { get; set; }
         }
 
-        public class TwoFactorAuthenticationModel : BaseGrandModel
+        public class TwoFactorAuthenticationModel : BaseModel
         {
             public TwoFactorAuthenticationModel()
             {
@@ -168,7 +168,7 @@ namespace Grand.Web.Models.Customer
             public IDictionary<string, string> CustomValues { get; set; }
         }
 
-        public class TwoFactorAuthorizationModel : BaseGrandModel
+        public class TwoFactorAuthorizationModel : BaseModel
         {
             public string Code { get; set; }
             public string UserName { get; set; }

@@ -1,7 +1,8 @@
 ﻿#! "netcoreapp3.1"
 #r "Grand.Core"
-#r "Grand.Services"
 #r "Grand.Framework"
+#r "Grand.Services"
+#r "Grand.Web"
 
 using Grand.Framework.Events;
 using Grand.Services.Events;

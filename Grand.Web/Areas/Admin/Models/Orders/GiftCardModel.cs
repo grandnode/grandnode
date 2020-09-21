@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
-    public partial class GiftCardModel : BaseGrandEntityModel
+    public partial class GiftCardModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.GiftCards.Fields.GiftCardType")]
         public int GiftCardTypeId { get; set; }
@@ -59,7 +59,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 
         #region Nested classes
 
-        public partial class GiftCardUsageHistoryModel : BaseGrandEntityModel
+        public partial class GiftCardUsageHistoryModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.GiftCards.History.UsedValue")]
             public string UsedValue { get; set; }

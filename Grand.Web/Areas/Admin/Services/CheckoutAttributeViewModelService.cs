@@ -6,7 +6,6 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
-using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
@@ -42,8 +41,7 @@ namespace Grand.Web.Areas.Admin.Services
             ICustomerActivityService customerActivityService,
             CurrencySettings currencySettings,
             IMeasureService measureService,
-            MeasureSettings measureSettings,
-            IStoreService storeService
+            MeasureSettings measureSettings
             )
         {
             _checkoutAttributeService = checkoutAttributeService;

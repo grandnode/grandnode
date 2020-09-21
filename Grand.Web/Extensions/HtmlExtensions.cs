@@ -1,48 +1,16 @@
-﻿using Grand.Core;
-using Grand.Framework;
-using Grand.Framework.UI.Paging;
+﻿using Grand.Framework;
 using Grand.Services.Localization;
-using Grand.Services.Seo;
-using Grand.Services.Topics;
 using Grand.Web.Models.Boards;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Grand.Web.Extensions
 {
     public static class HtmlExtensions
     {
-        /// <summary>
-        /// BBCode editor
-        /// </summary>
-        /// <typeparam name="TModel">Model</typeparam>
-        /// <param name="html">HTML Helper</param>
-        /// <param name="name">Name</param>
-        /// <returns>Editor</returns>
-        public static IHtmlContent BBCodeEditor<TModel>(this IHtmlHelper<TModel> html, IWebHelper webHelper, string name)
-        {
-            var sb = new StringBuilder();
-
-            var storeLocation = webHelper.GetStoreLocation();
-            string bbEditorWebRoot = String.Format("{0}content/", storeLocation);
-
-            sb.AppendFormat("<script src=\"{0}content/bbeditor/ed.js\" ></script>", storeLocation);
-            sb.Append(Environment.NewLine);
-            sb.Append("<script language=\"javascript\" type=\"text/javascript\">");
-            sb.Append(Environment.NewLine);
-            sb.AppendFormat("edToolbar('{0}','{1}');", name, bbEditorWebRoot);
-            sb.Append(Environment.NewLine);
-            sb.Append("</script>");
-            sb.Append(Environment.NewLine);
-
-            return new HtmlString(sb.ToString());
-        }
 
         //we have two pagers:
         //The first one can have custom routes
@@ -215,30 +183,6 @@ namespace Grand.Web.Extensions
             }
             return new HtmlString(string.Empty);
         }
-        public static Pager Pager(this IHtmlHelper helper, IPageableModel pagination)
-        {
-            return new Pager(pagination, helper.ViewContext);
-        }
-
-        ///// <summary>
-        ///// Get topic system name
-        ///// </summary>
-        ///// <typeparam name="T">T</typeparam>
-        ///// <param name="html">HTML helper</param>
-        ///// <param name="systemName">System name</param>
-        ///// <returns>Topic SEO Name</returns>
-        public static async Task<string> GetTopicSeName<T>(this IHtmlHelper<T> html, string systemName, HttpContext httpContext)
-        {
-            var storeContext = httpContext.RequestServices.GetRequiredService<IStoreContext>();
-            var topicService = httpContext.RequestServices.GetRequiredService<ITopicService>();
-            var topic = await topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
-            if (topic == null)
-                return "";
-
-            var workContext = httpContext.RequestServices.GetRequiredService<IWorkContext>();
-            return topic.GetSeName(workContext.WorkingLanguage.Id);
-        }
-
     }
 }
 

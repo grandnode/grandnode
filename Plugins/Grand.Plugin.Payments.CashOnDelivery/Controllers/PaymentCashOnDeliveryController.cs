@@ -47,9 +47,9 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Controllers
             var model = new ConfigurationModel();
             model.DescriptionText = cashOnDeliveryPaymentSettings.DescriptionText;
             //locales
-            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, async (locale, languageId) => 
             {
-                locale.DescriptionText = cashOnDeliveryPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, languageId, "", false, false);
+                locale.DescriptionText = await cashOnDeliveryPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, languageId, "", false, false);
             });
             model.AdditionalFee = cashOnDeliveryPaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = cashOnDeliveryPaymentSettings.AdditionalFeePercentage;

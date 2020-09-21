@@ -1,11 +1,11 @@
 ﻿using Grand.Domain.Catalog;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class ProductAttributeConditionModel : BaseGrandModel
+    public partial class ProductAttributeConditionModel : BaseModel
     {
         public ProductAttributeConditionModel()
         {
@@ -24,7 +24,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         #region Nested classes
 
-        public partial class ProductAttributeModel : BaseGrandEntityModel
+        public partial class ProductAttributeModel : BaseEntityModel
         {
             public ProductAttributeModel()
             {
@@ -44,7 +44,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public IList<ProductAttributeValueModel> Values { get; set; }
         }
 
-        public partial class ProductAttributeValueModel : BaseGrandEntityModel
+        public partial class ProductAttributeValueModel : BaseEntityModel
         {
             public string Name { get; set; }
 

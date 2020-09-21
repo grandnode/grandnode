@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Orders
 {
-    public partial class CustomerReturnRequestsModel : BaseGrandModel
+    public partial class CustomerReturnRequestsModel : BaseModel
     {
         public CustomerReturnRequestsModel()
         {
@@ -14,7 +14,7 @@ namespace Grand.Web.Models.Orders
         public IList<ReturnRequestModel> Items { get; set; }
 
         #region Nested classes
-        public partial class ReturnRequestModel : BaseGrandEntityModel
+        public partial class ReturnRequestModel : BaseEntityModel
         {
             public int ReturnNumber { get; set; }
             public string ReturnRequestStatus { get; set; }

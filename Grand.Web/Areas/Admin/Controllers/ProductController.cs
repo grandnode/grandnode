@@ -50,6 +50,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -67,7 +68,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IProductReservationService productReservationService,
             IAuctionService auctionService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            IPermissionService permissionService)
         {
             _productViewModelService = productViewModelService;
             _productService = productService;
@@ -81,6 +83,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _productReservationService = productReservationService;
             _auctionService = auctionService;
             _dateTimeHelper = dateTimeHelper;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -120,6 +123,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ProductList(DataSourceRequest command, ProductListModel model)
         {
@@ -132,6 +136,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-product-by-sku")]
         public async Task<IActionResult> GoToSku(ProductListModel model)
@@ -158,6 +163,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create product
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = new ProductModel();
@@ -168,6 +174,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(ProductModel model, bool continueEditing)
         {
@@ -187,6 +194,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit product
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var product = await _productService.GetProductById(id, true);
@@ -230,6 +238,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(ProductModel model, bool continueEditing)
         {
@@ -273,6 +282,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
         //delete product
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -301,6 +311,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Edit", new { id = id });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> DeleteSelected(ICollection<string> selectedIds)
         {
@@ -312,6 +323,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         [HttpPost]
         public async Task<IActionResult> CopyProduct(ProductModel model, [FromServices] ICopyProductService copyProductService)
         {
@@ -347,6 +359,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Required products
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
 
         public async Task<IActionResult> LoadProductFriendlyNames(string productIds)
@@ -378,6 +391,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Text = result });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> RequiredProductAddPopup(string productIdsInput)
         {
             var model = await _productViewModelService.PrepareAddRequiredProductModel();
@@ -385,6 +399,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> RequiredProductAddPopupList(DataSourceRequest command, ProductModel.AddRequiredProductModel model)
         {
@@ -400,6 +415,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product categories
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ProductCategoryList(DataSourceRequest command, string productId)
         {
@@ -418,6 +434,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductCategoryInsert(ProductModel.ProductCategoryModel model)
         {
@@ -436,6 +453,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductCategoryUpdate(ProductModel.ProductCategoryModel model)
         {
@@ -454,6 +472,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductCategoryDelete(ProductModel.ProductCategoryModel model)
         {
@@ -469,6 +488,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product manufacturers
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ProductManufacturerList(DataSourceRequest command, string productId)
         {
@@ -487,6 +507,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductManufacturerInsert(ProductModel.ProductManufacturerModel model)
         {
@@ -505,6 +526,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductManufacturerUpdate(ProductModel.ProductManufacturerModel model)
         {
@@ -523,6 +545,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductManufacturerDelete(ProductModel.ProductManufacturerModel model)
         {
@@ -538,6 +561,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Related products
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> RelatedProductList(DataSourceRequest command, string productId)
         {
@@ -568,6 +592,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> RelatedProductUpdate(ProductModel.RelatedProductModel model)
         {
@@ -579,6 +604,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> RelatedProductDelete(ProductModel.RelatedProductModel model)
         {
@@ -590,6 +616,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> RelatedProductAddPopup(string productId)
         {
             var model = await _productViewModelService.PrepareRelatedProductModel();
@@ -597,6 +624,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> RelatedProductAddPopupList(DataSourceRequest command, ProductModel.AddRelatedProductModel model)
         {
@@ -608,6 +636,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> RelatedProductAddPopup(ProductModel.AddRelatedProductModel model)
@@ -636,6 +666,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Similar products
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> SimilarProductList(DataSourceRequest command, string productId)
         {
@@ -666,6 +697,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> SimilarProductUpdate(ProductModel.SimilarProductModel model)
         {
@@ -677,6 +709,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> SimilarProductDelete(ProductModel.SimilarProductModel model)
         {
@@ -688,6 +721,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> SimilarProductAddPopup(string productId)
         {
             var model = await _productViewModelService.PrepareSimilarProductModel();
@@ -695,6 +729,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> SimilarProductAddPopupList(DataSourceRequest command, ProductModel.AddSimilarProductModel model)
         {
@@ -706,6 +741,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> SimilarProductAddPopup(ProductModel.AddSimilarProductModel model)
@@ -733,6 +770,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Bundle products
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> BundleProductList(DataSourceRequest command, string productId)
         {
@@ -763,6 +801,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> BundleProductUpdate(ProductModel.BundleProductModel model)
         {
@@ -774,6 +813,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> BundleProductDelete(ProductModel.BundleProductModel model)
         {
@@ -785,6 +825,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> BundleProductAddPopup(string productId)
         {
             var model = await _productViewModelService.PrepareBundleProductModel();
@@ -792,6 +833,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> BundleProductAddPopupList(DataSourceRequest command, ProductModel.AddBundleProductModel model)
         {
@@ -804,6 +846,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> BundleProductAddPopup(ProductModel.AddBundleProductModel model)
@@ -832,6 +875,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Cross-sell products
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> CrossSellProductList(DataSourceRequest command, string productId)
         {
@@ -859,6 +903,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> CrossSellProductDelete(ProductModel.CrossSellProductModel model)
         {
@@ -879,6 +924,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> CrossSellProductAddPopup(string productId)
         {
             var model = await _productViewModelService.PrepareCrossSellProductModel();
@@ -886,6 +932,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> CrossSellProductAddPopupList(DataSourceRequest command, ProductModel.AddCrossSellProductModel model)
         {
@@ -898,6 +945,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> CrossSellProductAddPopup(ProductModel.AddCrossSellProductModel model)
@@ -925,6 +973,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Associated products
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> AssociatedProductList(DataSourceRequest command, string productId)
         {
@@ -960,6 +1009,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AssociatedProductUpdate(ProductModel.AssociatedProductModel model)
         {
@@ -977,6 +1027,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AssociatedProductDelete(ProductModel.AssociatedProductModel model)
         {
@@ -992,6 +1043,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> AssociatedProductAddPopup(string productId)
         {
             var model = await _productViewModelService.PrepareAssociatedProductModel();
@@ -999,6 +1051,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AssociatedProductAddPopupList(DataSourceRequest command, ProductModel.AddAssociatedProductModel model)
         {
@@ -1010,6 +1063,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> AssociatedProductAddPopup(ProductModel.AddAssociatedProductModel model)
@@ -1058,6 +1112,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ProductPictureList(DataSourceRequest command, string productId)
         {
@@ -1076,6 +1131,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductPictureUpdate(ProductModel.ProductPictureModel model)
         {
@@ -1087,6 +1143,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductPictureDelete(ProductModel.ProductPictureModel model)
         {
@@ -1113,6 +1170,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(result);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductSpecificationAttributeAdd(ProductModel.AddProductSpecificationAttributeModel model)
         {
             if (ModelState.IsValid)
@@ -1128,6 +1186,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = false });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ProductSpecAttrList(DataSourceRequest command, string productId)
         {
@@ -1145,6 +1204,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductSpecAttrUpdate(ProductSpecificationAttributeModel model)
         {
@@ -1164,6 +1224,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductSpecAttrDelete(ProductSpecificationAttributeModel model)
         {
@@ -1187,9 +1248,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Purchased with order
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> PurchasedWithOrders(DataSourceRequest command, string productId)
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Json(new DataSourceResult {
+                    Data = null,
+                    Total = 0
+                });
+
             var product = await _productService.GetProductById(productId);
 
             var permission = CheckAccessToProduct(product);
@@ -1209,6 +1277,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Reviews
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> Reviews(DataSourceRequest command, string productId, [FromServices] IProductReviewService productReviewService)
         {
@@ -1244,6 +1313,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Export / Import
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("download-catalog-pdf")]
         public async Task<IActionResult> DownloadCatalogAsPdf(ProductListModel model, [FromServices] IPdfService pdfService)
@@ -1266,7 +1336,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
-
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportxml-all")]
         public async Task<IActionResult> ExportXmlAll(ProductListModel model)
@@ -1285,6 +1355,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost]
         public async Task<IActionResult> ExportXmlSelected(string selectedIds)
         {
@@ -1308,7 +1379,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         }
 
-
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportexcel-all")]
         public async Task<IActionResult> ExportExcelAll(ProductListModel model)
@@ -1326,6 +1397,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         [HttpPost]
         public async Task<IActionResult> ExportExcelSelected(string selectedIds)
         {
@@ -1348,6 +1420,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return File(bytes, "text/xls", "products.xlsx");
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Import)]
         [HttpPost]
         public async Task<IActionResult> ImportExcel(IFormFile importexcelfile)
         {
@@ -1381,12 +1454,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Bulk editing
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> BulkEdit()
         {
             var model = await _productViewModelService.PrepareBulkEditListModel();
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> BulkEditSelect(DataSourceRequest command, BulkEditListModel model)
         {
@@ -1398,6 +1473,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> BulkEditUpdate(IEnumerable<BulkEditProductModel> products)
         {
@@ -1408,6 +1484,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> BulkEditDelete(IEnumerable<BulkEditProductModel> products)
         {
@@ -1422,6 +1499,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Tier prices
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> TierPriceList(DataSourceRequest command, string productId)
         {
@@ -1439,6 +1517,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> TierPriceCreatePopup(string productId)
         {
             var model = new ProductModel.TierPriceModel {
@@ -1448,6 +1527,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> TierPriceCreatePopup(ProductModel.TierPriceModel model)
@@ -1472,6 +1552,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> TierPriceEditPopup(string id, string productId)
         {
             var product = await _productService.GetProductById(productId);
@@ -1492,6 +1573,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> TierPriceEditPopup(string productId, ProductModel.TierPriceModel model)
         {
@@ -1517,6 +1599,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> TierPriceDelete(ProductModel.TierPriceModel model)
         {
@@ -1541,6 +1624,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product attributes
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeMappingList(DataSourceRequest command, string productId)
         {
@@ -1559,6 +1643,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAttributeMappingPopup(string productId, string productAttributeMappingId)
         {
             var product = await _productService.GetProductById(productId);
@@ -1580,6 +1665,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeMappingPopup(ProductModel.ProductAttributeMappingModel model)
         {
@@ -1602,6 +1688,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeMappingDelete(string id, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
@@ -1627,6 +1714,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAttributeValidationRulesPopup(string id, string productId)
         {
             var product = await _productService.GetProductById(productId);
@@ -1644,6 +1732,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeValidationRulesPopup(ProductModel.ProductAttributeMappingModel model)
         {
@@ -1670,6 +1759,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product attributes. Condition
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAttributeConditionPopup(string productId, string productAttributeMappingId)
         {
             var product = await _productService.GetProductById(productId);
@@ -1687,6 +1777,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeConditionPopup(ProductAttributeConditionModel model, IFormCollection form)
         {
@@ -1721,6 +1812,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Product attribute values
 
         //list
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> EditAttributeValues(string productAttributeMappingId, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
             var product = await _productService.GetProductById(productId);
@@ -1751,6 +1843,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeValueList(string productAttributeMappingId, string productId, DataSourceRequest command)
         {
@@ -1773,6 +1866,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAttributeValueCreatePopup(string productAttributeMappingId, string productId, [FromServices] IPictureService pictureService)
         {
             var product = await _productService.GetProductById(productId);
@@ -1817,6 +1911,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAttributeValueCreatePopup(ProductModel.ProductAttributeValueModel model)
         {
             var product = await _productService.GetProductById(model.ProductId);
@@ -1853,6 +1948,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAttributeValueEditPopup(string id, string productId, string productAttributeMappingId)
         {
             var product = await _productService.GetProductById(productId);
@@ -1881,6 +1977,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeValueEditPopup(string productId, ProductModel.ProductAttributeValueModel model)
         {
@@ -1919,6 +2016,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //delete
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeValueDelete(string Id, string pam, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
@@ -1955,6 +2053,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AssociateProductToAttributeValuePopupList(DataSourceRequest command,
             ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
@@ -1967,6 +2066,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> AssociateProductToAttributeValuePopup(ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
@@ -1990,6 +2090,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product attribute combinations
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeCombinationList(DataSourceRequest command, string productId)
         {
@@ -2007,6 +2108,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeCombinationDelete(string id, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
@@ -2040,6 +2142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> AttributeCombinationPopup(string productId, string Id)
         {
             var product = await _productService.GetProductById(productId);
@@ -2053,6 +2156,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> AttributeCombinationPopup(string productId,
             ProductAttributeCombinationModel model, IFormCollection form)
@@ -2087,6 +2191,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> GenerateAllAttributeCombinations(string productId)
         {
@@ -2107,6 +2212,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Success = true });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ClearAllAttributeCombinations(string productId, [FromServices] IProductAttributeService productAttributeService)
         {
@@ -2142,6 +2248,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product Attribute combination - tier prices
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeCombinationTierPriceList(DataSourceRequest command, string productId, string productAttributeCombinationId)
         {
@@ -2160,6 +2267,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeCombinationTierPriceInsert(string productId, string productAttributeCombinationId, ProductModel.ProductAttributeCombinationTierPricesModel model)
         {
@@ -2182,6 +2290,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeCombinationTierPriceUpdate(string productId, string productAttributeCombinationId, ProductModel.ProductAttributeCombinationTierPricesModel model)
         {
@@ -2204,6 +2313,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAttributeCombinationTierPriceDelete(string productId, string productAttributeCombinationId, string id)
         {
@@ -2236,6 +2346,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Activity log
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ListActivityLog(DataSourceRequest command, string productId)
         {
@@ -2257,6 +2368,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Reservation
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ListReservations(DataSourceRequest command, string productId)
         {
@@ -2286,6 +2398,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> GenerateCalendar(string productId, ProductModel.GenerateCalendarModel model)
         {
@@ -2431,6 +2544,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { success = true });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ClearCalendar(string productId)
         {
             var product = await _productService.GetProductById(productId);
@@ -2454,6 +2568,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json("");
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ClearOld(string productId)
         {
             var product = await _productService.GetProductById(productId);
@@ -2477,6 +2592,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json("");
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductReservationDelete(ProductModel.ReservationModel model)
         {
@@ -2508,6 +2624,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Bids
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ListBids(DataSourceRequest command, string productId)
         {
@@ -2531,6 +2648,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> BidDelete(ProductModel.BidModel model, [FromServices] ICustomerActivityService customerActivityService)
         {

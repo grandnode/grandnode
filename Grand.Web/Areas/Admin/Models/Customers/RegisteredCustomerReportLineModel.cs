@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    public partial class RegisteredCustomerReportLineModel : BaseGrandModel
+    public partial class RegisteredCustomerReportLineModel : BaseModel
     {
         [GrandResourceDisplayName("Admin.Reports.Customers.RegisteredCustomers.Fields.Period")]
         public string Period { get; set; }

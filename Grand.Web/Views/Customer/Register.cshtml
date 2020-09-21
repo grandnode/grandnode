@@ -1,10 +1,10 @@
 ﻿@model RegisterModel
 @using System.Text.Encodings.Web
-
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
     //title
-    Html.AddTitleParts(T("PageTitle.Register").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Register").Text);
 }
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
@@ -59,94 +59,94 @@
         <div class="card mb-3">
             <h3 class="h4 card-header">@T("Account.YourPersonalDetails")</h3>
             <div class="card-body">
-                    @if (Model.GenderEnabled)
-                    {
-                        <div class="row">
-                            <div class="col-lg-3 col-sm-12">
-                                <span>@T("Account.Fields.Gender"):</span>
-                            </div>
+                @if (Model.GenderEnabled)
+                {
+                    <div class="row">
+                        <div class="col-lg-3 col-sm-12">
+                            <span>@T("Account.Fields.Gender"):</span>
                         </div>
-                        <fieldset class="gender px-3">
-                            <legend class="sr-only">@T("Account.Fields.Gender")</legend>
-                            <div class="d-flex row">
-                                <label class="male custom-control custom-radio">
-                                    <input id="gender-male" name="Gender" type="radio" value="M" checked="@(Model.Gender == "M")" class="custom-control-input">
-                                    <span class="custom-control-label"></span>
-                                    <span class="forcheckbox custom-control-description">@T("Account.Fields.Gender.Male")</span>
-                                </label>
-                                <label class="female custom-control custom-radio ml-2">
-                                    <input id="gender-female" name="Gender" type="radio" value="F" checked="@(Model.Gender == "F")" class="custom-control-input">
-                                    <span class="custom-control-label"></span>
-                                    <span class="forcheckbox custom-control-description">@T("Account.Fields.Gender.Female")</span>
-                                </label>
-                            </div>
-                        </fieldset>
-                    }
-                    <div class="form-row">
-                        <fieldset class="col-sm-6 col-12 form-group">
+                    </div>
+                    <fieldset class="gender px-3">
+                        <legend class="sr-only">@T("Account.Fields.Gender")</legend>
+                        <div class="d-flex row">
+                            <label class="male custom-control custom-radio">
+                                <input id="gender-male" name="Gender" type="radio" value="M" checked="@(Model.Gender == "M")" class="custom-control-input">
+                                <span class="custom-control-label"></span>
+                                <span class="forcheckbox custom-control-description">@T("Account.Fields.Gender.Male")</span>
+                            </label>
+                            <label class="female custom-control custom-radio ml-2">
+                                <input id="gender-female" name="Gender" type="radio" value="F" checked="@(Model.Gender == "F")" class="custom-control-input">
+                                <span class="custom-control-label"></span>
+                                <span class="forcheckbox custom-control-description">@T("Account.Fields.Gender.Female")</span>
+                            </label>
+                        </div>
+                    </fieldset>
+                }
+                <div class="form-row">
+                    <fieldset class="col-sm-6 col-12 form-group">
                         <legend class="sr-only">@T("account.fields.firstname")</legend>
                         <label asp-for="FirstName" class="col-form-label">@T("Account.Fields.FirstName"):</label>
-                        <input asp-for="FirstName" class="form-control"/>
+                        <input asp-for="FirstName" class="form-control" />
                         <span asp-validation-for="FirstName"></span>
                     </fieldset>
                     <fieldset class="col-sm-6 col-12 form-group">
                         <legend class="sr-only">@T("account.fields.lastname")</legend>
                         <label asp-for="LastName" class="col-form-label">@T("Account.Fields.LastName"):</label>
-                        <input asp-for="LastName" class="form-control"/>
+                        <input asp-for="LastName" class="form-control" />
                         <span asp-validation-for="LastName"></span>
                     </fieldset>
-                    </div>
+                </div>
 
-                    @if (Model.DateOfBirthEnabled)
-                    {
-                        <fieldset class="form-group date-of-birth col-sm-12">
-                            <legend class="sr-only">@T("Account.Fields.DateOfBirth")</legend>
-                            <div class="row">
-                                <span class="col-form-label col-12 py-0 px-0">@T("Account.Fields.DateOfBirth"):</span>
-                                <date-picker-dropdown control-day="@Html.IdFor(x => x.DateOfBirthDay)"
-                                                      control-month="@Html.IdFor(x => x.DateOfBirthMonth)"
-                                                      control-year="@Html.IdFor(x => x.DateOfBirthYear)"
-                                                      begin-year="@(DateTime.Now.Year - 100)"
-                                                      end-year="DateTime.Now.Year"
-                                                      selected-day="Model.DateOfBirthDay.HasValue ? Model.DateOfBirthDay.Value : 0"
-                                                      selected-month="Model.DateOfBirthMonth.HasValue ? Model.DateOfBirthMonth.Value : 0"
-                                                      selected-year="Model.DateOfBirthYear.HasValue ? Model.DateOfBirthYear.Value : 0"
-                                                      class="col-12 input-group px-0" />
-                            </div>
-                            <div class="row">
-                                <span asp-validation-for="DateOfBirthDay"></span>
-                                <span asp-validation-for="DateOfBirthMonth"></span>
-                                <span asp-validation-for="DateOfBirthYear"></span>
-                            </div>
-                        </fieldset>
-                    }
-                    <fieldset class="form-group col-md-12 mail">
-                        <legend class="sr-only">@T("account.fields.email")</legend>
+                @if (Model.DateOfBirthEnabled)
+                {
+                    <fieldset class="form-group date-of-birth col-sm-12">
+                        <legend class="sr-only">@T("Account.Fields.DateOfBirth")</legend>
                         <div class="row">
-                            <label asp-for="Email" class="col-form-label">@T("Account.Fields.Email"):</label>
-                            <input asp-for="Email" class="form-control"/>
-                            <span asp-validation-for="Email"></span>
+                            <span class="col-form-label col-12 py-0 px-0">@T("Account.Fields.DateOfBirth"):</span>
+                            <date-picker-dropdown control-day="@Html.IdFor(x => x.DateOfBirthDay)"
+                                                  control-month="@Html.IdFor(x => x.DateOfBirthMonth)"
+                                                  control-year="@Html.IdFor(x => x.DateOfBirthYear)"
+                                                  begin-year="@(DateTime.Now.Year - 100)"
+                                                  end-year="DateTime.Now.Year"
+                                                  selected-day="Model.DateOfBirthDay.HasValue ? Model.DateOfBirthDay.Value : 0"
+                                                  selected-month="Model.DateOfBirthMonth.HasValue ? Model.DateOfBirthMonth.Value : 0"
+                                                  selected-year="Model.DateOfBirthYear.HasValue ? Model.DateOfBirthYear.Value : 0"
+                                                  class="col-12 input-group px-0" />
+                        </div>
+                        <div class="row">
+                            <span asp-validation-for="DateOfBirthDay"></span>
+                            <span asp-validation-for="DateOfBirthMonth"></span>
+                            <span asp-validation-for="DateOfBirthYear"></span>
                         </div>
                     </fieldset>
+                }
+                <fieldset class="form-group col-md-12 mail">
+                    <legend class="sr-only">@T("account.fields.email")</legend>
+                    <div class="row">
+                        <label asp-for="Email" class="col-form-label">@T("Account.Fields.Email"):</label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email"></span>
+                    </div>
+                </fieldset>
 
-                    @if (Model.UsernamesEnabled)
-                    {
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <label asp-for="Username" class="col-form-label">@T("Account.Fields.Username"):</label>
-                            </div>
-                            <div class="col-12">
-                                <input asp-for="Username" class="form-control"/>
-                                <span asp-validation-for="Username"></span>
-                                @if (Model.CheckUsernameAvailabilityEnabled)
-                                {
-                                    <partial name="_CheckUsernameAvailability" />
-                                }
-                            </div>
+                @if (Model.UsernamesEnabled)
+                {
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <label asp-for="Username" class="col-form-label">@T("Account.Fields.Username"):</label>
                         </div>
-                    }
-                </div>
+                        <div class="col-12">
+                            <input asp-for="Username" class="form-control" />
+                            <span asp-validation-for="Username"></span>
+                            @if (Model.CheckUsernameAvailabilityEnabled)
+                            {
+                                <partial name="_CheckUsernameAvailability" />
+                            }
+                        </div>
+                    </div>
+                }
             </div>
+        </div>
 
         @if (Model.CompanyEnabled)
         {
@@ -155,7 +155,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label asp-for="Company" class="col-form-label">@T("Account.Fields.Company"):</label>
-                        <input asp-for="Company"  class="form-control"/>
+                        <input asp-for="Company" class="form-control" />
                         <span asp-validation-for="Company"></span>
                     </div>
 
@@ -175,10 +175,10 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-                Model.StreetAddress2Enabled ||
-                Model.ZipPostalCodeEnabled ||
-                Model.CityEnabled ||
-                Model.CountryEnabled)
+               Model.StreetAddress2Enabled ||
+               Model.ZipPostalCodeEnabled ||
+               Model.CityEnabled ||
+               Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">
@@ -191,7 +191,7 @@
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.streetaddress")</legend>
                                 <label asp-for="StreetAddress" class="col-form-label">@T("Account.Fields.StreetAddress"):</label>
-                                <input asp-for="StreetAddress" class="form-control"/>
+                                <input asp-for="StreetAddress" class="form-control" />
                                 <span asp-validation-for="StreetAddress"></span>
                             </fieldset>
                         }
@@ -200,7 +200,7 @@
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.streetaddress2")</legend>
                                 <label asp-for="StreetAddress2" class="col-form-label">@T("Account.Fields.StreetAddress2"):</label>
-                                <input asp-for="StreetAddress2" class="form-control"/>
+                                <input asp-for="StreetAddress2" class="form-control" />
                                 <span asp-validation-for="StreetAddress2"></span>
                             </fieldset>
                         }
@@ -209,7 +209,7 @@
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.zippostalcode")</legend>
                                 <label asp-for="ZipPostalCode" class="col-form-label">@T("Account.Fields.ZipPostalCode"):</label>
-                                <input asp-for="ZipPostalCode" class="form-control"/>
+                                <input asp-for="ZipPostalCode" class="form-control" />
                                 <span asp-validation-for="ZipPostalCode"></span>
                             </fieldset>
                         }
@@ -218,7 +218,7 @@
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.city")</legend>
                                 <label asp-for="City" class="col-form-label">@T("Account.Fields.City"):</label>
-                                <input asp-for="City" class="form-control"/>
+                                <input asp-for="City" class="form-control" />
                                 <span asp-validation-for="City"></span>
                             </fieldset>
                         }
@@ -257,7 +257,7 @@
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.phone")</legend>
                                 <label asp-for="Phone" class="col-form-label">@T("Account.Fields.Phone"):</label>
-                                <input asp-for="Phone" class="form-control"/>
+                                <input asp-for="Phone" class="form-control" />
                                 <span asp-validation-for="Phone"></span>
                             </fieldset>
                         }
@@ -266,7 +266,7 @@
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.fax")</legend>
                                 <label asp-for="Fax" class="col-form-label">@T("Account.Fields.Fax"):</label>
-                                <input asp-for="Fax" class="form-control"/>
+                                <input asp-for="Fax" class="form-control" />
                                 <span asp-validation-for="Fax"></span>
                             </fieldset>
                         }
@@ -280,23 +280,23 @@
             <div class="card mb-3">
                 <h3 class="h5 card-header">@T("Account.Options")</h3>
                 <div class="card-body">
-                        @if (Model.NewsletterEnabled)
-                        {
-                            <div class="form-group">
-                                <label for="Newsletter" class="ml-1 custom-control custom-checkbox">
-                                    <input class="custom-control-input" asp-for="Newsletter" />
-                                    <span class="custom-control-label"></span>
-                                    <span class="custom-control-description">@T("account.fields.newsletter")</span>
-                                    <span class="sr-only">@T("account.fields.newsletter")</span>
-                                </label>
-                                <span asp-validation-for="Newsletter"></span>
-                            </div>
-                            <partial name="_NewsLetterCategories" model="Model.NewsletterCategories" />
-                        }
-                        @if (Model.CustomerAttributes.Any())
-                        {
-                            <partial name="_CustomerAttributes" model="Model.CustomerAttributes" />
-                        }
+                    @if (Model.NewsletterEnabled)
+                    {
+                        <div class="form-group">
+                            <label for="Newsletter" class="ml-1 custom-control custom-checkbox">
+                                <input class="custom-control-input" asp-for="Newsletter" />
+                                <span class="custom-control-label"></span>
+                                <span class="custom-control-description">@T("account.fields.newsletter")</span>
+                                <span class="sr-only">@T("account.fields.newsletter")</span>
+                            </label>
+                            <span asp-validation-for="Newsletter"></span>
+                        </div>
+                        <partial name="_NewsLetterCategories" model="Model.NewsletterCategories" />
+                    }
+                    @if (Model.CustomerAttributes.Any())
+                    {
+                        <partial name="_CustomerAttributes" model="Model.CustomerAttributes" />
+                    }
                 </div>
             </div>
         }
@@ -322,14 +322,14 @@
                 <div class="form-group col-12">
                     <div class="row">
                         <label asp-for="Password" class="col-form-label">@T("Account.Fields.Password"):</label>
-                        <input asp-for="Password" class="form-control"/>
+                        <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password"></span>
                     </div>
                 </div>
                 <div class="form-group col-12">
                     <div class="row">
                         <label asp-for="ConfirmPassword" class="col-form-label">@T("Account.Fields.ConfirmPassword"):</label>
-                        <input asp-for="ConfirmPassword" class="form-control"/>
+                        <input asp-for="ConfirmPassword" class="form-control" />
                         <span asp-validation-for="ConfirmPassword"></span>
                     </div>
                 </div>

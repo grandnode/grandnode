@@ -22,7 +22,7 @@ namespace Grand.Api.Controllers.OData
             _permissionService = permissionService;
         }
 
-        [SwaggerOperation(summary: "Get entity from Delivery Date by key")]
+        [SwaggerOperation(summary: "Get entity from Delivery Date by key", OperationId = "GetDeliveryDateById")]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
@@ -36,7 +36,7 @@ namespace Grand.Api.Controllers.OData
             return Ok(deliverydate.FirstOrDefault());
         }
 
-        [SwaggerOperation(summary: "Get entities from Delivery Date")]
+        [SwaggerOperation(summary: "Get entities from Delivery Date", OperationId = "GetDeliveryDates")]
         [HttpGet]
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()

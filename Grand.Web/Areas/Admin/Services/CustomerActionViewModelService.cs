@@ -48,7 +48,6 @@ namespace Grand.Web.Areas.Admin.Services
             IStoreService storeService,
             IVendorService vendorService,
             ICustomerActionService customerActionService,
-            IProductAttributeService productAttributeService,
             IBannerService bannerService,
             IInteractiveFormService interactiveFormService,
             IMessageTemplateService messageTemplateService,

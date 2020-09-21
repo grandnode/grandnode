@@ -1,25 +1,25 @@
 ﻿<!DOCTYPE html>
-<html lang="@(this.WorkingLanguage())  @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null)">
+<html use-lang="true">
 <head>
-    <title>@Html.GrandTitle(true)</title>
+    <title asp-default-title="true"></title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta name="description" content="@(Html.GrandMetaDescription())" />
-    <meta name="keywords" content="@(Html.GrandMetaKeywords())" />
-    @Html.GrandHeadCustom()
+    <meta-description>
+    <meta-keywords>
+    <head-custom>
     @*This is used so that themes can inject content into the header*@
     <partial name="Head" />
-    @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
-    @Html.GrandScripts(this.Url, ResourceLocation.Head)
-    @Html.GrandCanonicalUrls()
+    <css-files asp-location="Head">
+    <script-files asp-location="Head">
+    <canonical-urls> 
     @*Favicon - upload favicon.ico file to the root directory*@
-    @await Component.InvokeAsync("Favicon")
-    @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag" })
+    <vc:favicon></vc:favicon>
+    <vc:widget widget-zone="head_html_tag" additional-data="null"></vc:widget>
 </head>
 <body class="popup-window text-center px-3">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
+    <vc:widget widget-zone="body_start_html_tag_after" additional-data="null"></vc:widget>
     @RenderBody()
-    @await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })
-    @Html.GrandCssFiles(this.Url, ResourceLocation.Footer)
-    @Html.GrandScripts(this.Url, ResourceLocation.Footer)
+    <vc:widget widget-zone="body_end_html_tag_before" additional-data="null"></vc:widget>
+    <css-files asp-location="Footer">
+    <script-files asp-location="Footer">
 </body>
 </html>

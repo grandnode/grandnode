@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using Grand.Web.Models.Common;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutBillingAddressModel : BaseGrandModel
+    public partial class CheckoutBillingAddressModel : BaseModel
     {
         public CheckoutBillingAddressModel()
         {

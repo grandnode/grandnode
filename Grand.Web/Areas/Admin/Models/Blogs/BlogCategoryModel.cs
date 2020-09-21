@@ -1,17 +1,18 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Blogs
 {
-    public partial class BlogCategoryModel : BaseGrandEntityModel, ILocalizedModel<BlogCategoryLocalizedModel>, IStoreMappingModel
+    public partial class BlogCategoryModel : BaseEntityModel, ILocalizedModel<BlogCategoryLocalizedModel>, IStoreMappingModel
     {
         public BlogCategoryModel()
         {
-            this.AvailableStores = new List<StoreModel>();
+            AvailableStores = new List<StoreModel>();
             Locales = new List<BlogCategoryLocalizedModel>();
         }
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogCategory.Fields.Name")]
@@ -36,7 +37,7 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         public string Name { get; set; }
     }
 
-    public partial class AddBlogPostCategoryModel : BaseGrandModel
+    public partial class AddBlogPostCategoryModel : BaseModel
     {
         public AddBlogPostCategoryModel()
         {

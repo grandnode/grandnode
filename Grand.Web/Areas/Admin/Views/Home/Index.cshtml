@@ -19,8 +19,8 @@
 <vc:admin-widget widget-zone="admin_dashboard_top" additional-data="null" />
 @if (!Model.IsLoggedInAsVendor && canManageOrders)
 {
-    <div class="row top_tiles">
-        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
+    <div class="form-row top_tiles">
+        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-12">
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-user"></i></div>
                 <div class="count">@customersOnline</div>
@@ -32,7 +32,7 @@
                 <p>@T("Admin.Dashboard.OnlineCustomerMinutes", customerSettings.OnlineCustomerMinutes)</p>
             </div>
         </div>
-        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-12">
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-shopping-cart"></i></div>
                 <div class="count">@customersShoppingCart</div>
@@ -44,7 +44,7 @@
                 <p>@T("Admin.Dashboard.OnlineShoppingCart", customerSettings.OnlineShoppingCartMinutes)</p>
             </div>
         </div>
-        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-12">
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-money"></i></div>
                 <div class="count"> @ordersAmount / @ordersToday.Count</div>
@@ -68,7 +68,7 @@
                             <div class="page-toolbar">
                                 <div id="dashboard-report-range" class="pull-right btn btn-fit-height green" data-original-title="Change dashboard date range">
                                     <i class="icon-calendar"></i>&nbsp;
-                                    <span class="thin uppercase hidden-xs"></span>&nbsp;
+                                    <span class="thin uppercase d-none d-sm-inline"></span>&nbsp;
                                     <i class="fa fa-angle-down"></i>
                                 </div>
                             </div>
@@ -77,9 +77,25 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
+                    <div class="col-12">
+                        <div id="store_news" class="store-news"></div>
+                        <script>
+                            $.getJSON("https://grandnode.com/news.json", function (data) {
+                                var newsitems = [];
+                                $.each(data, function (key, value) {
+                                    newsitems.push("<li id='news-" + key + "' class='media'><div class='media-body note note-info'><h5><a href='" + value.Url + "' target='_blank' >" + value.Name + "</a></h5>" + value.Message + "</div></li>");
+                                });
+
+                                $("<ul/>", {
+                                    "class": "store-news",
+                                    html: newsitems.join("")
+                                }).appendTo("#store_news");
+                            });
+                        </script>
+                    </div>
                     @if (canAccessReports)
                     {
-                        <div class="col-xs-12 col-sm-12 col-lg-8 col-md-12 whiteBg">
+                        <div class="col-12 col-sm-12 col-lg-8 col-md-12 whiteBg">
                             @await Component.InvokeAsync("CustomerReportCustomerTimeChart")
                         </div>
                     }
@@ -107,7 +123,7 @@
         <div class="col-md-12">
             @if (!Model.HideReportGA)
             {
-                <div class="col-xs-12 col-sm-12 col-lg-4 col-md-12 whiteBg">
+                <div class="col-12 col-sm-12 col-lg-4 col-md-12 whiteBg">
                     <div class="x_panel">
                         <div class="x_title">
                             <div class="caption level-caption">
@@ -224,7 +240,7 @@
                             <div class="page-toolbar">
                                 <div id="dashboard-report-range" class="pull-right btn btn-fit-height green" data-original-title="Change dashboard date range">
                                     <i class="icon-calendar"></i>&nbsp;
-                                    <span class="thin uppercase hidden-xs"></span>&nbsp;
+                                    <span class="thin uppercase d-none d-sm-inline"></span>&nbsp;
                                     <i class="fa fa-angle-down"></i>
                                 </div>
                             </div>

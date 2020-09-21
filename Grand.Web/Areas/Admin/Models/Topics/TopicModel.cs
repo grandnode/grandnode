@@ -1,13 +1,14 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Topics
 {
-    public partial class TopicModel : BaseGrandEntityModel, ILocalizedModel<TopicLocalizedModel>, IAclMappingModel, IStoreMappingModel
+    public partial class TopicModel : BaseEntityModel, ILocalizedModel<TopicLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public TopicModel()
         {

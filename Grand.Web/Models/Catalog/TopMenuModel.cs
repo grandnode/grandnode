@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class TopMenuModel : BaseGrandModel
+    public partial class TopMenuModel : BaseModel
     {
         public TopMenuModel()
         {
@@ -30,13 +30,13 @@ namespace Grand.Web.Models.Catalog
 
         #region Nested classes
 
-        public class TopMenuTopicModel : BaseGrandEntityModel
+        public class TopMenuTopicModel : BaseEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }
         }
 
-        public class TopMenuManufacturerModel : BaseGrandEntityModel
+        public class TopMenuManufacturerModel : BaseEntityModel
         {
             public string Name { get; set; }
             public string Icon { get; set; }
@@ -44,7 +44,7 @@ namespace Grand.Web.Models.Catalog
         }
 
 
-        public class CategoryLineModel : BaseGrandModel
+        public class CategoryLineModel : BaseModel
         {
             public int Level { get; set; }
             public bool ResponsiveMobileMenu { get; set; }

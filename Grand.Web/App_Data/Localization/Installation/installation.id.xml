@@ -1,0 +1,149 @@
+﻿<Language Name="English" IsDefault="true" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Email administrator</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Masukkan email administrator</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Password administrator</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Masukkan password administrator</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Akun '{0}' tidak diijinkan melakukan perubahan pada folder '{1}'. Silahkan atur konfigurasi pengguna ini.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Akun '{0}' tidak diijinkan mengubah file/berkas '{1}'. Silahkan atur konfigurasi untuk melakukan ini.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Konfirmasi passwordd</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Masukkan konfirmasi password</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Koneksi ke database MongoDB (Connection String)</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Koneksi (Connection string) MongoDB harus diisi</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Masukkan nilai koneksi MongoDB</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Format koneksi (Connection String) MongoDB salah</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Buat database baru jika tidak ada</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Buat data contoh</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Server MongoDB Collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Kesalahan terjadi saat pembuatan database: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Informasi Database</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Nama database</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Nama database harus diisi</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Database tidak ditemukan atau anda tidak mempunyai ijin untuk mengakses database ini.</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Pilih penyedia data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Jika anda membutuhkan informasi lebih lanjut tentang grandnode, kunjungi</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>dokumentasi pada grandnode.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Contoh</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Install</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Installing grandnode...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Password tidak sama</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Masukkan koneksi database (raw connection string) (mode ahli)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Disarankan]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Ulangi proses instalasi</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Klik untuk mengulang proses instalasi (bersihkan semua cache)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Setup gagal: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBAuthentication">
+    <Value>Gunakan akun MongoDB Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerName">
+    <Value>Nama MongoDB Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerNameRequired">
+    <Value>Nama MongoDB Server harus diisi</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBUsername">
+    <Value>Username MongoDB Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBPassword">
+    <Value>Password MongoDB Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerPassword">
+    <Value>Password MongoDB</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerPasswordRequired">
+    <Value>Password MongoDB Password harus diisi</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerUsername">
+    <Value>Username MongoDB Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerUsernameRequired">
+    <Value>Username MongoDB Server harus diisi</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBStandard">
+    <Value>Gunakan server database MongoDB</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Informasi Toko</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>Instalasi GrandNode</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>GrandNode adalah solusi e-commerce dibuat dengan ASP .NET. Proses ini akan menuntun Anda mengkonfigurasi GrandNode</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Untuk menyelesaikan proses ini Anda harus mengetahui konfigurasi database Anda ("connection string"). Silahkan menghubungi sistem administrator Anda untuk informasi lebih lanjut.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Gunakan mode Windows authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installed">
+    <Value>Aplikasi berhasil diinstall, silahkan jalankan ulang aplikasinya.</Value>
+  </LocaleResource>
+  <LocaleResource Name="AlreadyInstalled">
+    <Value>Database yang Anda pilih sudah teriinstall GrandNode. Silahkan pilih database yang lain.</Value>
+  </LocaleResource>
+</Language>

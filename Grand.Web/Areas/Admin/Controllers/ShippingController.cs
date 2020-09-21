@@ -5,7 +5,7 @@ using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -196,7 +197,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var pluginDescriptor = srcm.PluginDescriptor;
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
-            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+            PluginFileParser.SavePluginConfigFile(pluginDescriptor);
             //reset plugin cache
             _pluginFinder.ReloadPlugins();
 

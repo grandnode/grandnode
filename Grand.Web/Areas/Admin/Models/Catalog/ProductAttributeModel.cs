@@ -1,11 +1,11 @@
 ﻿using Grand.Framework.Localization;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class ProductAttributeModel : BaseGrandEntityModel, ILocalizedModel<ProductAttributeLocalizedModel>
+    public partial class ProductAttributeModel : BaseEntityModel, ILocalizedModel<ProductAttributeLocalizedModel>
     {
         public ProductAttributeModel()
         {
@@ -27,7 +27,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         #region Nested classes
 
-        public partial class UsedByProductModel : BaseGrandEntityModel
+        public partial class UsedByProductModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")]
             public string ProductName { get; set; }
@@ -51,7 +51,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string Description { get; set; }
     }
 
-    public partial class PredefinedProductAttributeValueModel : BaseGrandEntityModel, ILocalizedModel<PredefinedProductAttributeValueLocalizedModel>
+    public partial class PredefinedProductAttributeValueModel : BaseEntityModel, ILocalizedModel<PredefinedProductAttributeValueLocalizedModel>
     {
         public PredefinedProductAttributeValueModel()
         {

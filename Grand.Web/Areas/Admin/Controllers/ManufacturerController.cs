@@ -103,6 +103,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command, ManufacturerListModel model)
         {
@@ -125,6 +126,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Create / Edit / Delete
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create([FromServices] CatalogSettings catalogSettings)
         {
             var model = new ManufacturerModel();
@@ -149,6 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(ManufacturerModel model, bool continueEditing)
         {
@@ -180,6 +183,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var manufacturer = await _manufacturerService.GetManufacturerById(id);
@@ -204,6 +208,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 locale.Name = manufacturer.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Description = manufacturer.GetLocalized(x => x.Description, languageId, false, false);
+                locale.BottomDescription = manufacturer.GetLocalized(x => x.BottomDescription, languageId, false, false);
                 locale.MetaKeywords = manufacturer.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = manufacturer.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = manufacturer.GetLocalized(x => x.MetaTitle, languageId, false, false);
@@ -223,6 +228,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(ManufacturerModel model, bool continueEditing)
         {
@@ -272,6 +278,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -301,6 +308,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Export / Import
 
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         public async Task<IActionResult> ExportXml()
         {
             try
@@ -316,7 +324,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
-
+        [PermissionAuthorizeAction(PermissionActionName.Export)]
         public async Task<IActionResult> ExportXlsx()
         {
             try
@@ -331,6 +339,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Import)]
         [HttpPost]
         public async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile, [FromServices] IWorkContext workContext)
         {
@@ -362,6 +371,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Products
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ProductList(DataSourceRequest command, string manufacturerId)
         {
@@ -380,6 +390,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductUpdate(ManufacturerModel.ManufacturerProductModel model)
         {
@@ -391,6 +402,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductDelete(ManufacturerModel.ManufacturerProductModel model)
         {
@@ -403,6 +415,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAddPopup(string manufacturerId)
         {
             var model = await _manufacturerViewModelService.PrepareAddManufacturerProductModel(_workContext.CurrentCustomer.StaffStoreId);
@@ -410,6 +423,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, ManufacturerModel.AddManufacturerProductModel model)
         {
@@ -427,6 +441,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> ProductAddPopup(ManufacturerModel.AddManufacturerProductModel model)
@@ -448,6 +463,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Activity log
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ListActivityLog(DataSourceRequest command, string manufacturerId)
         {

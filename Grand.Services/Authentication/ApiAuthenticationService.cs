@@ -100,13 +100,6 @@ namespace Grand.Services.Authentication
 
             Customer customer = null;
 
-            if (_httpContextAccessor.HttpContext.Request.Path.Value.ToLowerInvariant().Contains("/api/token/create"))
-            {
-                customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
-                if (customer != null)
-                    return customer;
-            }
-
             //try to get authenticated user identity
             string authHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith(JwtBearerDefaults.AuthenticationScheme))

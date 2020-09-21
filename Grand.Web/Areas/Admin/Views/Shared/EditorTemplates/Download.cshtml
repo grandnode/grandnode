@@ -2,10 +2,11 @@
 @using Grand.Core;
 @using Grand.Framework.UI;
 @inject Grand.Services.Media.IDownloadService downloadService
+@inject IPageHeadBuilder pagebuilder
 @{
     //register CSS and JS
-    Html.AddCssFileParts("~/scripts/fineuploader/fineuploader-4.2.2.min.css", excludeFromBundle: true);
-    Html.AddScriptParts("~/scripts/fineuploader/jquery.fineuploader-4.2.2.min.js", excludeFromBundle: true);
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/scripts/fineuploader/fineuploader-4.2.2.min.css", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/scripts/fineuploader/jquery.fineuploader-4.2.2.min.js", excludeFromBundle: true);
 
     //other variables
     var randomNumber = CommonHelper.GenerateRandomInteger();
@@ -72,7 +73,7 @@
                 </div>
                 <div class="col-md-6 col-sm-6">
                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox control control-checkbox">
-                        <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
+                        <input type="checkbox" class="check-box" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
                                @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text> } />
                         <div class="control__indicator"></div>
                     </label>
@@ -84,12 +85,17 @@
                 @T("Admin.Download.DownloadURL"):
             </div>
             <div class="col-md-6 col-sm-6">
-                <input type="text" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
-                       @if (download != null && !String.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text> } />
-                <input type="button" id="saveDownloadUrl@(randomNumber)" class="k-button" value="@T("Admin.Download.SaveDownloadURL")" />
-                <div id="pnlDownloadURLResult@(randomNumber)" style="display:none;">@T("Admin.Download.DownloadURLSaved")</div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
+                           @if (download != null && !String.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text> } />
+                    <div class="input-group-append">
+                        <input type="button" id="saveDownloadUrl@(randomNumber)" class="k-button" value="@T("Admin.Download.SaveDownloadURL")" />
+                    </div>
+                </div>
+
+                    <div id="pnlDownloadURLResult@(randomNumber)" style="display:none;">@T("Admin.Download.DownloadURLSaved")</div>
+                </div>
             </div>
-        </div>
         <div class="form-group" id="pnlDownloadFile@(randomNumber)">
             <div class="col-md-3 col-sm-3">
                 @T("Admin.Download.UploadFile"):

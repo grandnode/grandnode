@@ -147,7 +147,7 @@ namespace Grand.Web.Features.Handlers.Products
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var model = await PrepareStandardProperties(product, updateCartItem, isAssociatedProduct);
+            var model = await PrepareStandardProperties(product, updateCartItem);
 
             #region Vendor details
 
@@ -340,7 +340,7 @@ namespace Grand.Web.Features.Handlers.Products
         }
 
 
-        private async Task<ProductDetailsModel> PrepareStandardProperties(Product product, ShoppingCartItem updateCartItem, bool isAssociatedProduct)
+        private async Task<ProductDetailsModel> PrepareStandardProperties(Product product, ShoppingCartItem updateCartItem)
         {
             #region Standard properties
 

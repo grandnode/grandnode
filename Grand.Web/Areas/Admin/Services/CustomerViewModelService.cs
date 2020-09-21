@@ -10,7 +10,7 @@ using Grand.Domain.Payments;
 using Grand.Domain.Shipping;
 using Grand.Domain.Tax;
 using Grand.Framework.Extensions;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 using Grand.Services.Affiliates;
 using Grand.Services.Authentication.External;
 using Grand.Services.Catalog;
@@ -42,6 +42,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -495,7 +496,7 @@ namespace Grand.Web.Areas.Admin.Services
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.FreeShipping = customer.FreeShipping;
                     model.Active = customer.Active;
-                    model.Owner = string.IsNullOrEmpty(customer.OwnerId) ? "" : (await _customerService.GetCustomerById(customer.OwnerId))?.Email;
+                    model.Owner = customer.IsOwner() ? "" : (await _customerService.GetCustomerById(customer.OwnerId))?.Email;
                     var result = new StringBuilder();
                     foreach (var item in customer.CustomerTags)
                     {
@@ -1289,8 +1290,11 @@ namespace Grand.Web.Areas.Admin.Services
                     OrderNumber = order.OrderNumber,
                     OrderCode = order.Code,
                     OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    OrderStatusId = order.OrderStatusId,
                     PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    PaymentStatusId = order.PaymentStatusId,
                     ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    ShippingStatusId = order.ShippingStatusId,
                     OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
                     StoreName = store != null ? store.Shortcut : "Unknown",
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),

@@ -25,7 +25,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ISettingService _settingService;
 	    private readonly IPluginFinder _pluginFinder;
         private readonly ICacheManager _cacheManager;
-        private readonly IServiceProvider _serviceProvider;
         private readonly WidgetSettings _widgetSettings;
         #endregion
 
@@ -35,14 +34,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             ISettingService settingService,
             IPluginFinder pluginFinder,
             ICacheManager cacheManager,
-            IServiceProvider serviceProvider,
             WidgetSettings widgetSettings)
 		{
             _widgetService = widgetService;
             _widgetSettings = widgetSettings;
             _pluginFinder = pluginFinder;
             _cacheManager = cacheManager;
-            _serviceProvider = serviceProvider;
             _settingService = settingService;
         }
 
@@ -54,6 +51,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
@@ -63,7 +61,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var tmp1 = widget.ToModel();
                 tmp1.IsActive = widget.IsWidgetActive(_widgetSettings);
-                tmp1.ConfigurationUrl = widget.PluginDescriptor.Instance(_serviceProvider).GetConfigurationPageUrl();
                 tmp1.ConfigurationUrl = widget.GetConfigurationPageUrl();
                 widgetsModel.Add(tmp1);
             }
@@ -77,6 +74,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> WidgetUpdate(WidgetModel model)
         {
@@ -103,7 +101,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var pluginDescriptor = widget.PluginDescriptor;
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
-            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+            PluginFileParser.SavePluginConfigFile(pluginDescriptor);
             //reset plugin cache
             _pluginFinder.ReloadPlugins();
 

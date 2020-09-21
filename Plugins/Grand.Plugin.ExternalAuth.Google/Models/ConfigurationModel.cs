@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Plugin.ExternalAuth.Google.Models
 {
-    public class ConfigurationModel : BaseGrandModel
+    public class ConfigurationModel : BaseModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 

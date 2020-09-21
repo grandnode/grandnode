@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class ProductReviewModel : BaseGrandEntityModel
+    public partial class ProductReviewModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Product")]
         public string ProductId { get; set; }

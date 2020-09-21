@@ -1,12 +1,12 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Grand.Web.Models.Common;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Orders
 {
-    public partial class ReturnRequestModel : BaseGrandModel
+    public partial class ReturnRequestModel : BaseModel
     {
         public ReturnRequestModel()
         {
@@ -49,7 +49,7 @@ namespace Grand.Web.Models.Orders
 
         #region Nested classes
 
-        public partial class OrderItemModel : BaseGrandEntityModel
+        public partial class OrderItemModel : BaseEntityModel
         {
             public string ProductId { get; set; }
 
@@ -73,11 +73,11 @@ namespace Grand.Web.Models.Orders
             public string ReturnRequestActionId { get; set; }
         }
 
-        public partial class ReturnRequestReasonModel : BaseGrandEntityModel
+        public partial class ReturnRequestReasonModel : BaseEntityModel
         {
             public string Name { get; set; }
         }
-        public partial class ReturnRequestActionModel : BaseGrandEntityModel
+        public partial class ReturnRequestActionModel : BaseEntityModel
         {
             public string Name { get; set; }
         }

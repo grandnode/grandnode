@@ -1,6 +1,6 @@
 ﻿using Grand.Api.DTOs.Customers;
 using Grand.Api.Queries.Models.Common;
-using Grand.Core.Data;
+using Grand.Domain.Data;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;

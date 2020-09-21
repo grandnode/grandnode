@@ -16,7 +16,7 @@
                         @T("Admin.Customers.Customers")
                     </div>
                     <div class="actions btn-group btn-group-devided">
-                        <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
+                        <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="d-none d-sm-inline"> @T("Admin.Common.AddNew") </span></a>
 
                         <div class="btn-group btn-group-devided">
                             <a class="btn default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
@@ -51,11 +51,11 @@
 
                         <div class="form-body">
                             <div class="form-group popup">
-                                <admin-label asp-for="SearchEmail" class="col-xs-2 control-label col-sm-2" />
-                                <div class="col-xs-10 col-md-4 col-sm-4">
+                                <admin-label asp-for="SearchEmail" class="col-2 control-label col-sm-2" />
+                                <div class="col-10 col-md-4 col-sm-4">
                                     <admin-input asp-for="SearchEmail" />
                                 </div>
-                                <div class="col-xs-8 col-md-4 col-sm-4 mt-mobile-10">
+                                <div class="col-8 col-md-6 col-sm-4 mt-mobile-10">
                                     <div class="btn-group btn-group-devided">
                                         <button class="btn btn-success filter-submit" id="search-customers">
                                             <i class="fa fa-search"></i> @T("Admin.Common.Search")
@@ -72,29 +72,29 @@
                             @if (Model.UsernamesEnabled)
                             {
                                 <div class="form-group">
-                                    <admin-label asp-for="SearchUsername" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                    <div class="col-xs-8 col-md-8 col-sm-8">
+                                    <admin-label asp-for="SearchUsername" class="control-label col-4 col-md-4 col-sm-4" />
+                                    <div class="col-8 col-md-8 col-sm-8">
                                         <admin-input asp-for="SearchUsername" />
                                     </div>
                                 </div>
                             }
                             <div class="form-group">
-                                <admin-label asp-for="SearchFirstName" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchFirstName" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-input asp-for="SearchFirstName" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchLastName" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchLastName" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-input asp-for="SearchLastName" />
                                 </div>
                             </div>
                             @if (Model.CompanyEnabled)
                             {
                                 <div class="form-group">
-                                    <admin-label asp-for="SearchCompany" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                    <div class="col-xs-8 col-md-8 col-sm-8">
+                                    <admin-label asp-for="SearchCompany" class="control-label col-4 col-md-4 col-sm-4" />
+                                    <div class="col-8 col-md-8 col-sm-8">
                                         <admin-input asp-for="SearchCompany" />
                                     </div>
                                 </div>
@@ -102,22 +102,22 @@
                         </div>
                         <div class="form-body col-md-6 extend-collapse">
                             <div class="form-group">
-                                <admin-label asp-for="SearchCustomerRoleIds" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchCustomerRoleIds" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-input asp-for="SearchCustomerRoleIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerRoles" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchCustomerTagIds" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                <div class="col-xs-8 col-md-8 col-sm-8">
+                                <admin-label asp-for="SearchCustomerTagIds" class="control-label col-4 col-md-4 col-sm-4" />
+                                <div class="col-8 col-md-8 col-sm-8">
                                     <admin-input asp-for="SearchCustomerTagIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerTags" />
                                 </div>
                             </div>
                             @if (Model.PhoneEnabled)
                             {
                                 <div class="form-group">
-                                    <admin-label asp-for="SearchPhone" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                    <div class="col-xs-8 col-md-8 col-sm-8">
+                                    <admin-label asp-for="SearchPhone" class="control-label col-4 col-md-4 col-sm-4" />
+                                    <div class="col-8 col-md-8 col-sm-8">
                                         <admin-input asp-for="SearchPhone" />
                                     </div>
                                 </div>
@@ -125,8 +125,8 @@
                             @if (Model.ZipPostalCodeEnabled)
                             {
                                 <div class="form-group">
-                                    <admin-label asp-for="SearchZipPostalCode" class="control-label col-xs-4 col-md-4 col-sm-4" />
-                                    <div class="col-xs-8 col-md-8 col-sm-8">
+                                    <admin-label asp-for="SearchZipPostalCode" class="control-label col-4 col-md-4 col-sm-4" />
+                                    <div class="col-8 col-md-8 col-sm-8">
                                         <admin-input asp-for="SearchZipPostalCode" />
                                     </div>
                                 </div>

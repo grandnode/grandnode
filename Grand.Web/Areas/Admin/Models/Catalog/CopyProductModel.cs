@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class CopyProductModel : BaseGrandEntityModel
+    public partial class CopyProductModel : BaseEntityModel
     {
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Copy.Name")]

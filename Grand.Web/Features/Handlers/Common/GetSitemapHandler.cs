@@ -119,7 +119,7 @@ namespace Grand.Web.Features.Handlers.Common
                     .ToList();
                 model.Topics = topics.Select(topic => new TopicModel {
                     Id = topic.Id,
-                    SystemName = topic.SystemName,
+                    SystemName = topic.GetLocalized(x=>x.SystemName, request.Language.Id),
                     IncludeInSitemap = topic.IncludeInSitemap,
                     IsPasswordProtected = topic.IsPasswordProtected,
                     Title = topic.GetLocalized(x => x.Title, request.Language.Id),

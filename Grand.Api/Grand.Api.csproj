@@ -5,15 +5,16 @@
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
+    <Product>grandnode</Product>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
     <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\Grand.Core\Grand.Core.csproj" />
-    <ProjectReference Include="..\Grand.Framework\Grand.Framework.csproj" />
     <ProjectReference Include="..\Grand.Services\Grand.Services.csproj" />
   </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="7.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.OData.Versioning" Version="4.1.1" />

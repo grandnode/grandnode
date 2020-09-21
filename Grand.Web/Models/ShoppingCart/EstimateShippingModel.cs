@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class EstimateShippingModel : BaseGrandModel
+    public partial class EstimateShippingModel : BaseModel
     {
         public EstimateShippingModel()
         {
@@ -26,7 +26,7 @@ namespace Grand.Web.Models.ShoppingCart
         public IList<SelectListItem> AvailableStates { get; set; }
     }
 
-    public partial class EstimateShippingResultModel : BaseGrandModel
+    public partial class EstimateShippingResultModel : BaseModel
     {
         public EstimateShippingResultModel()
         {
@@ -40,7 +40,7 @@ namespace Grand.Web.Models.ShoppingCart
 
         #region Nested Classes
 
-        public partial class ShippingOptionModel : BaseGrandModel
+        public partial class ShippingOptionModel : BaseModel
         {
             public string Name { get; set; }
 

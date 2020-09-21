@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
-    public partial class NewsLetterSubscriptionModel : BaseGrandEntityModel
+    public partial class NewsLetterSubscriptionModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")]
         public string Email { get; set; }

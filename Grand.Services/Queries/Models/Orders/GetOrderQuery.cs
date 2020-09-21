@@ -17,6 +17,7 @@ namespace Grand.Services.Queries.Models.Orders
         public string AffiliateId { get; set; } = "";
         public string WarehouseId { get; set; } = "";
         public string BillingCountryId { get; set; } = "";
+        public string OwnerId { get; set; } = "";
         public string PaymentMethodSystemName { get; set; } = null;
         public DateTime? CreatedFromUtc { get; set; } = null;
         public DateTime? CreatedToUtc { get; set; } = null;
@@ -29,5 +30,6 @@ namespace Grand.Services.Queries.Models.Orders
         public string OrderCode { get; set; } = null;
         public int PageIndex { get; set; } = 0;
         public int PageSize { get; set; } = int.MaxValue;
+        public string OrderTagId { get; set; } = "";
     }
 }

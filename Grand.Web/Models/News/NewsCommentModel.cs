@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Models.News
 {
-    public partial class NewsCommentModel : BaseGrandEntityModel
+    public partial class NewsCommentModel : BaseEntityModel
     {
         public string CustomerId { get; set; }
 

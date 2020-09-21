@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Orders
 {
-    public partial class CustomerRewardPointsModel : BaseGrandModel
+    public partial class CustomerRewardPointsModel : BaseModel
     {
         public CustomerRewardPointsModel()
         {
@@ -20,7 +20,7 @@ namespace Grand.Web.Models.Orders
 
         #region Nested classes
 
-        public partial class RewardPointsHistoryModel : BaseGrandEntityModel
+        public partial class RewardPointsHistoryModel : BaseEntityModel
         {
             [GrandResourceDisplayName("RewardPoints.Fields.Points")]
             public int Points { get; set; }

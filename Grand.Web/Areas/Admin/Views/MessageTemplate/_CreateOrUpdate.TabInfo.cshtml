@@ -1,8 +1,9 @@
 ﻿@model MessageTemplateModel
+@inject IPageHeadBuilder pagebuilder
 @{
-    Html.AddScriptParts("~/content/codemirror/codemirror.js", excludeFromBundle: true);
-    Html.AddScriptParts("~/content/codemirror/mode/xml/xml.js", excludeFromBundle: true);
-    Html.AddCssFileParts("~/content/codemirror/codemirror.css", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/codemirror.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/mode/xml/xml.js", excludeFromBundle: true);
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/codemirror/codemirror.css", excludeFromBundle: true);
 }
 
 <div class="form-horizontal">
@@ -26,7 +27,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IsActive" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IsActive"></span>
             </div>
@@ -118,7 +119,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SendImmediately" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SendImmediately"></span>
             </div>
@@ -146,8 +147,11 @@
                     ViewData["Grand.DownloadEditor.DisableUrl"] = true;
                 }
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="HasAttachedDownload" />@T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
-                     <div class="control__indicator"></div>
+                    <div class="d-inline-flex flex-row-reverse">
+                        <admin-input asp-for="HasAttachedDownload" />
+                        @T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
+                        <div class="control__indicator mr-3"></div>
+                    </div>
                 </label>
                 <div id="pnlAttachedDownload">
                     <admin-input asp-for="AttachedDownloadId" />

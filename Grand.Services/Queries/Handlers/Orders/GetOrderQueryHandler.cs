@@ -75,6 +75,9 @@ namespace Grand.Services.Queries.Handlers.Orders
             if (!string.IsNullOrEmpty(request.AffiliateId))
                 query = query.Where(o => o.AffiliateId == request.AffiliateId);
 
+            if (!string.IsNullOrEmpty(request.OwnerId))
+                query = query.Where(o => o.OwnerId == request.OwnerId);
+
             if (request.CreatedFromUtc.HasValue)
                 query = query.Where(o => request.CreatedFromUtc.Value <= o.CreatedOnUtc);
 
@@ -105,6 +108,11 @@ namespace Grand.Services.Queries.Handlers.Orders
             {
                 query = query.Where(o => o.Code == request.OrderCode.ToUpperInvariant());
             }
+
+            //tag filtering 
+            if (!string.IsNullOrEmpty(request.OrderTagId))
+                query = query.Where(o => o.OrderTags.Any(y => y == request.OrderTagId));
+
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 

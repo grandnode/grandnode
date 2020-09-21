@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class ProductSpecificationModel : BaseGrandModel
+    public partial class ProductSpecificationModel : BaseModel
     {
         public string SpecificationAttributeId { get; set; }
 

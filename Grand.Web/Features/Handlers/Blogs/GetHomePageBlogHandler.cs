@@ -24,7 +24,6 @@ namespace Grand.Web.Features.Handlers.Blogs
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IWebHelper _webHelper;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
@@ -38,7 +37,6 @@ namespace Grand.Web.Features.Handlers.Blogs
             IPictureService pictureService,
             ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
-            IWebHelper webHelper,
             ICacheManager cacheManager,
             BlogSettings blogSettings,
             MediaSettings mediaSettings)
@@ -49,7 +47,6 @@ namespace Grand.Web.Features.Handlers.Blogs
             _pictureService = pictureService;
             _localizationService = localizationService;
             _dateTimeHelper = dateTimeHelper;
-            _webHelper = webHelper;
             _cacheManager = cacheManager;
 
             _blogSettings = blogSettings;

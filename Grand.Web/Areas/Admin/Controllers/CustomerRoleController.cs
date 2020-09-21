@@ -12,6 +12,7 @@ using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,9 +22,13 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class CustomerRoleController : BaseAdminController
     {
         #region Fields
+
         private readonly ICustomerRoleViewModelService _customerRoleViewModelService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+        private readonly IWorkContext _workContext;
+
         #endregion
 
         #region Constructors
@@ -31,11 +36,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         public CustomerRoleController(
             ICustomerRoleViewModelService customerRoleViewModelService,
             ICustomerService customerService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            IWorkContext workContext)
         {
             _customerRoleViewModelService = customerRoleViewModelService;
             _customerService = customerService;
             _localizationService = localizationService;
+            _permissionService = permissionService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -46,6 +55,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
@@ -61,12 +71,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public IActionResult Create()
         {
             var model = _customerRoleViewModelService.PrepareCustomerRoleModel();
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(CustomerRoleModel model, bool continueEditing)
         {
@@ -80,6 +92,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var customerRole = await _customerService.GetCustomerRoleById(id);
@@ -91,6 +104,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(CustomerRoleModel model, bool continueEditing)
         {
@@ -124,6 +138,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -153,6 +168,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Products
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> Products(string customerRoleId, DataSourceRequest command)
         {
@@ -164,6 +180,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductDelete(string id)
         {
@@ -178,6 +195,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductUpdate(CustomerRoleProductModel model)
         {
@@ -193,12 +211,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAddPopup(string customerRoleId)
         {
             var model = await _customerRoleViewModelService.PrepareProductModel(customerRoleId);
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, CustomerRoleProductModel.AddProductModel model)
         {
@@ -210,6 +230,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         [FormValueRequired("save")]
         public async Task<IActionResult> ProductAddPopup(CustomerRoleProductModel.AddProductModel model)
@@ -223,6 +244,69 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.RefreshPage = true;
             return View(model);
         }
+        #endregion
+
+        #region Acl
+
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
+        [HttpPost]
+        public async Task<IActionResult> Acl(string customerRoleId)
+        {
+            var permissionRecords = await _permissionService.GetAllPermissionRecords();
+            var model = new List<CustomerRolePermissionModel>();
+
+            foreach (var pr in permissionRecords)
+            {
+                model.Add(new CustomerRolePermissionModel {
+                    Id = pr.Id,
+                    Name = pr.GetLocalizedPermissionName(_localizationService, _workContext),
+                    SystemName = pr.SystemName,
+                    Actions = pr.Actions.ToList(),
+                    Access = pr.CustomerRoles.Contains(customerRoleId)
+                });
+            }
+
+            var gridModel = new DataSourceResult {
+                Data = model,
+                Total = model.Count()
+            };
+            return Json(gridModel);
+        }
+
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [HttpPost]
+        public async Task<IActionResult> AclUpdate(string customerRoleId, string id, bool access)
+        {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+                ModelState.AddModelError("", "You don't have permission to the update");
+
+            var cr = await _customerService.GetCustomerRoleById(customerRoleId);
+            if (cr == null)
+                throw new ArgumentException("No customer role found with the specified id");
+
+            var permissionRecord = await _permissionService.GetPermissionRecordById(id);
+            if (permissionRecord == null)
+                throw new ArgumentException("No permission found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                if (access)
+                {
+                    if (!permissionRecord.CustomerRoles.Contains(customerRoleId))
+                        permissionRecord.CustomerRoles.Add(customerRoleId);
+                }
+                else
+                    if (permissionRecord.CustomerRoles.Contains(customerRoleId))
+                    permissionRecord.CustomerRoles.Remove(customerRoleId);
+
+                await _permissionService.UpdatePermissionRecord(permissionRecord);
+
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
+        }
+
+
         #endregion
     }
 }

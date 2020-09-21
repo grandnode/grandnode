@@ -1,5 +1,5 @@
 ﻿using Grand.Domain.Common;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Web.Models.Checkout;

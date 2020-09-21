@@ -1,34 +1,35 @@
 ﻿@model IList<ManufacturerModel>
+@using Grand.Web.Models.Catalog
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Manufacturers").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Manufacturers").Text);
 }
-@using Grand.Web.Models.Catalog;
-    <div class="page manufacturer-list-page">
-        <h2 class="generalTitle">@T("Manufacturers.List")</h2>
-        <div class="manufacturerGrid text-center">
-            <div class="flex-grid form-row">
-                @foreach (var item in Model)
-                {
-                    <div class="col-md-4 col-6 mb-2">
-                        <div class="card p-0 border-0">
-                            <div class="list-picture">
-                                <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                                    <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+<div class="page manufacturer-list-page">
+    <h2 class="generalTitle">@T("Manufacturers.List")</h2>
+    <div class="manufacturerGrid text-center">
+        <div class="flex-grid form-row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 col-6 mb-2">
+                    <div class="card p-0 border-0">
+                        <div class="list-picture">
+                            <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                            </a>
+                        </div>
+                        <div class="list-title mt-3">
+                            <h3 class="h6 card-title m-0 p-0">
+                                <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })">
+                                    @item.Name
                                 </a>
-                            </div>
-                            <div class="list-title mt-3">
-                                <h3 class="h6 card-title m-0 p-0">
-                                    <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })">
-                                        @item.Name
-                                    </a>
-                                </h3>
-                            </div>
+                            </h3>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
         </div>
     </div>
+</div>

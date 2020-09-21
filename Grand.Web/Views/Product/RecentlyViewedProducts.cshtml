@@ -1,21 +1,22 @@
 ﻿@model IList<ProductOverviewModel>
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(T("PageTitle.RecentlyViewedProducts").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.RecentlyViewedProducts").Text);
 }
 <div class="page recently-viewed-products-page col-12 px-0">
-        <h2 class="generalTitle">@T("Products.RecentlyViewedProducts")</h2>
-        @if (Model.Any())
-        {
-            <div class="form-row flex-grid">
-                @foreach (var product in Model)
-                {
-                    <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
-                        <partial name="_ProductBox" model="product" />
-                    </div>
-                }
-            </div>
-        }
+    <h2 class="generalTitle">@T("Products.RecentlyViewedProducts")</h2>
+    @if (Model.Any())
+    {
+        <div class="form-row flex-grid">
+            @foreach (var product in Model)
+            {
+                <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
+                    <partial name="_ProductBox" model="product" />
+                </div>
+            }
+        </div>
+    }
 </div>

@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Polls
 {
-    public partial class PollModel : BaseGrandEntityModel
+    public partial class PollModel : BaseEntityModel
     {
         public PollModel()
         {
@@ -21,7 +21,7 @@ namespace Grand.Web.Models.Polls
 
     }
 
-    public partial class PollAnswerModel : BaseGrandEntityModel
+    public partial class PollAnswerModel : BaseEntityModel
     {
         public string Name { get; set; }
         public string PollId { get; set; }

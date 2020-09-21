@@ -1,8 +1,9 @@
 ﻿@model PrivateMessageIndexModel
-@{    
+@inject IPageHeadBuilder pagebuilder
+@{
     Layout = "_ColumnsOne";
-    
-    Html.AddTitleParts(T("PageTitle.PrivateMessages").Text);
+
+    pagebuilder.AddTitleParts(T("PageTitle.PrivateMessages").Text);
 }
 <div class="page private-messages private-messages-page">
     <h2 class="text-xs-center generalTitle">@T("PrivateMessages.PrivateMessages")</h2>

@@ -17,4 +17,193 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.Owner.hint">
     <Value>Allow to assign owner email account</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTags">
+    <Value>Order's tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderTags.Hint">
+    <Value>
+      Order's tags are keywords that this order can also be identified by.
+      Enter a comma separated list of the tags to be associated with this order.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags">
+    <Value>Order's tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.BackToList">
+    <Value>Back to tag list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.EditTagDetails">
+    <Value>Edit order's tag details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Fields.Name">
+    <Value>Tag name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Fields.Name.Hint">
+    <Value>The name of the order's tag.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.ProductTags.Fields.OrderCount">
+    <Value>Tagged orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Fields.OrderNumber">
+    <Value>Order's number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Info">
+    <Value>Order's tag info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderTags.Orders">
+    <Value>Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageOrderTags">
+    <Value>Admin area. Manage Order Tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.SaveOrderTags">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CancelOrderTags">
+    <Value>Cancel</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.SubAccounts">
+    <Value>Subaccounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccounts">
+    <Value>Subaccounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccounts.NotExists">
+    <Value>No subaccounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="account.fields.active">
+    <Value>Active account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccount.AddNew">
+    <Value>Add new account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.SubAccount.Edit">
+    <Value>Edit account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderTagId">
+    <Value>Order's tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MinOrderAmount">
+    <Value>Min order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MinOrderAmount.Hint">
+    <Value>Enter minimum order total amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MaxOrderAmount">
+    <Value>Max order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.MaxOrderAmount.Hint">
+    <Value>Enter maximum order total amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.MinMaxOrderTotalAmount">
+    <Value>Order total amount does not meet the requirements.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.Actions">
+    <Value>Actions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Acl.Fields.Access">
+    <Value>Access</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Acl.Fields.Actions">
+    <Value>Actions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Acl.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Acl.SaveBeforeEdit">
+    <Value>You need to save before you can edit access control list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.CustomRobotsTxt">
+    <Value>Custom Robots.txt </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.BottomDescription">
+    <Value>Bottom description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.BottomDescription.Hint">
+    <Value>Additional category description, which will be visible at the bottom of the page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.BottomDescription">
+    <Value>Bottom description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.BottomDescription.Hint">
+    <Value>Additional manufacturer description, which will be visible at the bottom of the page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StorePicture">
+    <Value>Open Graph/Twitter Store Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StorePicture.Hint">
+    <Value>Upload the picture of the store. It will be visible as a store preview when you will share your store on social media.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyPreference">
+    <Value>Privacy Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyPreference.Center">
+    <Value>Privacy Preference Center</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyPreference.Description">
+    <Value>Grandnode uses necessary cookies for the correct operation of the website. Other categories of cookies may be used to personalize your experience.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyPreference.System.Name">
+    <Value>Application cookies</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyPreference.System.FullDescription">
+    <Value>These cookies are necessary for the correct functioning of our website and allow the use of essential functionalities during your navigation. </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceHeaderText">
+    <Value>Invoice header text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceHeaderText.Hint">
+    <Value>Enter the text that will appear at the header of generated invoices.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterText">
+    <Value>Invoice footer text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterText.Hint">
+    <Value>Enter the text that will appear at the bottom of generated invoices.</Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Accept">
+    <Value>I accept cookies</Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Refuse">
+    <Value>I refuse cookies</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayPrivacyPreference">
+    <Value>Display Privacy Preference</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayPrivacyPreference.Hint">
+    <Value>Check this box if you want to display privacy preferences</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PremiumThemes">
+    <Value>Customize your store with one of a premium theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder">
+    <Value>Automatically cancel unpaid and pending orders after X days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder.Hint">
+    <Value>Enter the number of days after which the unpaid and pending orders will be canceled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DaysToCancelUnpaidOrder.Validator">
+    <Value>Days To Cancel Unpaid and pending Orders Must Be Greater Than Zero</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.generalcommon.premiumthemes">
+    <Value>Customize your store with one of our premium themes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Addresses">
+    <Value>Billing and Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Info">
+    <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Orders.DaysToCancelUnpaidOrder.Note">
+    <Value>Scheduled task responsible for automatically cancel unpaid and pending orders is disabled by default. Please enable it before use.</Value>
+  </LocaleResource>
+<LocaleResource Name="Admin.Configuration.Settings.Orders.MinOrderSubtotalAmount.Note">
+  <Value>Min/Max Order subtotal amount can be configured also on a specified customer role.</Value>
+</LocaleResource>
 </Language>

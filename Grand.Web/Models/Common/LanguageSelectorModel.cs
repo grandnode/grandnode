@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class LanguageSelectorModel : BaseGrandModel
+    public partial class LanguageSelectorModel : BaseModel
     {
         public LanguageSelectorModel()
         {

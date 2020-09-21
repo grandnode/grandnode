@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Api.Models;
 
 namespace Grand.Api.DTOs.Catalog
 {

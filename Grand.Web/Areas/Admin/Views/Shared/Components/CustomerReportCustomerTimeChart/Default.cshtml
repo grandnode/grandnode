@@ -6,6 +6,9 @@
 <script>
     $(document).ready(function () {
         initReportCustomerTimeChart(true);
+        $("#DarkLight").change(function () {
+            initReportCustomerTimeChart(true);
+        });
     });
 
 
@@ -51,31 +54,69 @@
                 var ctx = document.getElementById('canvasReportCustomerTimeChart').getContext('2d');
 
                 if (first) {
-                    window.myReportCustomerTimeChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: chartData,
-                        options: {
-                            responsive: true,
-                            title: {
-                                display: true,
-                                text: 'Number of registered customers in time'
-                            },
-                            tooltips: {
-                                mode: 'index',
-                                intersect: true
-                            }, scales: {
-                                yAxes: [{
-                                    id: 'L',
-                                    type: 'linear',
-                                    position: 'left',
-                                    ticks: {
-                                        min: 0,
-                                        stepSize: 1
-                                    },
-                                }]
+                    if ($('#DarkLight').is(':checked')) {
+                        window.myReportCustomerTimeChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: chartData,
+                            options: {
+                                responsive: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of registered customers in time',
+                                    fontColor: 'white'
+                                },
+                                legend: {
+                                    labels: {
+                                        fontColor: 'white'
+                                    }
+                                },
+                                tooltips: {
+                                    mode: 'index',
+                                    intersect: true
+                                }, scales: {
+                                    yAxes: [{
+                                        id: 'L',
+                                        type: 'linear',
+                                        position: 'left',
+                                        gridLines: {
+                                            color: 'rgb(255,255,255)'
+                                        },
+                                        ticks: {
+                                            min: 0,
+                                            stepSize: 1,
+                                            fontColor: 'rgb(255,255,255)'
+                                        },
+                                    }]
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        window.myReportCustomerTimeChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: chartData,
+                            options: {
+                                responsive: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of registered customers in time'
+                                },
+                                tooltips: {
+                                    mode: 'index',
+                                    intersect: true
+                                }, scales: {
+                                    yAxes: [{
+                                        id: 'L',
+                                        type: 'linear',
+                                        position: 'left',
+                                        ticks: {
+                                            min: 0,
+                                            stepSize: 1
+                                        },
+                                    }]
+                                }
+                            }
+                        });
+                    }
                 } else {
                     window.myReportCustomerTimeChart.data = chartData;
                     window.myReportCustomerTimeChart.update();

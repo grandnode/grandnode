@@ -194,14 +194,15 @@ namespace Grand.Services.Orders
         /// <param name="endTimeUtc">End date</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
-        /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
+        /// <param name="tagid">Tag ident.</param>
         /// <returns>Result</returns>
         public virtual async Task<OrderAverageReportLine> GetOrderAverageReportLine(string storeId = "",
             string vendorId = "", string billingCountryId = "", 
             string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, string billingLastName = "", bool ignoreCancelledOrders = false)
+            string billingEmail = null, string billingLastName = "", bool ignoreCancelledOrders = false, 
+            string tagid = null)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -262,6 +263,10 @@ namespace Grand.Services.Orders
 
             if (!String.IsNullOrEmpty(billingLastName))
                 filter = filter & builder.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
+
+            //tag filtering 
+            if (!string.IsNullOrEmpty(tagid))
+                filter = filter & builder.Where(o => o.OrderTags.Any(y => y == tagid));
 
             var query = await _orderRepository.Collection
                     .Aggregate()
@@ -580,13 +585,13 @@ namespace Grand.Services.Orders
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
-        /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
+        /// <param name="tagid">Tag ident.</param>
         /// <returns>Result</returns>
         public virtual async Task<decimal> ProfitReport(string storeId = "", string vendorId = "",
             string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, string billingLastName = "")
+            string billingEmail = null, string billingLastName = "", string tagid = null)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -633,6 +638,10 @@ namespace Grand.Services.Orders
             if (!String.IsNullOrEmpty(billingLastName))
                 query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
 
+            //tag filtering 
+            if (!string.IsNullOrEmpty(tagid))
+                query = query.Where(o => o.OrderTags.Any(y => y == tagid));
+
             var query2 = from o in query
                     from p in o.OrderItems
                     select p;
@@ -651,7 +660,8 @@ namespace Grand.Services.Orders
                 ss: ss,
                 startTimeUtc: startTimeUtc,
                 endTimeUtc: endTimeUtc,
-                billingEmail: billingEmail
+                billingEmail: billingEmail,
+                tagid: tagid
                 );
             var profit = Convert.ToDecimal(reportSummary.SumOrders - reportSummary.SumShippingExclTax - reportSummary.SumTax - productCost);
             return profit;

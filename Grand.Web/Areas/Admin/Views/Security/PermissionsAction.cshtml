@@ -1,0 +1,51 @@
+﻿@model PermissionActionModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    //page title
+    ViewBag.Title = T("Admin.Configuration.ACL").Text;
+}
+@if (ViewBag.ClosePage == true)
+{
+    <script>
+        window.close();
+    </script>
+}
+<form asp-area="Admin" asp-controller="Security" asp-action="PermissionsAction" method="post">
+    <input asp-for="SystemName" type="hidden" />
+    <input asp-for="CustomerRoleId" type="hidden" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-user-secret"></i>
+                        @T("Admin.Configuration.ACL.Actions") (@Model.PermissionName - @Model.CustomerRoleName)
+                    </div>
+
+                </div>
+                <div class="x_content form">
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="mt-checkbox-list">
+                                        @foreach (var action in Model.AvailableActions)
+                                        {
+                                            <label class="mt-checkbox mt-checkbox-outline control control-checkbox control control-checkbox">
+                                                <input type="checkbox" name="SelectedActions" value="@action" checked="@(!Model.DeniedActions.Contains(action))" />@action
+                                                <div class="control__indicator"></div>
+                                            </label>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

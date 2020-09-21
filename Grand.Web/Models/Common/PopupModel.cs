@@ -1,9 +1,9 @@
 ﻿using Grand.Domain.Messages;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.Models;
 
 namespace Grand.Web.Models.Common
 {
-    public class PopupModel : BaseGrandEntityModel
+    public class PopupModel : BaseEntityModel
     {
         public string Name { get; set; }
         public string Body { get; set; }

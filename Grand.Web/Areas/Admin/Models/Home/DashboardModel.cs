@@ -1,14 +1,14 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Home
 {
-    public partial class DashboardModel : BaseGrandModel
+    public partial class DashboardModel : BaseModel
     {
         public bool IsLoggedInAsVendor { get; set; }
         public bool HideReportGA { get; set; }
 
     }
-    public partial class DashboardActivityModel : BaseGrandModel
+    public partial class DashboardActivityModel : BaseModel
     {
         public int OrdersPending { get; set; }
         public int AbandonedCarts { get; set; }

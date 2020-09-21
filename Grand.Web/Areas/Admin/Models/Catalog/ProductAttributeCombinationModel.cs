@@ -1,12 +1,12 @@
 ﻿using Grand.Domain.Catalog;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class ProductAttributeCombinationModel : BaseGrandModel
+    public partial class ProductAttributeCombinationModel : BaseModel
     {
         public string Id { get; set; }
 
@@ -62,7 +62,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         #region Nested classes
 
-        public partial class ProductAttributeModel : BaseGrandEntityModel
+        public partial class ProductAttributeModel : BaseEntityModel
         {
             public ProductAttributeModel()
             {
@@ -77,14 +77,14 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public IList<ProductAttributeValueModel> Values { get; set; }
         }
 
-        public partial class ProductAttributeValueModel : BaseGrandEntityModel
+        public partial class ProductAttributeValueModel : BaseEntityModel
         {
             public string Name { get; set; }
 
             public bool IsPreSelected { get; set; }
         }
 
-        public partial class WarehouseInventoryModel : BaseGrandEntityModel
+        public partial class WarehouseInventoryModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombination.WarehouseInventory.Fields.Warehouse")]
             public string WarehouseId { get; set; }

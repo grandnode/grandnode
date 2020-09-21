@@ -1,17 +1,18 @@
 ﻿@model ProductsByTagModel
 @inject SeoSettings seoSettings
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
+    pagebuilder.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
 
     //canonical URL
     var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var productsByTagUrl = Url.RouteUrl("ProductsByTag", new { productTagId = Model.Id, SeName = Model.TagSeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(productsByTagUrl);
+        pagebuilder.AddCanonicalUrlParts(productsByTagUrl);
     }
 }
 @using Grand.Domain.Seo
@@ -49,15 +50,7 @@
             </div>
         }
     }
-    @{
-        var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-    }
-    @if (!pager.IsEmpty())
-    {
-        <div class="pager">
-            @pager
-        </div>
-    }
+    <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
 </div>
 @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_bottom", additionalData = Model.Id })
 

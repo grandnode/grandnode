@@ -33,6 +33,11 @@ namespace Grand.Domain.Stores
         public bool DisplayEuCookieLawWarning { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether we should display privacy preference
+        /// </summary>
+        public bool DisplayPrivacyPreference { get; set; }
+
+        /// <summary>
         /// Gets or sets a value of Facebook page URL of the site
         /// </summary>
         public string FacebookLink { get; set; }

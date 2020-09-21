@@ -1,10 +1,10 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.Forums
 {
-    public partial class ForumGroupModel : BaseGrandEntityModel
+    public partial class ForumGroupModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.Name")]
 

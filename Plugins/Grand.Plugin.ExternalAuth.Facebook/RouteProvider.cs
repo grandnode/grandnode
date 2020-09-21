@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Routing;
+﻿using Grand.Core.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -13,10 +13,8 @@ namespace Grand.Plugin.ExternalAuth.Facebook
                  new { controller = "FacebookAuthentication", action = "SignInFailed" }
             );
         }
-        public int Priority
-        {
-            get
-            {
+        public int Priority {
+            get {
                 return 10;
             }
         }

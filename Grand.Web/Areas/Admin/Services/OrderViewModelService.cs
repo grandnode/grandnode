@@ -83,6 +83,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
         private readonly AddressSettings _addressSettings;
+        private readonly IOrderTagService _orderTagService;
         #endregion
 
         #region Ctor
@@ -125,7 +126,8 @@ namespace Grand.Web.Areas.Admin.Services
             IServiceProvider serviceProvider,
             CurrencySettings currencySettings,
             TaxSettings taxSettings,
-            AddressSettings addressSettings)
+            AddressSettings addressSettings,
+            IOrderTagService orderTagService)
         {
             _orderService = orderService;
             _orderReportService = orderReportService;
@@ -166,15 +168,32 @@ namespace Grand.Web.Areas.Admin.Services
             _taxSettings = taxSettings;
             _addressSettings = addressSettings;
             _customerService = customerService;
+            _orderTagService = orderTagService;
         }
 
         #endregion
 
+        private IList<string> ParseOrderTagsToList(string orderTags)
+        {
+            var result = new List<string>();
+            if (!string.IsNullOrWhiteSpace(orderTags))
+            {
+                var values = orderTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var val1 in values)
+                {
+                    if (!string.IsNullOrEmpty(val1.Trim()))
+                        result.Add(val1.Trim());
+                }
+            }
+            return result;
+        }
+
+
         public virtual async Task<OrderListModel> PrepareOrderListModel(
-            int? orderStatusId = null, 
-            int? paymentStatusId = null, 
-            int? shippingStatusId = null, 
-            DateTime? startDate = null, 
+            int? orderStatusId = null,
+            int? paymentStatusId = null,
+            int? shippingStatusId = null,
+            DateTime? startDate = null,
             string storeId = null,
             string code = null)
         {
@@ -200,6 +219,13 @@ namespace Grand.Web.Areas.Admin.Services
                 var item = model.AvailablePaymentStatuses.FirstOrDefault(x => x.Value == paymentStatusId.Value.ToString());
                 if (item != null)
                     item.Selected = true;
+            }
+
+            //order's tags
+            model.AvailableOrderTags.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var s in (await _orderTagService.GetAllOrderTags()))
+            {
+                model.AvailableOrderTags.Add(new SelectListItem { Text = s.Name, Value = s.Id });
             }
 
             //shipping statuses
@@ -262,6 +288,7 @@ namespace Grand.Web.Areas.Admin.Services
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
+
             var filterByProductId = "";
             var product = await _productService.GetProductById(model.ProductId);
             if (product != null && _workContext.HasAccessToProduct(product))
@@ -284,7 +311,8 @@ namespace Grand.Web.Areas.Admin.Services
                 orderGuid: model.OrderGuid,
                 orderCode: model.GoDirectlyToNumber,
                 pageIndex: pageIndex - 1,
-                pageSize: pageSize);
+                pageSize: pageSize,
+                orderTagId: model.OrderTag);
 
             //summary report
             //currently we do not support productId and warehouseId parameters for this report
@@ -300,7 +328,8 @@ namespace Grand.Web.Areas.Admin.Services
                 endTimeUtc: endDateValue,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
-                billingCountryId: model.BillingCountryId
+                billingCountryId: model.BillingCountryId,
+                tagid: model.OrderTag
                 );
             var profit = await _orderReportService.ProfitReport(
                 storeId: model.StoreId,
@@ -313,7 +342,8 @@ namespace Grand.Web.Areas.Admin.Services
                 endTimeUtc: endDateValue,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
-                billingCountryId: model.BillingCountryId
+                billingCountryId: model.BillingCountryId,
+                tagid: model.OrderTag
                 );
             var primaryStoreCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             if (primaryStoreCurrency == null)
@@ -380,7 +410,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.GenericAttributes = order.GenericAttributes;
 
             var customer = await _customerService.GetCustomerById(order.CustomerId);
-            if(customer != null)
+            if (customer != null)
                 model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
 
             model.CustomerIp = order.CustomerIp;
@@ -401,6 +431,19 @@ namespace Grand.Web.Areas.Admin.Services
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff();
             //custom values
             model.CustomValues = order.DeserializeCustomValues();
+
+            //order's tags
+            if (order != null && order.OrderTags.Any())
+            {
+                var tagsName = new List<string>();
+                foreach (var item in order.OrderTags)
+                {
+                    var tag = await _orderTagService.GetOrderTagById(item);
+                    if (tag != null)
+                        tagsName.Add(tag.Name);
+                }
+                model.OrderTags = string.Join(",", tagsName);
+            }
 
             #region Order totals
 
@@ -1321,5 +1364,62 @@ namespace Grand.Web.Areas.Admin.Services
 
             return orders;
         }
+
+        /// <summary>
+        /// Save order's tag by id
+        /// </summary>
+        /// <param name="order">Order identifier</param>
+        /// <param name="orderTags">Order's tag identifier</param>
+        /// <returns>Order's tag</returns>
+        public virtual async Task SaveOrderTags(Order order, string orderTags)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            //order's tags
+            var existingOrderTags = new List<string>();
+            foreach (var item in order.OrderTags)
+            {
+                var tag = await _orderTagService.GetOrderTagById(item);
+                if (tag != null)
+                    existingOrderTags.Add(tag.Name);
+            }
+            var newOrderTags = ParseOrderTagsToList(orderTags);
+
+            // compare 
+            var orderTagsToRemove = existingOrderTags.Except(newOrderTags);
+
+            foreach (var orderTag in orderTagsToRemove)
+            {
+                var ot = await _orderTagService.GetOrderTagByName(orderTag);
+                if (ot != null)
+                {
+                    await _orderTagService.DetachOrderTag(ot.Id, order.Id);
+                }
+            }
+
+            var allOrderTags = await _orderTagService.GetAllOrderTags();
+            foreach (var newOrderTag in newOrderTags)
+            {
+                OrderTag orderTag;
+                var orderTag2 = allOrderTags.ToList().Find(o => o.Name == newOrderTag);
+
+                if (orderTag2 == null)
+                {
+                    orderTag = new OrderTag { Name = newOrderTag, Count = 0 };
+                    await _orderTagService.InsertOrderTag(orderTag);
+                }
+                else
+                {
+                    orderTag = orderTag2;
+                }
+
+                if (!order.OrderTagExists(orderTag))
+                {
+                    await _orderTagService.AttachOrderTag(orderTag.Id, order.Id);
+                }
+            }
+        }
+
     }
 }

@@ -123,6 +123,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IRepository<PickupPoint> _pickupPointsRepository;
         private readonly IRepository<PermissionRecord> _permissionRepository;
+        private readonly IRepository<PermissionAction> _permissionAction;
         private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
@@ -135,11 +136,12 @@ namespace Grand.Services.Installation
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProductRepository;
         private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
         private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
+        private readonly IRepository<OrderTag> _orderTagRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IServiceProvider _serviceProvider;
-
+        
         #endregion
 
         #region Ctor
@@ -214,6 +216,7 @@ namespace Grand.Services.Installation
             _warehouseRepository = serviceProvider.GetRequiredService<IRepository<Warehouse>>();
             _pickupPointsRepository = serviceProvider.GetRequiredService<IRepository<PickupPoint>>();
             _permissionRepository = serviceProvider.GetRequiredService<IRepository<PermissionRecord>>();
+            _permissionAction = serviceProvider.GetRequiredService<IRepository<PermissionAction>>();
             _vendorRepository = serviceProvider.GetRequiredService<IRepository<Vendor>>();
             _externalAuthenticationRepository = serviceProvider.GetRequiredService<IRepository<ExternalAuthenticationRecord>>();
             _discountusageRepository = serviceProvider.GetRequiredService<IRepository<DiscountUsageHistory>>();
@@ -227,6 +230,7 @@ namespace Grand.Services.Installation
             _knowledgebaseArticleRepository = serviceProvider.GetRequiredService<IRepository<KnowledgebaseArticle>>();
             _knowledgebaseCategoryRepository = serviceProvider.GetRequiredService<IRepository<KnowledgebaseCategory>>();
             _popupArchive = serviceProvider.GetRequiredService<IRepository<PopupArchive>>();
+            _orderTagRepository = serviceProvider.GetRequiredService<IRepository<OrderTag>>();
             _genericAttributeService = serviceProvider.GetRequiredService<IGenericAttributeService>();
             _webHelper = serviceProvider.GetRequiredService<IWebHelper>();
             _hostingEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
@@ -246,7 +250,7 @@ namespace Grand.Services.Installation
         protected virtual async Task InstallVersion()
         {
             var version = new GrandNodeVersion {
-                DataBaseVersion = GrandVersion.CurrentVersion
+                DataBaseVersion = GrandVersion.SupportedDBVersion
             };
             await _versionRepository.InsertAsync(version);
         }
@@ -4815,11 +4819,8 @@ namespace Grand.Services.Installation
 
             await _settingService.SaveSetting(new PdfSettings {
                 LogoPictureId = "",
-                LetterPageSizeEnabled = false,
-                RenderOrderNotes = true,
-                FontFileName = "FreeSerif.ttf",
-                InvoiceFooterTextColumn1 = null,
-                InvoiceFooterTextColumn2 = null,
+                InvoiceHeaderText = null,
+                InvoiceFooterText = null,
             });
 
             await _settingService.SaveSetting(new CommonSettings {
@@ -4832,11 +4833,8 @@ namespace Grand.Services.Installation
                 SitemapIncludeProducts = false,
                 DisplayJavaScriptDisabledWarning = false,
                 UseFullTextSearch = false,
-                FullTextMode = FulltextSearchMode.ExactMatch,
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
-                RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge",
                 DeleteGuestTaskOlderThanMinutes = 1440,
                 PopupForTermsOfServiceLinks = true,
                 AllowToSelectStore = false,
@@ -5102,6 +5100,7 @@ namespace Grand.Services.Installation
                 AllowUsersToExportData = false,
                 HideReviewsTab = false,
                 HideCoursesTab = true,
+                HideSubAccountsTab = true,
                 TwoFactorAuthenticationEnabled = false,
             });
 
@@ -5217,7 +5216,9 @@ namespace Grand.Services.Installation
                 ReturnRequests_PickupDateRequired = false,
                 NumberOfDaysReturnRequestAvailable = 365,
                 MinimumOrderPlacementInterval = 30,
-                DeactivateGiftCardsAfterDeletingOrder = false,
+                DeactivateGiftCardsAfterDeletingOrder = true,
+                DeactivateGiftCardsAfterCancelOrder = true,
+                GiftCards_Activated_OrderStatusId = 30,
                 CompleteOrderWhenDelivered = true,
                 UserCanCancelUnpaidOrder = false,
                 LengthCode = 8
@@ -5225,7 +5226,7 @@ namespace Grand.Services.Installation
 
             await _settingService.SaveSetting(new ShippingSettings {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
-                ShipToSameAddress = false,
+                ShipToSameAddress = true,
                 AllowPickUpInStore = true,
                 UseWarehouseLocation = false,
                 NotifyCustomerAboutShippingFromMultipleLocations = false,
@@ -5243,9 +5244,9 @@ namespace Grand.Services.Installation
             await _settingService.SaveSetting(new PaymentSettings {
                 ActivePaymentMethodSystemNames = new List<string>
                     {
-                        "Payments.CheckMoneyOrder",
                         "Payments.CashOnDelivery",
-                        "Payments.PayInStore",
+                        "Payments.PayPalStandard",
+                        "Payments.BrainTree",
                     },
                 AllowRePostingPayments = true,
                 BypassPaymentMethodSelectionIfOnlyOne = true,
@@ -5890,6 +5891,32 @@ namespace Grand.Services.Installation
                 });
                 await _categoryRepository.UpdateAsync(category);
             }
+        }
+
+        // Install order's tags
+        protected virtual async Task InstallOrderTags()
+        {
+            var coolTag = new OrderTag {
+                Name = "cool",
+                Count = 0
+
+            };
+             await _orderTagRepository.InsertAsync(coolTag);
+
+            var newTag = new OrderTag {
+                Name = "new",
+                Count = 0
+
+            };
+            await _orderTagRepository.InsertAsync(newTag);
+
+            var oldTag = new OrderTag {
+                Name = "old",
+                Count = 0
+
+            };
+            await _orderTagRepository.InsertAsync(oldTag);
+
         }
 
         protected virtual async Task InstallManufacturers()
@@ -10424,6 +10451,14 @@ namespace Grand.Services.Installation
                     StopOnError = false,
                     TimeInterval = 60
                 },
+                new ScheduleTask
+                {
+                    ScheduleTaskName = "Cancel unpaid and pending orders",
+                    Type = "Grand.Services.Tasks.CancelOrderScheduledTask, Grand.Services",
+                    Enabled = false,
+                    StopOnError = false,
+                    TimeInterval = 1440
+                },
             };
             await _scheduleTaskRepository.InsertAsync(tasks);
         }
@@ -10779,6 +10814,7 @@ namespace Grand.Services.Installation
 
             //permision
             await _permissionRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<PermissionRecord>((Builders<PermissionRecord>.IndexKeys.Ascending(x => x.SystemName)), new CreateIndexOptions() { Name = "SystemName", Unique = true }));
+            await _permissionAction.Collection.Indexes.CreateOneAsync(new CreateIndexModel<PermissionAction>((Builders<PermissionAction>.IndexKeys.Ascending(x => x.SystemName)), new CreateIndexOptions() { Name = "SystemName", Unique = false }));
 
             //externalauth
             await _externalAuthenticationRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ExternalAuthenticationRecord>((Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.CustomerId)), new CreateIndexOptions() { Name = "CustomerId" }));
@@ -10815,7 +10851,12 @@ namespace Grand.Services.Installation
                 options.Collation = collation;
                 var dataSettingsManager = new DataSettingsManager();
                 var connectionString = dataSettingsManager.LoadSettings().DataConnectionString;
-                var mongoDBContext = new MongoDBContext(connectionString);
+
+                var mongourl = new MongoUrl(connectionString);
+                var databaseName = mongourl.DatabaseName;
+                var mongodb = new MongoClient(connectionString).GetDatabase(databaseName);
+                var mongoDBContext = new MongoDBContext(mongodb);
+
                 var typeFinder = _serviceProvider.GetRequiredService<ITypeFinder>();
                 var q = typeFinder.GetAssemblies().FirstOrDefault(x => x.GetName().Name == "Grand.Core");
                 foreach (var item in q.GetTypes().Where(x => x.Namespace != null && x.Namespace.StartsWith("Grand.Domain")))
@@ -10884,6 +10925,7 @@ namespace Grand.Services.Installation
                 await InstallPickupPoints();
                 await InstallVendors();
                 await InstallAffiliates();
+                await InstallOrderTags();
             }
         }
 

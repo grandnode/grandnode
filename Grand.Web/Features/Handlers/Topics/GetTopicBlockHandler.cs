@@ -43,7 +43,7 @@ namespace Grand.Web.Features.Handlers.Topics
             if (!_aclService.Authorize(topic))
                 return null;
 
-            return topic.ToModel(_workContext.WorkingLanguage);
+            return topic.ToModel(_workContext.WorkingLanguage, request.Password);
 
         }
     }

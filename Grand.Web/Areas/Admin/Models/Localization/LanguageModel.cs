@@ -1,12 +1,13 @@
 ﻿using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Localization
 {
-    public partial class LanguageModel : BaseGrandEntityModel, IStoreMappingModel
+    public partial class LanguageModel : BaseEntityModel, IStoreMappingModel
     {
         public LanguageModel()
         {

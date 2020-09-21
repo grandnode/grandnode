@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Grand.Core.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Framework.Mvc.Models
 {
-    public partial class DatePickerDropDownsModel : BaseGrandEntityModel
+    public partial class DatePickerDropDownsModel : BaseEntityModel
     {
         public DatePickerDropDownsModel()
         {

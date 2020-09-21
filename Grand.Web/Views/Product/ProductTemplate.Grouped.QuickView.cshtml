@@ -128,7 +128,7 @@
                             {
                                 <div class="col-12 associatedItem mb-3" data-productid="@variant.Id">
                                     <div class="flex-sm-row row">
-                                        @if (!String.IsNullOrWhiteSpace(variant.DefaultPictureModel.ImageUrl))
+                                        @if (!string.IsNullOrWhiteSpace(variant.DefaultPictureModel.ImageUrl))
                                         {
                                             <div class="col-sm-3 col-12">
                                                 <img class="card-img-top img-fluid" alt="@variant.DefaultPictureModel.AlternateText" src="@variant.DefaultPictureModel.ImageUrl"
@@ -136,20 +136,20 @@
                                             </div>
                                         }
                                     <div class="col-sm-9 col-12 px-sm-2">
-                                        @if (!String.IsNullOrWhiteSpace(variant.Name))
+                                        @if (!string.IsNullOrWhiteSpace(variant.Name))
                                         {
                                             <div class="variant-name">
                                                 @variant.Name
                                             </div>
                                         }
-                                        @if (!String.IsNullOrWhiteSpace(variant.ShortDescription))
+                                        @if (!string.IsNullOrWhiteSpace(variant.ShortDescription))
                                         {
                                             <div class="variant-description">
                                                 @Html.Raw(variant.ShortDescription)
                                             </div>
                                         }
                                         <!--availability-->
-                                        @if (!String.IsNullOrWhiteSpace(variant.StockAvailability) || variant.DisplayBackInStockSubscription)
+                                        @if (!string.IsNullOrWhiteSpace(variant.StockAvailability) || variant.DisplayBackInStockSubscription)
                                         {
                                             <partial name="_Availability" model="variant" />
                                         }
@@ -168,7 +168,7 @@
                                         }
                                         <!--attributes-->
                                         @{
-                                            if (Model.ProductAttributes.Any())
+                                            if (variant.ProductAttributes.Any())
                                             {
                                                 var dataDictAttributes = new ViewDataDictionary(ViewData);
                                                 dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);

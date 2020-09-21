@@ -35,6 +35,7 @@ namespace Grand.Web.Extensions
                 ParentCategoryId = entity.ParentCategoryId,
                 Name = entity.GetLocalized(x => x.Name, language.Id),
                 Description = entity.GetLocalized(x => x.Description, language.Id),
+                BottomDescription = entity.GetLocalized(x => x.BottomDescription, language.Id),
                 MetaKeywords = entity.GetLocalized(x => x.MetaKeywords, language.Id),
                 MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
@@ -53,11 +54,11 @@ namespace Grand.Web.Extensions
             if (entity == null)
                 return null;
 
-            var model = new ManufacturerModel
-            {
+            var model = new ManufacturerModel {
                 Id = entity.Id,
                 Name = entity.GetLocalized(x => x.Name, language.Id),
                 Description = entity.GetLocalized(x => x.Description, language.Id),
+                BottomDescription = entity.GetLocalized(x => x.BottomDescription, language.Id),
                 MetaKeywords = entity.GetLocalized(x => x.MetaKeywords, language.Id),
                 MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
@@ -99,7 +100,7 @@ namespace Grand.Web.Extensions
                 Name = entity.GetLocalized(x => x.Name, language.Id)
             };
             model.AlreadyVoted = entity.
-                PollAnswers.Any(x=>x.PollVotingRecords.Any(z => z.CustomerId == customer.Id));
+                PollAnswers.Any(x => x.PollVotingRecords.Any(z => z.CustomerId == customer.Id));
 
             var answers = entity.PollAnswers.OrderBy(x => x.DisplayOrder);
             foreach (var answer in answers)
@@ -118,9 +119,9 @@ namespace Grand.Web.Extensions
             return model;
 
         }
-        
+
         //topic
-        public static TopicModel ToModel(this Topic entity, Language language)
+        public static TopicModel ToModel(this Topic entity, Language language, string password = "")
         {
             var model = new TopicModel {
                 Id = entity.Id,
@@ -128,8 +129,8 @@ namespace Grand.Web.Extensions
                 IncludeInSitemap = entity.IncludeInSitemap,
                 IsPasswordProtected = entity.IsPasswordProtected,
                 Password = entity.Password,
-                Title = entity.IsPasswordProtected ? "" : entity.GetLocalized(x => x.Title, language.Id),
-                Body = entity.IsPasswordProtected ? "" : entity.GetLocalized(x => x.Body, language.Id),
+                Title = entity.IsPasswordProtected && !(entity.Password == password) ? "" : entity.GetLocalized(x => x.Title, language.Id),
+                Body = entity.IsPasswordProtected && !(entity.Password == password) ? "" : entity.GetLocalized(x => x.Body, language.Id),
                 MetaKeywords = entity.GetLocalized(x => x.MetaKeywords, language.Id),
                 MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
@@ -208,7 +209,7 @@ namespace Grand.Web.Extensions
             destination.ZipPostalCode = model.ZipPostalCode;
             destination.PhoneNumber = model.PhoneNumber;
             destination.FaxNumber = model.FaxNumber;
-            
+
             return destination;
         }
 

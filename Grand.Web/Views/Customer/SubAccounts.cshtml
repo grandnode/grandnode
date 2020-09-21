@@ -1,0 +1,85 @@
+﻿@model IList<SubAccountSimpleModel>
+@using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.SubAccounts").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.SubAccounts })
+}
+
+<div class="page account-page subaccounts-list-page pl-lg-3 pt-lg-0 pt-3">
+    @Html.AntiForgeryToken()
+    <button type="button" class="btn btn-info btn-sm add-address-button float-sm-right" onclick="location.href='@Url.RouteUrl("CustomerSubAccountAdd")'">
+        <i class="fa fa-plus" aria-hidden="true"></i> @T("Common.AddNew")
+    </button>
+    <h1 class="h2 generalTitle">@T("Account.SubAccounts")</h1>
+    @if (Model.Any())
+    {
+        <div class="col-12 px-0">
+            <div class="row account-list">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var account = Model[i];
+                    <div class="col-md-6 col-12 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h5><strong>@account.FirstName @account.LastName</strong></h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="account-item">
+                                    @account.Email
+                                </div>
+                                <div class="card-footer px-0 buttons text-xs-center btn-group btn-group-sm" role="group">
+                                    <input type="button" class="btn btn-secondary edit-subaccount-button" onclick="location.href='@(Url.RouteUrl("CustomerSubAccountEdit", new { id = account.Id }))'" value='@T("Common.Edit")' />
+                                    <input type="button" class="btn btn-danger delete-subaccount-button" onclick="deletecustomersubaccount('@(account.Id)')" value="@T("Common.Delete")" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <script asp-location="Footer">
+                function deletecustomersubaccount(accountId) {
+                    if (confirm('@T("Admin.Common.AreYouSure")')) {
+                        var postData = {
+                            Id: accountId
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: 'POST',
+                            url: '@(Url.RouteUrl("CustomerSubAccountDelete"))',
+                            data: postData,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.success) {
+                                    location.href = data.redirect;
+                                }
+                                else {
+                                    alert(error);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                alert('Failed to delete');
+                            }
+                        });
+                    }
+                }
+        </script>
+    }
+    else
+    {
+        <div class="no-data">
+            @T("Account.SubAccounts.NotExists")
+        </div>
+    }
+</div>

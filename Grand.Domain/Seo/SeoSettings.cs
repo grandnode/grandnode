@@ -72,6 +72,10 @@ namespace Grand.Domain.Seo
         /// </summary>
         public bool OpenGraphMetaTags { get; set; }
         /// <summary>
+        /// Gets or sets a picture identifier of the store picture. If 0, then the default one will be used
+        /// </summary>
+        public string StorePictureId { get; set; }
+        /// <summary>
         /// Slugs (sename) reserved for some other needs
         /// </summary>
         public List<string> ReservedUrlRecordSlugs { get; set; }

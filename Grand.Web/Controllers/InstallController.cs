@@ -210,18 +210,8 @@ namespace Grand.Web.Controllers
                         .ThenBy(x => x.PluginDescriptor.DisplayOrder)
                         .ToList();
 
-                    var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ?
-                        new List<string>() :
-                        _config.PluginsIgnoredDuringInstallation
-                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => x.Trim())
-                        .ToList();
-
                     foreach (var plugin in plugins)
                     {
-                        if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))
-                            continue;
-
                         try
                         {
                             await plugin.Install();

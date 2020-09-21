@@ -10,7 +10,6 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.PushNotifications;
 using Grand.Services.Security;
-using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Models.PushNotifications;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -62,6 +61,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         [HttpPost]
         public async Task<IActionResult> Send(PushModel model)
         {
@@ -89,6 +89,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Send");
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> Messages()
         {
             var model = new MessagesModel
@@ -100,6 +101,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> Receivers()
         {
             var model = new ReceiversModel
@@ -111,6 +113,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> PushMessagesList(DataSourceRequest command)
         {
@@ -131,6 +134,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> PushReceiversList(DataSourceRequest command)
         {
@@ -172,6 +176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> DeleteReceiver(string id)
         {

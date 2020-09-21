@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class ProductsByTagModel : BaseGrandEntityModel
+    public partial class ProductsByTagModel : BaseEntityModel
     {
         public ProductsByTagModel()
         {

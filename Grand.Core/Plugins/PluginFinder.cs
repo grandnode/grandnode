@@ -33,8 +33,7 @@ namespace Grand.Core.Plugins
             if (!_arePluginsLoaded)
             {
                 var foundPlugins = PluginManager.ReferencedPlugins.ToList();
-                foundPlugins.Sort();
-                _plugins = foundPlugins.ToList();
+                _plugins = foundPlugins.OrderBy(x => x.DisplayOrder).ToList();
 
                 _arePluginsLoaded = true;
             }
@@ -176,7 +175,7 @@ namespace Grand.Core.Plugins
         public virtual PluginDescriptor GetPluginDescriptorBySystemName(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
         {
             return GetPluginDescriptors(loadMode)
-                .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(p => p.SystemName.Equals(systemName, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -190,7 +189,7 @@ namespace Grand.Core.Plugins
             where T : class, IPlugin
         {
             return GetPluginDescriptors<T>(loadMode)
-                .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(p => p.SystemName.Equals(systemName, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>

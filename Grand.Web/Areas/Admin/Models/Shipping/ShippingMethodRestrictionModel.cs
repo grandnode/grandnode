@@ -1,10 +1,11 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Directory;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Shipping
 {
-    public partial class ShippingMethodRestrictionModel : BaseGrandModel
+    public partial class ShippingMethodRestrictionModel : BaseModel
     {
         public ShippingMethodRestrictionModel()
         {

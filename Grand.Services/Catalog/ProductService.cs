@@ -69,7 +69,6 @@ namespace Grand.Services.Catalog
         #region Fields
 
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IRepository<ProductDeleted> _productDeletedRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -89,7 +88,6 @@ namespace Grand.Services.Catalog
         /// </summary>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
-            IRepository<ProductReview> productReviewRepository,
             IRepository<ProductDeleted> productDeletedRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
@@ -102,7 +100,6 @@ namespace Grand.Services.Catalog
         {
             _cacheManager = cacheManager;
             _productRepository = productRepository;
-            _productReviewRepository = productReviewRepository;
             _productDeletedRepository = productDeletedRepository;
             _productAttributeService = productAttributeService;
             _productAttributeParser = productAttributeParser;
@@ -426,11 +423,14 @@ namespace Grand.Services.Catalog
             //event notification
             if (mediator)
                 await _mediator.Publish(new UpdateStockEvent(product));
+
+            //event notification
+            await _mediator.EntityUpdated(product);
         }
 
-        public virtual async Task UpdateMostView(string productId, int qty)
+        public virtual async Task UpdateMostView(string productId)
         {
-            var update = new UpdateDefinitionBuilder<Product>().Inc(x => x.Viewed, qty);
+            var update = new UpdateDefinitionBuilder<Product>().Inc(x => x.Viewed, 1);
             await _productRepository.Collection.UpdateManyAsync(x => x.Id == productId, update);
         }
 
@@ -440,15 +440,17 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(x => x.Id == productId, update);
         }
 
-        public virtual async Task UnpublishProduct(string productId)
+        public virtual async Task UnpublishProduct(Product product)
         {
-            var filter = Builders<Product>.Filter.Eq("Id", productId);
+            var filter = Builders<Product>.Filter.Eq("Id", product.Id);
             var update = Builders<Product>.Update
                     .Set(x => x.Published, false)
                     .CurrentDate("UpdatedOnUtc");
             await _productRepository.Collection.UpdateOneAsync(filter, update);
-            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productId));
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
+            //event notification
+            await _mediator.EntityUpdated(product);
         }
 
         /// <summary>
@@ -962,6 +964,8 @@ namespace Grand.Services.Catalog
                 }
             }
 
+            //event notification
+            await _mediator.EntityUpdated(product);
         }
 
         /// <summary>
@@ -1852,8 +1856,6 @@ namespace Grand.Services.Catalog
         }
 
         #endregion
-
-        
 
         #region Product warehouse inventory
 

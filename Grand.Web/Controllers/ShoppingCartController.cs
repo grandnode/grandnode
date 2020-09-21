@@ -278,9 +278,6 @@ namespace Grand.Web.Controllers
                     }
             }
 
-            //updated cart
-            _workContext.CurrentCustomer = await _customerService.GetCustomerById(_workContext.CurrentCustomer.Id);
-
             cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, PrepareCartTypes());
 
             var model = await _mediator.Send(new GetShoppingCart() {
@@ -308,7 +305,7 @@ namespace Grand.Web.Controllers
             return Json(new
             {
                 totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.Items.Sum(x => x.Quantity)),
-                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
             });
         }
 
@@ -803,9 +800,6 @@ namespace Grand.Web.Controllers
                         }
                 }
             }
-
-            //updated wishlist
-            _workContext.CurrentCustomer = await _customerService.GetCustomerById(customer.Id);
 
             cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
             var model = await _mediator.Send(new GetWishlist() {

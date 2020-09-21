@@ -1,0 +1,73 @@
+﻿@model Editor
+@inject IPageHeadBuilder pagebuilder
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.CustomRobotsTxt").Text;
+}
+@{
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/codemirror.js", excludeFromBundle: true);
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/codemirror/codemirror.css", excludeFromBundle: true);
+    
+}
+<style>
+    .CodeMirror {
+        background: #f8f8f8;
+        border: 1px solid #eee;
+        height: 600px;
+    }
+</style>
+<antiforgery-token />
+<div class="row">
+    <div class="col-md-12">
+        <div class="x_panel light form-fit">
+            <div class="x_title">
+                <div class="caption level-caption">
+                    <i class="fa fa-sitemap"></i>
+                    @T("Admin.System.CustomRobotsTxt")
+                </div>
+            </div>
+            <div class="actions">
+                <div class="util-btn-margin-bottom-5">
+                    <button id="btnSave" class="btn btn-success">
+                        <i class="fa fa fa-check"></i> @T("Admin.Common.Save")
+                    </button>
+                </div>
+            </div>
+            <div class="x_content form">
+
+                <div class="col-12">
+                    <textarea id="Content" name="Content">@Model.Content</textarea>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        var editor = CodeMirror.fromTextArea(document.getElementById('Content'), {
+                            lineNumbers: true
+                        });
+
+                        $('#btnSave').click(function () {
+				            $.ajax({
+					            cache: false,
+					            url: "@Url.Action("SaveRobotsTxt", "Common")",
+                                data: additionalData(),
+					            type: 'POST',
+					            success: function (response) {
+						            alert(response);
+					            }
+				            });
+				            return false;
+                        });
+
+                        function additionalData() {
+                                var data = {
+                                    content: editor.getValue()
+                                };
+                                addAntiForgeryToken(data);
+                                return data;
+                        }
+
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

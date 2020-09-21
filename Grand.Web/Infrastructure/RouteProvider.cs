@@ -1,12 +1,9 @@
 ﻿using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Domain.Localization;
-using Grand.Framework.Mvc.Routing;
-using Grand.Services.Localization;
+using Grand.Core.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 
 namespace Grand.Web.Infrastructure
 {
@@ -163,6 +160,22 @@ namespace Grand.Web.Infrastructure
                             pattern + "customer/reviews",
                             new { controller = "Customer", action = "Reviews" });
 
+            routeBuilder.MapControllerRoute("CustomerSubAccounts",
+                            pattern + "customer/subaccounts",
+                            new { controller = "Customer", action = "SubAccounts" });
+
+            routeBuilder.MapControllerRoute("CustomerSubAccountAdd",
+                            pattern + "customer/subaccountadd",
+                            new { controller = "Customer", action = "SubAccountAdd" });
+
+            routeBuilder.MapControllerRoute("CustomerSubAccountEdit",
+                            pattern + "customer/subaccountedit",
+                            new { controller = "Customer", action = "SubAccountEdit" });
+
+            routeBuilder.MapControllerRoute("CustomerSubAccountDelete",
+                            pattern + "customer/subaccountdelete",
+                            new { controller = "Customer", action = "SubAccountDelete" });
+
             routeBuilder.MapControllerRoute("CustomerDownloadableProducts",
                             pattern + "customer/downloadableproducts",
                             new { controller = "Customer", action = "DownloadableProducts" });
@@ -191,7 +204,7 @@ namespace Grand.Web.Infrastructure
                             pattern + "customer/useragreement/{orderItemId}",
                             new { controller = "Customer", action = "UserAgreement" });
 
-            
+
         }
         private void RegisterVendorRoute(IEndpointRouteBuilder routeBuilder, string pattern)
         {
@@ -384,6 +397,11 @@ namespace Grand.Web.Infrastructure
                             pattern + "eucookielawaccept",
                             new { controller = "Common", action = "EuCookieLawAccept" });
 
+            //Privacy Preference settings
+            routeBuilder.MapControllerRoute("PrivacyPreference",
+                pattern + "privacypreference",
+                new { controller = "Common", action = "PrivacyPreference" });
+
             // contact attributes with "upload file" type
             routeBuilder.MapControllerRoute("UploadFileContactAttribute",
                             pattern + "uploadfilecontactattribute/{attributeId}",
@@ -411,7 +429,7 @@ namespace Grand.Web.Infrastructure
 
             //lets encrypt
             routeBuilder.MapControllerRoute("well-known",
-                            ".well-known/acme-challenge/{fileName}",
+                            ".well-known/pki-validation/{fileName}",
                             new { controller = "LetsEncrypt", action = "Index" });
 
 
@@ -564,7 +582,7 @@ namespace Grand.Web.Infrastructure
                             pattern + "deletepm/{privateMessageId}",
                             new { controller = "PrivateMessages", action = "DeletePM" });
         }
-        
+
         private void RegisterBoardsRoute(IEndpointRouteBuilder routeBuilder, string pattern)
         {
             //forum

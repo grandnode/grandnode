@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Customer
 {
-    public class CoursesModel : BaseGrandModel
+    public class CoursesModel : BaseModel
     {
         public CoursesModel()
         {
@@ -13,7 +13,7 @@ namespace Grand.Web.Models.Customer
         public List<Course> CourseList { get; set; }
         public string CustomerId { get; set; }
 
-        public class Course : BaseGrandEntityModel
+        public class Course : BaseEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }

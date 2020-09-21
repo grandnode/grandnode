@@ -1,12 +1,10 @@
 ﻿@model ForumPageModel
-@using Grand.Domain.Forums;
-@using Grand.Web.Models.Boards;
-@using Grand.Web.Models.Common;
 @inject Grand.Services.Localization.ILocalizationService localizationService
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
-    Html.AddTitleParts(Model.Name);
+    pagebuilder.AddTitleParts(Model.Name);
 }
 <div class="page forum-page">
     @await Component.InvokeAsync("ForumBreadcrumb", new { forumId = Model.Id })

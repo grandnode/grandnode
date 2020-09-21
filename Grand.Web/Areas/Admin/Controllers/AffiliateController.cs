@@ -21,17 +21,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IAffiliateService _affiliateService;
         private readonly IAffiliateViewModelService _affiliateViewModelService;
-
+        private readonly IPermissionService _permissionService;
         #endregion
 
         #region Constructors
 
         public AffiliateController(ILocalizationService localizationService,
-            IAffiliateService affiliateService, IAffiliateViewModelService affiliateViewModelService)
+            IAffiliateService affiliateService, IAffiliateViewModelService affiliateViewModelService,
+            IPermissionService permissionService)
         {
             _localizationService = localizationService;
             _affiliateService = affiliateService;
             _affiliateViewModelService = affiliateViewModelService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -47,6 +49,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command, AffiliateListModel model)
         {
@@ -60,6 +63,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = new AffiliateModel();
@@ -67,6 +71,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
         public async Task<IActionResult> Create(AffiliateModel model, bool continueEditing)
@@ -86,6 +91,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var affiliate = await _affiliateService.GetAffiliateById(id);
@@ -127,6 +133,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //delete
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -144,9 +151,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Edit", new { id = id });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> AffiliatedOrderList(DataSourceRequest command, AffiliatedOrderListModel model)
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Json(new DataSourceResult {
+                    Data = null,
+                    Total = 0
+                });
+
             var affiliate = await _affiliateService.GetAffiliateById(model.AffliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
@@ -162,7 +176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> AffiliatedCustomerList(string affiliateId, DataSourceRequest command)
         {

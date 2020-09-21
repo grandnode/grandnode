@@ -76,6 +76,7 @@ namespace Grand.Domain.MongoDB
             RegisterClassVendorNote();
             RegisterClassCurrency();
             RegisterClassDocument();
+            RegisterClassOrderTag();
         }
 
         private static void RegisterClassProduct()
@@ -421,6 +422,14 @@ namespace Grand.Domain.MongoDB
                 cm.AutoMap();
                 cm.UnmapMember(c => c.DocumentStatus);
                 cm.UnmapMember(c => c.Reference);
+            });
+        }
+
+        private static void RegisterClassOrderTag()
+        {
+            BsonClassMap.RegisterClassMap<OrderTag>(cm =>
+            {
+                cm.AutoMap();
             });
         }
     }

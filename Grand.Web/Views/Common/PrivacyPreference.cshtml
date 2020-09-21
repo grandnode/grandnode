@@ -1,0 +1,38 @@
+﻿@model IList<PrivacyPreferenceModel>
+<div class="modal-dialog" role="document">
+    <div class="modal-content rounded-0 p-2 p-xl-3">
+        <div class="modal-header bg-info rounded-0">
+            <h5 class="text-center text-white w-100 mb-0">
+                @T("PrivacyPreference.Center")
+            </h5>
+            <button type="button" class="close text-white position-static" data-dismiss="modal" aria-label="Close">
+                <span class="mdi mdi-close"></span>
+            </button>
+        </div>
+        <div>
+            @T("PrivacyPreference.Description")
+        </div>
+        @if (Model.Any())
+        {
+            <form id="frmPrivacyPreference">
+                <div class="mt-3"> 
+                    @foreach (var item in Model)
+                    {
+                        <div class="d-inline-flex align-items-start justify-content-between w-100 mb-3">
+                            <div class="d-flex flex-column">
+                                <div class="h5">@item.Name</div>
+                                <div>@item.Description</div>
+                            </div>
+                            <div class="custom-control custom-switch">
+                                <input @if (!(item.AllowToDisable)) { <text> disabled checked</text> } @if (item.State == true) { <text> checked</text> } type="checkbox" 
+                                       value="@item.SystemName" class="custom-control-input" id="ConsentCookies_@item.SystemName" name="ConsentCookies_@item.SystemName">
+                                <label class="custom-control-label" for="ConsentCookies_@item.SystemName"></label>
+                            </div>
+                        </div>
+                    }
+                    <input type="button" class="btn btn-info w-100" value="Save" onclick="SavePrivacyPreference('@Url.RouteUrl("PrivacyPreference")');" />
+                </div>
+            </form>
+        }
+    </div>
+</div>

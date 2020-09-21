@@ -151,7 +151,7 @@
                     <text>
                         {
                             Id: '@(categoryItem.Value)',
-                            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(categoryItem.Text)))"
+                            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(string.IsNullOrEmpty(categoryItem.Text) ? "": categoryItem.Text)))"
                         }
                         </text>
                     if (i != Model.AvailableCategories.Count - 1)

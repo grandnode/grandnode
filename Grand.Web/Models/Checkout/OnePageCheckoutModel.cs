@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class OnePageCheckoutModel : BaseGrandModel
+    public partial class OnePageCheckoutModel : BaseModel
     {
         public bool ShippingRequired { get; set; }
         public bool DisableBillingAddressCheckoutStep { get; set; }

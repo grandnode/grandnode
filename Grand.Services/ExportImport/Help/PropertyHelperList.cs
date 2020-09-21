@@ -1,5 +1,4 @@
-﻿using OfficeOpenXml;
-using OfficeOpenXml.Style;
+﻿using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
 
@@ -47,33 +46,16 @@ namespace Grand.Services.ExportImport.Help
             public string Value { get; set; }
         }
 
-        public void WriteToXlsx(ExcelWorksheet worksheet)
+        public void WriteToXlsx(ISheet sheet)
         {
-            int row = 2;
+            int row = 0;
             foreach (var prop in ToList())
             {
-                worksheet.Cells[row, 1].Value = prop.Field;
-                worksheet.Cells[row, 2].Value = prop.Value;
+                IRow _row = sheet.CreateRow(row);
+                _row.CreateCell(0).SetCellValue(prop.Field);
+                _row.CreateCell(1).SetCellValue(prop.Value);
                 row++;
             }
         }
-
-        /// <summary>
-        /// Write caption (first row) to XLSX worksheet
-        /// </summary>
-        /// <param name="worksheet">worksheet</param>
-        /// <param name="setStyle">Detection of cell style</param>
-        public void WriteCaption(ExcelWorksheet worksheet, Action<ExcelStyle> setStyle)
-        {
-            var cellKey = worksheet.Cells[1, 1];
-            cellKey.Value = "Key";
-            setStyle(cellKey.Style);
-            cellKey.Worksheet.Column(1).Width = 30;
-            var cellValue = worksheet.Cells[1, 2];
-            cellValue.Value = "Value";
-            setStyle(cellValue.Style);
-            cellValue.Worksheet.Column(2).Width = 70;
-        }
-
     }
 }

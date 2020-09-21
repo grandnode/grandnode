@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace Grand.Plugin.Payments.BrainTree.Models
 {
-    public class PaymentInfoModel : BaseGrandModel
+    public class PaymentInfoModel : BaseModel
     {
         public PaymentInfoModel()
         {

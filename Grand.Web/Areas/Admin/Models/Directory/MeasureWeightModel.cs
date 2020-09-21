@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Directory
 {
-    public partial class MeasureWeightModel : BaseGrandEntityModel
+    public partial class MeasureWeightModel : BaseEntityModel
     {
         [GrandResourceDisplayName("Admin.Configuration.Measures.Weights.Fields.Name")]
 

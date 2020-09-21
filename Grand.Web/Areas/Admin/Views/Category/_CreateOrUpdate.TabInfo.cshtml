@@ -45,6 +45,13 @@
                  </div>
              </div>
              <div class="form-group">
+                 <admin-label asp-for="@Model.Locales[item].BottomDescription" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="@Model.Locales[item].BottomDescription" asp-template="RichEditor" />
+                     <span asp-validation-for="@Model.Locales[item].BottomDescription"></span>
+                 </div>
+             </div>
+             <div class="form-group">
                  <admin-label asp-for="@Model.Locales[item].Flag" />
                  <div class="col-md-9 col-sm-9">
                      <admin-input asp-for="@Model.Locales[item].Flag" />
@@ -69,6 +76,13 @@
                  <div class="col-md-9 col-sm-9">
                      <admin-input asp-for="Description" asp-template="RichEditor" />
                      <span asp-validation-for="Description"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="BottomDescription" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="BottomDescription" asp-template="RichEditor" />
+                     <span asp-validation-for="BottomDescription"></span>
                  </div>
              </div>
              <div class="form-group">

@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 
 namespace Grand.Web.Models.Course
 {
-    public class LessonModel : BaseGrandEntityModel
+    public class LessonModel : BaseEntityModel
     {
         public string Name { get; set; }
         public string ShortDescription { get; set; }

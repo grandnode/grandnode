@@ -1,9 +1,10 @@
 ﻿@model EditForumPostModel
 @using Grand.Web.Models.Boards;
-@{   
+@inject IPageHeadBuilder pagebuilder
+@{
     Layout = "_ColumnsOne";
 
-    Html.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
+    pagebuilder.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
 }
 <form asp-route="PostEdit" method="post">
     <partial name="_CreateUpdatePost" model="Model" />

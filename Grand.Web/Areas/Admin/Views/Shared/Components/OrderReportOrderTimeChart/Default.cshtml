@@ -1,4 +1,4 @@
-﻿<div class="col-xs-12 text-center" style="height:50px;position:relative">
+﻿<div class="col-12 text-center" style="height:50px;position:relative">
     <span style="position: absolute;bottom: 0;left:0;right:0;">
         <strong>
             Orders summary
@@ -14,6 +14,9 @@
 <script>
     $(document).ready(function () {
         initReportOrderTimeChart(true);
+        $("#DarkLight").change(function () {
+            initReportOrderTimeChart(true);
+        });
     });
 
     function initReportOrderTimeChart(first) {
@@ -48,7 +51,7 @@
                     }, {
                         type: 'bar',
                         label: 'Total sum',
-                        yAxisID: 'L',
+                            yAxisID: 'L',
                         backgroundColor: 'rgba(255, 159, 64, 0.6)',
                         borderColor: 'rgb(255, 159, 64)',
                         data: [],
@@ -63,40 +66,84 @@
                 }
                 var ctx = document.getElementById('canvasReportOrderTimeChart').getContext('2d');
                 if (first) {
-                    window.myReportOrderTimeChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: chartData,
-                        options: {
-                            responsive: true,
-                            tooltips: {
-                                mode: 'index',
-                                intersect: true
-                            }, scales: {
-                                yAxes: [{
-                                    id: 'L',
-                                    type: 'linear',
-                                    position: 'left',
-                                    ticks: {
-                                        min: 0,
-                                    },
-                                }, {
-                                    id: 'R',
-                                    type: 'linear',
-                                    position: 'right',
-                                    gridLines: {
-                                        display: false
-                                    },
-                                    ticks: {
-                                        min: 0,
-                                    },
-                                }]
+                    if ($('#DarkLight').is(':checked')) {
+                        window.myReportOrderTimeChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: chartData,
+                            options: {
+                                responsive: true,
+                                legend: {
+                                    labels: {
+                                        fontColor: 'white'
+                                    }
+                                },
+                                tooltips: {
+                                    mode: 'index',
+                                    intersect: true
+                                }, scales: {
+                                    yAxes: [{
+                                        id: 'L',
+                                        type: 'linear',
+                                        position: 'left',
+                                        gridLines: {
+                                            color: 'rgb(255,255,255)'
+                                        },
+                                        ticks: {
+                                            min: 0,
+                                            fontColor: 'rgb(255,255,255)',
+                                        },
+                                    }, {
+                                        id: 'R',
+                                        type: 'linear',
+                                        position: 'right',
+                                        gridLines: {
+                                            display: false,
+                                        },
+                                        ticks: {
+                                            min: 0,
+                                            fontColor: 'rgb(255,255,255)',
+                                        },
+                                    }]
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        window.myReportOrderTimeChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: chartData,
+                            options: {
+                                responsive: true,
+                                tooltips: {
+                                    mode: 'index',
+                                    intersect: true
+                                }, scales: {
+                                    yAxes: [{
+                                        id: 'L',
+                                        type: 'linear',
+                                        position: 'left',
+                                        ticks: {
+                                            min: 0,
+                                        },
+                                    }, {
+                                        id: 'R',
+                                        type: 'linear',
+                                        position: 'right',
+                                        gridLines: {
+                                            display: false
+                                        },
+                                        ticks: {
+                                            min: 0,
+                                        },
+                                    }]
+                                }
+                            }
+                        });
+                    }
                 } else {
                     window.myReportOrderTimeChart.data = chartData;
                     window.myReportOrderTimeChart.update();
                 }
+
             },
             error: function () {
                 alert('error');

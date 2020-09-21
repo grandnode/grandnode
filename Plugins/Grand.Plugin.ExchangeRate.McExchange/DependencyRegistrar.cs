@@ -15,7 +15,7 @@ namespace Grand.Plugin.ExchangeRate.EcbExchange
 
         public int Order
         {
-            get { return 1; }
+            get { return 10; }
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Plugin.Widgets.Slider.Domain;
 using Grand.Plugin.Widgets.Slider.Models;
 using Grand.Services.Localization;

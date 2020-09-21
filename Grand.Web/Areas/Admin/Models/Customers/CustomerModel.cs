@@ -1,14 +1,15 @@
 ﻿using Grand.Domain.Catalog;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
-    public partial class CustomerModel : BaseGrandEntityModel
+    public partial class CustomerModel : BaseEntityModel
     {
         public CustomerModel()
         {
@@ -234,7 +235,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         #region Nested classes
 
-        public partial class AssociatedExternalAuthModel : BaseGrandEntityModel
+        public partial class AssociatedExternalAuthModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email")]
             public string Email { get; set; }
@@ -246,7 +247,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string AuthMethodName { get; set; }
         }
 
-        public partial class RewardPointsHistoryModel : BaseGrandEntityModel
+        public partial class RewardPointsHistoryModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Store")]
             public string StoreName { get; set; }
@@ -264,7 +265,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class SendEmailModel : BaseGrandModel
+        public partial class SendEmailModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.SendEmail.Subject")]
             public string Subject { get; set; }
@@ -279,7 +280,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public DateTime? DontSendBeforeDate { get; set; }
         }
 
-        public partial class SendPmModel : BaseGrandModel
+        public partial class SendPmModel : BaseModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.SendPM.Subject")]
             public string Subject { get; set; }
@@ -288,7 +289,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string Message { get; set; }
         }
 
-        public partial class OrderModel : BaseGrandEntityModel
+        public partial class OrderModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.ID")]
             public override string Id { get; set; }
@@ -298,10 +299,13 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string OrderCode { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.OrderStatus")]
             public string OrderStatus { get; set; }
+            public int OrderStatusId { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.PaymentStatus")]
             public string PaymentStatus { get; set; }
+            public int PaymentStatusId { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.ShippingStatus")]
             public string ShippingStatus { get; set; }
+            public int ShippingStatusId { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.OrderTotal")]
             public string OrderTotal { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.Orders.Store")]
@@ -310,7 +314,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class ActivityLogModel : BaseGrandEntityModel
+        public partial class ActivityLogModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.ActivityLog.ActivityLogType")]
             public string ActivityLogTypeName { get; set; }
@@ -321,7 +325,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             [GrandResourceDisplayName("Admin.Customers.Customers.ActivityLog.IpAddress")]
             public string IpAddress { get; set; }
         }
-        public partial class ProductModel : BaseGrandEntityModel
+        public partial class ProductModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.PersonalizedProduct.ProductName")]
             public string ProductName { get; set; }
@@ -329,7 +333,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public int DisplayOrder { get; set; }
             public string ProductId { get; set; }
         }
-        public partial class ProductPriceModel : BaseGrandEntityModel
+        public partial class ProductPriceModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.ProductPrice.ProductName")]
             public string ProductName { get; set; }
@@ -337,7 +341,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public decimal Price { get; set; }
             public string ProductId { get; set; }
         }
-        public partial class AddProductModel : BaseGrandModel
+        public partial class AddProductModel : BaseModel
         {
             public AddProductModel()
             {
@@ -372,7 +376,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
             public string[] SelectedProductIds { get; set; }
         }
-        public partial class BackInStockSubscriptionModel : BaseGrandEntityModel
+        public partial class BackInStockSubscriptionModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.Store")]
             public string StoreName { get; set; }
@@ -385,7 +389,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class CustomerAttributeModel : BaseGrandEntityModel
+        public partial class CustomerAttributeModel : BaseEntityModel
         {
             public CustomerAttributeModel()
             {
@@ -407,14 +411,14 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         }
 
-        public partial class CustomerAttributeValueModel : BaseGrandEntityModel
+        public partial class CustomerAttributeValueModel : BaseEntityModel
         {
             public string Name { get; set; }
 
             public bool IsPreSelected { get; set; }
         }
 
-        public partial class CustomerNote : BaseGrandEntityModel
+        public partial class CustomerNote : BaseEntityModel
         {
             public string CustomerId { get; set; }
             [GrandResourceDisplayName("Admin.Customers.CustomerNotes.Fields.DisplayToCustomer")]

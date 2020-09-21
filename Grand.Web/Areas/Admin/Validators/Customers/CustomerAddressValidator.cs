@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Validators;
+﻿using Grand.Core.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Validators.Common;

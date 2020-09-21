@@ -1,11 +1,12 @@
 @model WishlistModel
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
+@inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
 
     //title
-    Html.AddTitleParts(T("PageTitle.Wishlist").Text);
+    pagebuilder.AddTitleParts(T("PageTitle.Wishlist").Text);
 }
 <div class="page wishlist-page mt-3">
     <h2 class="generalTitle text-center mt-3">
@@ -223,7 +224,7 @@
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <div class="tax-shipping-info">
-                        @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
+                        @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = TopicSeNameConstants.Shippinginfo }))
                     </div>
                 }
 
@@ -239,7 +240,7 @@
                     {
                         <button type="submit" name="addtocartbutton" class="btn btn-info ml-1 wishlist-add-to-cart-button d-sm-flex justify-content-center align-items-center">
                             <span class="mdi mdi-cart-outline pr-2"></span>
-                            <span class="d-sm-block d-none">@T("ShoppingCart.AddToCart")</span> 
+                            <span class="d-sm-block d-none">@T("ShoppingCart.AddToCart")</span>
                         </button>
                     }
                     @if (Model.IsEditable && Model.EmailWishlistEnabled)

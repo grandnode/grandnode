@@ -119,20 +119,7 @@ namespace Grand.Services.Tests.Authentication
             Assert.IsTrue(result);
         }
 
-        [TestMethod()]
-        public async Task GetAuthenticatedCustomer_RequestPath_FetchCustomerBySystemName()
-        {
-            var customer = new Customer() { Email = "johny@gmail.com" };
-            var httpContext = new Mock<HttpContext>();
-            var req = new Mock<HttpRequest>();
-            req.Setup(c => c.Path).Returns(new PathString("/api/token/create"));
-            httpContext.Setup(c => c.Request).Returns(req.Object);
-            _httpContextAccessorMoc.Setup(c => c.HttpContext).Returns(httpContext.Object);
-            _customerService.Setup(c => c.GetCustomerBySystemName(It.IsAny<string>())).Returns(() => Task.FromResult(customer));
-            var result = await _authService.GetAuthenticatedCustomer();
-            _customerService.Verify(c => c.GetCustomerBySystemName(It.IsAny<string>()), Times.Once);
-            Assert.AreEqual(customer.Email, result.Email);
-        }
+        
 
         [TestMethod()]
         public async Task GetAuthenticatedCustomer_NullAuthHeader_GetNull()

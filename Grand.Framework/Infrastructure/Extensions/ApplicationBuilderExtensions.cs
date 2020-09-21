@@ -20,6 +20,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WebMarkupMin.AspNetCore3;
+using Grand.Core.Routing;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -35,7 +36,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="webHostEnvironment">Web Host Environment</param>
         public static void ConfigureRequestPipeline(this IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
-            EngineContext.Current.ConfigureRequestPipeline(application, webHostEnvironment);
+            Engine.ConfigureRequestPipeline(application, webHostEnvironment);
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="configuration">configuration</param>
         public static void ConfigureContainer(this ContainerBuilder container, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
-            EngineContext.Current.ConfigureContainer(container, configuration);
+            Engine.ConfigureContainer(container, configuration);
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             var serviceProvider = application.ApplicationServices;
             var grandConfig = serviceProvider.GetRequiredService<GrandConfig>();
             var hostingEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
-            bool useDetailedExceptionPage = grandConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
+            var useDetailedExceptionPage = grandConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
                 //get detailed exceptions for developing and testing purposes

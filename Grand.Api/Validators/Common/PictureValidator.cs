@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Grand.Api.DTOs.Common;
-using Grand.Framework.Validators;
+using Grand.Core.Validators;
 using Grand.Services.Localization;
 using System.Collections.Generic;
 

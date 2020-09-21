@@ -3,6 +3,7 @@ using Grand.Api.Models.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace Grand.Api.Controllers
     [Area("Api")]
     [Route("[area]/[controller]/[action]")]
     [ApiExplorerSettings(IgnoreApi = false)]
+    [SwaggerTag(description:"Create token")]
     public class TokenController : Controller
     {
         private readonly IMediator _mediator;

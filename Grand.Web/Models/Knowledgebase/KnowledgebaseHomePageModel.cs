@@ -1,9 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Models;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Knowledgebase
 {
-    public class KnowledgebaseHomePageModel : BaseGrandEntityModel
+    public class KnowledgebaseHomePageModel : BaseEntityModel
     {
         public List<KnowledgebaseItemModel> Items { get; set; }
         public List<KnowledgebaseCategoryModel> Categories { get; set; }

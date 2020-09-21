@@ -1,16 +1,17 @@
 ﻿using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
+using Grand.Core.ModelBinding;
+using Grand.Core.Models;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class CategoryModel : BaseGrandEntityModel, ILocalizedModel<CategoryLocalizedModel>, IAclMappingModel, IStoreMappingModel
+    public partial class CategoryModel : BaseEntityModel, ILocalizedModel<CategoryLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public CategoryModel()
         {
@@ -31,6 +32,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
 
         public string Description { get; set; }
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.BottomDescription")]
+
+        public string BottomDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.CategoryTemplate")]
         public string CategoryTemplateId { get; set; }
@@ -140,7 +144,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
 
         #region Nested classes
-        public partial class CategoryProductModel : BaseGrandEntityModel
+        public partial class CategoryProductModel : BaseEntityModel
         {
             public string CategoryId { get; set; }
 
@@ -155,7 +159,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Categories.Products.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
-        public partial class AddCategoryProductModel : BaseGrandModel
+        public partial class AddCategoryProductModel : BaseModel
         {
             public AddCategoryProductModel()
             {
@@ -191,7 +195,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string[] SelectedProductIds { get; set; }
         }
 
-        public partial class ActivityLogModel : BaseGrandEntityModel
+        public partial class ActivityLogModel : BaseEntityModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Categories.ActivityLogType")]
             public string ActivityLogTypeName { get; set; }
@@ -219,6 +223,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
 
         public string Description { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.BottomDescription")]
+
+        public string BottomDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
 

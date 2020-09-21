@@ -80,8 +80,7 @@ namespace Grand.Services.Catalog
         /// Updates most view on the product
         /// </summary>
         /// <param name="productId">ProductId</param>
-        /// <param name="qty">Count</param>
-        Task UpdateMostView(string productId, int qty);
+        Task UpdateMostView(string productId);
 
         /// <summary>
         /// Updates best sellers on the product
@@ -93,8 +92,8 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Set product as unpublished
         /// </summary>
-        /// <param name="productId"></param>
-        Task UnpublishProduct(string productId);
+        /// <param name="product"></param>
+        Task UnpublishProduct(Product product);
 
         /// <summary>
         /// Get (visible) product number in certain category
