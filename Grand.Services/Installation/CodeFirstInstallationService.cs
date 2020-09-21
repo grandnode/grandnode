@@ -10858,8 +10858,8 @@ namespace Grand.Services.Installation
                 var mongoDBContext = new MongoDBContext(mongodb);
 
                 var typeFinder = _serviceProvider.GetRequiredService<ITypeFinder>();
-                var q = typeFinder.GetAssemblies().FirstOrDefault(x => x.GetName().Name == "Grand.Core");
-                foreach (var item in q.GetTypes().Where(x => x.Namespace != null && x.Namespace.StartsWith("Grand.Domain")))
+                var q = typeFinder.GetAssemblies().FirstOrDefault(x => x.GetName().Name == "Grand.Domain");
+                foreach (var item in q.GetTypes())
                 {
                     if (item.BaseType != null && item.IsClass && item.BaseType == typeof(BaseEntity))
                         await mongoDBContext.Database().CreateCollectionAsync(item.Name, options);
