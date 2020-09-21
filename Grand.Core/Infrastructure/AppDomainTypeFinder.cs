@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Loader;
 
 namespace Grand.Core.Infrastructure
 {
@@ -167,29 +165,12 @@ namespace Grand.Core.Infrastructure
         /// <param name="directoryPath">
         /// The physical path to a directory containing dlls to load in the app domain.
         /// </param>
-        protected virtual void LoadMatchingAssemblies(string directoryPath)
+        protected virtual void LoadMatchingAssemblies()
         {
             var loadedAssemblyNames = new List<string>();
             foreach (Assembly a in GetAssemblies())
             {
                 loadedAssemblyNames.Add(a.FullName);
-            }
-
-            if (!Directory.Exists(directoryPath))
-            {
-                return;
-            }
-
-            foreach (string dllPath in Directory.GetFiles(directoryPath, "*.dll"))
-            {
-                try
-                {
-                    var shadowCopiedAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(dllPath);
-                }
-                catch (BadImageFormatException ex)
-                {
-                    Trace.TraceError(ex.ToString());
-                }
             }
         }
 

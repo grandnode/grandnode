@@ -45,8 +45,7 @@ namespace Grand.Core.Infrastructure
             if (EnsureBinFolderAssembliesLoaded && !_binFolderAssembliesLoaded)
             {
                 _binFolderAssembliesLoaded = true;
-                var binPath = GetBinDirectory();
-                LoadMatchingAssemblies(binPath);
+                LoadMatchingAssemblies();
             }
             return base.GetAssemblies();
         }
