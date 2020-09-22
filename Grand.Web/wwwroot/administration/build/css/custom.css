@@ -6175,11 +6175,6 @@ form>h4 {
     #searchInput {
         width: 300px;
     }
-    .light-dark-switch .custom-control-label {
-        width: 0;
-        text-indent: -99999px;
-    }
-
 }
 
 @media screen and (max-width:1120px) {
@@ -6585,7 +6580,7 @@ table.tableFixHead {
     cursor: pointer;
     text-indent: -9999999px;
     color: transparent;
-    margin: 0 0 0 3px;
+    width: 0;
 }
 .light-dark-switch .custom-control-label::after {
     top: 10px;
