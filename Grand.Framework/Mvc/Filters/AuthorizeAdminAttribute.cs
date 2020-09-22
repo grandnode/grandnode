@@ -2,6 +2,7 @@
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -80,7 +81,7 @@ namespace Grand.Framework.Mvc.Filters
                 {
                     //authorize permission of access to the admin area
                     if (!await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
-                        filterContext.Result = new ChallengeResult();
+                        filterContext.Result = new RedirectToRouteResult("AdminLogin", new RouteValueDictionary());
                 }
             }
 
