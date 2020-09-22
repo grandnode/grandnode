@@ -2,11 +2,11 @@
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLoginLayout.cshtml";
     //title
-    pagebuilder.AddTitleParts(T("PageTitle.Login").Text);
+    pagebuilder.AddTitleParts(T("Admin.Login.TwoFactor.PageTitle.Login").Text);
 
 }
 <div class="page login-page">
-    <h2 class="generalTitle text-center">@T("Login.TwoFactorAuth.EnterCode")</h2>
+    <h2 class="generalTitle text-center">@T("Admin.Login.TwoFactorAuth.EnterCode")</h2>
     <div class="mb-2">
         <div class="row flex-md-row justify-content-center text-center my-3">
             @* login main block *@
@@ -19,7 +19,7 @@
                                 <div class="col-12 form-group mb-0 d-flex justify-content-around">
                                     <div class="form-group row">
                                         <div class="col-lg-3 col-12">
-                                            <label name="token" class="col-form-label">@T("Login.TwoFactorAuth.DigitCode")</label>
+                                            <label name="token" class="col-form-label">@T("Admin.Login.TwoFactorAuth.DigitCode")</label>
                                         </div>
                                         <div class="col-lg-9 col-12">
                                             <input name="token" type="text" class="form-control" autofocus />
@@ -30,7 +30,7 @@
                         </div>
                         <div class="card-footer">
                             <div class="buttons">
-                                <input class="btn btn-info login-button" type="submit" value="@T("Login.TwoFactorAuth.SendCode")" />
+                                <input class="btn btn-info login-button" type="submit" value="@T("Admin.Login.TwoFactorAuth.SendCode")" />
                             </div>
                         </div>
                     </form>

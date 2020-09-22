@@ -1,22 +1,21 @@
 ﻿@model Grand.Web.Areas.Admin.Models.Common.LoginModel
 @{
     //page title
-    ViewBag.Title = T("Admin.Login").Text;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLoginLayout.cshtml";
 }
 
 <form asp-route="AdminLogin" asp-area="Admin" method="post">
         <div class="card col-xl-6 col-lg-8 col-md-10 col-12">
-            <h5 class="card-header"><strong>@T("Account.Login.ReturningCustomer")</strong></h5>
+            <h5 class="card-header"><strong>@T("Admin.Login.Title")</strong></h5>
             <div class="card-body">
                 <div class="row">
-                    <div asp-validation-summary="ModelOnly" class="message-error w-100 text-center">@T("Account.Login.Unsuccessful")</div>
+                    <div asp-validation-summary="ModelOnly" class="message-error w-100 text-center">@T("Admin.Login.Unsuccessful")</div>
                     <div class="col-12 form-group mb-0">
                         @if (Model.UsernamesEnabled)
                         {
                             <div class="form-group row">
                                 <div class="col-lg-3 col-12 d-flex align-items-start justify-content-sm-start">
-                                    <label asp-for="Username" class="h5 m-0">@T("Account.Login.Fields.UserName"):</label>
+                                    <label asp-for="Username" class="h5 m-0">@T("Admin.Login.UserName"):</label>
                                 </div>
                                 <div class="col-lg-9 col-12">
                                     <input asp-for="Username" class="form-control username" autofocus="autofocus" />
@@ -28,7 +27,7 @@
                         {
                             <div class="form-group row">
                                 <div class="col-lg-3 col-12 d-flex align-items-start justify-content-start">
-                                    <label asp-for="Email" class="h5 m-0">@T("Account.Login.Fields.Email"):</label>
+                                    <label asp-for="Email" class="h5 m-0">@T("Admin.Login.Email"):</label>
                                 </div>
                                 <div class="col-lg-9 col-12">
                                     <input asp-for="Email" class="form-control email" autofocus="autofocus" />
@@ -38,7 +37,7 @@
                         }
                         <div class="form-group row">
                             <div class="col-lg-3 col-12 d-flex align-items-center justify-content-start">
-                                <label asp-for="Password" class="h5 m-0">@T("Account.Login.Fields.Password"):</label>
+                                <label asp-for="Password" class="h5 m-0">@T("Admin.Login.Password"):</label>
                             </div>
                             <div class="col-lg-9 col-12">
                                 <input asp-for="Password" class="form-control password" />
@@ -50,10 +49,10 @@
                                 <input class="custom-control-input" asp-for="RememberMe" />
                                 <input class="custom-control-label" name="RememberMe" type="hidden" value="false">
                                 <span class="custom-control-label"></span>
-                                <span class="custom-control-description">@T("Account.Login.Fields.RememberMe")</span>
+                                <span class="custom-control-description">@T("Admin.Login.RememberMe")</span>
                             </label>
                             <span class="ml-3 forgot-password">
-                                <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
+                                <a asp-route="PasswordRecovery">@T("Admin.Login.ForgotPassword")</a>
                             </span>
                         </div>
                         @if (Model.DisplayCaptcha)
@@ -67,7 +66,7 @@
             </div>
             <div class="card-footer px-0">
                 <div class="buttons">
-                    <input class="btn btn-info login-button px-5" type="submit" value="@T("Account.Login.LoginButton")" />
+                    <input class="btn btn-info login-button px-5" type="submit" value="@T("Admin.Login.LoginButton")" />
                 </div>
             </div>
         </div>
