@@ -6,67 +6,69 @@
 }
 
 <form asp-route="AdminLogin" asp-area="Admin" method="post">
-    <h5 class="card-header"><strong>@T("Account.Login.ReturningCustomer")</strong></h5>
-    <div class="card-body">
-        <div class="row">
-            <div asp-validation-summary="ModelOnly" class="message-error w-100 text-center">@T("Account.Login.Unsuccessful")</div>
-            <div class="col-12 form-group mb-0">
-                @if (Model.UsernamesEnabled)
-                {
-                    <div class="form-group row">
-                        <div class="col-lg-3 col-12 d-flex align-items-start justify-content-sm-start">
-                            <label asp-for="Username" class="h5 m-0">@T("Account.Login.Fields.UserName"):</label>
+        <div class="card col-xl-6 col-lg-8 col-md-10 col-12">
+            <h5 class="card-header"><strong>@T("Account.Login.ReturningCustomer")</strong></h5>
+            <div class="card-body">
+                <div class="row">
+                    <div asp-validation-summary="ModelOnly" class="message-error w-100 text-center">@T("Account.Login.Unsuccessful")</div>
+                    <div class="col-12 form-group mb-0">
+                        @if (Model.UsernamesEnabled)
+                        {
+                            <div class="form-group row">
+                                <div class="col-lg-3 col-12 d-flex align-items-start justify-content-sm-start">
+                                    <label asp-for="Username" class="h5 m-0">@T("Account.Login.Fields.UserName"):</label>
+                                </div>
+                                <div class="col-lg-9 col-12">
+                                    <input asp-for="Username" class="form-control username" autofocus="autofocus" />
+                                    <span asp-validation-for="Username"></span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group row">
+                                <div class="col-lg-3 col-12 d-flex align-items-start justify-content-start">
+                                    <label asp-for="Email" class="h5 m-0">@T("Account.Login.Fields.Email"):</label>
+                                </div>
+                                <div class="col-lg-9 col-12">
+                                    <input asp-for="Email" class="form-control email" autofocus="autofocus" />
+                                    <span asp-validation-for="Email"></span>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <div class="col-lg-3 col-12 d-flex align-items-center justify-content-start">
+                                <label asp-for="Password" class="h5 m-0">@T("Account.Login.Fields.Password"):</label>
+                            </div>
+                            <div class="col-lg-9 col-12">
+                                <input asp-for="Password" class="form-control password" />
+                                <span asp-validation-for="Password"></span>
+                            </div>
                         </div>
-                        <div class="col-lg-9 col-12">
-                            <input asp-for="Username" class="form-control username" autofocus="autofocus" />
-                            <span asp-validation-for="Username"></span>
+                        <div class="inputs d-flex flex-sm-row flex-column justify-content-center">
+                            <label class="custom-control custom-checkbox">
+                                <input class="custom-control-input" asp-for="RememberMe" />
+                                <input class="custom-control-label" name="RememberMe" type="hidden" value="false">
+                                <span class="custom-control-label"></span>
+                                <span class="custom-control-description">@T("Account.Login.Fields.RememberMe")</span>
+                            </label>
+                            <span class="ml-3 forgot-password">
+                                <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
+                            </span>
                         </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="form-group row">
-                        <div class="col-lg-3 col-12 d-flex align-items-start justify-content-start">
-                            <label asp-for="Email" class="h5 m-0">@T("Account.Login.Fields.Email"):</label>
-                        </div>
-                        <div class="col-lg-9 col-12">
-                            <input asp-for="Email" class="form-control email" autofocus="autofocus" />
-                            <span asp-validation-for="Email"></span>
-                        </div>
-                    </div>
-                }
-                <div class="form-group row">
-                    <div class="col-lg-3 col-12 d-flex align-items-center justify-content-start">
-                        <label asp-for="Password" class="h5 m-0">@T("Account.Login.Fields.Password"):</label>
-                    </div>
-                    <div class="col-lg-9 col-12">
-                        <input asp-for="Password" class="form-control password" />
-                        <span asp-validation-for="Password"></span>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                <captcha />
+                            </div>
+                        }
                     </div>
                 </div>
-                <div class="inputs d-flex flex-sm-row flex-column justify-content-center">
-                    <label class="custom-control custom-checkbox">
-                        <input class="custom-control-input" asp-for="RememberMe" />
-                        <input class="custom-control-label" name="RememberMe" type="hidden" value="false">
-                        <span class="custom-control-label"></span>
-                        <span class="custom-control-description">@T("Account.Login.Fields.RememberMe")</span>
-                    </label>
-                    <span class="ml-3 forgot-password">
-                        <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
-                    </span>
+            </div>
+            <div class="card-footer px-0">
+                <div class="buttons">
+                    <input class="btn btn-info login-button px-5" type="submit" value="@T("Account.Login.LoginButton")" />
                 </div>
-                @if (Model.DisplayCaptcha)
-                {
-                    <div class="captcha-box">
-                        <captcha />
-                    </div>
-                }
             </div>
         </div>
-    </div>
-    <div class="card-footer px-0">
-        <div class="buttons">
-            <input class="btn btn-info login-button px-5" type="submit" value="@T("Account.Login.LoginButton")" />
-        </div>
-    </div>
 </form>
