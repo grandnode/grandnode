@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
 }
 
 @model CustomerAttributeValueModel
@@ -8,7 +8,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerAttributes.Values.EditValueDetails").Text;
 }
-<form asp-area="Admin" asp-controller="CustomerAttribute" asp-action="ValueEditPopup"
+<form asp-area="@Constants.AreaAdmin" asp-controller="CustomerAttribute" asp-action="ValueEditPopup"
       asp-route-customerAttributeId="@Context.Request.Query["customerAttributeId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

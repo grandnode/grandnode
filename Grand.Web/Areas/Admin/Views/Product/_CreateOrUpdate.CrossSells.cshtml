@@ -72,7 +72,7 @@
                     {
                         field: "Product2Name",
                         title: "@T("Admin.Catalog.Products.CrossSells.Fields.Product")",
-                        template: '<a class="k-link" href="@Url.Action("Edit", "Product")/#=Id#">#=kendo.htmlEncode(Product2Name)#</a>',
+                        template: '<a class="k-link" href="@Url.Action("Edit", "Product", new { id = "" })/#=Id#">#=kendo.htmlEncode(Product2Name)#</a>',
                     }, {
                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                         title: "@T("Admin.Common.Delete")",

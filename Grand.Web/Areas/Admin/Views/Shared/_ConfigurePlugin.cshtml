@@ -29,7 +29,7 @@
         backToLocale = "Admin.Configuration.Payment.Methods.BackToList";
         listActionMethodName = "Methods";
         listControllerName = "Payment";
-        menuitem = "/Admin/Payment/Methods";
+        menuitem = $"/{Constants.AreaAdmin}/Payment/Methods";
     }
     else if (plugin is IShippingRateComputationMethod)
     {
@@ -38,7 +38,7 @@
         backToLocale = "Admin.Configuration.Shipping.Providers.BackToList";
         listActionMethodName = "Providers";
         listControllerName = "Shipping";
-        menuitem = "/Admin/Shipping/Providers";
+        menuitem = $"/{Constants.AreaAdmin}/Shipping/Providers";
     }
     else if (plugin is ITaxProvider)
     {
@@ -47,7 +47,7 @@
         backToLocale = "Admin.Configuration.Tax.Providers.BackToList";
         listActionMethodName = "Providers";
         listControllerName = "Tax";
-        menuitem = "/Admin/Tax/Providers";
+        menuitem = $"/{Constants.AreaAdmin}/Tax/Providers";
     }
     else if (plugin is IExternalAuthenticationMethod)
     {
@@ -56,7 +56,7 @@
         backToLocale = "Admin.Configuration.ExternalAuthenticationMethods.BackToList";
         listActionMethodName = "Methods";
         listControllerName = "ExternalAuthentication";
-        menuitem = "/Admin/ExternalAuthentication/Methods";
+        menuitem = $"/{Constants.AreaAdmin}/ExternalAuthentication/Methods";
     }
     else if (plugin is IWidgetPlugin)
     {
@@ -65,7 +65,7 @@
         backToLocale = "Admin.ContentManagement.Widgets.BackToList";
         listActionMethodName = "List";
         listControllerName = "Widget";
-        menuitem = "/Admin/Widget/List";
+        menuitem = $"/{Constants.AreaAdmin}/Widget/List";
     }
     else if (plugin is IMiscPlugin)
     {
@@ -74,7 +74,7 @@
         backToLocale = "Admin.Configuration.Plugins.Misc.BackToList";
         listActionMethodName = "List";
         listControllerName = "Plugin";
-        menuitem = "/Admin/Plugin/List";
+        menuitem = $"/{Constants.AreaAdmin}/Plugin/List";
     }
 
     Layout = "_AdminLayout";

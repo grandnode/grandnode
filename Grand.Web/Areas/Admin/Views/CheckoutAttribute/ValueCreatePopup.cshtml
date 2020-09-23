@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
 }
 
 @model CheckoutAttributeValueModel
@@ -8,7 +8,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew").Text;
 }
-<form asp-area="Admin" asp-controller="CheckoutAttribute" asp-action="ValueCreatePopup"
+<form asp-area="@Constants.AreaAdmin" asp-controller="CheckoutAttribute" asp-action="ValueCreatePopup"
       asp-route-checkoutAttributeId="@Context.Request.Query["checkoutAttributeId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

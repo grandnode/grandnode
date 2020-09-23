@@ -1,11 +1,11 @@
 ﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Orders.Fields.PartialRefund").Text;
 }
 @model OrderModel
 
-<form asp-area="Admin" asp-controller="Order" asp-action="PartiallyRefundOrderPopup" method="post"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Order" asp-action="PartiallyRefundOrderPopup" method="post"
       asp-route-OrderId="@Context.Request.Query["OrderId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-online="@Context.Request.Query["online"]"

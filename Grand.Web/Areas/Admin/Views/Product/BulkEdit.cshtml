@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.BulkEdit").Text;
 }
-<form asp-area="Admin" asp-controller="Product" asp-action="BulkEdit" method="post">
+<form asp-area="@Constants.AreaAdmin" asp-controller="Product" asp-action="BulkEdit" method="post">
     
     <div class="row">
         <div class="col-md-12">

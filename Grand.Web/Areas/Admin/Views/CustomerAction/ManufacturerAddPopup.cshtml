@@ -1,11 +1,11 @@
 ﻿@model CustomerActionConditionModel.AddManufacturerConditionModel
 @inject AdminAreaSettings adminAreaSettings
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerActionCondition.Manufacturers.AddNew").Text;
 }
-<form asp-area="Admin" asp-controller="CustomerAction" asp-action="ManufacturerAddPopup" method="post"
+<form asp-area="@Constants.AreaAdmin" asp-controller="CustomerAction" asp-action="ManufacturerAddPopup" method="post"
       asp-route-CustomerActionId="@Context.Request.Query["CustomerActionId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerReminder.Edit").Text;
 }
-<form asp-area="Admin" asp-controller="CustomerReminder" 
+<form asp-area="@Constants.AreaAdmin" asp-controller="CustomerReminder" 
       asp-action="Edit" method="post" id="customer-reminder-form">
     
     <div class="row">
@@ -34,7 +34,7 @@
 <admin-delete-confirmation button-id="customerreminder-delete"/>
 
 @*run report*@
-<form asp-area="Admin" asp-controller="CustomerReminder" asp-action="Run" method="post" id="run-form">
+<form asp-area="@Constants.AreaAdmin" asp-controller="CustomerReminder" asp-action="Run" method="post" id="run-form">
     
     <input asp-for="Id" type="hidden" />
 </form>

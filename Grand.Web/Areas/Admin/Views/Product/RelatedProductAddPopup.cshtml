@@ -1,12 +1,12 @@
 ﻿@model ProductModel.AddRelatedProductModel
 @inject AdminAreaSettings adminAreaSettings
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.RelatedProducts.AddNew").Text;
 }
 
-<form asp-area="Admin" asp-controller="Product" asp-action="RelatedProductAddPopup"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Product" asp-action="RelatedProductAddPopup"
       asp-route-productId="@Context.Request.Query["productId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

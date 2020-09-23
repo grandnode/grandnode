@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName);
 }
-<form asp-area="Admin" asp-controller="Product" asp-action="EditAttributeValues" id="productattribute-form" 
+<form asp-area="@Constants.AreaAdmin" asp-controller="Product" asp-action="EditAttributeValues" id="productattribute-form" 
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

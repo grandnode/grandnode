@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Orders.Address.EditAddress").Text;
 }
-<form asp-area="Admin" asp-controller="Order" asp-action="AddressEdit"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Order" asp-action="AddressEdit"
       asp-route-addressId="@Context.Request.Query["addressId"]"
       asp-route-orderId="@Context.Request.Query["orderId"]">
     

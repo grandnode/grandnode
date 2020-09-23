@@ -1,7 +1,7 @@
 ﻿@model CourseLessonModel
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<input id="active-menu-item" type="hidden" value="/Admin/Course/List" />
+<input id="active-menu-item" type="hidden" value="/@Constants.AreaAdmin/Course/List" />
 <admin-tabstrip name="lesson-edit">
     <items>
         <tabstrip-item text="@T("Admin.Courses.Course.Lesson.Info")" tab-index="0">

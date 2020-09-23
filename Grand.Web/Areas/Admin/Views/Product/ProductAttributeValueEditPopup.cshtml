@@ -1,10 +1,10 @@
 ﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditValueDetails").Text;
 }
 @model ProductModel.ProductAttributeValueModel
-<form asp-area="Admin" asp-controller="Product" asp-action="ProductAttributeValueEditPopup" method="post"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Product" asp-action="ProductAttributeValueEditPopup" method="post"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-productAttributeMappingId="@Context.Request.Query["ProductAttributeMappingId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"

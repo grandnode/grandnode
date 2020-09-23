@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Forums").Text;
 }
-<form asp-area="Admin" asp-controller="Setting" asp-action="Forum" method="post">
+<form asp-area="@Constants.AreaAdmin" asp-controller="Setting" asp-action="Forum" method="post">
     
     <div asp-validation-summary="All"></div>
 

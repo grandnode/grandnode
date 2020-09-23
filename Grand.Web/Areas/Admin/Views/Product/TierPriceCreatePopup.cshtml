@@ -1,13 +1,13 @@
 ﻿@model ProductModel.TierPriceModel
 
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
 
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.TierPrices.AddNew").Text;
 }
 
-<form asp-area="Admin" asp-controller="Product" asp-action="TierPriceCreatePopup"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Product" asp-action="TierPriceCreatePopup"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

@@ -1,6 +1,6 @@
 @inject IPageHeadBuilder pagebuilder
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLoginLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminLogin;
     //title
     pagebuilder.AddTitleParts(T("Admin.Login.TwoFactor.PageTitle.Login").Text);
 
@@ -12,7 +12,7 @@
             @* login main block *@
             <div class="col-sm-8 col-12">
                 <div class="card p-3 bg-light">
-                    <form asp-action="TwoFactorAuthorization" asp-controller="Login" asp-area="Admin" method="post">
+                    <form asp-action="TwoFactorAuthorization" asp-controller="Login" asp-area="@Constants.AreaAdmin" method="post">
                         <div class="card-body">
                             <div class="row">
                                 <div asp-validation-summary="ModelOnly" class="col-12 justify-content-around text-danger"></div>

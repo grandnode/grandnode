@@ -148,7 +148,7 @@
                         $(document).ready(function () {
                             $("#@clientId").fineUploader({
                                 request: {
-                                    endpoint: '@(Url.Content("~/Admin/Download/AsyncUpload"))'
+                                    endpoint: '@(Url.Action("AsyncUpload", "Download"))'
                                 },
                                 template: "@(clientId)-qq-template",
                                 multiple: false

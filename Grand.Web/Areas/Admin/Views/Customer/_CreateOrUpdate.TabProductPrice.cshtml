@@ -72,7 +72,7 @@
                     field: "ProductName",
                     title: "@T("Admin.Customers.Customers.ProductPrice.ProductName")",
                     width: 300,
-                    template: '<a href="/Admin/Product/Edit/#=ProductId#" target="_blank">#=kendo.htmlEncode(ProductName)#</a>'
+                    template: '<a href="@Url.Action("Edit", "Product")/#=ProductId#" target="_blank">#=kendo.htmlEncode(ProductName)#</a>'
                 }, {
                     field: "Price",
                     title: "@T("Admin.Customers.Customers.ProductPrice.Price")",

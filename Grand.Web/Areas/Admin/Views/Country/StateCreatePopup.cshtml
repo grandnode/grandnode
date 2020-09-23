@@ -1,11 +1,11 @@
 ﻿@model StateProvinceModel
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries.States.AddNew").Text;
 }
 
-<form asp-area="Admin" asp-controller="Country" asp-action="StateCreatePopup"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Country" asp-action="StateCreatePopup"
       asp-route-countryId="@Context.Request.Query["countryId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

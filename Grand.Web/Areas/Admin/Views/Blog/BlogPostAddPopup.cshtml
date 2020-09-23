@@ -2,11 +2,11 @@
 @inject AdminAreaSettings adminAreaSettings
 
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.BlogCategory.AddNewPost").Text;
 }
-<form asp-area="Admin" asp-controller="Blog" asp-action="BlogPostAddPopup" method="post"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Blog" asp-action="BlogPostAddPopup" method="post"
       asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

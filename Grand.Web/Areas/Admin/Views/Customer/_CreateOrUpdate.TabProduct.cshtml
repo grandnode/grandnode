@@ -13,7 +13,7 @@
     </div>
     <vc:admin-widget widget-zone="customer_details_product_bottom" additional-data="Model" />
 </div>
-    <script>
+<script>
         $(document).ready(function () {
             $("#personalizedproduct-grid").kendoGrid({
                 dataSource: {
@@ -72,7 +72,7 @@
                     field: "ProductName",
                     title: "@T("Admin.Customers.Customers.PersonalizedProduct.ProductName")",
                     width: 300,
-                    template: '<a href="/Admin/Product/Edit/#=ProductId#" target="_blank">#=kendo.htmlEncode(ProductName)#</a>'
+                    template: '<a href="@Url.Action("Edit", "Product")/#=ProductId#" target="_blank">#=kendo.htmlEncode(ProductName)#</a>'
                 }, {
                     field: "DisplayOrder",
                     title: "@T("Admin.Customers.Customers.PersonalizedProduct.DisplayOrder")",
@@ -93,7 +93,7 @@
                 }]
             });
         });
-    </script>
+</script>
     <script>
             $(document).ready(function () {
                 $('#btnRefreshPersonalizedProducts').click(function () {

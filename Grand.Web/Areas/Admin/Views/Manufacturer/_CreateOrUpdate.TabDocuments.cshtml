@@ -50,12 +50,12 @@ $(document).ready(function () {
         columns: [{
                 field: "Number",
                 title: "@T("Admin.Documents.Document.Fields.Number")",
-                template: '<a class="k-link" href="/Admin/Document/EditDocument/#=Id#">#=kendo.htmlEncode(Number)#</a>',
+                template: '<a class="k-link" href="@Url.Action("EditDocument", "Document")/#=Id#">#=kendo.htmlEncode(Number)#</a>',
             },
             {
                 field: "Name",
                 title: "@T("Admin.Documents.Document.Fields.Name")",
-                template: '<a class="k-link" href="/Admin/Document/EditDocument/#=Id#">#=kendo.htmlEncode(Name)#</a>',
+                template: '<a class="k-link" href="@Url.Action("EditDocument", "Document")/#=Id#">#=kendo.htmlEncode(Name)#</a>',
             }, {
                 field: "Published",
                 title: "@T("Admin.Documents.Document.Fields.Published")",

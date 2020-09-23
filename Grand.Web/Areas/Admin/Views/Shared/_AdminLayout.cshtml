@@ -237,7 +237,7 @@
                                         @if (currentCustomer.IsAdmin())
                                         {
                                             <li>
-                                                <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
+                                                <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = Constants.AreaAdmin })">
                                                     <i class="icon-user"></i> @T("Admin.Header.Profile")
                                                 </a>
                                             </li>

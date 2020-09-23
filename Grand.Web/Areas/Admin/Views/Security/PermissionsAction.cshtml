@@ -1,6 +1,6 @@
 ﻿@model PermissionActionModel
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Configuration.ACL").Text;
 }
@@ -10,7 +10,7 @@
         window.close();
     </script>
 }
-<form asp-area="Admin" asp-controller="Security" asp-action="PermissionsAction" method="post">
+<form asp-area="@Constants.AreaAdmin" asp-controller="Security" asp-action="PermissionsAction" method="post">
     <input asp-for="SystemName" type="hidden" />
     <input asp-for="CustomerRoleId" type="hidden" />
     <div class="row">

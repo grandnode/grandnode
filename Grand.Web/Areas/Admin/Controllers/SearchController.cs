@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Web.Areas.Admin.Extensions;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -72,7 +73,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         result.Add(new Tuple<object, int>(new
                         {
                             title = product.Name,
-                            link = Url.Content("~/Admin/Product/Edit/") + product.Id,
+                            link = Url.Content($"~/{Constants.AreaAdmin}/Product/Edit/") + product.Id,
                             source = _localizationService.GetResource("Admin.Catalog.Products")
                         }, _adminSearchSettings.ProductsDisplayOrder));
                     }
@@ -86,7 +87,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         result.Add(new Tuple<object, int>(new
                         {
                             title = category.Name,
-                            link = Url.Content("~/Admin/Category/Edit/") + category.Id,
+                            link = Url.Content($"~/{Constants.AreaAdmin}/Category/Edit/") + category.Id,
                             source = _localizationService.GetResource("Admin.Catalog.Categories")
                         }, _adminSearchSettings.CategoriesDisplayOrder));
                     }
@@ -100,7 +101,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         result.Add(new Tuple<object, int>(new
                         {
                             title = manufacturer.Name,
-                            link = Url.Content("~/Admin/Manufacturer/Edit/") + manufacturer.Id,
+                            link = Url.Content($"~/{Constants.AreaAdmin}/Manufacturer/Edit/") + manufacturer.Id,
                             source = _localizationService.GetResource("Admin.Catalog.Manufacturers")
                         }, _adminSearchSettings.ManufacturersDisplayOrder));
                     }
@@ -115,7 +116,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         result.Add(new Tuple<object, int>(new
                         {
                             title = topic.SystemName,
-                            link = Url.Content("~/Admin/Topic/Edit/") + topic.Id,
+                            link = Url.Content($"~/{Constants.AreaAdmin}/Topic/Edit/") + topic.Id,
                             source = _localizationService.GetResource("Admin.ContentManagement.Topics")
                         }, _adminSearchSettings.TopicsDisplayOrder));
                     }
@@ -129,7 +130,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         result.Add(new Tuple<object, int>(new
                         {
                             title = signleNews.Title,
-                            link = Url.Content("~/Admin/News/Edit/") + signleNews.Id,
+                            link = Url.Content($"~/{Constants.AreaAdmin}/News/Edit/") + signleNews.Id,
                             source = _localizationService.GetResource("Admin.ContentManagement.News")
                         }, _adminSearchSettings.NewsDisplayOrder));
                     }
@@ -143,7 +144,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         result.Add(new Tuple<object, int>(new
                         {
                             title = blogPost.Title,
-                            link = Url.Content("~/Admin/Blog/Edit/") + blogPost.Id,
+                            link = Url.Content($"~/{Constants.AreaAdmin}/Blog/Edit/") + blogPost.Id,
                             source = _localizationService.GetResource("Admin.ContentManagement.Blog")
                         }, _adminSearchSettings.BlogsDisplayOrder));
                     }
@@ -165,7 +166,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         result.Add(new Tuple<object, int>(new
                         {
                             title = customer.Email,
-                            link = Url.Content("~/Admin/Customer/Edit/") + customer.Id,
+                            link = Url.Content($"~/{Constants.AreaAdmin}/Customer/Edit/") + customer.Id,
                             source = _localizationService.GetResource("Admin.Customers")
                         }, _adminSearchSettings.CustomersDisplayOrder));
                     }
@@ -209,7 +210,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         result.Add(new Tuple<object, int>(new
                         {
                             title = order.OrderNumber,
-                            link = Url.Content("~/Admin/Order/Edit/") + order.Id,
+                            link = Url.Content($"~/{Constants.AreaAdmin}/Order/Edit/") + order.Id,
                             source = _localizationService.GetResource("Admin.Orders")
                         }, _adminSearchSettings.OrdersDisplayOrder));
                     }
@@ -220,7 +221,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     result.Add(new Tuple<object, int>(new
                     {
                         title = order.Code,
-                        link = Url.Content("~/Admin/Order/Edit/") + order.Id,
+                        link = Url.Content($"~/{Constants.AreaAdmin}/Order/Edit/") + order.Id,
                         source = _localizationService.GetResource("Admin.Orders")
                     }, _adminSearchSettings.OrdersDisplayOrder));
                 }

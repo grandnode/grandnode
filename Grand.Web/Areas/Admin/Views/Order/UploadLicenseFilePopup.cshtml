@@ -1,10 +1,10 @@
 ﻿@model OrderModel.UploadLicenseModel
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Orders.Products.License.UploadFile").Text;
 }
-<form asp-area="Admin" asp-controller="Order" asp-action="UploadLicenseFilePopup" method="post">
+<form asp-area="@Constants.AreaAdmin" asp-controller="Order" asp-action="UploadLicenseFilePopup" method="post">
     
     <div class="row">
         <div class="col-md-12">

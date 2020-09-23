@@ -82,7 +82,7 @@
                 columns: [{
                     field: "ProductName",
                     title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.Product")",
-                    template: '<a class="k-link" href="@Url.Action("Edit", "Product")/#=Id#">#=kendo.htmlEncode(ProductName)#</a>'
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Product", new { id ="" })/#=Id#">#=kendo.htmlEncode(ProductName)#</a>'
                 }, {
                     field: "DisplayOrder",
                     title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")",
