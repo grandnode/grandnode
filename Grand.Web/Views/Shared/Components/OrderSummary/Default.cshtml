@@ -229,9 +229,10 @@
             </div>
             @if (Model.IsEditable)
             {
-                <div class="common-buttons btn-group btn-group-sm mb-3">
-                    <button type="button" onclick="setLocation('@(Url.RouteUrl("ClearCart"))')" class="btn btn-danger d-flex justify-content-center removeAll-cart-button"><span class="mdi mdi-delete-forever-outline pr-1"></span><span class="d-sm-block">@T("shoppingcart.clearcart")</span></button>
-                </div>
+        <div class="common-buttons btn-group btn-group-sm mb-3">
+            <button type="button" onclick="setLocation('@(Url.RouteUrl("ClearCart"))')" class="btn btn-danger d-flex justify-content-center removeAll-cart-button"><span class="mdi mdi-delete-forever-outline pr-1"></span><span class="d-sm-block">@T("shoppingcart.clearcart")</span></button>
+            <button type="button" onclick="setLocation('@(Url.RouteUrl("ContinueShopping"))')" class="btn btn-outline-secondary d-flex justify-content-center continue-shopping-button"><span class="d-sm-block">@T("shoppingcart.continueshopping")</span></button>
+        </div>
             }
             <div class="cart-options">
                 <div class="row">
