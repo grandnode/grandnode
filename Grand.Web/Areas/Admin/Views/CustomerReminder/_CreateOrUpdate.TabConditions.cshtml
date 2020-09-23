@@ -68,7 +68,7 @@
                         field: "Name",
                         title: "@T("Admin.Customers.CustomerReminder.Fields.Name")",
                         width: 300,
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/CustomerReminder/EditCondition")?customerReminderId=@(Model.Id)&cid=#=Id#">#=kendo.htmlEncode(Name)#</a>',
+                        template: '<a class="k-link" href="@Url.Action("EditCondition", "CustomerReminder")/?customerReminderId=@(Model.Id)&cid=#=Id#">#=kendo.htmlEncode(Name)#</a>',
                     },
                     {
                         field: "Condition",

@@ -94,7 +94,7 @@
                     width: 340,
                     //template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
                     encoded: false,
-                    template: "<a class='k-link' href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/AttributeCombinationPopup/")?productId=@(Model.Id)&Id=#=Id#&btnId=btnRefreshCombinations&formId=product-form\", 800, 600, true);'>#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #</a>"
+                    template: "<a class='k-link' href='javascript:OpenWindow(\"@Url.Action("AttributeCombinationPopup", "Product")/?productId=@(Model.Id)&Id=#=Id#&btnId=btnRefreshCombinations&formId=product-form\", 800, 600, true);'>#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #</a>"
                 }, {
                     field: "StockQuantity",
                     title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")",

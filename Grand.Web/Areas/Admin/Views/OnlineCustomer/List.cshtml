@@ -59,7 +59,7 @@
             columns: [{
                 field: "Id",
                 title: "@T("Admin.Customers.OnlineCustomers.Fields.CustomerInfo")",
-                template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">#:kendo.htmlEncode(CustomerInfo)#</a>',
+                template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=Id#">#:kendo.htmlEncode(CustomerInfo)#</a>',
                 width: 220,
             }, {
                 field: "LastIpAddress",

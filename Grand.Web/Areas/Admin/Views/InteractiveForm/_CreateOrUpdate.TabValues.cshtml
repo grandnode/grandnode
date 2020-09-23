@@ -12,7 +12,7 @@
             </div>
         </div>
 
-            <script>
+        <script>
             $(document).ready(function () {
                 $("#interactiveformattributes-grid").kendoGrid({
                     dataSource: {
@@ -64,7 +64,7 @@
                     }, {
                         field: "SystemName",
                         title: "@T("Admin.Promotions.InteractiveForms.Attribute.Fields.SystemName")",
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/InteractiveForm/EditAttribute")?formId=@(Model.Id)&aid=#=Id#">#=SystemName#</a>',
+                        template: '<a class="k-link" href="@Url.Action("EditAttribute", "InteractiveForm")/?formId=@(Model.Id)&aid=#=Id#">#=SystemName#</a>',
                     }, {
                         field: "Type",
                         title: "@T("Admin.Promotions.InteractiveForms.Attribute.Fields.FormControlTypeId")",
@@ -77,7 +77,7 @@
                     }]
                 });
             });
-            </script>
+        </script>
 
     }
     else

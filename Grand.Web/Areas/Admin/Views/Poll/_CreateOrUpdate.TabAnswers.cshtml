@@ -14,7 +14,7 @@
     <vc:admin-widget widget-zone="poll_details_answers_bottom" additional-data="Model" />
 </div>
 
-        <script>
+<script>
             $(document).ready(function () {
                 $("#answers-grid").kendoGrid({
                     dataSource: {
@@ -75,7 +75,7 @@
                         field: "Name",
                         title: "@T("Admin.ContentManagement.Polls.Answers.Fields.Name")",
                         width: 300,
-                        template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Poll/PollAnswerEditPopup/")#=Id#?pollId=@(Model.Id)&btnId=btnRefresh&formId=poll-form', 800, 450, true); return false;\">#=kendo.htmlEncode(Name)#</a>",
+                        template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Action("PollAnswerEditPopup", "Poll")/#=Id#?pollId=@(Model.Id)&btnId=btnRefresh&formId=poll-form', 800, 450, true); return false;\">#=kendo.htmlEncode(Name)#</a>",
                     }, {
                         field: "NumberOfVotes",
                         title: "@T("Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes")",
@@ -97,7 +97,7 @@
                 });
             });
 
-        </script>
+</script>
         <script>
             $(document).ready(function () {
                 $('#btnRefresh').click(function () {

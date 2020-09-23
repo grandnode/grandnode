@@ -623,6 +623,26 @@ body {
     line-height: 1.471;
 }
 
+.admin-login-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.admin-login-layout form {
+    display: flex;
+}
+.admin-login-layout .main_container {
+    width: 100%;
+    padding: 0 15px;
+}
+.admin-login-layout .card {
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+}
+
 
 .main_container .top_nav {
     display: block;
@@ -6175,11 +6195,6 @@ form>h4 {
     #searchInput {
         width: 300px;
     }
-    .light-dark-switch .custom-control-label {
-        width: 0;
-        text-indent: -99999px;
-    }
-
 }
 
 @media screen and (max-width:1120px) {
@@ -6585,7 +6600,7 @@ table.tableFixHead {
     cursor: pointer;
     text-indent: -9999999px;
     color: transparent;
-    margin: 0 0 0 3px;
+    width: 0;
 }
 .light-dark-switch .custom-control-label::after {
     top: 10px;

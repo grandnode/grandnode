@@ -70,11 +70,7 @@ namespace Grand.Web.Infrastructure
 
         }
 
-        public int Priority {
-            get {
-                return 0;
-            }
-        }
+        public int Priority => 0;
 
         private void RegisterCustomerRoute(IEndpointRouteBuilder routeBuilder, string pattern)
         {

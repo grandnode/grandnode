@@ -14,6 +14,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Grand.Web.Areas.Admin.Extensions;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -151,21 +152,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //no need user to configure
                 INTEGRATION = "tinymce4",
                 RETURN_URL_PREFIX = currentPathBase,
-                DIRLIST = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DIRLIST",
-                CREATEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=CREATEDIR",
-                DELETEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DELETEDIR",
-                MOVEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=MOVEDIR",
-                COPYDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=COPYDIR",
-                RENAMEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=RENAMEDIR",
-                FILESLIST = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=FILESLIST",
-                UPLOAD = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=UPLOAD",
-                DOWNLOAD = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DOWNLOAD",
-                DOWNLOADDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DOWNLOADDIR",
-                DELETEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DELETEFILE",
-                MOVEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=MOVEFILE",
-                COPYFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=COPYFILE",
-                RENAMEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=RENAMEFILE",
-                GENERATETHUMB = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=GENERATETHUMB",
+                DIRLIST = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=DIRLIST",
+                CREATEDIR = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=CREATEDIR",
+                DELETEDIR = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=DELETEDIR",
+                MOVEDIR = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=MOVEDIR",
+                COPYDIR = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=COPYDIR",
+                RENAMEDIR = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=RENAMEDIR",
+                FILESLIST = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=FILESLIST",
+                UPLOAD = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=UPLOAD",
+                DOWNLOAD = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=DOWNLOAD",
+                DOWNLOADDIR = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=DOWNLOADDIR",
+                DELETEFILE = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=DELETEFILE",
+                MOVEFILE = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=MOVEFILE",
+                COPYFILE = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=COPYFILE",
+                RENAMEFILE = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=RENAMEFILE",
+                GENERATETHUMB = $"{HttpContext.Request.PathBase}/{Constants.AreaAdmin}/RoxyFileman/ProcessRequest?a=GENERATETHUMB",
             };
 
             //save the file

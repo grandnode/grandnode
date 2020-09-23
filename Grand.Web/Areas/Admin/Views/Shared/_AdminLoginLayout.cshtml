@@ -1,0 +1,53 @@
+﻿@model Grand.Web.Areas.Admin.Models.Common.LoginModel
+@{
+    //page title
+    Layout = "";
+}
+@inject IPageHeadBuilder pagebuilder
+@{
+    //page title
+    string adminPageTitle = "";
+    if (!String.IsNullOrWhiteSpace(ViewBag.Title))
+    {
+        adminPageTitle = ViewBag.Title + " / ";
+    }
+    adminPageTitle += T("Admin.Login.PageTitle").Text;
+
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/build/css/custom.css", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/bootstrap/js/bootstrap.min.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/bootstrap/js/popper.min.js", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/bootstrap/css/bootstrap.min.css", excludeFromBundle: true);
+
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/jquery.validate.unobtrusive.min.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/jquery.validate.min.js", excludeFromBundle: true);
+
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/simple-line-icons/simple-line-icons.min.css", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/build/css/font-awesome.min.css", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/administration/build/js/moment.min.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/administration/build/js/jquery.min.js", excludeFromBundle: true);
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@adminPageTitle</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <css-files asp-location="Head" bundle-files="false">
+        <script-files asp-location="Head" bundle-files="false">
+
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    <div class="container body admin-login-layout">
+        <div class="main_container">
+           @RenderBody()
+        </div>
+    </div>
+
+    <css-files asp-location="Footer">
+    <script-files asp-location="Footer">
+</body>
+</html>

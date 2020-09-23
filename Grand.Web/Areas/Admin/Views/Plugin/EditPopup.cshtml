@@ -1,11 +1,11 @@
 ﻿@model PluginModel
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.EditDetails").Text;
 }
 
-<form asp-area="Admin" asp-controller="Plugin" asp-action="EditPopup" method="post" asp-route-btnId="@Context.Request.Query["btnId"]"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Plugin" asp-action="EditPopup" method="post" asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
     
     <div class="row">

@@ -1,10 +1,10 @@
 ﻿@model ContactAttributeValueModel
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.ContactAttributes.Values.EditValueDetails").Text;
 }
-<form asp-area="Admin" asp-controller="ContactAttribute" asp-action="ValueEditPopup"
+<form asp-area="@Constants.AreaAdmin" asp-controller="ContactAttribute" asp-action="ValueEditPopup"
       asp-route-contactAttributeId="@Context.Request.Query["contactAttributeId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

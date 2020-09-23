@@ -75,7 +75,7 @@ else
 
         $("#@(clientId)").fineUploader({
             request: {
-                endpoint: '@(Url.Content("~/Admin/Picture/AsyncUpload"))'
+                endpoint: '@(Url.Action("AsyncUpload", "Picture"))'
             },
             template: "@(clientId)-qq-template",
             multiple: false

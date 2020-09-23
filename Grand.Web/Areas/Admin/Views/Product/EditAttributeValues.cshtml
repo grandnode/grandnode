@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName);
 }
-<form asp-area="Admin" asp-controller="Product" asp-action="EditAttributeValues" id="productattribute-form" 
+<form asp-area="@Constants.AreaAdmin" asp-controller="Product" asp-action="EditAttributeValues" id="productattribute-form" 
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
@@ -124,7 +124,7 @@
                         field: "Id",
                         title: "@T("Admin.Common.Edit")",
                         width: 100,
-                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")#=Id#?productId=@(Model.ProductId)&productAttributeMappingId=@(Model.ProductAttributeMappingId)&btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\" class='k-button' />"
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Action("ProductAttributeValueEditPopup", "Product")/#=Id#?productId=@(Model.ProductId)&productAttributeMappingId=@(Model.ProductAttributeMappingId)&btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\" class='k-button' />"
                     }, {
                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                         title: "@T("Admin.Common.Delete")",

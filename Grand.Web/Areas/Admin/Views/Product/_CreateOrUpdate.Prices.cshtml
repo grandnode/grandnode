@@ -277,7 +277,7 @@
                 }, {
                     field: "Id",
                     title: "@T("Admin.Common.Edit")",
-                    template: "<button type=\"button\" onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/TierPriceEditPopup/")#=Id#?productId=@(Model.Id)&btnId=btnRefreshTierPrices&formId=product-form', 800, 600, true); return false;\" class=\"k-button\"><span class=\"k-icon k-i-edit\"></span>&nbsp;@T("Admin.Common.Edit")</button>"
+                    template: "<button type=\"button\" onclick=\"javascript:OpenWindow('@Url.Action("TierPriceEditPopup", "Product")/#=Id#?productId=@(Model.Id)&btnId=btnRefreshTierPrices&formId=product-form', 800, 600, true); return false;\" class=\"k-button\"><span class=\"k-icon k-i-edit\"></span>&nbsp;@T("Admin.Common.Edit")</button>"
                 }, {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                     title: "@T("Admin.Common.Delete")"

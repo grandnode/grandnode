@@ -379,18 +379,24 @@ namespace Grand.Framework.Infrastructure.Extensions
             .AddHtmlMinification(options =>
             {
                 options.ExcludedPages = new List<IUrlMatcher> {
+                    new WildcardUrlMatcher("/swagger/*"),
                     new WildcardUrlMatcher("/admin/*"),
-                    new ExactUrlMatcher("/admin")
+                    new ExactUrlMatcher("/admin"),
                 };
             })
             .AddXmlMinification(options =>
             {
                 options.ExcludedPages = new List<IUrlMatcher> {
+                    new WildcardUrlMatcher("/swagger/*"),
                     new WildcardUrlMatcher("/admin/*"),
-                    new ExactUrlMatcher("/admin")
+                    new ExactUrlMatcher("/admin"),
                 };
             })
-            .AddHttpCompression();
+            .AddHttpCompression(options => {
+                options.ExcludedPages = new List<IUrlMatcher> {
+                    new WildcardUrlMatcher("/swagger/*"),
+                };
+            });
 
         }
 

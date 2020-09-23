@@ -70,7 +70,7 @@
                 columns: [{
                     field: "Article2Name",
                     title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")",
-                    template: '<a href="@Url.Content("~/Admin/Knowledgebase/EditArticle/")#=Article2Id#">#=kendo.htmlEncode(Article2Name)#</a>',
+                    template: '<a href="@Url.Action("EditArticle", "Knowledgebase")/#=Article2Id#">#=kendo.htmlEncode(Article2Name)#</a>',
                     width: 400
                 }, {
                     field: "DisplayOrder",

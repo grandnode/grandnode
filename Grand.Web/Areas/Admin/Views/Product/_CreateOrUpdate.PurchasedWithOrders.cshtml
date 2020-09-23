@@ -51,13 +51,13 @@
                     field: "OrderNumber",
                     title: "@T("Admin.Orders.Fields.ID")",
                     width: 80,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=OrderNumber#</a>',
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Order")/#=Id#">#=OrderNumber#</a>',
                 }, {
                     field: "CustomerEmail",
                     title: "@T("Admin.Orders.Fields.CustomerEmail")",
                     width: 200,
                     minScreenWidth: 500,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:CustomerEmail#</a>'
                 },
                 @if (!Model.IsLoggedInAsVendor)
                 {

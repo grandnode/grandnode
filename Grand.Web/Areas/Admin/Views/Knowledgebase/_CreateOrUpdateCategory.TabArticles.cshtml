@@ -64,7 +64,7 @@
                 columns: [{
                     field: "Name",
                     title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")",
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Knowledgebase/EditArticle/")#=ArticleId#">#=kendo.htmlEncode(Name)#</a>',
+                    template: '<a class="k-link" href="@Url.Action("EditArticle", "Knowledgebase")/#=ArticleId#">#=kendo.htmlEncode(Name)#</a>',
                     width: 400
                 }, {
                     field: "Published",

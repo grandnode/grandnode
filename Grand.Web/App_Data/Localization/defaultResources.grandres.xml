@@ -13364,6 +13364,45 @@
   <LocaleResource Name="Admin.Home">
     <Value>Home</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Login.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.ForgotPassword">
+    <Value>Forgot password?</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.LoginButton">
+    <Value>Log in</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.PageTitle">
+    <Value>GrandNode admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.Password">
+    <Value>Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.RememberMe">
+    <Value>Remember me?</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.Title">
+    <Value>Welcome, please sign in</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.TwoFactorAuth.DigitCode">
+    <Value>Code:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.TwoFactorAuth.EnterCode">
+    <Value>Please enter the security code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.TwoFactorAuth.PageTitle.Login">
+    <Value>Two factory authentication login</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.TwoFactorAuth.SendCode">
+    <Value>Send code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.Unsuccessful">
+    <Value>Login was unsuccessful. Please correct the errors and try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Login.UserName">
+    <Value>Username</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders">
     <Value>Orders</Value>
   </LocaleResource>

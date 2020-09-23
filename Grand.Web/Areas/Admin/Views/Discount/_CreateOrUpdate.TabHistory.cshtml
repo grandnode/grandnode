@@ -65,7 +65,7 @@
                     field: "OrderId",
                     title: "@T("Admin.Promotions.Discounts.History.Order")",
                     width: 200,
-                    template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-search"></i> #=OrderNumber# - @T("Admin.Common.View")</a>'
+                    template: '<a class="btn btn-sm btn-default" href="@Url.Action("Edit", "Order")/#=OrderId#"><i class="fa fa-search"></i> #=OrderNumber# - @T("Admin.Common.View")</a>'
                 }, {
                     field: "OrderTotal",
                     title: "@T("Admin.Promotions.Discounts.History.OrderTotal")",

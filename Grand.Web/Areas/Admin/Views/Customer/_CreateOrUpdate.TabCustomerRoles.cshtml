@@ -8,7 +8,7 @@
         {
         <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
             <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds!=null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />
-            <a href="@Url.Content("/Admin/CustomerRole/Edit/")@customerRole.Id">@customerRole.Name</a>
+            <a href="@Url.Action("Edit", "CustomerRole")/@customerRole.Id">@customerRole.Name</a>
             <div class="control__indicator"></div>
         </label>
         }

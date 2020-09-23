@@ -1,11 +1,11 @@
 ﻿@model PredefinedProductAttributeValueModel
 @{    
     // layout
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.EditValueDetails").Text;
 }
-<form asp-area="Admin" asp-controller="ProductAttribute" asp-action="PredefinedProductAttributeValueEditPopup" method="post"
+<form asp-area="@Constants.AreaAdmin" asp-controller="ProductAttribute" asp-action="PredefinedProductAttributeValueEditPopup" method="post"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
     

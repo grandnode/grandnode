@@ -14,7 +14,7 @@
     <vc:admin-widget widget-zone="discount_details_applied_to_vendors_bottom" additional-data="Model" />
 </div>
 
-        <script>
+<script>
             $(document).ready(function () {
                 $("#vendors-grid").kendoGrid({
                     dataSource: {
@@ -67,7 +67,7 @@
                     columns: [{
                         field: "VendorName",
                         title: "@T("Admin.Promotions.Discounts.AppliedToVendors.Vendor")",
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#">#=kendo.htmlEncode(VendorName)#</a>',
+                        template: '<a class="k-link" href="@Url.Action("Edit", "Vendor")/#=VendorId#">#=kendo.htmlEncode(VendorName)#</a>',
                     }, {
                         command: [{
                             name: "destroy",
@@ -77,7 +77,7 @@
                     }]
                 });
             });
-        </script>
+</script>
         <script>
             $(document).ready(function () {
                 $('#btnRefreshVendors').click(function () {

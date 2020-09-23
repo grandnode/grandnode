@@ -69,7 +69,7 @@
                 columns: [{
                         field: "Name",
                         title: "@T("Admin.ContentManagement.Blog.BlogCategory.Fields.Post")",
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/Blog/Edit/")#=BlogPostId#">#=kendo.htmlEncode(Name)#</a>',
+                        template: '<a class="k-link" href="@Url.Action("Edit", "Blog")/#=BlogPostId#">#=kendo.htmlEncode(Name)#</a>',
                     },{
                     command: [{
                         name: "destroy",

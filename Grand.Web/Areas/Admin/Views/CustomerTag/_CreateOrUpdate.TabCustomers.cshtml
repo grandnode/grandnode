@@ -65,7 +65,7 @@
                         field: "Email",
                         title: "@T("Admin.Customers.CustomerTags.Fields.Email")",
                         width: 300,
-                            template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">#=Email#</a>',
+                            template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=Id#">#=Email#</a>',
                     },
                     {
                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },

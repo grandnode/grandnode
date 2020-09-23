@@ -1,12 +1,12 @@
 ﻿@model ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel
 @inject AdminAreaSettings adminAreaSettings
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew").Text;
 }
 
-<form asp-area="Admin" asp-controller="Product" asp-action="AssociateProductToAttributeValuePopup"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Product" asp-action="AssociateProductToAttributeValuePopup"
      asp-route-productIdInput="@Context.Request.Query["productIdInput"]"
       asp-route-productNameInput="@Context.Request.Query["productNameInput"]">
 

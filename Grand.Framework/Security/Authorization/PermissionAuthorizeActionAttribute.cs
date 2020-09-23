@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Framework.Security.Authorization
 {
@@ -43,7 +44,7 @@ namespace Grand.Framework.Security.Authorization
 
             //authorize permission of access to the admin area
             if (!await permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
-                context.Result = new ChallengeResult();
+                context.Result = new RedirectToRouteResult("AdminLogin", new RouteValueDictionary());
             else
                 context.Result = new RedirectToActionResult("AccessDenied", "Home", new { pageUrl = context.HttpContext.Request.Path });
 

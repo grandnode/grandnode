@@ -144,13 +144,13 @@ $(document).ready(function () {
             field: "ProductName",
             title: "@T("Admin.Catalog.ProductReviews.Fields.Product")",
             width: 200,
-            template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:kendo.htmlEncode(ProductName)#</a>'
+            template: '<a class="k-link" href="@Url.Action("Edit", "Product")/#=ProductId#">#:kendo.htmlEncode(ProductName)#</a>'
         }, {
             field: "CustomerId",
             title: "@T("Admin.Catalog.ProductReviews.Fields.Customer")",
             width: 200,
             minScreenWidth: 750,
-            template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
+            template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
         }, {
             field: "Title",
             title: "@T("Admin.Catalog.ProductReviews.Fields.Title")",

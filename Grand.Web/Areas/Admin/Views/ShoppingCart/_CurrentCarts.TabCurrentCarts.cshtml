@@ -43,7 +43,7 @@ $(document).ready(function() {
             {
                 field: "CustomerId",
                 title: "@T("Admin.CurrentCarts.Customer")",
-                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                template: '<a href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:CustomerEmail#</a>'
             }, {
                 field: "TotalItems",
                 title: "@T("Admin.CurrentCarts.TotalItems")",
@@ -91,7 +91,7 @@ function detailInitCart(e) {
             {
                 field: "ProductName",
                 title: "@T("Admin.CurrentCarts.Product")",
-                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
+                template: '<a href="@Url.Action("Edit", "Product")/#=ProductId#">#:ProductName#</a>' +
                     '# if(AttributeInfo && AttributeInfo.length > 0) {# <br />#=AttributeInfo# #} #',
                 width: 400
             },{

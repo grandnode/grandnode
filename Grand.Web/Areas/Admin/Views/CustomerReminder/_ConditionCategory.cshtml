@@ -70,7 +70,7 @@
                                 columns: [{
                                     field: "CategoryName",
                                     title: "@T("Admin.Customers.CustomerReminder.Condition.Fields.CategoryName")",
-                                    template: '<a class="k-link" href="@Url.Content("~/Admin/Category/Edit/")#=Id#">#=kendo.htmlEncode(CategoryName)#</a>',
+                                    template: '<a class="k-link" href="@Url.Action("Edit", "Category")/#=Id#">#=kendo.htmlEncode(CategoryName)#</a>',
                                 },  {
                                     command: [{
                                         name: "destroy",

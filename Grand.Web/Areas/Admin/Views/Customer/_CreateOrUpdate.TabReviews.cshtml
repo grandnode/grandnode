@@ -96,11 +96,11 @@
                     field: "ProductName",
                     title: "@T("Admin.Customers.Customers.Reviews.Product")",
                     width: 90,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=kendo.htmlEncode(ProductName)#</a>'
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Product")/#=ProductId#">#=kendo.htmlEncode(ProductName)#</a>'
                 }, {
                     field: "Title",
                     title: "@T("Admin.Customers.Customers.Reviews.Title")",
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/ProductReview/Edit/")#=Id#">#:kendo.htmlEncode(Title)#</a>',
+                    template: '<a class="k-link" href="@Url.Action("Edit", "ProductReview")/#=Id#">#:kendo.htmlEncode(Title)#</a>',
                     width: 120
                 }, {
                     field: "Rating",

@@ -125,7 +125,7 @@
             columns: [{
                 field: "ProductName",
                 title: "@T("Admin.Reports.Bestsellers.Fields.Name")",
-                template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=kendo.htmlEncode(ProductName)#</a>'
+                template: '<a class="k-link" href="@Url.Action("Edit", "Product")/#=ProductId#">#=kendo.htmlEncode(ProductName)#</a>'
             }, {
                 field: "TotalQuantity",
                 title: "@T("Admin.Reports.Bestsellers.Fields.TotalQuantity")"

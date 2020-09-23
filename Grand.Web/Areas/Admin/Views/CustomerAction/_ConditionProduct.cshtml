@@ -70,7 +70,7 @@
                         field: "ProductName",
                         title: "@T("Admin.Customers.CustomerActionCondition.Fields.ProductName")",
                         width: 300,
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=Id#">#=kendo.htmlEncode(ProductName)#</a>',
+                        template: '<a class="k-link" href="@Url.Action("Edit", "Product")/#=Id#">#=kendo.htmlEncode(ProductName)#</a>',
                 },
                 {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
