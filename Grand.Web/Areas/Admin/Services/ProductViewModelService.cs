@@ -460,7 +460,7 @@ namespace Grand.Web.Areas.Admin.Services
                 foreach (var category in allCategories)
                 {
                     model.AvailableCategories.Add(new SelectListItem {
-                        Text = _categoryService.GetFormattedBreadCrumb(category, allCategories),
+                        Text = _categoryService.GetFormattedBreadCrumb(category, allCategories, languageId: _workContext.WorkingLanguage.Id),
                         Value = category.Id.ToString()
                     });
                 }
