@@ -7,12 +7,9 @@
 <partial name="_OldInternetExplorerWarning" />
 <main class="c-offcanvas-content-wrap clean-page">
     <div class="container page-container">
-        <div class="d-inline-flex flex-sm-row flex-column align-items-center justify-content-between w-100 mt-3">
+        <div class="d-inline-flex flex-sm-row flex-column align-items-center justify-content-center w-100 mt-3">
             @await Component.InvokeAsync("Logo")
-            <div class="back-to-store mt-sm-0 mt-3" onclick="setLocation('@(Url.RouteUrl("ContinueShopping"))')">
-                <span>@T("shoppingcart.continueshopping")</span>
-                <span class="mdi mdi-close"></span>
-            </div>
+            
         </div>
         @await Component.InvokeAsync("Widget", new { widgetZone = "clean_content_before" })
         @if (IsSectionDefined("Breadcrumb"))
