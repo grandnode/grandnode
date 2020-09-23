@@ -16,6 +16,7 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Stores;
+using Grand.Services.Topics;
 using Grand.Web.Commands.Models.Common;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Models.Common;
@@ -70,8 +71,6 @@ namespace Grand.Web.Controllers
             return View();
         }
 
-        //available even when a store is closed
-        [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> SetLanguage(
@@ -221,8 +220,16 @@ namespace Grand.Web.Controllers
         //contact us page
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual async Task<IActionResult> ContactUs()
+        public virtual async Task<IActionResult> ContactUs(
+            [FromServices] StoreInformationSettings storeInformationSettings,
+            [FromServices] ITopicService topicService)
         {
+            if (storeInformationSettings.StoreClosed)
+            {
+                var closestoretopic = await topicService.GetTopicBySystemName("ContactUs");
+                if (closestoretopic == null || !closestoretopic.AccessibleWhenStoreClosed)
+                    return RedirectToRoute("StoreClosed");
+            }
             var model = await _mediator.Send(new ContactUsCommand() {
                 Customer = _workContext.CurrentCustomer,
                 Language = _workContext.WorkingLanguage,
@@ -236,8 +243,18 @@ namespace Grand.Web.Controllers
         [ValidateCaptcha]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual async Task<IActionResult> ContactUsSend(ContactUsModel model, IFormCollection form, bool captchaValid)
+        public virtual async Task<IActionResult> ContactUsSend(
+            [FromServices] StoreInformationSettings storeInformationSettings,
+            [FromServices] ITopicService topicService,
+            ContactUsModel model, IFormCollection form, bool captchaValid)
         {
+            if (storeInformationSettings.StoreClosed)
+            {
+                var closestoretopic = await topicService.GetTopicBySystemName("ContactUs");
+                if (closestoretopic == null || !closestoretopic.AccessibleWhenStoreClosed)
+                    return RedirectToRoute("StoreClosed");
+            }
+
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
             {
@@ -286,8 +303,6 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        //available even when a store is closed
-        [CheckAccessClosedStore(true)]
         public virtual async Task<IActionResult> SitemapXml(int? id, string seocode,
             [FromServices] ILanguageService languageService,
             [FromServices] CommonSettings commonSettings)
@@ -348,11 +363,11 @@ namespace Grand.Web.Controllers
             await genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ConsentCookies, "", _storeContext.CurrentStore.Id);
             var dictionary = new Dictionary<string, bool>();
             var consentCookies = cookiePreference.GetConsentCookies();
-            foreach (var item in consentCookies.Where(x=>x.AllowToDisable))
+            foreach (var item in consentCookies.Where(x => x.AllowToDisable))
             {
                 dictionary.Add(item.SystemName, accept);
             }
-            if(dictionary.Any())
+            if (dictionary.Any())
                 await genericAttributeService.SaveAttribute<Dictionary<string, bool>>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ConsentCookies, dictionary, _storeContext.CurrentStore.Id);
 
             //save setting - EuCookieLawAccepted

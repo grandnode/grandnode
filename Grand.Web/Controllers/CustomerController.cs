@@ -81,8 +81,6 @@ namespace Grand.Web.Controllers
 
         #region Login / logout
 
-        //available even when a store is closed
-        [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Login(bool? checkoutAsGuest)
@@ -95,8 +93,6 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        //available even when a store is closed
-        [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         [ValidateCaptcha]
