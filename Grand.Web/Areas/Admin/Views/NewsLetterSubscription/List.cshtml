@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.newsLetterSubscriptions").Text;
 }
-<form asp-area="Admin" asp-controller="NewsletterSubscription" asp-action="List" method="post">
+<form asp-area="@Constants.AreaAdmin" asp-controller="NewsletterSubscription" asp-action="List" method="post">
     
 
     <div class="row">
@@ -215,7 +215,7 @@
 
     @*import emails form*@
     <div id="importcsv-window" style="display:none;">
-        <form asp-area="Admin" asp-controller="NewsLetterSubscription" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
+        <form asp-area="@Constants.AreaAdmin" asp-controller="NewsLetterSubscription" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
             
             <table style="text-align:left;">
                 <tr>

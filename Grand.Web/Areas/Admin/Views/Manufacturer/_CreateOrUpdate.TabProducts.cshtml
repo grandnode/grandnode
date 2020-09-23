@@ -80,7 +80,7 @@
                     editable: false,
                     type: "string",
                     title: "@T("Admin.Catalog.Manufacturers.Products.Fields.Product")",
-                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=kendo.htmlEncode(ProductName)#</a>'
+                    template: '<a href="@Url.Action("Edit", "Product")/#=ProductId#">#=kendo.htmlEncode(ProductName)#</a>'
                 }, {
                     field: "IsFeaturedProduct",
                     title: "@T("Admin.Catalog.Manufacturers.Products.Fields.IsFeaturedProduct")",

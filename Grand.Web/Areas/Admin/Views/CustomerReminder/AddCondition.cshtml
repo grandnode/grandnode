@@ -4,7 +4,7 @@
     ViewBag.Title = T("Admin.Customers.CustomerReminder.AddCondition").Text;
 }
 
-<form asp-area="Admin" asp-controller="CustomerReminder" 
+<form asp-area="@Constants.AreaAdmin" asp-controller="CustomerReminder" 
       asp-action="AddCondition" method="post" id="customer-reminder-condition-form"
       asp-route-CustomerReminderId="@Context.Request.Query["CustomerReminderId"]">
     

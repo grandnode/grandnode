@@ -92,7 +92,7 @@ $(document).ready(function() {
         {
             field: "CustomerId",
             title: "@T("Admin.PushNotifications.Message.Fields.CustomerEmail")",
-            template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>',
+            template: '<a href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:CustomerEmail#</a>',
             width: 100
         }, {
             field: "Allowed",

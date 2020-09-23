@@ -69,7 +69,7 @@ $(document).ready(function () {
             field: "ProductName",
             title: "@T("Admin.CurrentCarts.Product")",
             width:500,
-            template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:kendo.htmlEncode(ProductName)#</a>' +
+            template: '<a href="@Url.Action("Edit", "Product")/#=ProductId#">#:kendo.htmlEncode(ProductName)#</a>' +
                 '# if(AttributeInfo && AttributeInfo.length > 0) {# <br />#=AttributeInfo# #} #'
         }, {
             field: "Quantity",

@@ -356,7 +356,7 @@
                 field: "OrderId",
                 title: "@T("Admin.Catalog.Products.Calendar.OrderId")",
                 width: 200,
-                template: '# if(OrderId) {# <a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>  #} #'
+                template: '# if(OrderId) {# <a class="btn btn-sm btn-default" href="@Url.Action("Edit", "Order")/#=OrderId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>  #} #'
             }, {
                 command: [{
                     name: "destroy",

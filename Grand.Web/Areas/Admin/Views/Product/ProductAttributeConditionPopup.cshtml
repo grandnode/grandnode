@@ -1,13 +1,13 @@
 ﻿@using Grand.Domain.Catalog
 @model ProductAttributeConditionModel
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition").Text;
 }
 
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-<form asp-area="Admin" asp-controller="Product" asp-action="ProductAttributeConditionPopup" enctype="multipart/form-data" method="post"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Product" asp-action="ProductAttributeConditionPopup" enctype="multipart/form-data" method="post"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-productAttributeMappingId="@Context.Request.Query["ProductAttributeMappingId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"

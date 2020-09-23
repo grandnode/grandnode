@@ -85,7 +85,7 @@ $(document).ready(function () {
         columns: [{
             field: "CustomerName",
             title: "@T("Admin.Reports.Customers.BestBy.Fields.Customer")",
-            template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerName#</a>',
+            template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:CustomerName#</a>',
         }, {
             field: "OrderTotal",
             title: "@T("Admin.Reports.Customers.BestBy.Fields.OrderTotal")"

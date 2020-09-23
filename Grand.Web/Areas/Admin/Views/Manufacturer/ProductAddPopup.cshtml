@@ -1,12 +1,12 @@
 ﻿@model ManufacturerModel.AddManufacturerProductModel
 @inject AdminAreaSettings adminAreaSettings
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers.Products.AddNew").Text;
 }
 
-<form asp-area="Admin" asp-controller="Manufacturer" asp-action="ProductAddPopup" method="post"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Manufacturer" asp-action="ProductAddPopup" method="post"
       asp-route-ManufacturerId="@Context.Request.Query["ManufacturerId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

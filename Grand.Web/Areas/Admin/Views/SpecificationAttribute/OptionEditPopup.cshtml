@@ -1,12 +1,12 @@
 ﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
 }
 @model SpecificationAttributeOptionModel
 @{    
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails").Text;
 }
-<form asp-area="Admin" asp-controller="SpecificationAttribute" asp-action="OptionEditPopup" method="post" id="specificationattribute-form"
+<form asp-area="@Constants.AreaAdmin" asp-controller="SpecificationAttribute" asp-action="OptionEditPopup" method="post" id="specificationattribute-form"
       asp-route-SpecificationAttributeId="@Context.Request.Query["SpecificationAttributeId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

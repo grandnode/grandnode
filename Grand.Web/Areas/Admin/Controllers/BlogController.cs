@@ -406,7 +406,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var post = new BlogCategoryPost();
                 post.Id = item.Id;
-                post.BlogPostId = post.BlogPostId;
+                post.BlogPostId = item.BlogPostId;
                 var _post = await _blogService.GetBlogPostById(item.BlogPostId);
                 if (_post != null)
                     post.Name = _post.Title;

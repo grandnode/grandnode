@@ -1,10 +1,10 @@
 ﻿@model Grand.Web.Areas.Admin.Models.Common.LoginModel
 @{
     //page title
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLoginLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminLogin;
 }
 
-<form asp-route="AdminLogin" asp-area="Admin" method="post">
+<form asp-route="AdminLogin" asp-area="@Constants.AreaAdmin" method="post">
         <div class="card col-xl-6 col-lg-8 col-md-10 col-12">
             <h5 class="card-header"><strong>@T("Admin.Login.Title")</strong></h5>
             <div class="card-body">

@@ -65,7 +65,7 @@
                     field: "CustomerId",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.Customer")",
                     width: 200,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
                 }, {
                     field: "CommentTitle",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.CommentTitle")"

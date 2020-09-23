@@ -1,41 +1,32 @@
 @inject IPageHeadBuilder pagebuilder
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLoginLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminLogin;
     //title
     pagebuilder.AddTitleParts(T("Admin.Login.TwoFactor.PageTitle.Login").Text);
 
 }
-<div class="page login-page">
-    <h2 class="generalTitle text-center">@T("Admin.Login.TwoFactorAuth.EnterCode")</h2>
-    <div class="mb-2">
-        <div class="row flex-md-row justify-content-center text-center my-3">
-            @* login main block *@
-            <div class="col-sm-8 col-12">
-                <div class="card p-3 bg-light">
-                    <form asp-action="TwoFactorAuthorization" asp-controller="Login" asp-area="Admin" method="post">
-                        <div class="card-body">
-                            <div class="row">
-                                <div asp-validation-summary="ModelOnly" class="col-12 justify-content-around text-danger"></div>
-                                <div class="col-12 form-group mb-0 d-flex justify-content-around">
-                                    <div class="form-group row">
-                                        <div class="col-lg-3 col-12">
-                                            <label name="token" class="col-form-label">@T("Admin.Login.TwoFactorAuth.DigitCode")</label>
-                                        </div>
-                                        <div class="col-lg-9 col-12">
-                                            <input name="token" type="text" class="form-control" autofocus />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<form asp-action="TwoFactorAuthorization" asp-controller="Login" asp-area="@Constants.AreaAdmin" method="post">
+    <div class="card col-xl-6 col-lg-8 col-md-10 col-12">
+        <h5 class="card-header"><strong>@T("Admin.Login.TwoFactorAuth.EnterCode")</strong></h5>
+        <div class="card-body">
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="col-12 justify-content-around text-danger"></div>
+                <div class="col-12 form-group mb-0 d-flex justify-content-around">
+                    <div class="form-group row">
+                        <div class="col-lg-3 col-12 d-flex align-items-start justify-content-sm-start">
+                            <label name="token" class="h5 m-0">@T("Admin.Login.TwoFactorAuth.DigitCode")</label>
                         </div>
-                        <div class="card-footer">
-                            <div class="buttons">
-                                <input class="btn btn-info login-button" type="submit" value="@T("Admin.Login.TwoFactorAuth.SendCode")" />
-                            </div>
+                        <div class="col-lg-9 col-12">
+                            <input name="token" type="text" class="form-control" autofocus />
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="card-footer">
+            <div class="buttons">
+                <input class="btn btn-info login-button px-5" type="submit" value="@T("Admin.Login.TwoFactorAuth.SendCode")" />
+            </div>
+        </div>
     </div>
-</div>
+</form>

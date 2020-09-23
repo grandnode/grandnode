@@ -1,13 +1,13 @@
 ﻿@model ProductModel.ProductAttributeMappingModel
 @using Grand.Domain.Catalog
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules").Text;
 
     var attributeControlType = (AttributeControlType)Model.AttributeControlTypeId;
 }
-<form asp-area="Admin" asp-controller="Product" asp-action="ProductAttributeValidationRulesPopup" enctype="multipart/form-data" method="post"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Product" asp-action="ProductAttributeValidationRulesPopup" enctype="multipart/form-data" method="post"
       asp-route-ProductId="@Context.Request.Query["ProductId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">

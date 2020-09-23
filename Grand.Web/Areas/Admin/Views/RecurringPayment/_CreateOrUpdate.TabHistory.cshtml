@@ -60,7 +60,7 @@
                 field: "OrderId",
                 title: "@T("Admin.RecurringPayments.History.Order")",
                 width: 200,
-                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderNumber# - @T("Admin.Common.View")</a>'
+                template: '<a href="@Url.Action("Edit", "Order")/#=OrderId#">#=OrderNumber# - @T("Admin.Common.View")</a>'
             }, {
                 field: "OrderStatus",
                 title: "@T("Admin.RecurringPayments.History.OrderStatus")",

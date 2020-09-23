@@ -94,12 +94,12 @@
                 title: "@T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")",
                 width: 200,
                 encoded: false,
-                template: '<a class="k-link" href="@Url.Content("~/Admin/Blog/Edit/")#=BlogPostId#">#:kendo.htmlEncode(BlogPostTitle)#</a>'
+                template: '<a class="k-link" href="@Url.Action("Edit", "Blog")/#=BlogPostId#">#:kendo.htmlEncode(BlogPostTitle)#</a>'
             }, {
                 field: "CustomerId",
                 title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Customer")",
                 width: 200,
-                template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
+                template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
             }, {
                 field: "Comment",
                 title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Comment")",

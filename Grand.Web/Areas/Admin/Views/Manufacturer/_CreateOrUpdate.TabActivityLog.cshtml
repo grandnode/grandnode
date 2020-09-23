@@ -51,7 +51,7 @@
                 }, {
                     field: "CustomerId",
                     title: "@T("Admin.Catalog.Manufacturers.ActivityLog.Customer")",
-                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>',
+                    template: '<a href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:CustomerEmail#</a>',
                     minScreenWidth: 500,
                 }, {
                     field: "Comment",

@@ -174,10 +174,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = "Admin" });
+                returnUrl = Url.Action("Index", "Home", new { area = Constants.AreaAdmin });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = "Admin" });
+                return RedirectToAction("Index", "Home", new { area = Constants.AreaAdmin });
             return Redirect(returnUrl);
         }
 

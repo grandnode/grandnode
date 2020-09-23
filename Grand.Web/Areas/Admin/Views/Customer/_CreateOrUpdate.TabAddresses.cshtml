@@ -67,10 +67,6 @@ $(document).ready(function () {
             title: "@T("Admin.Address.Fields.PhoneNumber")",
             minScreenWidth: 1020,
         }, {
-            field: "FaxNumber",
-            title: "@T("Admin.Address.Fields.FaxNumber")",
-            minScreenWidth: 1020,
-        }, {
             field: "AddressHtml",
             title: "@T("Admin.Address")",
             encoded: false
@@ -78,7 +74,7 @@ $(document).ready(function () {
             field: "Id",
             title: "@T("Admin.Common.Edit")",
             width: 100,
-                template: '<a class="k-button" href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#"><span class="k-icon k-i-edit"></span>&nbsp;&nbsp;@T("Admin.Common.Edit")</a>'
+            template: '<a class="k-button" href="@Url.Action("AddressEdit", "Customer")?customerId=@Model.Id&addressid=#=Id#"><span class="k-icon k-i-edit"></span>&nbsp;&nbsp;@T("Admin.Common.Edit")</a>'
         }, {
             command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
             title: "@T("Admin.Common.Delete")",

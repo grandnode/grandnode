@@ -85,19 +85,19 @@
                 field: "OrderNumber",
                 title: "@T("Admin.Affiliates.Orders.Order")",
                 width: 80,
-                template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=OrderNumber#</a>'
+                template: '<a class="k-link" href="@Url.Action("Edit", "Order")/#=Id#">#=OrderNumber#</a>'
             }, {
                 field: "OrderStatus",
                 title: "@T("Admin.Affiliates.Orders.OrderStatus")",
-                template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=OrderStatus#</a>'
+                template: '<a class="k-link" href="@Url.Action("Edit", "Order")/#=Id#">#=OrderStatus#</a>'
             }, {
                 field: "PaymentStatus",
                 title: "@T("Admin.Affiliates.Orders.PaymentStatus")",
-                template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=PaymentStatus#</a>'
+                template: '<a class="k-link" href="@Url.Action("Edit", "Order")/#=Id#">#=PaymentStatus#</a>'
             },{
                 field: "ShippingStatus",
                 title: "@T("Admin.Affiliates.Orders.ShippingStatus")",
-                template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=ShippingStatus#</a>'
+                template: '<a class="k-link" href="@Url.Action("Edit", "Order")/#=Id#">#=ShippingStatus#</a>'
             },{
                 field: "OrderTotal",
                 title: "@T("Admin.Affiliates.Orders.OrderTotal")"

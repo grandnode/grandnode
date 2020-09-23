@@ -1,12 +1,12 @@
 ﻿@model CourseModel.AssociateProductToCourseModel
 @inject AdminAreaSettings adminAreaSettings
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Courses.Course.Fields.PurchasedWithProduct.Choose").Text;
 }
 
-<form asp-area="Admin" asp-controller="Course" asp-action="AssociateProductToCoursePopup" method="post"
+<form asp-area="@Constants.AreaAdmin" asp-controller="Course" asp-action="AssociateProductToCoursePopup" method="post"
       asp-route-CustomerRoleId="@Context.Request.Query["CourseId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-productIdInput="@Context.Request.Query["productIdInput"]"

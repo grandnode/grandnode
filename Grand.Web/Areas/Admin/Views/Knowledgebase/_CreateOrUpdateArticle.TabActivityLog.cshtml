@@ -50,7 +50,7 @@
                 field: "CustomerId",
                 title: "@T("Admin.Catalog.Articles.ActivityLog.Customer")",
                 width: 200,
-                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                template: '<a href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:CustomerEmail#</a>'
             }, {
                 field: "Comment",
                 title: "@T("Admin.Catalog.Articles.ActivityLog.Comment")"

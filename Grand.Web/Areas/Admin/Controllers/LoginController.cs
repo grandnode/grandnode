@@ -8,6 +8,7 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Notifications.Customers;
+using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area(Constants.AreaAdmin)]
     public class LoginController : BaseController
     {
         private readonly CustomerSettings _customerSettings;

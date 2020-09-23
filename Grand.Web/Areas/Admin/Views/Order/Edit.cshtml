@@ -7,7 +7,7 @@
     var canManageDocuments = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageDocuments);
     var canManageGenericAttributes = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageGenericAttributes);
 }
-<form asp-area="Admin" asp-controller="Order" asp-action="Edit" method="post" id="order-form">
+<form asp-area="@Constants.AreaAdmin" asp-controller="Order" asp-action="Edit" method="post" id="order-form">
     
     <div class="row">
         <div class="col-md-12">

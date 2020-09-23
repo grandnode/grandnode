@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Routing;
+using Grand.Web.Areas.Admin.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -9,10 +10,10 @@ namespace Grand.Web.Areas.Admin.Infrastructure
         public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
             //admin index
-            routeBuilder.MapControllerRoute("AdminIndex", $"admin/", new { controller = "Home", action = "Index", area = "Admin" });
+            routeBuilder.MapControllerRoute("AdminIndex", $"admin/", new { controller = "Home", action = "Index", area = Constants.AreaAdmin });
 
             //admin login
-            routeBuilder.MapControllerRoute("AdminLogin", $"admin/login/", new { controller = "Login", action = "Index", area = "Admin" });
+            routeBuilder.MapControllerRoute("AdminLogin", $"admin/login/", new { controller = "Login", action = "Index", area = Constants.AreaAdmin });
 
         }
         public int Priority => 0;

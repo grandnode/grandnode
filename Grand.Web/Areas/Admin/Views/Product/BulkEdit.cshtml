@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.BulkEdit").Text;
 }
-<form asp-area="Admin" asp-controller="Product" asp-action="BulkEdit" method="post">
+<form asp-area="@Constants.AreaAdmin" asp-controller="Product" asp-action="BulkEdit" method="post">
     
     <div class="row">
         <div class="col-md-12">
@@ -170,7 +170,7 @@
                     field: "ProductId",
                     title: "@T("Admin.Common.View")",
                     width: 80,
-                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                    template: '<a href="@Url.Action("Edit", "Product")/#=Id#">@T("Admin.Common.View")</a>'
                 },{
                     field: "Sku",
                     title: "@T("Admin.Catalog.BulkEdit.Fields.Sku")",

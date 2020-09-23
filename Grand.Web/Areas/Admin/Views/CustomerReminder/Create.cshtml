@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerReminder.AddNew").Text;
 }
-<form asp-area="Admin" asp-controller="CustomerReminder" asp-action="Create" method="post" id="customer-reminder-form">
+<form asp-area="@Constants.AreaAdmin" asp-controller="CustomerReminder" asp-action="Create" method="post" id="customer-reminder-form">
     
     <div class="row">
         <div class="col-md-12">

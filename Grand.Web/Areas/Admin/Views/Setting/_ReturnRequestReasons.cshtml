@@ -56,7 +56,7 @@ $(document).ready(function () {
             field: "Name",
             title: "@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")",
             width: 300,
-            template: '<a class="k-link" href="@Url.Content("~/Admin/Setting/ReturnRequestReasonEdit/")#=Id#">#=kendo.htmlEncode(Name)#</a>',
+            template: '<a class="k-link" href="@Url.Action("ReturnRequestReasonEdit", "Setting")/#=Id#">#=kendo.htmlEncode(Name)#</a>',
         }, {
             field: "DisplayOrder",
             title: "@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder")",

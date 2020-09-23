@@ -1,12 +1,12 @@
 ﻿@model CustomerReminderModel.ConditionModel.AddCategoryConditionModel
 @inject AdminAreaSettings adminAreaSettings
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = Grand.Web.Areas.Admin.Extensions.Constants.Layout_AdminPopup;
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerReminder.Condition.Category.AddNew").Text;
 }
 
-<form asp-area="Admin" asp-controller="CustomerReminder" asp-action="CategoryAddPopup" method="post"
+<form asp-area="@Constants.AreaAdmin" asp-controller="CustomerReminder" asp-action="CategoryAddPopup" method="post"
       asp-route-CustomerReminderId="@Context.Request.Query["CustomerReminderId"]"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
