@@ -55,7 +55,7 @@
                 field: "Name",
                 title: "@T("Admin.Customers.CustomerAttributes.Fields.Name")",
                 width: 300,
-                template: '<a class="k-link" href="@Url.Content("~/Admin/CustomerAttribute/Edit/")#=Id#">#=kendo.htmlEncode(Name)#</a>',
+                template: '<a class="k-link" href="@Url.Action("Edit", "CustomerAttribute")/#=Id#">#=kendo.htmlEncode(Name)#</a>',
             }, {
                 field: "AttributeControlTypeName",
                 title: "@T("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")",

@@ -15,7 +15,7 @@
     <vc:admin-widget widget-zone="specification_attribute_details_options_bottom" additional-data="Model" />
 </div>
 
-        <script>
+<script>
             $(document).ready(function () {
                 $("#specificationattributeoptions-grid").kendoGrid({
                     dataSource: {
@@ -64,7 +64,7 @@
                     columns: [{
                         field: "Name",
                         title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")",
-                        template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 450, true); return false;\">#=kendo.htmlEncode(Name)#</a>"
+                        template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Action("OptionEditPopup", "SpecificationAttribute")/#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 450, true); return false;\">#=kendo.htmlEncode(Name)#</a>"
                     }, {
                         field: "DisplayOrder",
                         title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder")",
@@ -80,7 +80,7 @@
                     }]
                 });
             });
-        </script>
+</script>
         <script>
             $(document).ready(function () {
                 $('#btnRefresh').click(function () {

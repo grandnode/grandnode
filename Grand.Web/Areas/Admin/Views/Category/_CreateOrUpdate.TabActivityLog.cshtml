@@ -52,7 +52,7 @@
                     field: "CustomerId",
                     minScreenWidth: 500,
                     title: "@T("Admin.Catalog.Categories.ActivityLog.Customer")",
-                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                    template: '<a href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:CustomerEmail#</a>'
                 }, {
                     field: "Comment",
                     minScreenWidth: 750,

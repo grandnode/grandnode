@@ -135,12 +135,12 @@
                     field: "CustomerId",
                     title: "@T("Admin.ReturnRequests.Fields.Customer")",
                     width: 200,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
                 }, {
                     field: "OrderId",
                     title: "@T("Admin.ReturnRequests.Fields.Order")",
                     width: 80,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#:OrderNumber#</a>'
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Order")/#=OrderId#">#:OrderNumber#</a>'
                 }, {
                     field: "ReturnRequestStatusStr",
                     title: "@T("Admin.ReturnRequests.Fields.Status")",

@@ -70,7 +70,7 @@
             columns: [{
                 field: "Name",
                 title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")",
-                template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Name)#</a>',
+                template: '<a class="k-link" href="@Url.Action("Edit", "CheckoutAttribute")/#=Id#">#=kendo.htmlEncode(Name)#</a>',
             }, {
                 field: "AttributeControlTypeName",
                 title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType")",

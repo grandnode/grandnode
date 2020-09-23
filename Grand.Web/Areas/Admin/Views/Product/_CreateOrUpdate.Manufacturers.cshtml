@@ -102,7 +102,7 @@
                                 title: "@T("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")",
                                 width: 200,
                                 editor: manufacturerDropDownEditor,
-                                template: '<a class="k-link" href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#">#:Manufacturer#</a>'
+                                template: '<a class="k-link" href="@Url.Action("Edit", "Manufacturer")/#=ManufacturerId#">#:Manufacturer#</a>'
                             },
                             @if (!Model.IsLoggedInAsVendor)
                             {

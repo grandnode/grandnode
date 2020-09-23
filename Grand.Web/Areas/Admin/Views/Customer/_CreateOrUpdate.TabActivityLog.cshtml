@@ -140,7 +140,7 @@
                         field: "Id",
                         title: "@T("Admin.Common.View")",
                         width: 30,
-                        template: '<a href="@Url.Content("~/Admin/ContactForm/Details/")#=Id#">@T("admin.common.view")</a>'
+                        template: '<a href="@Url.Action("Details", "ContactForm")/#=Id#">@T("admin.common.view")</a>'
                     }]
                 });
             });

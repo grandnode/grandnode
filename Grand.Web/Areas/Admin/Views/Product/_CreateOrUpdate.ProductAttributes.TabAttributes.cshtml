@@ -93,7 +93,7 @@
                         field: "ProductAttributeId",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")",
                         width: 190,
-                        template: "<a class='k-link' href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeMappingPopup/")?productId=@(Model.Id)&productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 600, true);'>#=kendo.htmlEncode(ProductAttribute)#<br /></a>"
+                        template: "<a class='k-link' href='javascript:OpenWindow(\"@Url.Action("ProductAttributeMappingPopup", "Product")/?productId=@(Model.Id)&productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 600, true);'>#=kendo.htmlEncode(ProductAttribute)#<br /></a>"
                     }, {
                         field: "TextPrompt",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")",
@@ -110,19 +110,19 @@
                         field: "AttributeControlTypeId",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")",
                         width: 140,
-                        template: "#:AttributeControlType# <br> # if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?&productId=@(Model.Id)&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 300, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink")</a><br />#=ValidationRulesString# #}  #"
+                        template: "#:AttributeControlType# <br> # if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Action("ProductAttributeValidationRulesPopup", "Product")/#=Id#?&productId=@(Model.Id)&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 300, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink")</a><br />#=ValidationRulesString# #}  #"
                     },
                     {
                         field: "ShouldHaveValues",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values")",
                         width: 60,
-                        template: '# if(ShouldHaveValues) {# <a href="@Url.Content("~/Admin/Product/EditAttributeValues/")?productAttributeMappingId=#=Id#&productId=@(Model.Id)">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink")</a><br />@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.TotalValues") #=TotalValues# #}  #'
+                        template: '# if(ShouldHaveValues) {# <a href="@Url.Action("EditAttributeValues", "Product")/?productAttributeMappingId=#=Id#&productId=@(Model.Id)">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink")</a><br />@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.TotalValues") #=TotalValues# #}  #'
                     },
                     {
                         field: "ConditionAllowed",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")",
                         width: 80,
-                        template: "# if(ConditionAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeConditionPopup/")?productId=@(Model.Id)&productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 400, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink")</a><br /> #}  #"
+                        template: "# if(ConditionAllowed) {# <a href='javascript:OpenWindow(\"@Url.Action("ProductAttributeConditionPopup", "Product")/?productId=@(Model.Id)&productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 400, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink")</a><br /> #}  #"
                     },
                     {
                         command: [

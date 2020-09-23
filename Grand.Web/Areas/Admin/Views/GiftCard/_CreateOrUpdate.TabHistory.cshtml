@@ -50,7 +50,7 @@
                     field: "OrderId",
                     title: "@T("Admin.GiftCards.History.Order")",
                     width: 200,
-                        template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#" class="k-button"><span class="k-icon k-i-eye"></span>&nbsp;@T("Admin.Common.View") #=OrderNumber#</a>'
+                        template: '<a href="@Url.Action("Edit", "Order")/#=OrderId#" class="k-button"><span class="k-icon k-i-eye"></span>&nbsp;@T("Admin.Common.View") #=OrderNumber#</a>'
                 }, {
                     field: "UsedValue",
                     title: "@T("Admin.GiftCards.History.UsedValue")",

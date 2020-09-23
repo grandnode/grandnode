@@ -63,7 +63,7 @@
                         field: "Name",
                         title: "@T("Admin.Configuration.Countries.States.Fields.Name")",
                         width: 300,
-                        template: "<a class=\"k-link\" onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Country/StateEditPopup/")#=Id#?btnId=btnRefresh&formId=country-form', 800, 500, true); return false;\">#=Name#</a>",
+                        template: "<a class=\"k-link\" onclick=\"javascript:OpenWindow('@Url.Action("StateEditPopup", "Country")/#=Id#?btnId=btnRefresh&formId=country-form', 800, 500, true); return false;\">#=Name#</a>",
                     }, {
                         field: "Abbreviation",
                         title: "@T("Admin.Configuration.Countries.States.Fields.Abbreviation")",

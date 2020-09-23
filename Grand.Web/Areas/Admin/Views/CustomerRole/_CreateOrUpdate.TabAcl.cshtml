@@ -86,7 +86,7 @@
                             width: 10,
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
-                            template: '# if(Actions.length > 0) {# <a class="k-link" onclick="javascript:OpenWindow(\'@Url.Content("~/Admin/Security/PermissionsAction")?systemname=#=SystemName#&customeRoleId=@Model.Id\', 600, 400, true); return false;"><i class="icon-settings"></i></a> #} #'
+                            template: '# if(Actions.length > 0) {# <a class="k-link" onclick="javascript:OpenWindow(\'@Url.Action("PermissionsAction", "Security")/?systemname=#=SystemName#&customeRoleId=@Model.Id\', 600, 400, true); return false;"><i class="icon-settings"></i></a> #} #'
 
                         },
                         {

@@ -111,12 +111,12 @@ $(document).ready(function () {
             field: "VendorName",
             title: "@T("Admin.VendorReviews.Fields.Vendor")",
             width: 200,
-            template: '<a href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#">#:VendorName#</a>'
+            template: '<a href="@Url.Action("Edit", "Vendor")/#=VendorId#">#:VendorName#</a>'
         }, {
             field: "CustomerId",
             title: "@T("Admin.VendorReviews.Fields.Customer")",
             width: 200,
-            template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+            template: '<a href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:CustomerInfo#</a>'
         }, {
             field: "Title",
             title: "@T("Admin.VendorReviews.Fields.Title")",

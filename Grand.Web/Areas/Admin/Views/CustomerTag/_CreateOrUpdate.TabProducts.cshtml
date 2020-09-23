@@ -82,7 +82,7 @@
                                 field: "Name",
                                 title: "@T("Admin.Customers.CustomerTags.Products.Fields.Name")",
                                 width: 300,
-                                template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=kendo.htmlEncode(Name)#</a>',
+                                template: '<a class="k-link" href="@Url.Action("Edit", "Product")/#=ProductId#">#=kendo.htmlEncode(Name)#</a>',
                         }, {
                             field: "DisplayOrder",
                             title: "@T("Admin.Customers.CustomerTags.Products.Fields.DisplayOrder")",

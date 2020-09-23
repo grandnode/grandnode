@@ -48,7 +48,7 @@ $(document).ready(function () {
             field: "CustomerId",
             title: "@T("Admin.VendorReviews.Fields.Customer")",
             width: 200,
-            template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
+            template: '<a href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
         },
         {
             field: "Title",
@@ -80,7 +80,7 @@ $(document).ready(function () {
             field: "Id",
             title: "@T("Admin.Common.View")",
             width: 100,
-            template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/VendorReview/Edit/")#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
+            template: '<a class="btn btn-sm btn-default" href="@Url.Action("Edit", "VendorReview")/#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
         }]
     });
 });

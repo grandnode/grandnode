@@ -77,7 +77,7 @@
                     field: "DownloadId",
                     title: "@T("Admin.Customers.CustomerNotes.Fields.Download")",
                     width: 100,
-                    template: '# if(DownloadId != "") {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Customers.CustomerNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Customers.CustomerNotes.Fields.Download.Link.No") #} #'
+                    template: '# if(DownloadId != "") {# <a href="@Url.Action("DownloadFile", "Download")/?downloadGuid=#=DownloadGuid#">@T("Admin.Customers.CustomerNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Customers.CustomerNotes.Fields.Download.Link.No") #} #'
                 },{
                     field: "DisplayToCustomer",
                     title: "@T("Admin.Customers.CustomerNotes.Fields.DisplayToCustomer")",

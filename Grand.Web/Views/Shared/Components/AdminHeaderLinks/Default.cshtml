@@ -13,7 +13,7 @@
     @if (Model.DisplayAdminLink)
     {
         <li class="nav-item">
-            <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.Content("~/Admin")">
+            <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("AdminIndex")">
                 <span class="mdi mdi-settings"></span>
                 <span class="text text-uppercase ml-3">@T("admin")</span>
             </a>

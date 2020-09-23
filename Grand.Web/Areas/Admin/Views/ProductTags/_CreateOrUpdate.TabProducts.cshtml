@@ -57,7 +57,7 @@
                     field: "Name",
                     title: "@T("Admin.Catalog.ProductTags.Fields.ProductName")",
                     width: 300,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=Id#">#=kendo.htmlEncode(Name)#</a>',
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Product")/#=Id#">#=kendo.htmlEncode(Name)#</a>',
                 }]
             });
         });

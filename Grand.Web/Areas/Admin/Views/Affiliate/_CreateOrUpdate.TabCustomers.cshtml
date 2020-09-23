@@ -42,7 +42,7 @@
             columns: [{
                 field: "Name",
                 title: "@T("Admin.Affiliates.Customers.Name")",
-                template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=Id#"">#=kendo.htmlEncode(Name)#</a>'
+                template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=Id#"">#=kendo.htmlEncode(Name)#</a>'
             }]
         });
     });

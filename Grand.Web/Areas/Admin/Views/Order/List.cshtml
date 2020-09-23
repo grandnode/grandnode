@@ -341,7 +341,7 @@
                         {
                             <text>
                             template: function(dataItem) {
-                                    return "<a class=\"k-link\" href='@Url.Content("~/Admin/Customer/Edit/")" + dataItem.CustomerId + "'>" + kendo.htmlEncode(dataItem.CustomerFullName) + " (" + dataItem.CustomerEmail + ")</a>";
+                                    return "<a class=\"k-link\" href='@Url.Action("Edit", "Customer")/" + dataItem.CustomerId + "'>" + kendo.htmlEncode(dataItem.CustomerFullName) + " (" + dataItem.CustomerEmail + ")</a>";
                             }
                             </text>
                         }

@@ -123,17 +123,17 @@
                     field: "ShipmentNumber",
                     title: "@T("Admin.Orders.Shipments.ID")",
                     width: 100,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Shipment/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
+                    template: '<a class="k-link" href="@Url.Action("ShipmentDetails", "Shipment")/#=Id#">#=ShipmentNumber#</a>'
                 }, {
                     field: "OrderNumber",
                     title: "@T("Admin.Orders.Shipments.OrderID")",
                     width: 100,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderNumber#</a>'
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Order")/#=OrderId#">#=OrderNumber#</a>'
                 }, {
                     field: "TrackingNumber",
                     title: "@T("Admin.Orders.Shipments.TrackingNumber")",
                     width: 100,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Shipment/ShipmentDetails/")#=Id#">#=kendo.htmlEncode(TrackingNumber)#</a>'
+                    template: '<a class="k-link" href="@Url.Action("ShipmentDetails", "Shipment")/#=Id#">#=kendo.htmlEncode(TrackingNumber)#</a>'
                 }, {
                     field: "TotalWeight",
                     title: "@T("Admin.Orders.Shipments.TotalWeight")",

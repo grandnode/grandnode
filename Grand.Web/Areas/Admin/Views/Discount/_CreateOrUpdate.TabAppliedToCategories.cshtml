@@ -67,7 +67,7 @@
                     columns: [{
                         field: "CategoryName",
                         title: "@T("Admin.Promotions.Discounts.AppliedToCategories.Category")",
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#">#=kendo.htmlEncode(CategoryName)#</a>',
+                        template: '<a class="k-link" href="@Url.Action("Edit", "Category")/#=CategoryId#">#=kendo.htmlEncode(CategoryName)#</a>',
                     }, {
                         command: [{
                             name: "destroy",

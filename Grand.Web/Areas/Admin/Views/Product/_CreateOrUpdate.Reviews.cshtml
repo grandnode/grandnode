@@ -48,13 +48,13 @@
                     field: "CustomerId",
                     title: "@T("Admin.Catalog.ProductReviews.Fields.Customer")",
                     width: 200,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>',
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:CustomerInfo#</a>',
                     minScreenWidth: 750,
                 },
                 {
                     field: "Title",
                     title: "@T("Admin.Catalog.ProductReviews.Fields.Title")",
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/ProductReview/Edit/")#=Id#">#:Title#</a>',
+                    template: '<a class="k-link" href="@Url.Action("Edit", "ProductReview")/#=Id#">#:Title#</a>',
                     width: 280,
                 },
                 {

@@ -73,7 +73,7 @@
                     field: "DownloadId",
                     title: "@T("Admin.Orders.OrderNotes.Fields.Download")",
                     width: 100,
-                    template: '# if(DownloadId != "") {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
+                    template: '# if(DownloadId != "") {# <a href="@Url.Action("DownloadFile", "Download")/?downloadGuid=#=DownloadGuid#">@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
                 }, {
                     field: "CreatedByCustomer",
                     title: "@T("Admin.Orders.OrderNotes.Fields.CreatedByCustomer")",

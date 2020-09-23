@@ -84,7 +84,7 @@ $(document).ready(function () {
             field: "SystemName",
             title: "@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")",
             width: 200,
-            template: '<a href="@Url.Content("~/Admin/Tax/MarkAsPrimaryProvider/")?systemName=#=SystemName#" class="k-button">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")</a>'
+            template: '<a href="@Url.Action("MarkAsPrimaryProvider", "Tax")/?systemName=#=SystemName#" class="k-button">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")</a>'
         }]
     });
 });

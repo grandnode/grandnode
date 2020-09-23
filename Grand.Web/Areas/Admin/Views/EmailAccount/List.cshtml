@@ -76,7 +76,7 @@
             }, {
                 field: "Id",
                 title: "@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")",
-                template: '<a href="@Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/")#=Id#" class="k-button">@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")</a>'
+                template: '<a href="@Url.Action("MarkAsDefaultEmail", "EmailAccount")/#=Id#" class="k-button">@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")</a>'
             }]
         });
     });

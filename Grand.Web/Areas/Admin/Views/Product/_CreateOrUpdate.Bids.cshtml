@@ -66,7 +66,7 @@
                 field: "CustomerId",
                 title: "@T("Admin.Catalog.Products.Bids.CustomerId")",
                 width: 200,
-                template: '# if(Email) {# <a  href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#=Email#</a>  #} #'
+                template: '# if(Email) {# <a  href="@Url.Action("Edit", "Customer")/#=CustomerId#">#=Email#</a>  #} #'
             }, {
                 field: "Amount",
                 title: "@T("Admin.Catalog.Products.Bids.Amount")",
@@ -75,7 +75,7 @@
                 field: "OrderId",
                 title: "@T("Admin.Catalog.Products.Bids.OrderId")",
                 width: 200,
-                template: '# if(OrderId) {# <a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>  #} #'
+                template: '# if(OrderId) {# <a class="btn btn-sm btn-default" href="@Url.Action("Edit", "Order")/#=OrderId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>  #} #'
             }, {
                 command: [{
                     name: "destroy",

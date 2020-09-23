@@ -61,7 +61,7 @@
                         @if (!Model)
                         {
                             <text>
-                                template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#=CustomerFullName# (#=CustomerEmail#)</a>'
+                                template: '<a class="k-link" href="@Url.Action("Edit", "Customer")/#=CustomerId#">#=CustomerFullName# (#=CustomerEmail#)</a>'
                             </text>
                         }
                     },

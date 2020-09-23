@@ -52,7 +52,7 @@
                     field: "ProductId",
                     title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.Product")",
                     width: 300,
-                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
+                    template: '<a href="@Url.Action("Edit", "Product")/#=ProductId#">#:ProductName#</a>'
                 },{
                     field: "CreatedOn",
                     title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn")",

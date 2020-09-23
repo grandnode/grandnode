@@ -71,7 +71,7 @@
                     columns: [{
                         field: "ManufacturerName",
                         title: "@T("Admin.Customers.CustomerReminder.Condition.Fields.Manufacturer")",
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/Manufacturer/Edit/")#=Id#">#=kendo.htmlEncode(ManufacturerName)#</a>',
+                        template: '<a class="k-link" href="@Url.Action("Edit", "Manufacturer")/#=Id#">#=kendo.htmlEncode(ManufacturerName)#</a>',
                     },  {
                         command: [{
                             name: "destroy",
