@@ -43,6 +43,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Grand.Services.Logging;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -437,7 +438,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("convert-picture-webp")]
-        public async Task<IActionResult> MaintenanceConvertPicture([FromServices] IPictureService pictureService, [FromServices] MediaSettings mediaSettings)
+        public async Task<IActionResult> MaintenanceConvertPicture([FromServices] IPictureService pictureService, [FromServices] MediaSettings mediaSettings, [FromServices] ILogger logger)
         {
             var model = new MaintenanceModel();
             model.ConvertedPictureModel.NumberOfConvertItems = 0;
@@ -448,10 +449,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     if (!picture.MimeType.Contains("webp"))
                     {
-                        using var image = SKBitmap.Decode(picture.PictureBinary);
-                        SKData d = SKImage.FromBitmap(image).Encode(SKEncodedImageFormat.Webp, mediaSettings.DefaultImageQuality);
-                        await pictureService.UpdatePicture(picture.Id, d.ToArray(), "image/webp", picture.SeoFilename, picture.AltAttribute, picture.TitleAttribute, true, false);
-                        model.ConvertedPictureModel.NumberOfConvertItems += 1;
+                        try
+                        {
+                            using var image = SKBitmap.Decode(picture.PictureBinary);
+                            SKData d = SKImage.FromBitmap(image).Encode(SKEncodedImageFormat.Webp, mediaSettings.DefaultImageQuality);
+                            await pictureService.UpdatePicture(picture.Id, d.ToArray(), "image/webp", picture.SeoFilename, picture.AltAttribute, picture.TitleAttribute, true, false);
+                            model.ConvertedPictureModel.NumberOfConvertItems += 1;
+                        }
+                        catch(Exception ex)
+                        {
+                            logger.Error($"Error on converting picture with id {picture.Id} to webp format", ex);
+                        }
                     }
                 }
             }
