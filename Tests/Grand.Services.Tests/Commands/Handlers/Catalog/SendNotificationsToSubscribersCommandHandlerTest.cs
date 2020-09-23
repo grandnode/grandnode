@@ -43,7 +43,7 @@ namespace Grand.Services.Tests.Commands.Handlers.Catalog
         }
 
         [TestMethod()]
-        public async Task GetAllSubscriptionsWithCorrectParamsProductId()
+        public async Task GetAllSubscriptionsWithCorrectParams()
         {
             var result = await _handler.Handle(_sendNotificationsToSubscribersCommand, default);
             var resultList = result.ToList();
