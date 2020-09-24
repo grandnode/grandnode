@@ -38,6 +38,7 @@ namespace Grand.Services.Commands.Handlers.Catalog
                 throw new ArgumentNullException("product");
 
             int result = 0;
+
             var subscriptions = await GetAllSubscriptionsByProductId(request.Product.Id, request.AttributeXml, request.Warehouse);
             foreach (var subscription in subscriptions)
             {
