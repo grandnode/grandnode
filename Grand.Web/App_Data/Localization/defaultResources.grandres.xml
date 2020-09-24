@@ -8372,6 +8372,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.AllowGuestNotifications.Hint">
     <Value>Should be checked if you want to allow guest to register for push notifications</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.AppId">
+    <Value>AppId</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.AppId.Hint">
+    <Value>Provide the AppId</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.configuration.settings.pushnotifications.authdomain">
     <Value>Auth Domain</Value>
   </LocaleResource>

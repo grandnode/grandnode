@@ -18,5 +18,6 @@ namespace Grand.Domain.PushNotifications
         public string PictureId { get; set; }
         public bool AllowGuestNotifications { get; set; }
         public string ClickUrl { get; set; }
+        public string AppId { get; set; }
     }
 }
