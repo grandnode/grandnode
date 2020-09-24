@@ -27,6 +27,7 @@ namespace Grand.Web.Components
             model.ProjectId = _pushNotificationsSettings.ProjectId;
             model.StorageBucket = _pushNotificationsSettings.StorageBucket;
             model.DatabaseUrl = _pushNotificationsSettings.DatabaseUrl;
+            model.AppId = _pushNotificationsSettings.AppId;
             if (_pushNotificationsSettings.Enabled)
             {
                 if (!_pushNotificationsSettings.AllowGuestNotifications && _workContext.CurrentCustomer.IsGuest())

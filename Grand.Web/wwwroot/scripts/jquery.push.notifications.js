@@ -6,8 +6,9 @@
     DatabaseUrl: "",
     ProjectId: "",
     StorageBucket: "",
+    AppId: "",
 
-    init: function init(ApiKey, SenderId, ProjectId, AuthDomain, StorageBucket, DatabaseUrl, url) {
+    init: function init(ApiKey, SenderId, ProjectId, AuthDomain, StorageBucket, DatabaseUrl, url, appId) {
         this.url = url;
         this.SenderId = SenderId;
         this.ApiKey = ApiKey;
@@ -15,6 +16,7 @@
         this.DatabaseUrl = DatabaseUrl;
         this.ProjectId = ProjectId;
         this.StorageBucket = StorageBucket;
+        this.AppId = appId;
     },
 
     process: function process() {
@@ -25,7 +27,8 @@
             databaseURL: this.DatabaseUrl,
             projectId: this.ProjectId,
             storageBucket: this.StorageBucket,
-            messagingSenderId: this.SenderId
+            messagingSenderId: this.SenderId,
+            AppId: this.appId
         };
 
         firebase.initializeApp(config);

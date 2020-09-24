@@ -28,6 +28,8 @@ namespace Grand.Web.Areas.Admin.Models.PushNotifications
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.PushNotifications.StorageBucket")]
         public string StorageBucket { get; set; }
+        [GrandResourceDisplayName("Admin.Configuration.Settings.PushNotifications.AppId")]
+        public string AppId { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.PushNotifications.AllowGuestNotifications")]
         public bool AllowGuestNotifications { get; set; }

@@ -2113,6 +2113,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 SenderId = settings.SenderId,
                 StorageBucket = settings.StorageBucket,
                 PrivateApiKey = settings.PrivateApiKey,
+                AppId = settings.AppId,
                 Enabled = settings.Enabled
             };
 
@@ -2133,6 +2134,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             settings.SenderId = model.SenderId;
             settings.StorageBucket = model.StorageBucket;
             settings.PrivateApiKey = model.PrivateApiKey;
+            settings.AppId = model.AppId;
             settings.Enabled = model.Enabled;
             await _settingService.SaveSetting(settings);
 
@@ -2173,6 +2175,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                     if (line.Contains("messagingSenderId"))
                     {
                         lines[i] = "messagingSenderId: \"" + model.SenderId + "\",";
+                    }
+
+                    if (line.Contains("appId"))
+                    {
+                        lines[i] = "appId: \"" + model.AppId + "\",";
                     }
 
                     i++;

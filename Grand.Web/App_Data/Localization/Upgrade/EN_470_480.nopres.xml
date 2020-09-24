@@ -245,5 +245,10 @@
   <LocaleResource Name="Admin.Login.TwoFactorAuth.SendCode">
     <Value>Send code</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.AppId">
+    <Value>AppId</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.AppId.Hint">
+    <Value>Provide the AppId</Value>
+  </LocaleResource>
 </Language>
