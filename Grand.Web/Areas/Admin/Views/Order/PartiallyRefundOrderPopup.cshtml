@@ -52,7 +52,9 @@
     @if (ViewBag.RefreshPage == true)
     {
         <script>
-            try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+            try {
+                window.opener.location.href = window.opener.location.href;
+            }
             catch (e){}
             window.close();
         </script>
