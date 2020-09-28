@@ -573,10 +573,6 @@ body:not(.is-ready) .search-box-button {
 
 .search-box-button {
     height: 38px;
-    border: 1px solid rgba(0,0,0,.15);
-    background-color: transparent;
-    border-left: 0;
-    color: #666;
 }
 
 .search-results-list {
@@ -4772,14 +4768,8 @@ span.product-quantity {
 /*footer*/
 
 footer {
-    background-color: #fff;
-    width: 100%;
-    display: inline-block;
-    height: auto;
+    margin: 15px 0 0 0;
     padding: 45px 0 0 0;
-}
-
-footer {
     background-color: #fff;
     width: 100%;
     display: inline-block;
@@ -5713,17 +5703,12 @@ footer .socicon-pinterest:hover {
         transition: transform .2s ease;
         z-index: 1037;
     }
-
-/*    body.scroll-down:not(.onTop) header {
-        -webkit-transform: translateY(-100%);
-        transform: translateY(-100%);
+    #back-to-top {
+        bottom: 75px;
     }
-
-    body.scroll-up header,
-    body.onTop header {
-        -webkit-transform: translateY(0);
-        transform: translateY(0);
-    }*/
+    .footer-clean + #back-to-top {
+        bottom: 15px;
+    }
     .shopping-links {
         width: 100%;
         height: 100%;
@@ -5745,6 +5730,16 @@ footer .socicon-pinterest:hover {
     .side-panel .js-offcanvas-trigger {
         width: 25%;
         border-right: 1px solid #ddd;
+    }
+    .search-box-button {
+        border: 1px solid rgba(0,0,0,.15);
+        background-color: transparent;
+        border-left: 0;
+        color: #666;
+    }
+    #small-searchterms:focus ~ .input-group-append .search-box-button {
+        border-color: #0093B5;
+        box-shadow: 0 2px 6px 0 rgba(0,0,0,0.12);
     }
     #topcartlink .js-offcanvas-trigger {
         border-right: 0;
@@ -5787,9 +5782,13 @@ footer .socicon-pinterest:hover {
         -webkit-overflow-scrolling: touch;
     }
 
-    #topcartlink .cart-qty, .wishlist-qty {
+    #topcartlink .cart-qty {
         top: 5px;
-        left: 25px;
+        left: 30px;
+    }
+    .wishlist-qty {
+        top: 5px;
+        left: 45px;
     }
 
     .categoryGrid .flex-grid,
@@ -5815,8 +5814,8 @@ footer .socicon-pinterest:hover {
     }
 
     .shopping-links .nav-link {
-        padding: 0;
-        width: 100%;
+        position: relative;
+        padding: 0 20px;
         height: 100%;
         justify-content: center;
     }
@@ -6205,7 +6204,7 @@ footer .socicon-pinterest:hover {
         left: unset;
         right: 15px;
         width: calc(100vw - 30px);
-        max-width: 720px;
+        max-width: 540px;
     }
 
     .category-icon {
@@ -6247,6 +6246,7 @@ footer .socicon-pinterest:hover {
         order: 2;
         width: 50%;
         height: 100%;
+        text-align: center;
         border-right: 1px solid #ddd;
     }
 
@@ -6417,7 +6417,9 @@ footer .socicon-pinterest:hover {
         min-height: 130px;
     }
 
-    footer {
+    footer:not(.footer-clean) {
+        transform: translateY(-60px);
+        margin-top: 75px !important;
         padding: 0;
     }
 
