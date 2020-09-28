@@ -2224,7 +2224,7 @@ namespace Grand.Services.Orders
 
             //update order info
             order.RefundedAmount = totalAmountRefunded;
-            order.PaymentStatus = PaymentStatus.PartiallyRefunded;
+            order.PaymentStatus = order.RefundedAmount >= order.OrderTotal ? PaymentStatus.Refunded : PaymentStatus.PartiallyRefunded;
             await _orderService.UpdateOrder(order);
 
             //add a note
