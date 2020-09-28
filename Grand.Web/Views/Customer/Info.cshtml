@@ -8,6 +8,7 @@
 
     //title
     pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
+    
 }
 @section left
 {
@@ -143,7 +144,7 @@
                     <div class="col-12">
                         <label asp-for="Email" class="col-form-label">@T("Account.Fields.Email"):</label>
                         <span class="required">*</span>
-                        <input asp-for="Email" class="form-control" />
+                        <input asp-for="Email" class="form-control" asp-readonly=@(!Model.AllowUsersToChangeEmail) />
                         <span asp-validation-for="Email"></span>
                     </div>
                 </fieldset>
@@ -208,10 +209,10 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-     Model.StreetAddress2Enabled ||
-     Model.ZipPostalCodeEnabled ||
-     Model.CityEnabled ||
-     Model.CountryEnabled)
+    Model.StreetAddress2Enabled ||
+    Model.ZipPostalCodeEnabled ||
+    Model.CityEnabled ||
+    Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">

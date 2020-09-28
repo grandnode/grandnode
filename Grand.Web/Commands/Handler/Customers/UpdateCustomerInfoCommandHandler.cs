@@ -74,7 +74,7 @@ namespace Grand.Web.Commands.Handler.Customers
                 }
             }
             //email
-            if (!request.Customer.Email.Equals(request.Model.Email.Trim(), StringComparison.OrdinalIgnoreCase))
+            if (!request.Customer.Email.Equals(request.Model.Email.Trim(), StringComparison.OrdinalIgnoreCase) && _customerSettings.AllowUsersToChangeEmail)
             {
                 //change email
                 await _customerRegistrationService.SetEmail(request.Customer, request.Model.Email.Trim());

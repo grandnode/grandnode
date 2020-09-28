@@ -24,6 +24,7 @@ namespace Grand.Web.Models.Customer
         [DataType(DataType.EmailAddress)]
         [GrandResourceDisplayName("Account.Fields.Email")]
         public string Email { get; set; }
+        public bool AllowUsersToChangeEmail { get; set; }
 
         public bool CheckUsernameAvailabilityEnabled { get; set; }
         public bool AllowUsersToChangeUsernames { get; set; }

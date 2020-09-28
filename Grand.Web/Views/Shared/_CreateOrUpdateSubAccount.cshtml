@@ -1,5 +1,8 @@
 ﻿@model SubAccountModel
-
+@inject Grand.Domain.Customers.CustomerSettings customerSettings
+@{
+    var edit_email = !string.IsNullOrEmpty(Model.Id) && !customerSettings.AllowUsersToChangeEmail;
+}
 <input asp-for="Id" type="hidden" />
 <div class="edit-subaccount row">
     <div class="form-group col-sm-12 col-md-6">
@@ -17,7 +20,7 @@
     <div class="form-group col-sm-12">
         <label asp-for="Email" class="col-form-label">@T("Account.Fields.Email"):</label>
         <span class="required">*</span>
-        <input asp-for="Email" class="form-control" />
+        <input asp-for="Email" class="form-control" asp-readonly=@edit_email />
         <span asp-validation-for="Email"></span>
     </div>
     <div class="form-group col-sm-12">

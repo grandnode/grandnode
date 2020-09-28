@@ -41,7 +41,7 @@ namespace Grand.Web.Commands.Handler.Customers
             }
 
             //update email
-            if (customer.Email != request.Model.Email.ToLower())
+            if (customer.Email != request.Model.Email.ToLower() && _customerSettings.AllowUsersToChangeEmail)
             {
                 try
                 {

@@ -220,6 +220,7 @@ namespace Grand.Web.Features.Handlers.Customers
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
+            model.AllowUsersToChangeEmail = _customerSettings.AllowUsersToChangeEmail;
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
             model.Is2faEnabled = request.Customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled);
