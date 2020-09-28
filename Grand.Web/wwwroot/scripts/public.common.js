@@ -102,21 +102,6 @@ function mainMenuReplace() {
     }
 }
 
-// search box
-
-function searchReplace() {
-    if (window.matchMedia('(max-width: 991px)').matches) {
-        if ($("#searchModal #small-search-box-form").length < 1) {
-            $('#small-search-box-form').prependTo('#searchModal');
-        }
-    }
-    else {
-        if ($(".formSearch #small-search-box-form").length < 1) {
-            $('#small-search-box-form').prependTo('.formSearch');
-        }
-    }
-}
-
 // back to top
 
 function BackToTop() {
@@ -207,7 +192,6 @@ $(document).ready(function () {
     edgeFix();
     CartFix();
     mainMenuReplace();
-    searchReplace();
     LeftSide();
     itemsStatistics();
     dataCountdown();
@@ -216,7 +200,6 @@ $(document).ready(function () {
 
     $(window).resize(function () {
         mainMenuReplace();
-        searchReplace();
         LeftSide();
         productInfo();
     });

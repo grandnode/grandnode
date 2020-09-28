@@ -1270,7 +1270,6 @@ footer {
         display: inline;
         text-align: right;
         margin-bottom: 0;
-        padding-top: 5px;
     }
 }
 
@@ -5928,7 +5927,7 @@ label {
     cursor: pointer;
     font-size: 14px;
     transition: 0.3s;
-    top: -5px;
+    top: -8px;
     margin: 10px 0;
 }
 

@@ -573,6 +573,10 @@ body:not(.is-ready) .search-box-button {
 
 .search-box-button {
     height: 38px;
+    border: 1px solid rgba(0,0,0,.15);
+    background-color: transparent;
+    border-left: 0;
+    color: #666;
 }
 
 .search-results-list {
@@ -755,6 +759,7 @@ body:not(.is-ready) .search-box-button {
         font-weight: 300;
         font-size: 14px;
         color: #212529;
+        text-align: left;
         text-overflow: ellipsis;
         white-space: pre-wrap;
         overflow: hidden;
@@ -881,6 +886,7 @@ ul.ui-autocomplete li {
     background: #0091b5;
     color: #fff;
     height: 43px;
+    min-height: 43px;
     text-transform: uppercase;
 }
 
@@ -5422,6 +5428,9 @@ footer .socicon-pinterest:hover {
 }
 
 @media (min-width: 992px) {
+    .w-lg-auto {
+        width: auto !important;
+    }
     .formSearch {
         -ms-flex-preferred-size: 0;
         flex-basis: 0;
@@ -5705,7 +5714,7 @@ footer .socicon-pinterest:hover {
         z-index: 1037;
     }
 
-    body.scroll-down:not(.onTop) header {
+/*    body.scroll-down:not(.onTop) header {
         -webkit-transform: translateY(-100%);
         transform: translateY(-100%);
     }
@@ -5714,8 +5723,40 @@ footer .socicon-pinterest:hover {
     body.onTop header {
         -webkit-transform: translateY(0);
         transform: translateY(0);
+    }*/
+    .shopping-links {
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: space-between;
     }
 
+    .side-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: #fff;
+        box-shadow: 0 -6px 10px -8px #999;
+        border-top: 1px solid #ddd;
+        z-index: 1040;
+    }
+    .side-panel .js-offcanvas-trigger {
+        width: 25%;
+        border-right: 1px solid #ddd;
+    }
+    #topcartlink .js-offcanvas-trigger {
+        border-right: 0;
+    }
+    #small-searchterms {
+        margin: 0;
+        border-right: 0;
+    }
+    #small-searchterms:focus ~ .input-group-append .search-box-button {
+        border-color: #0093B5;
+        box-shadow: 0 2px 6px 0 rgba(0,0,0,0.12);
+    }
     .product-details-page .add-to-cart-button {
         width: calc(100% - 80px);
         height: auto;
@@ -5747,7 +5788,8 @@ footer .socicon-pinterest:hover {
     }
 
     #topcartlink .cart-qty, .wishlist-qty {
-        left: 30px;
+        top: 5px;
+        left: 25px;
     }
 
     .categoryGrid .flex-grid,
@@ -5773,7 +5815,10 @@ footer .socicon-pinterest:hover {
     }
 
     .shopping-links .nav-link {
-        padding: 0 0 0 .5rem;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
     }
 
     #mobile_menu .navbar-collapse {
@@ -5850,7 +5895,7 @@ footer .socicon-pinterest:hover {
     }
 
     .header-logo img {
-        max-height: 65px;
+        max-height: 70px;
     }
 
     .user-panel-trigger .mdi {
@@ -5861,10 +5906,6 @@ footer .socicon-pinterest:hover {
     .shopping-links .nav-link .mdi {
         font-size: 28px;
         color: #000;
-    }
-
-    #small-search-box-form {
-        display: none;
     }
 
     #searchModal #small-search-box-form {
@@ -6160,7 +6201,11 @@ footer .socicon-pinterest:hover {
     }
 
     .advanced-search-results.open {
-        top: 60px;
+        top: 46px;
+        left: unset;
+        right: 15px;
+        width: calc(100vw - 30px);
+        max-width: 720px;
     }
 
     .category-icon {
@@ -6200,12 +6245,19 @@ footer .socicon-pinterest:hover {
 
     .wishlist-container {
         order: 2;
+        width: 50%;
+        height: 100%;
+        border-right: 1px solid #ddd;
     }
 
     #topcartlink {
+        width: 50%;
+        height: 100%;
         order: 3;
-        margin-left: auto;
         padding-right: 0;
+    }
+    #topcartlink .btn-group.dropdown {
+        height: 100%;
     }
 
     .navUp .container.fly-in {
@@ -6926,6 +6978,10 @@ footer .socicon-pinterest:hover {
 }
 
 @media (max-width: 575px) {
+    .advanced-search-results .title {
+        font-size: 20px;
+        font-weight: 500;
+    }
     .nav-tabs .nav-link {
         padding: 8px 10px;
     }

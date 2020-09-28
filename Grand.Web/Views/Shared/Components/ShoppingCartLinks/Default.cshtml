@@ -1,9 +1,9 @@
 ﻿@model ShoppingCartLinksModel
-<div class="d-inline-flex align-items-center">
+<div class="d-inline-flex align-items-center w-50 w-lg-auto">
     <ul class="shopping-links">
         @if (Model.WishlistEnabled)
         {
-            <li class="nav-item wishlist-container d-lg-block d-none">
+            <li class="nav-item wishlist-container">
                 <a class="nav-link" href="@Url.RouteUrl("Wishlist")">
                     <span class="wishlist-label hl-label">
                         <span class="mdi mdi-heart-outline"></span>
