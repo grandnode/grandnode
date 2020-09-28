@@ -196,7 +196,7 @@ namespace Grand.Web.Controllers
                     var dataProviderSettings = dataSettingsManager.LoadSettings(reloadSettings: true);
 
                     var installationService = _serviceProvider.GetRequiredService<IInstallationService>();
-                    await installationService.InstallData(model.AdminEmail, model.AdminPassword, model.Collation, model.InstallSampleData);
+                    await installationService.InstallData(model.AdminEmail, model.AdminPassword, model.Collation, model.InstallSampleData, model.CompanyName, model.CompanyAddress, model.CompanyPhoneNumber, model.CompanyEmail);
 
                     //reset cache
                     DataSettingsHelper.ResetCache();

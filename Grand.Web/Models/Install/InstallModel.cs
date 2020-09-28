@@ -32,5 +32,9 @@ namespace Grand.Web.Models.Install
         public string Collation { get; set; }
         public List<SelectListItem> AvailableLanguages { get; set; }
         public List<SelectListItem> AvailableCollation { get; set; }
+        public string CompanyName { get; set; }
+        public string CompanyAddress { get; set; }
+        public string CompanyPhoneNumber { get; set; }
+        public string CompanyEmail { get; set; }
     }
 }

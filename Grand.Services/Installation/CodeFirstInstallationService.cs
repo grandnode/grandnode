@@ -255,7 +255,7 @@ namespace Grand.Services.Installation
             await _versionRepository.InsertAsync(version);
         }
 
-        protected virtual async Task InstallStores()
+        protected virtual async Task InstallStores(string companyName, string companyAddress, string companyPhoneNumber, string companyEmail)
         {
             //var storeUrl = "http://www.yourStore.com/";
             var storeUrl = _webHelper.GetStoreLocation(false);
@@ -269,12 +269,11 @@ namespace Grand.Services.Installation
                     SslEnabled = false,
                     Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,
-                    //should we set some default company info?
-                    CompanyName = "Your company name",
-                    CompanyAddress = "21 West 52nd Street",
-                    CompanyPhoneNumber = "(123) 456-78901",
+                    CompanyName = companyName,
+                    CompanyAddress = companyAddress,
+                    CompanyPhoneNumber = companyPhoneNumber,
                     CompanyVat = null,
-                    CompanyEmail = "company@email.com",
+                    CompanyEmail = companyEmail,
                     CompanyHours = "Monday - Sunday / 8:00AM - 6:00PM"
                 },
             };
@@ -10877,14 +10876,14 @@ namespace Grand.Services.Installation
 
 
         public virtual async Task InstallData(string defaultUserEmail,
-            string defaultUserPassword, string collation, bool installSampleData = true)
+            string defaultUserPassword, string collation, bool installSampleData = true, string companyName = "", string companyAddress = "", string companyPhoneNumber = "", string companyEmail = "")
         {
 
             defaultUserEmail = defaultUserEmail.ToLower();
             await CreateTables(collation);
             await CreateIndexes();
             await InstallVersion();
-            await InstallStores();
+            await InstallStores(companyName, companyAddress, companyPhoneNumber, companyEmail);
             await InstallMeasures();
             await InstallTaxCategories();
             await InstallLanguages();

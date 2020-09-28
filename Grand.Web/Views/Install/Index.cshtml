@@ -24,8 +24,8 @@
     <div class="container">
         @if (!Model.Installed)
         {
-            <form asp-action="Index" asp-controller="Install" id="installation-form" method="post" autocomplete="off">
-                <script>
+        <form asp-action="Index" asp-controller="Install" id="installation-form" method="post" autocomplete="off">
+            <script>
                 $(document).ready(function () {
                     $('#installation').click(function (e) {
                         if ($('#installation-form').valid()) {
@@ -62,162 +62,201 @@
                         $('.mongoDBDatabaseName').append(element);
                     }
                 }
-                </script>
-                <div class="row flex-row">
-                    <div class="col-6">
-                        <img class="img-fluid mt-3" title="" alt="grandNode" src="~/Themes/DefaultClean/Content/images/logo.png" />
-                    </div>
-                    <div class="col-6">
-                        <div class="row">
-                            <div class="col">
-                                <h1 class="text-xs-center generalTitle">@ILS.GetResource("Title")</h1>
-                            </div>
-                            <div class="col-3 pt-3">
-                                @Html.DropDownList("language", Model.AvailableLanguages, new { @class = "custom-select", onchange = "window.location.href = this.value;" })
-                            </div>
+            </script>
+            <div class="row flex-row">
+                <div class="col-6">
+                    <img class="img-fluid mt-3" title="" alt="grandNode" src="~/Themes/DefaultClean/Content/images/logo.png" />
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col">
+                            <h1 class="text-xs-center generalTitle">@ILS.GetResource("Title")</h1>
+                        </div>
+                        <div class="col-3 pt-3">
+                            @Html.DropDownList("language", Model.AvailableLanguages, new { @class = "custom-select", onchange = "window.location.href = this.value;" })
                         </div>
                     </div>
                 </div>
-                <div class="content">
-                    <p>
-                        @ILS.GetResource("Tooltip2")
-                        <div style="color: Red;">
-                            @Html.ValidationSummary(false)
+            </div>
+            <div class="content">
+                <p>
+                    @ILS.GetResource("Tooltip2")
+                    <div style="color: Red;">
+                        @Html.ValidationSummary(false)
+                    </div>
+                </p>
+            </div>
+            <div class="card">
+                <a href="https://bit.ly/3cD1drT" target="_blank"><img class="img-fluid mt-3" title="" alt="GrandNode Support Services" src="~/Themes/DefaultClean/Content/images/banner.jpg" /></a>
+            </div>
+            <div class="card">
+                <h3 class="card-header">
+                    @ILS.GetResource("CompanyInformation")
+                </h3>
+                <div class="card-body">
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6 col-12">
+                            <label for="AdminPassword">
+                                @ILS.GetResource("CompanyName"):
+                            </label>
+                            <input asp-for="CompanyName" class="form-control" />
                         </div>
-                    </p>
-                </div>
-                <div class="card">
-                    <h3 class="card-header">
-                        @ILS.GetResource("StoreInformation")
-                    </h3>
-                    <div class="card-body">
-                        <label for="AdminEmail" class="col-12 col-form-label px-0">
-                            @ILS.GetResource("AdminEmail"):
-                        </label>
-                        <div class="col-12 px-0">
-                            <input asp-for="AdminEmail" class="form-control" />
+                        <div class="col-md-6">
+                            <label for="ConfirmPassword">
+                                @ILS.GetResource("CompanyAddress"):
+                            </label>
+                            <input asp-for="CompanyAddress" class="form-control" />
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-md-6 col-12">
-                                <label for="AdminPassword">
-                                    @ILS.GetResource("AdminPassword"):
-                                </label>
-                                <input asp-for="AdminPassword" class="form-control password" />
-                            </div>
-                            <div class="col-md-6">
-                                <label for="ConfirmPassword">
-                                    @ILS.GetResource("ConfirmPassword"):
-                                </label>
-                                <input asp-for="ConfirmPassword" class="form-control password" />
-                            </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6 col-12">
+                            <label for="AdminPassword">
+                                @ILS.GetResource("CompanyPhoneNumber"):
+                            </label>
+                            <input asp-for="CompanyPhoneNumber" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ConfirmPassword">
+                                @ILS.GetResource("CompanyEmail"):
+                            </label>
+                            <input asp-for="CompanyEmail" class="form-control" />
                         </div>
                     </div>
                 </div>
-                @if (!Model.DisableSampleDataOption)
-                {
-                    <div nowrap="nowrap" align="left">
-                        <label class="custom-control custom-checkbox my-3">
-                            <input asp-for="InstallSampleData" class="custom-control-input" />
-                            <span class="custom-control-label"></span>
-                            <span class="custom-control-description">@ILS.GetResource("CreateSampleData")</span>
-                        </label>
-                    </div>
-                }
-                <section id="MongoDBConnectionInformation">
-                    <div id="MongoDBSimpleData">
-                        <div class="card">
-                            <h3 class="card-header">
-                                @ILS.GetResource("DatabaseInformation")
-                            </h3>
-                            <div class="card-body">
-                                <label for="MongoDBServerName">
-                                    @ILS.GetResource("MongoDBServerName"):
-                                </label>
-                                <input asp-for="MongoDBServerName" class="form-control" />
-                                <div class="row mt-3 mongoDBDatabaseName">
-                                    <div class="col-6">
-                                        <label class="mt-3" for="MongoDBDatabaseName">
-                                            @ILS.GetResource("DatabaseName"):
-                                        </label>
-                                        <input asp-for="MongoDBDatabaseName" class="form-control" />
-                                    </div>
-                                    <div class="col-6 collation">
-                                        <label class="mt-3" for="Collation">
-                                            @ILS.GetResource("Collation"):
-                                        </label>
-                                        @Html.DropDownList("Collation", Model.AvailableCollation, new { @class = "custom-select" })
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-6">
-                                        <label for="MongoDBUsername">
-                                            @ILS.GetResource("MongoDBUsername"):
-                                        </label>
-                                        <input asp-for="MongoDBUsername" class="form-control" />
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="MongoDBPassword">
-                                            @ILS.GetResource("MongoDBPassword"):
-                                        </label>
-                                        <input asp-for="MongoDBPassword" class="form-control password" />
-                                    </div>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <label class="custom-control custom-checkbox my-3">
-                        <input asp-for="MongoDBConnectionInfo" class="custom-control-input" />
-                        <span class="custom-control-label"></span>
-                        <span class="custom-control-description">@ILS.GetResource("ConnectionString"):</span>
+            </div>
+            <div class="card">
+                <h3 class="card-header">
+                    @ILS.GetResource("StoreInformation")
+                </h3>
+                <div class="card-body">
+                    <label for="AdminEmail" class="col-12 col-form-label px-0">
+                        @ILS.GetResource("AdminEmail"):
                     </label>
-                    <div id="MongoDBDatabaseConnectionString">
-                        <span style="white-space: nowrap;">
-                            <input asp-for="DatabaseConnectionString" class="textbox form-control" />
-                        </span>
-                        <br />
-                        <span class="hint">
-                            @ILS.GetResource("Example"):<br />
-                            @Html.Raw("mongodb://[username:password@]host1[:port1]/databaseName")
-                            <br />
-                            Find more info <a href="https://docs.mongodb.org/manual/reference/connection-string/" target="_blank">here</a>
-                        </span>
+                    <div class="col-12 px-0">
+                        <input asp-for="AdminEmail" class="form-control" />
                     </div>
-                </section>
-                <div class="row mx-0">
-                    <div class="py-3 col-12">
-                        @ILS.GetResource("Documentation1") <a href="http://docs.grandnode.com/" target="_blank">@ILS.GetResource("Documentation2")</a>.
-                    </div>
-                    <div class="col-md-6 col-12 mb-3 px-0">
-                        <input class="btn btn-success" type="button" id="installation" name="installation" value="@ILS.GetResource("Install")" style="width: 100px;" />
-                    </div>
-                    <div class="col-md-6 col-12 text-right">
-                        <a class="btn btn-secondary" href="@Url.Action("RestartInstall", "Install")" title="@ILS.GetResource("RestartInstallationTooltip")">
-                            @ILS.GetResource("RestartInstallation")
-                        </a>
-
-                    </div>
-                </div>
-                <div class="throbber">
-                    <div class="curtain">
-                    </div>
-
-                    <div class="curtain-content">
-                        <div>
-                            <h1 class="throbber-header">@ILS.GetResource("Installing")</h1>
-                            <div class="spinner active">
-                                <svg style="width:100px; height:100px" viewBox="0 0 64 64">
-                                    <circle cx="32" cy="32" r="29" fill="none" stroke-width="3" stroke-miterlimit="10"></circle>
-                                </svg>
-                            </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6 col-12">
+                            <label for="AdminPassword">
+                                @ILS.GetResource("AdminPassword"):
+                            </label>
+                            <input asp-for="AdminPassword" class="form-control password" />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ConfirmPassword">
+                                @ILS.GetResource("ConfirmPassword"):
+                            </label>
+                            <input asp-for="ConfirmPassword" class="form-control password" />
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
+            @if (!Model.DisableSampleDataOption)
+            {
+                <div nowrap="nowrap" align="left">
+                    <label class="custom-control custom-checkbox my-3">
+                        <input asp-for="InstallSampleData" class="custom-control-input" />
+                        <span class="custom-control-label"></span>
+                        <span class="custom-control-description">@ILS.GetResource("CreateSampleData")</span>
+                    </label>
+                </div>
+            }
+            <section id="MongoDBConnectionInformation">
+                <div id="MongoDBSimpleData">
+                    <div class="card">
+                        <h3 class="card-header">
+                            @ILS.GetResource("DatabaseInformation")
+                        </h3>
+                        <div class="card-body">
+                            <label for="MongoDBServerName">
+                                @ILS.GetResource("MongoDBServerName"):
+                            </label>
+                            <input asp-for="MongoDBServerName" class="form-control" />
+                            <div class="row mt-3 mongoDBDatabaseName">
+                                <div class="col-6">
+                                    <label class="mt-3" for="MongoDBDatabaseName">
+                                        @ILS.GetResource("DatabaseName"):
+                                    </label>
+                                    <input asp-for="MongoDBDatabaseName" class="form-control" />
+                                </div>
+                                <div class="col-6 collation">
+                                    <label class="mt-3" for="Collation">
+                                        @ILS.GetResource("Collation"):
+                                    </label>
+                                    @Html.DropDownList("Collation", Model.AvailableCollation, new { @class = "custom-select" })
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <label for="MongoDBUsername">
+                                        @ILS.GetResource("MongoDBUsername"):
+                                    </label>
+                                    <input asp-for="MongoDBUsername" class="form-control" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="MongoDBPassword">
+                                        @ILS.GetResource("MongoDBPassword"):
+                                    </label>
+                                    <input asp-for="MongoDBPassword" class="form-control password" />
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <label class="custom-control custom-checkbox my-3">
+                    <input asp-for="MongoDBConnectionInfo" class="custom-control-input" />
+                    <span class="custom-control-label"></span>
+                    <span class="custom-control-description">@ILS.GetResource("ConnectionString"):</span>
+                </label>
+                <div id="MongoDBDatabaseConnectionString">
+                    <span style="white-space: nowrap;">
+                        <input asp-for="DatabaseConnectionString" class="textbox form-control" />
+                    </span>
+                    <br />
+                    <span class="hint">
+                        @ILS.GetResource("Example"):<br />
+                        @Html.Raw("mongodb://[username:password@]host1[:port1]/databaseName")
+                        <br />
+                        Find more info <a href="https://docs.mongodb.org/manual/reference/connection-string/" target="_blank">here</a>
+                    </span>
+                </div>
+            </section>
+            <div class="row mx-0">
+                <div class="py-3 col-12">
+                    @ILS.GetResource("Documentation1") <a href="http://docs.grandnode.com/" target="_blank">@ILS.GetResource("Documentation2")</a>.
+                </div>
+                <div class="col-md-6 col-12 mb-3 px-0">
+                    <input class="btn btn-success" type="button" id="installation" name="installation" value="@ILS.GetResource("Install")" style="width: 100px;" />
+                </div>
+                <div class="col-md-6 col-12 text-right">
+                    <a class="btn btn-secondary" href="@Url.Action("RestartInstall", "Install")" title="@ILS.GetResource("RestartInstallationTooltip")">
+                        @ILS.GetResource("RestartInstallation")
+                    </a>
+
+                </div>
+            </div>
+            <div class="throbber">
+                <div class="curtain">
+                </div>
+
+                <div class="curtain-content">
+                    <div>
+                        <h1 class="throbber-header">@ILS.GetResource("Installing")</h1>
+                        <div class="spinner active">
+                            <svg style="width:100px; height:100px" viewBox="0 0 64 64">
+                                <circle cx="32" cy="32" r="29" fill="none" stroke-width="3" stroke-miterlimit="10"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
         }
         else
         {

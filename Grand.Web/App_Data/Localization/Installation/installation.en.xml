@@ -11,6 +11,18 @@
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Enter admin password</Value>
   </LocaleResource>
+  <LocaleResource Name="CompanyName">
+    <Value>Company name</Value>
+  </LocaleResource>
+  <LocaleResource Name="CompanyAddress">
+    <Value>Company address</Value>
+  </LocaleResource>
+  <LocaleResource Name="CompanyPhoneNumber">
+    <Value>Company phone number</Value>
+  </LocaleResource>
+  <LocaleResource Name="CompanyEmail">
+    <Value>Company email</Value>
+  </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
   </LocaleResource>

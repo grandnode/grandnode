@@ -11,6 +11,21 @@
   <LocaleResource Name="AdminPasswordRequired">
     <Value>Slá verður inn lykilorð kerfisstjóra</Value>
   </LocaleResource>
+  <LocaleResource Name="CompanyInformation">
+    <Value>Company information</Value>
+  </LocaleResource>
+  <LocaleResource Name="CompanyName">
+    <Value>Company name</Value>
+  </LocaleResource>
+  <LocaleResource Name="CompanyAddress">
+    <Value>Company address</Value>
+  </LocaleResource>
+  <LocaleResource Name="CompanyPhoneNumber">
+    <Value>Company phone number</Value>
+  </LocaleResource>
+  <LocaleResource Name="CompanyEmail">
+    <Value>Company email</Value>
+  </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
     <Value>Notandaaðgangur '{0}' hefur ekki skrifréttindi á möppuna '{1}'. Vinsamlegast aðgætið að aðgangsréttindi séu rétt skilgreind.</Value>
   </LocaleResource>
