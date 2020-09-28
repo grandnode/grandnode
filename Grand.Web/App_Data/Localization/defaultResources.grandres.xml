@@ -6768,6 +6768,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowCustomersToUploadAvatars.Hint">
     <Value>A value indicating whether customers are allowed to upload avatars.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeEmail">
+    <Value>Allow users to change email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeEmail.Hint">
+    <Value>Check if you want to allow users to change their main email accounts</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeUsernames">
     <Value>Allow customers to change their usernames</Value>
   </LocaleResource>
@@ -6968,6 +6974,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideReviewsTab.Hint">
     <Value>Check to hide 'My Reviews' tab on 'My account' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideSubaccountsTab">
+    <Value>Hide Subaccounts Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideSubaccountsTab.Hint">
+    <Value>Check if you want to hide the Subaccounts tab in "My Account" section.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe">
     <Value>Newsletter box. Allow to unsubscribe</Value>

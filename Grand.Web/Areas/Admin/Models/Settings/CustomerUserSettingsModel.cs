@@ -24,6 +24,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
         public partial class CustomerSettingsModel : BaseModel
         {
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeEmail")]
+            public bool AllowUsersToChangeEmail { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernamesEnabled")]
             public bool UsernamesEnabled { get; set; }
 
@@ -183,6 +186,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationType")]
             public int TwoFactorAuthenticationType { get; set; }
+           
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideSubaccountsTab")]
+            public bool HideSubaccountsTab { get; set; }
 
         }
 

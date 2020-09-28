@@ -115,6 +115,11 @@ namespace Grand.Domain.Customers
         public bool HideDocumentsTab { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to hide 'Subaccounts' tab on 'My account' page
+        /// </summary>
+        public bool HideSubAccountsTab { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to validate user when downloading products
         /// </summary>
         public bool DownloadableProductsValidateUser { get; set; }
@@ -208,11 +213,6 @@ namespace Grand.Domain.Customers
         /// Gets or sets a value indicating whether to hide 'Courses' tab on 'My account' page
         /// </summary>
         public bool HideCoursesTab { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to hide 'SubAccounts' tab on 'My account' page
-        /// </summary>
-        public bool HideSubAccountsTab { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Two factor authentication'  is enabled
