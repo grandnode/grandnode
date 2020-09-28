@@ -6079,6 +6079,7 @@ body.lock #lock_screen .unlock {
   position: fixed;
   font-size: 30px;
   z-index: 1001;
+  cursor: pointer;
 }
 
 .x_title h2 {
