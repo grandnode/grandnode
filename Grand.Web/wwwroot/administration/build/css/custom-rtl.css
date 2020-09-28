@@ -97,6 +97,11 @@ IF you want all numbers in persian use this
   font-weight: "normal";
   font-style: "normal";
 }
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
 /*Grid Header Fix*/
 .k-grid .k-grid-header .k-header {
     text-align: right;
@@ -726,6 +731,7 @@ pre, code {
   right: 27px;
   position: absolute;
   top: 0;
+  z-index: 0;
 }
 
 body {
@@ -1503,13 +1509,14 @@ a.hiddenanchor {
   display: block;
   cursor: pointer;
   width: 100%;
+  border-bottom: 1px solid #3d4957;
 }
 
 .nav.side-menu>li>a {
-  margin-bottom: 6px;
   color: #e7e7e7;
   font-weight: 500;
   text-align: right;
+  z-index: 2;
 }
 
 .nav.side-menu>li>a:hover {
@@ -1664,7 +1671,6 @@ footer {
   padding-bottom: 5px;
   background-clip: padding-box;
   background: #fff;
-  transition: all 300ms ease-in-out;
 }
 
 .tile-stats.sparkline {
@@ -1904,7 +1910,6 @@ footer {
   border: 1px solid #e6e9ed;
   column-break-inside: avoid;
   opacity: 1;
-  transition: all .2s ease;
 }
 
 .x_title {
@@ -4511,6 +4516,40 @@ div[data-role="editor-toolbar"] {
   border: 1px solid #ccc;
 }
 
+/* store news */
+
+.store-news {
+    display: inline-flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 15px -10px;
+    list-style-type: none;
+}
+.store-news li {
+    width: 33.33%;
+    padding: 0 7.5px;
+}
+.store-news .note {
+    margin: 0 0 10px 0;
+}
+.store-news .media-body {
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd !important;
+    border-right: 5px solid #8bb4e7 !important;
+}
+.store-news h5 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    color: #fff;
+}
+.store-news img {
+    max-width: 75px;
+    margin: 0 10px 10px 0;
+}
+
 .switchery {
   width: 32px;
   height: 20px;
@@ -5734,7 +5773,7 @@ body.lock #lock_screen .unlock {
 
 .control__indicator_custom {
   top: -20px;
-  margin-right: 17px;
+  margin-right: 0;
   left: 0;
   background-color: #dddddd;
 }
@@ -6034,10 +6073,11 @@ body.lock #lock_screen .unlock {
 .scroll-to-top {
   display: block;
   bottom: 10px;
-  right: 10px;
+  left: 10px;
   padding: 1px;
   text-align: center;
   position: fixed;
+  font-size: 30px;
   z-index: 1001;
 }
 
@@ -6150,7 +6190,7 @@ h2 {
 }
 @media screen and (max-width: 1700px) {
   .rtlabel {
-    margin-left: 30px;
+    margin-left: 0;
   }
 }
 
@@ -6387,6 +6427,7 @@ h2 {
     align-items: center;
     overflow: hidden;
     justify-content: center;
+    padding-left: 0;
 }
 .light-dark-switch .custom-control-label {
     font-weight: 500;
@@ -6394,10 +6435,10 @@ h2 {
     text-indent: -9999999px;
     color: transparent;
     width: 0;
-    padding-left: 26px;
 }
 .light-dark-switch .custom-control-label::after {
-    top: 12px;
+    top: 9px;
+    right: -1.5rem;
 }
 .light-dark-switch .custom-control-label::before {
     top: 8px;
@@ -6431,7 +6472,7 @@ h2 {
     align-items: center;
     justify-content: center;
     background-color: transparent !important;
-    transform: translateX(.65rem) !important;
+    transform: translateX(.7rem) !important;
     text-indent: 1px !important;
 }
 
