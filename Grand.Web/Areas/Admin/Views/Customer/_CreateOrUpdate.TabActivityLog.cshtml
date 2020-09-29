@@ -1,5 +1,6 @@
 ﻿@model CustomerModel
 @inject AdminAreaSettings adminAreaSettings
+@inject Grand.Services.Security.IPermissionService permisionService
 @{
     var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
     var gridPageSizes = adminAreaSettings.GridPageSizes;
@@ -146,4 +147,86 @@
             });
         </script>
     }
+
+    @if (await permisionService.Authorize(Grand.Services.Security.PermissionSystemName.MessageQueue))
+    {
+        <br />
+        <strong>@T("Admin.System.QueuedEmails")</strong>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="queuedEmails-grid"></div>
+            </div>
+        </div>
+        <script>
+            function queadditionalData() {
+                var data = {
+                    SearchToEmail: $('#@Html.FieldIdFor(model => model.Email)').val(),
+                    SearchStartDate: '',
+                    SearchEndDate: '',
+                    SearchFromEmail: '',
+                    SearchLoadNotSent: false,
+                    SearchMaxSentTries: 10
+                };
+                addAntiForgeryToken(data);
+                return data;
+            }
+            $(document).ready(function () {
+                $("#queuedEmails-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("QueuedEmailList", "QueuedEmail"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: queadditionalData
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Subject",
+                        title: "@T("Admin.System.QueuedEmails.Fields.Subject")",
+                        width: 300,
+                        template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Subject)#</a>',
+                    }, {
+                        field: "CreatedOn",
+                        title: "@T("Admin.System.QueuedEmails.Fields.CreatedOn")",
+                        width: 100,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "SentOn",
+                        title: "@T("Admin.System.QueuedEmails.Fields.SentOn")",
+                        width: 100,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "PriorityName",
+                        title: "@T("Admin.System.QueuedEmails.Fields.Priority")",
+                        width: 50
+                    }]
+                });
+            });
+        </script>
+    }
+
 }
