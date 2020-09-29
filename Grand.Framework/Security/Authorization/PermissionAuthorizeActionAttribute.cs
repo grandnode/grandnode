@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Routing;
+using Grand.Framework.Kendoui;
 
 namespace Grand.Framework.Security.Authorization
 {
@@ -46,8 +47,15 @@ namespace Grand.Framework.Security.Authorization
             if (!await permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
                 context.Result = new RedirectToRouteResult("AdminLogin", new RouteValueDictionary());
             else
-                context.Result = new RedirectToActionResult("AccessDenied", "Home", new { pageUrl = context.HttpContext.Request.Path });
-
+            {
+                var isAjaxCall = context.HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest";
+                if(!isAjaxCall)
+                    context.Result = new RedirectToActionResult("AccessDenied", "Home", new { pageUrl = context.HttpContext.Request.Path });
+                else
+                {
+                    context.Result = new JsonResult(new DataSourceResult { Errors = $"Access denied to the resource {context.HttpContext.Request.Path}" });
+                }
+            }
             return;
         }
     }
