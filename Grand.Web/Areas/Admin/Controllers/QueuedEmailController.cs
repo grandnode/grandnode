@@ -42,7 +42,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index() => RedirectToAction("List");
 
-		public IActionResult List()
+        [PermissionAuthorizeAction(PermissionActionName.List)]
+        public IActionResult List()
         {
 		    var model = new QueuedEmailListModel
 		    {
@@ -52,7 +53,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
 		}
 
-		[HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
+        [HttpPost]
 		public async Task<IActionResult> QueuedEmailList(DataSourceRequest command, QueuedEmailListModel model)
         {
             DateTime? startDateValue = (model.SearchStartDate == null) ? null
@@ -84,7 +86,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
-
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-email-by-number")]
         public async Task<IActionResult> GoToEmailByNumber(QueuedEmailListModel model)
@@ -95,8 +97,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             
             return RedirectToAction("Edit", "QueuedEmail", new { id = queuedEmail.Id });
         }
-
-		public async Task<IActionResult> Edit(string id)
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
+        public async Task<IActionResult> Edit(string id)
         {
 			var email = await _queuedEmailService.GetQueuedEmailById(id);
             if (email == null)
@@ -115,7 +117,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return View(model);
 		}
-
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
@@ -147,7 +149,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return View(model);
 		}
-
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
         public async Task<IActionResult> Requeue(QueuedEmailModel queuedEmailModel)
         {
@@ -182,8 +184,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Requeued"));
             return RedirectToAction("Edit", new { id = requeuedEmail.Id });
         }
-
-	    [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
+        [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
 			var email = await _queuedEmailService.GetQueuedEmailById(id);
@@ -196,7 +198,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Deleted"));
 			return RedirectToAction("List");
 		}
-
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost]
         public async Task<IActionResult> DeleteSelected(ICollection<string> selectedIds)
         {
@@ -209,7 +211,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(new { Result = true });
         }
-
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("delete-all")]
         public async Task<IActionResult> DeleteAll()
