@@ -206,7 +206,7 @@
                         field: "Subject",
                         title: "@T("Admin.System.QueuedEmails.Fields.Subject")",
                         width: 300,
-                        template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Subject)#</a>',
+                        template: '<a class="k-link" href="@Url.Action("Edit", "QueuedEmail")/#=Id#">#=kendo.htmlEncode(Subject)#</a>'
                     }, {
                         field: "CreatedOn",
                         title: "@T("Admin.System.QueuedEmails.Fields.CreatedOn")",
