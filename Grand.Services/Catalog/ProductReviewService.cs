@@ -71,15 +71,7 @@ namespace Grand.Services.Catalog
 
             return await PagedList<ProductReview>.Create(query, pageIndex, pageSize);
         }
-
-        public async Task<List<ProductReview>> ProductReviewsByProductAsync(string productId)
-        {
-            var reviews = await _productReviewRepository.Collection
-                .Find(new BsonDocument("ProductId", productId)).ToListAsync();
-
-            return reviews;
-        }
-
+        
         public virtual async Task<int> RatingSumProduct(string productId, string storeId)
         {
             var query = from p in _productReviewRepository.Table

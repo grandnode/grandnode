@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Grand.Services.Commands.Models.Catalog;
 using MongoDB.Driver;
 using Grand.Services.Catalog;
+using Grand.Domain;
 
 namespace Grand.Services.Tests.Commands.Handlers.Catalog
 {
@@ -17,7 +18,6 @@ namespace Grand.Services.Tests.Commands.Handlers.Catalog
     public class UpdateProductReviewTotalsCommandHandlerTest
     {
         private Mock<IRepository<Product>> _productRepositoryMock;
-        private Mock<IRepository<ProductReview>> _productReviewRepositoryMock;
         private Mock<ICacheManager> _cacheManagerMock;
         private UpdateProductReviewTotalsCommandHandler _updateProductReviewTotalsCommandHandler;
         private Mock<IMongoCollection<Product>> _mongoCollectionMock;
@@ -41,15 +41,20 @@ namespace Grand.Services.Tests.Commands.Handlers.Catalog
             _productRepositoryMock = new Mock<IRepository<Product>>();
             _productRepositoryMock.Setup(x => x.Collection).Returns(_mongoCollectionMock.Object);
 
-            _productReviewRepositoryMock = new Mock<IRepository<ProductReview>>();
             _cacheManagerMock = new Mock<ICacheManager>();
 
             _productReviewServiceMock = new Mock<IProductReviewService>();
-            _productReviewServiceMock.Setup(x => x.ProductReviewsByProductAsync(It.IsAny<string>())).Returns(Task.FromResult(reviews));
+            IPagedList<ProductReview> pagedListReviews = new PagedList<ProductReview>( reviews, 0, 234567);
+            _productReviewServiceMock.Setup(x => x.GetAllProductReviews(null, 
+                null,
+                null, 
+                null, 
+                null, 
+                null, 
+                It.IsAny<string>(), 0, It.IsAny<int>())).Returns(Task.FromResult(pagedListReviews));
 
             _updateProductReviewTotalsCommandHandler = new UpdateProductReviewTotalsCommandHandler(
                 _productRepositoryMock.Object,
-                _productReviewRepositoryMock.Object,
                 _productReviewServiceMock.Object,
                 _cacheManagerMock.Object);
         }
@@ -69,7 +74,8 @@ namespace Grand.Services.Tests.Commands.Handlers.Catalog
             var request = new UpdateProductReviewTotalsCommand { Product = new Product() };
             await _updateProductReviewTotalsCommandHandler.Handle(request, default);
 
-            _productReviewServiceMock.Verify(x => x.ProductReviewsByProductAsync(It.IsAny<string>()), Times.Once);
+            _productReviewServiceMock.Verify(x => x.GetAllProductReviews(null, null, null, null, null,
+                null, It.IsAny<string>(), 0, It.IsAny<int>()), Times.Once);
             _productRepositoryMock.Verify(x => x.Collection.UpdateOneAsync(It.IsAny<FilterDefinition<Product>>(),
                 It.IsAny<UpdateDefinition<Product>>(),
                 It.IsAny<UpdateOptions>(),

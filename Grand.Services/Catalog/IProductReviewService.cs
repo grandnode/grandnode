@@ -66,11 +66,5 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         Task DeleteProductReview(ProductReview productReview);
-
-        // <summary>
-        /// Get all product's reviews by product
-        /// </summary>
-        /// <param name="productId">Product identificator</param>
-        Task<List<ProductReview>> ProductReviewsByProductAsync(string productId);
     }
 }

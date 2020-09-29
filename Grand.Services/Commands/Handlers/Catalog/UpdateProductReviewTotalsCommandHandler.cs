@@ -27,16 +27,14 @@ namespace Grand.Services.Commands.Handlers.Catalog
         #region Fields
 
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IProductReviewService _productReviewService;
         private readonly ICacheManager _cacheManager;
 
         #endregion
 
-        public UpdateProductReviewTotalsCommandHandler(IRepository<Product> productRepository, IRepository<ProductReview> productReviewRepository, IProductReviewService productReviewService, ICacheManager cacheManager)
+        public UpdateProductReviewTotalsCommandHandler(IRepository<Product> productRepository, IProductReviewService productReviewService, ICacheManager cacheManager)
         {
             _productRepository = productRepository;
-            _productReviewRepository = productReviewRepository;
             _cacheManager = cacheManager;
             _productReviewService = productReviewService;
         }
@@ -51,8 +49,9 @@ namespace Grand.Services.Commands.Handlers.Catalog
             int approvedTotalReviews = 0;
             int notApprovedTotalReviews = 0;
 
-            var reviews = await _productReviewService.ProductReviewsByProductAsync(request.Product.Id);
-            
+            var reviews = await _productReviewService.GetAllProductReviews(null, null, null, null, null,
+                null, request.Product.Id, 0, 2147483647);
+                        
             foreach (var pr in reviews)
             {
                 if (pr.IsApproved)
