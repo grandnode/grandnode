@@ -105,27 +105,42 @@
                 </div>
                 <div class="viewBox">
                     <ul class="pl-0 list-group list-pad">
-                        <li class="list-group-item">
-                            <span>@T("Footer.CompanyName.Title")</span>
-                            <span>@Model.CompanyName</span>
-                        </li>
-                        <li class="list-group-item">
-                            <span>@T("Footer.Address.Title")</span>
-                            <span>@Model.CompanyAddress</span>
-                        </li>
-                        <li class="list-group-item">
-                            <span>@T("footer.Email.Title")</span>
-                            <span>@Model.CompanyEmail</span>
-                        </li>
-                        <li class="list-group-item">
-                            <span>@T("Footer.Phone.Title")</span>
-                            <span>@Model.CompanyPhone</span>
-                        </li>
-                        <li class="list-group-item">
-                            <span>@T("Footer.Hour.Title")</span>
-                            <span>@Model.CompanyHours</span>
-                        </li>
-                    </ul>
+                        @if (!string.IsNullOrEmpty(Model.CompanyName))
+                        {
+                            <li class="list-group-item">
+                                <span>@T("Footer.CompanyName.Title")</span>
+                                <span>@Model.CompanyName</span>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.CompanyAddress))
+                        {
+                            <li class="list-group-item">
+                                <span>@T("Footer.Address.Title")</span>
+                                <span>@Model.CompanyAddress</span>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.CompanyEmail))
+                        {
+                            <li class="list-group-item">
+                                <span>@T("footer.Email.Title")</span>
+                                <span>@Model.CompanyEmail</span>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.CompanyPhone))
+                        {
+                            <li class="list-group-item">
+                                <span>@T("Footer.Phone.Title")</span>
+                                <span>@Model.CompanyPhone</span>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.CompanyHours))
+                        {
+                            <li class="list-group-item">
+                                <span>@T("Footer.Hour.Title")</span>
+                                <span>@Model.CompanyHours</span>
+                            </li>
+                        }
+                        </ul>
                 </div>
             </div>
             <ol class="d-flex flex-row list-group justify-content-center w-100 flex-wrap social-icons list-pad pb-0">
