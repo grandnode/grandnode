@@ -104,6 +104,31 @@ namespace Grand.Services.ExportImport
         #endregion
 
         #region Utilities
+
+        protected virtual PropertyManager<T> GetPropertyManager<T>(NPOI.SS.UserModel.ISheet worksheet)
+        {
+            var properties = new List<PropertyByName<T>>();
+            var poz = 0;
+            while (true)
+            {
+                try
+                {
+                    var cell = worksheet.GetRow(0).Cells[poz];
+
+                    if (cell == null || string.IsNullOrEmpty(cell.StringCellValue))
+                        break;
+
+                    poz += 1;
+                    properties.Add(new PropertyByName<T>(cell.StringCellValue.ToLower()));
+                }
+                catch
+                {
+                    break;
+                }
+            }
+            return new PropertyManager<T>(properties.ToArray());
+        }
+
         protected virtual void PrepareProductMapping(Product product, PropertyManager<Product> manager,
             IList<ProductTemplate> templates,
             IList<DeliveryDate> deliveryDates,
@@ -733,29 +758,8 @@ namespace Grand.Services.ExportImport
             var worksheet = workbook.GetSheetAt(0);
             if (worksheet == null)
                 throw new GrandException("No worksheet found");
-            var iRow = 0;
-            var properties = new List<PropertyByName<Product>>();
-            var poz = 0;
-
-            while (true)
-            {
-                try
-                {
-                    var cell = worksheet.GetRow(iRow).Cells[poz];
-
-                    if (cell == null || string.IsNullOrEmpty(cell.StringCellValue))
-                        break;
-
-                    poz += 1;
-                    properties.Add(new PropertyByName<Product>(cell.StringCellValue.ToLower()));
-                }
-                catch
-                {
-                    break;
-                }
-            }
-
-            var manager = new PropertyManager<Product>(properties.ToArray());
+            
+            var manager = GetPropertyManager<Product>(worksheet);
 
             var templates = await _productTemplateService.GetAllProductTemplates();
             var deliveryDates = await _shippingService.GetAllDeliveryDates();
@@ -763,7 +767,7 @@ namespace Grand.Services.ExportImport
             var warehouses = await _shippingService.GetAllWarehouses();
             var units = await _measureService.GetAllMeasureUnits();
 
-            for (iRow = 1; iRow < worksheet.PhysicalNumberOfRows; iRow++)
+            for (var iRow = 1; iRow < worksheet.PhysicalNumberOfRows; iRow++)
             {
 
                 manager.ReadFromXlsx(worksheet, iRow);
@@ -780,7 +784,7 @@ namespace Grand.Services.ExportImport
 
                 var isNew = product == null;
 
-                product = product ?? new Product();
+                product ??= new Product();
 
                 if (isNew)
                 {
@@ -796,7 +800,7 @@ namespace Grand.Services.ExportImport
 
                 PrepareProductMapping(product, manager, templates, deliveryDates, warehouses, units, taxes);
 
-                if (isNew && properties.All(p => p.PropertyName.ToLower() != "producttypeid"))
+                if (isNew && manager.GetProperties.All(p => p.PropertyName.ToLower() != "producttypeid"))
                     product.ProductType = ProductType.SimpleProduct;
 
                 product.LowStock = product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity;
@@ -839,7 +843,6 @@ namespace Grand.Services.ExportImport
                 await PrepareProductPictures(product, manager, isNew);
 
             }
-
 
         }
 
@@ -991,32 +994,12 @@ namespace Grand.Services.ExportImport
             var worksheet = workbook.GetSheetAt(0);
             if (worksheet == null)
                 throw new GrandException("No worksheet found");
-            var iRow = 0;
-            var properties = new List<PropertyByName<Manufacturer>>();
-            var poz = 0;
 
-            while (true)
-            {
-                try
-                {
-                    var cell = worksheet.GetRow(iRow).Cells[poz];
+            var manager = GetPropertyManager<Manufacturer>(worksheet);
 
-                    if (cell == null || string.IsNullOrEmpty(cell.StringCellValue))
-                        break;
-
-                    poz += 1;
-                    properties.Add(new PropertyByName<Manufacturer>(cell.StringCellValue.ToLower()));
-                }
-                catch
-                {
-                    break;
-                }
-            }
-
-            var manager = new PropertyManager<Manufacturer>(properties.ToArray());
             var templates = await _manufacturerTemplateService.GetAllManufacturerTemplates();
 
-            for (iRow = 1; iRow < worksheet.PhysicalNumberOfRows; iRow++)
+            for (var iRow = 1; iRow < worksheet.PhysicalNumberOfRows; iRow++)
             {
 
                 manager.ReadFromXlsx(worksheet, iRow);
@@ -1073,30 +1056,12 @@ namespace Grand.Services.ExportImport
             var worksheet = workbook.GetSheetAt(0);
             if (worksheet == null)
                 throw new GrandException("No worksheet found");
-            var iRow = 0;
-            var properties = new List<PropertyByName<Category>>();
-            var poz = 0;
-            while (true)
-            {
-                try
-                {
-                    var cell = worksheet.GetRow(iRow).Cells[poz];
 
-                    if (cell == null || string.IsNullOrEmpty(cell.StringCellValue))
-                        break;
+            var manager = GetPropertyManager<Category>(worksheet);
 
-                    poz += 1;
-                    properties.Add(new PropertyByName<Category>(cell.StringCellValue.ToLower()));
-                }
-                catch
-                {
-                    break;
-                }
-            }
-            var manager = new PropertyManager<Category>(properties.ToArray());
             var templates = await _categoryTemplateService.GetAllCategoryTemplates();
 
-            for (iRow = 1; iRow < worksheet.PhysicalNumberOfRows; iRow++)
+            for (var iRow = 1; iRow < worksheet.PhysicalNumberOfRows; iRow++)
             {
                 manager.ReadFromXlsx(worksheet, iRow);
 
@@ -1139,93 +1104,6 @@ namespace Grand.Services.ExportImport
 
             }
 
-
-
-            /*
-            using (var xlPackage = new ExcelPackage(stream))
-            {
-                // get the first worksheet in the workbook
-                var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
-                if (worksheet == null)
-                    throw new GrandException("No worksheet found");
-
-                var iRow = 2;
-
-                //property array
-                //the columns
-                var properties = new List<PropertyByName<Category>>();
-                var poz = 1;
-                while (true)
-                {
-                    try
-                    {
-                        var cell = worksheet.Cells[1, poz];
-
-                        if (cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()))
-                            break;
-
-                        poz += 1;
-                        properties.Add(new PropertyByName<Category>(cell.Value.ToString().ToLower()));
-                    }
-                    catch
-                    {
-                        break;
-                    }
-                }
-                var manager = new PropertyManager<Category>(properties.ToArray());
-                var templates = await _categoryTemplateService.GetAllCategoryTemplates();
-
-                while (true)
-                {
-                    var allColumnsAreEmpty = manager.GetProperties
-                        .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
-                        .All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()));
-
-                    if (allColumnsAreEmpty)
-                        break;
-
-                    manager.ReadFromXlsx(worksheet, iRow);
-
-                    var categoryid = manager.GetProperty("id") != null ? manager.GetProperty("id").StringValue : string.Empty;
-                    var category = string.IsNullOrEmpty(categoryid) ? null : await _categoryService.GetCategoryById(categoryid);
-
-                    var isNew = category == null;
-
-                    category = category ?? new Category();
-
-                    if (isNew)
-                    {
-                        category.CreatedOnUtc = DateTime.UtcNow;
-                        category.CategoryTemplateId = templates.FirstOrDefault()?.Id;
-                        if (!string.IsNullOrEmpty(categoryid))
-                            category.Id = categoryid;
-                    }
-
-                    PrepareCategoryMapping(category, manager, templates);
-                    category.UpdatedOnUtc = DateTime.UtcNow;
-
-                    if (isNew)
-                        await _categoryService.InsertCategory(category);
-                    else
-                        await _categoryService.UpdateCategory(category);
-
-                    var picture = manager.GetProperty("picture") != null ? manager.GetProperty("sename").StringValue : "";
-                    if (!string.IsNullOrEmpty(picture))
-                    {
-                        var _picture = await LoadPicture(picture, category.Name, isNew ? "" : category.PictureId);
-                        if (_picture != null)
-                            category.PictureId = _picture.Id;
-                    }
-
-                    var sename = manager.GetProperty("sename") != null ? manager.GetProperty("sename").StringValue : category.Name;
-                    sename = await category.ValidateSeName(sename, category.Name, true, _seoSetting, _urlRecordService, _languageService);
-                    category.SeName = sename;
-                    await _categoryService.UpdateCategory(category);
-                    await _urlRecordService.SaveSlug(category, sename, "");
-
-                    iRow++;
-                }
-            */
         }
 
         #endregion
