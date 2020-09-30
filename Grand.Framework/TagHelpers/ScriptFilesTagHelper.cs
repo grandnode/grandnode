@@ -6,14 +6,12 @@ namespace Grand.Framework.TagHelpers
 {
     [HtmlTargetElement("script-files", TagStructure = TagStructure.WithoutEndTag)]
     [HtmlTargetElement("script-files", Attributes = AttributeNameLocation)]
-    [HtmlTargetElement("script-files", Attributes = AttributeNameBundleFiles)]
     public class ScriptFilesTagHelper : TagHelper
     {
         private const string AttributeNameLocation = "asp-location";
         [HtmlAttributeName(AttributeNameLocation)]
         public ResourceLocation Location { get; set; }
 
-        private const string AttributeNameBundleFiles = "asp-files";
         public bool? BundleFiles { get; set; } = null;
 
         private readonly IPageHeadBuilder _pageHeadBuilder;

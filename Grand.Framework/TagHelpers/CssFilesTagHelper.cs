@@ -6,14 +6,12 @@ namespace Grand.Framework.TagHelpers
 {
     [HtmlTargetElement("css-files", TagStructure = TagStructure.WithoutEndTag)]
     [HtmlTargetElement("css-files", Attributes = AttributeNameLocation)]
-    [HtmlTargetElement("css-files", Attributes = AttributeNameBundleFiles)]
     public class CssFilesTagHelper : TagHelper
     {
         private const string AttributeNameLocation = "asp-location";
         [HtmlAttributeName(AttributeNameLocation)]
         public ResourceLocation Location { get; set; }
 
-        private const string AttributeNameBundleFiles = "asp-files";
         public bool? BundleFiles { get; set; } = null;
 
         private readonly IPageHeadBuilder _pageHeadBuilder;
