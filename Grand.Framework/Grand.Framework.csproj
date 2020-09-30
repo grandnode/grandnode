@@ -18,10 +18,10 @@
     <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.1" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.11.2" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
-    <PackageReference Include="Wangkanai.Detection.Crawler" Version="2.0.0" />
-    <PackageReference Include="Wangkanai.Detection.Device" Version="2.0.0" />
+    <PackageReference Include="Wangkanai.Detection.Crawler" Version="2.0.1" />
+    <PackageReference Include="Wangkanai.Detection.Device" Version="2.0.1" />
     <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.65" />
-    <PackageReference Include="WebMarkupMin.AspNetCore3" Version="2.8.9" />
+    <PackageReference Include="WebMarkupMin.AspNetCore3" Version="2.8.11" />
     <PackageReference Include="WebMarkupMin.Core" Version="2.8.6" />
   </ItemGroup>
 
