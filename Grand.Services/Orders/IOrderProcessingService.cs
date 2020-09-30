@@ -44,7 +44,15 @@ namespace Grand.Services.Orders
         /// <param name="recurringPayment">Recurring Payment</param>
         /// <returns>value indicating whether a customer can cancel recurring payment</returns>
         Task<bool> CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment);
-        
+
+        /// <summary>
+        /// Cancel a order
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="notifyCustomer">Notify Customer</param>
+        /// <param name="notifyStoreOwner">Notify StoreOwner</param>
+        Task CancelOrder(Order order, bool notifyCustomer = true, bool notifyStoreOwner = true);
+
         /// <summary>
         /// Gets a value indicating whether cancel is allowed
         /// </summary>

@@ -1594,6 +1594,17 @@ namespace Grand.Services.Orders
         }
 
         /// <summary>
+        /// Cancel a order
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="notifyCustomer">Notify Customer</param>
+        /// <param name="notifyStoreOwner">Notify StoreOwner</param>
+        public virtual Task CancelOrder(Order order, bool notifyCustomer = true, bool notifyStoreOwner = true)
+        {
+            return _mediator.Send(new CancelOrderCommand() { Order = order, NotifyCustomer = notifyCustomer, NotifyStoreOwner = notifyStoreOwner });
+        }
+
+        /// <summary>
         /// Gets a value indicating whether cancel is allowed
         /// </summary>
         /// <param name="order">Order</param>
