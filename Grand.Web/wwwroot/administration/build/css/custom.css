@@ -6689,7 +6689,8 @@ table.tableFixHead {
 [data-theme="dark"] .panel,
 [data-theme="dark"] .panel-footer,
 [data-theme="dark"] .card,
-[data-theme="dark"] .table {
+[data-theme="dark"] .table,
+[data-theme="dark"] .modal-content {
     color: #fff;
     background: #475766;
 }
