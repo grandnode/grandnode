@@ -95,7 +95,7 @@ Admin password: 123456
 
 ## License ##
 
-GrandNode open source edition is licensed under GrandNode Public License Version 3.0 (GPL v3). It's available [here](https://github.com/grandnode/grandnode/blob/develop/LICENSE.md).
+GrandNode open source edition is licensed under GNU General Public License v3.0. It's available [here](https://github.com/grandnode/grandnode/blob/develop/LICENSE).
 
 ## Additional tools ##
 
