@@ -1,5 +1,6 @@
 ﻿using Grand.Domain.Tasks;
 using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -100,7 +101,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
-        public async Task<IActionResult> EditScheduler(ScheduleTaskModel model)
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public async Task<IActionResult> EditScheduler(ScheduleTaskModel model, bool continueEditing)
         {
             var scheduleTask = await _scheduleTaskService.GetTaskById(model.Id);
             if (ModelState.IsValid)
@@ -111,7 +113,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 scheduleTask.TimeInterval = model.TimeInterval;
                 await _scheduleTaskService.UpdateTask(scheduleTask);
                 SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.Updated"));
-                return await EditScheduler(model.Id);
+                if (continueEditing)
+                {
+                    //return RedirectToAction("Edit", new { id = model.Id });
+                    return await EditScheduler(model.Id);
+                }
+                return RedirectToAction("List");
             }
             model.ScheduleTaskName = scheduleTask.ScheduleTaskName;
             model.Type = scheduleTask.Type;
