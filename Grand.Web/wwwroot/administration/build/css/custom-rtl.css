@@ -18,7 +18,7 @@
   font-family: "IRANSans";
   src: url('../fonts/eot/IRANSansWeb_Medium.eot?1532072864');
   src: url('../fonts/eot/IRANSansWeb_Medium.eot?&1532072864#iefix') format('embedded-opentype'), url('../fonts/woff2/IRANSansWeb_Medium.woff2?1532072864') format('woff2'), url('../fonts/woff/IRANSansWeb_Medium.woff?1532072864') format('woff'), url('../fonts/ttf/IRANSansWeb_Medium.ttf?1532072864') format('truetype');
-  font-weight: 500;
+  font-weight: 500;6630
   font-style: "normal";
 }
 
@@ -6529,7 +6529,8 @@ h2 {
 [data-theme="dark"] .panel,
 [data-theme="dark"] .panel-footer,
 [data-theme="dark"] .card,
-[data-theme="dark"] .table {
+[data-theme="dark"] .table,
+[data-theme="dark"] .modal-content {
     color: #fff;
     background: #475766;
 }
