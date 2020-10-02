@@ -36,7 +36,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> ContactFormList(DataSourceRequest command, ContactFormListModel model)
+        [PermissionAuthorizeAction(PermissionActionName.List)]
+        public async Task<IActionResult> ContactFormList(DataSourceRequest command, ContactFormListModel model)
         {
             var (contactFormModel, totalCount) = await _contactFormViewModelService.PrepareContactFormListModel(model, command.Page, command.PageSize);
 
@@ -47,8 +48,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
-
-		public async Task<IActionResult> Details(string id)
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
+        public async Task<IActionResult> Details(string id)
         {
 			var contactform = await _contactUsService.GetContactUsById(id);
             if (contactform == null)
@@ -59,6 +60,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 		}
 
 	    [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> Delete(string id)
         {
             var contactform = await _contactUsService.GetContactUsById(id);
@@ -78,6 +80,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("delete-all")]
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> DeleteAll()
         {
             await _contactUsService.ClearTable();
