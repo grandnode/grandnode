@@ -39,7 +39,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Activity log types
-
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> ListTypes()
         {
             var model = await _activityLogViewModelService.PrepareActivityLogTypeModels();
@@ -47,6 +47,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> SaveTypes(IFormCollection form)
         {
             string formKey = "checkbox_activity_types";
@@ -61,7 +62,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Activity log
-
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> ListLogs()
         {
             var model = await _activityLogViewModelService.PrepareActivityLogSearchModel();
@@ -69,6 +70,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> ListLogs(DataSourceRequest command, ActivityLogSearchModel model)
         {
             var activitymodel = await _activityLogViewModelService.PrepareActivityLogModel(model, command.Page, command.PageSize);
@@ -80,6 +82,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> ActivityLogDelete(string id)
         {
             var activityLog = await _customerActivityService.GetActivityById(id);
@@ -95,6 +98,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> ClearAll()
         {
             await _customerActivityService.ClearAllActivities();
@@ -104,13 +108,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Activity Stats
-
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> ListStats()
         {
             var model = await _activityLogViewModelService.PrepareActivityLogSearchModel();
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> ListStats(DataSourceRequest command, ActivityLogSearchModel model)
         {
