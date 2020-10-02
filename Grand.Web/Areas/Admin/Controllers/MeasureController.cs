@@ -46,9 +46,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Weights
 
+        [PermissionAuthorizeAction(PermissionActionName.Weights_List)]
         public IActionResult Weights() => View();
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Weights_List)]
         public async Task<IActionResult> Weights(DataSourceRequest command)
         {
             var weightsModel = (await _measureService.GetAllMeasureWeights())
@@ -66,6 +68,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Weights_Edit)]
         public async Task<IActionResult> WeightUpdate(MeasureWeightModel model)
         {
             if (!ModelState.IsValid)
@@ -81,6 +84,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Weights_Add)]
         public async Task<IActionResult> WeightAdd(MeasureWeightModel model)
         {
             if (!ModelState.IsValid)
@@ -96,6 +100,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Weights_Delete)]
         public async Task<IActionResult> WeightDelete(string id)
         {
             var weight = await _measureService.GetMeasureWeightById(id);
@@ -113,6 +118,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Weights_Edit)]
         public async Task<IActionResult> MarkAsPrimaryWeight(string id)
         {
             var primaryWeight = await _measureService.GetMeasureWeightById(id);
@@ -129,9 +135,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Dimensions
 
+        [PermissionAuthorizeAction(PermissionActionName.Dimensions_List)]
         public IActionResult Dimensions() => View();
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Dimensions_List)]
         public async Task<IActionResult> Dimensions(DataSourceRequest command)
         {
             var dimensionsModel = (await _measureService.GetAllMeasureDimensions())
@@ -149,6 +157,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Dimensions_Edit)]
         public async Task<IActionResult> DimensionUpdate(MeasureDimensionModel model)
         {
             if (!ModelState.IsValid)
@@ -164,6 +173,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Dimensions_Add)]
         public async Task<IActionResult> DimensionAdd(MeasureDimensionModel model)
         {
             if (!ModelState.IsValid)
@@ -179,6 +189,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Dimensions_Delete)]
         public async Task<IActionResult> DimensionDelete(string id)
         {
             var dimension = await _measureService.GetMeasureDimensionById(id);
@@ -196,6 +207,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Dimensions_Edit)]
         public async Task<IActionResult> MarkAsPrimaryDimension(string id)
         {
             var primaryDimension = await _measureService.GetMeasureDimensionById(id);
@@ -211,9 +223,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Units
 
+        [PermissionAuthorizeAction(PermissionActionName.Units_List)]
         public IActionResult Units() => View();
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Units_List)]
         public async Task<IActionResult> Units(DataSourceRequest command)
         {
             var unitsModel = (await _measureService.GetAllMeasureUnits())
@@ -230,6 +244,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Units_Edit)]
         public async Task<IActionResult> UnitUpdate(MeasureUnitModel model)
         {
             if (!ModelState.IsValid)
@@ -245,6 +260,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Units_Add)]
         public async Task<IActionResult> UnitAdd(MeasureUnitModel model)
         {
             if (!ModelState.IsValid)
@@ -260,6 +276,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Units_Delete)]
         public async Task<IActionResult> UnitDelete(string id)
         {
             var unit = await _measureService.GetMeasureUnitById(id);
