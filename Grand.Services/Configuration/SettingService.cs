@@ -144,7 +144,7 @@ namespace Grand.Services.Configuration
 
             //cache
             if (clearCache)
-                await _cacheManager.RemoveByPrefix(SETTINGS_PATTERN_KEY);
+                await _cacheManager.Clear();
 
         }
 
@@ -162,7 +162,7 @@ namespace Grand.Services.Configuration
 
             //cache
             if (clearCache)
-                await _cacheManager.RemoveByPrefix(SETTINGS_PATTERN_KEY);
+                await _cacheManager.Clear();
 
         }
 
@@ -178,7 +178,7 @@ namespace Grand.Services.Configuration
             await _settingRepository.DeleteAsync(setting);
 
             //cache
-            await _cacheManager.RemoveByPrefix(SETTINGS_PATTERN_KEY);
+            await _cacheManager.Clear();
 
         }
 
