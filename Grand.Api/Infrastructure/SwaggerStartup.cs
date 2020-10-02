@@ -63,7 +63,7 @@ namespace Grand.Api.Infrastructure
             }
         }
 
-        public int Order => 1001;
+        public int Order => 900;
 
         private void SetOutputFormatters(IServiceCollection services)
         {
