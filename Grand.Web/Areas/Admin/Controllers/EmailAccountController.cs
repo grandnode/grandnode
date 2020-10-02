@@ -41,6 +41,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
             var emailAccountModels = (await _emailAccountService.GetAllEmailAccounts())
@@ -57,7 +58,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
-
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> MarkAsDefaultEmail(string id)
         {
             var defaultEmailAccount = await _emailAccountService.GetEmailAccountById(id);
@@ -68,7 +69,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             return RedirectToAction("List");
         }
-
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public IActionResult Create()
         {
             var model = _emailAccountViewModelService.PrepareEmailAccountModel();
@@ -76,6 +77,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create(EmailAccountModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
@@ -87,7 +89,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var emailAccount = await _emailAccountService.GetEmailAccountById(id);
@@ -100,6 +102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> Edit(EmailAccountModel model, bool continueEditing)
         {
             var emailAccount = await _emailAccountService.GetEmailAccountById(model.Id);
@@ -120,6 +123,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("changepassword")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ChangePassword(EmailAccountModel model)
         {
             var emailAccount = await _emailAccountService.GetEmailAccountById(model.Id);
@@ -140,6 +144,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("sendtestemail")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> SendTestEmail(EmailAccountModel model)
         {
             var emailAccount = await _emailAccountService.GetEmailAccountById(model.Id);
@@ -168,6 +173,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> Delete(string id)
         {
             var emailAccount = await _emailAccountService.GetEmailAccountById(id);
