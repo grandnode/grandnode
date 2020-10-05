@@ -13,6 +13,7 @@
     var clientId = "picture" + random;
     var picture = await pictureService.GetPictureById(Model);
     var targetPictureSize = 100;
+
 }
 <div id="@(clientId + "value")">
     <input asp-for="@Model" type="hidden" />
@@ -78,7 +79,11 @@ else
                 endpoint: '@(Url.Action("AsyncUpload", "Picture"))'
             },
             template: "@(clientId)-qq-template",
-            multiple: false
+            multiple: false,
+            validation: {
+                itemLimit: 5,
+                acceptFiles: 'image/*',
+            }
         }).on("complete", function(event, id, name, responseJSON, xhr) {
             if (responseJSON.success) {
                 $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "'/>");

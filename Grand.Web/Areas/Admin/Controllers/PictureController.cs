@@ -1,22 +1,35 @@
-﻿using Grand.Framework.Security.Authorization;
+﻿using Grand.Domain.Media;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Media;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.Files)]
+    [PermissionAuthorize(PermissionSystemName.Pictures)]
     public partial class PictureController : BaseAdminController
     {
         private readonly IPictureService _pictureService;
+        private readonly MediaSettings _mediaSettings;
 
-        public PictureController(IPictureService pictureService)
+        public PictureController(IPictureService pictureService, MediaSettings mediaSettings)
         {
             _pictureService = pictureService;
+            _mediaSettings = mediaSettings;
+        }
+
+        [NonAction]
+        protected virtual IList<string> GetAllowedFileTypes()
+        {
+            if (string.IsNullOrEmpty(_mediaSettings.AllowedFileTypes))
+                return new List<string> { ".gif", ".jpg", ".jpeg", ".png", ".bmp", ".webp" };
+            else
+                return _mediaSettings.AllowedFileTypes.Split(',');
         }
 
         [HttpPost]
@@ -36,8 +49,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 });
             }
 
-            var fileBinary = httpPostedFile.GetDownloadBits();
-
+            
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
             if (String.IsNullOrEmpty(fileName) && form.ContainsKey(qqFileNameParameter))
@@ -50,6 +62,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             var fileExtension = Path.GetExtension(fileName);
             if (!String.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
+
+            if (!GetAllowedFileTypes().Contains(fileExtension))
+            {
+                return Json(new
+                {
+                    success = false,
+                    pictureId = "",
+                    imageUrl = ""
+                });
+            }
 
             //contentType is not always available 
             //that's why we manually update it here
@@ -84,6 +106,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
 
+            var fileBinary = httpPostedFile.GetDownloadBits();
             var picture = await _pictureService.InsertPicture(fileBinary, contentType, null);
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.

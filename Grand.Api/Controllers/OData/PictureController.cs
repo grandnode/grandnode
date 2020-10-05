@@ -24,7 +24,7 @@ namespace Grand.Api.Controllers.OData
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Pictures))
                 return Forbid();
 
             var picture = await _mediator.Send(new GetPictureByIdQuery() { Id = key });
@@ -38,7 +38,7 @@ namespace Grand.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PictureDto model)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Pictures))
                 return Forbid();
 
             if (ModelState.IsValid)
@@ -53,7 +53,7 @@ namespace Grand.Api.Controllers.OData
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Pictures))
                 return Forbid();
 
             var picture = await _mediator.Send(new GetPictureByIdQuery() { Id = key });
