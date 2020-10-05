@@ -10,6 +10,5 @@ namespace Grand.Web.Models.Common
         public string CompanyHours { get; set; }
         public string CompanyAddress { get; set; }
         public string CompanyPhone { get; set; }
-        public bool HidePoweredByGrandNode { get; set; }
     }
 }

@@ -140,7 +140,7 @@
                                 <span>@Model.CompanyHours</span>
                             </li>
                         }
-                        </ul>
+                    </ul>
                 </div>
             </div>
             <ol class="d-flex flex-row list-group justify-content-center w-100 flex-wrap social-icons list-pad pb-0">
@@ -222,12 +222,9 @@
                     }
                 </div>
                 @await Component.InvokeAsync("StoreThemeSelector")
-                @if (!Model.HidePoweredByGrandNode)
-                {
-                    <div class="col-12 col-md-4  pb-1 pt-1 text-center text-lg-right">
-                        <a class="pr-1 text-success" href="https://grandnode.com/">GrandNode</a><span>- Powered by </span><a href="https://nopcommerce.com/" rel="nofollow">nopCommerce </a>
-                    </div>
-                }
+                <div class="col-12 col-md-4  pb-1 pt-1 text-center text-lg-right">
+                    <span>Shopping cart software by </span><a class="pr-1 text-success" href="https://grandnode.com/">GrandNode</a>™
+                </div>
             </div>
         </div>
     </div>

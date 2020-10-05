@@ -113,7 +113,6 @@ namespace Grand.Web.ViewComponents
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
                 InclTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax,
-                HidePoweredByGrandNode = _storeInformationSettings.HidePoweredByGrandNode,
                 AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
                 Topics = topicModel
             };

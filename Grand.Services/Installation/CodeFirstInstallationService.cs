@@ -5130,7 +5130,6 @@ namespace Grand.Services.Installation
                 InstagramLink = "https://www.instagram.com/grandnode/",
                 LinkedInLink = "https://www.linkedin.com/company/grandnode.com/",
                 PinterestLink = "",
-                HidePoweredByGrandNode = false
             });
 
             await _settingService.SaveSetting(new ExternalAuthenticationSettings {

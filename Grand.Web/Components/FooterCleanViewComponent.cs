@@ -11,16 +11,13 @@ namespace Grand.Web.Components
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly StoreInformationSettings _storeInformationSettings;
 
         public FooterCleanViewComponent(
             IWorkContext workContext,
-            IStoreContext storeContext,
-            StoreInformationSettings storeInformationSettings)
+            IStoreContext storeContext)
         {
             _workContext = workContext;
             _storeContext = storeContext;
-            _storeInformationSettings = storeInformationSettings;
         }
 
         public IViewComponentResult Invoke()
@@ -40,7 +37,6 @@ namespace Grand.Web.Components
                 CompanyAddress = currentstore.CompanyAddress,
                 CompanyPhone = currentstore.CompanyPhoneNumber,
                 CompanyHours = currentstore.CompanyHours,
-                HidePoweredByGrandNode = _storeInformationSettings.HidePoweredByGrandNode,
             };
 
             return model;

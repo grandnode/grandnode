@@ -5,10 +5,6 @@ namespace Grand.Domain.Stores
     public class StoreInformationSettings : ISettings
     {
         /// <summary>
-        /// Gets or sets a value indicating whether "GrandNode.com Powered by nopCommerce" text should be displayed.
-        /// </summary>
-        public bool HidePoweredByGrandNode { get; set; }
-        /// <summary>
         /// Gets or sets a value indicating whether store is closed
         /// </summary>
         public bool StoreClosed { get; set; }

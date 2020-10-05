@@ -33,12 +33,6 @@
                 <div class="col-12 col-md pb-1 pt-1 flex-column text-lg-left text-center copyright">
                     <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
                 </div>
-                @if (!Model.HidePoweredByGrandNode)
-                {
-                    <div class="col-12 col-md-4  pb-1 pt-1 text-center text-lg-right">
-                        <a class="pr-1 text-success" href="http://www.grandNode.com/">GrandNode</a><span>- Powered by </span><a href="http://www.nopcommerce.com/">nopCommerce </a>
-                    </div>
-                }
             </div>
         </div>
         @await Component.InvokeAsync("Widget", new { widgetZone = "after_footerclean" })
