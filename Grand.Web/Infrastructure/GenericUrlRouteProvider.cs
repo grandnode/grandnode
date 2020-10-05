@@ -18,12 +18,12 @@ namespace Grand.Web.Infrastructure
                 var config = routeBuilder.ServiceProvider.GetRequiredService<GrandConfig>();
                 if (config.SeoFriendlyUrlsForLanguagesEnabled)
                 {
-                    pattern = $"{{language:lang={config.SeoFriendlyUrlsDefaultCode}}}/{{SeName}}";
+                    pattern = $"{{language:lang={config.SeoFriendlyUrlsDefaultCode}}}/{{**SeName}}";
                 }
 
             }
             routeBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(pattern);
-
+            
             //and default one
             routeBuilder.MapControllerRoute(
                 name: "Default",
@@ -85,6 +85,7 @@ namespace Grand.Web.Infrastructure
                 name: "Course",
                 pattern: pattern,
                 new { controller = "Course", action = "Details" });
+            
         }
 
         public int Priority {

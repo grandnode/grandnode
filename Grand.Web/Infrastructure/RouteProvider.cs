@@ -349,15 +349,7 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("ContactUs",
                             pattern + "contactus",
                             new { controller = "Common", action = "ContactUs" });
-            //sitemap
-            routeBuilder.MapControllerRoute("Sitemap",
-                            pattern + "sitemap",
-                            new { controller = "Common", action = "Sitemap" });
-
-            routeBuilder.MapControllerRoute("sitemap-indexed.xml",
-                            pattern + "sitemap-{Id:min(0)}.xml",
-                            new { controller = "Common", action = "SitemapXml" });
-
+            
             //interactive form
             routeBuilder.MapControllerRoute("PopupInteractiveForm",
                             pattern + "popupinteractiveform",
@@ -408,9 +400,18 @@ namespace Grand.Web.Infrastructure
                             "robots.txt",
                             new { controller = "Common", action = "RobotsTextFile" });
 
+            //sitemap
+            routeBuilder.MapControllerRoute("Sitemap",
+                            pattern + "sitemap",
+                            new { controller = "Common", action = "Sitemap" });
+
             //sitemap (XML)
             routeBuilder.MapControllerRoute("sitemap.xml",
                             pattern + "sitemap.xml",
+                            new { controller = "Common", action = "SitemapXml" });
+
+            routeBuilder.MapControllerRoute("sitemap-indexed.xml",
+                            pattern + "sitemap/{id:min(0)}.xml",
                             new { controller = "Common", action = "SitemapXml" });
 
             //store closed
