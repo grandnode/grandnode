@@ -11,13 +11,16 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.SubAccounts })
 }
+<vc:widget widget-zone="customer-subaccount-add-before" additional-data="@Model"></vc:widget>
 <form asp-route="CustomerSubAccountAdd" asp-antiforgery="true" method="post" autocomplete="off">
     <div class="page account-page subaccount-edit-page pl-lg-3 mb-3 pt-lg-0 pt-3">
         <h2 class="generalTitle">@T("Account.SubAccount.AddNew")</h2>
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
         <partial name="_CreateOrUpdateSubAccount" model="Model" />
+        <vc:widget widget-zone="customer-subaccount-add-form" additional-data="@Model"></vc:widget>
         <div class="buttons generalMarginSupporter mt-1 mb-1">
             <input type="submit" class="btn btn-info save-subaccount-button" value="@T("Common.Save")" />
         </div>
     </div>
 </form>
+<vc:widget widget-zone="customer-subaccount-add-after" additional-data="@Model"></vc:widget>

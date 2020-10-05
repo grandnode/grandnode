@@ -11,6 +11,7 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
+<vc:widget widget-zone="customer-address-list-before" additional-data="@Model"></vc:widget>
 <div class="page account-page address-list-page pl-lg-3 pt-lg-0 pt-3">
     @Html.AntiForgeryToken()
     <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Account.Navigation")</span></a>
@@ -163,3 +164,4 @@
         </div>
     }
 </div>
+<vc:widget widget-zone="customer-address-list-after" additional-data="@Model"></vc:widget>

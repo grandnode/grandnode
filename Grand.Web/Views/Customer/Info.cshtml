@@ -8,13 +8,13 @@
 
     //title
     pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
-    
+
 }
 @section left
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
 }
-
+<vc:widget widget-zone="customer-info-before" additional-data="@Model"></vc:widget>
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <script asp-location="Footer">
@@ -209,10 +209,10 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-    Model.StreetAddress2Enabled ||
-    Model.ZipPostalCodeEnabled ||
-    Model.CityEnabled ||
-    Model.CountryEnabled)
+  Model.StreetAddress2Enabled ||
+  Model.ZipPostalCodeEnabled ||
+  Model.CityEnabled ||
+  Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">
@@ -477,11 +477,13 @@
                 }
             </div>
         }
+        <vc:widget widget-zone="customer-info-form" additional-data="@Model"></vc:widget>
         <div class="generalMarginSupporter">
             <input type="submit" value="@T("Common.Save")" name="save-info-button" class="btn btn-secondary save-customer-info-button" />
         </div>
     </form>
 </div>
+<vc:widget widget-zone="customer-info-after" additional-data="@Model"></vc:widget>
 
 <script asp-location="Footer">
     function removeexternalassociation(itemId) {

@@ -11,7 +11,7 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.SubAccounts })
 }
-
+<vc:widget widget-zone="customer-subaccounts" additional-data="@Model"></vc:widget>
 <div class="page account-page subaccounts-list-page pl-lg-3 pt-lg-0 pt-3">
     @Html.AntiForgeryToken()
     <button type="button" class="btn btn-info btn-sm add-address-button float-sm-right" onclick="location.href='@Url.RouteUrl("CustomerSubAccountAdd")'">

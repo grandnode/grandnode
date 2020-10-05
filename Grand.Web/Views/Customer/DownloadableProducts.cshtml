@@ -11,6 +11,7 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
 }
+<vc:widget widget-zone="customer-downloadable-products-before" additional-data="@Model"></vc:widget>
 <section class="page account-page downloadable-products-page pl-lg-3 pt-lg-0 pt-3">
     <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Account.Navigation")</span></a>
     <h1 class="h2 generalTitle">@T("Account.DownloadableProducts")</h1>
@@ -93,3 +94,4 @@
         </div>
     }
 </section>
+<vc:widget widget-zone="customer-downloadable-products-after" additional-data="@Model"></vc:widget>

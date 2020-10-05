@@ -11,6 +11,7 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
+<vc:widget widget-zone="customer-address-add-before" additional-data="@Model"></vc:widget>
 <form asp-route="CustomerAddressAdd" method="post">
     <div class="page account-page address-edit-page pl-lg-3 mb-3 pt-lg-0 pt-3">
         <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Account.Navigation")</span></a>
@@ -21,8 +22,10 @@
             dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
             <partial name="_CreateOrUpdateAddress" model="Model.Address" view-data="dataDictAddress" />
         }
+        <vc:widget widget-zone="customer-address-add-form" additional-data="@Model"></vc:widget>
         <div class="buttons generalMarginSupporter mt-1 mb-1">
             <input type="submit" class="btn btn-info save-address-button" value="@T("Common.Save")" />
         </div>
     </div>
 </form>
+<vc:widget widget-zone="customer-address-add-after" additional-data="@Model"></vc:widget>

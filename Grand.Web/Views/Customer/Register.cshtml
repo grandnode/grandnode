@@ -52,7 +52,7 @@
         }
     });
 </script>
-
+<vc:widget widget-zone="customer-register-before" additional-data="@Model"></vc:widget>
 <form asp-route="Register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
     <div class="page registration-page">
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
@@ -175,10 +175,10 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-               Model.StreetAddress2Enabled ||
-               Model.ZipPostalCodeEnabled ||
-               Model.CityEnabled ||
-               Model.CountryEnabled)
+              Model.StreetAddress2Enabled ||
+              Model.ZipPostalCodeEnabled ||
+              Model.CityEnabled ||
+              Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">
@@ -373,5 +373,7 @@
             </label>
         }
     </div>
+    <vc:widget widget-zone="customer-register-form" additional-data="@Model"></vc:widget>
     <input type="submit" id="register-button" class="btn btn-secondary register-next-step-button mt-3 mb-3" value="@T("Account.Register.Button")" name="register-button" />
 </form>
+<vc:widget widget-zone="customer-register-after" additional-data="@Model"></vc:widget>
