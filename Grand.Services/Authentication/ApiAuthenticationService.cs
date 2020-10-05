@@ -3,6 +3,7 @@ using Grand.Services.Customers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -101,7 +102,7 @@ namespace Grand.Services.Authentication
             Customer customer = null;
 
             //try to get authenticated user identity
-            string authHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            string authHeader = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Authorization];
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith(JwtBearerDefaults.AuthenticationScheme))
                 return null;
 

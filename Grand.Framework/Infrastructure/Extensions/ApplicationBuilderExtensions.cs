@@ -118,7 +118,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 //handle 404 Not Found
                 if (context.HttpContext.Response.StatusCode == 404)
                 {
-                    string authHeader = context.HttpContext.Request.Headers["Authorization"];
+                    string authHeader = context.HttpContext.Request.Headers[HeaderNames.Authorization];
                     var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
 
                     var webHelper = context.HttpContext.RequestServices.GetRequiredService<IWebHelper>();
