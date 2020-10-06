@@ -6586,6 +6586,25 @@ table.tableFixHead {
     hyphens: auto;
 }
 
+@media (max-width: 575px) {
+    .k-content .form-horizontal .form-body .form-group .col-8.col-md-4.col-sm-4,
+    .k-content .form-horizontal .form-body .form-group .col-4.col-md-8.col-sm-8,
+    .k-content .form-horizontal .form-body .form-group .col-xs-4.col-md-8.col-sm-8,
+    .k-content .form-horizontal .form-body .form-group .col-xs-8.col-md-4.col-sm-4 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+        text-align: center !important;
+    }
+    .premium-list {
+        padding: 0;
+        justify-content: center;
+    }
+    .premium-list li {
+        margin: 0 0 15px 0;
+    }
+}
+
 /* Dark Mode */
 
 .light-dark-switch {
