@@ -13,6 +13,7 @@ using Grand.Web.Models.Blogs;
 using Grand.Web.Models.Media;
 using MediatR;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -55,8 +56,8 @@ namespace Grand.Web.Features.Handlers.Blogs
 
         public async Task<HomePageBlogItemsModel> Handle(GetHomePageBlog request, CancellationToken cancellationToken)
         {
-            var cacheKey = string.Format(ModelCacheEventConst.BLOG_HOMEPAGE_MODEL_KEY, 
-                _workContext.WorkingLanguage.Id, 
+            var cacheKey = string.Format(ModelCacheEventConst.BLOG_HOMEPAGE_MODEL_KEY,
+                _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id);
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
@@ -74,6 +75,7 @@ namespace Grand.Web.Features.Handlers.Blogs
                     item.Short = description?.Length > _blogSettings.MaxTextSizeHomePage ? description.Substring(0, _blogSettings.MaxTextSizeHomePage) : description;
                     item.CreatedOn = _dateTimeHelper.ConvertToUserTime(post.StartDateUtc ?? post.CreatedOnUtc, DateTimeKind.Utc);
                     item.GenericAttributes = post.GenericAttributes;
+                    item.Category = (await _blogService.GetBlogCategoryByPostId(post.Id)).FirstOrDefault()?.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
 
                     //prepare picture model
                     if (!string.IsNullOrEmpty(post.PictureId))
