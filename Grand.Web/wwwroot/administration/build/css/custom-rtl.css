@@ -5732,6 +5732,22 @@ body.lock #lock_screen .unlock {
     width: 12px;
     height: 12px;
 }
+.mt-checkbox-inline > .mt-checkbox {
+    padding-right: 40px;
+    padding-left: 0;
+    margin-right: 10px;
+}
+.mt-checkbox-inline .check-box + .control__indicator {
+    position: static;
+}
+.mt-checkbox-inline .check-box + .control__indicator::before {
+    top: 1px;
+    right: 0px;
+}
+.mt-checkbox-inline .check-box + .control__indicator::after {
+    top: 4px;
+    right: 3px;
+}
 .check-box:checked ~ .control__indicator::before {
     color: #fff;
     border-color: #26B99A;
