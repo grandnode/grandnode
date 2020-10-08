@@ -8,8 +8,8 @@ using Grand.Domain.Stores;
 using Grand.Domain.Vendors;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -185,6 +185,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
         public string CreatedOn {
             get {
                 return _order.CreatedOnUtc.ToLocalTime().ToString("D");
+            }
+        }
+
+        public DateTime CreatedOnUtc {
+            get {
+                return _order.CreatedOnUtc;
             }
         }
 
