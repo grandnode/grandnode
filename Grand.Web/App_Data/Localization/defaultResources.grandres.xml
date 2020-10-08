@@ -5814,6 +5814,9 @@
   <LocaleResource Name="Admin.Configuration.Plugins.Description">
     <Value>Manual plugin installation</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Description.Note">
+    <Value>NOTE: Due to the fact that we provide all possible versions of the plugin, please make sure you want to upload the correct ZIP file (with the correct structure). The correct file structure is Plugin.zip -> Plugin directory -> Content of the plugin. Otherwise, each attempt to use the Upload Plugin form will fail.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Description.Step1">
     <Value>Upload the plugin to the /plugins folder in your grandnode directory.</Value>
   </LocaleResource>

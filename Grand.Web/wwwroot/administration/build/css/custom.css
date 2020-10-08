@@ -5550,6 +5550,21 @@ a span.username {
     width: 12px;
     height: 12px;
 }
+.mt-checkbox-inline > .mt-checkbox {
+    padding-left: 40px;
+    margin-right: 10px;
+}
+.mt-checkbox-inline .check-box + .control__indicator {
+    position: static;
+}
+.mt-checkbox-inline .check-box + .control__indicator::before {
+    top: 2px;
+    left: 0px;
+}
+.mt-checkbox-inline .check-box + .control__indicator::after {
+    top: 4px;
+    left: 3px;
+}
 .check-box:checked + .control__indicator::before {
     color: #fff;
     border-color: #26B99A;
@@ -6064,9 +6079,6 @@ form>h4 {
     margin-left: 15px;
 }
 
-.mt-checkbox-inline>.mt-checkbox {
-    margin-right: 5px;
-}
 .piechart{
     width:50%;
     margin-bottom:40px;
