@@ -17,7 +17,7 @@ namespace Grand.Services.Documents
         /// Gets all documents
         /// </summary>
         /// <returns>Documents</returns>
-        Task<IPagedList<Document>> GetAll(string customerId = "", string name = "", string number = "", string email = "", 
+        Task<IPagedList<Document>> GetAll(string customerId = "", string name = "", string number = "", string email = "", string username = "",
             int reference = 0, string objectId = "", int status = -1, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
