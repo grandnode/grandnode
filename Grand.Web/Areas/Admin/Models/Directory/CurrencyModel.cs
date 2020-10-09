@@ -33,8 +33,10 @@ namespace Grand.Web.Areas.Admin.Models.Directory
         public decimal Rate { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.CustomFormatting")]
-
         public string CustomFormatting { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.NumberDecimal")]
+        public int NumberDecimal { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.Published")]
         public bool Published { get; set; }

@@ -93,6 +93,11 @@ namespace Grand.Domain.Directory
         }
 
         /// <summary>
+        /// Gets or sets the number of decimal places (for RoundPrice)
+        /// </summary>
+        public int NumberDecimal { get; set; } = 2;
+
+        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
