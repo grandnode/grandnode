@@ -756,7 +756,7 @@ table.no-margin .progress {
     opacity: .5;
 }
 .order-status-block.Cancelled::before {
-    content: "\f071";
+    content: "\f05e";
     color: rgba(231, 76, 60, 1);
 }
 .order-status-block.Complete::before {
@@ -6654,6 +6654,10 @@ table.tableFixHead {
 }
 
 @media (max-width: 575px) {
+    .table > tbody > tr > td,
+    .table > thead > th {
+        white-space: nowrap;
+    }
     .k-content .form-horizontal .form-body .form-group .col-8.col-md-4.col-sm-4,
     .k-content .form-horizontal .form-body .form-group .col-4.col-md-8.col-sm-8,
     .k-content .form-horizontal .form-body .form-group .col-xs-4.col-md-8.col-sm-8,

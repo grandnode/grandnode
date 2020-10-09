@@ -758,6 +758,58 @@ body .container.body .right_col {
   height: 57px;
 }
 
+.order-status-block {
+    position: relative;
+}
+.order-status-block::before {
+    position: absolute;
+    top: 150px;
+    left: 0;
+    right: 25%;
+    display: flex;
+    justify-content: center;
+    font-size: 260px;
+    font-family: FontAwesome;
+    z-index: 0;
+    opacity: .5;
+}
+.order-status-block.Cancelled::before {
+    content: "\f05e";
+    color: rgba(231, 76, 60, 1);
+}
+.order-status-block.Complete::before {
+    content: "\f046";
+    color: rgba(38, 185, 154, 1);
+}
+.order-status-block.Processing::before {
+    content: "\f021";
+    color: #d1ecf1;
+}
+.order-status-block.Pending::before {
+    content: "\f017";
+    color: rgba(243, 156, 18, 1);
+}
+.order-status-block.Cancelled .alert {
+    color: #E9EDEF;
+    background-color: rgba(231, 76, 60, 0.88);
+    border-color: rgba(231, 76, 60, 0.88);
+}
+.order-status-block.Complete .alert {
+    color: #ffffff;
+    background-color: rgba(38, 185, 154, 0.88);
+    border-color: rgba(38, 185, 154, 0.88);
+}
+.order-status-block.Processing .alert {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+.order-status-block.Pending .alert {
+    color: #fff;
+    background-color: rgba(243, 156, 18, 0.88);
+    border-color: rgba(243, 156, 18, 0.88);
+}
+
 @media (max-width: 1024px) {
   .right_col {
     padding: 10px !important;
@@ -6142,6 +6194,13 @@ h2 {
 .form-control, .container, .container-fluid, .row, .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-2, .col-sm-2, .col-md-2, .col-lg-2, .col-3, .col-sm-3, .col-md-3, .col-lg-3, .col-4, .col-sm-4, .col-md-4, .col-lg-4, .col-5, .col-sm-5, .col-md-5, .col-lg-5, .col-6, .col-sm-6, .col-md-6, .col-lg-6, .col-7, .col-sm-7, .col-md-7, .col-lg-7, .col-8, .col-sm-8, .col-md-8, .col-lg-8, .col-9, .col-sm-9, .col-md-9, .col-lg-9, .col-10, .col-sm-10, .col-md-10, .col-lg-10, .col-11, .col-sm-11, .col-md-11, .col-lg-11, .col-12, .col-sm-12, .col-md-12, .col-lg-12 {
   box-sizing: border-box!important;
 }
+.col-md-55, .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-2, .col-sm-2, .col-md-2, .col-lg-2, .col-3, .col-sm-3, .col-md-3, .col-lg-3, .col-4, .col-sm-4, .col-md-4, .col-lg-4, .col-5, .col-sm-5, .col-md-5, .col-lg-5, .col-6, .col-sm-6, .col-md-6, .col-lg-6, .col-7, .col-sm-7, .col-md-7, .col-lg-7, .col-8, .col-sm-8, .col-md-8, .col-lg-8, .col-9, .col-sm-9, .col-md-9, .col-lg-9, .col-10, .col-sm-10, .col-md-10, .col-lg-10, .col-11, .col-sm-11, .col-md-11, .col-lg-11, .col-12, .col-sm-12, .col-md-12, .col-lg-12 {
+    position: relative;
+    float: right;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
 
 .btn-group.btn-group-devided>.btn {
   margin-bottom: 5px;
@@ -6437,6 +6496,10 @@ h2 {
   }
 }
 @media (max-width: 575px) {
+    .table > tbody > tr > td,
+    .table > thead > th {
+        white-space: nowrap;
+    }
     .k-content .form-horizontal .form-body .form-group .col-8.col-md-4.col-sm-4,
     .k-content .form-horizontal .form-body .form-group .col-4.col-md-8.col-sm-8,
     .k-content .form-horizontal .form-body .form-group .col-xs-4.col-md-8.col-sm-8,
