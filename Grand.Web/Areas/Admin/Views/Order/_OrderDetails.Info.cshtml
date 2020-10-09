@@ -351,9 +351,9 @@
                 foreach (var tr in Model.TaxRates)
                 {
                     <div class="form-group">
-                        <admin-label asp-for="Tax" asp-display-hint="false" class="control-label col-3 col-md-3 col-sm-3"></admin-label> @tr.Rate%:
+                        <admin-label asp-for="Tax" asp-display-hint="false" class="control-label col-3 col-md-3 col-sm-3"></admin-label> 
                         <div class="col-9 col-md-9 col-sm-9">
-                            <label class="control-label">@tr.Value</label>
+                            <label class="control-label">@tr.Rate% - @tr.Value</label>
                         </div>
                     </div>
                 }
