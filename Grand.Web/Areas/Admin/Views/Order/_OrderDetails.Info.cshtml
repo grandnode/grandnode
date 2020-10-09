@@ -120,13 +120,13 @@
     <div class="form-body">
         @if (!Model.IsLoggedInAsVendor)
         {
-            <div class="form-group">
+            <div class="form-group order-status-block @Model.OrderStatus">
                 <admin-label asp-for="OrderStatus" asp-display-hint="false" class="control-label col-12 col-md-3 col-sm-3 pt-2"></admin-label>
                 <div class="col-12 col-md-9 col-sm-9 orderEditBtn">
                     <div class="d-inline-flex w-100 align-items-center mb-3">
-                        <strong>
+                        <div class="alert mb-0">
                             @Model.OrderStatus
-                        </strong>&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>&nbsp;&nbsp;&nbsp;&nbsp;
                         @if (Model.CanCancelOrder)
                         {
                             <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="btn red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
