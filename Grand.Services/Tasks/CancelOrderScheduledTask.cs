@@ -31,8 +31,7 @@ namespace Grand.Services.Tasks
 
         private DateTime CalculateStartCancelDate(int daysToCancelUnpaidOrder)
         {
-            DateTime todayDate = DateTime.Now.Date;
-            return todayDate.AddDays(-1 * (daysToCancelUnpaidOrder - 1)); // -1 avoid query dateTime.Date in Mongo IQueryable
+            return DateTime.UtcNow.Date.AddDays(-daysToCancelUnpaidOrder);
         }
     }
 }
