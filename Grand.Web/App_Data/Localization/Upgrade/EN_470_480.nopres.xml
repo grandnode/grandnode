@@ -266,4 +266,10 @@
   <LocaleResource Name="Admin.Configuration.Plugins.Description.Note">
     <Value>NOTE: Due to the fact that we provide all possible versions of the plugin, please make sure you want to upload the correct ZIP file (with the correct structure). The correct file structure is Plugin.zip -> Plugin directory -> Content of the plugin. Otherwise, each attempt to use the Upload Plugin form will fail.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.NumberDecimal">
+    <Value>The number of decimal places in the return value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.NumberDecimal.Hint">
+    <Value>Allow to set the number of decimal places in the return value (round price).</Value>
+  </LocaleResource>
 </Language>

@@ -35,9 +35,9 @@ namespace Grand.Framework.TagHelpers.Admin
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             ViewContext.ViewData[typeof(AdminTabContentTagHelper).FullName] = new List<string>();
-            var content = await output.GetChildContentAsync();
+            var _ = await output.GetChildContentAsync();
             var list = (List<string>)ViewContext.ViewData[typeof(AdminTabContentTagHelper).FullName];
-            if (_resolver.Device.Type == DeviceType.Mobile && SetTabPos)
+            if (_resolver.Device.Type == DeviceType.Mobile || _resolver.Device.Type == DeviceType.Tablet)
                 SetTabPos = false;
 
             output.TagName = "div";

@@ -6,7 +6,6 @@
         /// Default rounding (Match.Round(num, 2))
         /// </summary>
         Rounding001 = 0,
-
         /// <summary>
         /// Prices are rounded up to the nearest multiple of 5 cents for sales ending in: 3¢ & 4¢ round to 5¢; and, 8¢ & 9¢ round to 10¢
         /// </summary>

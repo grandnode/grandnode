@@ -3,6 +3,7 @@ using Grand.Domain.Localization;
 using Grand.Domain.Orders;
 using Grand.Domain.Shipping;
 using Grand.Domain.Stores;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -40,6 +41,17 @@ namespace Grand.Services.Messages.DotLiquidDrops
         public string TrackingNumber
         {
             get { return _shipment.TrackingNumber; }
+        }
+
+        public DateTime? ShippedDateUtc {
+            get { return _shipment.ShippedDateUtc; }
+        }
+
+        public DateTime? DeliveryDateUtc {
+            get { return _shipment.DeliveryDateUtc; }
+        }
+        public DateTime CreatedOnUtc {
+            get { return _shipment.CreatedOnUtc; }
         }
 
         public string AdminComment

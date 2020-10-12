@@ -5343,6 +5343,12 @@
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.NumberDecimal">
+    <Value>The number of decimal places in the return value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.NumberDecimal.Hint">
+    <Value>Allow to set the number of decimal places in the return value (round price).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.Published">
     <Value>Published</Value>
   </LocaleResource>

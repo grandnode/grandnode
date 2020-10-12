@@ -219,7 +219,7 @@ namespace Grand.Services.Tax
             if (result == decimal.Zero)
                 return 0;
 
-            return Math.Round(result, 2);
+            return Math.Round(result, _taxSettings.CalculateRoundPrice);
         }
 
         /// <summary>

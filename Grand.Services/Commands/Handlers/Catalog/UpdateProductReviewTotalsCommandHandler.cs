@@ -3,11 +3,11 @@ using Grand.Domain.Data;
 using Grand.Domain.Catalog;
 using Grand.Services.Commands.Models.Catalog;
 using MediatR;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Grand.Services.Catalog;
 
 namespace Grand.Services.Commands.Handlers.Catalog
 {
@@ -27,16 +27,16 @@ namespace Grand.Services.Commands.Handlers.Catalog
         #region Fields
 
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
+        private readonly IProductReviewService _productReviewService;
         private readonly ICacheManager _cacheManager;
 
         #endregion
 
-        public UpdateProductReviewTotalsCommandHandler(IRepository<Product> productRepository, IRepository<ProductReview> productReviewRepository, ICacheManager cacheManager)
+        public UpdateProductReviewTotalsCommandHandler(IRepository<Product> productRepository, IProductReviewService productReviewService, ICacheManager cacheManager)
         {
             _productRepository = productRepository;
-            _productReviewRepository = productReviewRepository;
             _cacheManager = cacheManager;
+            _productReviewService = productReviewService;
         }
 
         public async Task<bool> Handle(UpdateProductReviewTotalsCommand request, CancellationToken cancellationToken)
@@ -48,7 +48,10 @@ namespace Grand.Services.Commands.Handlers.Catalog
             int notApprovedRatingSum = 0;
             int approvedTotalReviews = 0;
             int notApprovedTotalReviews = 0;
-            var reviews = await _productReviewRepository.Collection.Find(new BsonDocument("ProductId", request.Product.Id)).ToListAsync();
+
+            var reviews = await _productReviewService.GetAllProductReviews(null, null, null, null, null,
+                null, request.Product.Id, 0, 2147483647);
+                        
             foreach (var pr in reviews)
             {
                 if (pr.IsApproved)

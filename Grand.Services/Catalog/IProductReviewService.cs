@@ -1,6 +1,7 @@
 ﻿using Grand.Domain;
 using Grand.Domain.Catalog;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
@@ -65,6 +66,5 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         Task DeleteProductReview(ProductReview productReview);
-
     }
 }

@@ -21,6 +21,7 @@ namespace Grand.Web.Models.Blogs
             public PictureModel PictureModel { get; set; }
             public string Short { get; set; }
             public string Full { get; set; }
+            public string Category { get; set; }
             public DateTime CreatedOn { get; set; }
         }
     }

@@ -8,7 +8,8 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.Collections.Generic;
+using MongoDB.Bson;
 
 namespace Grand.Services.Catalog
 {
@@ -70,7 +71,7 @@ namespace Grand.Services.Catalog
 
             return await PagedList<ProductReview>.Create(query, pageIndex, pageSize);
         }
-
+        
         public virtual async Task<int> RatingSumProduct(string productId, string storeId)
         {
             var query = from p in _productReviewRepository.Table

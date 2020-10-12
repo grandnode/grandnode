@@ -328,6 +328,16 @@ namespace Grand.Services.Blogs
         }
 
         /// <summary>
+        /// Get categories by post id
+        /// </summary>
+        /// <param name="blogPostId">Blog post id</param>
+        /// <returns></returns>
+        public virtual async Task<IList<BlogCategory>> GetBlogCategoryByPostId(string blogPostId)
+        {
+            return await _blogCategoryRepository.Table.Where(x => x.BlogPosts.Any(x => x.BlogPostId == blogPostId)).ToListAsync();
+        }
+
+        /// <summary>
         /// Get category by sename
         /// </summary>
         /// <param name="blogCategorySeName">Blog category sename</param>
