@@ -72,13 +72,6 @@
             </div>
         </div>
         <div class="form-group">
-            <admin-label asp-for="NumberDecimal" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="NumberDecimal" />
-                <span asp-validation-for="NumberDecimal"></span>
-            </div>
-        </div>
-        <div class="form-group">
             <admin-label asp-for="Published" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
@@ -109,7 +102,13 @@
                 <span asp-validation-for="MidpointRoundId"></span>
             </div>
         </div>
-
+        <div class="form-group">
+            <admin-label asp-for="NumberDecimal" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="NumberDecimal" />
+                <span asp-validation-for="NumberDecimal"></span>
+            </div>
+        </div>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
             <div class="form-group">
