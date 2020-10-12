@@ -316,14 +316,13 @@ namespace Grand.Services.Orders
         public async Task CancelExpiredOrders(DateTime expirationDateUTC)
         {
             var orders = await _orderRepository.Table
-              .Where(o => 
-              o.CreatedOnUtc < expirationDateUTC && 
-              (o.PaymentStatusId == (int)PaymentStatus.Pending || 
-              !o.PaidDateUtc.HasValue ||
-              o.OrderStatusId == (int)OrderStatus.Pending) && 
-              o.OrderStatusId != (int)OrderStatus.Cancelled)
+              .Where(o =>
+              o.CreatedOnUtc < expirationDateUTC &&
+              o.PaymentStatusId == (int)PaymentStatus.Pending &&
+              o.OrderStatusId == (int)OrderStatus.Pending &&
+              (o.ShippingStatusId == (int)ShippingStatus.NotYetShipped || o.ShippingStatusId == (int)ShippingStatus.ShippingNotRequired))
               .ToListAsync();
-
+            
             foreach (var order in orders)
                 await _mediator.Send(new CancelOrderCommand() { Order = order, NotifyCustomer = true });
         }
