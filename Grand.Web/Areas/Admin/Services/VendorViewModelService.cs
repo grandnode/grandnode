@@ -103,7 +103,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 model.Title = vendorReview.Title;
                 if (formatReviewText)
-                    model.ReviewText = Core.Html.HtmlHelper.FormatText(vendorReview.ReviewText, false, true, false, false, false, false);
+                    model.ReviewText = Core.Html.HtmlHelper.FormatText(vendorReview.ReviewText);
                 else
                     model.ReviewText = vendorReview.ReviewText;
                 model.IsApproved = vendorReview.IsApproved;

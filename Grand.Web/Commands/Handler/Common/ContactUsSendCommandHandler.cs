@@ -397,10 +397,8 @@ namespace Grand.Web.Commands.Handler.Common
 
         private async Task<ContactUsModel> SendContactUs(ContactUsModel model, Store store)
         {
-            string email = model.Email.Trim();
-            string fullName = model.FullName;
             string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-            string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+            string body = Core.Html.HtmlHelper.FormatText(model.Enquiry);
 
             await _workflowMessageService.SendContactUsMessage(_workContext.CurrentCustomer, store, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body, model.ContactAttributeInfo, model.ContactAttributeXml);
 

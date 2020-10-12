@@ -20,7 +20,7 @@ namespace Grand.Web.Commands.Handler.Products
             await _workflowMessageService.SendProductEmailAFriendMessage(request.Customer, request.Store,
                                request.Language.Id, request.Product,
                                request.Model.YourEmailAddress, request.Model.FriendEmail,
-                               Core.Html.HtmlHelper.FormatText(request.Model.PersonalMessage, false, true, false, false, false, false));
+                               Core.Html.HtmlHelper.FormatText(request.Model.PersonalMessage));
 
             return true;
         }

@@ -958,7 +958,7 @@ namespace Grand.Web.Controllers
                 //email
                 await workflowMessageService.SendWishlistEmailAFriendMessage(_workContext.CurrentCustomer, _storeContext.CurrentStore,
                         _workContext.WorkingLanguage.Id, model.YourEmailAddress,
-                        model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                        model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage));
 
                 model.SuccessfullySent = true;
                 model.Result = _localizationService.GetResource("Wishlist.EmailAFriend.SuccessfullySent");

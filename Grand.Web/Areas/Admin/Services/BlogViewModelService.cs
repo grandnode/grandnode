@@ -182,7 +182,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var customer = await _customerService.GetCustomerById(blogComment.CustomerId);
                 commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                 commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
-                commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
+                commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText);
                 commentsList.Add(commentModel);
             }
             return (commentsList, comments.Count);

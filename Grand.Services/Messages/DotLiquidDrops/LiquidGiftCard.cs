@@ -48,7 +48,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get
             {
-                var giftCardMesage = !String.IsNullOrWhiteSpace(_giftCard.Message) ? HtmlHelper.FormatText(_giftCard.Message, false, true, false, false, false, false) : "";
+                var giftCardMesage = !String.IsNullOrWhiteSpace(_giftCard.Message) ? HtmlHelper.FormatText(_giftCard.Message) : "";
                 return giftCardMesage;
             }
         }

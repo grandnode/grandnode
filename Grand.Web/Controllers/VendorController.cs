@@ -184,7 +184,7 @@ namespace Grand.Web.Controllers
                         pictureId = picture.Id;
                 }
 
-                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var description = Core.Html.HtmlHelper.EnsureOnlyAllowedHtml(model.Description);
                 var address = new Address();
                 //disabled by default
                 var vendor = new Vendor {
@@ -300,7 +300,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
-                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var description = Core.Html.HtmlHelper.EnsureOnlyAllowedHtml(model.Description);
 
                 vendor.Name = model.Name;
                 vendor.Email = model.Email;
