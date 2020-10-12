@@ -41,6 +41,7 @@ namespace Grand.Web.Models.Catalog
         public string ReviewText { get; set; }
         public string ReplyText { get; set; }
         public string Signature { get; set; }
+        public bool ConfirmedPurchase { get; set; }
         public int Rating { get; set; }
         public ProductReviewHelpfulnessModel Helpfulness { get; set; }
         public string WrittenOnStr { get; set; }

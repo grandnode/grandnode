@@ -63,6 +63,7 @@ namespace Grand.Web.Features.Handlers.Products
                     ReviewText = pr.ReviewText,
                     ReplyText = pr.ReplyText,
                     Signature = pr.Signature,
+                    ConfirmedPurchase = pr.ConfirmedPurchase,
                     Rating = pr.Rating,
                     Helpfulness = new ProductReviewHelpfulnessModel {
                         ProductId = request.Product.Id,
