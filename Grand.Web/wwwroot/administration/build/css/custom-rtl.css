@@ -1729,6 +1729,35 @@ footer {
     margin-left: 0 !important;
 }
 
+/* version check */
+
+.version-check .dropdown-toggle {
+    cursor: pointer;
+}
+.info-indicator {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 100% !important;
+}
+.version-check .dropdown-toggle .danger.info-indicator {
+    background: #dc3545;
+}
+.version-check .dropdown-toggle .success.info-indicator {
+    background: #26B99A;
+}
+.version-check .badge {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 3px !important;
+}
+.version-check .dropdown-menu li a {
+    padding: 0;
+}
+
 .tile-stats {
     position: relative;
     display: block;
