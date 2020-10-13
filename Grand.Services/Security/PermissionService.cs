@@ -36,7 +36,7 @@ namespace Grand.Services.Security
         /// {1} : permission system name
         /// {2} : permission action name
         /// </remarks>
-        private const string PERMISSIONS_ALLOWED_ACTION_KEY = "Grand.permission.allowed-{0}-{1}-{2}";
+        private const string PERMISSIONS_ALLOWED_ACTION_KEY = "Grand.permission.allowed.action-{0}-{1}-{2}";
 
         /// <summary>
         /// Key pattern to clear cache
