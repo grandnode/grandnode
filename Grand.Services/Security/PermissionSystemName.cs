@@ -11,6 +11,7 @@
         public const string ProductTags = "ManageProductTags";
         public const string Attributes = "ManageAttributes";
         public const string Customers = "ManageCustomers";
+        public const string CustomerTags = "ManageCustomerTags";
         public const string Documents = "ManageDocuments";
         public const string Reports = "ManageReports";
         public const string CustomerRoles = "ManageCustomerRoles";
@@ -20,6 +21,7 @@
         public const string VendorReviews = "ManageVendorReviews";
         public const string CurrentCarts = "ManageCurrentCarts";
         public const string Orders = "ManageOrders";
+        public const string OrderTags = "ManageOrderTags";
         public const string Shipments = "ManageShipments";
         public const string RecurringPayments = "ManageRecurringPayments";
         public const string GiftCards = "ManageGiftCards";
@@ -63,7 +65,6 @@
         public const string GenericAttributes = "GenericAttributes";
         public const string HtmlEditor = "HtmlEditor.ManagePictures";
         public const string ScheduleTasks = "ManageScheduleTasks";
-        public const string OrderTags = "ManageOrderTags";
 
         //public store permissions
         public const string DisplayPrices = "DisplayPrices";
