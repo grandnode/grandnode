@@ -70,6 +70,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> List(DiscountListModel model, DataSourceRequest command)
         {
             var (discountModel, totalCount) = await _discountViewModelService.PrepareDiscountModel(model, command.Page, command.PageSize);
@@ -81,6 +82,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = new DiscountModel();
@@ -95,6 +97,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create(DiscountModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
@@ -119,6 +122,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var discount = await _discountService.GetDiscountById(id);
@@ -147,6 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> Edit(DiscountModel model, bool continueEditing)
         {
             var discount = await _discountService.GetDiscountById(model.Id);
@@ -188,6 +193,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> Delete(string id)
         {
             var discount = await _discountService.GetDiscountById(id);
@@ -221,6 +227,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Discount coupon codes
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> CouponCodeList(DataSourceRequest command, string discountId)
         {
             var discount = await _discountService.GetDiscountById(discountId);
@@ -240,6 +247,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> CouponCodeDelete(string discountId, string Id)
         {
             var discount = await _discountService.GetDiscountById(discountId);
@@ -261,6 +269,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
 
         }
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> CouponCodeInsert(string discountId, string couponCode)
         {
             if (string.IsNullOrEmpty(couponCode))
@@ -286,6 +295,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Discount requirements
 
         [AcceptVerbs("GET")]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> GetDiscountRequirementConfigurationUrl(string systemName, string discountId, string discountRequirementId)
         {
             if (String.IsNullOrEmpty(systemName))
@@ -305,6 +315,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { url = url });
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> GetDiscountRequirementMetaInfo(string discountRequirementId, string discountId)
         {
             var discount = await _discountService.GetDiscountById(discountId);
@@ -327,6 +338,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> DeleteDiscountRequirement(string discountRequirementId, string discountId)
         {
             var discount = await _discountService.GetDiscountById(discountId);
@@ -349,7 +361,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Applied to products
 
-        [PermissionAuthorizeAction(PermissionActionName.List)]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ProductList(DataSourceRequest command, string discountId, [FromServices] IProductService productService)
         {
@@ -369,7 +381,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Delete)]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductDelete(string discountId, string productId, [FromServices] IProductService productService)
         {
             var discount = await _discountService.GetDiscountById(discountId);
@@ -431,7 +443,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Applied to categories
 
-        [PermissionAuthorizeAction(PermissionActionName.List)]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> CategoryList(DataSourceRequest command, string discountId, [FromServices] ICategoryService categoryService)
         {
@@ -456,7 +468,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Delete)]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> CategoryDelete(string discountId, string categoryId, [FromServices] ICategoryService categoryService)
         {
             var discount = await _discountService.GetDiscountById(discountId);
@@ -524,7 +536,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Applied to manufacturers
 
-        [PermissionAuthorizeAction(PermissionActionName.List)]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> ManufacturerList(DataSourceRequest command, string discountId, [FromServices] IManufacturerService manufacturerService)
         {
@@ -544,7 +556,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Delete)]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ManufacturerDelete(string discountId, string manufacturerId, [FromServices] IManufacturerService manufacturerService)
         {
             var discount = await _discountService.GetDiscountById(discountId);
@@ -605,7 +617,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Applied to vendors
 
-        [PermissionAuthorizeAction(PermissionActionName.List)]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> VendorList(DataSourceRequest command, string discountId, [FromServices] IVendorService vendorService)
         {
@@ -625,7 +637,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Delete)]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> VendorDelete(string discountId, string vendorId, [FromServices] IVendorService vendorService)
         {
             var discount = await _discountService.GetDiscountById(discountId);
@@ -692,7 +704,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Discount usage history
 
-        [PermissionAuthorizeAction(PermissionActionName.List)]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
         public async Task<IActionResult> UsageHistoryList(string discountId, DataSourceRequest command)
         {
@@ -708,7 +720,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Delete)]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> UsageHistoryDelete(string discountId, string id)
         {
