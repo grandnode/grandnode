@@ -79,7 +79,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.List)]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-returnrequest")]
         public async Task<IActionResult> GoToId(ReturnReqestListModel model)
@@ -125,7 +125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var returnRequest = await _returnRequestService.GetReturnRequestById(id);
@@ -276,7 +276,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Delete)]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> ReturnRequestNoteDelete(string id, string returnRequestId)
         {
