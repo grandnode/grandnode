@@ -712,19 +712,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> CustomRobotsTxt()
-        {
-            var model = new Editor();
-            var file = Path.Combine(CommonHelper.WebRootPath, "robots.custom.txt");
-            if (System.IO.File.Exists(file))
-            {
-                model.Content = await System.IO.File.ReadAllTextAsync(file);
-            }
-
-            return View(model);
-        }
-
-
         [HttpPost]
         public IActionResult SaveEditor(string content = "", bool css = true)
         {
@@ -749,13 +736,25 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Json(ex.Message);
             }
         }
+        public async Task<IActionResult> AdditionsRobotsTxt()
+        {
+            var model = new Editor();
+            var file = Path.Combine(CommonHelper.WebRootPath, "robots.additions.txt");
+            if (System.IO.File.Exists(file))
+            {
+                model.Content = await System.IO.File.ReadAllTextAsync(file);
+            }
+
+            return View(model);
+        }
+
 
         [HttpPost]
         public IActionResult SaveRobotsTxt(string content = "")
         {
             try
             {
-                var file = Path.Combine(CommonHelper.WebRootPath, "robots.custom.txt");
+                var file = Path.Combine(CommonHelper.WebRootPath, "robots.additions.txt");
 
                 System.IO.File.WriteAllText(file, content, Encoding.UTF8);
 
