@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.Attributes)]
+    [PermissionAuthorize(PermissionSystemName.SpecificationAttributes)]
     public partial class SpecificationAttributeController : BaseAdminController
     {
         #region Fields

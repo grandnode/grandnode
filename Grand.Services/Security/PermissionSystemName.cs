@@ -9,7 +9,10 @@
         public const string ProductReviews = "ManageProductReviews";
         public const string Manufacturers = "ManageManufacturers";
         public const string ProductTags = "ManageProductTags";
-        public const string Attributes = "ManageAttributes";
+        public const string ProductAttributes = "ManageProductAttributes";
+        public const string SpecificationAttributes = "ManageSpecificationAttributes";
+        public const string CheckoutAttributes = "ManageCheckoutAttributes";
+        public const string ContactAttributes = "ManageContactAttributes";
         public const string Customers = "ManageCustomers";
         public const string CustomerTags = "ManageCustomerTags";
         public const string Documents = "ManageDocuments";

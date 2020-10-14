@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.Attributes)]
+    [PermissionAuthorize(PermissionSystemName.ContactAttributes)]
     public partial class ContactAttributeController : BaseAdminController
     {
         #region Fields

@@ -27,7 +27,7 @@ namespace Grand.Api.Controllers.OData
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.SpecificationAttributes))
                 return Forbid();
 
             var specificationAttribute = await _mediator.Send(new GetQuery<SpecificationAttributeDto>() { Id = key });
@@ -42,7 +42,7 @@ namespace Grand.Api.Controllers.OData
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.SpecificationAttributes))
                 return Forbid();
 
             return Ok(await _mediator.Send(new GetQuery<SpecificationAttributeDto>()));
@@ -52,7 +52,7 @@ namespace Grand.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] SpecificationAttributeDto model)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.SpecificationAttributes))
                 return Forbid();
 
             if (ModelState.IsValid)
@@ -67,7 +67,7 @@ namespace Grand.Api.Controllers.OData
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] SpecificationAttributeDto model)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.SpecificationAttributes))
                 return Forbid();
 
             if (ModelState.IsValid)
@@ -82,7 +82,7 @@ namespace Grand.Api.Controllers.OData
         [HttpPatch]
         public async Task<IActionResult> Patch([FromODataUri] string key, JsonPatchDocument<SpecificationAttributeDto> model)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.SpecificationAttributes))
                 return Forbid();
 
 
@@ -107,7 +107,7 @@ namespace Grand.Api.Controllers.OData
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.SpecificationAttributes))
                 return Forbid();
 
             var specification = await _mediator.Send(new GetQuery<SpecificationAttributeDto>() { Id = key });

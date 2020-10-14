@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.Attributes)]
+    [PermissionAuthorize(PermissionSystemName.CheckoutAttributes)]
     public partial class CheckoutAttributeController : BaseAdminController
     {
         #region Fields
