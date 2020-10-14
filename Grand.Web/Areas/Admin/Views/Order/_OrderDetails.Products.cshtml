@@ -108,32 +108,32 @@
                                 <td>
                                     <div>
                                         <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>
-                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                        @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <p>
                                                 @Html.Raw(item.AttributeInfo)
                                             </p>
                                         }
-                                        @if (!String.IsNullOrEmpty(item.RecurringInfo))
+                                        @if (!string.IsNullOrEmpty(item.RecurringInfo))
                                         {
                                             <p>
                                                 @Html.Raw(item.RecurringInfo)
                                             </p>
                                         }
-                                        @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                        @if (!string.IsNullOrEmpty(item.RentalInfo))
                                         {
                                             <p>
                                                 @Html.Raw(item.RentalInfo)
                                             </p>
                                         }
-                                        @if (!String.IsNullOrEmpty(item.Sku))
+                                        @if (!string.IsNullOrEmpty(item.Sku))
                                         {
                                             <p>
                                                 <strong>@T("Admin.Orders.Products.SKU")</strong><text>:</text>
                                                 @item.Sku
                                             </p>
                                         }
-                                        @if (!String.IsNullOrEmpty(item.VendorName))
+                                        @if (!string.IsNullOrEmpty(item.VendorName))
                                         {
                                             <p>
                                                 <strong>@T("Admin.Orders.Products.Vendor")</strong><text>:</text>
@@ -194,7 +194,7 @@
                                                 <br />
                                                 @if (item.LicenseDownloadGuid != Guid.Empty)
                                                 {
-                                                    <a href="@Url.Action("DownloadFile", "Download", new { downloadGuid = item.LicenseDownloadGuid })">@T("Admin.Orders.Products.License.DownloadLicense")</a>
+                                                    <a href="@Url.Action("DownloadFile", "Download", new { downloadGuid = item.LicenseDownloadGuid })" class="btn purple">@T("Admin.Orders.Products.License.DownloadLicense")</a>
                                                 }
                                                 <br />
                                                 <input type="submit" id="pvlicensefile" name="pvlicensefile" value="@T("Admin.Orders.Products.License.UploadFile")" onclick="javascript:OpenWindow('@(Url.Action("UploadLicenseFilePopup", "Order", new { id = Model.Id, orderItemId = item.Id, btnId = "btnRefreshPage", formId = "order-form" }))', 550, 300, true); return false;" class="k-button" />
