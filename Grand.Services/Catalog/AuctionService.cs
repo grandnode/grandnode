@@ -110,8 +110,9 @@ namespace Grand.Services.Catalog
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            await _mediator.EntityUpdated(product);
             await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+
+            await _mediator.EntityUpdated(product);
         }
 
         public virtual async Task<IList<Product>> GetAuctionsToEnd()
@@ -133,8 +134,9 @@ namespace Grand.Services.Catalog
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            await _mediator.EntityUpdated(product);
             await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+
+            await _mediator.EntityUpdated(product);
         }
 
 
