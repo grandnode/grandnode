@@ -33,6 +33,7 @@
         public const string InteractiveForms = "ManageInteractiveForms";
         public const string Discounts = "ManageDiscounts";
         public const string NewsletterSubscribers = "ManageNewsletterSubscribers";
+        public const string NewsletterCategories = "ManageNewsletterCategories";
         public const string Polls = "ManagePolls";
         public const string News = "ManageNews";
         public const string Blog = "ManageBlog";

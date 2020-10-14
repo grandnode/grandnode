@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.NewsletterSubscribers)]
+    [PermissionAuthorize(PermissionSystemName.NewsletterCategories)]
     public partial class NewsletterCategoryController: BaseAdminController
     {
         #region Fields 
@@ -45,6 +45,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List() => View();
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
@@ -65,6 +66,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = new NewsletterCategoryModel();
@@ -75,6 +77,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(NewsletterCategoryModel model, bool continueEditing)
         {
@@ -91,7 +94,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return View(model);
         }
-
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var newsletterCategory = await _newsletterCategoryService.GetNewsletterCategoryById(id);
@@ -115,6 +118,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> Edit(NewsletterCategoryModel model, bool continueEditing)
         {
             var newsletterCategory = await _newsletterCategoryService.GetNewsletterCategoryById(model.Id);
@@ -136,6 +140,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> Delete(string id)
         {
             var newsletterCategory = await _newsletterCategoryService.GetNewsletterCategoryById(id);
@@ -149,7 +154,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
 
     }
 }
