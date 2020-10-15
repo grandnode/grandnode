@@ -2,7 +2,7 @@
 @inject IWebHelper webHelper
 @inject IPageHeadBuilder pagebuilder
 @{
-    Layout = "_ColumnsOne";
+    Layout = "_ColumnsOneClean";
 
     //title
     pagebuilder.AddTitleParts(T("PageTitle.Login").Text);
@@ -11,7 +11,6 @@
     var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] });
 }
 <div class="page login-page">
-    <h2 class="generalTitle text-center">@T("Account.Login.Welcome")</h2>
     <partial name="_ExternalAuthentication.Errors" />
     <div class="mb-2">
         <div class="row flex-md-row justify-content-center text-center my-3">
@@ -88,18 +87,12 @@
                     </div>
                 </div>
             </div>
-            @* want some register? *@
             @if (Model.CheckoutAsGuest)
             {
                 <div class="col-sm-8 col-12 new-wrapper checkout-as-guest-or-register-block mt-2">
                     <h5 class="pt-1">
                         <strong>@T("Account.Login.CheckoutAsGuestOrRegister")</strong>
                     </h5>
-                    <div class="row text">
-                        <div class="col-12">
-                            @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
-                        </div>
-                    </div>
                     <div class="buttons mt-1 areYouGuest">
                         <input type="button" class="btn btn-secondary checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />
                         <input type="button" class="btn btn-secondary register-button" onclick="location.href='@registerUrl'" value="@T("Account.Register")" />
@@ -110,23 +103,17 @@
             {
                 <div class="col-sm-8 col-12">
                     <div class="card-body register-block">
-                        <div class="text generalMarginSupporter">
-                            @T("Account.Login.NewCustomerText")
-                        </div>
-                        <div class="d-inline-flex align-items-center justify-content-center w-100">
-                            <a><strong>@T("Account.Login.NewCustomer")</strong></a>
-                            <a class="ml-3 register-button" href="@registerUrl">
-                                @T("Account.Register")
-                            </a>
-                        </div>
+                        <h5>
+                            <strong>
+                                @T("Account.Login.NewCustomer")</strong></h5>
+                                <div class="d-inline-flex align-items-center justify-content-center w-100">
+                                    <a class="btn btn-info register-button px-5" href="@registerUrl">
+                                        @T("Account.Register")
+                                    </a>
+                                </div>
                     </div>
                 </div>
             }
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12 mb-2">
-            @await Component.InvokeAsync("TopicBlock", new { systemName = "LoginRegistrationInfo" })
         </div>
     </div>
 </div>

@@ -272,4 +272,7 @@
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.NumberDecimal.Hint">
     <Value>Allow to set the number of decimal places in the return value (round price).</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.NewCustomer">
+    <Value>Don't have an account?</Value>
+  </LocaleResource>
 </Language>

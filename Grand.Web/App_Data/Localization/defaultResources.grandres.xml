@@ -577,7 +577,7 @@
     <Value>Log in</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.NewCustomer">
-    <Value>Don't have an account? Create one for free</Value>
+    <Value>Don't have an account?</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.NewCustomerText">
     <Value>By creating an account on our website you will be able to shop faster, be up to date on an orders status, and keep track of the orders you have previously made.</Value>

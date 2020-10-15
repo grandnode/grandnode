@@ -2298,6 +2298,21 @@ list settings .list__item,
 .login-page .inputs {
     padding-left: 3px;
 }
+.register-button {
+    background-color: #ffffff;
+    color: #138496;
+}
+.register-button:hover {
+    background-color: #138496;
+    color: #ffffff;
+}
+.password-recovery-page, .login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-direction: column;
+}
 /* reservations */
 
 #hoursDiv input {

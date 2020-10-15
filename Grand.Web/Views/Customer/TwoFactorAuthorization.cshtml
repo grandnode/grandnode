@@ -1,6 +1,6 @@
 @inject IPageHeadBuilder pagebuilder
 @{
-    Layout = "_ColumnsOne";
+    Layout = "_ColumnsOneClean";
 
     //title
     pagebuilder.AddTitleParts(T("PageTitle.Login").Text);
@@ -9,8 +9,8 @@
     var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] });
 }
 <div class="page login-page">
-    <h2 class="generalTitle text-center">@T("Login.TwoFactorAuth.EnterCode")</h2>
-    <div class="mb-2">
+    <h2 class="generalTitle h3 text-center">@T("Login.TwoFactorAuth.EnterCode")</h2>
+    <div class="mb-2 w-100">
         <div class="row flex-md-row justify-content-center text-center my-3">
             @* login main block *@
             <div class="col-sm-8 col-12">
