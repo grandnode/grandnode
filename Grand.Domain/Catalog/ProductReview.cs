@@ -50,6 +50,11 @@ namespace Grand.Domain.Catalog
         public string Signature { get; set; }
 
         /// <summary>
+        /// Gets or sets the review was confirmed by purchased
+        /// </summary>
+        public bool ConfirmedPurchase { get; set; }
+
+        /// <summary>
         /// Review rating
         /// </summary>
         public int Rating { get; set; }

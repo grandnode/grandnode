@@ -9,8 +9,12 @@
         public const string ProductReviews = "ManageProductReviews";
         public const string Manufacturers = "ManageManufacturers";
         public const string ProductTags = "ManageProductTags";
-        public const string Attributes = "ManageAttributes";
+        public const string ProductAttributes = "ManageProductAttributes";
+        public const string SpecificationAttributes = "ManageSpecificationAttributes";
+        public const string CheckoutAttributes = "ManageCheckoutAttributes";
+        public const string ContactAttributes = "ManageContactAttributes";
         public const string Customers = "ManageCustomers";
+        public const string CustomerTags = "ManageCustomerTags";
         public const string Documents = "ManageDocuments";
         public const string Reports = "ManageReports";
         public const string CustomerRoles = "ManageCustomerRoles";
@@ -20,6 +24,7 @@
         public const string VendorReviews = "ManageVendorReviews";
         public const string CurrentCarts = "ManageCurrentCarts";
         public const string Orders = "ManageOrders";
+        public const string OrderTags = "ManageOrderTags";
         public const string Shipments = "ManageShipments";
         public const string RecurringPayments = "ManageRecurringPayments";
         public const string GiftCards = "ManageGiftCards";
@@ -31,6 +36,7 @@
         public const string InteractiveForms = "ManageInteractiveForms";
         public const string Discounts = "ManageDiscounts";
         public const string NewsletterSubscribers = "ManageNewsletterSubscribers";
+        public const string NewsletterCategories = "ManageNewsletterCategories";
         public const string Polls = "ManagePolls";
         public const string News = "ManageNews";
         public const string Blog = "ManageBlog";
@@ -63,7 +69,6 @@
         public const string GenericAttributes = "GenericAttributes";
         public const string HtmlEditor = "HtmlEditor.ManagePictures";
         public const string ScheduleTasks = "ManageScheduleTasks";
-        public const string OrderTags = "ManageOrderTags";
 
         //public store permissions
         public const string DisplayPrices = "DisplayPrices";

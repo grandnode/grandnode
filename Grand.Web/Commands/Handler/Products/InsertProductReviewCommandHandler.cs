@@ -1,12 +1,15 @@
 ﻿using Grand.Domain.Catalog;
 using Grand.Domain.Localization;
+using Grand.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Messages;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Web.Commands.Models.Products;
 using MediatR;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,10 +44,19 @@ namespace Grand.Web.Commands.Handler.Products
         public async Task<ProductReview> Handle(InsertProductReviewCommand request, CancellationToken cancellationToken)
         {
             //save review
-            int rating = request.Model.AddProductReview.Rating;
+            var rating = request.Model.AddProductReview.Rating;
             if (rating < 1 || rating > 5)
                 rating = _catalogSettings.DefaultProductRatingValue;
-            bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
+            var isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
+
+            var confirmPurchased = _catalogSettings.ProductReviewPossibleOnlyAfterPurchasing ? true :
+                (await _mediator.Send(new GetOrderQuery() {
+                    CustomerId = request.Customer.Id,
+                    StoreId = request.Store.Id,
+                    ProductId = request.Product.Id,
+                    Os = OrderStatus.Complete,
+                    PageSize = 1
+                })).Any();
 
             var productReview = new ProductReview {
                 ProductId = request.Product.Id,
@@ -56,8 +68,10 @@ namespace Grand.Web.Commands.Handler.Products
                 HelpfulYesTotal = 0,
                 HelpfulNoTotal = 0,
                 IsApproved = isApproved,
+                ConfirmedPurchase = confirmPurchased,
                 CreatedOnUtc = DateTime.UtcNow,
             };
+
             await _productReviewService.InsertProductReview(productReview);
 
             if (!request.Customer.HasContributions)

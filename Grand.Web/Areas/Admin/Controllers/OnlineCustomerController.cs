@@ -49,6 +49,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
             var customers = await _customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes),

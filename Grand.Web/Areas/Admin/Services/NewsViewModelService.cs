@@ -134,7 +134,7 @@ namespace Grand.Web.Areas.Admin.Services
                 commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                 commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
                 commentModel.CommentTitle = newsComment.CommentTitle;
-                commentModel.CommentText = Core.Html.HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
+                commentModel.CommentText = Core.Html.HtmlHelper.FormatText(newsComment.CommentText);
                 items.Add(commentModel);
             }
             return (items, comments.Count);

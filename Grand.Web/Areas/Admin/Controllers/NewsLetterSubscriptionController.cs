@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Domain.Customers;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -32,6 +33,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
+        private readonly IWorkContext _workContext;
 
         public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
             INewsletterCategoryService newsletterCategoryService,
@@ -39,7 +41,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             IStoreService storeService,
             IExportManager exportManager,
-            IImportManager importManager)
+            IImportManager importManager,
+            IWorkContext workContext)
         {
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _newsletterCategoryService = newsletterCategoryService;
@@ -48,6 +51,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _storeService = storeService;
             _exportManager = exportManager;
             _importManager = importManager;
+            _workContext = workContext;
         }
 
         [NonAction]
@@ -77,9 +81,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var model = new NewsLetterSubscriptionListModel();
 
+            var storeId = _workContext.CurrentCustomer.StaffStoreId;
+
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in await _storeService.GetAllStores())
+            foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
                 model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
 
             //active
@@ -111,6 +117,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 isActive = true;
             else if (model.ActiveId == 2)
                 isActive = false;
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
 
             var newsletterSubscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
                 model.StoreId, isActive, searchCategoryIds, command.Page - 1, command.PageSize);
@@ -171,6 +182,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 isActive = true;
             else if (model.ActiveId == 2)
                 isActive = false;
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
 
             var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
                 model.StoreId, isActive, searchCategoryIds);

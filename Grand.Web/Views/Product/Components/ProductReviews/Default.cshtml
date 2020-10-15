@@ -44,7 +44,7 @@
                     </div>
                     <div class="review-content">
                         <div class="review-text">
-                            @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
+                            @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReviewText))
                         </div>
                     </div>
                     @if (!string.IsNullOrEmpty(review.ReplyText))
@@ -52,7 +52,7 @@
                         <div class="reply-content">
                             <blockquote class="administration-response">
                                 <h5 class="administration-response-header">@T("Reviews.AdministrationResponse")</h5>
-                                @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
+                                @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReplyText))
                                 <p>@review.Signature</p>
                             </blockquote>
                         </div>

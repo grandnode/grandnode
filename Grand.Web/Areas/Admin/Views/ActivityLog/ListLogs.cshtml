@@ -14,7 +14,7 @@
                     @T("Admin.Configuration.ActivityLog.ActivityLog")
                 </div>
                 <div class="actions btn-group btn-group-devided">
-                    <a asp-action="ClearAll" class="btn red">
+                    <a asp-action="ClearAll" class="btn red" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
                         <i class="fa fa-trash-o"></i>
                         @T("Admin.Common.Clear")
                     </a>

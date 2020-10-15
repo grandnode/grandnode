@@ -16072,6 +16072,9 @@
   <LocaleResource Name="Admin.System">
     <Value>System</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.AdditionsRobotsTxt">
+    <Value>Additions Robots.txt</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.APIUsers">
     <Value>Manage api users</Value>
   </LocaleResource>
@@ -16188,9 +16191,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.CustomJs.Tip">
     <Value>Start typing, when you enter first letters of JS code, press CTRL + space and see hints.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.CustomRobotsTxt">
-    <Value>Custom Robots.txt</Value>
   </LocaleResource>
   <LocaleResource Name="admin.system.developertools">
     <Value>Developer Tools</Value>

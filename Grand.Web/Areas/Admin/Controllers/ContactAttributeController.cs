@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.Attributes)]
+    [PermissionAuthorize(PermissionSystemName.ContactAttributes)]
     public partial class ContactAttributeController : BaseAdminController
     {
         #region Fields
@@ -62,6 +62,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
             var contactAttributes = await _contactAttributeViewModelService.PrepareContactAttributeListModel();
@@ -74,6 +75,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = new ContactAttributeModel();
@@ -90,6 +92,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create(ContactAttributeModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
@@ -108,6 +111,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var contactAttribute = await _contactAttributeService.GetContactAttributeById(id);
@@ -133,6 +137,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> Edit(ContactAttributeModel model, bool continueEditing)
         {
             var contactAttribute = await _contactAttributeService.GetContactAttributeById(model.Id);
@@ -164,6 +169,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
         {
             if (ModelState.IsValid)
@@ -187,6 +193,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //list
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> ValueList(string contactAttributeId, DataSourceRequest command)
         {
             var contactAttribute = await _contactAttributeService.GetContactAttributeById(contactAttributeId);
@@ -208,6 +215,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ValueCreatePopup(string contactAttributeId)
         {
             var contactAttribute = await _contactAttributeService.GetContactAttributeById(contactAttributeId);
@@ -219,6 +227,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ValueCreatePopup(ContactAttributeValueModel model)
         {
             var contactAttribute = await _contactAttributeService.GetContactAttributeById(model.ContactAttributeId);
@@ -246,6 +255,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ValueEditPopup(string id, string contactAttributeId)
         {
             var contactAttribute = await _contactAttributeService.GetContactAttributeById(contactAttributeId);
@@ -265,6 +275,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ValueEditPopup(ContactAttributeValueModel model)
         {
             var contactAttribute = await _contactAttributeService.GetContactAttributeById(model.ContactAttributeId);
@@ -294,6 +305,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ValueDelete(string id, string contactAttributeId)
         {
             var contactAttribute = await _contactAttributeService.GetContactAttributeById(contactAttributeId);

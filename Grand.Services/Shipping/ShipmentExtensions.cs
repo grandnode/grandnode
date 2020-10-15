@@ -21,7 +21,7 @@ namespace Grand.Services.Shipping
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = HtmlHelper.FormatText(text);
 
             return text;
         }

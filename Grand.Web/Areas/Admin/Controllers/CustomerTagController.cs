@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.Customers)]
+    [PermissionAuthorize(PermissionSystemName.CustomerTags)]
     public partial class CustomerTagController : BaseAdminController
     {
         #region Fields
@@ -48,6 +48,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
             var customertags = await _customerTagService.GetAllCustomerTags();
@@ -65,6 +66,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> Search(string term)
         {
             var customertags = (await _customerTagService.GetCustomerTagsByName(term)).Select(x => x.Name);
@@ -72,6 +74,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> Customers(string customerTagId, DataSourceRequest command)
         {
             var customers = await _customerTagService.GetCustomersByTag(customerTagId, command.Page - 1, command.PageSize);
@@ -82,7 +85,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
-
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public IActionResult Create()
         {
             var model = _customerTagViewModelService.PrepareCustomerTagModel();
@@ -90,6 +93,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create(CustomerTagModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
@@ -103,6 +107,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var customerTag = await _customerTagService.GetCustomerTagById(id);
@@ -115,6 +120,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> Edit(CustomerTagModel model, bool continueEditing)
         {
             var customertag = await _customerTagService.GetCustomerTagById(model.Id);
@@ -142,6 +148,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> CustomerDelete(string Id, string customerTagId)
         {
             var customertag = await _customerTagService.GetCustomerTagById(customerTagId);
@@ -156,6 +163,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> Delete(string id)
         {
             var customerTag = await _customerTagService.GetCustomerTagById(id);
@@ -185,6 +193,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Products
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Products(string customerTagId, DataSourceRequest command, [FromServices] IProductService productService)
         {
             var products = await _customerTagService.GetCustomerTagProducts(customerTagId);
@@ -208,6 +217,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductDelete(string id)
         {
             var ctp = await _customerTagService.GetCustomerTagProductById(id);
@@ -222,6 +232,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductUpdate(CustomerRoleProductModel model)
         {
             var ctp = await _customerTagService.GetCustomerTagProductById(model.Id);
@@ -243,6 +254,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, CustomerTagProductModel.AddProductModel model)
         {
             var products = await _customerTagViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
@@ -256,6 +268,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ProductAddPopup(CustomerTagProductModel.AddProductModel model)
         {
             if (model.SelectedProductIds != null)

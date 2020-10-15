@@ -2,7 +2,7 @@
 @inject IPageHeadBuilder pagebuilder
 @{
     //page title
-    ViewBag.Title = T("Admin.System.CustomRobotsTxt").Text;
+    ViewBag.Title = T("Admin.System.AdditionsRobotsTxt").Text;
 }
 @{
     pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/codemirror.js", excludeFromBundle: true);
@@ -23,7 +23,7 @@
             <div class="x_title">
                 <div class="caption level-caption">
                     <i class="fa fa-sitemap"></i>
-                    @T("Admin.System.CustomRobotsTxt")
+                    @T("Admin.System.AdditionsRobotsTxt")
                 </div>
             </div>
             <div class="actions">

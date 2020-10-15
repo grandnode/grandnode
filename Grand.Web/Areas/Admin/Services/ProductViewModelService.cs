@@ -749,8 +749,8 @@ namespace Grand.Web.Areas.Admin.Services
                 model.Title = productReview.Title;
                 if (formatReviewText)
                 {
-                    model.ReviewText = Core.Html.HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
-                    model.ReplyText = Core.Html.HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
+                    model.ReviewText = Core.Html.HtmlHelper.FormatText(productReview.ReviewText);
+                    model.ReplyText = Core.Html.HtmlHelper.FormatText(productReview.ReplyText);
                 }
                 else
                 {

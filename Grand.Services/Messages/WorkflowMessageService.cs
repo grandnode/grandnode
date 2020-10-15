@@ -2193,8 +2193,8 @@ namespace Grand.Services.Messages
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
 
-            if (!String.IsNullOrEmpty(toEmail))
-                toEmail = emailAccount.Email;
+            if (string.IsNullOrEmpty(toEmail))
+               return 0;
 
             return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
@@ -2517,8 +2517,8 @@ namespace Grand.Services.Messages
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
 
-            if (!String.IsNullOrEmpty(toEmail))
-                toEmail = emailAccount.Email;
+            if (string.IsNullOrEmpty(toEmail))
+                return 0;
 
             return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,

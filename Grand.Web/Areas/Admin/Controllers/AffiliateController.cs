@@ -105,6 +105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> Edit(AffiliateModel model, bool continueEditing)
         {
             var affiliate = await _affiliateService.GetAffiliateById(model.Id);

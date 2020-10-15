@@ -112,25 +112,28 @@
         </div>
         <h2>@(string.Format(_localizationService.GetResource("PDFInvoice.Order#", order.CustomerLanguageId), order.OrderNumber))</h2>
         <div class="addresses">
-            <div class="billing column">
-                <h3>@(_localizationService.GetResource("PDFInvoice.BillingInformation", order.CustomerLanguageId))</h3>
-                <ul>
-                    @if (!string.IsNullOrEmpty(order.BillingAddress.Company))
-                    {
-                        <li>@(string.Format(_localizationService.GetResource("PDFInvoice.Company", order.CustomerLanguageId), order.BillingAddress.Company))</li>
-                    }
-                    <li>@(string.Format(_localizationService.GetResource("PDFInvoice.Name", order.CustomerLanguageId), order.BillingAddress.FirstName + " " + order.BillingAddress.LastName))</li>
-                    <li>@(string.Format(_localizationService.GetResource("PDFInvoice.Phone", order.CustomerLanguageId), order.BillingAddress.PhoneNumber))</li>
-                    <li>@(string.Format(_localizationService.GetResource("PDFInvoice.Address", order.CustomerLanguageId), order.BillingAddress.Address1))</li>
-                    <li>@(order.BillingAddress.City + ", " + order.BillingAddress.ZipPostalCode)</li>
-                    <li>@((await _countryService.GetCountryById(order.BillingAddress.CountryId)).Name)</li>
-                    @{
-                        var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
-                        string paymentMethodStr = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, order.CustomerLanguageId) : order.PaymentMethodSystemName;
-                    }
-                    <li>@(string.Format(_localizationService.GetResource("PDFInvoice.PaymentMethod", order.CustomerLanguageId), paymentMethodStr))</li>
-                </ul>
-            </div>
+            @if (order.BillingAddress != null)
+            {
+                <div class="billing column">
+                    <h3>@(_localizationService.GetResource("PDFInvoice.BillingInformation", order.CustomerLanguageId))</h3>
+                    <ul>
+                        @if (!string.IsNullOrEmpty(order.BillingAddress.Company))
+                        {
+                            <li>@(string.Format(_localizationService.GetResource("PDFInvoice.Company", order.CustomerLanguageId), order.BillingAddress.Company))</li>
+                        }
+                        <li>@(string.Format(_localizationService.GetResource("PDFInvoice.Name", order.CustomerLanguageId), order.BillingAddress.FirstName + " " + order.BillingAddress.LastName))</li>
+                        <li>@(string.Format(_localizationService.GetResource("PDFInvoice.Phone", order.CustomerLanguageId), order.BillingAddress.PhoneNumber))</li>
+                        <li>@(string.Format(_localizationService.GetResource("PDFInvoice.Address", order.CustomerLanguageId), order.BillingAddress.Address1))</li>
+                        <li>@(order.BillingAddress.City + ", " + order.BillingAddress.ZipPostalCode)</li>
+                        <li>@((await _countryService.GetCountryById(order.BillingAddress.CountryId))?.Name)</li>
+                        @{
+                            var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
+                            string paymentMethodStr = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, order.CustomerLanguageId) : order.PaymentMethodSystemName;
+                        }
+                        <li>@(string.Format(_localizationService.GetResource("PDFInvoice.PaymentMethod", order.CustomerLanguageId), paymentMethodStr))</li>
+                    </ul>
+                </div>
+            }
             @if (order.ShippingAddress != null)
             {
                 <div class="shipping column">
@@ -144,7 +147,7 @@
                         <li>@(string.Format(_localizationService.GetResource("PDFInvoice.Phone", order.CustomerLanguageId), order.ShippingAddress.PhoneNumber))</li>
                         <li>@(string.Format(_localizationService.GetResource("PDFInvoice.Address", order.CustomerLanguageId), order.ShippingAddress.Address1))</li>
                         <li>@(order.ShippingAddress.City + ", " + order.ShippingAddress.ZipPostalCode)</li>
-                        <li>@((await _countryService.GetCountryById(order.ShippingAddress.CountryId)).Name)</li>
+                        <li>@((await _countryService.GetCountryById(order.ShippingAddress.CountryId))?.Name)</li>
                         <li>@(string.Format(_localizationService.GetResource("PDFInvoice.ShippingMethod", order.CustomerLanguageId), order.ShippingMethod))</li>
                     </ul>
                 </div>

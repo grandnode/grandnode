@@ -65,6 +65,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index() => RedirectToAction("List");
 
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> List(bool liveRates = false)
         {
             if (liveRates)
@@ -99,6 +100,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> List(IFormCollection formValues)
         {
             _currencySettings.ActiveExchangeRateProviderSystemName = formValues["exchangeRateProvider"];
@@ -108,6 +110,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> ListGrid(DataSourceRequest command)
         {
             var currenciesModel = (await _currencyService.GetAllCurrencies(true)).Select(x => x.ToModel()).ToList();
@@ -125,6 +128,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> ApplyRate(string currencyCode, string rate)
         {
             var _rate = decimal.Parse(rate, CultureInfo.InvariantCulture.NumberFormat);
@@ -139,6 +143,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> MarkAsPrimaryExchangeRateCurrency(string id)
         {
             _currencySettings.PrimaryExchangeRateCurrencyId = id;
@@ -148,6 +153,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> MarkAsPrimaryStoreCurrency(string id)
         {
             _currencySettings.PrimaryStoreCurrencyId = id;
@@ -171,7 +177,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(CurrencyModel model, bool continueEditing)
         {

@@ -87,7 +87,7 @@
             <div class="col-md-6 col-sm-6">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
-                           @if (download != null && !String.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text> } />
+                           @if (download != null && !string.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text> } />
                     <div class="input-group-append">
                         <input type="button" id="saveDownloadUrl@(randomNumber)" class="k-button" value="@T("Admin.Download.SaveDownloadURL")" />
                     </div>
@@ -153,7 +153,7 @@
                                 template: "@(clientId)-qq-template",
                                 multiple: false
                             }).on("complete", function (event, id, name, responseJSON, xhr) {
-                                $("#@(clientId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Admin.Download.DownloadUploadedFile")</a>");
+                                $("#@(clientId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "' class=\"btn purple\">@T("Admin.Download.DownloadUploadedFile")</a>");
                                 $("#@(clientId + "value") input").val(responseJSON.downloadId);
                                 $("#@(clientId + "remove")").show();
                             });
@@ -172,7 +172,7 @@
                 <div id="@(clientId + "downloadurl")">
                     @if (download != null)
                     {
-                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid }))">@T("Admin.Download.DownloadUploadedFile")</a>
+                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid }))"  class="btn purple">@T("Admin.Download.DownloadUploadedFile")</a>
                     }
                 </div>
                 <div>

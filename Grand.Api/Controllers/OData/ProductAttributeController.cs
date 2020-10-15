@@ -30,7 +30,7 @@ namespace Grand.Api.Controllers.OData
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.ProductAttributes))
                 return Forbid();
 
             var productAttribute = await _mediator.Send(new GetQuery<ProductAttributeDto>() { Id = key });
@@ -45,7 +45,7 @@ namespace Grand.Api.Controllers.OData
         [EnableQuery(HandleNullPropagation = HandleNullPropagationOption.False)]
         public async Task<IActionResult> Get()
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.ProductAttributes))
                 return Forbid();
 
             return Ok(await _mediator.Send(new GetQuery<ProductAttributeDto>()));
@@ -55,7 +55,7 @@ namespace Grand.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProductAttributeDto model)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.ProductAttributes))
                 return Forbid();
 
             if (ModelState.IsValid)
@@ -70,7 +70,7 @@ namespace Grand.Api.Controllers.OData
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] ProductAttributeDto model)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.ProductAttributes))
                 return Forbid();
 
             if (ModelState.IsValid)
@@ -85,7 +85,7 @@ namespace Grand.Api.Controllers.OData
         [HttpPatch]
         public async Task<IActionResult> Patch([FromODataUri] string key, JsonPatchDocument<ProductAttributeDto> model)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.ProductAttributes))
                 return Forbid();
 
             var productAttribute = await _mediator.Send(new GetQuery<ProductAttributeDto>() { Id = key });
@@ -107,7 +107,7 @@ namespace Grand.Api.Controllers.OData
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
-            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.ProductAttributes))
                 return Forbid();
 
             var productAttribute = await _mediator.Send(new GetQuery<ProductAttributeDto>() { Id = key });

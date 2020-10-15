@@ -50,7 +50,7 @@ namespace Grand.Services.Commands.Handlers.Catalog
             int notApprovedTotalReviews = 0;
 
             var reviews = await _productReviewService.GetAllProductReviews(null, null, null, null, null,
-                null, request.Product.Id, 0, 2147483647);
+                null, request.Product.Id, 0, int.MaxValue);
                         
             foreach (var pr in reviews)
             {

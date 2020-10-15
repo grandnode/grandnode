@@ -17,7 +17,7 @@
                 </div>
                 <div class="x_content form">
                     <input type="submit" name="uploadlicense" value="@T("Admin.Common.Save")" id="uploadlicense" class="btn green" />
-                    @if (!String.IsNullOrEmpty(Model.LicenseDownloadId))
+                    @if (!string.IsNullOrEmpty(Model.LicenseDownloadId))
                     {
                         <input type="submit" name="deletelicense" value="@T("Admin.Common.Delete")" id="deletelicense" class="btn red" />
                     }

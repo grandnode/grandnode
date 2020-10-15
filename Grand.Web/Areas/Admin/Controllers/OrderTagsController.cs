@@ -38,6 +38,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
             var tags = (await _orderTagService.GetAllOrderTags());
@@ -60,6 +61,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Orders(string tagId, DataSourceRequest command)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -86,6 +88,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var orderTag = await _orderTagService.GetOrderTagById(id);
@@ -102,6 +105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> Edit(OrderTagModel model)
         {
             var orderTag = await _orderTagService.GetOrderTagById(model.Id);
@@ -122,6 +126,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> Delete(string id)
         {
             var tagOrder = await _orderTagService.GetOrderTagById(id);

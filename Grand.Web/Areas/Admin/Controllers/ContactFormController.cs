@@ -8,6 +8,7 @@ using Grand.Web.Areas.Admin.Models.Messages;
 using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Grand.Core;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -17,14 +18,17 @@ namespace Grand.Web.Areas.Admin.Controllers
 		private readonly IContactUsService _contactUsService;
         private readonly IContactFormViewModelService _contactFormViewModelService;
         private readonly ILocalizationService _localizationService;
+        private readonly IWorkContext _workContext;
 
         public ContactFormController(IContactUsService contactUsService,
             IContactFormViewModelService contactFormViewModelService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IWorkContext workContext)
 		{
             _contactUsService = contactUsService;
             _contactFormViewModelService = contactFormViewModelService;
             _localizationService = localizationService;
+            _workContext = workContext;
         }
 
         public IActionResult Index() => RedirectToAction("List");
@@ -55,6 +59,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (contactform == null)
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentVendor != null)
+            {
+                if (contactform.VendorId != _workContext.CurrentVendor.Id)
+                    return RedirectToAction("List");
+            }
             var model = await _contactFormViewModelService.PrepareContactFormModel(contactform);
             return View(model);
 		}
@@ -67,6 +76,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (contactform == null)
                 //No email found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentVendor != null)
+            {
+                if (contactform.VendorId != _workContext.CurrentVendor.Id)
+                    ModelState.AddModelError("", "This is not your contact us form");
+            }
+
             if (ModelState.IsValid)
             {
                 await _contactUsService.DeleteContactUs(contactform);
@@ -83,7 +99,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> DeleteAll()
         {
-            await _contactUsService.ClearTable();
+            if (_workContext.CurrentVendor != null)
+            {
+                var contactforms = await _contactUsService.GetAllContactUs(
+                vendorId: _workContext.CurrentVendor.Id,
+                pageIndex: 0,
+                pageSize: int.MaxValue);
+                foreach (var item in contactforms)
+                {
+                    await _contactUsService.DeleteContactUs(item);
+                }
+            }
+            else
+                await _contactUsService.ClearTable();
 
             SuccessNotification(_localizationService.GetResource("Admin.System.ContactForm.DeletedAll"));
             return RedirectToAction("List");

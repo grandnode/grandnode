@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.Attributes)]
+    [PermissionAuthorize(PermissionSystemName.ProductAttributes)]
     public partial class ProductAttributeController : BaseAdminController
     {
         #region Fields
@@ -83,7 +83,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(ProductAttributeModel model, bool continueEditing)
         {

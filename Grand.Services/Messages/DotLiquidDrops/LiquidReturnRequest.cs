@@ -53,12 +53,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string CustomerComment
         {
-            get { return HtmlHelper.FormatText(_returnRequest.CustomerComments, false, true, false, false, false, false); }
+            get { return HtmlHelper.FormatText(_returnRequest.CustomerComments); }
         }
 
         public string StaffNotes
         {
-            get { return HtmlHelper.FormatText(_returnRequest.StaffNotes, false, true, false, false, false, false); }
+            get { return HtmlHelper.FormatText(_returnRequest.StaffNotes); }
         }
 
         public string Status { get; set; }

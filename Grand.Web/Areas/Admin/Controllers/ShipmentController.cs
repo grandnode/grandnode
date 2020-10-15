@@ -659,6 +659,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
             }
+            if (_workContext.CurrentVendor != null)
+            {
+                model.VendorId = _workContext.CurrentVendor.Id;
+            }
 
             //load shipments
             var shipments = await _shipmentViewModelService.PrepareShipments(model, 1, 100);

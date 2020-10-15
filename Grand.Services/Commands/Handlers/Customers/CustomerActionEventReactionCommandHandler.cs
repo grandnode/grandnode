@@ -84,7 +84,8 @@ namespace Grand.Services.Commands.Handlers.Customers
                             _workContext.WorkingLanguage.Id);
                 }
 
-                if (action.ActionTypeId != customerActionTypes.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id && action.ActionTypeId != customerActionTypes.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id)
+                if (action.ActionTypeId != customerActionTypes.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id 
+                    && action.ActionTypeId != customerActionTypes.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id)
                 {
                     await workflowMessageService.SendCustomerActionEvent_Notification(action,
                         _workContext.WorkingLanguage.Id, customer);

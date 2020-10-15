@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.Attributes)]
+    [PermissionAuthorize(PermissionSystemName.SpecificationAttributes)]
     public partial class SpecificationAttributeController : BaseAdminController
     {
         #region Fields
@@ -55,6 +55,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.List)]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
             var specificationAttributes = await _specificationAttributeService
@@ -68,6 +69,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create()
         {
             var model = new SpecificationAttributeModel();
@@ -77,6 +79,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PermissionAuthorizeAction(PermissionActionName.Create)]
         public async Task<IActionResult> Create(SpecificationAttributeModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
@@ -95,6 +98,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> Edit(string id)
         {
             var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(id);
@@ -113,6 +117,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> Edit(SpecificationAttributeModel model, bool continueEditing)
         {
             var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(model.Id);
@@ -146,6 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Delete)]
         public async Task<IActionResult> Delete(string id)
         {
             var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(id);
@@ -172,6 +178,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //list
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
         public async Task<IActionResult> OptionList(string specificationAttributeId, DataSourceRequest command)
         {
             var options = (await _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)).SpecificationAttributeOptions.OrderBy(x => x.DisplayOrder);
@@ -191,6 +198,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> OptionCreatePopup(string specificationAttributeId)
         {
             var model = new SpecificationAttributeOptionModel {
@@ -202,6 +210,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> OptionCreatePopup(SpecificationAttributeOptionModel model)
         {
             var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
@@ -229,6 +238,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> OptionEditPopup(string id)
         {
             var sao = (await _specificationAttributeService.GetSpecificationAttributeByOptionId(id)).SpecificationAttributeOptions.Where(x => x.Id == id).FirstOrDefault();
@@ -248,6 +258,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> OptionEditPopup(SpecificationAttributeOptionModel model)
         {
             var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeByOptionId(model.Id);
@@ -277,6 +288,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
         public async Task<IActionResult> OptionDelete(string id)
         {
             if (ModelState.IsValid)

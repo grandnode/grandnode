@@ -1003,7 +1003,6 @@ namespace Grand.Services.Installation
 
             #endregion
 
-
             #region Update customer settings
 
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
@@ -1016,6 +1015,9 @@ namespace Grand.Services.Installation
             #region Update permissions - Actions
 
             IPermissionProvider provider = new StandardPermissionProvider();
+            //install new permissions
+            await _mediator.Send(new InstallNewPermissionsCommand() { PermissionProvider = provider });
+
             var permissions = provider.GetPermissions();
             var permissionService = _serviceProvider.GetRequiredService<IPermissionService>();
             foreach (var permission in permissions)
@@ -1029,7 +1031,8 @@ namespace Grand.Services.Installation
             }
 
             #endregion
-            #region update cancel order Scheduled Task
+
+            #region Update cancel order Scheduled Task
 
             var tasks = _serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
             var cancelOrderTask = new ScheduleTask {
@@ -1042,7 +1045,6 @@ namespace Grand.Services.Installation
             await tasks.InsertAsync(cancelOrderTask);
 
             #endregion
-
         }
 
         private async Task InstallStringResources(string filenames)

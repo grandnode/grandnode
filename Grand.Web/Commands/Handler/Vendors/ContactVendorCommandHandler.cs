@@ -30,7 +30,7 @@ namespace Grand.Web.Commands.Handler.Vendors
         public async Task<ContactVendorModel> Handle(ContactVendorSendCommand request, CancellationToken cancellationToken)
         {
             var subject = _commonSettings.SubjectFieldOnContactUsForm ? request.Model.Subject : null;
-            var body = Core.Html.HtmlHelper.FormatText(request.Model.Enquiry, false, true, false, false, false, false);
+            var body = Core.Html.HtmlHelper.FormatText(request.Model.Enquiry);
 
             await _workflowMessageService.SendContactVendorMessage(_workContext.CurrentCustomer, request.Store, request.Vendor, _workContext.WorkingLanguage.Id,
                 request.Model.Email.Trim(), request.Model.FullName, subject, body);
