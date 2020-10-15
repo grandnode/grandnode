@@ -43,7 +43,7 @@ GrandNode Starter Pack: [https://grandnode.com/e-commerce-starter-pack](https://
 
 ## Development status ##
 The latest stable version is 4.80.0
-Active development version: branch [develop](https://github.com/grandnode/grandnode/tree/develop))
+Active development version: branch [develop](https://github.com/grandnode/grandnode/tree/develop)
 
 ## How to contribute code ##
 
