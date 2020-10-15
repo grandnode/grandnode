@@ -37,13 +37,13 @@ Premium themes: [https://grandnode.com/grandnode-themes](https://grandnode.com/g
 
 Premium extensions: [https://grandnode.com/extensions](https://grandnode.com/extensions)
 
+Premium support: [https://grandnode.com/premium-support-packages](https://grandnode.com/premium-support-packages)
+
+GrandNode Starter Pack: [https://grandnode.com/e-commerce-starter-pack](https://grandnode.com/e-commerce-starter-pack)
+
 ## Development status ##
-The latest stable version is 4.70
-Active development version: 4.80 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
-
-[Roadmap for 4.80](https://github.com/grandnode/grandnode/projects/6)
-
-[Tickets linked to 4.80](https://github.com/grandnode/grandnode/issues)
+The latest stable version is 4.80.0
+Active development version: branch [develop](https://github.com/grandnode/grandnode/tree/develop))
 
 ## How to contribute code ##
 
