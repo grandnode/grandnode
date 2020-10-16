@@ -1139,6 +1139,11 @@ namespace Grand.Services.Orders
                         else
                             customerEnteredPricesEqual = false;
                     }
+                    else
+                    {
+                        if (customerEnteredPrice.HasValue)
+                            customerEnteredPricesEqual = false;
+                    }
 
                     //found?
                     if (attributesEqual && giftCardInfoSame && customerEnteredPricesEqual)
