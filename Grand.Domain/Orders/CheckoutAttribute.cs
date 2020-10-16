@@ -118,11 +118,11 @@ namespace Grand.Domain.Orders
         {
             get
             {
-                return (AttributeControlType)this.AttributeControlTypeId;
+                return (AttributeControlType)AttributeControlTypeId;
             }
             set
             {
-                this.AttributeControlTypeId = (int)value;
+                AttributeControlTypeId = (int)value;
             }
         }
         /// <summary>

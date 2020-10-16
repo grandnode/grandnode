@@ -53,11 +53,11 @@ namespace Grand.Domain.Catalog
         {
             get
             {
-                return (SpecificationAttributeType)this.AttributeTypeId;
+                return (SpecificationAttributeType)AttributeTypeId;
             }
             set
             {
-                this.AttributeTypeId = (int)value;
+                AttributeTypeId = (int)value;
             }
         }
     }

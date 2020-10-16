@@ -55,9 +55,9 @@ namespace Grand.Domain.Messages
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(this.DisplayName))
-                    return this.Email + " (" + this.DisplayName + ")";
-                return this.Email;
+                if (!String.IsNullOrWhiteSpace(DisplayName))
+                    return Email + " (" + DisplayName + ")";
+                return Email;
             }
         }
 

@@ -38,7 +38,7 @@ namespace Grand.Domain.Directory
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0} {1}", this.CurrencyCode, this.Rate);
+            return string.Format("{0} {1}", CurrencyCode, Rate);
         }
     }
 

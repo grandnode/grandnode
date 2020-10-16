@@ -83,11 +83,11 @@ namespace Grand.Domain.Orders
         {
             get
             {
-                return (ReturnRequestStatus)this.ReturnRequestStatusId;
+                return (ReturnRequestStatus)ReturnRequestStatusId;
             }
             set
             {
-                this.ReturnRequestStatusId = (int)value;
+                ReturnRequestStatusId = (int)value;
             }
         }
 

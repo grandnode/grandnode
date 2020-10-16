@@ -411,11 +411,11 @@ namespace Grand.Domain.Orders
         {
             get
             {
-                return (OrderStatus)this.OrderStatusId;
+                return (OrderStatus)OrderStatusId;
             }
             set
             {
-                this.OrderStatusId = (int)value;
+                OrderStatusId = (int)value;
             }
         }
 
@@ -426,11 +426,11 @@ namespace Grand.Domain.Orders
         {
             get
             {
-                return (PaymentStatus)this.PaymentStatusId;
+                return (PaymentStatus)PaymentStatusId;
             }
             set
             {
-                this.PaymentStatusId = (int)value;
+                PaymentStatusId = (int)value;
             }
         }
 
@@ -441,11 +441,11 @@ namespace Grand.Domain.Orders
         {
             get
             {
-                return (ShippingStatus)this.ShippingStatusId;
+                return (ShippingStatus)ShippingStatusId;
             }
             set
             {
-                this.ShippingStatusId = (int)value;
+                ShippingStatusId = (int)value;
             }
         }
 
@@ -456,11 +456,11 @@ namespace Grand.Domain.Orders
         {
             get
             {
-                return (TaxDisplayType)this.CustomerTaxDisplayTypeId;
+                return (TaxDisplayType)CustomerTaxDisplayTypeId;
             }
             set
             {
-                this.CustomerTaxDisplayTypeId = (int)value;
+                CustomerTaxDisplayTypeId = (int)value;
             }
         }
 
@@ -471,7 +471,7 @@ namespace Grand.Domain.Orders
         {
             get
             {
-                return this.ParseTaxRates(this.TaxRates);
+                return this.ParseTaxRates(TaxRates);
             }
         }
         

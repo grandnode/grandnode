@@ -47,13 +47,13 @@ namespace Grand.Domain.Messages
         public int CustomerHasOrders { get; set; }
         public CampaignCondition CustomerHasOrdersCondition {
             get { return (CampaignCondition)CustomerHasOrders; }
-            set { this.CustomerHasOrders = (int)value; }
+            set { CustomerHasOrders = (int)value; }
         }
 
         public int CustomerHasShoppingCart { get; set; }
         public CampaignCondition CustomerHasShoppingCartCondition {
             get { return (CampaignCondition)CustomerHasShoppingCart; }
-            set { this.CustomerHasShoppingCart = (int)value; }
+            set { CustomerHasShoppingCart = (int)value; }
         }
 
         /// <summary>

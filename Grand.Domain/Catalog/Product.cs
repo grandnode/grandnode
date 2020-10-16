@@ -247,11 +247,11 @@ namespace Grand.Domain.Catalog
         {
             get
             {
-                return (IntervalUnit)this.IntervalUnitId;
+                return (IntervalUnit)IntervalUnitId;
             }
             set
             {
-                this.IntervalUnitId = (int)value;
+                IntervalUnitId = (int)value;
             }
 
         }
@@ -568,11 +568,11 @@ namespace Grand.Domain.Catalog
         {
             get
             {
-                return (ProductType)this.ProductTypeId;
+                return (ProductType)ProductTypeId;
             }
             set
             {
-                this.ProductTypeId = (int)value;
+                ProductTypeId = (int)value;
             }
         }
 
@@ -583,11 +583,11 @@ namespace Grand.Domain.Catalog
         {
             get
             {
-                return (BackorderMode)this.BackorderModeId;
+                return (BackorderMode)BackorderModeId;
             }
             set
             {
-                this.BackorderModeId = (int)value;
+                BackorderModeId = (int)value;
             }
         }
 
@@ -598,11 +598,11 @@ namespace Grand.Domain.Catalog
         {
             get
             {
-                return (DownloadActivationType)this.DownloadActivationTypeId;
+                return (DownloadActivationType)DownloadActivationTypeId;
             }
             set
             {
-                this.DownloadActivationTypeId = (int)value;
+                DownloadActivationTypeId = (int)value;
             }
         }
 
@@ -613,11 +613,11 @@ namespace Grand.Domain.Catalog
         {
             get
             {
-                return (GiftCardType)this.GiftCardTypeId;
+                return (GiftCardType)GiftCardTypeId;
             }
             set
             {
-                this.GiftCardTypeId = (int)value;
+                GiftCardTypeId = (int)value;
             }
         }
 
@@ -628,11 +628,11 @@ namespace Grand.Domain.Catalog
         {
             get
             {
-                return (LowStockActivity)this.LowStockActivityId;
+                return (LowStockActivity)LowStockActivityId;
             }
             set
             {
-                this.LowStockActivityId = (int)value;
+                LowStockActivityId = (int)value;
             }
         }
 
@@ -643,11 +643,11 @@ namespace Grand.Domain.Catalog
         {
             get
             {
-                return (ManageInventoryMethod)this.ManageInventoryMethodId;
+                return (ManageInventoryMethod)ManageInventoryMethodId;
             }
             set
             {
-                this.ManageInventoryMethodId = (int)value;
+                ManageInventoryMethodId = (int)value;
             }
         }
 
@@ -658,11 +658,11 @@ namespace Grand.Domain.Catalog
         {
             get
             {
-                return (RecurringProductCyclePeriod)this.RecurringCyclePeriodId;
+                return (RecurringProductCyclePeriod)RecurringCyclePeriodId;
             }
             set
             {
-                this.RecurringCyclePeriodId = (int)value;
+                RecurringCyclePeriodId = (int)value;
             }
         }
 

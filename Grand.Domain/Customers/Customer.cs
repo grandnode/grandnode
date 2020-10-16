@@ -20,8 +20,8 @@ namespace Grand.Domain.Customers
         /// </summary>
         public Customer()
         {
-            this.CustomerGuid = Guid.NewGuid();
-            this.PasswordFormat = PasswordFormat.Clear;
+            CustomerGuid = Guid.NewGuid();
+            PasswordFormat = PasswordFormat.Clear;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Grand.Domain.Customers
         public PasswordFormat PasswordFormat
         {
             get { return (PasswordFormat)PasswordFormatId; }
-            set { this.PasswordFormatId = (int)value; }
+            set { PasswordFormatId = (int)value; }
         }
         /// <summary>
         /// Gets or sets the password salt

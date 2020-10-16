@@ -9,7 +9,7 @@ namespace Grand.Domain.Customers
     {
         public CustomerHistoryPassword()
         {
-            this.PasswordFormat = PasswordFormat.Clear;
+            PasswordFormat = PasswordFormat.Clear;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Grand.Domain.Customers
         public PasswordFormat PasswordFormat
         {
             get { return (PasswordFormat)PasswordFormatId; }
-            set { this.PasswordFormatId = (int)value; }
+            set { PasswordFormatId = (int)value; }
         }
     }
 }

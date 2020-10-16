@@ -54,11 +54,11 @@ namespace Grand.Domain.Logging
         {
             get
             {
-                return (LogLevel)this.LogLevelId;
+                return (LogLevel)LogLevelId;
             }
             set
             {
-                this.LogLevelId = (int)value;
+                LogLevelId = (int)value;
             }
         }
 

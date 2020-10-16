@@ -85,21 +85,21 @@ namespace Grand.Domain.Common
         {
             var addr = new Address
             {
-                FirstName = this.FirstName,
-                LastName = this.LastName,
-                Email = this.Email,
-                Company = this.Company,
-                VatNumber = this.VatNumber,
-                CountryId = this.CountryId,
-                StateProvinceId = this.StateProvinceId,
-                City = this.City,
-                Address1 = this.Address1,
-                Address2 = this.Address2,
-                ZipPostalCode = this.ZipPostalCode,
-                PhoneNumber = this.PhoneNumber,
-                FaxNumber = this.FaxNumber,
-                CustomAttributes = this.CustomAttributes,
-                CreatedOnUtc = this.CreatedOnUtc,
+                FirstName = FirstName,
+                LastName = LastName,
+                Email = Email,
+                Company = Company,
+                VatNumber = VatNumber,
+                CountryId = CountryId,
+                StateProvinceId = StateProvinceId,
+                City = City,
+                Address1 = Address1,
+                Address2 = Address2,
+                ZipPostalCode = ZipPostalCode,
+                PhoneNumber = PhoneNumber,
+                FaxNumber = FaxNumber,
+                CustomAttributes = CustomAttributes,
+                CreatedOnUtc = CreatedOnUtc,
             };
             return addr;
         }

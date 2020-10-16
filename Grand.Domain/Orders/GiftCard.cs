@@ -73,11 +73,11 @@ namespace Grand.Domain.Orders
         {
             get
             {
-                return (GiftCardType)this.GiftCardTypeId;
+                return (GiftCardType)GiftCardTypeId;
             }
             set
             {
-                this.GiftCardTypeId = (int)value;
+                GiftCardTypeId = (int)value;
             }
         }
         

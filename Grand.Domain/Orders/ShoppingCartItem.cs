@@ -69,11 +69,11 @@ namespace Grand.Domain.Orders
         {
             get
             {
-                return (ShoppingCartType)this.ShoppingCartTypeId;
+                return (ShoppingCartType)ShoppingCartTypeId;
             }
             set
             {
-                this.ShoppingCartTypeId = (int)value;
+                ShoppingCartTypeId = (int)value;
             }
         }
 

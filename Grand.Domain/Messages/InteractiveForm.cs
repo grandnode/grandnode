@@ -93,11 +93,11 @@ namespace Grand.Domain.Messages
             {
                 get
                 {
-                    return (FormControlType)this.FormControlTypeId;
+                    return (FormControlType)FormControlTypeId;
                 }
                 set
                 {
-                    this.FormControlTypeId = (int)value;
+                    FormControlTypeId = (int)value;
                 }
             }
             /// <summary>

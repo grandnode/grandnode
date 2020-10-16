@@ -13,9 +13,9 @@ namespace Grand.Domain.Configuration
         }
         
         public Setting(string name, string value, string storeId = "") {
-            this.Name = name;
-            this.Value = value;
-            this.StoreId = storeId;
+            Name = name;
+            Value = value;
+            StoreId = storeId;
         }
         
         /// <summary>

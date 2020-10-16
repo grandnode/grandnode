@@ -41,7 +41,7 @@ namespace Grand.Domain.Customers
         public CustomerReminderConditionEnum Condition
         {
             get { return (CustomerReminderConditionEnum)ConditionId; }
-            set { this.ConditionId = (int)value; }
+            set { ConditionId = (int)value; }
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Grand.Domain.Customers
         public CustomerReminderRuleEnum ReminderRule
         {
             get { return (CustomerReminderRuleEnum)ReminderRuleId; }
-            set { this.ReminderRuleId = (int)value; }
+            set { ReminderRuleId = (int)value; }
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Grand.Domain.Customers
             public CustomerReminderConditionTypeEnum ConditionType
             {
                 get { return (CustomerReminderConditionTypeEnum)ConditionTypeId; }
-                set { this.ConditionTypeId = (int)value; }
+                set { ConditionTypeId = (int)value; }
             }
 
             public int ConditionId { get; set; }
@@ -99,7 +99,7 @@ namespace Grand.Domain.Customers
             public CustomerReminderConditionEnum Condition
             {
                 get { return (CustomerReminderConditionEnum)ConditionId; }
-                set { this.ConditionId = (int)value; }
+                set { ConditionId = (int)value; }
             }
 
 

@@ -116,11 +116,11 @@ namespace Grand.Domain.Discounts
         {
             get
             {
-                return (DiscountType)this.DiscountTypeId;
+                return (DiscountType)DiscountTypeId;
             }
             set
             {
-                this.DiscountTypeId = (int)value;
+                DiscountTypeId = (int)value;
             }
         }
 
@@ -131,11 +131,11 @@ namespace Grand.Domain.Discounts
         {
             get
             {
-                return (DiscountLimitationType)this.DiscountLimitationId;
+                return (DiscountLimitationType)DiscountLimitationId;
             }
             set
             {
-                this.DiscountLimitationId = (int)value;
+                DiscountLimitationId = (int)value;
             }
         }
 

@@ -158,22 +158,22 @@ namespace Grand.Domain.Vendors
 
         public AddressSettings AddressSettings => new AddressSettings()
         {
-            CityEnabled = this.CityEnabled,
-            CityRequired = this.CityRequired,
-            CompanyEnabled = this.CompanyEnabled,
-            CompanyRequired = this.CompanyRequired,
-            CountryEnabled = this.CountryEnabled,
-            FaxEnabled = this.FaxEnabled,
-            FaxRequired = this.FaxRequired,
-            PhoneEnabled = this.PhoneEnabled,
-            PhoneRequired = this.PhoneRequired,
-            StateProvinceEnabled = this.StateProvinceEnabled,
-            StreetAddress2Enabled = this.StreetAddress2Enabled,
-            StreetAddress2Required = this.StreetAddress2Required,
-            StreetAddressEnabled = this.StreetAddressEnabled,
-            StreetAddressRequired = this.StreetAddressRequired,
-            ZipPostalCodeEnabled = this.ZipPostalCodeEnabled,
-            ZipPostalCodeRequired = this.ZipPostalCodeRequired,
+            CityEnabled = CityEnabled,
+            CityRequired = CityRequired,
+            CompanyEnabled = CompanyEnabled,
+            CompanyRequired = CompanyRequired,
+            CountryEnabled = CountryEnabled,
+            FaxEnabled = FaxEnabled,
+            FaxRequired = FaxRequired,
+            PhoneEnabled = PhoneEnabled,
+            PhoneRequired = PhoneRequired,
+            StateProvinceEnabled = StateProvinceEnabled,
+            StreetAddress2Enabled = StreetAddress2Enabled,
+            StreetAddress2Required = StreetAddress2Required,
+            StreetAddressEnabled = StreetAddressEnabled,
+            StreetAddressRequired = StreetAddressRequired,
+            ZipPostalCodeEnabled = ZipPostalCodeEnabled,
+            ZipPostalCodeRequired = ZipPostalCodeRequired,
         };
 
         #endregion

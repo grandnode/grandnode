@@ -10,7 +10,7 @@ namespace Grand.Domain.Messages
     {
         public QueuedEmail()
         {
-            this.AttachedDownloads = new List<string>();
+            AttachedDownloads = new List<string>();
         }
         /// <summary>
         /// Gets or sets the priority
@@ -115,11 +115,11 @@ namespace Grand.Domain.Messages
         {
             get
             {
-                return (QueuedEmailPriority)this.PriorityId;
+                return (QueuedEmailPriority)PriorityId;
             }
             set
             {
-                this.PriorityId = (int)value;
+                PriorityId = (int)value;
             }
         }
 

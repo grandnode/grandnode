@@ -70,8 +70,8 @@ namespace Grand.Domain.Messages
         /// </summary>
         public MessageDelayPeriod DelayPeriod
         {
-            get { return (MessageDelayPeriod)this.DelayPeriodId; }
-            set { this.DelayPeriodId = (int)value; }
+            get { return (MessageDelayPeriod)DelayPeriodId; }
+            set { DelayPeriodId = (int)value; }
         }
         /// <summary>
         /// Gets or sets the collection of locales

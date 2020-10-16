@@ -74,11 +74,11 @@ namespace Grand.Domain.Forums
         {
             get
             {
-                return (ForumTopicType)this.TopicTypeId;
+                return (ForumTopicType)TopicTypeId;
             }
             set
             {
-                this.TopicTypeId = (int)value;
+                TopicTypeId = (int)value;
             }
         }
 
