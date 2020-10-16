@@ -303,8 +303,9 @@ namespace Grand.Services.Orders
             //customer entered price
             if (product.CustomerEntersPrice)
             {
-                if (shoppingCartItem.CustomerEnteredPrice < product.MinimumCustomerEnteredPrice ||
-                    shoppingCartItem.CustomerEnteredPrice > product.MaximumCustomerEnteredPrice)
+                var shoppingCartItemEnteredPrice = shoppingCartItem.EnteredPrice.HasValue ? shoppingCartItem.EnteredPrice.Value : 0;
+                if (shoppingCartItemEnteredPrice < product.MinimumCustomerEnteredPrice ||
+                    shoppingCartItemEnteredPrice > product.MaximumCustomerEnteredPrice)
                 {
                     decimal minimumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.MinimumCustomerEnteredPrice, _workContext.WorkingCurrency);
                     decimal maximumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.MaximumCustomerEnteredPrice, _workContext.WorkingCurrency);
@@ -1086,7 +1087,7 @@ namespace Grand.Services.Orders
             string productId,
             string warehouseId = null,
             string attributesXml = "",
-            decimal customerEnteredPrice = decimal.Zero,
+            decimal? customerEnteredPrice = null,
             DateTime? rentalStartDate = null,
             DateTime? rentalEndDate = null)
         {
@@ -1131,8 +1132,13 @@ namespace Grand.Services.Orders
 
                     //price is the same (for products which require customers to enter a price)
                     bool customerEnteredPricesEqual = true;
-                    if (_product.CustomerEntersPrice)
-                        customerEnteredPricesEqual = Math.Round(sci.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
+                    if (sci.EnteredPrice.HasValue)
+                    {
+                        if (customerEnteredPrice.HasValue)
+                            customerEnteredPricesEqual = Math.Round(sci.EnteredPrice.Value, 2) == Math.Round(customerEnteredPrice.Value, 2);
+                        else
+                            customerEnteredPricesEqual = false;
+                    }
 
                     //found?
                     if (attributesEqual && giftCardInfoSame && customerEnteredPricesEqual)
@@ -1159,7 +1165,7 @@ namespace Grand.Services.Orders
         /// <returns>Warnings</returns>
         public virtual async Task<IList<string>> AddToCart(Customer customer, string productId,
             ShoppingCartType shoppingCartType, string storeId, string warehouseId = null, string attributesXml = null,
-            decimal customerEnteredPrice = decimal.Zero,
+            decimal? customerEnteredPrice = null,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
             string reservationId = "", string parameter = "", string duration = "")
@@ -1290,7 +1296,7 @@ namespace Grand.Services.Orders
                     WarehouseId = warehouseId,
                     ProductId = productId,
                     AttributesXml = attributesXml,
-                    CustomerEnteredPrice = customerEnteredPrice,
+                    EnteredPrice = customerEnteredPrice,
                     Quantity = quantity,
                     RentalStartDateUtc = rentalStartDate,
                     RentalEndDateUtc = rentalEndDate,
@@ -1385,7 +1391,7 @@ namespace Grand.Services.Orders
         /// <returns>Warnings</returns>
         public virtual async Task<IList<string>> UpdateShoppingCartItem(Customer customer,
             string shoppingCartItemId, string warehouseId, string attributesXml,
-            decimal customerEnteredPrice,
+            decimal? customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool resetCheckoutData = true, string reservationId = "", string sciId = "")
         {
@@ -1408,7 +1414,7 @@ namespace Grand.Services.Orders
                     shoppingCartItem.Quantity = quantity;
                     shoppingCartItem.WarehouseId = warehouseId;
                     shoppingCartItem.AttributesXml = attributesXml;
-                    shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
+                    shoppingCartItem.EnteredPrice = customerEnteredPrice;
                     shoppingCartItem.RentalStartDateUtc = rentalStartDate;
                     shoppingCartItem.RentalEndDateUtc = rentalEndDate;
                     shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
@@ -1461,7 +1467,7 @@ namespace Grand.Services.Orders
             {
                 var sci = fromCart[i];
                 await AddToCart(toCustomer, sci.ProductId, sci.ShoppingCartType, sci.StoreId, sci.WarehouseId,
-                    sci.AttributesXml, sci.CustomerEnteredPrice,
+                    sci.AttributesXml, sci.EnteredPrice,
                     sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.ReservationId, sci.Parameter, sci.Duration);
             }
             for (int i = 0; i < fromCart.Count; i++)

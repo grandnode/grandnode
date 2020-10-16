@@ -45,7 +45,8 @@ namespace Grand.Services.Commands.Handlers.Orders
                     {
                         warnings.AddRange(await _shoppingCartService.AddToCart(customer, orderItem.ProductId,
                             ShoppingCartType.ShoppingCart, request.Order.StoreId, orderItem.WarehouseId,
-                            orderItem.AttributesXml, orderItem.UnitPriceExclTax,
+                            orderItem.AttributesXml, 
+                            product.CustomerEntersPrice ? orderItem.UnitPriceExclTax : (decimal?)default,
                             orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
                             orderItem.Quantity, false));
                     }
