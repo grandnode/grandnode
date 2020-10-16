@@ -11,12 +11,12 @@
         /// <summary>
         /// Gets the minor version
         /// </summary>
-        public const string MinorVersion = "80";
+        public const string MinorVersion = "90";
 
         /// <summary>
         /// Gets the patch version
         /// </summary>
-        public const string PatchVersion = "0";
+        public const string PatchVersion = "0-develop";
 
         /// <summary>
         /// Gets the full version
