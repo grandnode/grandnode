@@ -4,6 +4,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Web.Commands.Models.Common;
+using Grand.Web.Events;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -22,13 +23,15 @@ namespace Grand.Web.Commands.Handler.Common
         private readonly IEmailAccountService _emailAccountService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IMediator _mediator;
 
         public PopupInteractiveCommandHandler(IInteractiveFormService interactiveFormService,
             ILocalizationService localizationService,
             IWorkContext workContext,
             IEmailAccountService emailAccountService,
             IQueuedEmailService queuedEmailService,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService,
+            IMediator mediator)
         {
             _interactiveFormService = interactiveFormService;
             _localizationService = localizationService;
@@ -36,6 +39,7 @@ namespace Grand.Web.Commands.Handler.Common
             _emailAccountService = emailAccountService;
             _queuedEmailService = queuedEmailService;
             _customerActivityService = customerActivityService;
+            _mediator = mediator;
         }
 
         public async Task<IList<string>> Handle(PopupInteractiveCommand request, CancellationToken cancellationToken)
@@ -47,11 +51,11 @@ namespace Grand.Web.Commands.Handler.Common
                 return errors;
 
             string enquiry = "";
-
+            var enquiryForm = new List<(string attrName, string attrValue)>();
             foreach (var item in form.FormAttributes)
             {
                 enquiry += string.Format("{0}: {1} <br />", item.Name, request.Form[item.SystemName]);
-
+                enquiryForm.Add((item.Name, request.Form[item.SystemName]));
                 if (!string.IsNullOrEmpty(item.RegexValidation))
                 {
                     var valuesStr = request.Form[item.SystemName];
@@ -122,6 +126,9 @@ namespace Grand.Web.Commands.Handler.Common
                     CreatedOnUtc = DateTime.UtcNow,
                     EmailAccountId = emailAccount.Id
                 });
+
+                //notification
+                await _mediator.Publish(new PopupInteractiveEvent(_workContext.CurrentCustomer, request.Form, enquiryForm));
 
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.InteractiveForm", form.Id, string.Format(_localizationService.GetResource("ActivityLog.PublicStore.InteractiveForm"), form.Name));
