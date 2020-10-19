@@ -18,6 +18,7 @@ using Grand.Services.Messages;
 using Grand.Services.Stores;
 using Grand.Services.Topics;
 using Grand.Web.Commands.Models.Common;
+using Grand.Web.Events;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Models.Common;
 using MediatR;
@@ -279,6 +280,9 @@ namespace Grand.Web.Controllers
                 }
                 else
                 {
+                    //notification
+                    await _mediator.Publish(new ContactUsEvent(_workContext.CurrentCustomer, result.model, form));
+
                     model = result.model;
                     return View(model);
                 }
