@@ -1,5 +1,4 @@
 ﻿using Grand.Core;
-using Grand.Core.Caching;
 using Grand.Domain.Catalog;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
@@ -26,7 +25,6 @@ using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
-using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -638,38 +636,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SelectedStoreIds = new string[] { _workContext.CurrentVendor.StoreId };
             }
         }
-        public virtual async Task<(IEnumerable<OrderModel> orderModels, int totalCount)> PrepareOrderModel(string productId, int pageIndex, int pageSize)
-        {
-            var storeId = string.Empty;
-            if (_workContext.CurrentCustomer.IsStaff())
-                storeId = _workContext.CurrentCustomer.StaffStoreId;
-
-            var orderService = _serviceProvider.GetRequiredService<IOrderService>();
-            var orders = await orderService.SearchOrders(
-                            storeId: storeId,
-                            productId: productId,
-                            pageIndex: pageIndex - 1,
-                            pageSize: pageSize);
-
-            var items = new List<OrderModel>();
-            foreach (var x in orders)
-            {
-                var store = await _storeService.GetStoreById(x.StoreId);
-                items.Add(new OrderModel {
-                    Id = x.Id,
-                    OrderNumber = x.OrderNumber,
-                    Code = x.Code,
-                    StoreName = store != null ? store.Shortcut : "Unknown",
-                    OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    CustomerEmail = x.BillingAddress?.Email,
-                    CustomerId = x.CustomerId,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
-                });
-            }
-            return (items, orders.TotalCount);
-        }
+        
         public virtual async Task SaveProductWarehouseInventory(Product product, IList<ProductModel.ProductWarehouseInventoryModel> model)
         {
             if (product == null)

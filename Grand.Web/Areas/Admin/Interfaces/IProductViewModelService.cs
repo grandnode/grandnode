@@ -12,7 +12,6 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task PrepareProductReviewModel(ProductReviewModel model, ProductReview productReview, bool excludeProperties, bool formatReviewText);
         Task BackInStockNotifications(Product product, ProductModel model, int prevStockQuantity, List<ProductWarehouseInventory> prevMultiWarehouseStock);
         Task BackInStockNotifications(ProductAttributeCombination combination);
-        Task<(IEnumerable<OrderModel> orderModels, int totalCount)> PrepareOrderModel(string productId, int pageIndex, int pageSize);
         Task PrepareAddProductAttributeCombinationModel(ProductAttributeCombinationModel model, Product product);
         Task SaveProductWarehouseInventory(Product product, IList<ProductModel.ProductWarehouseInventoryModel> model);
         Task PrepareTierPriceModel(ProductModel.TierPriceModel model);

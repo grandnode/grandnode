@@ -21,6 +21,7 @@ using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
+using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -1249,7 +1250,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
-        public async Task<IActionResult> PurchasedWithOrders(DataSourceRequest command, string productId)
+        public async Task<IActionResult> PurchasedWithOrders(DataSourceRequest command, string productId,
+            [FromServices] IOrderViewModelService orderViewModelService)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Json(new DataSourceResult {
@@ -1263,13 +1265,22 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!permission.allow)
                 return ErrorForKendoGridJson(permission.message);
 
-            var (orderModels, totalCount) = await _productViewModelService.PrepareOrderModel(productId, command.Page, command.PageSize);
+            var model = new OrderListModel {
+                ProductId = productId
+            };
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
+            if (_workContext.CurrentVendor != null)
+                model.VendorId = _workContext.CurrentVendor.Id;
+
+            var (orderModels, aggregator, totalCount) = await orderViewModelService.PrepareOrderModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult {
                 Data = orderModels.ToList(),
                 Total = totalCount
             };
-
             return Json(gridModel);
+
         }
 
         #endregion
