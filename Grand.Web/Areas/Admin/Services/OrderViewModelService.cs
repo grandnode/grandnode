@@ -295,8 +295,10 @@ namespace Grand.Web.Areas.Admin.Services
                 filterByProductId = model.ProductId;
 
             //load orders
-            var orders = await _orderService.SearchOrders(storeId: model.StoreId,
+            var orders = await _orderService.SearchOrders(
+                storeId: model.StoreId,
                 vendorId: model.VendorId,
+                customerId: model.CustomerId,
                 productId: filterByProductId,
                 warehouseId: model.WarehouseId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
@@ -318,6 +320,7 @@ namespace Grand.Web.Areas.Admin.Services
             //currently we do not support productId and warehouseId parameters for this report
             var reportSummary = await _orderReportService.GetOrderAverageReportLine(
                 storeId: model.StoreId,
+                customerId: model.CustomerId,
                 vendorId: model.VendorId,
                 orderId: "",
                 paymentMethodSystemName: model.PaymentMethodSystemName,

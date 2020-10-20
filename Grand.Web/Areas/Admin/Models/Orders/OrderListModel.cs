@@ -30,18 +30,20 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
+        public string CustomerId { get; set; }
+
         [GrandResourceDisplayName("Admin.Orders.List.BillingEmail")]
-        
         public string BillingEmail { get; set; }
 
         [GrandResourceDisplayName("Admin.Orders.List.BillingLastName")]
-        
         public string BillingLastName { get; set; }
 
         [GrandResourceDisplayName("Admin.Orders.List.OrderStatus")]
         public int OrderStatusId { get; set; }
+
         [GrandResourceDisplayName("Admin.Orders.List.PaymentStatus")]
         public int PaymentStatusId { get; set; }
+
         [GrandResourceDisplayName("Admin.Orders.List.ShippingStatus")]
         public int ShippingStatusId { get; set; }
 

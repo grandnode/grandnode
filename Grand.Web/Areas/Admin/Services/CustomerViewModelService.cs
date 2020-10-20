@@ -10,7 +10,7 @@ using Grand.Domain.Payments;
 using Grand.Domain.Shipping;
 using Grand.Domain.Tax;
 using Grand.Framework.Extensions;
-using Grand.Core.Models;
+using Grand.Framework.Mvc.Models;
 using Grand.Services.Affiliates;
 using Grand.Services.Authentication.External;
 using Grand.Services.Catalog;
@@ -42,7 +42,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -68,7 +67,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IVendorService _vendorService;
         private readonly IStoreContext _storeContext;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly IOrderService _orderService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
@@ -117,7 +115,6 @@ namespace Grand.Web.Areas.Admin.Services
             IVendorService vendorService,
             IStoreContext storeContext,
             IPriceFormatter priceFormatter,
-            IOrderService orderService,
             ICustomerActivityService customerActivityService,
             IPriceCalculationService priceCalculationService,
             IProductAttributeFormatter productAttributeFormatter,
@@ -166,7 +163,6 @@ namespace Grand.Web.Areas.Admin.Services
             _vendorService = vendorService;
             _storeContext = storeContext;
             _priceFormatter = priceFormatter;
-            _orderService = orderService;
             _customerActivityService = customerActivityService;
             _priceCalculationService = priceCalculationService;
             _productAttributeFormatter = productAttributeFormatter;
@@ -1276,33 +1272,6 @@ namespace Grand.Web.Areas.Admin.Services
             address.CustomAttributes = customAttributes;
             await _customerService.UpdateCustomerinAdminPanel(customer);
             return address;
-        }
-
-        public virtual async Task<(IEnumerable<CustomerModel.OrderModel> orderModels, int totalCount)> PrepareOrderModel(string customerId, int pageIndex, int pageSize)
-        {
-            var orders = await _orderService.SearchOrders(customerId: customerId, pageIndex: pageIndex - 1, pageSize: pageSize);
-            var ordersModelList = new List<CustomerModel.OrderModel>();
-            foreach (var order in orders)
-            {
-                var store = await _storeService.GetStoreById(order.StoreId);
-                var orderModel = new CustomerModel.OrderModel {
-                    Id = order.Id,
-                    OrderNumber = order.OrderNumber,
-                    OrderCode = order.Code,
-                    OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    OrderStatusId = order.OrderStatusId,
-                    PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    PaymentStatusId = order.PaymentStatusId,
-                    ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    ShippingStatusId = order.ShippingStatusId,
-                    OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
-                    StoreName = store != null ? store.Shortcut : "Unknown",
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
-                };
-                ordersModelList.Add(orderModel);
-            }
-            return (ordersModelList, orders.TotalCount);
-
         }
 
         public virtual CustomerReportsModel PrepareCustomerReportsModel()

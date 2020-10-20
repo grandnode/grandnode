@@ -801,7 +801,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
-        public async Task<IActionResult> OrderList(string customerId, DataSourceRequest command)
+        public async Task<IActionResult> OrderList(string customerId, DataSourceRequest command, 
+            [FromServices] IOrderViewModelService orderViewModelService)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Json(new DataSourceResult {
@@ -809,7 +810,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Total = 0
                 });
 
-            var (orderModels, totalCount) = await _customerViewModelService.PrepareOrderModel(customerId, command.Page, command.PageSize);
+            var model = new OrderListModel {
+                CustomerId = customerId
+            };
+            if (_workContext.CurrentCustomer.IsStaff())
+                model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
+            if (_workContext.CurrentVendor != null)
+                model.VendorId = _workContext.CurrentVendor.Id;
+
+            var (orderModels, aggregator, totalCount) = await orderViewModelService.PrepareOrderModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult {
                 Data = orderModels.ToList(),
                 Total = totalCount
