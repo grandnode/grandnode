@@ -183,6 +183,7 @@ namespace Grand.Services.Orders
         /// Get order average report
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
+        /// <param name="customerId">Customer identifier; pass 0 to ignore this parameter</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
@@ -196,7 +197,7 @@ namespace Grand.Services.Orders
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <param name="tagid">Tag ident.</param>
         /// <returns>Result</returns>
-        public virtual async Task<OrderAverageReportLine> GetOrderAverageReportLine(string storeId = "",
+        public virtual async Task<OrderAverageReportLine> GetOrderAverageReportLine(string storeId = "", string customerId = "",
             string vendorId = "", string billingCountryId = "", 
             string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
@@ -224,6 +225,9 @@ namespace Grand.Services.Orders
 
             if (!String.IsNullOrEmpty(orderId))
                 filter = filter & builder.Where(o => o.StoreId == storeId);
+            
+            if (!string.IsNullOrEmpty(customerId))
+                filter = filter & builder.Where(o => o.CustomerId == customerId);
 
             if (!String.IsNullOrEmpty(vendorId))
             {
@@ -575,6 +579,7 @@ namespace Grand.Services.Orders
         /// Get profit report
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
+        /// <param name="CustomerId">Customer identifier; pass 0 to ignore this parameter</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
@@ -587,7 +592,7 @@ namespace Grand.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="tagid">Tag ident.</param>
         /// <returns>Result</returns>
-        public virtual async Task<decimal> ProfitReport(string storeId = "", string vendorId = "",
+        public virtual async Task<decimal> ProfitReport(string storeId = "", string customerId = "", string vendorId = "",
             string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
@@ -608,16 +613,23 @@ namespace Grand.Services.Orders
             var query = _orderRepository.Table;
 
             query = query.Where(o => !o.Deleted);
+            
             if (!String.IsNullOrEmpty(storeId))
                 query = query.Where(o => o.StoreId == storeId);
+
+            if (!String.IsNullOrEmpty(customerId))
+                query = query.Where(o => o.CustomerId == customerId);
+
             if (!String.IsNullOrEmpty(orderId))
                 query = query.Where(o => o.Id == orderId);
+            
             if (!String.IsNullOrEmpty(vendorId))
             {
                 query = query
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.VendorId == vendorId));
             }
+
             if (!String.IsNullOrEmpty(billingCountryId))
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
             
@@ -652,6 +664,7 @@ namespace Grand.Services.Orders
             var reportSummary = await GetOrderAverageReportLine(
                 storeId: storeId,
                 vendorId: vendorId,
+                customerId: customerId,
                 billingCountryId: billingCountryId,
                 orderId: orderId,
                 paymentMethodSystemName: paymentMethodSystemName,
