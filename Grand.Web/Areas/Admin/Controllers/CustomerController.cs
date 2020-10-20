@@ -46,7 +46,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ILocalizationService _localizationService;
-        private readonly CustomerSettings _customerSettings;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IExportManager _exportManager;
@@ -57,6 +56,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDownloadService _downloadService;
         private readonly IPermissionService _permissionService;
+        private readonly CustomerSettings _customerSettings;
         #endregion
 
         #region Constructors
@@ -70,7 +70,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
             ILocalizationService localizationService,
-            CustomerSettings customerSettings,
             IWorkContext workContext,
             IStoreContext storeContext,
             IExportManager exportManager,
@@ -80,7 +79,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IAddressAttributeService addressAttributeService,
             IWorkflowMessageService workflowMessageService,
             IDownloadService downloadService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            CustomerSettings customerSettings)
         {
             _customerService = customerService;
             _productService = productService;
@@ -91,7 +91,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             _genericAttributeService = genericAttributeService;
             _customerRegistrationService = customerRegistrationService;
             _localizationService = localizationService;
-            _customerSettings = customerSettings;
             _workContext = workContext;
             _storeContext = storeContext;
             _exportManager = exportManager;
@@ -102,6 +101,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _workflowMessageService = workflowMessageService;
             _downloadService = downloadService;
             _permissionService = permissionService;
+            _customerSettings = customerSettings;
         }
 
         #endregion

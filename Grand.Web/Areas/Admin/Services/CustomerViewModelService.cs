@@ -52,27 +52,12 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IRewardPointsService _rewardPointsService;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly TaxSettings _taxSettings;
-        private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly CustomerSettings _customerSettings;
-        private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
         private readonly IVendorService _vendorService;
         private readonly IStoreContext _storeContext;
-        private readonly IPriceFormatter _priceFormatter;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IForumService _forumService;
-        private readonly IExternalAuthenticationService _openAuthenticationService;
-        private readonly AddressSettings _addressSettings;
-        private readonly CommonSettings _commonSettings;
         private readonly IStoreService _storeService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
@@ -80,15 +65,18 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAffiliateService _affiliateService;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
-        private readonly IContactUsService _contactUsService;
         private readonly ICustomerTagService _customerTagService;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
-        private readonly IDownloadService _downloadService;
         private readonly IServiceProvider _serviceProvider;
+
+        private readonly DateTimeSettings _dateTimeSettings;
+        private readonly TaxSettings _taxSettings;
+        private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly AddressSettings _addressSettings;
+        private readonly CommonSettings _commonSettings;
 
         public CustomerViewModelService(
             ICustomerService customerService,
@@ -99,27 +87,12 @@ namespace Grand.Web.Areas.Admin.Services
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IRewardPointsService rewardPointsService,
-            DateTimeSettings dateTimeSettings,
-            TaxSettings taxSettings,
-            RewardPointsSettings rewardPointsSettings,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
-            CustomerSettings customerSettings,
-            ITaxService taxService,
             IWorkContext workContext,
             IVendorService vendorService,
             IStoreContext storeContext,
-            IPriceFormatter priceFormatter,
             ICustomerActivityService customerActivityService,
-            IPriceCalculationService priceCalculationService,
-            IProductAttributeFormatter productAttributeFormatter,
-            IQueuedEmailService queuedEmailService,
-            EmailAccountSettings emailAccountSettings,
-            IEmailAccountService emailAccountService,
-            IForumService forumService,
-            IExternalAuthenticationService openAuthenticationService,
-            AddressSettings addressSettings,
-            CommonSettings commonSettings,
             IStoreService storeService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
@@ -127,15 +100,17 @@ namespace Grand.Web.Areas.Admin.Services
             IAddressAttributeService addressAttributeService,
             IAddressAttributeFormatter addressAttributeFormatter,
             IAffiliateService affiliateService,
-            IWorkflowMessageService workflowMessageService,
-            IBackInStockSubscriptionService backInStockSubscriptionService,
-            IContactUsService contactUsService,
             ICustomerTagService customerTagService,
             IProductService productService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
-            IDownloadService downloadService,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            CustomerSettings customerSettings,
+            DateTimeSettings dateTimeSettings,
+            TaxSettings taxSettings,
+            RewardPointsSettings rewardPointsSettings,
+            AddressSettings addressSettings,
+            CommonSettings commonSettings)
         {
             _customerService = customerService;
             _customerProductService = customerProductService;
@@ -152,19 +127,10 @@ namespace Grand.Web.Areas.Admin.Services
             _stateProvinceService = stateProvinceService;
             _customerSettings = customerSettings;
             _commonSettings = commonSettings;
-            _taxService = taxService;
             _workContext = workContext;
             _vendorService = vendorService;
             _storeContext = storeContext;
-            _priceFormatter = priceFormatter;
             _customerActivityService = customerActivityService;
-            _priceCalculationService = priceCalculationService;
-            _productAttributeFormatter = productAttributeFormatter;
-            _queuedEmailService = queuedEmailService;
-            _emailAccountSettings = emailAccountSettings;
-            _emailAccountService = emailAccountService;
-            _forumService = forumService;
-            _openAuthenticationService = openAuthenticationService;
             _addressSettings = addressSettings;
             _storeService = storeService;
             _customerAttributeParser = customerAttributeParser;
@@ -173,17 +139,12 @@ namespace Grand.Web.Areas.Admin.Services
             _addressAttributeService = addressAttributeService;
             _addressAttributeFormatter = addressAttributeFormatter;
             _affiliateService = affiliateService;
-            _workflowMessageService = workflowMessageService;
-            _backInStockSubscriptionService = backInStockSubscriptionService;
-            _contactUsService = contactUsService;
             _customerTagService = customerTagService;
             _productService = productService;
             _categoryService = categoryService;
             _manufacturerService = manufacturerService;
-            _downloadService = downloadService;
             _serviceProvider = serviceProvider;
         }
-
 
         #region Utilities
 
@@ -268,11 +229,11 @@ namespace Grand.Web.Areas.Admin.Services
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-
+            var openAuthenticationService = _serviceProvider.GetRequiredService<IExternalAuthenticationService>();
             var result = new List<CustomerModel.AssociatedExternalAuthModel>();
-            foreach (var record in await _openAuthenticationService.GetExternalIdentifiersFor(customer))
+            foreach (var record in await openAuthenticationService.GetExternalIdentifiersFor(customer))
             {
-                var method = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
+                var method = openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
                 if (method == null)
                     continue;
 
@@ -1091,9 +1052,13 @@ namespace Grand.Web.Areas.Admin.Services
 
         public async Task SendEmail(Customer customer, CustomerModel.SendEmailModel model)
         {
-            var emailAccount = await _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+            var emailAccountService = _serviceProvider.GetRequiredService<IEmailAccountService>();
+            var emailAccountSettings = _serviceProvider.GetRequiredService<EmailAccountSettings>();
+            var queuedEmailService = _serviceProvider.GetRequiredService<IQueuedEmailService>();
+
+            var emailAccount = await emailAccountService.GetEmailAccountById(emailAccountSettings.DefaultEmailAccountId);
             if (emailAccount == null)
-                emailAccount = (await _emailAccountService.GetAllEmailAccounts()).FirstOrDefault();
+                emailAccount = (await emailAccountService.GetAllEmailAccounts()).FirstOrDefault();
             if (emailAccount == null)
                 throw new GrandException("Email account can't be loaded");
 
@@ -1110,11 +1075,12 @@ namespace Grand.Web.Areas.Admin.Services
                 DontSendBeforeDateUtc = (model.SendImmediately || !model.DontSendBeforeDate.HasValue) ?
                         null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value)
             };
-            await _queuedEmailService.InsertQueuedEmail(email);
+            await queuedEmailService.InsertQueuedEmail(email);
             await _customerActivityService.InsertActivity("CustomerAdmin.SendEmail", "", _localizationService.GetResource("ActivityLog.SendEmailfromAdminPanel"), customer, model.Subject);
         }
         public virtual async Task SendPM(Customer customer, CustomerModel.SendPmModel model)
         {
+            var forumService = _serviceProvider.GetRequiredService<IForumService>();
             var privateMessage = new PrivateMessage {
                 StoreId = _storeContext.CurrentStore.Id,
                 ToCustomerId = customer.Id,
@@ -1127,7 +1093,7 @@ namespace Grand.Web.Areas.Admin.Services
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            await _forumService.InsertPrivateMessage(privateMessage);
+            await forumService.InsertPrivateMessage(privateMessage);
             await _customerActivityService.InsertActivity("CustomerAdmin.SendPM", "", _localizationService.GetResource("ActivityLog.SendPMfromAdminPanel"), customer, model.Subject);
         }
         public virtual async Task<IEnumerable<CustomerModel.RewardPointsHistoryModel>> PrepareRewardPointsHistoryModel(string customerId)
@@ -1272,7 +1238,9 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var customer = await _customerService.GetCustomerById(customerId);
             var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == cartTypeId).ToList();
-
+            var taxService = _serviceProvider.GetRequiredService<ITaxService>();
+            var priceCalculationService = _serviceProvider.GetRequiredService<IPriceCalculationService>();
+            var priceFormatter = _serviceProvider.GetRequiredService<IPriceFormatter>();
             var items = new List<ShoppingCartItemModel>();
             foreach (var sci in cart)
             {
@@ -1284,9 +1252,9 @@ namespace Grand.Web.Areas.Admin.Services
                     ProductId = sci.ProductId,
                     Quantity = sci.Quantity,
                     ProductName = product.Name,
-                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml),
-                    UnitPrice = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci)).unitprice)).productprice),
-                    Total = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetSubTotal(sci)).subTotal)).productprice),
+                    AttributeInfo = await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, sci.AttributesXml),
+                    UnitPrice = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetUnitPrice(sci)).unitprice)).productprice),
+                    Total = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetSubTotal(sci)).subTotal)).productprice),
                     UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
                 };
                 items.Add(sciModel);
@@ -1450,7 +1418,8 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<(IEnumerable<ContactFormModel> contactFormModels, int totalCount)> PrepareContactFormModel(string customerId, string vendorId, int pageIndex, int pageSize)
         {
-            var contactform = await _contactUsService.GetAllContactUs(storeId: "", vendorId: vendorId, customerId: customerId, pageIndex: pageIndex - 1, pageSize: pageSize);
+            var contactUsService = _serviceProvider.GetRequiredService<IContactUsService>();
+            var contactform = await contactUsService.GetAllContactUs(storeId: "", vendorId: vendorId, customerId: customerId, pageIndex: pageIndex - 1, pageSize: pageSize);
             var items = new List<ContactFormModel>();
             foreach (var x in contactform)
             {
@@ -1466,7 +1435,8 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<(IEnumerable<CustomerModel.BackInStockSubscriptionModel> backInStockSubscriptionModels, int totalCount)> PrepareBackInStockSubscriptionModel(string customerId, int pageIndex, int pageSize)
         {
-            var subscriptions = await _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customerId, "", pageIndex - 1, pageSize);
+            var backInStockSubscriptionService = _serviceProvider.GetRequiredService<IBackInStockSubscriptionService>();
+            var subscriptions = await backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customerId, "", pageIndex - 1, pageSize);
             var items = new List<CustomerModel.BackInStockSubscriptionModel>();
             foreach (var x in subscriptions)
             {
@@ -1477,7 +1447,8 @@ namespace Grand.Web.Areas.Admin.Services
                     StoreName = store != null ? store.Shortcut : "Unknown",
                     ProductId = x.ProductId,
                     ProductName = product != null ? product.Name : "Unknown",
-                    AttributeDescription = string.IsNullOrEmpty(x.AttributeXml) ? "" : await _productAttributeFormatter.FormatAttributes(product, x.AttributeXml),
+                    AttributeDescription = string.IsNullOrEmpty(x.AttributeXml) ? "" : 
+                        await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, x.AttributeXml),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                 };
                 items.Add(m);
@@ -1486,11 +1457,12 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<IList<CustomerModel.CustomerNote>> PrepareCustomerNoteList(string customerId)
         {
+            var downloadService = _serviceProvider.GetRequiredService<IDownloadService>();
             var customerNoteModels = new List<CustomerModel.CustomerNote>();
             foreach (var customerNote in (await _customerService.GetCustomerNotes(customerId))
                 .OrderByDescending(on => on.CreatedOnUtc))
             {
-                var download = await _downloadService.GetDownloadById(customerNote.DownloadId);
+                var download = await downloadService.GetDownloadById(customerNote.DownloadId);
                 customerNoteModels.Add(new CustomerModel.CustomerNote {
                     Id = customerNote.Id,
                     CustomerId = customerId,
@@ -1520,7 +1492,8 @@ namespace Grand.Web.Areas.Admin.Services
             if (displayToCustomer)
             {
                 //email
-                await _workflowMessageService.SendNewCustomerNoteAddedCustomerNotification(customerNote,
+                var workflowMessageService = _serviceProvider.GetRequiredService<IWorkflowMessageService>();
+                await workflowMessageService.SendNewCustomerNoteAddedCustomerNotification(customerNote,
                     await _customerService.GetCustomerById(customerId), _storeContext.CurrentStore, _workContext.WorkingLanguage.Id);
 
             }
@@ -1533,7 +1506,6 @@ namespace Grand.Web.Areas.Admin.Services
                 throw new ArgumentException("No customer note found with the specified id");
 
             await _customerService.DeleteCustomerNote(customerNote);
-
         }
     }
 }
