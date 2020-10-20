@@ -1,5 +1,4 @@
-﻿using Grand.Domain.Catalog;
-using Grand.Domain.Common;
+﻿using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Common;
@@ -31,9 +30,6 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task PrepareAddressModel(CustomerAddressModel model, Address address, Customer customer, bool excludeProperties);
         Task<Address> InsertAddressModel(Customer customer, CustomerAddressModel model, string customAttributes);
         Task<Address> UpdateAddressModel(Customer customer, Address address, CustomerAddressModel model, string customAttributes);
-        CustomerReportsModel PrepareCustomerReportsModel();
-        Task<IList<RegisteredCustomerReportLineModel>> GetReportRegisteredCustomersModel(string storeId);
-        Task<(IEnumerable<BestCustomerReportLineModel> bestCustomerReportLineModels, int totalCount)> PrepareBestCustomerReportLineModel(BestCustomersReportModel model, int orderBy, int pageIndex, int pageSize);
         Task<IList<ShoppingCartItemModel>> PrepareShoppingCartItemModel(string customerId, int cartTypeId);
         Task DeleteCart(Customer customer, string id);
         Task<(IEnumerable<CustomerModel.ProductPriceModel> productPriceModels, int totalCount)> PrepareProductPriceModel(string customerId, int pageIndex, int pageSize);

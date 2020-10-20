@@ -26,6 +26,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<CustomerActionViewModelService>().As<ICustomerActionViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerAttributeViewModelService>().As<ICustomerAttributeViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerViewModelService>().As<ICustomerViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReportViewModelService>().As<ICustomerReportViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerReminderViewModelService>().As<ICustomerReminderViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerRoleViewModelService>().As<ICustomerRoleViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerTagViewModelService>().As<ICustomerTagViewModelService>().InstancePerLifetimeScope();

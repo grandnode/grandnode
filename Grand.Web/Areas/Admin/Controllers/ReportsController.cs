@@ -34,11 +34,10 @@ namespace Grand.Web.Areas.Admin.Controllers
     [PermissionAuthorize(PermissionSystemName.Reports)]
     public class ReportsController : BaseAdminController
     {
-
         private readonly IOrderService _orderService;
         private readonly IOrderReportService _orderReportService;
         private readonly ICustomerReportService _customerReportService;
-        private readonly ICustomerViewModelService _customerViewModelService;
+        private readonly ICustomerReportViewModelService _customerReportViewModelService;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
         private readonly IPriceFormatter _priceFormatter;
@@ -54,7 +53,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public ReportsController(IOrderService orderService,
         IOrderReportService orderReportService,
         ICustomerReportService customerReportService,
-        ICustomerViewModelService customerViewModelService,
+        ICustomerReportViewModelService customerReportViewModelService,
         IPermissionService permissionService,
         IWorkContext workContext,
         IPriceFormatter priceFormatter,
@@ -70,7 +69,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _orderService = orderService;
             _orderReportService = orderReportService;
             _customerReportService = customerReportService;
-            _customerViewModelService = customerViewModelService;
+            _customerReportViewModelService = customerReportViewModelService;
             _permissionService = permissionService;
             _workContext = workContext;
             _priceFormatter = priceFormatter;
@@ -659,7 +658,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var model = _customerViewModelService.PrepareCustomerReportsModel();
+            var model = _customerReportViewModelService.PrepareCustomerReportsModel();
             return View(model);
         }
 
@@ -669,7 +668,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentCustomer.IsStaff())
                 model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
 
-            var (bestCustomerReportLineModels, totalCount) = await _customerViewModelService.PrepareBestCustomerReportLineModel(model, 1, command.Page, command.PageSize);
+            var (bestCustomerReportLineModels, totalCount) = await _customerReportViewModelService.PrepareBestCustomerReportLineModel(model, 1, command.Page, command.PageSize);
             var gridModel = new DataSourceResult {
                 Data = bestCustomerReportLineModels.ToList(),
                 Total = totalCount
@@ -683,7 +682,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentCustomer.IsStaff())
                 model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
 
-            var (bestCustomerReportLineModels, totalCount) = await _customerViewModelService.PrepareBestCustomerReportLineModel(model, 2, command.Page, command.PageSize);
+            var (bestCustomerReportLineModels, totalCount) = await _customerReportViewModelService.PrepareBestCustomerReportLineModel(model, 2, command.Page, command.PageSize);
             var gridModel = new DataSourceResult {
                 Data = bestCustomerReportLineModels.ToList(),
                 Total = totalCount
@@ -698,7 +697,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentCustomer.IsStaff())
                 storeId = _workContext.CurrentCustomer.StaffStoreId;
 
-            var model = await _customerViewModelService.GetReportRegisteredCustomersModel(storeId);
+            var model = await _customerReportViewModelService.GetReportRegisteredCustomersModel(storeId);
             var gridModel = new DataSourceResult {
                 Data = model,
                 Total = model.Count
@@ -720,10 +719,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
-
         #endregion
-
-
-
     }
 }
