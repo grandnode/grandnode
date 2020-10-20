@@ -139,7 +139,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaDescription = knowledgebaseCategory.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaKeywords = knowledgebaseCategory.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaTitle = knowledgebaseCategory.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = knowledgebaseCategory.GetSeName(languageId, false, false);
+                locale.SeName = knowledgebaseCategory.GetSeName(languageId, false);
             });
 
             await model.PrepareACLModel(knowledgebaseCategory, false, _customerService);
@@ -253,7 +253,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaDescription = knowledgebaseArticle.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaKeywords = knowledgebaseArticle.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaTitle = knowledgebaseArticle.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = knowledgebaseArticle.GetSeName(languageId, false, false);
+                locale.SeName = knowledgebaseArticle.GetSeName(languageId, false);
             });
 
             await model.PrepareACLModel(knowledgebaseArticle, false, _customerService);

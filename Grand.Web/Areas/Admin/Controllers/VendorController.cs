@@ -125,7 +125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaKeywords = vendor.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = vendor.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = vendor.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = vendor.GetSeName(languageId, false, false);
+                locale.SeName = vendor.GetSeName(languageId, false);
             });
             //discounts
             await _vendorViewModelService.PrepareDiscountModel(model, vendor, false);

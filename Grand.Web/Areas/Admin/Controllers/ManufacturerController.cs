@@ -212,7 +212,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaKeywords = manufacturer.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = manufacturer.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = manufacturer.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = manufacturer.GetSeName(languageId, false, false);
+                locale.SeName = manufacturer.GetSeName(languageId, false);
             });
             //templates
             await _manufacturerViewModelService.PrepareTemplatesModel(model);

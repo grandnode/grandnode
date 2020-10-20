@@ -17,7 +17,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                 .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
-                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)));
+                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true)));
 
             CreateMap<VendorModel, Vendor>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())

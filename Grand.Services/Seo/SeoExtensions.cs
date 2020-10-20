@@ -34,7 +34,7 @@ namespace Grand.Services.Seo
         {
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
-            string seName = GetSeName(productTag.GetLocalized(x => x.Name, languageId), false, false);
+            string seName = GenerateSlug(productTag.GetLocalized(x => x.Name, languageId), false, false);
             return seName;
         }
 
@@ -51,7 +51,7 @@ namespace Grand.Services.Seo
         {
             if (forumGroup == null)
                 throw new ArgumentNullException("forumGroup");
-            string seName = GetSeName(forumGroup.Name, false, false);
+            string seName = GenerateSlug(forumGroup.Name, false, false);
             return seName;
         }
 
@@ -64,7 +64,7 @@ namespace Grand.Services.Seo
         {
             if (forum == null)
                 throw new ArgumentNullException("forum");
-            string seName = GetSeName(forum.Name, false, false);
+            string seName = GenerateSlug(forum.Name, false, false);
             return seName;
         }
 
@@ -77,7 +77,7 @@ namespace Grand.Services.Seo
         {
             if (forumTopic == null)
                 throw new ArgumentNullException("forumTopic");
-            string seName = GetSeName(forumTopic.Subject, false, false);
+            string seName = GenerateSlug(forumTopic.Subject, false, false);
 
             // Trim SE name to avoid URLs that are too long
             var maxLength = 100;
@@ -100,21 +100,19 @@ namespace Grand.Services.Seo
         /// <param name="entity">Entity</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
-        /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Search engine  name (slug)</returns>
-        public static string GetSeName<T>(this T entity, string languageId, bool returnDefaultValue = true,
-            bool ensureTwoPublishedLanguages = true)
+        public static string GetSeName<T>(this T entity, string languageId, bool returnDefaultValue = true)
             where T : BaseEntity, ISlugSupported, ILocalizedEntity
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
             string seName = string.Empty;
-            if (!String.IsNullOrEmpty(languageId))
+            if (!string.IsNullOrEmpty(languageId))
             {
                 var value = entity.Locales.Where(x => x.LanguageId == languageId && x.LocaleKey == "SeName").FirstOrDefault();
                 if (value != null)
-                    if (!String.IsNullOrEmpty(value.LocaleValue))
+                    if (!string.IsNullOrEmpty(value.LocaleValue))
                         seName = value.LocaleValue;
             }
 
@@ -200,7 +198,7 @@ namespace Grand.Services.Seo
         /// <returns>Result</returns>
         public static string GetSeName(string name, SeoSettings seoSettings)
         {
-            return GetSeName(name, seoSettings.ConvertNonWesternChars, seoSettings.AllowUnicodeCharsInUrls, seoSettings.SeoCharConversion);
+            return GenerateSlug(name, seoSettings.ConvertNonWesternChars, seoSettings.AllowUnicodeCharsInUrls, seoSettings.SeoCharConversion);
         }
 
         /// <summary>
@@ -210,10 +208,11 @@ namespace Grand.Services.Seo
         /// <param name="convertNonWesternChars">A value indicating whether non western chars should be converted</param>
         /// <param name="allowUnicodeCharsInUrls">A value indicating whether Unicode chars are allowed</param>
         /// <returns>Result</returns>
-        public static string GetSeName(string name, bool convertNonWesternChars, bool allowUnicodeCharsInUrls, string charConversions = null)
+        public static string GenerateSlug(string name, bool convertNonWesternChars, bool allowUnicodeCharsInUrls, string charConversions = null)
         {
-            if (String.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 return name;
+
             string okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
             name = name.Trim().ToLowerInvariant();
 

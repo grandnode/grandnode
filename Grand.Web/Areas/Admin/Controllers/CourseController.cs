@@ -209,7 +209,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaKeywords = course.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = course.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = course.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = course.GetSeName(languageId, false, false);
+                locale.SeName = course.GetSeName(languageId, false);
             });
 
             model = await _courseViewModelService.PrepareCourseModel(model);

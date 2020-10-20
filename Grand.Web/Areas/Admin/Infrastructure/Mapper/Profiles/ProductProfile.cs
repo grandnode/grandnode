@@ -34,7 +34,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                 .ForMember(dest => dest.CopyProductModel, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductWarehouseInventoryModels, mo => mo.Ignore())
                 .ForMember(dest => dest.IsLoggedInAsVendor, mo => mo.Ignore())
-                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
+                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true)))
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())

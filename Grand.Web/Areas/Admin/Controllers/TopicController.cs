@@ -156,7 +156,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaKeywords = topic.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = topic.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = topic.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = topic.GetSeName(languageId, false, false);
+                locale.SeName = topic.GetSeName(languageId, false);
             });
             return View(model);
         }

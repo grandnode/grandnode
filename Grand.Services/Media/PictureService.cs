@@ -290,7 +290,7 @@ namespace Grand.Services.Media
         /// <returns>Result</returns>
         public virtual string GetPictureSeName(string name)
         {
-            return SeoExtensions.GetSeName(name, true, false);
+            return SeoExtensions.GenerateSlug(name, true, false);
         }
 
         /// <summary>

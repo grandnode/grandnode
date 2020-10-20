@@ -14,7 +14,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
         {
             CreateMap<BlogPost, BlogPostModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
+                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true)))
                 .ForMember(dest => dest.Comments, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())

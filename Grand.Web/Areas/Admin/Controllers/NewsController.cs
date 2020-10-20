@@ -145,7 +145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaKeywords = newsItem.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = newsItem.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = newsItem.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = newsItem.GetSeName(languageId, false, false);
+                locale.SeName = newsItem.GetSeName(languageId, false);
             });
             return View(model);
         }

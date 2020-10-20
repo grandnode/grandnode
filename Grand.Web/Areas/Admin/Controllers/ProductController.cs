@@ -228,7 +228,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaKeywords = product.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = product.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = product.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = product.GetSeName(languageId, false, false);
+                locale.SeName = product.GetSeName(languageId, false);
             });
 
             await model.PrepareACLModel(product, false, _customerService);

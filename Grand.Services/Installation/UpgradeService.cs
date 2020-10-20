@@ -619,7 +619,7 @@ namespace Grand.Services.Installation
 
                 await productRepository.Collection.UpdateManyAsync(filter, update);
 
-                tag.SeName = SeoExtensions.GetSeName(tag.Name, false, false);
+                tag.SeName = SeoExtensions.GenerateSlug(tag.Name, false, false);
                 await productTagService.UpdateProductTag(tag);
             }
 
@@ -953,10 +953,10 @@ namespace Grand.Services.Installation
 
             foreach (var specificationAttribute in specification.Table.ToList())
             {
-                specificationAttribute.SeName = SeoExtensions.GetSeName(specificationAttribute.Name, false, false);
+                specificationAttribute.SeName = SeoExtensions.GenerateSlug(specificationAttribute.Name, false, false);
                 specificationAttribute.SpecificationAttributeOptions.ToList().ForEach(x =>
                 {
-                    x.SeName = SeoExtensions.GetSeName(x.Name, false, false);
+                    x.SeName = SeoExtensions.GenerateSlug(x.Name, false, false);
                 });
                 await specification.UpdateAsync(specificationAttribute);
             }
@@ -968,7 +968,7 @@ namespace Grand.Services.Installation
             var attributes = _serviceProvider.GetRequiredService<IRepository<ProductAttribute>>();
             foreach (var attribute in attributes.Table.ToList())
             {
-                attribute.SeName = SeoExtensions.GetSeName(attribute.Name, false, false);
+                attribute.SeName = SeoExtensions.GenerateSlug(attribute.Name, false, false);
                 await attributes.UpdateAsync(attribute);
             }
 
@@ -980,7 +980,7 @@ namespace Grand.Services.Installation
 
             foreach (var category in blogcategories.Table.ToList())
             {
-                category.SeName = SeoExtensions.GetSeName(category.Name, false, false);
+                category.SeName = SeoExtensions.GenerateSlug(category.Name, false, false);
                 await blogcategories.UpdateAsync(category);
             }
 
