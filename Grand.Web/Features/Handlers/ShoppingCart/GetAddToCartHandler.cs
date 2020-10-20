@@ -114,7 +114,9 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             if (request.CartType != ShoppingCartType.Auctions)
             {
                 var sci = request.Customer.ShoppingCartItems.FirstOrDefault(x => x.ProductId == request.Product.Id 
-                && (string.IsNullOrEmpty(x.AttributesXml) ? "" : x.AttributesXml) == request.AttributesXml);
+                && (string.IsNullOrEmpty(x.AttributesXml) ? "" : x.AttributesXml) == request.AttributesXml 
+                && x.EnteredPrice == request.CustomerEnteredPrice);
+
                 model.ItemQuantity = sci.Quantity;
 
                 //unit prices
@@ -128,8 +130,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     decimal taxRate = productprices.taxRate;
                     decimal shoppingCartUnitPriceWithDiscountBase = productprices.productprice;
                     decimal shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, request.Currency);
-                    model.Price = request.CustomerEnteredPrice == 0 ? _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount) : _priceFormatter.FormatPrice(request.CustomerEnteredPrice);
-                    model.DecimalPrice = request.CustomerEnteredPrice == 0 ? shoppingCartUnitPriceWithDiscount : request.CustomerEnteredPrice;
+                    model.Price = !request.CustomerEnteredPrice.HasValue ? _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount) : _priceFormatter.FormatPrice(request.CustomerEnteredPrice.Value);
+                    model.DecimalPrice = !request.CustomerEnteredPrice.HasValue ? shoppingCartUnitPriceWithDiscount : request.CustomerEnteredPrice.Value;
                     model.TotalPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount * sci.Quantity);
                 }
 

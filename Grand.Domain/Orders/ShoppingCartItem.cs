@@ -35,7 +35,7 @@ namespace Grand.Domain.Orders
         /// <summary>
         /// Gets or sets the price enter by a customer
         /// </summary>
-        public decimal CustomerEnteredPrice { get; set; }
+        public decimal? EnteredPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity

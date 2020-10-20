@@ -487,7 +487,7 @@ namespace Grand.Services.Catalog
                 shoppingCartItem.ShoppingCartType,
                 shoppingCartItem.Quantity,
                 shoppingCartItem.AttributesXml,
-                shoppingCartItem.CustomerEnteredPrice,
+                shoppingCartItem.EnteredPrice,
                 shoppingCartItem.RentalStartDateUtc,
                 shoppingCartItem.RentalEndDateUtc,
                 includeDiscounts);
@@ -512,7 +512,7 @@ namespace Grand.Services.Catalog
             ShoppingCartType shoppingCartType,
             int quantity,
             string attributesXml,
-            decimal customerEnteredPrice,
+            decimal? customerEnteredPrice,
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts)
         {
@@ -527,8 +527,8 @@ namespace Grand.Services.Catalog
 
             decimal? finalPrice = null;
 
-            if (shoppingCartType == ShoppingCartType.Auctions && product.ProductType == ProductType.Auction)
-                finalPrice = customerEnteredPrice;
+            if (customerEnteredPrice.HasValue)
+                finalPrice = customerEnteredPrice.Value;
 
             if (!finalPrice.HasValue)
             {

@@ -77,7 +77,7 @@ namespace Grand.Services.Catalog
             ShoppingCartType shoppingCartType,
             int quantity,
             string attributesXml,
-            decimal customerEnteredPrice,
+            decimal? customerEnteredPrice,
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts);
 

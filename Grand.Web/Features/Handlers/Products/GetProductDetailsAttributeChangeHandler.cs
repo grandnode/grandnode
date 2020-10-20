@@ -94,7 +94,7 @@ namespace Grand.Web.Features.Handlers.Products
                 var unitprice = await _priceCalculationService.GetUnitPrice(request.Product,
                     request.Customer,
                     ShoppingCartType.ShoppingCart,
-                    1, attributeXml, 0,
+                    1, attributeXml, (decimal?)default,
                     rentalStartDate, rentalEndDate,
                     true);
 
