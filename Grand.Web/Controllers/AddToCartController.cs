@@ -149,7 +149,6 @@ namespace Grand.Web.Controllers
                 .GetShoppingCartItemWarnings(customer, new ShoppingCartItem() {
                     ShoppingCartType = cartType,
                     StoreId = _storeContext.CurrentStore.Id,
-                    CustomerEnteredPrice = decimal.Zero,
                     WarehouseId = warehouseId,
                     Quantity = quantityToValidate
                 },
@@ -185,7 +184,6 @@ namespace Grand.Web.Controllers
                 Customer = customer,
                 Quantity = quantity,
                 CartType = cartType,
-                CustomerEnteredPrice = 0,
                 AttributesXml = "",
                 Currency = _workContext.WorkingCurrency,
                 Store = _storeContext.CurrentStore,
@@ -347,7 +345,7 @@ namespace Grand.Web.Controllers
             #endregion
 
             #region Customer entered price
-            decimal customerEnteredPriceConverted = decimal.Zero;
+            decimal? customerEnteredPriceConverted = null;
             if (product.CustomerEntersPrice)
             {
                 foreach (string formKey in form.Keys)
@@ -662,7 +660,7 @@ namespace Grand.Web.Controllers
                 WarehouseId = warehouseId,
                 ShoppingCartType = ShoppingCartType.Auctions,
                 StoreId = _storeContext.CurrentStore.Id,
-                CustomerEnteredPrice = bid,
+                EnteredPrice = bid,
                 Quantity = 1
             };
 
@@ -695,7 +693,6 @@ namespace Grand.Web.Controllers
                 Customer = customer,
                 Quantity = 1,
                 CartType = ShoppingCartType.Auctions,
-                CustomerEnteredPrice = 0,
                 Currency = _workContext.WorkingCurrency,
                 Store = _storeContext.CurrentStore,
                 Language = _workContext.WorkingLanguage,

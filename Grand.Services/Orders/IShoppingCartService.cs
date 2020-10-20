@@ -150,7 +150,7 @@ namespace Grand.Services.Orders
             string productId,
             string warehouseId = null,
             string attributesXml = "",
-            decimal customerEnteredPrice = decimal.Zero,
+            decimal? customerEnteredPrice = null,
             DateTime? rentalStartDate = null,
             DateTime? rentalEndDate = null);
 
@@ -171,7 +171,7 @@ namespace Grand.Services.Orders
         /// <returns>Warnings</returns>
         Task<IList<string>> AddToCart(Customer customer, string productId,
             ShoppingCartType shoppingCartType, string storeId, string warehouseId = null, string attributesXml = null,
-            decimal customerEnteredPrice = decimal.Zero, 
+            decimal? customerEnteredPrice = null, 
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true, string reservationId = "", string parameter = "", string duration = "");
         
@@ -189,7 +189,7 @@ namespace Grand.Services.Orders
         /// <returns>Warnings</returns>
         Task<IList<string>> UpdateShoppingCartItem(Customer customer,
             string shoppingCartItemId, string warehouseId, string attributesXml,
-            decimal customerEnteredPrice,
+            decimal? customerEnteredPrice = null,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool resetCheckoutData = true, string reservationId = "", string sciId = "");
         
