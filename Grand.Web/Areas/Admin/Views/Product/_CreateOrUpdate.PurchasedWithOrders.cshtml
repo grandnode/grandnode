@@ -66,6 +66,12 @@
                         title: "@T("Admin.Orders.Fields.OrderStatus")",
                         width: 100,
                         minScreenWidth: 500,
+                        template: '<h4><span class="label label-' +
+                        '# if(OrderStatusId == 10) {#warning #} #' +
+                        '# if(OrderStatusId == 20) {#info #} #' +
+                        '# if(OrderStatusId == 30) {#success #} #' +
+                        '# if(OrderStatusId == 40) {#danger #} #' +
+                        '">#=OrderStatus#</span></h4>'
                     },{
                         field: "PaymentStatus",
                         title: "@T("Admin.Orders.Fields.PaymentStatus")",
