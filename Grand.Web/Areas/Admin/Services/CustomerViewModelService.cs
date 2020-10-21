@@ -1246,18 +1246,23 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 var store = await _storeService.GetStoreById(sci.StoreId);
                 var product = await _productService.GetProductById(sci.ProductId);
-                var sciModel = new ShoppingCartItemModel {
-                    Id = sci.Id,
-                    Store = store != null ? store.Shortcut : "Unknown",
-                    ProductId = sci.ProductId,
-                    Quantity = sci.Quantity,
-                    ProductName = product.Name,
-                    AttributeInfo = await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, sci.AttributesXml),
-                    UnitPrice = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetUnitPrice(sci)).unitprice)).productprice),
-                    Total = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetSubTotal(sci)).subTotal)).productprice),
-                    UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
-                };
-                items.Add(sciModel);
+                if (product != null)
+                {
+                    var price = (await taxService.GetProductPrice(product, (await priceCalculationService.GetUnitPrice(sci)).unitprice)).productprice;
+                    var sciModel = new ShoppingCartItemModel {
+                        Id = sci.Id,
+                        Store = store != null ? store.Shortcut : "Unknown",
+                        ProductId = sci.ProductId,
+                        Quantity = sci.Quantity,
+                        ProductName = product.Name,
+                        AttributeInfo = await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, sci.AttributesXml),
+                        UnitPrice = priceFormatter.FormatPrice(price),
+                        UnitPriceValue = price,
+                        Total = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetSubTotal(sci)).subTotal)).productprice),
+                        UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
+                    };
+                    items.Add(sciModel);
+                }
             }
             return items;
         }
@@ -1270,6 +1275,28 @@ namespace Grand.Web.Areas.Admin.Services
                     .DeleteShoppingCartItem(customer, cart, ensureOnlyActiveCheckoutAttributes: true);
                 await _customerService.UpdateCustomerinAdminPanel(customer);
             }
+        }
+
+        public virtual async Task<IList<string>> UpdateCart(Customer customer, string shoppingCartId, decimal? unitprice)
+        {
+            var cart = customer.ShoppingCartItems.FirstOrDefault(a => a.Id == shoppingCartId);
+            if (cart != null)
+            {
+                return await _serviceProvider.GetRequiredService<IShoppingCartService>()
+                    .UpdateShoppingCartItem(
+                    customer,
+                    shoppingCartId,
+                    cart.WarehouseId,
+                    cart.AttributesXml,
+                    unitprice,
+                    cart.RentalStartDateUtc,
+                    cart.RentalEndDateUtc,
+                    cart.Quantity,
+                    true,
+                    cart.ReservationId,
+                    shoppingCartId);
+            }
+            return new List<string>();
         }
         public virtual async Task<(IEnumerable<CustomerModel.ProductPriceModel> productPriceModels, int totalCount)> PrepareProductPriceModel(string customerId, int pageIndex, int pageSize)
         {

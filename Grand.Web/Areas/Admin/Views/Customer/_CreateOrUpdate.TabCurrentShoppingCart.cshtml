@@ -22,6 +22,12 @@ $(document).ready(function () {
                     dataType: "json",
                     data: addAntiForgeryToken
                 },
+                update: {
+                    url: "@Html.Raw(Url.Action("UpdateCart", "Customer", new { customerId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                },
                 destroy: {
                     url: "@Html.Raw(Url.Action("DeleteCart", "Customer", new { customerId = Model.Id }))",
                     type: "POST",
@@ -39,10 +45,16 @@ $(document).ready(function () {
                         ProductName: { editable: false, type: "string" },
                         Quantity: { editable: false, type: "number" },
                         UnitPrice: { editable: false, type: "string" },
+                        UnitPriceValue: { editable: true, type: "number" },
                         Total: { editable: false, type: "string" },
                         Store: { editable: false, type: "string" },
                         UpdatedOn: { editable: false, type: "date" },
                     }
+                }
+            },
+            requestEnd: function (e) {
+                if (e.type == "update") {
+                    this.read();
                 }
             },
             error: function(e) {
@@ -62,8 +74,9 @@ $(document).ready(function () {
         },
         editable: {
             confirmation: true,
-            mode: "inline"
+            mode: "incell"
         },
+        toolbar: ["save"],
         scrollable: false,
         columns: [{
             field: "ProductName",
@@ -76,9 +89,18 @@ $(document).ready(function () {
             title: "@T("Admin.CurrentCarts.Quantity")",
             width:200
         },{
-            field: "UnitPrice",
+            field: "UnitPriceValue",
             title: "@T("Admin.CurrentCarts.UnitPrice")",
-            width:200
+            width: 200,
+            format: "{0:n2}",
+            editor: function (container, options) {
+                        $('<input name="' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                format: "{0:n2}",
+                                decimals: 2
+                            });
+            }
         },{
             field: "Total",
             title: "@T("Admin.CurrentCarts.Total")",

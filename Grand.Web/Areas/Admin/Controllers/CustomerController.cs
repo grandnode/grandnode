@@ -916,7 +916,20 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [HttpPost]
+        public async Task<IActionResult> UpdateCart(string id, string customerId, decimal? unitPriceValue)
+        {
+            var customer = await _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "customerId");
 
+            var warnings = await _customerViewModelService.UpdateCart(customer, id, unitPriceValue);
+            if (warnings.Any())
+                return ErrorForKendoGridJson(string.Join(",", warnings));
+
+            return new NullJsonResult();
+        }
         [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost]
         public async Task<IActionResult> DeleteCart(string id, string customerId)

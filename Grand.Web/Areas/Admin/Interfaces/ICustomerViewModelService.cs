@@ -32,6 +32,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task<Address> UpdateAddressModel(Customer customer, Address address, CustomerAddressModel model, string customAttributes);
         Task<IList<ShoppingCartItemModel>> PrepareShoppingCartItemModel(string customerId, int cartTypeId);
         Task DeleteCart(Customer customer, string id);
+        Task<IList<string>> UpdateCart(Customer customer, string shoppingCartId, decimal? unitprice);
         Task<(IEnumerable<CustomerModel.ProductPriceModel> productPriceModels, int totalCount)> PrepareProductPriceModel(string customerId, int pageIndex, int pageSize);
         Task<(IEnumerable<CustomerModel.ProductModel> productModels, int totalCount)> PreparePersonalizedProducts(string customerId, int pageIndex, int pageSize);
         Task<CustomerModel.AddProductModel> PrepareCustomerModelAddProductModel();

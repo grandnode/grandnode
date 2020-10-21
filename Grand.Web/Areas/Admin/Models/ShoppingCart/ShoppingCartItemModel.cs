@@ -16,6 +16,7 @@ namespace Grand.Web.Areas.Admin.Models.ShoppingCart
 
         [GrandResourceDisplayName("Admin.CurrentCarts.UnitPrice")]
         public string UnitPrice { get; set; }
+        public decimal UnitPriceValue { get; set; }
         [GrandResourceDisplayName("Admin.CurrentCarts.Quantity")]
         public int Quantity { get; set; }
         [GrandResourceDisplayName("Admin.CurrentCarts.Total")]
