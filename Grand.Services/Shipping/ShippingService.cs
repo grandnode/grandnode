@@ -41,6 +41,11 @@ namespace Grand.Services.Shipping
         private const string WAREHOUSES_BY_ID_KEY = "Grand.warehouse.id-{0}";
 
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        private const string WAREHOUSES_ALL = "Grand.warehouse.all";
+
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string WAREHOUSES_PATTERN_KEY = "Grand.warehouse.";
@@ -378,26 +383,7 @@ namespace Grand.Services.Shipping
 
         #region Warehouses
 
-        /// <summary>
-        /// Deletes a warehouse
-        /// </summary>
-        /// <param name="warehouse">The warehouse</param>
-        public virtual async Task DeleteWarehouse(Warehouse warehouse)
-        {
-            if (warehouse == null)
-                throw new ArgumentNullException("warehouse");
-
-            await _warehouseRepository.DeleteAsync(warehouse);
-
-            //clear cache
-            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
-            //clear product cache
-            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
-
-            //event notification
-            await _mediator.EntityDeleted(warehouse);
-        }
-
+        
         /// <summary>
         /// Gets a warehouse
         /// </summary>
@@ -415,10 +401,13 @@ namespace Grand.Services.Shipping
         /// <returns>Warehouses</returns>
         public virtual async Task<IList<Warehouse>> GetAllWarehouses()
         {
-            var query = from wh in _warehouseRepository.Table
-                        orderby wh.DisplayOrder
-                        select wh;
-            return await query.ToListAsync();
+            return await _cacheManager.GetAsync(WAREHOUSES_ALL, () =>
+            {
+                var query = from wh in _warehouseRepository.Table
+                            orderby wh.DisplayOrder
+                            select wh;
+                return query.ToListAsync();
+            });
         }
 
         /// <summary>
@@ -455,6 +444,26 @@ namespace Grand.Services.Shipping
 
             //event notification
             await _mediator.EntityUpdated(warehouse);
+        }
+
+        /// <summary>
+        /// Deletes a warehouse
+        /// </summary>
+        /// <param name="warehouse">The warehouse</param>
+        public virtual async Task DeleteWarehouse(Warehouse warehouse)
+        {
+            if (warehouse == null)
+                throw new ArgumentNullException("warehouse");
+
+            await _warehouseRepository.DeleteAsync(warehouse);
+
+            //clear cache
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
+            //clear product cache
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
+
+            //event notification
+            await _mediator.EntityDeleted(warehouse);
         }
 
         #endregion
