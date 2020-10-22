@@ -9188,6 +9188,18 @@
   <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Name.hint">
     <Value>Specify a name of the pickup point.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Latitude">
+    <Value>Latitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Latitude.Hint">
+    <Value>Enter a pickup point latitude.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Longitude">
+    <Value>Longitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Longitude.Hint">
+    <Value>Enter a pickup point longitude.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.PickupFee">
     <Value>Pickup fee</Value>
   </LocaleResource>

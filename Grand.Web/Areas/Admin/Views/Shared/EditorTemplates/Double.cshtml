@@ -1,13 +1,11 @@
 @model double
 @Html.TextBoxFor(model => model)
-@using System.Globalization
 
 <script>
     $(document).ready(function () {
         $("#@Html.IdForModel()").kendoNumericTextBox({
-            culture: "@CultureInfo.CurrentCulture.Name",
-            format: "0.######",
-            decimals: 8
+            format: "0.############",
+            decimals: 12,
         });
     });
 </script>

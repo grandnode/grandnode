@@ -45,5 +45,10 @@ namespace Grand.Web.Areas.Admin.Models.Shipping
         [GrandResourceDisplayName("Admin.Configuration.Shipping.PickupPoint.Fields.PickupFee")]
         public decimal PickupFee { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.PickupPoint.Fields.Latitude")]
+        public double? Latitude { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.PickupPoint.Fields.Longitude")]
+        public double? Longitude { get; set; }
     }
 }
