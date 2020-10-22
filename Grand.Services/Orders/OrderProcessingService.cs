@@ -24,6 +24,7 @@ using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Notifications.Orders;
 using Grand.Services.Payments;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
@@ -538,7 +539,7 @@ namespace Grand.Services.Orders
                 if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
                 {
                     details.PickUpInStore = true;
-                    details.PickupPoint = await _shippingService.GetPickupPointById(pickupPoint);
+                    details.PickupPoint = await _mediator.Send(new GetPickupPointById() { Id = pickupPoint });
                 }
                 else
                 {

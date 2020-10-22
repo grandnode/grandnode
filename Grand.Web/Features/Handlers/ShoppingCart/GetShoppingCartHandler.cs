@@ -15,6 +15,7 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
@@ -581,7 +582,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     }
                     else
                     {
-                        var pickup = await _shippingService.GetPickupPointById(pickupPoint);
+                        var pickup = await _mediator.Send(new GetPickupPointById() { Id = pickupPoint });
                         if (pickup != null)
                         {
                             var country = await _countryService.GetCountryById(pickup.Address.CountryId);

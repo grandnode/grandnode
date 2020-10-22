@@ -39,6 +39,7 @@ namespace Grand.Web.Controllers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IShippingService _shippingService;
+        private readonly IPickupPointService _pickupPointService;
         private readonly IPaymentService _paymentService;
         private readonly IPluginFinder _pluginFinder;
         private readonly ILogger _logger;
@@ -65,6 +66,7 @@ namespace Grand.Web.Controllers
             IShoppingCartService shoppingCartService,
             IGenericAttributeService genericAttributeService,
             IShippingService shippingService,
+            IPickupPointService pickupPointService,
             IPaymentService paymentService,
             IPluginFinder pluginFinder,
             ILogger logger,
@@ -86,6 +88,7 @@ namespace Grand.Web.Controllers
             _shoppingCartService = shoppingCartService;
             _genericAttributeService = genericAttributeService;
             _shippingService = shippingService;
+            _pickupPointService = pickupPointService;
             _paymentService = paymentService;
             _pluginFinder = pluginFinder;
             _logger = logger;
@@ -450,7 +453,7 @@ namespace Grand.Web.Controllers
 
 
                     var pickupPoint = form["pickup-point-id"];
-                    var pickupPoints = await _shippingService.LoadActivePickupPoints(_storeContext.CurrentStore.Id);
+                    var pickupPoints = await _pickupPointService.LoadActivePickupPoints(_storeContext.CurrentStore.Id);
                     var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint));
                     if (selectedPoint == null)
                         return RedirectToRoute("CheckoutShippingAddress");
@@ -1311,7 +1314,7 @@ namespace Grand.Web.Controllers
 
 
                         var pickupPoint = form["pickup-point-id"];
-                        var pickupPoints = await _shippingService.LoadActivePickupPoints(_storeContext.CurrentStore.Id);
+                        var pickupPoints = await _pickupPointService.LoadActivePickupPoints(_storeContext.CurrentStore.Id);
                         var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint));
                         if (selectedPoint == null)
                             throw new Exception("Pickup point is not allowed");

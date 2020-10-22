@@ -20,6 +20,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
     public class GetEstimateShippingResultHandler : IRequestHandler<GetEstimateShippingResult, EstimateShippingResultModel>
     {
         private readonly IShippingService _shippingService;
+        private readonly IPickupPointService _pickupPointService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ITaxService _taxService;
         private readonly ICurrencyService _currencyService;
@@ -30,6 +31,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
         public GetEstimateShippingResultHandler(
             IShippingService shippingService,
+            IPickupPointService pickupPointService,
             IOrderTotalCalculationService orderTotalCalculationService,
             ITaxService taxService,
             ICurrencyService currencyService,
@@ -38,6 +40,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             ShippingSettings shippingSettings)
         {
             _shippingService = shippingService;
+            _pickupPointService = pickupPointService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _taxService = taxService;
             _currencyService = currencyService;
@@ -90,7 +93,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         //pickup in store?
                         if (_shippingSettings.AllowPickUpInStore)
                         {
-                            var pickupPoints = await _shippingService.GetAllPickupPoints();
+                            var pickupPoints = await _pickupPointService.GetAllPickupPoints();
                             if (pickupPoints.Count > 0)
                             {
                                 var soModel = new EstimateShippingResultModel.ShippingOptionModel {
