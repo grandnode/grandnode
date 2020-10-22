@@ -43,11 +43,6 @@ namespace Grand.Domain.Shipping
         public decimal PickupFee { get; set; }
 
         /// <summary>
-        /// Gets or sets the display order
-        /// </summary>
-        public int DisplayOrder { get; set; }
-
-        /// <summary>
         /// Gets or sets the latitude of the GeoCoordinate.
         /// </summary>
         public double? Latitude { get; set; }
@@ -57,5 +52,9 @@ namespace Grand.Domain.Shipping
         /// </summary>
         public double? Longitude { get; set; }
 
+        /// <summary>
+        /// Gets or sets the display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
     }
 }

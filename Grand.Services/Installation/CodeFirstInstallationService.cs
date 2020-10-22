@@ -10529,7 +10529,7 @@ namespace Grand.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            await _addressRepository.InsertAsync(warehouse1address);
+
             var warehouse2address = new Address {
                 Address1 = "300 South Spring Stree",
                 City = "Los Angeles",
@@ -10538,18 +10538,20 @@ namespace Grand.Services.Installation
                 ZipPostalCode = "90013",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            await _addressRepository.InsertAsync(warehouse2address);
+
             var warehouses = new List<Warehouse>
             {
                 new Warehouse
                 {
                     Name = "Warehouse 1 (New York)",
-                    Address = warehouse1address
+                    Address = warehouse1address,
+                    DisplayOrder = 0,
                 },
                 new Warehouse
                 {
                     Name = "Warehouse 2 (Los Angeles)",
-                    Address = warehouse2address
+                    Address = warehouse2address,
+                    DisplayOrder = 1,
                 }
             };
 

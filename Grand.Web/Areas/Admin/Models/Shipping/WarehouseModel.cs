@@ -25,5 +25,8 @@ namespace Grand.Web.Areas.Admin.Models.Shipping
 
         [GrandResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.Address")]
         public AddressModel Address { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.DisplayOrder")]
+        public int DisplayOrder { get; set; }
     }
 }

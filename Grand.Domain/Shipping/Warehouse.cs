@@ -35,5 +35,11 @@ namespace Grand.Domain.Shipping
         /// Gets or sets the address identifier of the warehouse
         /// </summary>
         public Address Address { get; set; }
+
+        /// <summary>
+        /// Gets or sets the display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
+
     }
 }

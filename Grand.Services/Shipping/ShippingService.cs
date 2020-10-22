@@ -39,6 +39,7 @@ namespace Grand.Services.Shipping
         /// {0} : warehouse ID
         /// </remarks>
         private const string WAREHOUSES_BY_ID_KEY = "Grand.warehouse.id-{0}";
+
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -415,7 +416,7 @@ namespace Grand.Services.Shipping
         public virtual async Task<IList<Warehouse>> GetAllWarehouses()
         {
             var query = from wh in _warehouseRepository.Table
-                        orderby wh.Name
+                        orderby wh.DisplayOrder
                         select wh;
             return await query.ToListAsync();
         }
@@ -528,7 +529,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.UpdateAsync(pickupPoint);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(pickupPoint);
