@@ -53,6 +53,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IWorkContext _workContext;
         private readonly IShippingService _shippingService;
         private readonly IShipmentService _shipmentService;
+        private readonly IDeliveryDateService _deliveryDateService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IDiscountService _discountService;
         private readonly ICustomerService _customerService;
@@ -86,6 +87,7 @@ namespace Grand.Web.Areas.Admin.Services
                ISpecificationAttributeService specificationAttributeService,
                IWorkContext workContext,
                IShippingService shippingService,
+               IDeliveryDateService deliveryDateService,
                IShipmentService shipmentService,
                ITaxCategoryService taxCategoryService,
                IDiscountService discountService,
@@ -118,6 +120,7 @@ namespace Grand.Web.Areas.Admin.Services
             _specificationAttributeService = specificationAttributeService;
             _workContext = workContext;
             _shippingService = shippingService;
+            _deliveryDateService = deliveryDateService;
             _shipmentService = shipmentService;
             _taxCategoryService = taxCategoryService;
             _discountService = discountService;
@@ -518,7 +521,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.DeliveryDate.None"),
                 Value = ""
             });
-            var deliveryDates = await _shippingService.GetAllDeliveryDates();
+            var deliveryDates = await _deliveryDateService.GetAllDeliveryDates();
             foreach (var deliveryDate in deliveryDates)
             {
                 model.AvailableDeliveryDates.Add(new SelectListItem {

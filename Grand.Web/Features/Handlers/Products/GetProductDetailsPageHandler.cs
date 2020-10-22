@@ -55,6 +55,7 @@ namespace Grand.Web.Features.Handlers.Products
         private readonly IPictureService _pictureService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShippingService _shippingService;
+        private readonly IDeliveryDateService _deliveryDateService;
         private readonly IVendorService _vendorService;
         private readonly ICategoryService _categoryService;
         private readonly IProductTagService _productTagService;
@@ -87,7 +88,8 @@ namespace Grand.Web.Features.Handlers.Products
             ICacheManager cacheManager, 
             IPictureService pictureService, 
             IProductAttributeParser productAttributeParser, 
-            IShippingService shippingService, 
+            IShippingService shippingService,
+            IDeliveryDateService deliveryDateService,
             IVendorService vendorService, 
             ICategoryService categoryService, 
             IProductTagService productTagService, 
@@ -119,6 +121,7 @@ namespace Grand.Web.Features.Handlers.Products
             _pictureService = pictureService;
             _productAttributeParser = productAttributeParser;
             _shippingService = shippingService;
+            _deliveryDateService = deliveryDateService;
             _vendorService = vendorService;
             _categoryService = categoryService;
             _productTagService = productTagService;
@@ -405,7 +408,7 @@ namespace Grand.Web.Features.Handlers.Products
                 //delivery date
                 if (!string.IsNullOrEmpty(product.DeliveryDateId))
                 {
-                    var deliveryDate = await _shippingService.GetDeliveryDateById(product.DeliveryDateId);
+                    var deliveryDate = await _deliveryDateService.GetDeliveryDateById(product.DeliveryDateId);
                     if (deliveryDate != null)
                     {
                         model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name, _workContext.WorkingLanguage.Id);

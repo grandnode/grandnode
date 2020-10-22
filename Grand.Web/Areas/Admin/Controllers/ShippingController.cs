@@ -35,6 +35,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         private readonly IShippingService _shippingService;
         private readonly IPickupPointService _pickupPointService;
+        private readonly IDeliveryDateService _deliveryDateService;
         private readonly ShippingSettings _shippingSettings;
         private readonly ISettingService _settingService;
         private readonly IAddressService _addressService;
@@ -54,6 +55,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public ShippingController(
             IShippingService shippingService,
             IPickupPointService pickupPointService,
+            IDeliveryDateService deliveryDateService,
             ShippingSettings shippingSettings,
             ISettingService settingService,
             IAddressService addressService,
@@ -68,6 +70,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             _shippingService = shippingService;
             _pickupPointService = pickupPointService;
+            _deliveryDateService = deliveryDateService;
             _shippingSettings = shippingSettings;
             _settingService = settingService;
             _addressService = addressService;
@@ -327,7 +330,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> DeliveryDates(DataSourceRequest command)
         {
-            var deliveryDatesModel = (await _shippingService.GetAllDeliveryDates())
+            var deliveryDatesModel = (await _deliveryDateService.GetAllDeliveryDates())
                 .Select(x => x.ToModel())
                 .ToList();
             var gridModel = new DataSourceResult {
@@ -354,7 +357,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var deliveryDate = model.ToEntity();
-                await _shippingService.InsertDeliveryDate(deliveryDate);
+                await _deliveryDateService.InsertDeliveryDate(deliveryDate);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Added"));
                 return continueEditing ? RedirectToAction("EditDeliveryDate", new { id = deliveryDate.Id }) : RedirectToAction("DeliveryDates");
             }
@@ -365,7 +368,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> EditDeliveryDate(string id)
         {
-            var deliveryDate = await _shippingService.GetDeliveryDateById(id);
+            var deliveryDate = await _deliveryDateService.GetDeliveryDateById(id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
                 return RedirectToAction("DeliveryDates");
@@ -389,7 +392,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> EditDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
-            var deliveryDate = await _shippingService.GetDeliveryDateById(model.Id);
+            var deliveryDate = await _deliveryDateService.GetDeliveryDateById(model.Id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
                 return RedirectToAction("DeliveryDates");
@@ -397,7 +400,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 deliveryDate = model.ToEntity(deliveryDate);
-                await _shippingService.UpdateDeliveryDate(deliveryDate);
+                await _deliveryDateService.UpdateDeliveryDate(deliveryDate);
                 //locales
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Updated"));
                 return continueEditing ? RedirectToAction("EditDeliveryDate", new { id = deliveryDate.Id }) : RedirectToAction("DeliveryDates");
@@ -411,13 +414,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteDeliveryDate(string id)
         {
-            var deliveryDate = await _shippingService.GetDeliveryDateById(id);
+            var deliveryDate = await _deliveryDateService.GetDeliveryDateById(id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
                 return RedirectToAction("DeliveryDates");
             if (ModelState.IsValid)
             {
-                await _shippingService.DeleteDeliveryDate(deliveryDate);
+                await _deliveryDateService.DeleteDeliveryDate(deliveryDate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Deleted"));
                 return RedirectToAction("DeliveryDates");

@@ -49,6 +49,7 @@ namespace Grand.Services.ExportImport
         private readonly IProductTemplateService _productTemplateService;
         private readonly IDownloadService _downloadService;
         private readonly IShippingService _shippingService;
+        private readonly IDeliveryDateService _deliveryDateService;
         private readonly ITaxCategoryService _taxService;
         private readonly IMeasureService _measureService;
         private readonly ILanguageService _languageService;
@@ -74,6 +75,7 @@ namespace Grand.Services.ExportImport
             IProductTemplateService productTemplateService,
             IDownloadService downloadService,
             IShippingService shippingService,
+            IDeliveryDateService deliveryDateService,
             ITaxCategoryService taxService,
             IMeasureService measureService,
             ILanguageService languageService,
@@ -95,6 +97,7 @@ namespace Grand.Services.ExportImport
             _productTemplateService = productTemplateService;
             _downloadService = downloadService;
             _shippingService = shippingService;
+            _deliveryDateService = deliveryDateService;
             _taxService = taxService;
             _measureService = measureService;
             _languageService = languageService;
@@ -762,7 +765,7 @@ namespace Grand.Services.ExportImport
             var manager = GetPropertyManager<Product>(worksheet);
 
             var templates = await _productTemplateService.GetAllProductTemplates();
-            var deliveryDates = await _shippingService.GetAllDeliveryDates();
+            var deliveryDates = await _deliveryDateService.GetAllDeliveryDates();
             var taxes = await _taxService.GetAllTaxCategories();
             var warehouses = await _shippingService.GetAllWarehouses();
             var units = await _measureService.GetAllMeasureUnits();
