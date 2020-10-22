@@ -56,6 +56,19 @@ namespace Grand.Services.Shipping
         private const string SHIPPINGMETHOD_PATTERN_KEY = "Grand.shippingmethod.";
 
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : picpup point ID
+        /// </remarks>
+        private const string PICKUPPOINTS_BY_ID_KEY = "Grand.pickuppoint.id-{0}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        private const string PICKUPPOINTS_ALL = "Grand.pickuppoint.all";
+
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string PICKUPPOINTS_PATTERN_KEY = "Grand.pickuppoint.";
@@ -250,7 +263,7 @@ namespace Grand.Services.Shipping
                 return query.ToListAsync();
             });
 
-            if (!String.IsNullOrEmpty(filterByCountryId))
+            if (!string.IsNullOrEmpty(filterByCountryId))
             {
                 shippingMethods = shippingMethods.Where(x => !x.CountryRestrictionExists(filterByCountryId)).ToList();
             }
@@ -479,7 +492,8 @@ namespace Grand.Services.Shipping
         /// <returns>Delivery date</returns>
         public virtual Task<PickupPoint> GetPickupPointById(string pickupPointId)
         {
-            return _pickupPointsRepository.GetByIdAsync(pickupPointId);
+            var key = string.Format(PICKUPPOINTS_BY_ID_KEY, pickupPointId);
+            return _cacheManager.GetAsync(key, () => _pickupPointsRepository.GetByIdAsync(pickupPointId));
         }
 
         /// <summary>
@@ -488,10 +502,13 @@ namespace Grand.Services.Shipping
         /// <returns>Warehouses</returns>
         public virtual async Task<IList<PickupPoint>> GetAllPickupPoints()
         {
-            var query = from pp in _pickupPointsRepository.Table
-                        orderby pp.DisplayOrder
-                        select pp;
-            return await query.ToListAsync();
+            return await _cacheManager.GetAsync(PICKUPPOINTS_ALL, () =>
+            {
+                var query = from pp in _pickupPointsRepository.Table
+                            orderby pp.DisplayOrder
+                            select pp;
+                return query.ToListAsync();
+            });
         }
 
         /// <summary>
@@ -554,6 +571,8 @@ namespace Grand.Services.Shipping
                 throw new ArgumentNullException("pickupPoint");
 
             await _pickupPointsRepository.DeleteAsync(pickupPoint);
+
+            //clear cache
             await _cacheManager.RemoveByPrefix(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
