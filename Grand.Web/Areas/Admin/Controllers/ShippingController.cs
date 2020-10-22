@@ -459,11 +459,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var warehouse = model.ToEntity();
                 var address = model.Address.ToEntity();
                 address.CreatedOnUtc = DateTime.UtcNow;
-                await _addressService.InsertAddressSettings(address);
-                var warehouse = model.ToEntity();
-                warehouse.AddressId = address.Id;
+                warehouse.Address = address;
                 await _shippingService.InsertWarehouse(warehouse);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Added"));
@@ -482,12 +481,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No warehouse found with the specified id
                 return RedirectToAction("Warehouses");
 
-            var address = await _addressService.GetAddressByIdSettings(warehouse.AddressId);
             var model = warehouse.ToModel();
-            if (address != null)
-            {
-                model.Address = await address.ToModel(_countryService, _stateProvinceService);
-            }
             await PrepareAddressWarehouseModel(model);
             return View(model);
         }
@@ -502,17 +496,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var address = await _addressService.GetAddressByIdSettings(warehouse.AddressId) ??
-                    new Domain.Common.Address
-                    {
-                        CreatedOnUtc = DateTime.UtcNow,
-                    };
-                address = model.Address.ToEntity(address);
-                if (!String.IsNullOrEmpty(address.Id))
-                    await _addressService.UpdateAddressSettings(address);
-                else
-                    await _addressService.InsertAddressSettings(address);
-
                 warehouse = model.ToEntity(warehouse);
                 await _shippingService.UpdateWarehouse(warehouse);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Updated"));

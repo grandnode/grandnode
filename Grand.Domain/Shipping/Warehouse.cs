@@ -1,3 +1,5 @@
+using Grand.Domain.Common;
+
 namespace Grand.Domain.Shipping
 {
     /// <summary>
@@ -5,6 +7,10 @@ namespace Grand.Domain.Shipping
     /// </summary>
     public partial class Warehouse : BaseEntity
     {
+        public Warehouse()
+        {
+            Address = new Address();
+        }
         /// <summary>
         /// Gets or sets the warehouse name
         /// </summary>
@@ -18,6 +24,6 @@ namespace Grand.Domain.Shipping
         /// <summary>
         /// Gets or sets the address identifier of the warehouse
         /// </summary>
-        public string AddressId { get; set; }
+        public Address Address { get; set; }
     }
 }

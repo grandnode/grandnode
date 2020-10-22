@@ -10,7 +10,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
         public WarehouseProfile()
         {
             CreateMap<Warehouse, WarehouseModel>()
-                .ForMember(dest => dest.Address, mo => mo.Ignore());
+                .ForMember(dest => dest.Address, mo => mo.MapFrom(y => y.Address));
 
             CreateMap<WarehouseModel, Warehouse>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());

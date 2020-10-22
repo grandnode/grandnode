@@ -785,7 +785,7 @@ namespace Grand.Services.Shipping
             var matchedByCountry = new List<Warehouse>();
             foreach (var warehouse in warehouses)
             {
-                var warehouseAddress = await _addressService.GetAddressByIdSettings(warehouse.AddressId);
+                var warehouseAddress = warehouse.Address;
                 if (warehouseAddress != null)
                     if (warehouseAddress.CountryId == address.CountryId)
                         matchedByCountry.Add(warehouse);
@@ -799,7 +799,7 @@ namespace Grand.Services.Shipping
             var matchedByState = new List<Warehouse>();
             foreach (var warehouse in matchedByCountry)
             {
-                var warehouseAddress = await _addressService.GetAddressByIdSettings(warehouse.AddressId);
+                var warehouseAddress = warehouse.Address;
                 if (warehouseAddress != null)
                     if (warehouseAddress.StateProvinceId == address.StateProvinceId)
                         matchedByState.Add(warehouse);
@@ -901,7 +901,7 @@ namespace Grand.Services.Shipping
                     if (warehouse != null)
                     {
                         //warehouse address
-                        originAddress = await _addressService.GetAddressByIdSettings(warehouse.AddressId);
+                        originAddress = warehouse.Address;
                         request.WarehouseFrom = warehouse;
                     }
                     if (originAddress == null)

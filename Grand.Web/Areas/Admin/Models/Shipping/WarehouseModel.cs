@@ -8,7 +8,7 @@ namespace Grand.Web.Areas.Admin.Models.Shipping
     {
         public WarehouseModel()
         {
-            this.Address = new AddressModel();
+            Address = new AddressModel();
         }
 
         [GrandResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.Name")]

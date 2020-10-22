@@ -10544,12 +10544,12 @@ namespace Grand.Services.Installation
                 new Warehouse
                 {
                     Name = "Warehouse 1 (New York)",
-                    AddressId = warehouse1address.Id
+                    Address = warehouse1address
                 },
                 new Warehouse
                 {
                     Name = "Warehouse 2 (Los Angeles)",
-                    AddressId = warehouse2address.Id
+                    Address = warehouse2address
                 }
             };
 
