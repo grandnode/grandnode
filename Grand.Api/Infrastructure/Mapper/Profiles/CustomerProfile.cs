@@ -35,7 +35,6 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.ShippingAddress, mo => mo.Ignore())
                 .ForMember(dest => dest.ShoppingCartItems, mo => mo.Ignore())
                 .ForMember(dest => dest.SystemName, mo => mo.Ignore())
-                .ForMember(dest => dest.UrlReferrer, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 

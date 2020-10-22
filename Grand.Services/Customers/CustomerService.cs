@@ -395,9 +395,16 @@ namespace Grand.Services.Customers
                 StoreId = store.Id,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
-                UrlReferrer = urlreferrer
             };
 
+            if(!string.IsNullOrEmpty(urlreferrer))
+            {
+                customer.GenericAttributes.Add(new GenericAttribute { 
+                    Key = SystemCustomerAttributeNames.UrlReferrer,
+                    Value = urlreferrer,
+                    StoreId = "",
+                });
+            }
             //add to 'Guests' role
             var guestRole = await GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
             if (guestRole == null)

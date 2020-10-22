@@ -27,6 +27,7 @@ namespace Grand.Domain.Customers
         public static string AvatarPictureId { get { return "AvatarPictureId"; } }
         public static string ForumPostCount { get { return "ForumPostCount"; } }
         public static string Signature { get { return "Signature"; } }
+        public static string UrlReferrer { get { return "UrlReferrer"; } }
         public static string PasswordRecoveryToken { get { return "PasswordRecoveryToken"; } }
         public static string PasswordRecoveryTokenDateGenerated { get { return "PasswordRecoveryTokenDateGenerated"; } }
         public static string AccountActivationToken { get { return "AccountActivationToken"; } }

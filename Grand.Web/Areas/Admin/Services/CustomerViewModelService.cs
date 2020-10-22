@@ -472,7 +472,7 @@ namespace Grand.Web.Areas.Admin.Services
                     if (customer.LastPurchaseDateUtc.HasValue)
                         model.LastPurchaseDate = _dateTimeHelper.ConvertToUserTime(customer.LastPurchaseDateUtc.Value, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
-                    model.UrlReferrer = customer.UrlReferrer;
+                    model.UrlReferrer = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.UrlReferrer);
                     model.LastVisitedPage = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastVisitedPage);
                     model.LastUrlReferrer = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastUrlReferrer);
 
