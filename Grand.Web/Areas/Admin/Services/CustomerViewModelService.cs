@@ -1282,6 +1282,10 @@ namespace Grand.Web.Areas.Admin.Services
             var cart = customer.ShoppingCartItems.FirstOrDefault(a => a.Id == shoppingCartId);
             if (cart != null)
             {
+                //activity log
+                await _customerActivityService.InsertActivity("CustomerAdmin.UpdateCartCustomer", _workContext.CurrentCustomer.Id,
+                    _localizationService.GetResource("ActivityLog.UpdateCartCustomer"), customer.Email, customer.Id, unitprice);
+
                 return await _serviceProvider.GetRequiredService<IShoppingCartService>()
                     .UpdateShoppingCartItem(
                     customer,

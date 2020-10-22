@@ -10245,6 +10245,12 @@ namespace Grand.Services.Installation
                                               },
                                             new ActivityLogType
                                               {
+                                                  SystemKeyword = "CustomerAdmin.UpdateCartCustomer",
+                                                  Enabled = true,
+                                                  Name = "Update shopping cart"
+                                              },
+                                            new ActivityLogType
+                                              {
                                                   SystemKeyword = "UpdateKnowledgebaseCategory",
                                                   Enabled = true,
                                                   Name = "Update knowledgebase category"
