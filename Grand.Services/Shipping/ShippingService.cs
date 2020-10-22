@@ -86,6 +86,13 @@ namespace Grand.Services.Shipping
         /// </summary>
         /// <remarks>
         /// </remarks>
+        private const string DELIVERYDATE_ALL = "Grand.deliverydate.all";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
         private const string DELIVERYDATE_PATTERN_KEY = "Grand.deliverydate.";
 
         /// <summary>
@@ -353,10 +360,13 @@ namespace Grand.Services.Shipping
         /// <returns>Delivery dates</returns>
         public virtual async Task<IList<DeliveryDate>> GetAllDeliveryDates()
         {
-            var query = from dd in _deliveryDateRepository.Table
-                        orderby dd.DisplayOrder
-                        select dd;
-            return await query.ToListAsync();
+            return await _cacheManager.GetAsync(DELIVERYDATE_ALL, () =>
+            {
+                var query = from dd in _deliveryDateRepository.Table
+                            orderby dd.DisplayOrder
+                            select dd;
+                return query.ToListAsync();
+            });
         }
 
         /// <summary>
