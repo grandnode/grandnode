@@ -517,11 +517,8 @@ namespace Grand.Services.Shipping
         /// <returns>Warehouses</returns>
         public virtual async Task<IList<PickupPoint>> LoadActivePickupPoints(string storeId = "")
         {
-            var query = from pp in _pickupPointsRepository.Table
-                        where pp.StoreId == storeId || String.IsNullOrEmpty(pp.StoreId)
-                        orderby pp.DisplayOrder
-                        select pp;
-            return await query.ToListAsync();
+            var pickupPoints = await GetAllPickupPoints();
+            return pickupPoints.Where(pp => pp.StoreId == storeId || string.IsNullOrEmpty(pp.StoreId)).ToList();
         }
 
 
