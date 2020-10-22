@@ -63,7 +63,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             DateTime? endDateValue = (model.SearchEndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var queuedEmails = await _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, 
+            var queuedEmails = await _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, model.SearchText,
                 startDateValue, endDateValue, 
                 model.SearchLoadNotSent, false, model.SearchMaxSentTries, true,
                 command.Page - 1, command.PageSize);

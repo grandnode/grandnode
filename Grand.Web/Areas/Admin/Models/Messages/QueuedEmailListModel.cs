@@ -16,12 +16,13 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         public DateTime? SearchEndDate { get; set; }
 
         [GrandResourceDisplayName("Admin.System.QueuedEmails.List.FromEmail")]
-        
         public string SearchFromEmail { get; set; }
 
         [GrandResourceDisplayName("Admin.System.QueuedEmails.List.ToEmail")]
-        
         public string SearchToEmail { get; set; }
+
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.List.Text")]
+        public string SearchText { get; set; }
 
         [GrandResourceDisplayName("Admin.System.QueuedEmails.List.LoadNotSent")]
         public bool SearchLoadNotSent { get; set; }

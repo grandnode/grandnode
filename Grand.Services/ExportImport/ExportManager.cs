@@ -913,7 +913,7 @@ namespace Grand.Services.ExportImport
 
                 //emails
                 var queuedEmailService = _serviceProvider.GetRequiredService<IQueuedEmailService>();
-                var queuedEmails = await queuedEmailService.SearchEmails("", customer.Email, null, null, false, true, 100, true);
+                var queuedEmails = await queuedEmailService.SearchEmails("", customer.Email, null, null, null, false, true, 100, true);
                 var worksheetEmails = xlPackage.CreateSheet("Emails");
                 var managerEmails = new PropertyManager<QueuedEmail>(PropertyByEmails());
                 managerEmails.WriteCaption(worksheetEmails);

@@ -16573,6 +16573,12 @@
   <LocaleResource Name="Admin.System.QueuedEmails.List.ToEmail.Hint">
     <Value>To address.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.List.Text">
+    <Value>Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.List.Text.Hint">
+    <Value>Allow searching by subject or body email</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Requeue">
     <Value>Requeue</Value>
   </LocaleResource>

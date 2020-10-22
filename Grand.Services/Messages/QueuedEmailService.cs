@@ -129,6 +129,7 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="fromEmail">From Email</param>
         /// <param name="toEmail">To Email</param>
+        /// <param name="text">Text</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="loadNotSentItemsOnly">A value indicating whether to load only not sent emails</param>
@@ -138,19 +139,22 @@ namespace Grand.Services.Messages
         /// <param name="pageSize">Page size</param>
         /// <returns>Email item list</returns>
         public virtual async Task<IPagedList<QueuedEmail>> SearchEmails(string fromEmail,
-            string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
+            string toEmail, string text, DateTime? createdFromUtc, DateTime? createdToUtc, 
             bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            fromEmail = (fromEmail ?? String.Empty).Trim();
-            toEmail = (toEmail ?? String.Empty).Trim();
+            fromEmail = (fromEmail ?? string.Empty).Trim();
+            toEmail = (toEmail ?? string.Empty).Trim();
 
             var query = _queuedEmailRepository.Table;
 
-            if (!String.IsNullOrEmpty(fromEmail))
+            if (!string.IsNullOrEmpty(fromEmail))
                 query = query.Where(qe => qe.From.ToLower().Contains(fromEmail.ToLower()));
-            if (!String.IsNullOrEmpty(toEmail))
+            if (!string.IsNullOrEmpty(toEmail))
                 query = query.Where(qe => qe.To.ToLower().Contains(toEmail.ToLower()));
+            if (!string.IsNullOrEmpty(text))
+                query = query.Where(qe => qe.Subject.ToLower().Contains(text.ToLower()) || qe.Body.ToLower().Contains(text.ToLower()));
+
             if (createdFromUtc.HasValue)
                 query = query.Where(qe => qe.CreatedOnUtc >= createdFromUtc.Value);
             if (createdToUtc.HasValue)

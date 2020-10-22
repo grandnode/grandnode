@@ -51,6 +51,7 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="fromEmail">From Email</param>
         /// <param name="toEmail">To Email</param>
+        /// <param name="text">Text</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="loadNotSentItemsOnly">A value indicating whether to load only not sent emails</param>
@@ -60,7 +61,7 @@ namespace Grand.Services.Messages
         /// <param name="pageSize">Page size</param>
         /// <returns>Queued emails</returns>
         Task<IPagedList<QueuedEmail>> SearchEmails(string fromEmail,
-            string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
+            string toEmail, string text, DateTime? createdFromUtc, DateTime? createdToUtc, 
             bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue);
 
