@@ -54,7 +54,7 @@ namespace Grand.Web.Features.Handlers.Products
         private readonly ICacheManager _cacheManager;
         private readonly IPictureService _pictureService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IShippingService _shippingService;
+        private readonly IWarehouseService _warehouseService;
         private readonly IDeliveryDateService _deliveryDateService;
         private readonly IVendorService _vendorService;
         private readonly ICategoryService _categoryService;
@@ -87,8 +87,8 @@ namespace Grand.Web.Features.Handlers.Products
             IMeasureService measureService, 
             ICacheManager cacheManager, 
             IPictureService pictureService, 
-            IProductAttributeParser productAttributeParser, 
-            IShippingService shippingService,
+            IProductAttributeParser productAttributeParser,
+            IWarehouseService warehouseService,
             IDeliveryDateService deliveryDateService,
             IVendorService vendorService, 
             ICategoryService categoryService, 
@@ -120,7 +120,7 @@ namespace Grand.Web.Features.Handlers.Products
             _cacheManager = cacheManager;
             _pictureService = pictureService;
             _productAttributeParser = productAttributeParser;
-            _shippingService = shippingService;
+            _warehouseService = warehouseService;
             _deliveryDateService = deliveryDateService;
             _vendorService = vendorService;
             _categoryService = categoryService;
@@ -387,7 +387,7 @@ namespace Grand.Web.Features.Handlers.Products
             model.AllowToSelectWarehouse = _shoppingCartSettings.AllowToSelectWarehouse;
             if (model.AllowToSelectWarehouse)
             {
-                foreach (var warehouse in await _shippingService.GetAllWarehouses())
+                foreach (var warehouse in await _warehouseService.GetAllWarehouses())
                 {
                     var productwarehouse = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouse.Id);
                     model.ProductWarehouses.Add(new ProductDetailsModel.ProductWarehouseModel {

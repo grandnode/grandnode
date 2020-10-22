@@ -45,7 +45,7 @@ namespace Grand.Services.Orders
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductReservationService _productReservationService;
-        private readonly IShippingService _shippingService;
+        private readonly IWarehouseService _warehouseService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         #endregion
 
@@ -68,9 +68,8 @@ namespace Grand.Services.Orders
             IStoreMappingService storeMappingService,
             IGenericAttributeService genericAttributeService,
             IProductAttributeService productAttributeService,
-            ICustomerActionEventService customerActionEventService,
             IProductReservationService productReservationService,
-            IShippingService shippingService,
+            IWarehouseService warehouseService,
             ShoppingCartSettings shoppingCartSettings)
         {
             _workContext = workContext;
@@ -90,7 +89,7 @@ namespace Grand.Services.Orders
             _genericAttributeService = genericAttributeService;
             _productAttributeService = productAttributeService;
             _productReservationService = productReservationService;
-            _shippingService = shippingService;
+            _warehouseService = warehouseService;
             _shoppingCartSettings = shoppingCartSettings;
         }
 
@@ -342,7 +341,7 @@ namespace Grand.Services.Orders
 
             if (!string.IsNullOrEmpty(warehouseId))
             {
-                var warehouse = await _shippingService.GetWarehouseById(warehouseId);
+                var warehouse = await _warehouseService.GetWarehouseById(warehouseId);
                 if (warehouse == null)
                     warnings.Add(_localizationService.GetResource("ShoppingCart.WarehouseNotExists"));
             }

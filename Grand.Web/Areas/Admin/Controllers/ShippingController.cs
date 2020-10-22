@@ -36,6 +36,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IShippingService _shippingService;
         private readonly IPickupPointService _pickupPointService;
         private readonly IDeliveryDateService _deliveryDateService;
+        private readonly IWarehouseService _warehouseService;
         private readonly ShippingSettings _shippingSettings;
         private readonly ISettingService _settingService;
         private readonly IAddressService _addressService;
@@ -56,6 +57,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IShippingService shippingService,
             IPickupPointService pickupPointService,
             IDeliveryDateService deliveryDateService,
+            IWarehouseService warehouseService,
             ShippingSettings shippingSettings,
             ISettingService settingService,
             IAddressService addressService,
@@ -71,6 +73,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _shippingService = shippingService;
             _pickupPointService = pickupPointService;
             _deliveryDateService = deliveryDateService;
+            _warehouseService = warehouseService;
             _shippingSettings = shippingSettings;
             _settingService = settingService;
             _addressService = addressService;
@@ -144,7 +147,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AvailableStores.Add(new SelectListItem { Text = c.Shortcut, Value = c.Id.ToString() });
 
             model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectWarehouse"), Value = "" });
-            foreach (var c in await _shippingService.GetAllWarehouses())
+            foreach (var c in await _warehouseService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
 
         }
@@ -438,7 +441,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Warehouses(DataSourceRequest command)
         {
-            var warehousesModel = (await _shippingService.GetAllWarehouses())
+            var warehousesModel = (await _warehouseService.GetAllWarehouses())
                 .Select(x => x.ToModel())
                 .ToList();
             var gridModel = new DataSourceResult {
@@ -464,7 +467,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var address = model.Address.ToEntity();
                 address.CreatedOnUtc = DateTime.UtcNow;
                 warehouse.Address = address;
-                await _shippingService.InsertWarehouse(warehouse);
+                await _warehouseService.InsertWarehouse(warehouse);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Added"));
                 return continueEditing ? RedirectToAction("EditWarehouse", new { id = warehouse.Id }) : RedirectToAction("Warehouses");
@@ -477,7 +480,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> EditWarehouse(string id)
         {
-            var warehouse = await _shippingService.GetWarehouseById(id);
+            var warehouse = await _warehouseService.GetWarehouseById(id);
             if (warehouse == null)
                 //No warehouse found with the specified id
                 return RedirectToAction("Warehouses");
@@ -490,7 +493,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> EditWarehouse(WarehouseModel model, bool continueEditing)
         {
-            var warehouse = await _shippingService.GetWarehouseById(model.Id);
+            var warehouse = await _warehouseService.GetWarehouseById(model.Id);
             if (warehouse == null)
                 //No warehouse found with the specified id
                 return RedirectToAction("Warehouses");
@@ -498,7 +501,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 warehouse = model.ToEntity(warehouse);
-                await _shippingService.UpdateWarehouse(warehouse);
+                await _warehouseService.UpdateWarehouse(warehouse);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Updated"));
                 return continueEditing ? RedirectToAction("EditWarehouse", new { id = warehouse.Id }) : RedirectToAction("Warehouses");
             }
@@ -511,12 +514,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteWarehouse(string id)
         {
-            var warehouse = await _shippingService.GetWarehouseById(id);
+            var warehouse = await _warehouseService.GetWarehouseById(id);
             if (warehouse == null)
                 //No warehouse found with the specified id
                 return RedirectToAction("Warehouses");
 
-            await _shippingService.DeleteWarehouse(warehouse);
+            await _warehouseService.DeleteWarehouse(warehouse);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.warehouses.Deleted"));
             return RedirectToAction("Warehouses");

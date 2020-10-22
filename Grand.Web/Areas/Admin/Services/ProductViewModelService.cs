@@ -51,7 +51,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IProductTemplateService _productTemplateService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IWorkContext _workContext;
-        private readonly IShippingService _shippingService;
+        private readonly IWarehouseService _warehouseService;
         private readonly IShipmentService _shipmentService;
         private readonly IDeliveryDateService _deliveryDateService;
         private readonly ITaxCategoryService _taxCategoryService;
@@ -86,7 +86,7 @@ namespace Grand.Web.Areas.Admin.Services
                IProductTemplateService productTemplateService,
                ISpecificationAttributeService specificationAttributeService,
                IWorkContext workContext,
-               IShippingService shippingService,
+               IWarehouseService warehouseService,
                IDeliveryDateService deliveryDateService,
                IShipmentService shipmentService,
                ITaxCategoryService taxCategoryService,
@@ -119,7 +119,7 @@ namespace Grand.Web.Areas.Admin.Services
             _productTemplateService = productTemplateService;
             _specificationAttributeService = specificationAttributeService;
             _workContext = workContext;
-            _shippingService = shippingService;
+            _warehouseService = warehouseService;
             _deliveryDateService = deliveryDateService;
             _shipmentService = shipmentService;
             _taxCategoryService = taxCategoryService;
@@ -531,7 +531,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
 
             //warehouses
-            var warehouses = await _shippingService.GetAllWarehouses();
+            var warehouses = await _warehouseService.GetAllWarehouses();
             model.AvailableWarehouses.Add(new SelectListItem {
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Warehouse.None"),
                 Value = ""
@@ -651,7 +651,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (!product.UseMultipleWarehouses)
                 return;
 
-            var warehouses = await _shippingService.GetAllWarehouses();
+            var warehouses = await _warehouseService.GetAllWarehouses();
 
             foreach (var warehouse in warehouses)
             {
@@ -767,7 +767,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
             //warehouses
             model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var wh in await _shippingService.GetAllWarehouses())
+            foreach (var wh in await _warehouseService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = wh.Name, Value = wh.Id.ToString() });
 
             //vendors
@@ -2589,7 +2589,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new ProductAttributeCombinationModel();
             var wim = new List<ProductAttributeCombinationModel.WarehouseInventoryModel>();
-            foreach (var warehouse in await _shippingService.GetAllWarehouses())
+            foreach (var warehouse in await _warehouseService.GetAllWarehouses())
             {
                 var pwiModel = new ProductAttributeCombinationModel.WarehouseInventoryModel {
                     WarehouseId = warehouse.Id,
@@ -2639,7 +2639,7 @@ namespace Grand.Web.Areas.Admin.Services
             var shoppingCartService = _serviceProvider.GetRequiredService<IShoppingCartService>();
             async Task PrepareCombinationWarehouseInventory(ProductAttributeCombination combination)
             {
-                var warehouses = await _shippingService.GetAllWarehouses();
+                var warehouses = await _warehouseService.GetAllWarehouses();
 
                 foreach (var warehouse in warehouses)
                 {

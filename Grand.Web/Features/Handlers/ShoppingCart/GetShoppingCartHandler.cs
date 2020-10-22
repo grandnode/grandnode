@@ -58,7 +58,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IDownloadService _downloadService;
         private readonly ICountryService _countryService;
-        private readonly IShippingService _shippingService;
+        private readonly IWarehouseService _warehouseService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -91,7 +91,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             ICheckoutAttributeParser checkoutAttributeParser,
             IDownloadService downloadService,
             ICountryService countryService,
-            IShippingService shippingService,
+            IWarehouseService warehouseService,
             IProductAttributeFormatter productAttributeFormatter,
             IPriceCalculationService priceCalculationService,
             IDateTimeHelper dateTimeHelper,
@@ -122,7 +122,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _checkoutAttributeParser = checkoutAttributeParser;
             _downloadService = downloadService;
             _countryService = countryService;
-            _shippingService = shippingService;
+            _warehouseService = warehouseService;
             _productAttributeFormatter = productAttributeFormatter;
             _priceCalculationService = priceCalculationService;
             _dateTimeHelper = dateTimeHelper;
@@ -386,7 +386,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
                 //warehouse
                 if (!string.IsNullOrEmpty(cartItemModel.WarehouseId))
-                    cartItemModel.WarehouseName = (await _shippingService.GetWarehouseById(cartItemModel.WarehouseId))?.Name;
+                    cartItemModel.WarehouseName = (await _warehouseService.GetWarehouseById(cartItemModel.WarehouseId))?.Name;
 
                 //vendor
                 if (!string.IsNullOrEmpty(product.VendorId))

@@ -78,7 +78,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IReturnRequestService _returnRequestService;
         private readonly ICustomerService _customerService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IShipmentService _shipmentService;
+        private readonly IWarehouseService _warehouseService;
         private readonly IServiceProvider _serviceProvider;
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
@@ -122,7 +122,7 @@ namespace Grand.Web.Areas.Admin.Services
             IReturnRequestService returnRequestService,
             ICustomerService customerService,
             ICustomerActivityService customerActivityService,
-            IShipmentService shipmentService,
+            IWarehouseService warehouseService,
             IServiceProvider serviceProvider,
             CurrencySettings currencySettings,
             TaxSettings taxSettings,
@@ -162,7 +162,7 @@ namespace Grand.Web.Areas.Admin.Services
             _taxService = taxService;
             _returnRequestService = returnRequestService;
             _customerActivityService = customerActivityService;
-            _shipmentService = shipmentService;
+            _warehouseService = warehouseService;
             _serviceProvider = serviceProvider;
             _currencySettings = currencySettings;
             _taxSettings = taxSettings;
@@ -251,7 +251,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //warehouses
             model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var w in await _shippingService.GetAllWarehouses())
+            foreach (var w in await _warehouseService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = w.Name, Value = w.Id.ToString() });
 
             //payment methods
@@ -751,7 +751,8 @@ namespace Grand.Web.Areas.Admin.Services
                         if (!product.IsShipEnabled)
                             continue;
                     }
-                    var totalNumberOfItemsCanBeAddedToShipment = await orderItem.GetTotalNumberOfItemsCanBeAddedToShipment(_orderService, _shipmentService);
+                    var shipmentService = _serviceProvider.GetRequiredService<IShipmentService>();
+                    var totalNumberOfItemsCanBeAddedToShipment = await orderItem.GetTotalNumberOfItemsCanBeAddedToShipment(_orderService, shipmentService);
                     if (totalNumberOfItemsCanBeAddedToShipment <= 0)
                         continue;
                     model.CanAddNewShipments = true;

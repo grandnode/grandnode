@@ -17,16 +17,16 @@ namespace Grand.Web.Areas.Admin.Services
     public partial class StoreViewModelService : IStoreViewModelService
     {
         private readonly ILanguageService _languageService;
-        private readonly IShippingService _shippingService;
+        private readonly IWarehouseService _warehouseService;
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
 
-        public StoreViewModelService(ILanguageService languageService, IShippingService shippingService, IStoreService storeService, ISettingService settingService,
+        public StoreViewModelService(ILanguageService languageService, IWarehouseService warehouseService, IStoreService storeService, ISettingService settingService,
             ICountryService countryService)
         {
             _languageService = languageService;
-            _shippingService = shippingService;
+            _warehouseService = warehouseService;
             _storeService = storeService;
             _settingService = settingService;
             _countryService = countryService;
@@ -65,7 +65,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Text = "---",
                 Value = ""
             });
-            var warehouses = await _shippingService.GetAllWarehouses();
+            var warehouses = await _warehouseService.GetAllWarehouses();
             foreach (var warehouse in warehouses)
             {
                 model.AvailableWarehouses.Add(new SelectListItem

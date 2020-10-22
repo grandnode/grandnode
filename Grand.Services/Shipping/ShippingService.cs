@@ -32,41 +32,17 @@ namespace Grand.Services.Shipping
     {
         #region Constants
 
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : warehouse ID
-        /// </remarks>
-        private const string WAREHOUSES_BY_ID_KEY = "Grand.warehouse.id-{0}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string WAREHOUSES_ALL = "Grand.warehouse.all";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string WAREHOUSES_PATTERN_KEY = "Grand.warehouse.";
-
+ 
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string SHIPPINGMETHOD_PATTERN_KEY = "Grand.shippingmethod.";
 
-       
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
-
         #endregion
 
         #region Fields
-
+        private readonly IWarehouseService _warehouseService;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
-        private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -90,8 +66,8 @@ namespace Grand.Services.Shipping
         /// Ctor
         /// </summary>
         public ShippingService(
+            IWarehouseService warehouseService,
             IRepository<ShippingMethod> shippingMethodRepository,
-            IRepository<Warehouse> warehouseRepository,
             ILogger logger,
             IProductService productService,
             IProductAttributeParser productAttributeParser,
@@ -107,8 +83,8 @@ namespace Grand.Services.Shipping
             ShoppingCartSettings shoppingCartSettings,
             ShippingSettings shippingSettings)
         {
+            _warehouseService = warehouseService;
             _shippingMethodRepository = shippingMethodRepository;
-            _warehouseRepository = warehouseRepository;
             _logger = logger;
             _productService = productService;
             _productAttributeParser = productAttributeParser;
@@ -271,92 +247,6 @@ namespace Grand.Services.Shipping
 
             //event notification
             await _mediator.EntityUpdated(shippingMethod);
-        }
-
-        #endregion
-
-        #region Warehouses
-
-        /// <summary>
-        /// Gets a warehouse
-        /// </summary>
-        /// <param name="warehouseId">The warehouse identifier</param>
-        /// <returns>Warehouse</returns>
-        public virtual Task<Warehouse> GetWarehouseById(string warehouseId)
-        {
-            string key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
-            return _cacheManager.GetAsync(key, () => _warehouseRepository.GetByIdAsync(warehouseId));
-        }
-
-        /// <summary>
-        /// Gets all warehouses
-        /// </summary>
-        /// <returns>Warehouses</returns>
-        public virtual async Task<IList<Warehouse>> GetAllWarehouses()
-        {
-            return await _cacheManager.GetAsync(WAREHOUSES_ALL, () =>
-            {
-                var query = from wh in _warehouseRepository.Table
-                            orderby wh.DisplayOrder
-                            select wh;
-                return query.ToListAsync();
-            });
-        }
-
-        /// <summary>
-        /// Inserts a warehouse
-        /// </summary>
-        /// <param name="warehouse">Warehouse</param>
-        public virtual async Task InsertWarehouse(Warehouse warehouse)
-        {
-            if (warehouse == null)
-                throw new ArgumentNullException("warehouse");
-
-            await _warehouseRepository.InsertAsync(warehouse);
-
-            //clear cache
-            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
-
-            //event notification
-            await _mediator.EntityInserted(warehouse);
-        }
-
-        /// <summary>
-        /// Updates the warehouse
-        /// </summary>
-        /// <param name="warehouse">Warehouse</param>
-        public virtual async Task UpdateWarehouse(Warehouse warehouse)
-        {
-            if (warehouse == null)
-                throw new ArgumentNullException("warehouse");
-
-            await _warehouseRepository.UpdateAsync(warehouse);
-
-            //clear cache
-            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
-
-            //event notification
-            await _mediator.EntityUpdated(warehouse);
-        }
-
-        /// <summary>
-        /// Deletes a warehouse
-        /// </summary>
-        /// <param name="warehouse">The warehouse</param>
-        public virtual async Task DeleteWarehouse(Warehouse warehouse)
-        {
-            if (warehouse == null)
-                throw new ArgumentNullException("warehouse");
-
-            await _warehouseRepository.DeleteAsync(warehouse);
-
-            //clear cache
-            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
-            //clear product cache
-            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
-
-            //event notification
-            await _mediator.EntityDeleted(warehouse);
         }
 
         #endregion
@@ -581,7 +471,7 @@ namespace Grand.Services.Shipping
         /// <returns></returns>
         public virtual async Task<Warehouse> GetNearestWarehouse(Address address, IList<Warehouse> warehouses = null)
         {
-            warehouses = warehouses ?? await GetAllWarehouses();
+            warehouses = warehouses ?? await _warehouseService.GetAllWarehouses();
 
             //no address specified. return any
             if (address == null)
@@ -663,7 +553,7 @@ namespace Grand.Services.Shipping
                         foreach (var pwi in product.ProductWarehouseInventory)
                         {
                             //TODO validate stock quantity when backorder is not allowed?
-                            var tmpWarehouse = await GetWarehouseById(pwi.WarehouseId);
+                            var tmpWarehouse = await _warehouseService.GetWarehouseById(pwi.WarehouseId);
                             if (tmpWarehouse != null)
                                 allWarehouses.Add(tmpWarehouse);
                         }
@@ -672,17 +562,17 @@ namespace Grand.Services.Shipping
                     else
                     {
                         //multiple warehouses are not supported
-                        warehouse = await GetWarehouseById(product.WarehouseId);
+                        warehouse = await _warehouseService.GetWarehouseById(product.WarehouseId);
                     }
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(sci.WarehouseId))
-                        warehouse = await GetWarehouseById(sci.WarehouseId);
+                        warehouse = await _warehouseService.GetWarehouseById(sci.WarehouseId);
                     else
                     {
                         if (!string.IsNullOrEmpty(store?.DefaultWarehouseId))
-                            warehouse = await GetWarehouseById(store.DefaultWarehouseId);
+                            warehouse = await _warehouseService.GetWarehouseById(store.DefaultWarehouseId);
                     }
 
                 }

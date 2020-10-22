@@ -48,7 +48,7 @@ namespace Grand.Services.ExportImport
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly IDownloadService _downloadService;
-        private readonly IShippingService _shippingService;
+        private readonly IWarehouseService _warehouseService;
         private readonly IDeliveryDateService _deliveryDateService;
         private readonly ITaxCategoryService _taxService;
         private readonly IMeasureService _measureService;
@@ -74,7 +74,7 @@ namespace Grand.Services.ExportImport
             IManufacturerTemplateService manufacturerTemplateService,
             IProductTemplateService productTemplateService,
             IDownloadService downloadService,
-            IShippingService shippingService,
+            IWarehouseService warehouseService,
             IDeliveryDateService deliveryDateService,
             ITaxCategoryService taxService,
             IMeasureService measureService,
@@ -96,7 +96,7 @@ namespace Grand.Services.ExportImport
             _manufacturerTemplateService = manufacturerTemplateService;
             _productTemplateService = productTemplateService;
             _downloadService = downloadService;
-            _shippingService = shippingService;
+            _warehouseService = warehouseService;
             _deliveryDateService = deliveryDateService;
             _taxService = taxService;
             _measureService = measureService;
@@ -767,7 +767,7 @@ namespace Grand.Services.ExportImport
             var templates = await _productTemplateService.GetAllProductTemplates();
             var deliveryDates = await _deliveryDateService.GetAllDeliveryDates();
             var taxes = await _taxService.GetAllTaxCategories();
-            var warehouses = await _shippingService.GetAllWarehouses();
+            var warehouses = await _warehouseService.GetAllWarehouses();
             var units = await _measureService.GetAllMeasureUnits();
 
             for (var iRow = 1; iRow < worksheet.PhysicalNumberOfRows; iRow++)
