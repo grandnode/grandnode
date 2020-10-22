@@ -10,7 +10,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
         public PickupPointProfile()
         {
             CreateMap<PickupPoint, PickupPointModel>()
-                .ForMember(dest => dest.Address, mo => mo.Ignore());
+                .ForMember(dest => dest.Address, mo => mo.MapFrom(y => y.Address));
 
             CreateMap<PickupPointModel, PickupPoint>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());

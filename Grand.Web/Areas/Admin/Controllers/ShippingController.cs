@@ -556,11 +556,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var address = model.Address.ToEntity();
-                address.CreatedOnUtc = DateTime.UtcNow;
-                await _addressService.InsertAddressSettings(address);
                 var pickuppoint = model.ToEntity();
-                pickuppoint.Address = address;
                 await _shippingService.InsertPickupPoint(pickuppoint);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.PickupPoints.Added"));
@@ -580,7 +576,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("PickupPoints");
 
             var model = pickuppoint.ToModel();
-            model.Address = await pickuppoint.Address.ToModel(_countryService, _stateProvinceService);
             await PreparePickupPointModel(model);
 
             return View(model);
@@ -596,11 +591,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var address = new Domain.Common.Address { CreatedOnUtc = DateTime.UtcNow };
-                address = model.Address.ToEntity(address);
                 pickupPoint = model.ToEntity(pickupPoint);
-                pickupPoint.Address = address;
                 await _shippingService.UpdatePickupPoint(pickupPoint);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.PickupPoints.Updated"));
                 return continueEditing ? RedirectToAction("EditPickupPoint", new { id = pickupPoint.Id }) : RedirectToAction("PickupPoints");
             }
