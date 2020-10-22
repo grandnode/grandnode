@@ -9317,6 +9317,18 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Latitude">
+    <Value>Latitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Latitude.Hint">
+    <Value>Enter a warehouse latitude.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Longitude">
+    <Value>Longitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Longitude.Hint">
+    <Value>Enter a warehouse longitude.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Updated">
     <Value>The warehouse has been updated successfully.</Value>
   </LocaleResource>

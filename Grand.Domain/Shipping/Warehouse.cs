@@ -22,6 +22,16 @@ namespace Grand.Domain.Shipping
         public string AdminComment { get; set; }
 
         /// <summary>
+        /// Gets or sets the latitude of the GeoCoordinate.
+        /// </summary>
+        public double? Latitude { get; set; }
+
+        /// <summary>
+        /// Gets or sets the longitude of the GeoCoordinate.
+        /// </summary>
+        public double? Longitude { get; set; }
+
+        /// <summary>
         /// Gets or sets the address identifier of the warehouse
         /// </summary>
         public Address Address { get; set; }
