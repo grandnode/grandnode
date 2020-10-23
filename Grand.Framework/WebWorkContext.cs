@@ -397,14 +397,19 @@ namespace Grand.Framework
             //find a currency previously selected by a customer
             var customerCurrencyId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CurrencyId, _storeContext.CurrentStore.Id);
 
-            var allStoreCurrencies = await _currencyService.GetAllCurrencies();
+            var allStoreCurrencies = await _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore?.Id);
 
             //check customer currency availability
             var customerCurrency = allStoreCurrencies.FirstOrDefault(currency => currency.Id == customerCurrencyId);
+
             if (customerCurrency == null)
             {
-                //it not found, then try to get the default currency for the current language (if specified)
-                customerCurrency = allStoreCurrencies.FirstOrDefault(currency => currency.Id == this.WorkingLanguage.DefaultCurrencyId);
+                //check if the current store has a set default currency
+                if (!string.IsNullOrEmpty(_storeContext.CurrentStore?.DefaultCurrencyId))
+                    customerCurrency = allStoreCurrencies.FirstOrDefault(currency => currency.Id == _storeContext.CurrentStore.DefaultCurrencyId);
+                else
+                    //it not found, then try to get the default currency for the current language (if specified)
+                    customerCurrency = allStoreCurrencies.FirstOrDefault(currency => currency.Id == WorkingLanguage.DefaultCurrencyId);
             }
 
             //if the default currency for the current store not found, then try to get the first one
@@ -422,7 +427,7 @@ namespace Grand.Framework
         public virtual async Task<Currency> SetWorkingCurrency(Currency currency)
         {
             //and save it
-            await _genericAttributeService.SaveAttribute(this.CurrentCustomer,
+            await _genericAttributeService.SaveAttribute(CurrentCustomer,
                 SystemCustomerAttributeNames.CurrencyId, currency.Id, _storeContext.CurrentStore.Id);
 
             //then reset the cache value
@@ -466,7 +471,7 @@ namespace Grand.Framework
                 return await Task.FromResult(taxDisplayType);
 
             //save passed value
-            await _genericAttributeService.SaveAttribute(this.CurrentCustomer,
+            await _genericAttributeService.SaveAttribute(CurrentCustomer,
                 SystemCustomerAttributeNames.TaxDisplayTypeId, (int)taxDisplayType, _storeContext.CurrentStore.Id);
 
             //then reset the cache value

@@ -168,6 +168,13 @@
                 <span asp-validation-for="DefaultCountryId"></span>
             </div>
         </div>
+        <div class="form-group">
+            <admin-label asp-for="DefaultCurrencyId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="DefaultCurrencyId" asp-items="Model.AvailableCurrencies" />
+                <span asp-validation-for="DefaultCurrencyId"></span>
+            </div>
+        </div>
     </div>
 </div>
 <vc:admin-widget widget-zone="store_details_bottom" additional-data="Model" />

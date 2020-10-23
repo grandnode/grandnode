@@ -9428,6 +9428,12 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultCountry.Hint">
     <Value>This property allows a store owner to specify a default country for a store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultCurrency">
+    <Value>Default currency</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultCurrency.Hint">
+    <Value>This property allows a store owner to specify a default currency for a store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage">
     <Value>Default language</Value>
   </LocaleResource>
