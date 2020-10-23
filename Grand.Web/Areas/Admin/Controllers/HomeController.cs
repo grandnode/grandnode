@@ -1,25 +1,23 @@
 ﻿using Grand.Core;
-using Grand.Domain.Catalog;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
 using Grand.Domain.Orders;
 using Grand.Domain.Seo;
-using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
-using Grand.Services.Orders;
 using Grand.Services.Logging;
+using Grand.Services.Orders;
+using Grand.Services.Queries.Models.Catalog;
 using Grand.Services.Queries.Models.Orders;
+using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Home;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Grand.Web.Areas.Admin.Extensions;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -75,9 +73,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.OrdersPending = (await _orderReportService.GetOrderAverageReportLine(storeId: storeId, os: OrderStatus.Pending)).CountOrders;
             model.AbandonedCarts = (await _customerService.GetAllCustomers(storeId: storeId, loadOnlyWithShoppingCart: true, pageSize: 1)).TotalCount;
 
-            HttpContext.RequestServices.GetRequiredService<IProductService>().GetLowStockProducts(vendorId, storeId, out IList<Product> products, out IList<ProductAttributeCombination> combinations);
-
-            model.LowStockProducts = products.Count + combinations.Count;
+            var lowStockProducts = await _mediator.Send(new GetLowStockProducts() { StoreId = storeId, VendorId = vendorId });
+            model.LowStockProducts = lowStockProducts.products.Count + lowStockProducts.combinations.Count;
 
             model.ReturnRequests = await _mediator.Send(new GetReturnRequestCountQuery() { RequestStatusId = 0, StoreId = storeId });
             model.TodayRegisteredCustomers = (await _customerService.GetAllCustomers(storeId: storeId, customerRoleIds: new string[] { (await _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered)).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1)).TotalCount;

@@ -652,69 +652,13 @@ namespace Grand.Services.Catalog
         }
 
         /// <summary>
-        /// Get low stock products
-        /// </summary>
-        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
-        /// <param name="storeId">Store identifier; "" to load all records</param>
-        /// <param name="products">Low stock products</param>
-        /// <param name="combinations">Low stock attribute combinations</param>
-        public virtual void GetLowStockProducts(string vendorId, string storeId,
-            out IList<Product> products,
-            out IList<ProductAttributeCombination> combinations)
-        {
-            //Track inventory for product
-            //simple products
-            var query_simple_products = from p in _productRepository.Table
-                                        where p.LowStock &&
-                                        ((p.ProductTypeId == (int)ProductType.SimpleProduct && p.ManageInventoryMethodId != (int)ManageInventoryMethod.DontManageStock)
-                                        ||
-                                        (p.ProductTypeId == (int)ProductType.BundledProduct && p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock))
-                                        select p;
-
-            if (!string.IsNullOrEmpty(vendorId))
-                query_simple_products = query_simple_products.Where(x => x.VendorId == vendorId);
-
-            if (!string.IsNullOrEmpty(storeId))
-                query_simple_products = query_simple_products.Where(x => x.Stores.Contains(storeId));
-
-            products = query_simple_products.ToList();
-
-            //Track inventory for product by product attributes
-            var query2_1 = from p in _productRepository.Table
-                           where
-                           p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                           (vendorId == "" || p.VendorId == vendorId) &&
-                           (storeId == "" || p.Stores.Contains(storeId))
-                           from c in p.ProductAttributeCombinations
-                           select new ProductAttributeCombination() {
-                               ProductId = p.Id,
-                               StockQuantity = c.StockQuantity,
-                               AttributesXml = c.AttributesXml,
-                               AllowOutOfStockOrders = c.AllowOutOfStockOrders,
-                               Id = c.Id,
-                               Gtin = c.Gtin,
-                               ManufacturerPartNumber = c.ManufacturerPartNumber,
-                               NotifyAdminForQuantityBelow = c.NotifyAdminForQuantityBelow,
-                               OverriddenPrice = c.OverriddenPrice,
-                               Sku = c.Sku
-                           };
-
-            var query2_2 = from c in query2_1
-                           where c.StockQuantity <= 0
-                           select c;
-
-            combinations = query2_2.ToList();
-        }
-
-
-        /// <summary>
         /// Gets a product by SKU
         /// </summary>
         /// <param name="sku">SKU</param>
         /// <returns>Product</returns>
         public virtual async Task<Product> GetProductBySku(string sku)
         {
-            if (String.IsNullOrEmpty(sku))
+            if (string.IsNullOrEmpty(sku))
                 return null;
 
             sku = sku.Trim();

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Grand.Domain.Catalog;
 using Grand.Domain.Data;
-using Grand.Domain.Catalog;
 using Grand.Services.Queries.Models.Catalog;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Queries.Handlers.Catalog
 {
