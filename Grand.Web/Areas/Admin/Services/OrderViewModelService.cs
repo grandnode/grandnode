@@ -1245,6 +1245,8 @@ namespace Grand.Web.Areas.Admin.Services
 
             //warnings
             var shoppingCartService = _serviceProvider.GetRequiredService<IShoppingCartService>();
+            var inventoryManageService = _serviceProvider.GetRequiredService<IInventoryManageService>();
+
             warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
             warnings.AddRange(shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributesXml));
             if (warnings.Count == 0)
@@ -1279,7 +1281,7 @@ namespace Grand.Web.Areas.Admin.Services
                 await _orderService.UpdateOrder(order);
                 await LogEditOrder(order.Id);
                 //adjust inventory
-                await _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                await inventoryManageService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
 
                 //add a note
                 await _orderService.InsertOrderNote(new OrderNote {

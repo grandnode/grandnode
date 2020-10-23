@@ -67,6 +67,7 @@ namespace Grand.Services.Orders.Tests
         private ILocalizationService _localizationService;
         private ILanguageService _languageService;
         private IProductService _productService;
+        private IInventoryManageService _inventoryManageService;
         private IPriceFormatter _priceFormatter;
         private IProductAttributeFormatter _productAttributeFormatter;
         private IShoppingCartService _shoppingCartService;
@@ -125,7 +126,7 @@ namespace Grand.Services.Orders.Tests
             _warehouseService = new Mock<IWarehouseService>().Object;
 
             _productService = new Mock<IProductService>().Object;
-
+            _inventoryManageService = new Mock<IInventoryManageService>().Object;
             //price calculation service
             _discountService = new Mock<IDiscountService>().Object;
             _categoryService = new Mock<ICategoryService>().Object;
@@ -238,7 +239,7 @@ namespace Grand.Services.Orders.Tests
 
             _orderProcessingService = new OrderProcessingService(_orderService, _webHelper,
                 _localizationService, _languageService,
-                _productService, _paymentService, _logger,
+                _productService, _inventoryManageService, _paymentService, _logger,
                 _orderTotalCalcService, _priceCalcService, _priceFormatter,
                 _productAttributeParser, _productAttributeFormatter,
                 _giftCardService, _shoppingCartService, _checkoutAttributeFormatter,

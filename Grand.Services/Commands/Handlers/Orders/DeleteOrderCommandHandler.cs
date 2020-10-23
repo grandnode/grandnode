@@ -17,6 +17,7 @@ namespace Grand.Services.Commands.Handlers.Orders
         private readonly IOrderService _orderService;
         private readonly IShipmentService _shipmentService;
         private readonly IProductService _productService;
+        private readonly IInventoryManageService _inventoryManageService;
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
         private readonly IDiscountService _discountService;
@@ -27,6 +28,7 @@ namespace Grand.Services.Commands.Handlers.Orders
             IOrderService orderService,
             IShipmentService shipmentService,
             IProductService productService,
+            IInventoryManageService inventoryManageService,
             IProductReservationService productReservationService,
             IAuctionService auctionService,
             IDiscountService discountService,
@@ -36,6 +38,7 @@ namespace Grand.Services.Commands.Handlers.Orders
             _orderService = orderService;
             _shipmentService = shipmentService;
             _productService = productService;
+            _inventoryManageService = inventoryManageService;
             _productReservationService = productReservationService;
             _auctionService = auctionService;
             _discountService = discountService;
@@ -76,7 +79,7 @@ namespace Grand.Services.Commands.Handlers.Orders
                         var product = await _productService.GetProductById(shipmentItem.ProductId);
                         shipmentItem.ShipmentId = shipment.Id;
                         if (product != null)
-                            await _productService.ReverseBookedInventory(product, shipment, shipmentItem);
+                            await _inventoryManageService.ReverseBookedInventory(product, shipment, shipmentItem);
                     }
                 }
                 //Adjust inventory
@@ -84,7 +87,7 @@ namespace Grand.Services.Commands.Handlers.Orders
                 {
                     var product = await _productService.GetProductById(orderItem.ProductId);
                     if (product != null)
-                        await _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                        await _inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
                 }
 
                 //cancel reservations

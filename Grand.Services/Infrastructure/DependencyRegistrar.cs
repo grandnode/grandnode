@@ -192,6 +192,7 @@ namespace Grand.Services.Infrastructure
             builder.RegisterType<CategoryTemplateService>().As<ICategoryTemplateService>().InstancePerLifetimeScope();
             builder.RegisterType<ManufacturerTemplateService>().As<IManufacturerTemplateService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductTagService>().As<IProductTagService>().InstancePerLifetimeScope();
+            builder.RegisterType<InventoryManageService>().As<IInventoryManageService>().InstancePerLifetimeScope();
             builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerLifetimeScope();
             builder.RegisterType<OrderTagService>().As<IOrderTagService>().InstancePerLifetimeScope();
 

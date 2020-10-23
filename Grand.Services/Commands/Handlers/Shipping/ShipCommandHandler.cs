@@ -21,6 +21,7 @@ namespace Grand.Services.Commands.Handlers.Shipping
         private readonly IOrderService _orderService;
         private readonly IShipmentService _shipmentService;
         private readonly IProductService _productService;
+        private readonly IInventoryManageService _inventoryManageService;
         private readonly IWorkflowMessageService _workflowMessageService;
 
         public ShipCommandHandler(
@@ -28,12 +29,14 @@ namespace Grand.Services.Commands.Handlers.Shipping
             IOrderService orderService,
             IShipmentService shipmentService,
             IProductService productService,
+            IInventoryManageService inventoryManageService,
             IWorkflowMessageService workflowMessageService)
         {
             _mediator = mediator;
             _orderService = orderService;
             _shipmentService = shipmentService;
             _productService = productService;
+            _inventoryManageService = inventoryManageService;
             _workflowMessageService = workflowMessageService;
         }
 
@@ -57,7 +60,7 @@ namespace Grand.Services.Commands.Handlers.Shipping
             {
                 var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
                 var product = await _productService.GetProductByIdIncludeArch(orderItem.ProductId);
-                await _productService.BookReservedInventory(product, item.AttributeXML, item.WarehouseId, -item.Quantity);
+                await _inventoryManageService.BookReservedInventory(product, item.AttributeXML, item.WarehouseId, -item.Quantity);
             }
 
             //check whether we have more items to ship

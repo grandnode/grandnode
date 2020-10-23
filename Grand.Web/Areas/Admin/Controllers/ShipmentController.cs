@@ -39,6 +39,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
         private readonly IProductService _productService;
+        private readonly IInventoryManageService _inventoryManageService;
         private readonly IShipmentService _shipmentService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IMediator _mediator;
@@ -52,6 +53,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             IPdfService pdfService,
             IProductService productService,
+            IInventoryManageService inventoryManageService,
             IShipmentService shipmentService,
             IDateTimeHelper dateTimeHelper,
             IMediator mediator)
@@ -62,6 +64,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _workContext = workContext;
             _pdfService = pdfService;
             _productService = productService;
+            _inventoryManageService = inventoryManageService;
             _shipmentService = shipmentService;
             _dateTimeHelper = dateTimeHelper;
             _mediator = mediator;
@@ -312,7 +315,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var product = await _productService.GetProductById(shipmentItem.ProductId);
                 shipmentItem.ShipmentId = shipment.Id;
                 if (product != null)
-                    await _productService.ReverseBookedInventory(product, shipment, shipmentItem);
+                    await _inventoryManageService.ReverseBookedInventory(product, shipment, shipmentItem);
             }
 
             await _shipmentService.DeleteShipment(shipment);

@@ -14,17 +14,20 @@ namespace Grand.Api.Commands.Models.Catalog
     public class UpdateProductStockCommandHandler : IRequestHandler<UpdateProductStockCommand, bool>
     {
         private readonly IProductService _productService;
+        private readonly IInventoryManageService _inventoryManageService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
 
         public UpdateProductStockCommandHandler(
             IProductService productService,
+            IInventoryManageService inventoryManageService,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             IBackInStockSubscriptionService backInStockSubscriptionService)
         {
             _productService = productService;
+            _inventoryManageService = inventoryManageService;
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
             _backInStockSubscriptionService = backInStockSubscriptionService;
@@ -41,7 +44,7 @@ namespace Grand.Api.Commands.Models.Catalog
                 if (string.IsNullOrEmpty(request.WarehouseId))
                 {
                     product.StockQuantity = request.Stock;
-                    await _productService.UpdateStockProduct(product, false);
+                    await _inventoryManageService.UpdateStockProduct(product, false);
                 }
                 else
                 {
@@ -66,7 +69,7 @@ namespace Grand.Api.Commands.Models.Catalog
                         }
 
                         product.StockQuantity = product.ProductWarehouseInventory.Sum(x => x.StockQuantity);
-                        await _productService.UpdateStockProduct(product, false);
+                        await _inventoryManageService.UpdateStockProduct(product, false);
                     }
                     else
                     {

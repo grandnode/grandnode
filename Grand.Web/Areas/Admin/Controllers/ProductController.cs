@@ -42,6 +42,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         private readonly IProductViewModelService _productViewModelService;
         private readonly IProductService _productService;
+        private readonly IInventoryManageService _inventoryManageService;
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
         private readonly ILanguageService _languageService;
@@ -62,6 +63,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public ProductController(
             IProductViewModelService productViewModelService,
             IProductService productService,
+            IInventoryManageService inventoryManageService,
             ICustomerService customerService,
             IWorkContext workContext,
             ILanguageService languageService,
@@ -77,6 +79,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             _productViewModelService = productViewModelService;
             _productService = productService;
+            _inventoryManageService = inventoryManageService;
             _customerService = customerService;
             _workContext = workContext;
             _languageService = languageService;
@@ -2150,7 +2153,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var pr = await _productService.GetProductById(productId);
                 pr.StockQuantity = pr.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                await _productService.UpdateStockProduct(pr, false);
+                await _inventoryManageService.UpdateStockProduct(pr, false);
             }
 
             return new NullJsonResult();
@@ -2254,7 +2257,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                 {
                     product.StockQuantity = 0;
-                    await _productService.UpdateStockProduct(product, false);
+                    await _inventoryManageService.UpdateStockProduct(product, false);
                 }
                 return Json(new { Success = true });
             }

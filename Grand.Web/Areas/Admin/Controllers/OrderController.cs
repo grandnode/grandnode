@@ -1042,7 +1042,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         [PermissionAuthorizeAction(PermissionActionName.Edit)]
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
-        public async Task<IActionResult> EditOrderItem(string id, IFormCollection form, [FromServices] IProductService productService)
+        public async Task<IActionResult> EditOrderItem(string id, IFormCollection form, 
+            [FromServices] IProductService productService, [FromServices] IInventoryManageService inventoryManageService)
         {
             var order = await _orderService.GetOrderById(id);
             if (order == null)
@@ -1098,13 +1099,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 orderItem.PriceExclTax = priceExclTax;
                 await _orderService.UpdateOrder(order);
                 //adjust inventory
-                await productService.AdjustInventory(product, qtyDifference, orderItem.AttributesXml, orderItem.WarehouseId);
+                await inventoryManageService.AdjustInventory(product, qtyDifference, orderItem.AttributesXml, orderItem.WarehouseId);
 
             }
             else
             {
                 //adjust inventory
-                await productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                await inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
                 await _orderService.DeleteOrderItem(orderItem);
             }
 
@@ -1133,6 +1134,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteOrderItem(string id, IFormCollection form,
             [FromServices] IGiftCardService giftCardService,
             [FromServices] IProductService productService,
+            [FromServices] IInventoryManageService inventoryManageService,
             [FromServices] IShipmentService shipmentService)
         {
             var order = await _orderService.GetOrderById(id);
@@ -1201,7 +1203,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 //adjust inventory
                 if (product != null)
-                    await productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                    await inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
 
                 await _orderService.DeleteOrderItem(orderItem);
                 order = await _orderService.GetOrderById(id);

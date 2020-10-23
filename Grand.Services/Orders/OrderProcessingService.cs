@@ -51,6 +51,7 @@ namespace Grand.Services.Orders
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
         private readonly IProductService _productService;
+        private readonly IInventoryManageService _inventoryManageService;
         private readonly IPaymentService _paymentService;
         private readonly ILogger _logger;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
@@ -94,6 +95,7 @@ namespace Grand.Services.Orders
             ILocalizationService localizationService,
             ILanguageService languageService,
             IProductService productService,
+            IInventoryManageService inventoryManageService,
             IPaymentService paymentService,
             ILogger logger,
             IOrderTotalCalculationService orderTotalCalculationService,
@@ -133,6 +135,7 @@ namespace Grand.Services.Orders
             _localizationService = localizationService;
             _languageService = languageService;
             _productService = productService;
+            _inventoryManageService = inventoryManageService;
             _paymentService = paymentService;
             _logger = logger;
             _orderTotalCalculationService = orderTotalCalculationService;
@@ -918,7 +921,7 @@ namespace Grand.Services.Orders
                 }
 
                 //inventory
-                await _productService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml, warehouseId);
+                await _inventoryManageService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml, warehouseId);
             }
 
             //insert order
@@ -1052,7 +1055,7 @@ namespace Grand.Services.Orders
                 }
 
                 //inventory
-                await _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                await _inventoryManageService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
             }
 
             //insert order
@@ -2442,27 +2445,7 @@ namespace Grand.Services.Orders
 
             return true;
         }
-
-        /// <summary>
-        /// Valdiate minimum order total amount
-        /// </summary>
-        /// <param name="cart">Shopping cart</param>
-        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
-        public virtual async Task<bool> ValidateMinOrderTotalAmount(IList<ShoppingCartItem> cart)
-        {
-            if (cart == null)
-                throw new ArgumentNullException("cart");
-
-            if (cart.Any() && _orderSettings.MinOrderTotalAmount > decimal.Zero)
-            {
-                decimal? shoppingCartTotalBase = (await _orderTotalCalculationService.GetShoppingCartTotal(cart)).shoppingCartTotal;
-                if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value < _orderSettings.MinOrderTotalAmount)
-                    return false;
-            }
-
-            return true;
-        }
-
+        
         /// <summary>
         /// Validate order total amount
         /// </summary>
