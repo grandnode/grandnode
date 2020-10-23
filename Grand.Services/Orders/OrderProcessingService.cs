@@ -433,9 +433,8 @@ namespace Grand.Services.Orders
             if (!CommonHelper.IsValidEmail(details.Customer.BillingAddress.Email))
                 throw new GrandException("Email is not valid");
 
-            //clone billing address
-            details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
-            if (!String.IsNullOrEmpty(details.BillingAddress.CountryId))
+            details.BillingAddress = details.Customer.BillingAddress;
+            if (!string.IsNullOrEmpty(details.BillingAddress.CountryId))
             {
                 var country = await _countryService.GetCountryById(details.BillingAddress.CountryId);
                 if (country != null)
