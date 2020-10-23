@@ -8,6 +8,7 @@ using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.ExportImport;
@@ -22,6 +23,7 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Orders;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -51,6 +53,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IAuctionService _auctionService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPermissionService _permissionService;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -69,7 +72,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IProductReservationService productReservationService,
             IAuctionService auctionService,
             IDateTimeHelper dateTimeHelper,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IMediator mediator)
         {
             _productViewModelService = productViewModelService;
             _productService = productService;
@@ -84,6 +88,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _auctionService = auctionService;
             _dateTimeHelper = dateTimeHelper;
             _permissionService = permissionService;
+            _mediator = mediator;
         }
 
         #endregion
@@ -2433,7 +2438,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Json(new { errors = _localizationService.GetResource("Admin.Catalog.Products.Calendar.CannotChangeInterval") });
                 }
             }
-            await _productService.UpdateIntervalProperties(productId, model.Interval, (IntervalUnit)model.IntervalUnit, model.IncBothDate);
+
+            await _mediator.Send(new UpdateIntervalPropertiesCommand() { Product = product, IncludeBothDates = model.IncBothDate, Interval = model.Interval, IntervalUnit = (IntervalUnit)model.IntervalUnit });
 
             if (!ModelState.IsValid)
             {

@@ -196,16 +196,6 @@ namespace Grand.Services.Catalog
         /// <returns>Product</returns>
         Task<Product> GetProductBySku(string sku);
 
-        /// <summary>
-        /// Update Interval properties
-        /// </summary>
-        /// <param name="productId">Product Id</param>
-        /// <param name="Interval">Interval</param>
-        /// <param name="IntervalUnit">Interval unit</param>
-        /// <param name="includeBothDates">Include both dates</param>
-        Task UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit, bool includeBothDates);
-
-
         #endregion
 
         #region Inventory management methods

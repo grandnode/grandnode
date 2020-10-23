@@ -687,34 +687,6 @@ namespace Grand.Services.Catalog
 
         }
 
-        /// <summary>
-        /// Update Interval properties
-        /// </summary>
-        /// <param name="Interval">Interval</param>
-        /// <param name="IntervalUnit">Interval unit</param>
-        /// <param name="includeBothDates">Include both dates</param>
-        public virtual async Task UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit, bool includeBothDates)
-        {
-            var product = await GetProductById(productId);
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            var filter = Builders<Product>.Filter.Eq("Id", product.Id);
-            var update = Builders<Product>.Update
-                    .Set(x => x.Interval, interval)
-                    .Set(x => x.IntervalUnitId, (int)intervalUnit)
-                    .Set(x => x.IncBothDate, includeBothDates);
-
-            await _productRepository.Collection.UpdateOneAsync(filter, update);
-
-            //event notification
-            await _mediator.EntityUpdated(product);
-
-            //cache
-            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
-
-        }
-
         #endregion
 
         #region Inventory management methods
