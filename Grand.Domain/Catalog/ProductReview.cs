@@ -84,7 +84,7 @@ namespace Grand.Domain.Catalog
         /// </summary>
         public virtual ICollection<ProductReviewHelpfulness> ProductReviewHelpfulnessEntries
         {
-            get { return _productReviewHelpfulnessEntries ?? (_productReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>()); }
+            get { return _productReviewHelpfulnessEntries ??= new List<ProductReviewHelpfulness>(); }
             protected set { _productReviewHelpfulnessEntries = value; }
         }
     }

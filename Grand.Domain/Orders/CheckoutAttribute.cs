@@ -130,7 +130,7 @@ namespace Grand.Domain.Orders
         /// </summary>
         public virtual ICollection<CheckoutAttributeValue> CheckoutAttributeValues
         {
-            get { return _checkoutAttributeValues ?? (_checkoutAttributeValues = new List<CheckoutAttributeValue>()); }
+            get { return _checkoutAttributeValues ??= new List<CheckoutAttributeValue>(); }
             protected set { _checkoutAttributeValues = value; }
         }
     }

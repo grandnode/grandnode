@@ -180,7 +180,7 @@ namespace Grand.Domain.Customers
         /// </summary>
         public virtual ICollection<CustomerRole> CustomerRoles
         {
-            get { return _customerRoles ?? (_customerRoles = new List<CustomerRole>()); }
+            get { return _customerRoles ??= new List<CustomerRole>(); }
             protected set { _customerRoles = value; }
         }
 
@@ -189,7 +189,7 @@ namespace Grand.Domain.Customers
         /// </summary>
         public virtual ICollection<ShoppingCartItem> ShoppingCartItems
         {
-            get { return _shoppingCartItems ?? (_shoppingCartItems = new List<ShoppingCartItem>()); }
+            get { return _shoppingCartItems ??= new List<ShoppingCartItem>(); }
             protected set { _shoppingCartItems = value; }            
         }
 
@@ -208,7 +208,7 @@ namespace Grand.Domain.Customers
         /// </summary>
         public virtual ICollection<Address> Addresses
         {
-            get { return _addresses ?? (_addresses = new List<Address>()); }
+            get { return _addresses ??= new List<Address>(); }
             protected set { _addresses = value; }            
         }
 
@@ -217,7 +217,7 @@ namespace Grand.Domain.Customers
         /// </summary>
         public virtual ICollection<string> CustomerTags
         {
-            get { return _customerTags ?? (_customerTags = new List<string>()); }
+            get { return _customerTags ??= new List<string>(); }
             protected set { _customerTags = value; }
         }
         #endregion

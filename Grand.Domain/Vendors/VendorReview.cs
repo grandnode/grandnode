@@ -60,7 +60,7 @@ namespace Grand.Domain.Vendors
         /// </summary>
         public virtual ICollection<VendorReviewHelpfulness> VendorReviewHelpfulnessEntries
         {
-            get { return _vendorReviewHelpfulnessEntries ?? (_vendorReviewHelpfulnessEntries = new List<VendorReviewHelpfulness>()); }
+            get { return _vendorReviewHelpfulnessEntries ??= new List<VendorReviewHelpfulness>(); }
             protected set { _vendorReviewHelpfulnessEntries = value; }
         }
     }

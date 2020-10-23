@@ -70,7 +70,7 @@ namespace Grand.Domain.Catalog
         /// </summary>
         public virtual ICollection<ProductCombinationWarehouseInventory> WarehouseInventory
         {
-            get { return _warehouseInventory ?? (_warehouseInventory = new List<ProductCombinationWarehouseInventory>()); }
+            get { return _warehouseInventory ??= new List<ProductCombinationWarehouseInventory>(); }
             protected set { _warehouseInventory = value; }
         }
 
@@ -79,7 +79,7 @@ namespace Grand.Domain.Catalog
         /// </summary>
         public virtual ICollection<ProductCombinationTierPrices> TierPrices
         {
-            get { return _tierPrices ?? (_tierPrices = new List<ProductCombinationTierPrices>()); }
+            get { return _tierPrices ??= new List<ProductCombinationTierPrices>(); }
             protected set { _tierPrices = value; }
         }
 

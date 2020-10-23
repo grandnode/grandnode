@@ -116,7 +116,7 @@ namespace Grand.Domain.Messages
         /// </summary>
         public virtual ICollection<ContactAttributeValue> ContactAttributeValues
         {
-            get { return _contactAttributeValues ?? (_contactAttributeValues = new List<ContactAttributeValue>()); }
+            get { return _contactAttributeValues ??= new List<ContactAttributeValue>(); }
             protected set { _contactAttributeValues = value; }
         }
     }

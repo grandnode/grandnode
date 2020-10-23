@@ -65,7 +65,7 @@ namespace Grand.Domain.Shipping
         /// </summary>
         public virtual ICollection<ShipmentItem> ShipmentItems
         {
-            get { return _shipmentItems ?? (_shipmentItems = new List<ShipmentItem>()); }
+            get { return _shipmentItems ??= new List<ShipmentItem>(); }
             protected set { _shipmentItems = value; }
         }
     }

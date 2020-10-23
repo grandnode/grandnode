@@ -386,7 +386,7 @@ namespace Grand.Domain.Orders
         /// </summary>
         public virtual ICollection<OrderItem> OrderItems
         {
-            get { return _orderItems ?? (_orderItems = new List<OrderItem>()); }
+            get { return _orderItems ??= new List<OrderItem>(); }
             protected set { _orderItems = value; }
         }
 
@@ -395,7 +395,7 @@ namespace Grand.Domain.Orders
         /// </summary>
         public virtual ICollection<string> OrderTags 
         {
-            get { return _orderTags ?? (_orderTags = new List<string>()); }
+            get { return _orderTags ??= new List<string>(); }
             protected set { _orderTags = value; }
 
         }

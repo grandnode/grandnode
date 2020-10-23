@@ -144,7 +144,7 @@ namespace Grand.Domain.Discounts
         /// </summary>
         public virtual ICollection<DiscountRequirement> DiscountRequirements
         {
-            get { return _discountRequirements ?? (_discountRequirements = new List<DiscountRequirement>()); }
+            get { return _discountRequirements ??= new List<DiscountRequirement>(); }
             protected set { _discountRequirements = value; }
         }
 

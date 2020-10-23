@@ -30,7 +30,7 @@ namespace Grand.Domain.Security
         /// </summary>
         public virtual ICollection<string> CustomerRoles
         {
-            get { return _customerRoles ?? (_customerRoles = new List<string>()); }
+            get { return _customerRoles ??= new List<string>(); }
             protected set { _customerRoles = value; }
         }
 
@@ -38,7 +38,7 @@ namespace Grand.Domain.Security
         /// Gets or sets actions
         /// </summary>
         public virtual ICollection<string> Actions {
-            get { return _actions ?? (_actions = new List<string>()); }
+            get { return _actions ??= new List<string>(); }
             set { _actions = value; }
         }
     }

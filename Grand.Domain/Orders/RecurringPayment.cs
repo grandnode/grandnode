@@ -140,7 +140,7 @@ namespace Grand.Domain.Orders
         /// </summary>
         public virtual ICollection<RecurringPaymentHistory> RecurringPaymentHistory
         {
-            get { return _recurringPaymentHistory ?? (_recurringPaymentHistory = new List<RecurringPaymentHistory>()); }
+            get { return _recurringPaymentHistory ??= new List<RecurringPaymentHistory>(); }
             protected set { _recurringPaymentHistory = value; }
         }        
 

@@ -79,7 +79,7 @@ namespace Grand.Domain.Directory
         /// </summary>
         public virtual ICollection<StateProvince> StateProvinces
         {
-            get { return _stateProvinces ?? (_stateProvinces = new List<StateProvince>()); }
+            get { return _stateProvinces ??= new List<StateProvince>(); }
             protected set { _stateProvinces = value; }
         }
 
@@ -88,7 +88,7 @@ namespace Grand.Domain.Directory
         /// </summary>
         public virtual ICollection<ShippingMethod> RestrictedShippingMethods
         {
-            get { return _restrictedShippingMethods ?? (_restrictedShippingMethods = new List<ShippingMethod>()); }
+            get { return _restrictedShippingMethods ??= new List<ShippingMethod>(); }
             protected set { _restrictedShippingMethods = value; }
         }
     }

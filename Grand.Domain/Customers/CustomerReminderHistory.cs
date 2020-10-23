@@ -37,7 +37,7 @@ namespace Grand.Domain.Customers
         /// </summary>
         public virtual ICollection<HistoryLevel> Levels
         {
-            get { return _level ?? (_level = new List<HistoryLevel>()); }
+            get { return _level ??= new List<HistoryLevel>(); }
             protected set { _level = value; }
         }
 

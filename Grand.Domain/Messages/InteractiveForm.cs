@@ -40,7 +40,7 @@ namespace Grand.Domain.Messages
 
         public virtual ICollection<FormAttribute> FormAttributes
         {
-            get { return _formAttributes ?? (_formAttributes = new List<FormAttribute>()); }
+            get { return _formAttributes ??= new List<FormAttribute>(); }
             protected set { _formAttributes = value; }
         }
 
@@ -117,7 +117,7 @@ namespace Grand.Domain.Messages
             public IList<LocalizedProperty> Locales { get; set; }
             public virtual ICollection<FormAttributeValue> FormAttributeValues
             {
-                get { return _formAttributeValues ?? (_formAttributeValues = new List<FormAttributeValue>()); }
+                get { return _formAttributeValues ??= new List<FormAttributeValue>(); }
                 protected set { _formAttributeValues = value; }
             }
         }
