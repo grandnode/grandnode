@@ -85,6 +85,7 @@ namespace Grand.Services.Orders.Tests
         private IMediator _eventPublisher;
         private IAffiliateService _affiliateService;
         private IVendorService _vendorService;
+        private IWarehouseService _warehouseService;
         private IPdfService _pdfService;
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
@@ -121,6 +122,8 @@ namespace Grand.Services.Orders.Tests
             }
             var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
 
+            _warehouseService = new Mock<IWarehouseService>().Object;
+
             _productService = new Mock<IProductService>().Object;
 
             //price calculation service
@@ -154,10 +157,7 @@ namespace Grand.Services.Orders.Tests
             _warehouseRepository = new Mock<IRepository<Warehouse>>().Object;
 
             _logger = new NullLogger();
-            _shippingService = new ShippingService(_shippingMethodRepository,
-            _deliveryDateRepository,
-            _warehouseRepository,
-            null,
+            _shippingService = new ShippingService(_warehouseService,
             _logger,
             _productService,
             _productAttributeParser,
@@ -167,9 +167,7 @@ namespace Grand.Services.Orders.Tests
             _countryService,
             _stateProvinceService,
             pluginFinder,
-            _eventPublisher,
             _currencyService,
-            cacheManager,
             _shoppingCartSettings,
             _shippingSettings);
             _shipmentService = new Mock<IShipmentService>().Object;

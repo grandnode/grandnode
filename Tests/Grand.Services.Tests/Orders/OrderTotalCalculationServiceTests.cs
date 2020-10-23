@@ -71,6 +71,7 @@ namespace Grand.Services.Orders.Tests
         private ICurrencyService _currencyService;
         private IServiceProvider _serviceProvider;
         private IStateProvinceService _stateProvinceService;
+        private IWarehouseService _warehouseService;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -105,7 +106,7 @@ namespace Grand.Services.Orders.Tests
             _vendorService = new Mock<IVendorService>().Object;
             _currencyService = new Mock<ICurrencyService>().Object;
             _serviceProvider = new Mock<IServiceProvider>().Object;
-
+            _warehouseService = new Mock<IWarehouseService>().Object;
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
             _customerService = new Mock<ICustomerService>().Object;
@@ -143,10 +144,7 @@ namespace Grand.Services.Orders.Tests
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
             _taxSettings.DefaultTaxAddressId = "10";
 
-            _shippingService = new ShippingService(_shippingMethodRepository,
-            _deliveryDateRepository,
-            _warehouseRepository,
-            null,
+            _shippingService = new ShippingService(_warehouseService,
             _logger,
             _productService,
             _productAttributeParser,
@@ -156,13 +154,9 @@ namespace Grand.Services.Orders.Tests
             _countryService,
             _stateProvinceService,
             pluginFinder,
-            _eventPublisher,
             _currencyService,
-            cacheManager,
             _shoppingCartSettings,
             _shippingSettings);
-
-
 
             var tempAddressService = new Mock<IAddressService>();
             {
