@@ -21,6 +21,7 @@ namespace Grand.Plugin.Shipping.ByWeight
         #region Fields
 
         private readonly IShippingService _shippingService;
+        private readonly IShippingMethodService _shippingMethodService;
         private readonly IStoreContext _storeContext;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ISettingService _settingService;
@@ -29,10 +30,12 @@ namespace Grand.Plugin.Shipping.ByWeight
         private readonly IServiceProvider _serviceProvider;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
+
         #endregion
 
         #region Ctor
         public ByWeightShippingComputationMethod(IShippingService shippingService,
+            IShippingMethodService shippingMethodService,
             IStoreContext storeContext,
             IPriceCalculationService priceCalculationService,
             ISettingService settingService,
@@ -43,6 +46,7 @@ namespace Grand.Plugin.Shipping.ByWeight
             IServiceProvider serviceProvider)
         {
             _shippingService = shippingService;
+            _shippingMethodService = shippingMethodService;
             _storeContext = storeContext;
             _priceCalculationService = priceCalculationService;
             _settingService = settingService;
@@ -138,7 +142,7 @@ namespace Grand.Plugin.Shipping.ByWeight
             }
             decimal weight = await _shippingService.GetTotalWeight(getShippingOptionRequest);
 
-            var shippingMethods = await _shippingService.GetAllShippingMethods(countryId, _workContext.CurrentCustomer);
+            var shippingMethods = await _shippingMethodService.GetAllShippingMethods(countryId, _workContext.CurrentCustomer);
             foreach (var shippingMethod in shippingMethods)
             {
                 decimal? rate = await GetRate(subTotal, weight, shippingMethod.Id,

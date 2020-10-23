@@ -22,7 +22,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
         #region Fields
 
         private readonly ISettingService _settingService;
-        private readonly IShippingService _shippingService;
+        private readonly IShippingMethodService _shippingMethodService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
@@ -31,14 +31,14 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
 
         #region Ctor
         public FixedRateShippingComputationMethod(ISettingService settingService,
-            IShippingService shippingService,
+            IShippingMethodService shippingMethodService,
             IWebHelper webHelper,
             ILocalizationService localizationService, 
             ILanguageService languageService,
             IWorkContext workContext)
         {
             _settingService = settingService;
-            _shippingService = shippingService;
+            _shippingMethodService = shippingMethodService;
             _webHelper = webHelper;
             _localizationService = localizationService;
             _languageService = languageService;
@@ -85,7 +85,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
             }
 
             string restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && !String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId)) ? getShippingOptionRequest.ShippingAddress.CountryId : "";
-            var shippingMethods = await _shippingService.GetAllShippingMethods(restrictByCountryId, getShippingOptionRequest.Customer);
+            var shippingMethods = await _shippingMethodService.GetAllShippingMethods(restrictByCountryId, getShippingOptionRequest.Customer);
             foreach (var shippingMethod in shippingMethods)
             {
                 var shippingOption = new ShippingOption
@@ -111,7 +111,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
                 throw new ArgumentNullException("getShippingOptionRequest");
 
             string restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && !String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId)) ? getShippingOptionRequest.ShippingAddress.CountryId : "";
-            var shippingMethods = await _shippingService.GetAllShippingMethods(restrictByCountryId);
+            var shippingMethods = await _shippingMethodService.GetAllShippingMethods(restrictByCountryId);
 
             var rates = new List<decimal>();
             foreach (var shippingMethod in shippingMethods)

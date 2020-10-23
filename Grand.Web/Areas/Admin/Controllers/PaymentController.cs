@@ -1,9 +1,9 @@
 ﻿using Grand.Core;
-using Grand.Domain.Payments;
 using Grand.Core.Plugins;
+using Grand.Domain.Payments;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
-using Grand.Core.Models;
+using Grand.Framework.Mvc.Models;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
@@ -20,51 +20,50 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
     [PermissionAuthorize(PermissionSystemName.PaymentMethods)]
     public partial class PaymentController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
         private readonly IPaymentService _paymentService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ISettingService _settingService;
-	    private readonly ICountryService _countryService;
+        private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
-        private readonly IShippingService _shippingService;
+        private readonly IShippingMethodService _shippingMethodService;
         private readonly IPluginFinder _pluginFinder;
-	    private readonly IWebHelper _webHelper;
-	    private readonly ILocalizationService _localizationService;
+        private readonly IWebHelper _webHelper;
+        private readonly ILocalizationService _localizationService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public PaymentController(IPaymentService paymentService,
             PaymentSettings paymentSettings,
-            ISettingService settingService, 
+            ISettingService settingService,
             ICountryService countryService,
             ICustomerService customerService,
-            IShippingService shippingService,
+            IShippingMethodService shippingMethodService,
             IPluginFinder pluginFinder,
             IWebHelper webHelper,
             ILocalizationService localizationService)
-		{
+        {
             _paymentService = paymentService;
             _paymentSettings = paymentSettings;
             _settingService = settingService;
             _countryService = countryService;
             _customerService = customerService;
-            _shippingService = shippingService;
+            _shippingMethodService = shippingMethodService;
             _pluginFinder = pluginFinder;
             _webHelper = webHelper;
             _localizationService = localizationService;
-		}
+        }
 
-		#endregion 
+        #endregion
 
         #region Methods
 
@@ -84,8 +83,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 paymentMethodsModel.Add(tmp1);
             }
             paymentMethodsModel = paymentMethodsModel.ToList();
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = paymentMethodsModel,
                 Total = paymentMethodsModel.Count
             };
@@ -94,7 +92,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MethodUpdate( PaymentMethodModel model)
+        public async Task<IActionResult> MethodUpdate(PaymentMethodModel model)
         {
             var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);
             if (pm.IsPaymentMethodActive(_paymentSettings))
@@ -145,7 +143,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
             var countries = await _countryService.GetAllCountries(showHidden: true);
             var customerroles = await _customerService.GetAllCustomerRoles(showHidden: true);
-            var shippings = await _shippingService.GetAllShippingMethods();
+            var shippings = await _shippingMethodService.GetAllShippingMethods();
 
             foreach (var pm in paymentMethods)
             {
@@ -157,13 +155,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             foreach (var r in customerroles)
             {
-                model.AvailableCustomerRoles.Add(new CustomerRoleModel() { Id  = r.Id, Name = r.Name });
+                model.AvailableCustomerRoles.Add(new CustomerRoleModel() { Id = r.Id, Name = r.Name });
             }
             foreach (var s in shippings)
             {
                 model.AvailableShippingMethods.Add(new Models.Shipping.ShippingMethodModel() {
-                     Id = s.Id,
-                     Name = s.Name
+                    Id = s.Id,
+                    Name = s.Name
                 });
             }
 
@@ -208,12 +206,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
             var countries = await _countryService.GetAllCountries(showHidden: true);
             var customerroles = await _customerService.GetAllCustomerRoles(showHidden: true);
-            var shippings = await _shippingService.GetAllShippingMethods();
+            var shippings = await _shippingMethodService.GetAllShippingMethods();
 
             foreach (var pm in paymentMethods)
             {
                 string formKey = "restrict_" + pm.PluginDescriptor.SystemName;
-                var countryIdsToRestrict = (form[formKey].ToString() != null ? form[formKey].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
+                var countryIdsToRestrict = (form[formKey].ToString() != null ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
                     .Select(x => x).ToList();
 
                 var newCountryIds = new List<string>();

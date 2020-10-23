@@ -374,6 +374,7 @@ namespace Grand.Services.Infrastructure
             builder.RegisterType<PickupPointService>().As<IPickupPointService>().InstancePerLifetimeScope();
             builder.RegisterType<DeliveryDateService>().As<IDeliveryDateService>().InstancePerLifetimeScope();
             builder.RegisterType<WarehouseService>().As<IWarehouseService>().InstancePerLifetimeScope();
+            builder.RegisterType<ShippingMethodService>().As<IShippingMethodService>().InstancePerLifetimeScope();
         }
         private void RegisterStoresService(ContainerBuilder builder)
         {

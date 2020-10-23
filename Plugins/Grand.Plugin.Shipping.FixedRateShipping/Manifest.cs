@@ -7,5 +7,5 @@ using Grand.Core.Plugins;
     SystemName = "Shipping.FixedRate",
     SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
-    Version = "2.2"
+    Version = "2.21"
 )]

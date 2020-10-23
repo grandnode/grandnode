@@ -17,17 +17,18 @@ namespace Grand.Plugin.Shipping.FixedRateShipping.Controllers
     [AuthorizeAdmin]
     public class ShippingFixedRateController : BaseShippingController
     {
-        private readonly IShippingService _shippingService;
+        private readonly IShippingMethodService _shippingMethodService;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
 
-        public ShippingFixedRateController(IShippingService shippingServicee,
+        public ShippingFixedRateController(
+            IShippingMethodService shippingMethodService,
             ISettingService settingService, 
             IPermissionService permissionService)
         {
-            this._shippingService = shippingServicee;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
+            _shippingMethodService = shippingMethodService;
+            _settingService = settingService;
+            _permissionService = permissionService;
         }
         
         public IActionResult Configure()
@@ -42,7 +43,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping.Controllers
                 return Content("Access denied");
 
             var rateModels = new List<FixedShippingRateModel>();
-            foreach (var shippingMethod in await _shippingService.GetAllShippingMethods())
+            foreach (var shippingMethod in await _shippingMethodService.GetAllShippingMethods())
                 rateModels.Add(new FixedShippingRateModel
                 {
                     ShippingMethodId = shippingMethod.Id,
@@ -76,7 +77,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping.Controllers
         [NonAction]
         protected decimal GetShippingRate(string shippingMethodId)
         {
-            var rate = this._settingService.GetSettingByKey<decimal>(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId));
+            var rate = _settingService.GetSettingByKey<decimal>(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId));
             return rate;
         }
     }

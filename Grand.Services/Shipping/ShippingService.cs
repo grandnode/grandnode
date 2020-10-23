@@ -1,21 +1,17 @@
 using Grand.Core;
-using Grand.Core.Caching;
-using Grand.Domain.Data;
+using Grand.Core.Plugins;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Orders;
 using Grand.Domain.Shipping;
 using Grand.Domain.Stores;
-using Grand.Core.Plugins;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Directory;
-using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
-using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -30,19 +26,9 @@ namespace Grand.Services.Shipping
     /// </summary>
     public partial class ShippingService : IShippingService
     {
-        #region Constants
-
- 
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string SHIPPINGMETHOD_PATTERN_KEY = "Grand.shippingmethod.";
-
-        #endregion
-
         #region Fields
+
         private readonly IWarehouseService _warehouseService;
-        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -53,8 +39,6 @@ namespace Grand.Services.Shipping
         private readonly ICurrencyService _currencyService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IPluginFinder _pluginFinder;
-        private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
@@ -67,7 +51,6 @@ namespace Grand.Services.Shipping
         /// </summary>
         public ShippingService(
             IWarehouseService warehouseService,
-            IRepository<ShippingMethod> shippingMethodRepository,
             ILogger logger,
             IProductService productService,
             IProductAttributeParser productAttributeParser,
@@ -77,14 +60,11 @@ namespace Grand.Services.Shipping
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
             IPluginFinder pluginFinder,
-            IMediator mediator,
             ICurrencyService currencyService,
-            ICacheManager cacheManager,
             ShoppingCartSettings shoppingCartSettings,
             ShippingSettings shippingSettings)
         {
             _warehouseService = warehouseService;
-            _shippingMethodRepository = shippingMethodRepository;
             _logger = logger;
             _productService = productService;
             _productAttributeParser = productAttributeParser;
@@ -95,15 +75,11 @@ namespace Grand.Services.Shipping
             _stateProvinceService = stateProvinceService;
             _pluginFinder = pluginFinder;
             _currencyService = currencyService;
-            _mediator = mediator;
-            _cacheManager = cacheManager;
             _shoppingCartSettings = shoppingCartSettings;
             _shippingSettings = shippingSettings;
         }
 
         #endregion
-
-        #region Methods
 
         #region Shipping rate computation methods
 
@@ -153,105 +129,6 @@ namespace Grand.Services.Shipping
 
         #endregion
 
-        #region Shipping methods
-
-
-        /// <summary>
-        /// Deletes a shipping method
-        /// </summary>
-        /// <param name="shippingMethod">The shipping method</param>
-        public virtual async Task DeleteShippingMethod(ShippingMethod shippingMethod)
-        {
-            if (shippingMethod == null)
-                throw new ArgumentNullException("shippingMethod");
-
-            await _shippingMethodRepository.DeleteAsync(shippingMethod);
-
-            //clear cache
-            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
-
-            //event notification
-            await _mediator.EntityDeleted(shippingMethod);
-        }
-
-        /// <summary>
-        /// Gets a shipping method
-        /// </summary>
-        /// <param name="shippingMethodId">The shipping method identifier</param>
-        /// <returns>Shipping method</returns>
-        public virtual Task<ShippingMethod> GetShippingMethodById(string shippingMethodId)
-        {
-            return _shippingMethodRepository.GetByIdAsync(shippingMethodId);
-        }
-
-        /// <summary>
-        /// Gets all shipping methods
-        /// </summary>
-        /// <param name="filterByCountryId">The country indentifier to filter by</param>
-        /// <returns>Shipping methods</returns>
-        public virtual async Task<IList<ShippingMethod>> GetAllShippingMethods(string filterByCountryId = "", Customer customer = null)
-        {
-            var shippingMethods = new List<ShippingMethod>();
-
-            shippingMethods = await _cacheManager.GetAsync(SHIPPINGMETHOD_PATTERN_KEY, () =>
-            {
-                var query = from sm in _shippingMethodRepository.Table
-                            orderby sm.DisplayOrder
-                            select sm;
-                return query.ToListAsync();
-            });
-
-            if (!string.IsNullOrEmpty(filterByCountryId))
-            {
-                shippingMethods = shippingMethods.Where(x => !x.CountryRestrictionExists(filterByCountryId)).ToList();
-            }
-            if (customer != null)
-            {
-                shippingMethods = shippingMethods.Where(x => !x.CustomerRoleRestrictionExists(customer.CustomerRoles.Select(y => y.Id).ToList())).ToList();
-            }
-
-            return shippingMethods;
-        }
-
-        /// <summary>
-        /// Inserts a shipping method
-        /// </summary>
-        /// <param name="shippingMethod">Shipping method</param>
-        public virtual async Task InsertShippingMethod(ShippingMethod shippingMethod)
-        {
-            if (shippingMethod == null)
-                throw new ArgumentNullException("shippingMethod");
-
-            await _shippingMethodRepository.InsertAsync(shippingMethod);
-
-            //clear cache
-            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
-
-            //event notification
-            await _mediator.EntityInserted(shippingMethod);
-        }
-
-        /// <summary>
-        /// Updates the shipping method
-        /// </summary>
-        /// <param name="shippingMethod">Shipping method</param>
-        public virtual async Task UpdateShippingMethod(ShippingMethod shippingMethod)
-        {
-            if (shippingMethod == null)
-                throw new ArgumentNullException("shippingMethod");
-
-            await _shippingMethodRepository.UpdateAsync(shippingMethod);
-
-            //clear cache
-            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
-
-            //event notification
-            await _mediator.EntityUpdated(shippingMethod);
-        }
-
-        #endregion
-
-        
 
         #region Workflow
 
@@ -757,8 +634,6 @@ namespace Grand.Services.Shipping
 
             return result;
         }
-
-        #endregion
 
         #endregion
     }

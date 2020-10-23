@@ -27,7 +27,8 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
     [PermissionAuthorize(PermissionSystemName.ShippingSettings)]
     public class ShippingByWeightController : BaseShippingController
     {
-        private readonly IShippingService _shippingService;
+        private readonly IWarehouseService _warehouseService;
+        private readonly IShippingMethodService _shippingMethodService;
         private readonly IStoreService _storeService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -40,7 +41,9 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
 
-        public ShippingByWeightController(IShippingService shippingService,
+        public ShippingByWeightController(
+            IWarehouseService warehouseService,
+            IShippingMethodService shippingMethodService,
             IStoreService storeService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
@@ -53,7 +56,8 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             IMeasureService measureService,
             MeasureSettings measureSettings)
         {
-            _shippingService = shippingService;
+            _warehouseService = warehouseService;
+            _shippingMethodService = shippingMethodService;
             _storeService = storeService;
             _countryService = countryService;
             _stateProvinceService = stateProvinceService;
@@ -111,13 +115,13 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
                     LowerWeightLimit = x.LowerWeightLimit,
                 };
                 //shipping method
-                var shippingMethod = await _shippingService.GetShippingMethodById(x.ShippingMethodId);
+                var shippingMethod = await _shippingMethodService.GetShippingMethodById(x.ShippingMethodId);
                 m.ShippingMethodName = (shippingMethod != null) ? shippingMethod.Name : "Unavailable";
                 //store
                 var store = await _storeService.GetStoreById(x.StoreId);
                 m.StoreName = (store != null) ? store.Shortcut : "*";
                 //warehouse
-                var warehouse = await _shippingService.GetWarehouseById(x.WarehouseId);
+                var warehouse = await _warehouseService.GetWarehouseById(x.WarehouseId);
                 m.WarehouseName = (warehouse != null) ? warehouse.Name : "*";
                 //country
                 var c = await _countryService.GetCountryById(x.CountryId);
@@ -173,7 +177,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             model.BaseWeightIn = (await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name;
             model.To = 1000000;
 
-            var shippingMethods = await _shippingService.GetAllShippingMethods();
+            var shippingMethods = await _shippingMethodService.GetAllShippingMethods();
             if (shippingMethods.Count == 0)
                 return Content("No shipping methods can be loaded");
 
@@ -183,7 +187,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
                 model.AvailableStores.Add(new SelectListItem { Text = store.Shortcut, Value = store.Id.ToString() });
             //warehouses
             model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = " " });
-            foreach (var warehouses in await _shippingService.GetAllWarehouses())
+            foreach (var warehouses in await _warehouseService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = warehouses.Name, Value = warehouses.Id.ToString() });
             //shipping methods
             foreach (var sm in shippingMethods)
@@ -250,13 +254,13 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
                 BaseWeightIn = (await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name
             };
 
-            var shippingMethods = await _shippingService.GetAllShippingMethods();
+            var shippingMethods = await _shippingMethodService.GetAllShippingMethods();
             if (shippingMethods.Count == 0)
                 return Content("No shipping methods can be loaded");
 
             var selectedStore = await _storeService.GetStoreById(sbw.StoreId);
-            var selectedWarehouse = await _shippingService.GetWarehouseById(sbw.WarehouseId);
-            var selectedShippingMethod = await _shippingService.GetShippingMethodById(sbw.ShippingMethodId);
+            var selectedWarehouse = await _warehouseService.GetWarehouseById(sbw.WarehouseId);
+            var selectedShippingMethod = await _shippingMethodService.GetShippingMethodById(sbw.ShippingMethodId);
             var selectedCountry = await _countryService.GetCountryById(sbw.CountryId);
             var selectedState = await _stateProvinceService.GetStateProvinceById(sbw.StateProvinceId);
             //stores
@@ -265,7 +269,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
                 model.AvailableStores.Add(new SelectListItem { Text = store.Shortcut, Value = store.Id.ToString(), Selected = (selectedStore != null && store.Id == selectedStore.Id) });
             //warehouses
             model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = "" });
-            foreach (var warehouse in await _shippingService.GetAllWarehouses())
+            foreach (var warehouse in await _warehouseService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = warehouse.Name, Value = warehouse.Id.ToString(), Selected = (selectedWarehouse != null && warehouse.Id == selectedWarehouse.Id) });
             //shipping methods
             foreach (var sm in shippingMethods)

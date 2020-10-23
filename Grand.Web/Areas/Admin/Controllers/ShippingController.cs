@@ -34,6 +34,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IShippingService _shippingService;
+        private readonly IShippingMethodService _shippingMethodService;
         private readonly IPickupPointService _pickupPointService;
         private readonly IDeliveryDateService _deliveryDateService;
         private readonly IWarehouseService _warehouseService;
@@ -55,6 +56,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public ShippingController(
             IShippingService shippingService,
+            IShippingMethodService shippingMethodService,
             IPickupPointService pickupPointService,
             IDeliveryDateService deliveryDateService,
             IWarehouseService warehouseService,
@@ -71,6 +73,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerService customerService)
         {
             _shippingService = shippingService;
+            _shippingMethodService = shippingMethodService;
             _pickupPointService = pickupPointService;
             _deliveryDateService = deliveryDateService;
             _warehouseService = warehouseService;
@@ -236,7 +239,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Methods(DataSourceRequest command)
         {
-            var shippingMethodsModel = (await _shippingService.GetAllShippingMethods())
+            var shippingMethodsModel = (await _shippingMethodService.GetAllShippingMethods())
                 .Select(x => x.ToModel())
                 .ToList();
             var gridModel = new DataSourceResult {
@@ -262,7 +265,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var sm = model.ToEntity();
-                await _shippingService.InsertShippingMethod(sm);
+                await _shippingMethodService.InsertShippingMethod(sm);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Added"));
                 return continueEditing ? RedirectToAction("EditMethod", new { id = sm.Id }) : RedirectToAction("Methods");
@@ -274,7 +277,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> EditMethod(string id)
         {
-            var sm = await _shippingService.GetShippingMethodById(id);
+            var sm = await _shippingMethodService.GetShippingMethodById(id);
             if (sm == null)
                 //No shipping method found with the specified id
                 return RedirectToAction("Methods");
@@ -293,7 +296,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> EditMethod(ShippingMethodModel model, bool continueEditing)
         {
-            var sm = await _shippingService.GetShippingMethodById(model.Id);
+            var sm = await _shippingMethodService.GetShippingMethodById(model.Id);
             if (sm == null)
                 //No shipping method found with the specified id
                 return RedirectToAction("Methods");
@@ -301,7 +304,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sm = model.ToEntity(sm);
-                await _shippingService.UpdateShippingMethod(sm);
+                await _shippingMethodService.UpdateShippingMethod(sm);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Updated"));
                 return continueEditing ? RedirectToAction("EditMethod", new { id = sm.Id }) : RedirectToAction("Methods");
@@ -313,12 +316,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteMethod(string id)
         {
-            var sm = await _shippingService.GetShippingMethodById(id);
+            var sm = await _shippingMethodService.GetShippingMethodById(id);
             if (sm == null)
                 //No shipping method found with the specified id
                 return RedirectToAction("Methods");
 
-            await _shippingService.DeleteShippingMethod(sm);
+            await _shippingMethodService.DeleteShippingMethod(sm);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Deleted"));
             return RedirectToAction("Methods");
@@ -628,7 +631,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new ShippingMethodRestrictionModel();
 
             var countries = await _countryService.GetAllCountries(showHidden: true);
-            var shippingMethods = await _shippingService.GetAllShippingMethods();
+            var shippingMethods = await _shippingMethodService.GetAllShippingMethods();
             var customerRoles = await _customerService.GetAllCustomerRoles();
 
             foreach (var country in countries)
@@ -681,7 +684,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RestrictionSave(IFormCollection form)
         {
             var countries = await _countryService.GetAllCountries(showHidden: true);
-            var shippingMethods = await _shippingService.GetAllShippingMethods();
+            var shippingMethods = await _shippingMethodService.GetAllShippingMethods();
             var customerRoles = await _customerService.GetAllCustomerRoles();
 
             foreach (var shippingMethod in shippingMethods)
@@ -702,7 +705,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) == null)
                         {
                             shippingMethod.RestrictedCountries.Add(country);
-                            await _shippingService.UpdateShippingMethod(shippingMethod);
+                            await _shippingMethodService.UpdateShippingMethod(shippingMethod);
                         }
                     }
                     else
@@ -710,7 +713,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) != null)
                         {
                             shippingMethod.RestrictedCountries.Remove(shippingMethod.RestrictedCountries.FirstOrDefault(x => x.Id == country.Id));
-                            await _shippingService.UpdateShippingMethod(shippingMethod);
+                            await _shippingMethodService.UpdateShippingMethod(shippingMethod);
                         }
                     }
                 }
@@ -732,7 +735,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (shippingMethod.RestrictedRoles.FirstOrDefault(c => c == role.Id) == null)
                         {
                             shippingMethod.RestrictedRoles.Add(role.Id);
-                            await _shippingService.UpdateShippingMethod(shippingMethod);
+                            await _shippingMethodService.UpdateShippingMethod(shippingMethod);
                         }
                     }
                     else
@@ -740,7 +743,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (shippingMethod.RestrictedRoles.FirstOrDefault(c => c == role.Id) != null)
                         {
                             shippingMethod.RestrictedRoles.Remove(role.Id);
-                            await _shippingService.UpdateShippingMethod(shippingMethod);
+                            await _shippingMethodService.UpdateShippingMethod(shippingMethod);
                         }
                     }
                 }
