@@ -437,7 +437,6 @@ namespace Grand.Services.Orders
             if (createdToUtc.HasValue)
                 filter = filter & builder.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
 
-            FilterDefinition<BsonDocument> filterPublishedProduct = new BsonDocument("Product.Published", true);
             var groupBy = new BsonDocument
             {
                  new BsonElement("_id", "$OrderItems.ProductId"),
@@ -451,7 +450,6 @@ namespace Grand.Services.Orders
                 .Unwind<Order, UnwindedOrderItem>(x => x.OrderItems)
                 .Match(filterItem)
                 .Lookup("Product", "OrderItems.ProductId", "_id", "Product")
-                .Match(filterPublishedProduct)
                 .Group(groupBy);
 
             if (orderBy == 1)
