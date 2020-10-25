@@ -5,6 +5,7 @@ using Grand.Domain.Media;
 using Grand.Domain.Orders;
 using Grand.Domain.Tax;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Localization;
@@ -34,14 +35,13 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly ITaxService _taxService;
         private readonly ICacheManager _cacheManager;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly IProductService _productService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILocalizationService _localizationService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPictureService _pictureService;
-
+        private readonly IMediator _mediator;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
@@ -55,13 +55,13 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             ITaxService taxService,
             ICacheManager cacheManager,
             ICheckoutAttributeService checkoutAttributeService,
-            IOrderProcessingService orderProcessingService,
             IProductService productService,
             IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
             ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService,
             IPictureService pictureService,
+            IMediator mediator,
             ShoppingCartSettings shoppingCartSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
@@ -74,13 +74,13 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _taxService = taxService;
             _cacheManager = cacheManager;
             _checkoutAttributeService = checkoutAttributeService;
-            _orderProcessingService = orderProcessingService;
             _productService = productService;
             _productAttributeFormatter = productAttributeFormatter;
             _productAttributeParser = productAttributeParser;
             _localizationService = localizationService;
             _priceCalculationService = priceCalculationService;
             _pictureService = pictureService;
+            _mediator = mediator;
             _shoppingCartSettings = shoppingCartSettings;
             _orderSettings = orderSettings;
             _taxSettings = taxSettings;
@@ -132,8 +132,11 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         return checkoutAttributes.Any();
                     });
 
-                    bool minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmount(cart.Where
-                        (x => x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList());
+                    var minOrderSubtotalAmountOk = await _mediator.Send(new ValidateMinShoppingCartSubtotalAmountCommand() {
+                        Customer = request.Customer,
+                        Cart = cart.Where
+                        (x => x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList() });
+
                     model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage &&
                         minOrderSubtotalAmountOk &&
                         !checkoutAttributesExist;

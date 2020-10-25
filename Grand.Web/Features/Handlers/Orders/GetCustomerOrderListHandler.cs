@@ -19,7 +19,7 @@ namespace Grand.Web.Features.Handlers.Orders
         private readonly IOrderService _orderService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderRecurringPayment _orderRecurringPayment;
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IMediator _mediator;
@@ -28,7 +28,7 @@ namespace Grand.Web.Features.Handlers.Orders
             IOrderService orderService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
-            IOrderProcessingService orderProcessingService,
+            IOrderRecurringPayment orderRecurringPayment,
             ICurrencyService currencyService,
             IMediator mediator,
             IPriceFormatter priceFormatter)
@@ -36,7 +36,7 @@ namespace Grand.Web.Features.Handlers.Orders
             _orderService = orderService;
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
-            _orderProcessingService = orderProcessingService;
+            _orderRecurringPayment = orderRecurringPayment;
             _currencyService = currencyService;
             _priceFormatter = priceFormatter;
             _mediator = mediator;
@@ -97,7 +97,7 @@ namespace Grand.Web.Features.Handlers.Orders
                     TotalCycles = recurringPayment.TotalCycles,
                     CyclesRemaining = recurringPayment.CyclesRemaining,
                     InitialOrderId = recurringPayment.InitialOrder.Id,
-                    CanCancel = await _orderProcessingService.CanCancelRecurringPayment(request.Customer, recurringPayment),
+                    CanCancel = await _orderRecurringPayment.CanCancelRecurringPayment(request.Customer, recurringPayment),
                 };
 
                 model.RecurringOrders.Add(recurringPaymentModel);

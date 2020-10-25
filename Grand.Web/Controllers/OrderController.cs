@@ -83,7 +83,8 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("CustomerOrders")]
         [AutoValidateAntiforgeryToken]
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
-        public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form)
+        public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form, 
+            [FromServices] IOrderRecurringPayment orderRecurringPayment)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -100,9 +101,9 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerOrders");
             }
 
-            if (await _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment))
+            if (await orderRecurringPayment.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment))
             {
-                var errors = await _orderProcessingService.CancelRecurringPayment(recurringPayment);
+                var errors = await orderRecurringPayment.CancelRecurringPayment(recurringPayment);
 
                 var model = await _mediator.Send(new GetCustomerOrderList() {
                     Customer = _workContext.CurrentCustomer,

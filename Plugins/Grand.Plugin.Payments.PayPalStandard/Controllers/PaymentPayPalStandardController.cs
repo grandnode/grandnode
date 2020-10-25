@@ -32,6 +32,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderRecurringPayment _orderRecurringPayment;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly ILogger _logger;
@@ -45,6 +46,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             IPaymentService paymentService,
             IOrderService orderService,
             IOrderProcessingService orderProcessingService,
+            IOrderRecurringPayment orderRecurringPayment,
             ILocalizationService localizationService,
             IStoreContext storeContext,
             ILogger logger,
@@ -58,6 +60,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             _paymentService = paymentService;
             _orderService = orderService;
             _orderProcessingService = orderProcessingService;
+            _orderRecurringPayment = orderRecurringPayment;
             _localizationService = localizationService;
             _storeContext = storeContext;
             _logger = logger;
@@ -414,7 +417,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                                 else
                                                 {
                                                     //next payments
-                                                    await _orderProcessingService.ProcessNextRecurringPayment(rp);
+                                                    await _orderRecurringPayment.ProcessNextRecurringPayment(rp);
                                                 }
                                             }
                                             break;

@@ -27,6 +27,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderRecurringPayment _orderRecurringPayment;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -37,12 +38,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public RecurringPaymentController(IOrderService orderService,
-            IOrderProcessingService orderProcessingService, ILocalizationService localizationService,
-            IWorkContext workContext, IDateTimeHelper dateTimeHelper, IPaymentService paymentService,
+            IOrderProcessingService orderProcessingService,
+            IOrderRecurringPayment orderRecurringPayment,
+            ILocalizationService localizationService,
+            IWorkContext workContext, 
+            IDateTimeHelper dateTimeHelper, 
+            IPaymentService paymentService,
             ICustomerService customerService)
         {
             _orderService = orderService;
             _orderProcessingService = orderProcessingService;
+            _orderRecurringPayment = orderRecurringPayment;
             _localizationService = localizationService;
             _workContext = workContext;
             _dateTimeHelper = dateTimeHelper;
@@ -78,7 +84,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.CustomerId = customer.Id;
             model.CustomerEmail = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.PaymentType = _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName).GetLocalizedEnum(_localizationService, _workContext);
-            model.CanCancelRecurringPayment = await _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
+            model.CanCancelRecurringPayment = await _orderRecurringPayment.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
         }
 
         [NonAction]
@@ -229,7 +235,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             
             try
             {
-                await _orderProcessingService.ProcessNextRecurringPayment(payment);
+                await _orderRecurringPayment.ProcessNextRecurringPayment(payment);
                 var model = new RecurringPaymentModel();
                 await PrepareRecurringPaymentModel(model, payment);
 
@@ -266,7 +272,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                var errors = await _orderProcessingService.CancelRecurringPayment(payment);
+                var errors = await _orderRecurringPayment.CancelRecurringPayment(payment);
                 var model = new RecurringPaymentModel();
                 await PrepareRecurringPaymentModel(model, payment);
                 if (errors.Count > 0)
