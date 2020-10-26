@@ -161,7 +161,7 @@ namespace Grand.Services.Orders
         }
 
         
-        protected virtual async Task UpdateCustomer(Order order)
+        protected virtual async Task UpdateCustomer(Order order, PlaceOrderContainter details)
         {
             //Update customer reminder history
             await _mediator.Send(new UpdateCustomerReminderHistoryCommand() { CustomerId = order.CustomerId, OrderId = order.Id });
@@ -174,6 +174,11 @@ namespace Grand.Services.Orders
 
             //Update field Last purchase date after added a new order
             await _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
+
+            if (!details.Customer.HasContributions)
+            {
+                await _customerService.UpdateContributions(details.Customer);
+            }
 
         }
 
@@ -323,76 +328,7 @@ namespace Grand.Services.Orders
             return processPaymentResult;
         }
 
-        protected virtual Order PrepareOrder(ProcessPaymentRequest processPaymentRequest, ProcessPaymentResult processPaymentResult, PlaceOrderContainter details)
-        {
-            var order = new Order {
-                StoreId = processPaymentRequest.StoreId,
-                OrderGuid = processPaymentRequest.OrderGuid,
-                Code = processPaymentRequest.OrderCode,
-                CustomerId = details.Customer.Id,
-                OwnerId = string.IsNullOrEmpty(details.Customer.OwnerId) ? details.Customer.Id : details.Customer.OwnerId,
-                CustomerLanguageId = details.CustomerLanguage.Id,
-                CustomerTaxDisplayType = details.CustomerTaxDisplayType,
-                CustomerIp = _webHelper.GetCurrentIpAddress(),
-                OrderSubtotalInclTax = Math.Round(details.OrderSubTotalInclTax, 6),
-                OrderSubtotalExclTax = Math.Round(details.OrderSubTotalExclTax, 6),
-                OrderSubTotalDiscountInclTax = Math.Round(details.OrderSubTotalDiscountInclTax, 6),
-                OrderSubTotalDiscountExclTax = Math.Round(details.OrderSubTotalDiscountExclTax, 6),
-                OrderShippingInclTax = Math.Round(details.OrderShippingTotalInclTax, 6),
-                OrderShippingExclTax = Math.Round(details.OrderShippingTotalExclTax, 6),
-                PaymentMethodAdditionalFeeInclTax = Math.Round(details.PaymentAdditionalFeeInclTax, 6),
-                PaymentMethodAdditionalFeeExclTax = Math.Round(details.PaymentAdditionalFeeExclTax, 6),
-                TaxRates = details.TaxRates,
-                OrderTax = Math.Round(details.OrderTaxTotal, 6),
-                OrderTotal = Math.Round(details.OrderTotal, 6),
-                RefundedAmount = decimal.Zero,
-                OrderDiscount = Math.Round(details.OrderDiscountAmount, 6),
-                CheckoutAttributeDescription = details.CheckoutAttributeDescription,
-                CheckoutAttributesXml = details.CheckoutAttributesXml,
-                CustomerCurrencyCode = details.CustomerCurrencyCode,
-                PrimaryCurrencyCode = details.PrimaryCurrencyCode,
-                CurrencyRate = details.CustomerCurrencyRate,
-                AffiliateId = details.AffiliateId,
-                OrderStatus = OrderStatus.Pending,
-                AllowStoringCreditCardNumber = processPaymentResult.AllowStoringCreditCardNumber,
-                CardType = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardType) : string.Empty,
-                CardName = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardName) : string.Empty,
-                CardNumber = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardNumber) : string.Empty,
-                MaskedCreditCardNumber = _encryptionService.EncryptText(_paymentService.GetMaskedCreditCardNumber(processPaymentRequest.CreditCardNumber)),
-                CardCvv2 = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardCvv2) : string.Empty,
-                CardExpirationMonth = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardExpireMonth.ToString()) : string.Empty,
-                CardExpirationYear = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardExpireYear.ToString()) : string.Empty,
-                PaymentMethodSystemName = processPaymentRequest.PaymentMethodSystemName,
-                AuthorizationTransactionId = processPaymentResult.AuthorizationTransactionId,
-                AuthorizationTransactionCode = processPaymentResult.AuthorizationTransactionCode,
-                AuthorizationTransactionResult = processPaymentResult.AuthorizationTransactionResult,
-                CaptureTransactionId = processPaymentResult.CaptureTransactionId,
-                CaptureTransactionResult = processPaymentResult.CaptureTransactionResult,
-                SubscriptionTransactionId = processPaymentResult.SubscriptionTransactionId,
-                PaymentStatus = processPaymentResult.NewPaymentStatus,
-                PaidDateUtc = null,
-                BillingAddress = details.BillingAddress,
-                ShippingAddress = details.ShippingAddress,
-                ShippingStatus = details.ShippingStatus,
-                ShippingMethod = details.ShippingMethodName,
-                PickUpInStore = details.PickUpInStore,
-                PickupPoint = details.PickupPoint,
-                ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
-                CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
-                VatNumber = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber),
-                VatNumberStatusId = details.Customer.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.VatNumberStatusId),
-                CompanyName = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company),
-                FirstName = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName),
-                LastName = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName),
-                CustomerEmail = details.Customer.Email,
-                UrlReferrer = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastUrlReferrer),
-                ShippingOptionAttributeDescription = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ShippingOptionAttributeDescription, processPaymentRequest.StoreId),
-                ShippingOptionAttributeXml = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ShippingOptionAttributeXml, processPaymentRequest.StoreId),
-                CreatedOnUtc = DateTime.UtcNow
-            };
-
-            return order;
-        }
+        
 
         protected virtual async Task<PlaceOrderContainter> PreparePlaceOrderDetails(ProcessPaymentRequest processPaymentRequest)
         {
@@ -660,336 +596,7 @@ namespace Grand.Services.Orders
             return details;
         }
 
-        protected virtual async Task<Order> SaveOrderDetails(PlaceOrderContainter details, Order order)
-        {
-            var reservationsToUpdate = new List<ProductReservation>();
-            var bidsToUpdate = new List<Bid>();
-
-            //move shopping cart items to order items
-            foreach (var sc in details.Cart)
-            {
-                //prices
-                decimal taxRate;
-                List<AppliedDiscount> scDiscounts;
-                decimal discountAmount;
-                decimal commissionRate;
-                decimal scUnitPrice = (await _priceCalculationService.GetUnitPrice(sc)).unitprice;
-                decimal scUnitPriceWithoutDisc = (await _priceCalculationService.GetUnitPrice(sc, false)).unitprice;
-
-                var product = await _productService.GetProductById(sc.ProductId);
-                var subtotal = await _priceCalculationService.GetSubTotal(sc, true);
-                decimal scSubTotal = subtotal.subTotal;
-                discountAmount = subtotal.discountAmount;
-                scDiscounts = subtotal.appliedDiscounts;
-
-                if (string.IsNullOrEmpty(product.VendorId))
-                {
-                    commissionRate = 0;
-                }
-                else
-                {
-                    commissionRate = (await _vendorService.GetVendorById(product.VendorId)).Commission;
-                }
-
-                var prices = await _taxService.GetTaxProductPrice(product, details.Customer, scUnitPrice, scUnitPriceWithoutDisc, scSubTotal, discountAmount, _taxSettings.PricesIncludeTax);
-                taxRate = prices.taxRate;
-                decimal scUnitPriceWithoutDiscInclTax = prices.UnitPriceWihoutDiscInclTax;
-                decimal scUnitPriceWithoutDiscExclTax = prices.UnitPriceWihoutDiscExclTax;
-                decimal scUnitPriceInclTax = prices.UnitPriceInclTax;
-                decimal scUnitPriceExclTax = prices.UnitPriceExclTax;
-                decimal scSubTotalInclTax = prices.SubTotalInclTax;
-                decimal scSubTotalExclTax = prices.SubTotalExclTax;
-                decimal discountAmountInclTax = prices.discountAmountInclTax;
-                decimal discountAmountExclTax = prices.discountAmountExclTax;
-
-                foreach (var disc in scDiscounts)
-                {
-                    if (!details.AppliedDiscounts.Where(x => x.DiscountId == disc.DiscountId).Any())
-                        details.AppliedDiscounts.Add(disc);
-                }
-
-                //attributes
-                string attributeDescription = await _productAttributeFormatter.FormatAttributes(product, sc.AttributesXml, details.Customer);
-
-                if (string.IsNullOrEmpty(attributeDescription) && sc.ShoppingCartType == ShoppingCartType.Auctions)
-                    attributeDescription = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
-
-                var itemWeight = await _shippingService.GetShoppingCartItemWeight(sc);
-
-                var warehouseId = !string.IsNullOrEmpty(sc.WarehouseId) ? sc.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
-                if (!product.UseMultipleWarehouses && string.IsNullOrEmpty(warehouseId))
-                {
-                    if (!string.IsNullOrEmpty(product.WarehouseId))
-                    {
-                        warehouseId = product.WarehouseId;
-                    }
-                }
-
-                //save order item
-                var orderItem = new OrderItem {
-                    OrderItemGuid = Guid.NewGuid(),
-                    ProductId = sc.ProductId,
-                    VendorId = product.VendorId,
-                    WarehouseId = warehouseId,
-                    UnitPriceWithoutDiscInclTax = Math.Round(scUnitPriceWithoutDiscInclTax, 6),
-                    UnitPriceWithoutDiscExclTax = Math.Round(scUnitPriceWithoutDiscExclTax, 6),
-                    UnitPriceInclTax = Math.Round(scUnitPriceInclTax, 6),
-                    UnitPriceExclTax = Math.Round(scUnitPriceExclTax, 6),
-                    PriceInclTax = Math.Round(scSubTotalInclTax, 6),
-                    PriceExclTax = Math.Round(scSubTotalExclTax, 6),
-                    OriginalProductCost = await _priceCalculationService.GetProductCost(product, sc.AttributesXml),
-                    AttributeDescription = attributeDescription,
-                    AttributesXml = sc.AttributesXml,
-                    Quantity = sc.Quantity,
-                    DiscountAmountInclTax = Math.Round(discountAmountInclTax, 6),
-                    DiscountAmountExclTax = Math.Round(discountAmountExclTax, 6),
-                    DownloadCount = 0,
-                    IsDownloadActivated = false,
-                    LicenseDownloadId = "",
-                    ItemWeight = itemWeight,
-                    RentalStartDateUtc = sc.RentalStartDateUtc,
-                    RentalEndDateUtc = sc.RentalEndDateUtc,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    Commission = Math.Round((commissionRate * scSubTotal / 100), 2),
-                };
-
-                string reservationInfo = "";
-                if (product.ProductType == ProductType.Reservation)
-                {
-                    if (sc.RentalEndDateUtc == default(DateTime) || sc.RentalEndDateUtc == null)
-                    {
-                        reservationInfo = sc.RentalStartDateUtc.ToString();
-                    }
-                    else
-                    {
-                        reservationInfo = sc.RentalStartDateUtc + " - " + sc.RentalEndDateUtc;
-                    }
-                    if (!string.IsNullOrEmpty(sc.Parameter))
-                    {
-                        reservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), sc.Parameter);
-                    }
-                    if (!string.IsNullOrEmpty(sc.Duration))
-                    {
-                        reservationInfo += "<br>" + _localizationService.GetResource("Products.Duration") + ": " + sc.Duration;
-                    }
-                }
-                if (!string.IsNullOrEmpty(reservationInfo))
-                {
-                    if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
-                    {
-                        orderItem.AttributeDescription += "<br>" + reservationInfo;
-                    }
-                    else
-                    {
-                        orderItem.AttributeDescription = reservationInfo;
-                    }
-                }
-
-                order.OrderItems.Add(orderItem);
-
-                await _productService.UpdateSold(sc.ProductId, sc.Quantity);
-
-                //gift cards
-                if (product.IsGiftCard)
-                {
-                    _productAttributeParser.GetGiftCardAttribute(sc.AttributesXml,
-                        out string giftCardRecipientName, out string giftCardRecipientEmail,
-                        out string giftCardSenderName, out string giftCardSenderEmail, out string giftCardMessage);
-
-                    for (int i = 0; i < sc.Quantity; i++)
-                    {
-                        var gc = new GiftCard {
-                            GiftCardType = product.GiftCardType,
-                            PurchasedWithOrderItem = orderItem,
-                            Amount = product.OverriddenGiftCardAmount ?? scUnitPriceExclTax,
-                            IsGiftCardActivated = false,
-                            GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
-                            RecipientName = giftCardRecipientName,
-                            RecipientEmail = giftCardRecipientEmail,
-                            SenderName = giftCardSenderName,
-                            SenderEmail = giftCardSenderEmail,
-                            Message = giftCardMessage,
-                            IsRecipientNotified = false,
-                            CreatedOnUtc = DateTime.UtcNow
-                        };
-                        await _giftCardService.InsertGiftCard(gc);
-                    }
-                }
-
-                //reservations
-                if (product.ProductType == ProductType.Reservation)
-                {
-                    if (!string.IsNullOrEmpty(sc.ReservationId))
-                    {
-                        var reservation = await _productReservationService.GetProductReservation(sc.ReservationId);
-                        reservationsToUpdate.Add(reservation);
-                    }
-
-                    if (sc.RentalStartDateUtc.HasValue && sc.RentalEndDateUtc.HasValue)
-                    {
-                        var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, null);
-                        var grouped = reservations.GroupBy(x => x.Resource);
-
-                        IGrouping<string, ProductReservation> groupToBook = null;
-                        foreach (var group in grouped)
-                        {
-                            bool groupCanBeBooked = true;
-                            if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
-                            {
-                                for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator <= sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
-                                {
-                                    if (!group.Select(x => x.Date).Contains(iterator))
-                                    {
-                                        groupCanBeBooked = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator < sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
-                                {
-                                    if (!group.Select(x => x.Date).Contains(iterator))
-                                    {
-                                        groupCanBeBooked = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (groupCanBeBooked)
-                            {
-                                groupToBook = group;
-                                break;
-                            }
-                        }
-
-                        if (groupToBook == null)
-                        {
-                            throw new Exception("ShoppingCart.Reservation.Nofreereservationsinthisperiod");
-                        }
-                        else
-                        {
-                            var temp = groupToBook.AsQueryable();
-                            if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
-                            {
-                                temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date <= sc.RentalEndDateUtc);
-                            }
-                            else
-                            {
-                                temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date < sc.RentalEndDateUtc);
-                            }
-
-                            foreach (var item in temp)
-                            {
-                                item.OrderId = order.OrderGuid.ToString();
-                                await _productReservationService.UpdateProductReservation(item);
-                            }
-
-                            reservationsToUpdate.AddRange(temp);
-                        }
-                    }
-                }
-
-                //auctions
-                if (sc.ShoppingCartType == ShoppingCartType.Auctions)
-                {
-                    var bid = (await _auctionService.GetBidsByProductId(product.Id)).Where(x => x.Amount == product.HighestBid).FirstOrDefault();
-                    if (bid == null)
-                        throw new ArgumentNullException("bid");
-
-                    bidsToUpdate.Add(bid);
-                }
-
-                if (product.ProductType == ProductType.Auction && sc.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                {
-                    await _auctionService.UpdateAuctionEnded(product, true, true);
-                    await _auctionService.UpdateHighestBid(product, product.Price, order.CustomerId);
-                    await _workflowMessageService.SendAuctionEndedCustomerNotificationBin(product, order.CustomerId, order.CustomerLanguageId, order.StoreId);
-                    await _auctionService.InsertBid(new Bid() {
-                        CustomerId = order.CustomerId,
-                        OrderId = order.Id,
-                        Amount = product.Price,
-                        Date = DateTime.UtcNow,
-                        ProductId = product.Id,
-                        StoreId = order.StoreId,
-                        Win = true,
-                        Bin = true,
-                    });
-                }
-                if (product.ProductType == ProductType.Auction && _orderSettings.UnpublishAuctionProduct)
-                {
-                    await _productService.UnpublishProduct(product);
-                }
-
-                //inventory
-                await _inventoryManageService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml, warehouseId);
-            }
-
-            //insert order
-            await _orderService.InsertOrder(order);
-
-            var reserved = await _productReservationService.GetCustomerReservationsHelpers(order.CustomerId);
-            foreach (var res in reserved)
-            {
-                await _productReservationService.DeleteCustomerReservationsHelper(res);
-            }
-
-            foreach (var resToUpdate in reservationsToUpdate)
-            {
-                resToUpdate.OrderId = order.Id;
-                await _productReservationService.UpdateProductReservation(resToUpdate);
-            }
-
-            foreach (var bid in bidsToUpdate)
-            {
-                bid.OrderId = order.Id;
-                await _auctionService.UpdateBid(bid);
-            }
-
-            //clear shopping cart
-            await _customerService.ClearShoppingCartItem(order.CustomerId, details.Cart);
-
-            //product also purchased
-            await _orderService.InsertProductAlsoPurchased(order);
-
-            if (!details.Customer.HasContributions)
-            {
-                await _customerService.UpdateContributions(details.Customer);
-            }
-
-            //discount usage history
-            foreach (var discount in details.AppliedDiscounts)
-            {
-                var duh = new DiscountUsageHistory {
-                    DiscountId = discount.DiscountId,
-                    CouponCode = discount.CouponCode,
-                    OrderId = order.Id,
-                    CustomerId = order.CustomerId,
-                    CreatedOnUtc = DateTime.UtcNow
-                };
-                await _discountService.InsertDiscountUsageHistory(duh);
-            }
-
-            //gift card usage history
-            if (details.AppliedGiftCards != null)
-                foreach (var agc in details.AppliedGiftCards)
-                {
-                    decimal amountUsed = agc.AmountCanBeUsed;
-                    var gcuh = new GiftCardUsageHistory {
-                        GiftCardId = agc.GiftCard.Id,
-                        UsedWithOrderId = order.Id,
-                        UsedValue = amountUsed,
-                        CreatedOnUtc = DateTime.UtcNow
-                    };
-                    agc.GiftCard.GiftCardUsageHistory.Add(gcuh);
-                    await _giftCardService.UpdateGiftCard(agc.GiftCard);
-                }
-
-            //reset checkout data
-            await _customerService.ResetCheckoutData(details.Customer, order.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
-
-            return order;
-        }
+        
 
         protected virtual async Task<Order> SaveOrderDetailsForReccuringPayment(PlaceOrderContainter details, Order order)
         {
@@ -1111,6 +718,450 @@ namespace Grand.Services.Orders
             }
         }
 
+        protected virtual async Task<OrderItem> PrepareOrderItem(ShoppingCartItem sc, Product product, PlaceOrderContainter details)
+        {
+            //prices
+            decimal taxRate;
+            List<AppliedDiscount> scDiscounts;
+            decimal discountAmount;
+            decimal commissionRate;
+            decimal scUnitPrice = (await _priceCalculationService.GetUnitPrice(sc)).unitprice;
+            decimal scUnitPriceWithoutDisc = (await _priceCalculationService.GetUnitPrice(sc, false)).unitprice;
+
+            var subtotal = await _priceCalculationService.GetSubTotal(sc, true);
+            decimal scSubTotal = subtotal.subTotal;
+            discountAmount = subtotal.discountAmount;
+            scDiscounts = subtotal.appliedDiscounts;
+
+            if (string.IsNullOrEmpty(product.VendorId))
+            {
+                commissionRate = 0;
+            }
+            else
+            {
+                commissionRate = (await _vendorService.GetVendorById(product.VendorId)).Commission;
+            }
+
+            var prices = await _taxService.GetTaxProductPrice(product, details.Customer, scUnitPrice, scUnitPriceWithoutDisc, scSubTotal, discountAmount, _taxSettings.PricesIncludeTax);
+            taxRate = prices.taxRate;
+            decimal scUnitPriceWithoutDiscInclTax = prices.UnitPriceWihoutDiscInclTax;
+            decimal scUnitPriceWithoutDiscExclTax = prices.UnitPriceWihoutDiscExclTax;
+            decimal scUnitPriceInclTax = prices.UnitPriceInclTax;
+            decimal scUnitPriceExclTax = prices.UnitPriceExclTax;
+            decimal scSubTotalInclTax = prices.SubTotalInclTax;
+            decimal scSubTotalExclTax = prices.SubTotalExclTax;
+            decimal discountAmountInclTax = prices.discountAmountInclTax;
+            decimal discountAmountExclTax = prices.discountAmountExclTax;
+
+            foreach (var disc in scDiscounts)
+            {
+                if (!details.AppliedDiscounts.Where(x => x.DiscountId == disc.DiscountId).Any())
+                    details.AppliedDiscounts.Add(disc);
+            }
+
+            //attributes
+            string attributeDescription = await _productAttributeFormatter.FormatAttributes(product, sc.AttributesXml, details.Customer);
+
+            if (string.IsNullOrEmpty(attributeDescription) && sc.ShoppingCartType == ShoppingCartType.Auctions)
+                attributeDescription = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
+
+            var itemWeight = await _shippingService.GetShoppingCartItemWeight(sc);
+
+            var warehouseId = !string.IsNullOrEmpty(sc.WarehouseId) ? sc.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+            if (!product.UseMultipleWarehouses && string.IsNullOrEmpty(warehouseId))
+            {
+                if (!string.IsNullOrEmpty(product.WarehouseId))
+                {
+                    warehouseId = product.WarehouseId;
+                }
+            }
+
+            //save order item
+            var orderItem = new OrderItem {
+                OrderItemGuid = Guid.NewGuid(),
+                ProductId = sc.ProductId,
+                VendorId = product.VendorId,
+                WarehouseId = warehouseId,
+                UnitPriceWithoutDiscInclTax = Math.Round(scUnitPriceWithoutDiscInclTax, 6),
+                UnitPriceWithoutDiscExclTax = Math.Round(scUnitPriceWithoutDiscExclTax, 6),
+                UnitPriceInclTax = Math.Round(scUnitPriceInclTax, 6),
+                UnitPriceExclTax = Math.Round(scUnitPriceExclTax, 6),
+                PriceInclTax = Math.Round(scSubTotalInclTax, 6),
+                PriceExclTax = Math.Round(scSubTotalExclTax, 6),
+                OriginalProductCost = await _priceCalculationService.GetProductCost(product, sc.AttributesXml),
+                AttributeDescription = attributeDescription,
+                AttributesXml = sc.AttributesXml,
+                Quantity = sc.Quantity,
+                DiscountAmountInclTax = Math.Round(discountAmountInclTax, 6),
+                DiscountAmountExclTax = Math.Round(discountAmountExclTax, 6),
+                DownloadCount = 0,
+                IsDownloadActivated = false,
+                LicenseDownloadId = "",
+                ItemWeight = itemWeight,
+                RentalStartDateUtc = sc.RentalStartDateUtc,
+                RentalEndDateUtc = sc.RentalEndDateUtc,
+                CreatedOnUtc = DateTime.UtcNow,
+                Commission = Math.Round((commissionRate * scSubTotal / 100), 2),
+            };
+
+            string reservationInfo = "";
+            if (product.ProductType == ProductType.Reservation)
+            {
+                if (sc.RentalEndDateUtc == default(DateTime) || sc.RentalEndDateUtc == null)
+                {
+                    reservationInfo = sc.RentalStartDateUtc.ToString();
+                }
+                else
+                {
+                    reservationInfo = sc.RentalStartDateUtc + " - " + sc.RentalEndDateUtc;
+                }
+                if (!string.IsNullOrEmpty(sc.Parameter))
+                {
+                    reservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), sc.Parameter);
+                }
+                if (!string.IsNullOrEmpty(sc.Duration))
+                {
+                    reservationInfo += "<br>" + _localizationService.GetResource("Products.Duration") + ": " + sc.Duration;
+                }
+            }
+            if (!string.IsNullOrEmpty(reservationInfo))
+            {
+                if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
+                {
+                    orderItem.AttributeDescription += "<br>" + reservationInfo;
+                }
+                else
+                {
+                    orderItem.AttributeDescription = reservationInfo;
+                }
+            }
+            return orderItem;
+        }
+
+        protected virtual async Task GenerateGiftCard(ShoppingCartItem sc, OrderItem orderItem, Product product)
+        {
+            _productAttributeParser.GetGiftCardAttribute(sc.AttributesXml,
+                        out string giftCardRecipientName, out string giftCardRecipientEmail,
+                        out string giftCardSenderName, out string giftCardSenderEmail, out string giftCardMessage);
+
+            for (int i = 0; i < sc.Quantity; i++)
+            {
+                var gc = new GiftCard {
+                    GiftCardType = product.GiftCardType,
+                    PurchasedWithOrderItem = orderItem,
+                    Amount = product.OverriddenGiftCardAmount ?? orderItem.UnitPriceExclTax,
+                    IsGiftCardActivated = false,
+                    GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
+                    RecipientName = giftCardRecipientName,
+                    RecipientEmail = giftCardRecipientEmail,
+                    SenderName = giftCardSenderName,
+                    SenderEmail = giftCardSenderEmail,
+                    Message = giftCardMessage,
+                    IsRecipientNotified = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                await _giftCardService.InsertGiftCard(gc);
+            }
+        }
+
+        protected virtual async Task UpdateProductReservation(Order order, PlaceOrderContainter details)
+        {
+            var reservationsToUpdate = new List<ProductReservation>();
+            foreach (var sc in details.Cart.Where(x => (x.RentalStartDateUtc.HasValue && x.RentalEndDateUtc.HasValue) || !string.IsNullOrEmpty(x.ReservationId)))
+            {
+                var product = await _productService.GetProductById(sc.ProductId);
+                if (!string.IsNullOrEmpty(sc.ReservationId))
+                {
+                    var reservation = await _productReservationService.GetProductReservation(sc.ReservationId);
+                    reservationsToUpdate.Add(reservation);
+                }
+
+                if (sc.RentalStartDateUtc.HasValue && sc.RentalEndDateUtc.HasValue)
+                {
+                    var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, null);
+                    var grouped = reservations.GroupBy(x => x.Resource);
+
+                    IGrouping<string, ProductReservation> groupToBook = null;
+                    foreach (var group in grouped)
+                    {
+                        bool groupCanBeBooked = true;
+                        if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
+                        {
+                            for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator <= sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
+                            {
+                                if (!group.Select(x => x.Date).Contains(iterator))
+                                {
+                                    groupCanBeBooked = false;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator < sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
+                            {
+                                if (!group.Select(x => x.Date).Contains(iterator))
+                                {
+                                    groupCanBeBooked = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (groupCanBeBooked)
+                        {
+                            groupToBook = group;
+                            break;
+                        }
+                    }
+
+                    if (groupToBook == null)
+                    {
+                        throw new Exception("ShoppingCart.Reservation.Nofreereservationsinthisperiod");
+                    }
+                    else
+                    {
+                        var temp = groupToBook.AsQueryable();
+                        if (product.IncBothDate && product.IntervalUnitType == IntervalUnit.Day)
+                        {
+                            temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date <= sc.RentalEndDateUtc);
+                        }
+                        else
+                        {
+                            temp = temp.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date < sc.RentalEndDateUtc);
+                        }
+
+                        foreach (var item in temp)
+                        {
+                            item.OrderId = order.OrderGuid.ToString();
+                            await _productReservationService.UpdateProductReservation(item);
+                        }
+
+                        reservationsToUpdate.AddRange(temp);
+                    }
+                }
+            }
+            var reserved = await _productReservationService.GetCustomerReservationsHelpers(order.CustomerId);
+            foreach (var res in reserved)
+            {
+                await _productReservationService.DeleteCustomerReservationsHelper(res);
+            }
+
+            foreach (var resToUpdate in reservationsToUpdate)
+            {
+                resToUpdate.OrderId = order.Id;
+                await _productReservationService.UpdateProductReservation(resToUpdate);
+            }
+
+        }
+
+        protected virtual async Task UpdateAuctionEnded(ShoppingCartItem sc, Product product, Order order)
+        {
+            if (product.ProductType == ProductType.Auction && sc.ShoppingCartType == ShoppingCartType.ShoppingCart)
+            {
+                await _auctionService.UpdateAuctionEnded(product, true, true);
+                await _auctionService.UpdateHighestBid(product, product.Price, order.CustomerId);
+                await _workflowMessageService.SendAuctionEndedCustomerNotificationBin(product, order.CustomerId, order.CustomerLanguageId, order.StoreId);
+                await _auctionService.InsertBid(new Bid() {
+                    CustomerId = order.CustomerId,
+                    OrderId = order.Id,
+                    Amount = product.Price,
+                    Date = DateTime.UtcNow,
+                    ProductId = product.Id,
+                    StoreId = order.StoreId,
+                    Win = true,
+                    Bin = true,
+                });
+            }
+            if (product.ProductType == ProductType.Auction && _orderSettings.UnpublishAuctionProduct)
+            {
+                await _productService.UnpublishProduct(product);
+            }
+        }
+
+        protected virtual async Task UpdateBids(Order order, PlaceOrderContainter details)
+        {
+            foreach (var sc in details.Cart.Where(x=>x.ShoppingCartType == ShoppingCartType.Auctions))
+            {
+                var bid = (await _auctionService.GetBidsByProductId(sc.Id)).Where(x => x.CustomerId == details.Customer.Id).FirstOrDefault();
+                if (bid != null)
+                {
+                    bid.OrderId = order.Id;
+                    await _auctionService.UpdateBid(bid);
+                }
+            }
+        }
+        protected virtual async Task InsertDiscountUsageHistory(Order order, PlaceOrderContainter details)
+        {
+            foreach (var discount in details.AppliedDiscounts)
+            {
+                var duh = new DiscountUsageHistory {
+                    DiscountId = discount.DiscountId,
+                    CouponCode = discount.CouponCode,
+                    OrderId = order.Id,
+                    CustomerId = order.CustomerId,
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                await _discountService.InsertDiscountUsageHistory(duh);
+            }
+        }
+
+        protected virtual async Task AppliedGiftCards(Order order, PlaceOrderContainter details)
+        {
+            foreach (var agc in details.AppliedGiftCards)
+            {
+                decimal amountUsed = agc.AmountCanBeUsed;
+                var gcuh = new GiftCardUsageHistory {
+                    GiftCardId = agc.GiftCard.Id,
+                    UsedWithOrderId = order.Id,
+                    UsedValue = amountUsed,
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                agc.GiftCard.GiftCardUsageHistory.Add(gcuh);
+                await _giftCardService.UpdateGiftCard(agc.GiftCard);
+            }
+        }
+
+
+        /// <summary>
+        /// Prepare order header
+        /// </summary>
+        /// <param name="processPaymentRequest">Process Payment Request</param>
+        /// <param name="processPaymentResult">Process Payment Result</param>
+        /// <param name="details">Place order containter</param>
+        /// <returns>Order</returns>
+        protected virtual Order PrepareOrderHeader(ProcessPaymentRequest processPaymentRequest, ProcessPaymentResult processPaymentResult, PlaceOrderContainter details)
+        {
+            var order = new Order {
+                StoreId = processPaymentRequest.StoreId,
+                OrderGuid = processPaymentRequest.OrderGuid,
+                Code = processPaymentRequest.OrderCode,
+                CustomerId = details.Customer.Id,
+                OwnerId = string.IsNullOrEmpty(details.Customer.OwnerId) ? details.Customer.Id : details.Customer.OwnerId,
+                CustomerLanguageId = details.CustomerLanguage.Id,
+                CustomerTaxDisplayType = details.CustomerTaxDisplayType,
+                CustomerIp = _webHelper.GetCurrentIpAddress(),
+                OrderSubtotalInclTax = Math.Round(details.OrderSubTotalInclTax, 6),
+                OrderSubtotalExclTax = Math.Round(details.OrderSubTotalExclTax, 6),
+                OrderSubTotalDiscountInclTax = Math.Round(details.OrderSubTotalDiscountInclTax, 6),
+                OrderSubTotalDiscountExclTax = Math.Round(details.OrderSubTotalDiscountExclTax, 6),
+                OrderShippingInclTax = Math.Round(details.OrderShippingTotalInclTax, 6),
+                OrderShippingExclTax = Math.Round(details.OrderShippingTotalExclTax, 6),
+                PaymentMethodAdditionalFeeInclTax = Math.Round(details.PaymentAdditionalFeeInclTax, 6),
+                PaymentMethodAdditionalFeeExclTax = Math.Round(details.PaymentAdditionalFeeExclTax, 6),
+                TaxRates = details.TaxRates,
+                OrderTax = Math.Round(details.OrderTaxTotal, 6),
+                OrderTotal = Math.Round(details.OrderTotal, 6),
+                RefundedAmount = decimal.Zero,
+                OrderDiscount = Math.Round(details.OrderDiscountAmount, 6),
+                CheckoutAttributeDescription = details.CheckoutAttributeDescription,
+                CheckoutAttributesXml = details.CheckoutAttributesXml,
+                CustomerCurrencyCode = details.CustomerCurrencyCode,
+                PrimaryCurrencyCode = details.PrimaryCurrencyCode,
+                CurrencyRate = details.CustomerCurrencyRate,
+                AffiliateId = details.AffiliateId,
+                OrderStatus = OrderStatus.Pending,
+                AllowStoringCreditCardNumber = processPaymentResult.AllowStoringCreditCardNumber,
+                CardType = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardType) : string.Empty,
+                CardName = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardName) : string.Empty,
+                CardNumber = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardNumber) : string.Empty,
+                MaskedCreditCardNumber = _encryptionService.EncryptText(_paymentService.GetMaskedCreditCardNumber(processPaymentRequest.CreditCardNumber)),
+                CardCvv2 = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardCvv2) : string.Empty,
+                CardExpirationMonth = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardExpireMonth.ToString()) : string.Empty,
+                CardExpirationYear = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardExpireYear.ToString()) : string.Empty,
+                PaymentMethodSystemName = processPaymentRequest.PaymentMethodSystemName,
+                AuthorizationTransactionId = processPaymentResult.AuthorizationTransactionId,
+                AuthorizationTransactionCode = processPaymentResult.AuthorizationTransactionCode,
+                AuthorizationTransactionResult = processPaymentResult.AuthorizationTransactionResult,
+                CaptureTransactionId = processPaymentResult.CaptureTransactionId,
+                CaptureTransactionResult = processPaymentResult.CaptureTransactionResult,
+                SubscriptionTransactionId = processPaymentResult.SubscriptionTransactionId,
+                PaymentStatus = processPaymentResult.NewPaymentStatus,
+                PaidDateUtc = null,
+                BillingAddress = details.BillingAddress,
+                ShippingAddress = details.ShippingAddress,
+                ShippingStatus = details.ShippingStatus,
+                ShippingMethod = details.ShippingMethodName,
+                PickUpInStore = details.PickUpInStore,
+                PickupPoint = details.PickupPoint,
+                ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
+                CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
+                VatNumber = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber),
+                VatNumberStatusId = details.Customer.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.VatNumberStatusId),
+                CompanyName = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company),
+                FirstName = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName),
+                LastName = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName),
+                CustomerEmail = details.Customer.Email,
+                UrlReferrer = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastUrlReferrer),
+                ShippingOptionAttributeDescription = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ShippingOptionAttributeDescription, processPaymentRequest.StoreId),
+                ShippingOptionAttributeXml = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ShippingOptionAttributeXml, processPaymentRequest.StoreId),
+                CreatedOnUtc = DateTime.UtcNow
+            };
+
+            return order;
+        }
+
+        #region Methods
+        /// <summary>
+        /// Save order details
+        /// </summary>
+        /// <param name="details">Place order containter</param>
+        /// <param name="order">Order</param>
+        /// <returns>Order</returns>
+        public virtual async Task<Order> SaveOrderDetails(PlaceOrderContainter details, Order order)
+        {
+            //move shopping cart items to order items
+            foreach (var sc in details.Cart)
+            {
+                var product = await _productService.GetProductById(sc.ProductId);
+
+                var orderItem = await PrepareOrderItem(sc, product, details);
+
+                order.OrderItems.Add(orderItem);
+
+                //gift cards
+                if (product.IsGiftCard)
+                {
+                    await GenerateGiftCard(sc, orderItem, product);
+                }
+
+                //update auction ended
+                await UpdateAuctionEnded(sc, product, order);
+
+                //inventory
+                await _inventoryManageService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml, orderItem.WarehouseId);
+
+                //update sold
+                await _productService.UpdateSold(sc.ProductId, sc.Quantity);
+            }
+
+            //insert order
+            await _orderService.InsertOrder(order);
+
+            //update reservation
+            await UpdateProductReservation(order, details);
+
+            //update bids
+            await UpdateBids(order, details);
+
+            //clear shopping cart
+            await _customerService.ClearShoppingCartItem(order.CustomerId, details.Cart);
+
+            //product also purchased
+            await _orderService.InsertProductAlsoPurchased(order);
+
+            //discount usage history
+            await InsertDiscountUsageHistory(order, details);
+
+            //gift card usage history
+            if (details.AppliedGiftCards != null)
+                await AppliedGiftCards(order, details);
+
+            //reset checkout data
+            await _customerService.ResetCheckoutData(details.Customer, order.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
+
+            return order;
+        }
+
         /// <summary>
         /// Send notification order 
         /// </summary>
@@ -1190,7 +1241,6 @@ namespace Grand.Services.Orders
                 }
             }
         }
-
         /// <summary>
         /// Places an order
         /// </summary>
@@ -1232,7 +1282,7 @@ namespace Grand.Services.Orders
                 {
                     #region Save order details
 
-                    var order = PrepareOrder(processPaymentRequest, processPaymentResult, details);
+                    var order = PrepareOrderHeader(processPaymentRequest, processPaymentResult, details);
 
                     if (!processPaymentRequest.IsRecurringPayment)
                     {
@@ -1271,7 +1321,7 @@ namespace Grand.Services.Orders
                     await _mediator.Send(new CheckOrderStatusCommand() { Order = order });
 
                     //update customer 
-                    await UpdateCustomer(order);
+                    await UpdateCustomer(order, details);
 
                     //raise event       
                     await _mediator.Publish(new OrderPlacedEvent(order));
@@ -1316,5 +1366,6 @@ namespace Grand.Services.Orders
             return result;
         }
 
+        #endregion
     }
 }

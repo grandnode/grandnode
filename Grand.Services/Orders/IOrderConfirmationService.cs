@@ -7,6 +7,14 @@ namespace Grand.Services.Orders
     public interface IOrderConfirmationService
     {
         /// <summary>
+        /// Save order details
+        /// </summary>
+        /// <param name="details">Place order containter</param>
+        /// <param name="order">Order</param>
+        /// <returns>Order</returns>
+        Task<Order> SaveOrderDetails(PlaceOrderContainter details, Order order);
+
+        /// <summary>
         /// Places an order
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
