@@ -6204,6 +6204,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogOnHomePage.Hint">
     <Value>Check to display your blog posts on your store home page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogPostsInSearchAutoComplete">
+    <Value>Show blog posts in search autocomplete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogPostsInSearchAutoComplete.Hint">
+    <Value>Check this box if you want to show blog posts in search autocomplete</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowHeaderRSSUrl">
     <Value>Display blog RSS feed link in the browser address bar</Value>
   </LocaleResource>
