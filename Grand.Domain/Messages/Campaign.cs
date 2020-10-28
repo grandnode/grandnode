@@ -70,7 +70,7 @@ namespace Grand.Domain.Messages
         /// </summary>
         public virtual ICollection<string> CustomerTags
         {
-            get { return _customerTags ?? (_customerTags = new List<string>()); }
+            get { return _customerTags ??= new List<string>(); }
             protected set { _customerTags = value; }
         }
         /// <summary>
@@ -78,7 +78,7 @@ namespace Grand.Domain.Messages
         /// </summary>
         public virtual ICollection<string> CustomerRoles
         {
-            get { return _customerRoles ?? (_customerRoles = new List<string>()); }
+            get { return _customerRoles ??= new List<string>(); }
             protected set { _customerRoles = value; }
         }
         /// <summary>
@@ -86,7 +86,7 @@ namespace Grand.Domain.Messages
         /// </summary>
         public virtual ICollection<string> NewsletterCategories
         {
-            get { return _newsletterCategories ?? (_newsletterCategories = new List<string>()); }
+            get { return _newsletterCategories ??= new List<string>(); }
             protected set { _newsletterCategories = value; }
         }
 

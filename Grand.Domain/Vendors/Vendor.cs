@@ -143,7 +143,7 @@ namespace Grand.Domain.Vendors
         /// </summary>
         public virtual ICollection<VendorNote> VendorNotes
         {
-            get { return _vendorNotes ?? (_vendorNotes = new List<VendorNote>()); }
+            get { return _vendorNotes ??= new List<VendorNote>(); }
             protected set { _vendorNotes = value; }
         }
         /// <summary>
@@ -151,7 +151,7 @@ namespace Grand.Domain.Vendors
         /// </summary>
         public virtual ICollection<string> AppliedDiscounts
         {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<string>()); }
+            get { return _appliedDiscounts ??= new List<string>(); }
             protected set { _appliedDiscounts = value; }
         }
 

@@ -334,6 +334,8 @@ namespace Grand.Services.Infrastructure
             builder.RegisterType<OrderService>().As<IOrderService>().InstancePerLifetimeScope();
             builder.RegisterType<OrderReportService>().As<IOrderReportService>().InstancePerLifetimeScope();
             builder.RegisterType<OrderProcessingService>().As<IOrderProcessingService>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderConfirmationService>().As<IOrderConfirmationService>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderRecurringPayment>().As<IOrderRecurringPayment>().InstancePerLifetimeScope();
             builder.RegisterType<OrderTotalCalculationService>().As<IOrderTotalCalculationService>().InstancePerLifetimeScope();
             builder.RegisterType<ReturnRequestService>().As<IReturnRequestService>().InstancePerLifetimeScope();
             builder.RegisterType<RewardPointsService>().As<IRewardPointsService>().InstancePerLifetimeScope();

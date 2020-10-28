@@ -59,6 +59,11 @@ namespace Grand.Domain.Stores
         public string DefaultCountryId { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of the default currency for this store
+        /// </summary>
+        public string DefaultCurrencyId { get; set; }
+
+        /// <summary>
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }

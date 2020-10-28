@@ -17,7 +17,7 @@ namespace Grand.Domain.Customers
 
         public virtual ICollection<int> ConditionType
         {
-            get { return _conditionType ?? (_conditionType = new List<int>()); }
+            get { return _conditionType ??= new List<int>(); }
             protected set { _conditionType = value; }
         }
 

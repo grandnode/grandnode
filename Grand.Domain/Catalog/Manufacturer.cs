@@ -152,7 +152,7 @@ namespace Grand.Domain.Catalog
         /// </summary>
         public virtual ICollection<string> AppliedDiscounts
         {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<string>()); }
+            get { return _appliedDiscounts ??= new List<string>(); }
             protected set { _appliedDiscounts = value; }
         }
     }

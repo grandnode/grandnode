@@ -40,7 +40,7 @@ namespace Grand.Domain.Catalog
         /// </summary>
         public virtual ICollection<SpecificationAttributeOption> SpecificationAttributeOptions
         {
-            get { return _specificationAttributeOptions ?? (_specificationAttributeOptions = new List<SpecificationAttributeOption>()); }
+            get { return _specificationAttributeOptions ??= new List<SpecificationAttributeOption>(); }
             protected set { _specificationAttributeOptions = value; }
         }
     }

@@ -41,7 +41,7 @@ namespace Grand.Domain.Shipping
         /// </summary>
         public virtual ICollection<Country> RestrictedCountries
         {
-            get { return _restrictedCountries ?? (_restrictedCountries = new List<Country>()); }
+            get { return _restrictedCountries ??= new List<Country>(); }
             protected set { _restrictedCountries = value; }
         }
 
@@ -50,7 +50,7 @@ namespace Grand.Domain.Shipping
         /// </summary>
         public virtual ICollection<string> RestrictedRoles
         {
-            get { return _restrictedRoles ?? (_restrictedRoles = new List<string>()); }
+            get { return _restrictedRoles ??= new List<string>(); }
             protected set { _restrictedRoles = value; }
         }
     }

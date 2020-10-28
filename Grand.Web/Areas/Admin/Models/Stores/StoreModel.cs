@@ -14,6 +14,7 @@ namespace Grand.Web.Areas.Admin.Models.Stores
             AvailableLanguages = new List<SelectListItem>();
             AvailableWarehouses = new List<SelectListItem>();
             AvailableCountries = new List<SelectListItem>();
+            AvailableCurrencies = new List<SelectListItem>();
         }
 
         [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
@@ -71,6 +72,9 @@ namespace Grand.Web.Areas.Admin.Models.Stores
         public string DefaultCountryId { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultCurrency")]
+        public string DefaultCurrencyId { get; set; }
+        public IList<SelectListItem> AvailableCurrencies { get; set; }
     }
 
     public partial class StoreLocalizedModel : ILocalizedModelLocal

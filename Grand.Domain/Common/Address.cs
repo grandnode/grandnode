@@ -80,28 +80,5 @@ namespace Grand.Domain.Common
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-        
-        public object Clone()
-        {
-            var addr = new Address
-            {
-                FirstName = FirstName,
-                LastName = LastName,
-                Email = Email,
-                Company = Company,
-                VatNumber = VatNumber,
-                CountryId = CountryId,
-                StateProvinceId = StateProvinceId,
-                City = City,
-                Address1 = Address1,
-                Address2 = Address2,
-                ZipPostalCode = ZipPostalCode,
-                PhoneNumber = PhoneNumber,
-                FaxNumber = FaxNumber,
-                CustomAttributes = CustomAttributes,
-                CreatedOnUtc = CreatedOnUtc,
-            };
-            return addr;
-        }
     }
 }

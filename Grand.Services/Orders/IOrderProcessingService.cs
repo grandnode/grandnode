@@ -1,7 +1,4 @@
-using Grand.Domain.Customers;
 using Grand.Domain.Orders;
-using Grand.Domain.Shipping;
-using Grand.Services.Payments;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,39 +9,6 @@ namespace Grand.Services.Orders
     /// </summary>
     public partial interface IOrderProcessingService
     {
-        /// <summary>
-        /// Send notification order 
-        /// </summary>
-        /// <param name="order">Order</param>
-        Task SendNotification(Order order);
-
-        /// <summary>
-        /// Places an order
-        /// </summary>
-        /// <param name="processPaymentRequest">Process payment request</param>
-        /// <returns>Place order result</returns>
-        Task<PlaceOrderResult> PlaceOrder(ProcessPaymentRequest processPaymentRequest);
-
-        /// <summary>
-        /// Process next recurring psayment
-        /// </summary>
-        /// <param name="recurringPayment">Recurring payment</param>
-        Task ProcessNextRecurringPayment(RecurringPayment recurringPayment);
-
-        /// <summary>
-        /// Cancels a recurring payment
-        /// </summary>
-        /// <param name="recurringPayment">Recurring payment</param>
-        Task<IList<string>> CancelRecurringPayment(RecurringPayment recurringPayment);
-
-        /// <summary>
-        /// Gets a value indicating whether a customer can cancel recurring payment
-        /// </summary>
-        /// <param name="customerToValidate">Customer</param>
-        /// <param name="recurringPayment">Recurring Payment</param>
-        /// <returns>value indicating whether a customer can cancel recurring payment</returns>
-        Task<bool> CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment);
-
         /// <summary>
         /// Cancel a order
         /// </summary>
@@ -59,7 +23,7 @@ namespace Grand.Services.Orders
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether cancel is allowed</returns>
         bool CanCancelOrder(Order order);
-        
+
         /// <summary>
         /// Gets a value indicating whether order can be marked as authorized
         /// </summary>
@@ -185,19 +149,5 @@ namespace Grand.Services.Orders
         /// <param name="order">Order</param>
         Task VoidOffline(Order order);
 
-        /// <summary>
-        /// Valdiate minimum order sub-total amount
-        /// </summary>
-        /// <param name="cart">Shopping cart</param>
-        /// <returns>true - OK; false - minimum order sub-total amount is not reached</returns>
-        Task<bool> ValidateMinOrderSubtotalAmount(IList<ShoppingCartItem> cart);
-
-        /// <summary>
-        /// Validate order total amount
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="cart">Shopping cart</param>
-        /// <returns>true - OK; false - minimum/maximum order total amount is not reached</returns>
-        Task<bool> ValidateOrderTotalAmount(Customer customer, IList<ShoppingCartItem> cart);
     }
 }

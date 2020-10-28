@@ -108,7 +108,7 @@ namespace Grand.Domain.Catalog
         /// </summary>
         public virtual ICollection<ProductAttributeValue> ProductAttributeValues
         {
-            get { return _productAttributeValues ?? (_productAttributeValues = new List<ProductAttributeValue>()); }
+            get { return _productAttributeValues ??= new List<ProductAttributeValue>(); }
             protected set { _productAttributeValues = value; }
         }
 

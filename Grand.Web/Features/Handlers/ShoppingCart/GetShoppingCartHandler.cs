@@ -6,6 +6,7 @@ using Grand.Domain.Media;
 using Grand.Domain.Orders;
 using Grand.Domain.Shipping;
 using Grand.Services.Catalog;
+using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -47,7 +48,6 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILocalizationService _localizationService;
         private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly ICurrencyService _currencyService;
         private readonly IDiscountService _discountService;
         private readonly IShoppingCartService _shoppingCartService;
@@ -80,7 +80,6 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             IProductAttributeParser productAttributeParser,
             ILocalizationService localizationService,
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
-            IOrderProcessingService orderProcessingService,
             ICurrencyService currencyService,
             IDiscountService discountService,
             IShoppingCartService shoppingCartService,
@@ -111,7 +110,6 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _productAttributeParser = productAttributeParser;
             _localizationService = localizationService;
             _checkoutAttributeFormatter = checkoutAttributeFormatter;
-            _orderProcessingService = orderProcessingService;
             _currencyService = currencyService;
             _discountService = discountService;
             _shoppingCartService = shoppingCartService;
@@ -177,7 +175,9 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             }
             else
             {
-                bool minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmount(request.Cart.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList());
+                var minOrderSubtotalAmountOk = await _mediator.Send(new ValidateMinShoppingCartSubtotalAmountCommand() {
+                    Customer = request.Customer,
+                    Cart = request.Cart.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList() });
                 if (!minOrderSubtotalAmountOk)
                 {
                     decimal minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, request.Currency);

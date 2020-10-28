@@ -21,15 +21,17 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;
 
         public StoreViewModelService(ILanguageService languageService, IWarehouseService warehouseService, IStoreService storeService, ISettingService settingService,
-            ICountryService countryService)
+            ICountryService countryService, ICurrencyService currencyService)
         {
             _languageService = languageService;
             _warehouseService = warehouseService;
             _storeService = storeService;
             _settingService = settingService;
             _countryService = countryService;
+            _currencyService = currencyService;
         }
 
         public virtual async Task PrepareLanguagesModel(StoreModel model)
@@ -49,7 +51,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableLanguages.Add(new SelectListItem
                 {
                     Text = language.Name,
-                    Value = language.Id.ToString()
+                    Value = language.Id
                 });
             }
         }
@@ -71,7 +73,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableWarehouses.Add(new SelectListItem
                 {
                     Text = warehouse.Name,
-                    Value = warehouse.Id.ToString()
+                    Value = warehouse.Id
                 });
             }
         }
@@ -91,7 +93,27 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 model.AvailableCountries.Add(new SelectListItem {
                     Text = country.Name,
-                    Value = country.Id.ToString()
+                    Value = country.Id
+                });
+            }
+        }
+        public virtual async Task PrepareCurrencyModel(StoreModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            //countries
+            model.AvailableCurrencies.Add(new SelectListItem {
+                Text = "---",
+                Value = ""
+            });
+
+            var currencies = await _currencyService.GetAllCurrencies();
+            foreach (var currency in currencies)
+            {
+                model.AvailableCurrencies.Add(new SelectListItem {
+                    Text = currency.Name,
+                    Value = currency.Id
                 });
             }
         }

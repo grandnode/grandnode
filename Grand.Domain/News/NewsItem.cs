@@ -115,7 +115,7 @@ namespace Grand.Domain.News
         /// </summary>
         public virtual ICollection<NewsComment> NewsComments
         {
-            get { return _newsComments ?? (_newsComments = new List<NewsComment>()); }
+            get { return _newsComments ??= new List<NewsComment>(); }
             protected set { _newsComments = value; }
         }
         

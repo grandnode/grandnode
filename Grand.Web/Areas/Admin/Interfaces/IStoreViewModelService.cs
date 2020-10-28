@@ -9,6 +9,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task PrepareLanguagesModel(StoreModel model);
         Task PrepareWarehouseModel(StoreModel model);
         Task PrepareCountryModel(StoreModel model);
+        Task PrepareCurrencyModel(StoreModel model);
         StoreModel PrepareStoreModel();
         Task<Store> InsertStoreModel(StoreModel model);
         Task<Store> UpdateStoreModel(Store store, StoreModel model);
