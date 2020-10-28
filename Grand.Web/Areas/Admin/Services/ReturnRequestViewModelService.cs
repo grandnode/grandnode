@@ -244,7 +244,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new ReturnReqestListModel {
                 //Return request status
-                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList().ToList()
+                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList(_localizationService, _workContext, false).ToList()
             };
             model.ReturnRequestStatus.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
 
