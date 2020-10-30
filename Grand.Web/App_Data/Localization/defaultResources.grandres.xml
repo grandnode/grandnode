@@ -16720,6 +16720,12 @@
   <LocaleResource Name="Admin.System.ScheduleTasks.StopOnError.hint">
     <Value>Stop on error</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.StoreId">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.StoreId.Hint">
+    <Value>A store name in which this task run (storecontext).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.TimeInterval">
     <Value>Time interval (in minutes)</Value>
   </LocaleResource>

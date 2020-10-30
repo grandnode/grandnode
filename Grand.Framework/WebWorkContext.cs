@@ -168,6 +168,13 @@ namespace Grand.Framework
             {
                 //in this case return built-in customer record for background task
                 customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
+                //if customer comes from background task, doesn't need to create cookies
+                if (customer != null)
+                {
+                    //cache the found customer
+                    _cachedCustomer = customer;
+                    return customer;
+                }
             }
 
             //set customer as a background task if method setted as AllowAnonymous

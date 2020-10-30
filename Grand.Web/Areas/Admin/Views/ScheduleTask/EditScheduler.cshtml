@@ -52,7 +52,7 @@
                                 <div class="col-md-9 col-sm-9">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="Enabled" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="Enabled"></span>
                                 </div>
@@ -62,7 +62,7 @@
                                 <div class="col-md-9 col-sm-9">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="StopOnError" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="StopOnError"></span>
                                 </div>
@@ -72,6 +72,12 @@
                                 <div class="col-md-9 col-sm-9">
                                     <admin-input asp-for="TimeInterval" />
                                     <span asp-validation-for="TimeInterval"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="StoreId" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                         </div>

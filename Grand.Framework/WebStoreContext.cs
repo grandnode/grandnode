@@ -42,10 +42,8 @@ namespace Grand.Framework
         /// <summary>
         /// Gets or sets the current store
         /// </summary>
-        public virtual Store CurrentStore
-        {
-            get
-            {
+        public virtual Store CurrentStore {
+            get {
                 return _cachedStore;
             }
 
@@ -87,6 +85,27 @@ namespace Grand.Framework
             }
             return _cachedStore ?? throw new Exception("No store could be loaded");
         }
+
+        /// <summary>
+        /// Set the current store by BackgroundService
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<Store> SetCurrentStore(string storeId)
+        {
+            if (!string.IsNullOrEmpty(storeId))
+            {
+                var store = await _storeService.GetStoreById(storeId);
+                if (store != null)
+                    _cachedStore = store;
+            }
+            if (_cachedStore == null)
+                _cachedStore = (await _storeService.GetAllStores()).FirstOrDefault();
+
+            return _cachedStore ?? throw new Exception("No store could be loaded by BackgroundService");
+
+        }
+
+
         /// <summary>
         /// Set store cookie
         /// </summary>
@@ -107,8 +126,7 @@ namespace Grand.Framework
             var cookieExpiresDate = DateTime.UtcNow.AddHours(CommonHelper.CookieAuthExpires);
 
             //set new cookie value
-            var options = new CookieOptions
-            {
+            var options = new CookieOptions {
                 HttpOnly = true,
                 Expires = cookieExpiresDate
             };

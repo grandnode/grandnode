@@ -5,9 +5,12 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
+using Grand.Services.Stores;
 using Grand.Services.Tasks;
+using Grand.Web.Areas.Admin.Extensions.Mapping;
 using Grand.Web.Areas.Admin.Models.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
@@ -23,6 +26,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IScheduleTaskService _scheduleTaskService;
         private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IStoreService _storeService;
 
         #endregion
 
@@ -30,32 +34,34 @@ namespace Grand.Web.Areas.Admin.Controllers
         public ScheduleTaskController(
             IScheduleTaskService scheduleTaskService,
             ILocalizationService localizationService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            IStoreService storeService)
         {
             _scheduleTaskService = scheduleTaskService;
             _localizationService = localizationService;
             _dateTimeHelper = dateTimeHelper;
+            _storeService = storeService;
         }
         #endregion
 
         #region Utility
+
         [NonAction]
         protected virtual ScheduleTaskModel PrepareScheduleTaskModel(ScheduleTask task)
         {
-            var model = new ScheduleTaskModel {
-                Id = task.Id,
-                ScheduleTaskName = task.ScheduleTaskName,
-                LeasedByMachineName = task.LeasedByMachineName,
-                Type = task.Type,
-                Enabled = task.Enabled,
-                StopOnError = task.StopOnError,
-                LastStartUtc = task.LastStartUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastStartUtc.Value, DateTimeKind.Utc) : default(DateTime?),
-                LastEndUtc = task.LastNonSuccessEndUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastNonSuccessEndUtc.Value, DateTimeKind.Utc) : default(DateTime?),
-                LastSuccessUtc = task.LastSuccessUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastSuccessUtc.Value, DateTimeKind.Utc) : default(DateTime?),
-                TimeInterval = task.TimeInterval,
-            };
+            var model = task.ToModel(_dateTimeHelper);           
             return model;
         }
+        [NonAction]
+        protected virtual async Task<ScheduleTaskModel> PrepareStores(ScheduleTaskModel model)
+        {
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.Select"), Value = "" });
+            foreach (var s in await _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Shortcut, Value = s.Id.ToString() });
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -67,7 +73,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
-            //get all tasks and then change their type inside PrepareSCheduleTaskModel and return as List<ScheduleTaskModel>
             var models = (await _scheduleTaskService.GetAllTasks())
                 .Select(PrepareScheduleTaskModel)
                 .ToList();
@@ -83,19 +88,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> EditScheduler(string id)
         {
             var task = await _scheduleTaskService.GetTaskById(id);
-            var model = new ScheduleTaskModel();
-            {
-                model.Id = task.Id;
-                model.ScheduleTaskName = task.ScheduleTaskName;
-                model.LeasedByMachineName = task.LeasedByMachineName;
-                model.Type = task.Type;
-                model.Enabled = task.Enabled;
-                model.StopOnError = task.StopOnError;
-                model.LastStartUtc = task.LastStartUtc;
-                model.LastEndUtc = task.LastNonSuccessEndUtc;
-                model.LastSuccessUtc = task.LastSuccessUtc;
-                model.TimeInterval = task.TimeInterval;
-            }
+            var model = task.ToModel(_dateTimeHelper);
+            model = await PrepareStores(model);
             return View(model);
         }
 
@@ -107,22 +101,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             var scheduleTask = await _scheduleTaskService.GetTaskById(model.Id);
             if (ModelState.IsValid)
             {
-                scheduleTask.Enabled = model.Enabled;
-                scheduleTask.LeasedByMachineName = model.LeasedByMachineName;
-                scheduleTask.StopOnError = model.StopOnError;
-                scheduleTask.TimeInterval = model.TimeInterval;
+                scheduleTask = model.ToEntity(scheduleTask);
                 await _scheduleTaskService.UpdateTask(scheduleTask);
                 SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.Updated"));
                 if (continueEditing)
-                {
-                    //return RedirectToAction("Edit", new { id = model.Id });
+                {                    
                     return await EditScheduler(model.Id);
                 }
                 return RedirectToAction("List");
             }
             model.ScheduleTaskName = scheduleTask.ScheduleTaskName;
             model.Type = scheduleTask.Type;
-
+            model = await PrepareStores(model);
             ErrorNotification(ModelState);
 
             return View(model);

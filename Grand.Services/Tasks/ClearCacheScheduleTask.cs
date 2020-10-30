@@ -14,6 +14,7 @@ namespace Grand.Services.Tasks
         {
             _cacheManager = cacheManager;
         }
+
         /// <summary>
         /// Executes a task
         /// </summary>
