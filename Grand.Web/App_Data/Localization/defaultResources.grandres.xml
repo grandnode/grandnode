@@ -10793,6 +10793,12 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published">
     <Value>Published</Value>
   </LocaleResource>
+   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.StartDate">
+		<Value>Start Date</Value>
+    </LocaleResource>
+	<LocaleResource Name="Admin.ContentManagement.Topics.Fields.EndDate">
+		<Value>End Date</Value>
+	</LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published.Hint">
     <Value>Specify if topic should be published or not.</Value>
   </LocaleResource>

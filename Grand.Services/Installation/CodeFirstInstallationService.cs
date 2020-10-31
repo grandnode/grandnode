@@ -141,7 +141,7 @@ namespace Grand.Services.Installation
         private readonly IWebHelper _webHelper;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IServiceProvider _serviceProvider;
-        
+
         #endregion
 
         #region Ctor
@@ -4619,7 +4619,7 @@ namespace Grand.Services.Installation
                                            EmailAccountId = eaGeneral.Id,
                                        },
                                     new MessageTemplate
-                                       { 
+                                       {
                                            Name = "VendorInformationChange.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. Vendor {{Vendor.Name}} changed provided information",
                                            Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Vendor.Name}} changed provided information.</p>",
@@ -4650,6 +4650,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your &quot;About Us&quot; information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4661,6 +4663,8 @@ namespace Grand.Services.Installation
                                            Body = "<p><strong>Register and save time!</strong><br />Register with us for future convenience:</p><ul><li>Fast and easy check out</li><li>Easy access to your order history and status</li></ul>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4673,6 +4677,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your conditions of use information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4684,6 +4690,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your contact information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4695,6 +4703,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4706,6 +4716,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>If you have questions, see the <a href=\"http://www.grandnode.com/\">Documentation</a>, or post in the <a href=\"http://www.grandnode.com/boards/\">Forums</a> at <a href=\"http://www.grandnode.com\">grandnode.com</a></p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4717,6 +4729,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your login / registration information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4729,6 +4743,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your privacy policy information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4740,6 +4756,8 @@ namespace Grand.Services.Installation
                                            Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4752,6 +4770,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your shipping &amp; returns information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4763,6 +4783,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4774,6 +4796,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your terms of service information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                    new Topic
                                        {
@@ -4785,6 +4809,8 @@ namespace Grand.Services.Installation
                                            Body = "<p>Knowledgebase homepage. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
+                                           StartDate = DateTime.MinValue,
+                                           EndDate = DateTime.MaxValue
                                        },
                                };
             await _topicRepository.InsertAsync(topics);
@@ -5906,7 +5932,7 @@ namespace Grand.Services.Installation
                 Count = 0
 
             };
-             await _orderTagRepository.InsertAsync(coolTag);
+            await _orderTagRepository.InsertAsync(coolTag);
 
             var newTag = new OrderTag {
                 Name = "new",

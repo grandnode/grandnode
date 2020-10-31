@@ -15,6 +15,7 @@ using Grand.Services.Seo;
 using Grand.Services.Topics;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -72,8 +73,9 @@ namespace Grand.Web.ViewComponents
         }
         private async Task<FooterModel> PrepareFooter()
         {
+            var now = DateTime.Now;
             var topicModel = (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
-                .Where(t => (t.IncludeInFooterRow1 || t.IncludeInFooterRow2 || t.IncludeInFooterRow3) && t.Published)
+                .Where(t => (t.IncludeInFooterRow1 || t.IncludeInFooterRow2 || t.IncludeInFooterRow3) && t.Published && t.StartDate <= now && now < t.EndDate)
                 .Select(t => new FooterModel.FooterTopicModel {
                     Id = t.Id,
                     Name = t.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id),

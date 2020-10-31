@@ -136,7 +136,9 @@ namespace Grand.Web.Extensions
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
                 SeName = entity.GetSeName(language.Id),
                 TopicTemplateId = entity.TopicTemplateId,
-                Published = entity.Published
+                Published = entity.Published,
+                StartDate = entity.StartDate.ToLocalTime(),
+                EndDate = entity.EndDate.ToLocalTime()
             };
             return model;
 

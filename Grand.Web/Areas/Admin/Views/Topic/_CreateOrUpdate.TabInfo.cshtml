@@ -173,6 +173,20 @@ function togglePassword() {
                 <span asp-validation-for="Published"></span>
             </div>
         </div>
+        <div class="form-group">
+            <admin-label asp-for="StartDate" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="StartDate" />
+                <span asp-validation-for="StartDate"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="EndDate" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="EndDate" />
+                <span asp-validation-for="EndDate"></span>
+            </div>
+        </div>
     </div>
 </div>
 <vc:admin-widget widget-zone="topic_details_info_bottom" additional-data="Model" />
