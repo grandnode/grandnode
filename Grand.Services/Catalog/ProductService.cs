@@ -1029,6 +1029,77 @@ namespace Grand.Services.Catalog
 
         #endregion
 
+        #region Product prices
+
+        /// <summary>
+        /// Deletes a product price
+        /// </summary>
+        /// <param name="productPrice">Product price</param>
+        public virtual async Task DeleteProductPrice(ProductPrice productPrice)
+        {
+            if (productPrice == null)
+                throw new ArgumentNullException("productPrice");
+
+            var updatebuilder = Builders<Product>.Update;
+            var update = updatebuilder.Pull(p => p.ProductPrices, productPrice);
+            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productPrice.ProductId), update);
+
+            //cache
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productPrice.ProductId));
+
+            //event notification
+            await _mediator.EntityDeleted(productPrice);
+        }
+
+        /// <summary>
+        /// Inserts a product price
+        /// </summary>
+        /// <param name="productPrice">Product price</param>
+        public virtual async Task InsertProductPrice(ProductPrice productPrice)
+        {
+            if (productPrice == null)
+                throw new ArgumentNullException("productPrice");
+
+            var updatebuilder = Builders<Product>.Update;
+            var update = updatebuilder.AddToSet(p => p.ProductPrices, productPrice);
+            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productPrice.ProductId), update);
+
+            //cache
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productPrice.ProductId));
+
+            //event notification
+            await _mediator.EntityInserted(productPrice);
+        }
+
+        /// <summary>
+        /// Updates the product price
+        /// </summary>
+        /// <param name="tierPrice">Tier price</param>
+        public virtual async Task UpdateProductPrice(ProductPrice productPrice)
+        {
+            if (productPrice == null)
+                throw new ArgumentNullException("productPrice");
+
+
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.Id, productPrice.ProductId);
+            filter = filter & builder.Where(x => x.ProductPrices.Any(y => y.Id == productPrice.Id));
+
+            var update = Builders<Product>.Update
+                .Set(x => x.ProductPrices.ElementAt(-1).Price, productPrice.Price)
+                .Set(x => x.ProductPrices.ElementAt(-1).CurrencyCode, productPrice.CurrencyCode);
+
+            await _productRepository.Collection.UpdateManyAsync(filter, update);
+
+            //cache
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productPrice.ProductId));
+
+            //event notification
+            await _mediator.EntityUpdated(productPrice);
+        }
+
+        #endregion
+
         #region Product pictures
 
         /// <summary>

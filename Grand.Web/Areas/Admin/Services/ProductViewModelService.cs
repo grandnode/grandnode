@@ -1991,6 +1991,7 @@ namespace Grand.Web.Areas.Admin.Services
                 }
             }
         }
+
         public virtual async Task<IList<ProductModel.TierPriceModel>> PrepareTierPriceModel(Product product)
         {
             var storeId = string.Empty;

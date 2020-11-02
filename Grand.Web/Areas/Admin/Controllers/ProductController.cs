@@ -1515,6 +1515,125 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Product currency price
+
+        [PermissionAuthorizeAction(PermissionActionName.Preview)]
+        [HttpPost]
+        public async Task<IActionResult> ProductPriceList(DataSourceRequest command, string productId)
+        {
+            var product = await _productService.GetProductById(productId);
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
+            var items = new List<ProductModel.ProductPriceModel>();
+            foreach (var item in product.ProductPrices)
+            {
+                items.Add(new ProductModel.ProductPriceModel() {
+                    Id = item.Id,
+                    CurrencyCode = item.CurrencyCode,
+                    Price = item.Price
+                });
+            }
+
+            var gridModel = new DataSourceResult {
+                Data = items,
+                Total = items.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [HttpPost]
+        public async Task<IActionResult> ProductPriceInsert(string productId, ProductModel.ProductPriceModel model)
+        {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            if (product.ProductPrices.Where(x => x.CurrencyCode == model.CurrencyCode).Any())
+                ModelState.AddModelError("", "Currency code exists");
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _productService.InsertProductPrice(new ProductPrice() { 
+                        ProductId = product.Id,
+                        CurrencyCode = model.CurrencyCode,
+                        Price = model.Price,
+                    });
+                    return new NullJsonResult();
+                }
+                catch (Exception ex)
+                {
+                    return ErrorForKendoGridJson(ex.Message);
+                }
+            }
+            return ErrorForKendoGridJson(ModelState);
+        }
+
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [HttpPost]
+        public async Task<IActionResult> ProductPriceUpdate(string productId, ProductModel.ProductPriceModel model)
+        {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            var productPrice = product.ProductPrices.FirstOrDefault(x => x.Id == model.Id);
+            if (productPrice == null)
+                ModelState.AddModelError("", "Product price model not exists");
+
+            if (product.ProductPrices.Where(x => x.Id != model.Id && x.CurrencyCode == model.CurrencyCode).Any())
+                ModelState.AddModelError("", "You can't use this currency code");
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    productPrice.CurrencyCode = model.CurrencyCode;
+                    productPrice.Price = model.Price;
+                    productPrice.ProductId = productId;
+
+                    await _productService.UpdateProductPrice(productPrice);
+
+                    return new NullJsonResult();
+                }
+                catch (Exception ex)
+                {
+                    return ErrorForKendoGridJson(ex.Message);
+                }
+            }
+            return ErrorForKendoGridJson(ModelState);
+        }
+
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [HttpPost]
+        public async Task<IActionResult> ProductPriceDelete(string productId, ProductModel.ProductPriceModel model)
+        {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            var productPrice = product.ProductPrices.FirstOrDefault(x => x.Id == model.Id);
+            if (productPrice == null)
+                ModelState.AddModelError("", "Product price model not exists");
+
+            if (ModelState.IsValid)
+            {
+                productPrice.ProductId = productId;
+                await _productService.DeleteProductPrice(productPrice);
+
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
+        }
+
+        #endregion
+
         #region Tier prices
 
         [PermissionAuthorizeAction(PermissionActionName.Preview)]

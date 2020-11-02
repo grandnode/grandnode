@@ -10,6 +10,9 @@
             </div>
         </div>
         <div class="form-group">
+            <partial name="_CreateOrUpdate.ProductPrices" model="Model" />
+        </div>
+        <div class="form-group">
             <admin-label asp-for="OldPrice" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="OldPrice" /> [@Model.PrimaryStoreCurrencyCode]

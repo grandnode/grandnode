@@ -795,6 +795,13 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public bool IsLoggedInAsVendor { get; set; }
         }
 
+        public partial class ProductPriceModel : BaseEntityModel
+        {
+            public string CurrencyCode { get; set; }
+
+            public decimal Price { get; set; }
+        }
+
         public partial class TierPriceModel : BaseEntityModel
         {
 
