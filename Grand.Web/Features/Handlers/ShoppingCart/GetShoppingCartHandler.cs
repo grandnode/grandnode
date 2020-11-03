@@ -455,19 +455,14 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     decimal discountAmount = unitprices.discountAmount;
                     List<AppliedDiscount> appliedDiscounts = unitprices.appliedDiscounts;
                     var productprices = await _taxService.GetProductPrice(product, unitprices.unitprice);
-                    decimal shoppingCartUnitPriceWithDiscountBase = productprices.productprice;
                     decimal taxRate = productprices.taxRate;
-                    decimal shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, request.Currency);
 
                     cartItemModel.UnitPriceWithoutDiscountValue =
-                         await _currencyService.ConvertFromPrimaryStoreCurrency(
-                        (await _taxService.GetProductPrice(product,
-                        (await _priceCalculationService.GetUnitPrice(sci, false)).unitprice)).productprice,
-                        request.Currency);
+                        (await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci, false)).unitprice)).productprice;
 
                     cartItemModel.UnitPriceWithoutDiscount = _priceFormatter.FormatPrice(cartItemModel.UnitPriceWithoutDiscountValue);
-                    cartItemModel.UnitPriceValue = shoppingCartUnitPriceWithDiscount;
-                    cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
+                    cartItemModel.UnitPriceValue = productprices.productprice;
+                    cartItemModel.UnitPrice = _priceFormatter.FormatPrice(productprices.productprice);
                     if (appliedDiscounts != null && appliedDiscounts.Any())
                     {
                         var discount = await _discountService.GetDiscountById(appliedDiscounts.FirstOrDefault().DiscountId);
@@ -483,8 +478,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     var subtotal = await _priceCalculationService.GetSubTotal(sci, true);
                     decimal shoppingCartItemDiscountBase = subtotal.discountAmount;
                     List<AppliedDiscount> scDiscounts = subtotal.appliedDiscounts;
-                    decimal shoppingCartItemSubTotalWithDiscountBase = (await _taxService.GetProductPrice(product, subtotal.subTotal)).productprice;
-                    decimal shoppingCartItemSubTotalWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, request.Currency);
+                    var shoppingCartItemSubTotalWithDiscount = (await _taxService.GetProductPrice(product, subtotal.subTotal)).productprice;
                     cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
                     cartItemModel.SubTotalValue = shoppingCartItemSubTotalWithDiscount;
 
@@ -494,8 +488,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         shoppingCartItemDiscountBase = (await _taxService.GetProductPrice(product, shoppingCartItemDiscountBase)).productprice;
                         if (shoppingCartItemDiscountBase > decimal.Zero)
                         {
-                            decimal shoppingCartItemDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemDiscountBase, request.Currency);
-                            cartItemModel.Discount = _priceFormatter.FormatPrice(shoppingCartItemDiscount);
+                            cartItemModel.Discount = _priceFormatter.FormatPrice(shoppingCartItemDiscountBase);
                         }
                     }
                 }

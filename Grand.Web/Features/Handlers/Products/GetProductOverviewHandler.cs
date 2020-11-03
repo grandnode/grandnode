@@ -220,7 +220,7 @@ namespace Grand.Web.Features.Handlers.Products
                                         {
                                             //calculate for the maximum quantity (in case if we have tier prices)
                                             var tmpPrice = (await _priceCalculationService.GetFinalPrice(associatedProduct,
-                                                _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue)).finalPrice;
+                                                _workContext.CurrentCustomer, _workContext.WorkingCurrency, decimal.Zero, true, int.MaxValue)).finalPrice;
                                             if (!minPossiblePrice.HasValue || tmpPrice < minPossiblePrice.Value)
                                             {
                                                 minPriceProduct = associatedProduct;
@@ -237,11 +237,10 @@ namespace Grand.Web.Features.Handlers.Products
                                             else if (minPossiblePrice.HasValue)
                                             {
                                                 //calculate prices
-                                                decimal finalPriceBase = (await _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, priceIncludesTax, _workContext.CurrentCustomer)).productprice;
-                                                decimal finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
+                                                decimal finalPrice = (await _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, priceIncludesTax, _workContext.CurrentCustomer)).productprice;
 
                                                 priceModel.OldPrice = null;
-                                                priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax));
+                                                priceModel.Price = string.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax));
                                                 priceModel.PriceValue = finalPrice;
 
                                                 //PAngV baseprice (used in Germany)
@@ -331,7 +330,7 @@ namespace Grand.Web.Features.Handlers.Products
 
                                     //calculate for the maximum quantity (in case if we have tier prices)
                                     var infoprice = (await _priceCalculationService.GetFinalPrice(product,
-                                        _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue));
+                                        _workContext.CurrentCustomer, _workContext.WorkingCurrency, decimal.Zero, true, int.MaxValue));
 
                                     priceModel.AppliedDiscounts = infoprice.appliedDiscounts;
                                     priceModel.PreferredTierPrice = infoprice.preferredTierPrice;
@@ -339,10 +338,9 @@ namespace Grand.Web.Features.Handlers.Products
                                     decimal minPossiblePrice = infoprice.finalPrice;
 
                                     decimal oldPriceBase = (await _taxService.GetProductPrice(product, product.OldPrice, priceIncludesTax, _workContext.CurrentCustomer)).productprice;
-                                    decimal finalPriceBase = (await _taxService.GetProductPrice(product, minPossiblePrice, priceIncludesTax, _workContext.CurrentCustomer)).productprice;
+                                    decimal finalPrice = (await _taxService.GetProductPrice(product, minPossiblePrice, priceIncludesTax, _workContext.CurrentCustomer)).productprice;
 
                                     decimal oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
-                                    decimal finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                                     //do we have tier prices configured?
                                     var tierPrices = new List<TierPrice>();
@@ -360,12 +358,12 @@ namespace Grand.Web.Features.Handlers.Products
                                     if (displayFromMessage)
                                     {
                                         priceModel.OldPrice = null;
-                                        priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax));
+                                        priceModel.Price = string.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax));
                                         priceModel.PriceValue = finalPrice;
                                     }
                                     else
                                     {
-                                        if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
+                                        if (finalPrice != oldPriceBase && oldPriceBase != decimal.Zero)
                                         {
                                             priceModel.OldPrice = _priceFormatter.FormatPrice(oldPrice, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax);
                                             priceModel.OldPriceValue = oldPrice;

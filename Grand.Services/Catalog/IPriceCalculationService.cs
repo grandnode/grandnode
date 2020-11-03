@@ -1,5 +1,6 @@
 using Grand.Domain.Catalog;
 using Grand.Domain.Customers;
+using Grand.Domain.Directory;
 using Grand.Domain.Orders;
 using Grand.Services.Discounts;
 using System;
@@ -18,12 +19,15 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">The customer</param>
+        /// <param name="currency">The currency</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <returns>Final price</returns>
-        Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(Product product,
+        Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(
+            Product product,
             Customer customer,
+            Currency currency,
             decimal additionalCharge = decimal.Zero, 
             bool includeDiscounts = true, 
             int quantity = 1);
@@ -33,6 +37,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">The customer</param>
+        /// <param name="currency">The currency</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
@@ -41,6 +46,7 @@ namespace Grand.Services.Catalog
         /// <returns>Final price</returns>
         Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(Product product,
             Customer customer,
+            Currency currency,
             decimal additionalCharge,
             bool includeDiscounts,
             int quantity,
@@ -64,6 +70,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
+        /// <param name="currency">The currency</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Product atrributes (XML format)</param>
@@ -74,6 +81,7 @@ namespace Grand.Services.Catalog
         /// <returns>Shopping cart unit price (one item)</returns>
         Task<(decimal unitprice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetUnitPrice(Product product,
             Customer customer,
+            Currency currency,
             ShoppingCartType shoppingCartType,
             int quantity,
             string attributesXml,

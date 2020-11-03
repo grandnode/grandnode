@@ -93,6 +93,7 @@ namespace Grand.Web.Features.Handlers.Products
                 //we do not calculate price of "customer enters price" option is enabled
                 var unitprice = await _priceCalculationService.GetUnitPrice(request.Product,
                     request.Customer,
+                    request.Currency,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, (decimal?)default,
                     rentalStartDate, rentalEndDate,

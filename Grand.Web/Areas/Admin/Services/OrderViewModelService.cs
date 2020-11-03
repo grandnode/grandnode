@@ -895,9 +895,9 @@ namespace Grand.Web.Areas.Admin.Services
                 throw new ArgumentException("No product found with the specified id");
 
             var customer = await _customerService.GetCustomerById(order.CustomerId);
-
+            var currency = await _currencyService.GetCurrencyByCode(order.CustomerCurrencyCode);
             var presetQty = 1;
-            var presetPrice = (await _priceCalculationService.GetFinalPrice(product, customer, decimal.Zero, true, presetQty)).finalPrice;
+            var presetPrice = (await _priceCalculationService.GetFinalPrice(product, customer, currency, decimal.Zero, true, presetQty)).finalPrice;
             decimal presetPriceInclTax = (await _taxService.GetProductPrice(product, presetPrice, true, customer)).productprice;
             decimal presetPriceExclTax = (await _taxService.GetProductPrice(product, presetPrice, false, customer)).productprice;
 

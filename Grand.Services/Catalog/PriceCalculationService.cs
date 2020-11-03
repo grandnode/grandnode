@@ -1,6 +1,7 @@
 using Grand.Core;
 using Grand.Domain.Catalog;
 using Grand.Domain.Customers;
+using Grand.Domain.Directory;
 using Grand.Domain.Discounts;
 using Grand.Domain.Orders;
 using Grand.Services.Customers;
@@ -341,17 +342,20 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">The customer</param>
+        /// <param name="currency">The currency</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <returns>Final price</returns>
-        public virtual async Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(Product product,
+        public virtual async Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(
+            Product product,
             Customer customer,
+            Currency currency,
             decimal additionalCharge = decimal.Zero,
             bool includeDiscounts = true,
             int quantity = 1)
         {
-            return await GetFinalPrice(product, customer, additionalCharge, includeDiscounts, quantity, null, null);
+            return await GetFinalPrice(product, customer, currency, additionalCharge, includeDiscounts, quantity, null, null);
         }
 
         /// <summary>
@@ -367,8 +371,10 @@ namespace Grand.Services.Catalog
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Final price</returns>
-        public virtual async Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(Product product,
+        public virtual async Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(
+            Product product,
             Customer customer,
+            Currency currency,
             decimal additionalCharge,
             bool includeDiscounts,
             int quantity,
@@ -386,7 +392,9 @@ namespace Grand.Services.Catalog
                 var result = new ProductPriceForCaching();
 
                 //initial price
-                decimal price = product.Price;
+                decimal price = 
+                    product.ProductPrices.FirstOrDefault(x => x.CurrencyCode == currency.CurrencyCode)?.Price ?? 
+                    await _currencyService.ConvertFromPrimaryStoreCurrency(product.Price, currency);
 
                 //tier prices
                 var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
@@ -484,6 +492,7 @@ namespace Grand.Services.Catalog
             var product = await _productService.GetProductById(shoppingCartItem.ProductId);
             return await GetUnitPrice(product,
                 _workContext.CurrentCustomer,
+                _workContext.WorkingCurrency,
                 shoppingCartItem.ShoppingCartType,
                 shoppingCartItem.Quantity,
                 shoppingCartItem.AttributesXml,
@@ -497,6 +506,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
+        /// <param name="currency">The currency</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Product atrributes (XML format)</param>
@@ -507,8 +517,10 @@ namespace Grand.Services.Catalog
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Shopping cart unit price (one item)</returns>
-        public virtual async Task<(decimal unitprice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetUnitPrice(Product product,
+        public virtual async Task<(decimal unitprice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetUnitPrice(
+            Product product,
             Customer customer,
+            Currency currency,
             ShoppingCartType shoppingCartType,
             int quantity,
             string attributesXml,
@@ -589,6 +601,7 @@ namespace Grand.Services.Catalog
                     }
                     var getfinalPrice = await GetFinalPrice(product,
                         customer,
+                        currency,
                         attributesTotalPrice,
                         includeDiscounts,
                         qty,
@@ -740,7 +753,8 @@ namespace Grand.Services.Catalog
                         var associatedProduct = await _productService.GetProductById(value.AssociatedProductId);
                         if (associatedProduct != null)
                         {
-                            adjustment = (await GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, additionalCharge: value.PriceAdjustment, includeDiscounts: true)).finalPrice * value.Quantity;
+                            adjustment = (await GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, _workContext.WorkingCurrency, 
+                                additionalCharge: value.PriceAdjustment, includeDiscounts: true)).finalPrice * value.Quantity;
                         }
                     }
                     break;

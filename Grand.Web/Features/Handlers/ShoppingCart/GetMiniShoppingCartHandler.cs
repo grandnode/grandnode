@@ -113,11 +113,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     var shoppingCartSubTotal = await _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax);
                     decimal orderSubTotalDiscountAmountBase = shoppingCartSubTotal.discountAmount;
                     List<AppliedDiscount> orderSubTotalAppliedDiscounts = shoppingCartSubTotal.appliedDiscounts;
-                    decimal subTotalWithoutDiscountBase = shoppingCartSubTotal.subTotalWithoutDiscount;
-                    decimal subTotalWithDiscountBase = shoppingCartSubTotal.subTotalWithDiscount;
-                    decimal subtotalBase = subTotalWithoutDiscountBase;
-                    decimal subtotal = await _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, request.Currency);
-                    model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, request.Currency, request.Language, subTotalIncludingTax);
+                    
+                    model.SubTotal = _priceFormatter.FormatPrice(shoppingCartSubTotal.subTotalWithoutDiscount, false, request.Currency, request.Language, subTotalIncludingTax);
 
                     var requiresShipping = cart.RequiresShipping();
                     //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
@@ -193,9 +190,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         {
                             var productprices = await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci)).unitprice);
                             decimal taxRate = productprices.taxRate;
-                            decimal shoppingCartUnitPriceWithDiscountBase = productprices.productprice;
-                            decimal shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, request.Currency);
-                            cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
+                            cartItemModel.UnitPrice = _priceFormatter.FormatPrice(productprices.productprice);
                         }
 
                         //picture

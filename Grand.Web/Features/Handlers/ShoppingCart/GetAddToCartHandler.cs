@@ -128,11 +128,9 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 {
                     var productprices = await _taxService.GetProductPrice(request.Product, (await _priceCalculationService.GetUnitPrice(sci)).unitprice);
                     decimal taxRate = productprices.taxRate;
-                    decimal shoppingCartUnitPriceWithDiscountBase = productprices.productprice;
-                    decimal shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, request.Currency);
-                    model.Price = !request.CustomerEnteredPrice.HasValue ? _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount) : _priceFormatter.FormatPrice(request.CustomerEnteredPrice.Value);
-                    model.DecimalPrice = !request.CustomerEnteredPrice.HasValue ? shoppingCartUnitPriceWithDiscount : request.CustomerEnteredPrice.Value;
-                    model.TotalPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount * sci.Quantity);
+                    model.Price = !request.CustomerEnteredPrice.HasValue ? _priceFormatter.FormatPrice(productprices.productprice) : _priceFormatter.FormatPrice(request.CustomerEnteredPrice.Value);
+                    model.DecimalPrice = request.CustomerEnteredPrice ?? productprices.productprice ;
+                    model.TotalPrice = _priceFormatter.FormatPrice(productprices.productprice * sci.Quantity);
                 }
 
                 //picture
@@ -168,18 +166,13 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             {
                 var subTotalIncludingTax = request.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
                 var shoppingCartSubTotal = await _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax);
-                decimal orderSubTotalDiscountAmountBase = shoppingCartSubTotal.discountAmount;
                 List<AppliedDiscount> orderSubTotalAppliedDiscounts = shoppingCartSubTotal.appliedDiscounts;
-                decimal subTotalWithoutDiscountBase = shoppingCartSubTotal.subTotalWithoutDiscount;
                 decimal subTotalWithDiscountBase = shoppingCartSubTotal.subTotalWithDiscount;
-                decimal subtotalBase = subTotalWithoutDiscountBase;
-                decimal subtotal = await _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, request.Currency);
-                model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, request.Currency, request.Language, subTotalIncludingTax);
-                model.DecimalSubTotal = subtotal;
-                if (orderSubTotalDiscountAmountBase > decimal.Zero)
+                model.SubTotal = _priceFormatter.FormatPrice(shoppingCartSubTotal.subTotalWithoutDiscount, true, request.Currency, request.Language, subTotalIncludingTax);
+                model.DecimalSubTotal = shoppingCartSubTotal.subTotalWithoutDiscount;
+                if (shoppingCartSubTotal.discountAmount > decimal.Zero)
                 {
-                    decimal orderSubTotalDiscountAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(orderSubTotalDiscountAmountBase, request.Currency);
-                    model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, request.Currency, request.Language, subTotalIncludingTax);
+                    model.SubTotalDiscount = _priceFormatter.FormatPrice(-shoppingCartSubTotal.discountAmount, true, request.Currency, request.Language, subTotalIncludingTax);
                 }
             }
             else if (request.CartType == ShoppingCartType.Auctions)

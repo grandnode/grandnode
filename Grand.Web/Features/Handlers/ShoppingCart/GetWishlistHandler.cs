@@ -151,9 +151,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 {
                     var productprice = await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci)).unitprice);
                     decimal taxRate = productprice.taxRate;
-                    decimal shoppingCartUnitPriceWithDiscountBase = productprice.productprice;
-                    decimal shoppingCartUnitPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, request.Currency);
-                    cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
+                    cartItemModel.UnitPrice = _priceFormatter.FormatPrice(productprice.productprice);
                 }
                 //subtotal, discount
                 if (product.CallForPrice)
@@ -168,10 +166,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     List<AppliedDiscount> scDiscounts = subtotal.appliedDiscounts;
                     var productprices = await _taxService.GetProductPrice(product, subtotal.subTotal);
                     decimal taxRate = productprices.taxRate;
-                    decimal shoppingCartItemSubTotalWithDiscountBase = productprices.productprice;
-
-                    decimal shoppingCartItemSubTotalWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, request.Currency);
-                    cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
+                    cartItemModel.SubTotal = _priceFormatter.FormatPrice(productprices.productprice);
 
                     //display an applied discount amount
                     if (shoppingCartItemDiscountBase > decimal.Zero)
@@ -179,8 +174,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         shoppingCartItemDiscountBase = (await _taxService.GetProductPrice(product, shoppingCartItemDiscountBase)).productprice;
                         if (shoppingCartItemDiscountBase > decimal.Zero)
                         {
-                            decimal shoppingCartItemDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemDiscountBase, request.Currency);
-                            cartItemModel.Discount = _priceFormatter.FormatPrice(shoppingCartItemDiscount);
+                            cartItemModel.Discount = _priceFormatter.FormatPrice(shoppingCartItemDiscountBase);
                         }
                     }
                 }

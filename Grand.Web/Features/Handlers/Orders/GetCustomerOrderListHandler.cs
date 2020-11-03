@@ -77,8 +77,7 @@ namespace Grand.Web.Features.Handlers.Orders
                     ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, request.Language.Id),
                     IsReturnRequestAllowed = await _mediator.Send(new IsReturnRequestAllowedQuery() { Order = order })
                 };
-                var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-                orderModel.OrderTotal = await _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, request.Language);
+                orderModel.OrderTotal = await _priceFormatter.FormatPrice(order.OrderTotal, true, order.CustomerCurrencyCode, false, request.Language);
 
                 model.Orders.Add(orderModel);
             }

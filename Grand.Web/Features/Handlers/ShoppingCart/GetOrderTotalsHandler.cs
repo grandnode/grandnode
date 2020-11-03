@@ -80,16 +80,10 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         {
             var subTotalIncludingTax = request.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
             var shoppingCartSubTotal = await _orderTotalCalculationService.GetShoppingCartSubTotal(request.Cart, subTotalIncludingTax);
-            decimal orderSubTotalDiscountAmountBase = shoppingCartSubTotal.discountAmount;
-            decimal subTotalWithoutDiscountBase = shoppingCartSubTotal.subTotalWithoutDiscount;
-            decimal subtotalBase = subTotalWithoutDiscountBase;
-            decimal subtotal = await _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, request.Currency);
-            model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, request.Currency, request.Language, subTotalIncludingTax);
-
-            if (orderSubTotalDiscountAmountBase > decimal.Zero)
+            model.SubTotal = _priceFormatter.FormatPrice(shoppingCartSubTotal.subTotalWithoutDiscount, true, request.Currency, request.Language, subTotalIncludingTax);
+            if (shoppingCartSubTotal.discountAmount > decimal.Zero)
             {
-                decimal orderSubTotalDiscountAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(orderSubTotalDiscountAmountBase, request.Currency);
-                model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, request.Currency, request.Language, subTotalIncludingTax);
+                model.SubTotalDiscount = _priceFormatter.FormatPrice(-shoppingCartSubTotal.discountAmount, true, request.Currency, request.Language, subTotalIncludingTax);
             }
         }
 
@@ -101,8 +95,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 decimal? shoppingCartShippingBase = (await _orderTotalCalculationService.GetShoppingCartShippingTotal(request.Cart)).shoppingCartShippingTotal;
                 if (shoppingCartShippingBase.HasValue)
                 {
-                    decimal shoppingCartShipping = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartShippingBase.Value, request.Currency);
-                    model.Shipping = _priceFormatter.FormatShippingPrice(shoppingCartShipping, true);
+                    model.Shipping = _priceFormatter.FormatShippingPrice(shoppingCartShippingBase.Value, true);
 
                     //selected shipping method
                     var shippingOption = request.Customer.GetAttributeFromEntity<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, request.Store.Id);
@@ -139,10 +132,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             {
                 var taxtotal = await _orderTotalCalculationService.GetTaxTotal(request.Cart);
                 SortedDictionary<decimal, decimal> taxRates = taxtotal.taxRates;
-                decimal shoppingCartTaxBase = taxtotal.taxtotal;
-                decimal shoppingCartTax = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartTaxBase, request.Currency);
 
-                if (shoppingCartTaxBase == 0 && _taxSettings.HideZeroTax)
+                if (taxtotal.taxtotal == 0 && _taxSettings.HideZeroTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
@@ -152,12 +143,12 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                     displayTax = !displayTaxRates;
 
-                    model.Tax = _priceFormatter.FormatPrice(shoppingCartTax, true, false);
+                    model.Tax = _priceFormatter.FormatPrice(taxtotal.taxtotal, true, false);
                     foreach (var tr in taxRates)
                     {
                         model.TaxRates.Add(new OrderTotalsModel.TaxRate {
                             Rate = _priceFormatter.FormatTaxRate(tr.Key),
-                            Value = _priceFormatter.FormatPrice(await _currencyService.ConvertFromPrimaryStoreCurrency(tr.Value, request.Currency), true, false),
+                            Value = _priceFormatter.FormatPrice(tr.Value, true, false),
                         });
                     }
                 }
@@ -176,14 +167,12 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             decimal redeemedRewardPointsAmount = carttotal.redeemedRewardPointsAmount;
             if (shoppingCartTotalBase.HasValue)
             {
-                decimal shoppingCartTotal = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartTotalBase.Value, request.Currency);
-                model.OrderTotal = _priceFormatter.FormatPrice(shoppingCartTotal, true, false);
+                model.OrderTotal = _priceFormatter.FormatPrice(shoppingCartTotalBase.Value, true, false);
             }
             //discount
             if (orderTotalDiscountAmountBase > decimal.Zero)
             {
-                decimal orderTotalDiscountAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(orderTotalDiscountAmountBase, request.Currency);
-                model.OrderTotalDiscount = _priceFormatter.FormatPrice(-orderTotalDiscountAmount, true, false);
+                model.OrderTotalDiscount = _priceFormatter.FormatPrice(-orderTotalDiscountAmountBase, true, false);
             }
 
             //gift cards
