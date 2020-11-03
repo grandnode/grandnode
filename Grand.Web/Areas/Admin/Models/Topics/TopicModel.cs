@@ -99,10 +99,10 @@ namespace Grand.Web.Areas.Admin.Models.Topics
         public string[] SelectedCustomerRoleIds { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.StartDate")]
-        public DateTime StartDate { get; set; }
+        public DateTime StartDateUtc { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.EndDate")]
-        public DateTime EndDate { get; set; }
+        public DateTime EndDateUtc { get; set; }
     }
 
     public partial class TopicLocalizedModel : ILocalizedModelLocal, ISlugModelLocal
