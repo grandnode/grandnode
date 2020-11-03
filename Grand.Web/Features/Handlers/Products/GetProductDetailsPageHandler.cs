@@ -971,6 +971,7 @@ namespace Grand.Web.Features.Handlers.Products
             var model = new List<ProductDetailsModel.TierPriceModel>();
             foreach (var tierPrice in product.TierPrices.OrderBy(x => x.Quantity)
                     .FilterByStore(_storeContext.CurrentStore.Id)
+                    .FilterByCurrency(_workContext.WorkingCurrency.CurrencyCode)
                     .FilterForCustomer(_workContext.CurrentCustomer)
                     .FilterByDate()
                     .RemoveDuplicatedQuantities())
@@ -979,9 +980,8 @@ namespace Grand.Web.Features.Handlers.Products
                 var priceBase = await _taxService.GetProductPrice(product, (await _priceCalculationService.GetFinalPrice(product,
                                        _workContext.CurrentCustomer, _workContext.WorkingCurrency,
                                        decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity)).finalPrice);
-                var price = await _currencyService.ConvertFromPrimaryStoreCurrency(priceBase.productprice, _workContext.WorkingCurrency);
                 tier.Quantity = tierPrice.Quantity;
-                tier.Price = _priceFormatter.FormatPrice(price, false, false);
+                tier.Price = _priceFormatter.FormatPrice(priceBase.productprice, false, false);
                 model.Add(tier);
             }
             return model;

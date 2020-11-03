@@ -1015,6 +1015,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.TierPrices.ElementAt(-1).Quantity, tierPrice.Quantity)
                 .Set(x => x.TierPrices.ElementAt(-1).StoreId, tierPrice.StoreId)
                 .Set(x => x.TierPrices.ElementAt(-1).CustomerRoleId, tierPrice.CustomerRoleId)
+                .Set(x => x.TierPrices.ElementAt(-1).CurrencyCode, tierPrice.CurrencyCode)
                 .Set(x => x.TierPrices.ElementAt(-1).StartDateTimeUtc, tierPrice.StartDateTimeUtc)
                 .Set(x => x.TierPrices.ElementAt(-1).EndDateTimeUtc, tierPrice.EndDateTimeUtc);
 

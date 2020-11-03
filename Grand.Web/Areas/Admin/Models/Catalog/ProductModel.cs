@@ -809,6 +809,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             {
                 AvailableStores = new List<SelectListItem>();
                 AvailableCustomerRoles = new List<SelectListItem>();
+                AvailableCurrencies = new List<SelectListItem>();
             }
             public string ProductId { get; set; }
 
@@ -821,6 +822,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string StoreId { get; set; }
             public IList<SelectListItem> AvailableStores { get; set; }
             public string Store { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Currency")]
+            public string CurrencyCode { get; set; }
+            public IList<SelectListItem> AvailableCurrencies { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Quantity")]
             public int Quantity { get; set; }

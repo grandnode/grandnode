@@ -11,6 +11,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
         {
             CreateMap<TierPrice, ProductModel.TierPriceModel>()
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCurrencies, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
 
             CreateMap<ProductModel.TierPriceModel, TierPrice>()

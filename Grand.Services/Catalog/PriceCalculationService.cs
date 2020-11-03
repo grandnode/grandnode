@@ -397,7 +397,7 @@ namespace Grand.Services.Catalog
                     await _currencyService.ConvertFromPrimaryStoreCurrency(product.Price, currency);
 
                 //tier prices
-                var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
+                var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, currency.CurrencyCode, quantity);
                 if (tierPrice != null)
                 {
                     price = tierPrice.Price;

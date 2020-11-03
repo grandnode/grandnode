@@ -348,6 +348,7 @@ namespace Grand.Web.Features.Handlers.Products
                                     {
                                         tierPrices.AddRange(product.TierPrices.OrderBy(tp => tp.Quantity)
                                             .FilterByStore(_storeContext.CurrentStore.Id)
+                                            .FilterByCurrency(_workContext.WorkingCurrency.CurrencyCode)
                                             .FilterForCustomer(_workContext.CurrentCustomer)
                                             .FilterByDate()
                                             .RemoveDuplicatedQuantities());

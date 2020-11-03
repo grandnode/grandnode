@@ -310,6 +310,10 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             foreach (var role in await _customerService.GetAllCustomerRoles(showHidden: true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = role.Name, Value = role.Id.ToString() });
+
+            foreach (var currency in await _currencyService.GetAllCurrencies())
+                model.AvailableCurrencies.Add(new SelectListItem { Text = currency.Name, Value = currency.CurrencyCode });
+            
         }
         public virtual async Task PrepareProductAttributeValueModel(Product product, ProductModel.ProductAttributeValueModel model)
         {
@@ -2015,6 +2019,7 @@ namespace Grand.Web.Areas.Admin.Services
                     Id = x.Id,
                     StoreId = x.StoreId,
                     Store = storeName,
+                    CurrencyCode = x.CurrencyCode,
                     CustomerRole = !string.IsNullOrEmpty(x.CustomerRoleId) ? (await _customerService.GetCustomerRoleById(x.CustomerRoleId)).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
                     ProductId = product.Id,
                     CustomerRoleId = !string.IsNullOrEmpty(x.CustomerRoleId) ? x.CustomerRoleId : "",
