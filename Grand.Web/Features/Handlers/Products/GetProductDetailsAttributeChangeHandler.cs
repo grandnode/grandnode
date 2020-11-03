@@ -103,9 +103,8 @@ namespace Grand.Web.Features.Handlers.Products
                 List<AppliedDiscount> scDiscounts = unitprice.appliedDiscounts;
                 decimal finalPrice = unitprice.unitprice;
                 var productprice = await _taxService.GetProductPrice(request.Product, finalPrice);
-                decimal finalPriceWithDiscountBase = productprice.productprice;
+                decimal finalPriceWithDiscount = productprice.productprice;
                 decimal taxRate = productprice.taxRate;
-                decimal finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, request.Currency);
                 model.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }
             //stock

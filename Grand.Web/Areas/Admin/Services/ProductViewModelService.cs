@@ -2406,6 +2406,35 @@ namespace Grand.Web.Areas.Admin.Services
             productAttributeMapping.ConditionAttributeXml = attributesXml;
             await _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
         }
+        public virtual async Task<ProductModel.ProductAttributeValueModel> PrepareProductAttributeValueModel(Product product, ProductAttributeMapping productAttributeMapping)
+        {
+            var model = new ProductModel.ProductAttributeValueModel {
+                ProductAttributeMappingId = productAttributeMapping.Id,
+                ProductId = product.Id,
+
+                //color squares
+                DisplayColorSquaresRgb = productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares,
+                ColorSquaresRgb = "#000000",
+                //image squares
+                DisplayImageSquaresPicture = productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares,
+                PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode,
+                //default qantity for associated product
+                Quantity = 1
+            };
+
+            //pictures
+            foreach (var x in product.ProductPictures)
+            {
+                model.ProductPictureModels.Add(new ProductModel.ProductPictureModel {
+                    Id = x.Id,
+                    ProductId = product.Id,
+                    PictureId = x.PictureId,
+                    PictureUrl = await _pictureService.GetPictureUrl(x.PictureId),
+                    DisplayOrder = x.DisplayOrder
+                });
+            }
+            return model;
+        }
         public virtual async Task<IList<ProductModel.ProductAttributeValueModel>> PrepareProductAttributeValueModels(Product product, ProductAttributeMapping productAttributeMapping)
         {
             var items = new List<ProductModel.ProductAttributeValueModel>();
@@ -2437,6 +2466,7 @@ namespace Grand.Web.Areas.Admin.Services
                     WeightAdjustment = x.WeightAdjustment,
                     WeightAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.WeightAdjustment.ToString("G29") : "",
                     Cost = x.Cost,
+                    PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode,
                     Quantity = x.Quantity,
                     IsPreSelected = x.IsPreSelected,
                     DisplayOrder = x.DisplayOrder,
@@ -2465,6 +2495,7 @@ namespace Grand.Web.Areas.Admin.Services
                 PriceAdjustment = pav.PriceAdjustment,
                 WeightAdjustment = pav.WeightAdjustment,
                 Cost = pav.Cost,
+                PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode,
                 Quantity = pav.Quantity,
                 IsPreSelected = pav.IsPreSelected,
                 DisplayOrder = pav.DisplayOrder,

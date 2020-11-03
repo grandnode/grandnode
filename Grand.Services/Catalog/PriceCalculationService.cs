@@ -392,8 +392,8 @@ namespace Grand.Services.Catalog
                 var result = new ProductPriceForCaching();
 
                 //initial price
-                decimal price = 
-                    product.ProductPrices.FirstOrDefault(x => x.CurrencyCode == currency.CurrencyCode)?.Price ?? 
+                decimal price =
+                    product.ProductPrices.FirstOrDefault(x => x.CurrencyCode == currency.CurrencyCode)?.Price ??
                     await _currencyService.ConvertFromPrimaryStoreCurrency(product.Price, currency);
 
                 //tier prices
@@ -574,6 +574,9 @@ namespace Grand.Services.Catalog
                     }
                 }
 
+                if (attributesTotalPrice > 0)
+                    attributesTotalPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(attributesTotalPrice, currency);
+
                 //get price of a product (with previously calculated price of all attributes)
                 if (product.CustomerEntersPrice)
                 {
@@ -753,7 +756,7 @@ namespace Grand.Services.Catalog
                         var associatedProduct = await _productService.GetProductById(value.AssociatedProductId);
                         if (associatedProduct != null)
                         {
-                            adjustment = (await GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, _workContext.WorkingCurrency, 
+                            adjustment = (await GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, _workContext.WorkingCurrency,
                                 additionalCharge: value.PriceAdjustment, includeDiscounts: true)).finalPrice * value.Quantity;
                         }
                     }

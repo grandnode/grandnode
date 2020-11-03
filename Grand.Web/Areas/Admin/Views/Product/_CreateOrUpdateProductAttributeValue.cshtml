@@ -127,7 +127,7 @@
         <div class="form-group" id="group-price-adjustment">
             <admin-label asp-for="PriceAdjustment" class="col-sm-3 control-label" />
             <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="PriceAdjustment" />
+                <admin-input asp-for="PriceAdjustment" /> [@Model.PrimaryStoreCurrencyCode]
                 <span asp-validation-for="PriceAdjustment"></span>
             </div>
         </div>
@@ -141,7 +141,7 @@
         <div class="form-group" id="group-cost">
             <admin-label asp-for="Cost" class="col-sm-3 control-label" />
             <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Cost" />
+                <admin-input asp-for="Cost" /> [@Model.PrimaryStoreCurrencyCode]
                 <span asp-validation-for="Cost"></span>
             </div>
         </div>

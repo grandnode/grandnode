@@ -2004,7 +2004,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //create
         [PermissionAuthorizeAction(PermissionActionName.Edit)]
-        public async Task<IActionResult> ProductAttributeValueCreatePopup(string productAttributeMappingId, string productId, [FromServices] IPictureService pictureService)
+        public async Task<IActionResult> ProductAttributeValueCreatePopup(string productAttributeMappingId, string productId)
         {
             var product = await _productService.GetProductById(productId);
 
@@ -2016,34 +2016,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
-            var model = new ProductModel.ProductAttributeValueModel {
-                ProductAttributeMappingId = productAttributeMappingId,
-                ProductId = productId,
-
-                //color squares
-                DisplayColorSquaresRgb = productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares,
-                ColorSquaresRgb = "#000000",
-                //image squares
-                DisplayImageSquaresPicture = productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares,
-
-                //default qantity for associated product
-                Quantity = 1
-            };
-
+            var model = await _productViewModelService.PrepareProductAttributeValueModel(product, productAttributeMapping);
             //locales
             await AddLocales(_languageService, model.Locales);
 
-            //pictures
-            foreach (var x in product.ProductPictures)
-            {
-                model.ProductPictureModels.Add(new ProductModel.ProductPictureModel {
-                    Id = x.Id,
-                    ProductId = product.Id,
-                    PictureId = x.PictureId,
-                    PictureUrl = await pictureService.GetPictureUrl(x.PictureId),
-                    DisplayOrder = x.DisplayOrder
-                });
-            }
             return View(model);
         }
 
