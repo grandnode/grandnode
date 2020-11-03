@@ -187,9 +187,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             //reward points to be spent (redeemed)
             if (redeemedRewardPointsAmount > decimal.Zero)
             {
-                decimal redeemedRewardPointsAmountInCustomerCurrency = await _currencyService.ConvertFromPrimaryStoreCurrency(redeemedRewardPointsAmount, request.Currency);
                 model.RedeemedRewardPoints = redeemedRewardPoints;
-                model.RedeemedRewardPointsAmount = _priceFormatter.FormatPrice(-redeemedRewardPointsAmountInCustomerCurrency, true, false);
+                model.RedeemedRewardPointsAmount = _priceFormatter.FormatPrice(-redeemedRewardPointsAmount, true, false);
             }
 
             //reward points to be earned

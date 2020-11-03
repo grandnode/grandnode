@@ -532,6 +532,7 @@ namespace Grand.Services.Orders
 
             //payment total
             decimal paymentAdditionalFee = await _paymentService.GetAdditionalHandlingFee(details.Cart, processPaymentRequest.PaymentMethodSystemName);
+            paymentAdditionalFee = await _currencyService.ConvertFromPrimaryStoreCurrency(paymentAdditionalFee, _workContext.WorkingCurrency);
             details.PaymentAdditionalFeeInclTax = (await _taxService.GetPaymentMethodAdditionalFee(paymentAdditionalFee, true, details.Customer)).paymentPrice;
             details.PaymentAdditionalFeeExclTax = (await _taxService.GetPaymentMethodAdditionalFee(paymentAdditionalFee, false, details.Customer)).paymentPrice;
 
@@ -556,14 +557,13 @@ namespace Grand.Services.Orders
             List<AppliedDiscount> orderAppliedDiscounts = shoppingCartTotal.appliedDiscounts;
             decimal orderDiscountAmount = shoppingCartTotal.discountAmount;
             int redeemedRewardPoints = shoppingCartTotal.redeemedRewardPoints;
-            decimal redeemedRewardPointsAmount = shoppingCartTotal.redeemedRewardPointsAmount;
             var orderTotal = shoppingCartTotal.shoppingCartTotal;
             if (!orderTotal.HasValue)
                 throw new GrandException("Order total couldn't be calculated");
 
             details.OrderDiscountAmount = orderDiscountAmount;
             details.RedeemedRewardPoints = redeemedRewardPoints;
-            details.RedeemedRewardPointsAmount = redeemedRewardPointsAmount;
+            details.RedeemedRewardPointsAmount = shoppingCartTotal.redeemedRewardPointsAmount;
             details.AppliedGiftCards = appliedGiftCards;
             details.OrderTotal = orderTotal.Value;
 

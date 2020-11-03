@@ -607,7 +607,8 @@ namespace Grand.Services.Orders
 
             if (shippingOption != null)
             {
-                var adjustshipingRate = await AdjustShippingRate(shippingOption.Rate, cart);
+                var rate = await _currencyService.ConvertFromPrimaryStoreCurrency(shippingOption.Rate, _workContext.WorkingCurrency);
+                var adjustshipingRate = await AdjustShippingRate(rate, cart);
                 shippingTotal = adjustshipingRate.shippingRate;
                 appliedDiscounts = adjustshipingRate.appliedDiscounts;
             }
@@ -757,6 +758,7 @@ namespace Grand.Services.Orders
             {
                 decimal taxRate;
                 decimal paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
+                paymentMethodAdditionalFee = await _currencyService.ConvertFromPrimaryStoreCurrency(paymentMethodAdditionalFee, _workContext.WorkingCurrency);
 
                 var additionalFeeExclTax = await _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer);
                 decimal paymentMethodAdditionalFeeExclTax = additionalFeeExclTax.paymentPrice;
@@ -844,13 +846,11 @@ namespace Grand.Services.Orders
 
             //payment method additional fee without tax
             decimal paymentMethodAdditionalFeeWithoutTax = decimal.Zero;
-            if (usePaymentMethodAdditionalFee && !String.IsNullOrEmpty(paymentMethodSystemName))
+            if (usePaymentMethodAdditionalFee && !string.IsNullOrEmpty(paymentMethodSystemName))
             {
-                decimal paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFee(cart,
-                    paymentMethodSystemName);
-                paymentMethodAdditionalFeeWithoutTax = (await
-                    _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee,
-                        false, customer)).paymentPrice;
+                var paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
+                paymentMethodAdditionalFee = await _currencyService.ConvertFromPrimaryStoreCurrency(paymentMethodAdditionalFee, _workContext.WorkingCurrency);
+                paymentMethodAdditionalFeeWithoutTax = (await _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer)).paymentPrice;
             }
 
             //tax
@@ -951,12 +951,12 @@ namespace Grand.Services.Orders
                             if (orderTotal > rewardPointsBalanceAmount)
                             {
                                 redeemedRewardPoints = rewardPointsBalance;
-                                redeemedRewardPointsAmount = rewardPointsBalanceAmount;
+                                redeemedRewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsBalanceAmount, _workContext.WorkingCurrency);
                             }
                             else
                             {
                                 redeemedRewardPointsAmount = orderTotal;
-                                redeemedRewardPoints = ConvertAmountToRewardPoints(redeemedRewardPointsAmount);
+                                redeemedRewardPoints = ConvertAmountToRewardPoints(await _currencyService.ConvertToPrimaryStoreCurrency(redeemedRewardPointsAmount, _workContext.WorkingCurrency));
                             }
                         }
                     }
