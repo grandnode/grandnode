@@ -1,5 +1,6 @@
 ﻿using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Customers;
+using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using MediatR;
@@ -16,19 +17,22 @@ namespace Grand.Services.Commands.Handlers.Orders
         private readonly IMediator _mediator;
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
+        private readonly ICurrencyService _currencyService;
 
         public AwardRewardPointsCommandHandler(
             ICustomerService customerService, 
             IRewardPointsService rewardPointsService, 
             IMediator mediator,
             IOrderService orderService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            ICurrencyService currencyService)
         {
             _customerService = customerService;
             _rewardPointsService = rewardPointsService;
             _mediator = mediator;
             _orderService = orderService;
             _localizationService = localizationService;
+            _currencyService = currencyService;
         }
 
         public async Task<bool> Handle(AwardRewardPointsCommand request, CancellationToken cancellationToken)
@@ -37,8 +41,9 @@ namespace Grand.Services.Commands.Handlers.Orders
                 throw new ArgumentNullException("order");
 
             var customer = await _customerService.GetCustomerById(request.Order.CustomerId);
-
-            int points = await _mediator.Send(new CalculateRewardPointsCommand() { Customer = customer, Amount = request.Order.OrderTotal - request.Order.OrderShippingInclTax });
+            var currency = await _currencyService.GetCurrencyByCode(request.Order.CustomerCurrencyCode);
+            var amount = await _currencyService.ConvertToPrimaryStoreCurrency(request.Order.OrderTotal - request.Order.OrderShippingInclTax, currency);
+            var points = await _mediator.Send(new CalculateRewardPointsCommand() { Customer = customer, Amount = amount });
             if (points <= 0)
                 return false;
             

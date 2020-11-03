@@ -202,7 +202,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     : 0;
                 var earnRewardPoints = shoppingCartTotalBase.Value - shippingBaseInclTax.Value;
                 if (earnRewardPoints > 0)
-                    model.WillEarnRewardPoints = await _mediator.Send(new CalculateRewardPointsCommand() { Customer = request.Customer, Amount = earnRewardPoints });
+                    model.WillEarnRewardPoints = await _mediator.Send(new CalculateRewardPointsCommand() { Customer = request.Customer, Amount = await _currencyService.ConvertToPrimaryStoreCurrency(earnRewardPoints, request.Currency)});
             }
         }
         
