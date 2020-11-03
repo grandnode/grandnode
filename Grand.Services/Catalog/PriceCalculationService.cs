@@ -548,7 +548,7 @@ namespace Grand.Services.Catalog
                 if (combination != null)
                 {
                     if (combination.OverriddenPrice.HasValue)
-                        finalPrice = combination.OverriddenPrice.Value;
+                        finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(combination.OverriddenPrice.Value, currency);
                     if (combination.TierPrices.Any())
                     {
                         var storeId = _storeContext.CurrentStore.Id;
@@ -557,7 +557,7 @@ namespace Grand.Services.Catalog
                             customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id).Contains(x.CustomerRoleId)).ToList();
                         var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
                         if (tierPrice != null)
-                            finalPrice = tierPrice.Price;
+                            finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(tierPrice.Price, currency);
                     }
                 }
             }

@@ -291,6 +291,7 @@ namespace Grand.Web.Areas.Admin.Services
                     DisplayOrder = picture.DisplayOrder
                 });
             }
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
         }
 
         public virtual async Task PrepareTierPriceModel(ProductModel.TierPriceModel model)
