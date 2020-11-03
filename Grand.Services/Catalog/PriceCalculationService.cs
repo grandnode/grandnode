@@ -408,12 +408,12 @@ namespace Grand.Services.Catalog
                 if (_catalogSettings.CustomerProductPrice)
                 {
                     var customerPrice = await _customerProductService.GetPriceByCustomerProduct(customer.Id, product.Id);
-                    if (customerPrice.HasValue && customerPrice.Value < price)
-                        price = customerPrice.Value;
+                    if (customerPrice.HasValue && customerPrice.Value < await _currencyService.ConvertToPrimaryStoreCurrency(price, currency))
+                        price = await _currencyService.ConvertFromPrimaryStoreCurrency(customerPrice.Value, currency);
                 }
 
                 //additional charge
-                price = price + additionalCharge;
+                price += additionalCharge;
 
                 //reservations
                 if (product.ProductType == ProductType.Reservation)
@@ -428,7 +428,7 @@ namespace Grand.Services.Catalog
                         {
                             decimal.TryParse((rentalEndDate - rentalStartDate).Value.TotalDays.ToString(), out d);
                         }
-                        price = price * d;
+                        price *= d;
                     }
 
                 if (includeDiscounts)
