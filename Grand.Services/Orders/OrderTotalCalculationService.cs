@@ -143,7 +143,7 @@ namespace Grand.Services.Orders
                     }
                 }
 
-            var preferredDiscounts = await _discountService.GetPreferredDiscount(allowedDiscounts, customer, orderSubTotal);
+            var preferredDiscounts = await _discountService.GetPreferredDiscount(allowedDiscounts, customer, _workContext.WorkingCurrency, orderSubTotal);
             appliedDiscounts = preferredDiscounts.appliedDiscount;
             discountAmount = preferredDiscounts.discountAmount;
 
@@ -186,7 +186,7 @@ namespace Grand.Services.Orders
                     }
                 }
 
-            var (appliedDiscount, discountAmount) = await _discountService.GetPreferredDiscount(allowedDiscounts, customer, shippingTotal);
+            var (appliedDiscount, discountAmount) = await _discountService.GetPreferredDiscount(allowedDiscounts, customer, _workContext.WorkingCurrency, shippingTotal);
             appliedDiscounts = appliedDiscount;
             shippingDiscountAmount = discountAmount;
 
@@ -233,7 +233,7 @@ namespace Grand.Services.Orders
                         });
                     }
                 }
-            var preferredDiscount = await _discountService.GetPreferredDiscount(allowedDiscounts, customer, orderTotal);
+            var preferredDiscount = await _discountService.GetPreferredDiscount(allowedDiscounts, customer, _workContext.WorkingCurrency, orderTotal);
             appliedDiscounts = preferredDiscount.appliedDiscount;
             discountAmount = preferredDiscount.discountAmount;
 

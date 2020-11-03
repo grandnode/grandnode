@@ -19,6 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Domain.Directory;
+using Grand.Services.Directory;
 
 namespace Grand.Services.Discounts
 {
@@ -58,6 +60,7 @@ namespace Grand.Services.Discounts
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountCoupon> _discountCouponRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
+        private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -77,6 +80,7 @@ namespace Grand.Services.Discounts
             IRepository<Discount> discountRepository,
             IRepository<DiscountCoupon> discountCouponRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
+            ICurrencyService currencyService,
             ILocalizationService localizationService,
             IStoreContext storeContext,
             IPluginFinder pluginFinder,
@@ -89,6 +93,7 @@ namespace Grand.Services.Discounts
             _discountRepository = discountRepository;
             _discountCouponRepository = discountCouponRepository;
             _discountUsageHistoryRepository = discountUsageHistoryRepository;
+            _currencyService = currencyService;
             _localizationService = localizationService;
             _storeContext = storeContext;
             _pluginFinder = pluginFinder;
@@ -484,11 +489,6 @@ namespace Grand.Services.Discounts
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            //invalid by default
-
-            //string key = $"DiscountValidationResult_{customer.Id}_{discount.Id}_{string.Join("_", couponCodesToValidate)}";
-            //var validationResult = await _perRequestCache.GetAsync(key, async () =>
-            //{
             var result = new DiscountValidationResult();
 
             //check is enabled
@@ -731,12 +731,14 @@ namespace Grand.Services.Discounts
         }
 
         /// <summary>
-        /// Get discount amount
+        /// Get discount amount from plugin
         /// </summary>
-        /// <param name="discount"></param>
-        /// <param name="amount"></param>
-        /// <returns></returns>
-        public async Task<decimal> GetDiscountAmount(Discount discount, Customer customer, Product product, decimal amount)
+        /// <param name="discount">Discount</param>
+        /// <param name="amount">Amount</param>
+        /// <param name="currency">currency</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="product">Product</param>
+        public async Task<decimal> GetDiscountAmount(Discount discount, Customer customer, Currency currency, Product product, decimal amount)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -748,7 +750,9 @@ namespace Grand.Services.Discounts
                 if (discount.UsePercentage)
                     result = (decimal)((((float)amount) * ((float)discount.DiscountPercentage)) / 100f);
                 else
-                    result = discount.DiscountAmount;
+                {
+                    result = await _currencyService.ConvertFromPrimaryStoreCurrency(discount.DiscountAmount, currency);
+                }
             }
             else
             {
@@ -771,13 +775,14 @@ namespace Grand.Services.Discounts
         /// Get preferred discount (with maximum discount value)
         /// </summary>
         /// <param name="discounts">A list of discounts to check</param>
-        /// <param name="customer"
+        /// <param name="customer">customer</param>
+        /// <param name="currency">currency</param>
         /// <param name="product"></param>
         /// <param name="amount">Amount</param>
         /// <param name="discountAmount"></param>
         /// <returns>Preferred discount</returns>
-        public virtual async Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(IList<AppliedDiscount> discounts,
-            Customer customer, Product product,
+        public virtual async Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(
+            IList<AppliedDiscount> discounts, Customer customer, Currency currency, Product product,
             decimal amount)
         {
             if (discounts == null)
@@ -792,7 +797,7 @@ namespace Grand.Services.Discounts
             foreach (var applieddiscount in discounts)
             {
                 var discount = await GetDiscountById(applieddiscount.DiscountId);
-                decimal currentDiscountValue = await GetDiscountAmount(discount, customer, product, amount);
+                decimal currentDiscountValue = await GetDiscountAmount(discount, customer, currency, product, amount);
                 if (currentDiscountValue > discountAmount)
                 {
                     discountAmount = currentDiscountValue;
@@ -810,7 +815,7 @@ namespace Grand.Services.Discounts
                 foreach (var item in cumulativeDiscounts)
                 {
                     var discount = await GetDiscountById(item.DiscountId);
-                    cumulativeDiscountAmount += await GetDiscountAmount(discount, customer, product, amount);
+                    cumulativeDiscountAmount += await GetDiscountAmount(discount, customer, currency, product, amount);
                 }
                 if (cumulativeDiscountAmount > discountAmount)
                 {
@@ -827,15 +832,18 @@ namespace Grand.Services.Discounts
         /// Get preferred discount (with maximum discount value)
         /// </summary>
         /// <param name="discounts">A list of discounts to check</param>
-        /// <param name="customer"
+        /// <param name="customer"></param>
+        /// <param name="currency">currency</param>
         /// <param name="amount">Amount</param>
         /// <param name="discountAmount"></param>
         /// <returns>Preferred discount</returns>
-        public virtual async Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(IList<AppliedDiscount> discounts,
+        public virtual async Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(
+            IList<AppliedDiscount> discounts,
             Customer customer,
+            Currency currency,
             decimal amount)
         {
-            return await GetPreferredDiscount(discounts, customer, null, amount);
+            return await GetPreferredDiscount(discounts, customer, currency, null, amount);
         }
 
         /// <summary>

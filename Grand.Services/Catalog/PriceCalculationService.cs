@@ -303,7 +303,7 @@ namespace Grand.Services.Catalog
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Discount amount</returns>
         protected virtual async Task<(decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetDiscountAmount(Product product,
-            Customer customer,
+            Customer customer, Currency currency,
             decimal productPriceWithoutDiscount)
         {
             if (product == null)
@@ -326,7 +326,7 @@ namespace Grand.Services.Catalog
             if (!allowedDiscounts.Any())
                 return (appliedDiscountAmount, appliedDiscounts);
 
-            var preferredDiscount = (await _discountService.GetPreferredDiscount(allowedDiscounts, customer, product, productPriceWithoutDiscount));
+            var preferredDiscount = (await _discountService.GetPreferredDiscount(allowedDiscounts, customer, currency, product, productPriceWithoutDiscount));
             appliedDiscounts = preferredDiscount.appliedDiscount;
             appliedDiscountAmount = preferredDiscount.discountAmount;
             return (appliedDiscountAmount, appliedDiscounts);
@@ -434,7 +434,7 @@ namespace Grand.Services.Catalog
                 if (includeDiscounts)
                 {
                     //discount
-                    var discountamount = await GetDiscountAmount(product, customer, price);
+                    var discountamount = await GetDiscountAmount(product, customer, currency, price);
                     decimal tmpDiscountAmount = discountamount.discountAmount;
                     List<AppliedDiscount> tmpAppliedDiscounts = discountamount.appliedDiscounts;
                     price = price - tmpDiscountAmount;
