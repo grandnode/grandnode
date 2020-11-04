@@ -351,10 +351,10 @@ namespace Grand.Services.Orders
                     {
                         decimal taxRate;
                         var checkoutAttributePriceExclTax = await _taxService.GetCheckoutAttributePrice(attributeValue.ca, attributeValue.cav, false, customer);
-                        decimal caExclTax = checkoutAttributePriceExclTax.checkoutPrice;
+                        decimal caExclTax = await _currencyService.ConvertFromPrimaryStoreCurrency(checkoutAttributePriceExclTax.checkoutPrice, _workContext.WorkingCurrency);
 
                         var checkoutAttributePriceInclTax = await _taxService.GetCheckoutAttributePrice(attributeValue.ca, attributeValue.cav, true, customer);
-                        decimal caInclTax = checkoutAttributePriceInclTax.checkoutPrice;
+                        decimal caInclTax = await _currencyService.ConvertFromPrimaryStoreCurrency(checkoutAttributePriceInclTax.checkoutPrice, _workContext.WorkingCurrency);
 
                         taxRate = checkoutAttributePriceInclTax.taxRate;
 
