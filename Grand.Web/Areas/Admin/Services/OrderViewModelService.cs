@@ -563,7 +563,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (_workContext.CurrentVendor == null)
             {
                 var profit = await _orderReportService.ProfitReport(orderId: order.Id);
-                model.Profit = await _priceFormatter.FormatPrice(profit, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
+                model.Profit = await _priceFormatter.FormatPrice(profit, true, order.PrimaryCurrencyCode, false, _workContext.WorkingLanguage);
             }
 
             if (order.PrimaryCurrencyCode != order.CustomerCurrencyCode)
