@@ -100,7 +100,7 @@ namespace Grand.Services.Customers
                          select new
                          {
                              CustomerId = g.Key,
-                             OrderTotal = g.Sum(x => x.OrderTotal),
+                             OrderTotal = g.Sum(x => x.OrderTotal / x.CurrencyRate),
                              OrderCount = g.Count()
                          };
             switch (orderBy)
