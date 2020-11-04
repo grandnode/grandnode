@@ -823,7 +823,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public IList<SelectListItem> AvailableStores { get; set; }
             public string Store { get; set; }
 
-            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Currency")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CurrencyCode")]
             public string CurrencyCode { get; set; }
             public IList<SelectListItem> AvailableCurrencies { get; set; }
 
