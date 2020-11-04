@@ -180,7 +180,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             {
                 foreach (var appliedGiftCard in appliedGiftCards)
                 {
-                    await PrepareGiftCards(appliedGiftCard, model, request);
+                    PrepareGiftCards(appliedGiftCard, model, request);
                 }
             }
 
@@ -205,18 +205,16 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             }
         }
         
-        private async Task PrepareGiftCards(AppliedGiftCard appliedGiftCard, OrderTotalsModel model, GetOrderTotals request)
+        private void PrepareGiftCards(AppliedGiftCard appliedGiftCard, OrderTotalsModel model, GetOrderTotals request)
         {
             var gcModel = new OrderTotalsModel.GiftCard {
                 Id = appliedGiftCard.GiftCard.Id,
                 CouponCode = appliedGiftCard.GiftCard.GiftCardCouponCode,
             };
-            decimal amountCanBeUsed = await _currencyService.ConvertFromPrimaryStoreCurrency(appliedGiftCard.AmountCanBeUsed, request.Currency);
-            gcModel.Amount = _priceFormatter.FormatPrice(-amountCanBeUsed, true, false);
+            gcModel.Amount = _priceFormatter.FormatPrice(-appliedGiftCard.AmountCanBeUsed, true, false);
 
             decimal remainingAmountBase = appliedGiftCard.GiftCard.GetGiftCardRemainingAmount() - appliedGiftCard.AmountCanBeUsed;
-            decimal remainingAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(remainingAmountBase, request.Currency);
-            gcModel.Remaining = _priceFormatter.FormatPrice(remainingAmount, true, false);
+            gcModel.Remaining = _priceFormatter.FormatPrice(remainingAmountBase, true, false);
 
             model.GiftCards.Add(gcModel);
         }

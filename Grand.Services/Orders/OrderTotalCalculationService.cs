@@ -2,6 +2,7 @@ using Grand.Core;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
+using Grand.Domain.Directory;
 using Grand.Domain.Discounts;
 using Grand.Domain.Orders;
 using Grand.Domain.Shipping;
@@ -253,7 +254,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Active gift cards</returns>
-        private async Task<IList<GiftCard>> GetActiveGiftCards(Customer customer)
+        private async Task<IList<GiftCard>> GetActiveGiftCards(Customer customer, Currency currency)
         {
             var result = new List<GiftCard>();
             if (customer == null)
@@ -265,7 +266,7 @@ namespace Grand.Services.Orders
                 var giftCards = await _giftCardService.GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
                 foreach (var gc in giftCards)
                 {
-                    if (gc.IsGiftCardValid())
+                    if (gc.IsGiftCardValid(currency))
                         result.Add(gc);
                 }
             }
@@ -896,7 +897,7 @@ namespace Grand.Services.Orders
             if (!cart.IsRecurring())
             {
                 //we don't apply gift cards for recurring products
-                var giftCards = await GetActiveGiftCards(customer);
+                var giftCards = await GetActiveGiftCards(customer, _workContext.WorkingCurrency);
                 if (giftCards != null)
                     foreach (var gc in giftCards)
                         if (resultTemp > decimal.Zero)

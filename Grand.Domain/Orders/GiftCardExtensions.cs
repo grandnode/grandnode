@@ -1,3 +1,5 @@
+using Grand.Domain.Directory;
+
 namespace Grand.Domain.Orders
 {
     /// <summary>
@@ -27,9 +29,12 @@ namespace Grand.Domain.Orders
         /// </summary>
         /// <param name="giftCard">Gift card</param>
         /// <returns>Result</returns>
-        public static bool IsGiftCardValid(this GiftCard giftCard)
+        public static bool IsGiftCardValid(this GiftCard giftCard, Currency currency)
         {
             if (!giftCard.IsGiftCardActivated)
+                return false;
+
+            if (giftCard.CurrencyCode != currency.CurrencyCode)
                 return false;
 
             decimal remainingAmount = giftCard.GetGiftCardRemainingAmount();

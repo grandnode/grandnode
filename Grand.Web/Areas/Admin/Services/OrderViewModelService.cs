@@ -1300,6 +1300,7 @@ namespace Grand.Web.Areas.Admin.Services
                             GiftCardType = product.GiftCardType,
                             PurchasedWithOrderItem = orderItem,
                             Amount = unitPriceExclTax,
+                            CurrencyCode = order.CustomerCurrencyCode,
                             IsGiftCardActivated = false,
                             GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
                             RecipientName = recipientName,

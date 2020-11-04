@@ -648,6 +648,7 @@ namespace Grand.Services.Orders
                             GiftCardType = product.GiftCardType,
                             PurchasedWithOrderItem = newOrderItem,
                             Amount = orderItem.UnitPriceExclTax,
+                            CurrencyCode = order.CustomerCurrencyCode,
                             IsGiftCardActivated = false,
                             GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
                             RecipientName = giftCardRecipientName,
@@ -838,7 +839,7 @@ namespace Grand.Services.Orders
             return orderItem;
         }
 
-        protected virtual async Task GenerateGiftCard(ShoppingCartItem sc, OrderItem orderItem, Product product)
+        protected virtual async Task GenerateGiftCard(ShoppingCartItem sc, Order order, OrderItem orderItem, Product product)
         {
             _productAttributeParser.GetGiftCardAttribute(sc.AttributesXml,
                         out string giftCardRecipientName, out string giftCardRecipientEmail,
@@ -849,7 +850,8 @@ namespace Grand.Services.Orders
                 var gc = new GiftCard {
                     GiftCardType = product.GiftCardType,
                     PurchasedWithOrderItem = orderItem,
-                    Amount = product.OverriddenGiftCardAmount ?? orderItem.UnitPriceExclTax,
+                    Amount = orderItem.UnitPriceInclTax,
+                    CurrencyCode = order.CustomerCurrencyCode,
                     IsGiftCardActivated = false,
                     GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
                     RecipientName = giftCardRecipientName,
@@ -1121,7 +1123,7 @@ namespace Grand.Services.Orders
                 //gift cards
                 if (product.IsGiftCard)
                 {
-                    await GenerateGiftCard(sc, orderItem, product);
+                    await GenerateGiftCard(sc, order, orderItem, product);
                 }
 
                 //update auction ended
