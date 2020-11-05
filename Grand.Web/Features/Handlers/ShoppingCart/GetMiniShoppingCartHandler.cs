@@ -188,7 +188,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         }
                         else
                         {
-                            var productprices = await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci)).unitprice);
+                            var productprices = await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci, product)).unitprice);
                             decimal taxRate = productprices.taxRate;
                             cartItemModel.UnitPrice = _priceFormatter.FormatPrice(productprices.productprice);
                         }

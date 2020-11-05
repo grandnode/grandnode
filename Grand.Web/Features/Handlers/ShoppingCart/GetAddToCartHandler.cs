@@ -126,7 +126,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 }
                 else
                 {
-                    var productprices = await _taxService.GetProductPrice(request.Product, (await _priceCalculationService.GetUnitPrice(sci)).unitprice);
+                    var productprices = await _taxService.GetProductPrice(request.Product, (await _priceCalculationService.GetUnitPrice(sci, request.Product)).unitprice);
                     decimal taxRate = productprices.taxRate;
                     model.Price = !request.CustomerEnteredPrice.HasValue ? _priceFormatter.FormatPrice(productprices.productprice) : _priceFormatter.FormatPrice(request.CustomerEnteredPrice.Value);
                     model.DecimalPrice = request.CustomerEnteredPrice ?? productprices.productprice ;

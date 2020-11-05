@@ -149,7 +149,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 }
                 else
                 {
-                    var productprice = await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci)).unitprice);
+                    var productprice = await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci, product)).unitprice);
                     decimal taxRate = productprice.taxRate;
                     cartItemModel.UnitPrice = _priceFormatter.FormatPrice(productprice.productprice);
                 }
@@ -161,7 +161,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 else
                 {
                     //sub total
-                    var subtotal = await _priceCalculationService.GetSubTotal(sci, true);
+                    var subtotal = await _priceCalculationService.GetSubTotal(sci, product, true);
                     decimal shoppingCartItemDiscountBase = subtotal.discountAmount;
                     List<AppliedDiscount> scDiscounts = subtotal.appliedDiscounts;
                     var productprices = await _taxService.GetProductPrice(product, subtotal.subTotal);

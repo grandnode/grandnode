@@ -345,9 +345,13 @@ namespace Grand.Services.Catalog.Tests
             };
             tempProductService.Setup(x => x.GetProductById("242422", false)).ReturnsAsync(product001);
 
+            var product = new Product() {
+                Id = "242422"
+            };
+
             var shoppingCartItem = new ShoppingCartItem
             {
-                ProductId = "242422",// product001.Id, //222
+                ProductId = product.Id,
                 Quantity = 2
             };
 
@@ -356,7 +360,7 @@ namespace Grand.Services.Catalog.Tests
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "1", "", "", false)).ReturnsAsync(new List<Discount>());
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "1", "", "", false)).ReturnsAsync(new List<Discount>());
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "1", "", "", false)).ReturnsAsync(new List<Discount>());
-            var pp = (await _priceCalcService.GetUnitPrice(shoppingCartItem)).unitprice;
+            var pp = (await _priceCalcService.GetUnitPrice(shoppingCartItem, product)).unitprice;
             Assert.AreEqual(49.99M, pp);
         }
 
@@ -387,7 +391,7 @@ namespace Grand.Services.Catalog.Tests
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "1", "", "", false)).ReturnsAsync(new List<Discount>());
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "1", "", "", false)).ReturnsAsync(new List<Discount>());
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "1", "", "", false)).ReturnsAsync(new List<Discount>());
-            var subtotal = (await _priceCalcService.GetSubTotal(shoppingCartItem)).subTotal;
+            var subtotal = (await _priceCalcService.GetSubTotal(shoppingCartItem, product001)).subTotal;
             Assert.AreEqual(110.22M, subtotal);
         }
     }

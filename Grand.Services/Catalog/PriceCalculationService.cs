@@ -480,16 +480,15 @@ namespace Grand.Services.Catalog
         /// Gets the shopping cart unit price (one item)
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="product">Product</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
-        /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Shopping cart unit price (one item)</returns>
         public virtual async Task<(decimal unitprice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetUnitPrice(ShoppingCartItem shoppingCartItem,
-            bool includeDiscounts = true)
+            Product product, bool includeDiscounts = true)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
-            var product = await _productService.GetProductById(shoppingCartItem.ProductId);
+
             return await GetUnitPrice(product,
                 _workContext.CurrentCustomer,
                 _workContext.WorkingCurrency,
@@ -632,11 +631,10 @@ namespace Grand.Services.Catalog
         /// Gets the shopping cart item sub total
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="product">Product</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
-        /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Shopping cart item sub total</returns>
-        public virtual async Task<(decimal subTotal, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetSubTotal(ShoppingCartItem shoppingCartItem,
+        public virtual async Task<(decimal subTotal, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetSubTotal(ShoppingCartItem shoppingCartItem, Product product,
            bool includeDiscounts = true)
         {
             if (shoppingCartItem == null)
@@ -644,7 +642,7 @@ namespace Grand.Services.Catalog
 
             decimal subTotal;
             //unit price
-            var getunitPrice = await GetUnitPrice(shoppingCartItem, includeDiscounts);
+            var getunitPrice = await GetUnitPrice(shoppingCartItem, product, includeDiscounts);
             var unitPrice = getunitPrice.unitprice;
             decimal discountAmount = getunitPrice.discountAmount;
             List<AppliedDiscount> appliedDiscounts = getunitPrice.appliedDiscounts;
@@ -667,7 +665,7 @@ namespace Grand.Services.Catalog
                     discountAmount = discountAmount * discountedQuantity;
 
                     var notDiscountedQuantity = shoppingCartItem.Quantity - discountedQuantity;
-                    var notDiscountedUnitPrice = await GetUnitPrice(shoppingCartItem, false);
+                    var notDiscountedUnitPrice = await GetUnitPrice(shoppingCartItem, product, false);
                     var notDiscountedSubTotal = notDiscountedUnitPrice.unitprice * notDiscountedQuantity;
 
                     subTotal = discountedSubTotal + notDiscountedSubTotal;

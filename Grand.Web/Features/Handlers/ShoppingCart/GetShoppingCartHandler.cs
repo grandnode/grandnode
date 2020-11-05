@@ -451,14 +451,14 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 }
                 else
                 {
-                    var unitprices = await _priceCalculationService.GetUnitPrice(sci, true);
+                    var unitprices = await _priceCalculationService.GetUnitPrice(sci, product, true);
                     decimal discountAmount = unitprices.discountAmount;
                     List<AppliedDiscount> appliedDiscounts = unitprices.appliedDiscounts;
                     var productprices = await _taxService.GetProductPrice(product, unitprices.unitprice);
                     decimal taxRate = productprices.taxRate;
 
                     cartItemModel.UnitPriceWithoutDiscountValue =
-                        (await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci, false)).unitprice)).productprice;
+                        (await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci, product, false)).unitprice)).productprice;
 
                     cartItemModel.UnitPriceWithoutDiscount = _priceFormatter.FormatPrice(cartItemModel.UnitPriceWithoutDiscountValue);
                     cartItemModel.UnitPriceValue = productprices.productprice;
@@ -475,7 +475,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         }
                     }
                     //sub total
-                    var subtotal = await _priceCalculationService.GetSubTotal(sci, true);
+                    var subtotal = await _priceCalculationService.GetSubTotal(sci, product, true);
                     decimal shoppingCartItemDiscountBase = subtotal.discountAmount;
                     List<AppliedDiscount> scDiscounts = subtotal.appliedDiscounts;
                     var shoppingCartItemSubTotalWithDiscount = (await _taxService.GetProductPrice(product, subtotal.subTotal)).productprice;

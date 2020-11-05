@@ -59,10 +59,11 @@ namespace Grand.Services.Catalog
         /// Gets the shopping cart unit price (one item)
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="product">Product</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart unit price (one item)</returns>
         Task<(decimal unitprice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetUnitPrice(ShoppingCartItem shoppingCartItem,
-            bool includeDiscounts = true);
+            Product product, bool includeDiscounts = true);
 
 
         /// <summary>
@@ -93,9 +94,10 @@ namespace Grand.Services.Catalog
         /// Gets the shopping cart item sub total
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="product">Product</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart item sub total</returns>
-        Task<(decimal subTotal, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetSubTotal(ShoppingCartItem shoppingCartItem,
+        Task<(decimal subTotal, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetSubTotal(ShoppingCartItem shoppingCartItem, Product product,
             bool includeDiscounts = true);
 
         /// <summary>

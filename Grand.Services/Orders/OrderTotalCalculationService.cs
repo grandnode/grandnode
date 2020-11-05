@@ -313,7 +313,7 @@ namespace Grand.Services.Orders
                 if (product == null)
                     continue;
 
-                var subtotal = await _priceCalculationService.GetSubTotal(shoppingCartItem);
+                var subtotal = await _priceCalculationService.GetSubTotal(shoppingCartItem, product);
                 decimal sciSubTotal = subtotal.subTotal;
 
                 decimal taxRate;

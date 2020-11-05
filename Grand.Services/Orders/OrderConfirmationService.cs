@@ -726,10 +726,10 @@ namespace Grand.Services.Orders
             List<AppliedDiscount> scDiscounts;
             decimal discountAmount;
             decimal commissionRate;
-            decimal scUnitPrice = (await _priceCalculationService.GetUnitPrice(sc)).unitprice;
-            decimal scUnitPriceWithoutDisc = (await _priceCalculationService.GetUnitPrice(sc, false)).unitprice;
+            decimal scUnitPrice = (await _priceCalculationService.GetUnitPrice(sc, product)).unitprice;
+            decimal scUnitPriceWithoutDisc = (await _priceCalculationService.GetUnitPrice(sc, product, false)).unitprice;
 
-            var subtotal = await _priceCalculationService.GetSubTotal(sc, true);
+            var subtotal = await _priceCalculationService.GetSubTotal(sc, product, true);
             decimal scSubTotal = subtotal.subTotal;
             discountAmount = subtotal.discountAmount;
             scDiscounts = subtotal.appliedDiscounts;

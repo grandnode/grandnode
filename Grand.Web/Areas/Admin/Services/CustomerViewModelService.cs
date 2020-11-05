@@ -1248,7 +1248,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var product = await _productService.GetProductById(sci.ProductId);
                 if (product != null)
                 {
-                    var price = (await taxService.GetProductPrice(product, (await priceCalculationService.GetUnitPrice(sci)).unitprice)).productprice;
+                    var price = (await taxService.GetProductPrice(product, (await priceCalculationService.GetUnitPrice(sci, product)).unitprice)).productprice;
                     var sciModel = new ShoppingCartItemModel {
                         Id = sci.Id,
                         Store = store != null ? store.Shortcut : "Unknown",
@@ -1258,7 +1258,7 @@ namespace Grand.Web.Areas.Admin.Services
                         AttributeInfo = await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, sci.AttributesXml),
                         UnitPrice = priceFormatter.FormatPrice(price),
                         UnitPriceValue = price,
-                        Total = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetSubTotal(sci)).subTotal)).productprice),
+                        Total = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetSubTotal(sci, product)).subTotal)).productprice),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
                     };
                     items.Add(sciModel);
