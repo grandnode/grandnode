@@ -614,7 +614,7 @@ namespace Grand.Web.Features.Handlers.Products
                         decimal finalPriceWithDiscount = (await _taxService.GetProductPrice(product, appliedPrice.finalPrice)).productprice;
                         decimal oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
 
-                        if (finalPriceWithoutDiscount != oldPriceBase && oldPriceBase > decimal.Zero)
+                        if (finalPriceWithoutDiscount != oldPrice && oldPrice > decimal.Zero)
                             model.OldPrice = _priceFormatter.FormatPrice(oldPrice);
 
                         model.Price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
