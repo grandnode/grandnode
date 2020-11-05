@@ -539,7 +539,7 @@ namespace Grand.Services.Catalog
             decimal? finalPrice = null;
 
             if (customerEnteredPrice.HasValue)
-                finalPrice = customerEnteredPrice.Value;
+                finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(customerEnteredPrice.Value, currency);
 
             if (!finalPrice.HasValue)
             {
