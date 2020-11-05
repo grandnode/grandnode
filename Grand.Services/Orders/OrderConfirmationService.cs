@@ -743,7 +743,7 @@ namespace Grand.Services.Orders
                 commissionRate = (await _vendorService.GetVendorById(product.VendorId)).Commission;
             }
 
-            var prices = await _taxService.GetTaxProductPrice(product, details.Customer, scUnitPrice, scUnitPriceWithoutDisc, scSubTotal, discountAmount, _taxSettings.PricesIncludeTax);
+            var prices = await _taxService.GetTaxProductPrice(product, details.Customer, scUnitPrice, scUnitPriceWithoutDisc, sc.Quantity, scSubTotal, discountAmount, _taxSettings.PricesIncludeTax);
             taxRate = prices.taxRate;
             decimal scUnitPriceWithoutDiscInclTax = prices.UnitPriceWihoutDiscInclTax;
             decimal scUnitPriceWithoutDiscExclTax = prices.UnitPriceWihoutDiscExclTax;

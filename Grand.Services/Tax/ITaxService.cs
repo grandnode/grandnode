@@ -80,6 +80,7 @@ namespace Grand.Services.Tax
         /// <param name="customer">Customer</param>
         /// <param name="unitPrice">Unit Price</param>
         /// <param name="unitPricewithoutDisc">Unit price without discount</param>
+        /// <param name="quantity">Quantity</param>
         /// <param name="subTotal">Sub-Total</param>
         /// <param name="discountAmount">Discount amount</param>
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
@@ -89,6 +90,7 @@ namespace Grand.Services.Tax
             Customer customer,
             decimal unitPrice,
             decimal unitPricewithoutDisc,
+            int quantity,
             decimal subTotal,
             decimal discountAmount,
             bool priceIncludesTax
