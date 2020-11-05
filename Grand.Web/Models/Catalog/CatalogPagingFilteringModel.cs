@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Directory;
+using Grand.Domain.Directory;
 
 namespace Grand.Web.Models.Catalog
 {
@@ -136,45 +138,49 @@ namespace Grand.Web.Models.Catalog
             public virtual PriceRange GetSelectedPriceRange(IWebHelper webHelper, string priceRangesStr)
             {
                 var range = webHelper.QueryString<string>(QUERYSTRINGPARAM);
-                if (String.IsNullOrEmpty(range))
+                if (string.IsNullOrEmpty(range))
                     return null;
                 string[] fromTo = range.Trim().Split(new[] { '-' });
                 if (fromTo.Length == 2)
                 {
                     decimal? from = null;
-                    if (!String.IsNullOrEmpty(fromTo[0]) && !String.IsNullOrEmpty(fromTo[0].Trim()))
+                    if (!string.IsNullOrEmpty(fromTo[0]) && !string.IsNullOrEmpty(fromTo[0].Trim()))
                         from = decimal.Parse(fromTo[0].Trim(), new CultureInfo("en-US"));
                     decimal? to = null;
-                    if (!String.IsNullOrEmpty(fromTo[1]) && !String.IsNullOrEmpty(fromTo[1].Trim()))
+                    if (!string.IsNullOrEmpty(fromTo[1]) && !string.IsNullOrEmpty(fromTo[1].Trim()))
                         to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
 
-                    var priceRangeList = GetPriceRangeList(priceRangesStr);
-                    foreach (var pr in priceRangeList)
-                    {
-                        if (pr.From == from && pr.To == to)
-                            return pr;
-                    }
+                    return new PriceRange() {
+                        From = from,
+                        To = to
+                    };
                 }
                 return null;
             }
 
-            public virtual void LoadPriceRangeFilters(string priceRangeStr, IWebHelper webHelper, IPriceFormatter priceFormatter)
+            public virtual async Task LoadPriceRangeFilters(string priceRangeStr, IWebHelper webHelper, IPriceFormatter priceFormatter, ICurrencyService currencyService, Currency currency)
             {
                 var priceRangeList = GetPriceRangeList(priceRangeStr);
                 if (priceRangeList.Any())
                 {
-                    this.Enabled = true;
+                    Enabled = true;
 
                     var selectedPriceRange = GetSelectedPriceRange(webHelper, priceRangeStr);
 
-                    this.Items = priceRangeList.ToList().Select(x =>
+                    foreach (var x in priceRangeList.ToList())
                     {
                         //from&to
                         var item = new PriceRangeFilterItem();
                         if (x.From.HasValue)
+                        {
+                            x.From = await currencyService.ConvertFromPrimaryStoreCurrency(x.From.Value, currency);
                             item.From = priceFormatter.FormatPrice(x.From.Value, true, false);
+                        }
                         if (x.To.HasValue)
+                        {
+                            x.To = await currencyService.ConvertFromPrimaryStoreCurrency(x.To.Value, currency);
                             item.To = priceFormatter.FormatPrice(x.To.Value, true, false);
+                        }
                         string fromQuery = string.Empty;
                         if (x.From.HasValue)
                             fromQuery = x.From.Value.ToString(new CultureInfo("en-US"));
@@ -194,8 +200,8 @@ namespace Grand.Web.Models.Catalog
                         item.FilterUrl = url;
 
 
-                        return item;
-                    }).ToList();
+                        Items.Add(item);
+                    }
 
                     if (selectedPriceRange != null)
                     {
