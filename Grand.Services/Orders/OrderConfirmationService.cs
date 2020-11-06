@@ -203,10 +203,13 @@ namespace Grand.Services.Orders
             if (details.InitialOrder == null)
                 throw new ArgumentException("Initial order is not set for recurring payment");
 
+            var currency = await _currencyService.GetCurrencyByCode(details.InitialOrder.CustomerCurrencyCode);
+            if (currency == null)
+                throw new ArgumentException("Initial order has not set correct currency code");
+
             details.InitialOrder.Code = await _mediator.Send(new PrepareOrderCodeCommand());
             processPaymentRequest.PaymentMethodSystemName = details.InitialOrder.PaymentMethodSystemName;
-            details.CustomerCurrencyCode = details.InitialOrder.CustomerCurrencyCode;
-            details.CustomerCurrencyRate = details.InitialOrder.CurrencyRate;
+            details.Currency = currency;
             details.CustomerLanguage = await _languageService.GetLanguageById(details.InitialOrder.CustomerLanguageId);
             details.CheckoutAttributesXml = details.InitialOrder.CheckoutAttributesXml;
             details.CheckoutAttributeDescription = details.InitialOrder.CheckoutAttributeDescription;
@@ -339,27 +342,6 @@ namespace Grand.Services.Orders
             if (details.Customer == null)
                 throw new ArgumentException("Customer is not set");
 
-            //affiliate
-            if (!string.IsNullOrEmpty(details.Customer.AffiliateId))
-            {
-                var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
-                if (affiliate != null && affiliate.Active && !affiliate.Deleted)
-                    details.AffiliateId = affiliate.Id;
-            }
-            //customer currency
-            var currencyTmp = await _currencyService.GetCurrencyById(details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
-            var customerCurrency = (currencyTmp != null && currencyTmp.Published) ? currencyTmp : _workContext.WorkingCurrency;
-            details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
-            var primaryStoreCurrency = await _currencyService.GetPrimaryStoreCurrency();
-            details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
-            details.PrimaryCurrencyCode = primaryStoreCurrency.CurrencyCode;
-
-            //customer language
-            details.CustomerLanguage = await _languageService.GetLanguageById(details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId, processPaymentRequest.StoreId));
-
-            if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
-                details.CustomerLanguage = _workContext.WorkingLanguage;
-
             //check whether customer is guest
             if (details.Customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 throw new GrandException("Anonymous checkout is not allowed");
@@ -370,6 +352,30 @@ namespace Grand.Services.Orders
 
             if (!CommonHelper.IsValidEmail(details.Customer.BillingAddress.Email))
                 throw new GrandException("Email is not valid");
+
+            //affiliate
+            if (!string.IsNullOrEmpty(details.Customer.AffiliateId))
+            {
+                var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
+                if (affiliate != null && affiliate.Active && !affiliate.Deleted)
+                    details.AffiliateId = affiliate.Id;
+            }
+
+            //customer currency
+            var currencyTmp = await _currencyService.GetCurrencyById(details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
+            var customerCurrency = (currencyTmp != null && currencyTmp.Published) ? currencyTmp : _workContext.WorkingCurrency;
+            details.Currency = customerCurrency;
+            var primaryStoreCurrency = await _currencyService.GetPrimaryStoreCurrency();
+            details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
+            details.PrimaryCurrencyCode = primaryStoreCurrency.CurrencyCode;
+
+            //customer language
+            details.CustomerLanguage = await _languageService.GetLanguageById(details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId, processPaymentRequest.StoreId));
+
+            if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
+                details.CustomerLanguage = _workContext.WorkingLanguage;
+
+            
 
             details.BillingAddress = details.Customer.BillingAddress;
             if (!string.IsNullOrEmpty(details.BillingAddress.CountryId))
@@ -839,7 +845,7 @@ namespace Grand.Services.Orders
             return orderItem;
         }
 
-        protected virtual async Task GenerateGiftCard(ShoppingCartItem sc, Order order, OrderItem orderItem, Product product)
+        protected virtual async Task GenerateGiftCard(PlaceOrderContainter details, ShoppingCartItem sc, Order order, OrderItem orderItem, Product product)
         {
             _productAttributeParser.GetGiftCardAttribute(sc.AttributesXml,
                         out string giftCardRecipientName, out string giftCardRecipientEmail,
@@ -847,10 +853,14 @@ namespace Grand.Services.Orders
 
             for (int i = 0; i < sc.Quantity; i++)
             {
+                var amount = orderItem.UnitPriceInclTax;
+                if(product.OverriddenGiftCardAmount.HasValue)
+                    amount = await _currencyService.ConvertFromPrimaryStoreCurrency(product.OverriddenGiftCardAmount.Value, details.Currency);
+
                 var gc = new GiftCard {
                     GiftCardType = product.GiftCardType,
                     PurchasedWithOrderItem = orderItem,
-                    Amount = orderItem.UnitPriceInclTax,
+                    Amount = amount,
                     CurrencyCode = order.CustomerCurrencyCode,
                     IsGiftCardActivated = false,
                     GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
@@ -1057,7 +1067,7 @@ namespace Grand.Services.Orders
                 OrderDiscount = Math.Round(details.OrderDiscountAmount, 6),
                 CheckoutAttributeDescription = details.CheckoutAttributeDescription,
                 CheckoutAttributesXml = details.CheckoutAttributesXml,
-                CustomerCurrencyCode = details.CustomerCurrencyCode,
+                CustomerCurrencyCode = details.Currency.CurrencyCode,
                 PrimaryCurrencyCode = details.PrimaryCurrencyCode,
                 CurrencyRate = details.CustomerCurrencyRate,
                 AffiliateId = details.AffiliateId,
@@ -1123,7 +1133,7 @@ namespace Grand.Services.Orders
                 //gift cards
                 if (product.IsGiftCard)
                 {
-                    await GenerateGiftCard(sc, order, orderItem, product);
+                    await GenerateGiftCard(details, sc, order, orderItem, product);
                 }
 
                 //update auction ended
