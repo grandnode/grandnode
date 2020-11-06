@@ -223,7 +223,7 @@ namespace Grand.Services.Orders
                 filter = filter & builder.Where(o => o.StoreId == storeId);
 
             if (!String.IsNullOrEmpty(orderId))
-                filter = filter & builder.Where(o => o.StoreId == storeId);
+                filter = filter & builder.Where(o => o.Id == orderId);
 
             if (!String.IsNullOrEmpty(vendorId))
             {
