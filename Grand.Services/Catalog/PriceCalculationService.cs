@@ -524,7 +524,8 @@ namespace Grand.Services.Catalog
             int quantity,
             string attributesXml,
             decimal? customerEnteredPrice,
-            DateTime? rentalStartDate, DateTime? rentalEndDate,
+            DateTime? rentalStartDate, 
+            DateTime? rentalEndDate,
             bool includeDiscounts)
         {
             if (product == null)
@@ -607,8 +608,9 @@ namespace Grand.Services.Catalog
                         attributesTotalPrice,
                         includeDiscounts,
                         qty,
-                        product.ProductType == ProductType.Reservation ? rentalStartDate : null,
-                        product.ProductType == ProductType.Reservation ? rentalEndDate : null);
+                        rentalStartDate,
+                        rentalEndDate);
+
                     finalPrice = getfinalPrice.finalPrice;
                     discountAmount = getfinalPrice.discountAmount;
                     appliedDiscounts = getfinalPrice.appliedDiscounts;
