@@ -32,7 +32,6 @@ namespace Grand.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly IPaymentService _paymentService;
         private readonly ILocalizationService _localizationService;
         private readonly IMediator _mediator;
@@ -45,7 +44,6 @@ namespace Grand.Web.Controllers
         public OrderController(IOrderService orderService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IOrderProcessingService orderProcessingService,
             IPaymentService paymentService,
             ILocalizationService localizationService,
             IMediator mediator,
@@ -54,7 +52,6 @@ namespace Grand.Web.Controllers
             _orderService = orderService;
             _workContext = workContext;
             _storeContext = storeContext;
-            _orderProcessingService = orderProcessingService;
             _paymentService = paymentService;
             _localizationService = localizationService;
             _mediator = mediator;
