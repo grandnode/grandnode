@@ -1058,6 +1058,18 @@ namespace Grand.Services.Installation
             await InstallStringResources("EN_480_490.xml");
 
             #endregion
+
+            #region Insert activities
+
+            var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
+                SystemKeyword = "CustomerAdmin.UpdateCartCustomer",
+                Enabled = true,
+                Name = "Update shopping cart"
+            });
+
+            #endregion
+
         }
 
 
