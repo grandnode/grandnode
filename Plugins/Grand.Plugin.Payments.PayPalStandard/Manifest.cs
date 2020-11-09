@@ -7,5 +7,5 @@ using Grand.Core.Plugins;
     SystemName = "Payments.PayPalStandard",
     SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
-    Version = "1.34"
+    Version = "1.35"
 )]

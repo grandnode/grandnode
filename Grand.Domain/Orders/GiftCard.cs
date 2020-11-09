@@ -22,6 +22,11 @@ namespace Grand.Domain.Orders
         public decimal Amount { get; set; }
 
         /// <summary>
+        /// Gets or sets the currency code
+        /// </summary>
+        public string CurrencyCode { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether gift card is activated
         /// </summary>
         public bool IsGiftCardActivated { get; set; }

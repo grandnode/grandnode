@@ -80,16 +80,10 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         {
             var subTotalIncludingTax = request.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
             var shoppingCartSubTotal = await _orderTotalCalculationService.GetShoppingCartSubTotal(request.Cart, subTotalIncludingTax);
-            decimal orderSubTotalDiscountAmountBase = shoppingCartSubTotal.discountAmount;
-            decimal subTotalWithoutDiscountBase = shoppingCartSubTotal.subTotalWithoutDiscount;
-            decimal subtotalBase = subTotalWithoutDiscountBase;
-            decimal subtotal = await _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, request.Currency);
-            model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, request.Currency, request.Language, subTotalIncludingTax);
-
-            if (orderSubTotalDiscountAmountBase > decimal.Zero)
+            model.SubTotal = _priceFormatter.FormatPrice(shoppingCartSubTotal.subTotalWithoutDiscount, true, request.Currency, request.Language, subTotalIncludingTax);
+            if (shoppingCartSubTotal.discountAmount > decimal.Zero)
             {
-                decimal orderSubTotalDiscountAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(orderSubTotalDiscountAmountBase, request.Currency);
-                model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, request.Currency, request.Language, subTotalIncludingTax);
+                model.SubTotalDiscount = _priceFormatter.FormatPrice(-shoppingCartSubTotal.discountAmount, true, request.Currency, request.Language, subTotalIncludingTax);
             }
         }
 
@@ -101,8 +95,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 decimal? shoppingCartShippingBase = (await _orderTotalCalculationService.GetShoppingCartShippingTotal(request.Cart)).shoppingCartShippingTotal;
                 if (shoppingCartShippingBase.HasValue)
                 {
-                    decimal shoppingCartShipping = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartShippingBase.Value, request.Currency);
-                    model.Shipping = _priceFormatter.FormatShippingPrice(shoppingCartShipping, true);
+                    model.Shipping = _priceFormatter.FormatShippingPrice(shoppingCartShippingBase.Value, true);
 
                     //selected shipping method
                     var shippingOption = request.Customer.GetAttributeFromEntity<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, request.Store.Id);
@@ -139,10 +132,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             {
                 var taxtotal = await _orderTotalCalculationService.GetTaxTotal(request.Cart);
                 SortedDictionary<decimal, decimal> taxRates = taxtotal.taxRates;
-                decimal shoppingCartTaxBase = taxtotal.taxtotal;
-                decimal shoppingCartTax = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartTaxBase, request.Currency);
 
-                if (shoppingCartTaxBase == 0 && _taxSettings.HideZeroTax)
+                if (taxtotal.taxtotal == 0 && _taxSettings.HideZeroTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
@@ -152,12 +143,12 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                     displayTax = !displayTaxRates;
 
-                    model.Tax = _priceFormatter.FormatPrice(shoppingCartTax, true, false);
+                    model.Tax = _priceFormatter.FormatPrice(taxtotal.taxtotal, true, false);
                     foreach (var tr in taxRates)
                     {
                         model.TaxRates.Add(new OrderTotalsModel.TaxRate {
                             Rate = _priceFormatter.FormatTaxRate(tr.Key),
-                            Value = _priceFormatter.FormatPrice(await _currencyService.ConvertFromPrimaryStoreCurrency(tr.Value, request.Currency), true, false),
+                            Value = _priceFormatter.FormatPrice(tr.Value, true, false),
                         });
                     }
                 }
@@ -176,14 +167,12 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             decimal redeemedRewardPointsAmount = carttotal.redeemedRewardPointsAmount;
             if (shoppingCartTotalBase.HasValue)
             {
-                decimal shoppingCartTotal = await _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartTotalBase.Value, request.Currency);
-                model.OrderTotal = _priceFormatter.FormatPrice(shoppingCartTotal, true, false);
+                model.OrderTotal = _priceFormatter.FormatPrice(shoppingCartTotalBase.Value, true, false);
             }
             //discount
             if (orderTotalDiscountAmountBase > decimal.Zero)
             {
-                decimal orderTotalDiscountAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(orderTotalDiscountAmountBase, request.Currency);
-                model.OrderTotalDiscount = _priceFormatter.FormatPrice(-orderTotalDiscountAmount, true, false);
+                model.OrderTotalDiscount = _priceFormatter.FormatPrice(-orderTotalDiscountAmountBase, true, false);
             }
 
             //gift cards
@@ -191,16 +180,15 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             {
                 foreach (var appliedGiftCard in appliedGiftCards)
                 {
-                    await PrepareGiftCards(appliedGiftCard, model, request);
+                    PrepareGiftCards(appliedGiftCard, model, request);
                 }
             }
 
             //reward points to be spent (redeemed)
             if (redeemedRewardPointsAmount > decimal.Zero)
             {
-                decimal redeemedRewardPointsAmountInCustomerCurrency = await _currencyService.ConvertFromPrimaryStoreCurrency(redeemedRewardPointsAmount, request.Currency);
                 model.RedeemedRewardPoints = redeemedRewardPoints;
-                model.RedeemedRewardPointsAmount = _priceFormatter.FormatPrice(-redeemedRewardPointsAmountInCustomerCurrency, true, false);
+                model.RedeemedRewardPointsAmount = _priceFormatter.FormatPrice(-redeemedRewardPointsAmount, true, false);
             }
 
             //reward points to be earned
@@ -213,22 +201,20 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     : 0;
                 var earnRewardPoints = shoppingCartTotalBase.Value - shippingBaseInclTax.Value;
                 if (earnRewardPoints > 0)
-                    model.WillEarnRewardPoints = await _mediator.Send(new CalculateRewardPointsCommand() { Customer = request.Customer, Amount = earnRewardPoints });
+                    model.WillEarnRewardPoints = await _mediator.Send(new CalculateRewardPointsCommand() { Customer = request.Customer, Amount = await _currencyService.ConvertToPrimaryStoreCurrency(earnRewardPoints, request.Currency)});
             }
         }
         
-        private async Task PrepareGiftCards(AppliedGiftCard appliedGiftCard, OrderTotalsModel model, GetOrderTotals request)
+        private void PrepareGiftCards(AppliedGiftCard appliedGiftCard, OrderTotalsModel model, GetOrderTotals request)
         {
             var gcModel = new OrderTotalsModel.GiftCard {
                 Id = appliedGiftCard.GiftCard.Id,
                 CouponCode = appliedGiftCard.GiftCard.GiftCardCouponCode,
             };
-            decimal amountCanBeUsed = await _currencyService.ConvertFromPrimaryStoreCurrency(appliedGiftCard.AmountCanBeUsed, request.Currency);
-            gcModel.Amount = _priceFormatter.FormatPrice(-amountCanBeUsed, true, false);
+            gcModel.Amount = _priceFormatter.FormatPrice(-appliedGiftCard.AmountCanBeUsed, true, false);
 
             decimal remainingAmountBase = appliedGiftCard.GiftCard.GetGiftCardRemainingAmount() - appliedGiftCard.AmountCanBeUsed;
-            decimal remainingAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(remainingAmountBase, request.Currency);
-            gcModel.Remaining = _priceFormatter.FormatPrice(remainingAmount, true, false);
+            gcModel.Remaining = _priceFormatter.FormatPrice(remainingAmountBase, true, false);
 
             model.GiftCards.Add(gcModel);
         }

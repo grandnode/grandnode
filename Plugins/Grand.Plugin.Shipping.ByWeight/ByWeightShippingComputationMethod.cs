@@ -30,7 +30,7 @@ namespace Grand.Plugin.Shipping.ByWeight
         private readonly IServiceProvider _serviceProvider;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
-
+        private readonly IProductService _productService;
         #endregion
 
         #region Ctor
@@ -41,8 +41,9 @@ namespace Grand.Plugin.Shipping.ByWeight
             ISettingService settingService,
             IWebHelper webHelper,
             IWorkContext workContext,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
             ILanguageService languageService,
+            IProductService productService,
             IServiceProvider serviceProvider)
         {
             _shippingService = shippingService;
@@ -54,6 +55,7 @@ namespace Grand.Plugin.Shipping.ByWeight
             _workContext = workContext;
             _localizationService = localizationService;
             _languageService = languageService;
+            _productService = productService;
             _serviceProvider = serviceProvider;
         }
         #endregion
@@ -137,8 +139,10 @@ namespace Grand.Plugin.Shipping.ByWeight
             {
                 if (packageItem.ShoppingCartItem.IsFreeShipping)
                     continue;
-                //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
-                subTotal += (await _priceCalculationService.GetSubTotal(packageItem.ShoppingCartItem)).subTotal;
+
+                var product = await _productService.GetProductById(packageItem.ShoppingCartItem.ProductId);
+                if (product != null)
+                    subTotal += (await _priceCalculationService.GetSubTotal(packageItem.ShoppingCartItem, product)).subTotal;
             }
             decimal weight = await _shippingService.GetTotalWeight(getShippingOptionRequest);
 
@@ -177,8 +181,7 @@ namespace Grand.Plugin.Shipping.ByWeight
         public override async Task Install()
         {
             //settings
-            var settings = new ShippingByWeightSettings
-            {
+            var settings = new ShippingByWeightSettings {
                 LimitMethodsToCreated = false,
             };
             await _settingService.SaveSetting(settings);
@@ -246,10 +249,8 @@ namespace Grand.Plugin.Shipping.ByWeight
         /// <summary>
         /// Gets a shipping rate computation method type
         /// </summary>
-        public ShippingRateComputationMethodType ShippingRateComputationMethodType
-        {
-            get
-            {
+        public ShippingRateComputationMethodType ShippingRateComputationMethodType {
+            get {
                 return ShippingRateComputationMethodType.Offline;
             }
         }
@@ -258,10 +259,8 @@ namespace Grand.Plugin.Shipping.ByWeight
         /// <summary>
         /// Gets a shipment tracker
         /// </summary>
-        public IShipmentTracker ShipmentTracker
-        {
-            get
-            {
+        public IShipmentTracker ShipmentTracker {
+            get {
                 //uncomment a line below to return a general shipment tracker (finds an appropriate tracker by tracking number)
                 return null;
             }

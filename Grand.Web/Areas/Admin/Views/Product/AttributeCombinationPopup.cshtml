@@ -194,7 +194,7 @@
                             <div class="form-group">
                                 <admin-label asp-for="OverriddenPrice" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    <admin-input asp-for="OverriddenPrice" />
+                                    <admin-input asp-for="OverriddenPrice" /> [@Model.PrimaryStoreCurrencyCode]
                                     <span asp-validation-for="OverriddenPrice"></span>
                                 </div>
                             </div>
@@ -242,7 +242,7 @@
                         {
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices")
+                                    @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices") [@Model.PrimaryStoreCurrencyCode]
                                 </div>
                                 <div class="panel-body">
                                     <div id="tierprices-grid"></div>

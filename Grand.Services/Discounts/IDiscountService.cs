@@ -1,6 +1,7 @@
 ﻿using Grand.Domain;
 using Grand.Domain.Catalog;
 using Grand.Domain.Customers;
+using Grand.Domain.Directory;
 using Grand.Domain.Discounts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -201,10 +202,13 @@ namespace Grand.Services.Discounts
         /// <summary>
         /// Get discount amount from plugin
         /// </summary>
-        /// <param name="discount"></param>
-        /// <param name="amount"></param>
+        /// <param name="discount">Discount</param>
+        /// <param name="amount">Amount</param>
+        /// <param name="currency">currency</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="product">Product</param>
         /// <returns></returns>
-        Task<decimal> GetDiscountAmount(Discount discount, Customer customer, Product product, decimal amount);
+        Task<decimal> GetDiscountAmount(Discount discount, Customer customer, Currency currency, Product product, decimal amount);
 
         /// <summary>
         /// Get preferred discount
@@ -213,10 +217,11 @@ namespace Grand.Services.Discounts
         /// <param name="amount"></param>
         /// <param name="customer"></param>
         /// <param name="product"></param>
+        /// <param name="currency"></param>
         /// <param name="discountAmount"></param>
         /// <returns></returns>
         Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(IList<AppliedDiscount> discounts,
-            Customer customer, Product product, decimal amount);
+            Customer customer, Currency currency, Product product, decimal amount);
 
         /// <summary>
         /// Get preferred discount
@@ -224,10 +229,11 @@ namespace Grand.Services.Discounts
         /// <param name="discounts"></param>
         /// <param name="amount"></param>
         /// <param name="customer"></param>
+        /// <param name="currency"></param>
         /// <param name="discountAmount"></param>
         /// <returns></returns>
         Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(IList<AppliedDiscount> discounts,
-            Customer customer, decimal amount);
+            Customer customer, Currency currency, decimal amount);
 
         /// <summary>
         /// GetDiscountAmountProvider

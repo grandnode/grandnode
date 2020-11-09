@@ -30,6 +30,13 @@
                 </div>
             </div>
             <div class="form-group">
+                <admin-label asp-for="CurrencyCode" class="col-sm-3 control-label" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-select asp-for="CurrencyCode" asp-items="Model.AvailableCurrencies" />
+                    <span asp-validation-for="CurrencyCode"></span>
+                </div>
+            </div>
+            <div class="form-group">
                 <admin-label asp-for="StoreId" class="col-sm-3 control-label" />
                 <div class="col-md-9 col-sm-9">
                     <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />

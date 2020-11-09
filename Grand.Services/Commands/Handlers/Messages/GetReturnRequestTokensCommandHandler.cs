@@ -86,14 +86,12 @@ namespace Grand.Services.Commands.Handlers.Messages
                     if (request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {
                         //including tax
-                        var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, request.Order.CurrencyRate);
-                        unitPriceStr = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, currency, request.Language, true);
+                        unitPriceStr = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax, true, currency, request.Language, true);
                     }
                     else
                     {
                         //excluding tax
-                        var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, request.Order.CurrencyRate);
-                        unitPriceStr = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, currency, request.Language, false);
+                        unitPriceStr = _priceFormatter.FormatPrice(orderItem.UnitPriceExclTax, true, currency, request.Language, false);
                     }
                     sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: right;\">{0}</td>", unitPriceStr));
                     sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", orderItem.Quantity));

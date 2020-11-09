@@ -594,7 +594,7 @@ namespace Grand.Web.Controllers
                 if (!string.IsNullOrWhiteSpace(giftcardcouponcode))
                 {
                     var giftCard = (await _mediator.Send(new GetGiftCardQuery() { GiftCardCouponCode = giftcardcouponcode, IsGiftCardActivated = true })).FirstOrDefault();
-                    bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
+                    bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid(_workContext.WorkingCurrency);
                     if (isGiftCardValid)
                     {
                         var result = _workContext.CurrentCustomer.ApplyCouponCode(SystemCustomerAttributeNames.GiftCardCoupons, giftcardcouponcode.Trim().ToLower());

@@ -23,6 +23,11 @@ namespace Grand.Domain.Catalog
         public string CustomerRoleId { get; set; }
 
         /// <summary>
+        /// Gets or sets the currency code
+        /// </summary>
+        public string CurrencyCode { get; set; }
+
+        /// <summary>
         /// Gets or sets the quantity
         /// </summary>
         public int Quantity { get; set; }

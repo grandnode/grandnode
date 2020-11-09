@@ -4500,6 +4500,12 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.SaveBeforeEdit">
     <Value>You need to save the product before you can add attributes for this page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductPrices.Fields.CurrencyCode">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductPrices.Fields.Price">
+    <Value>Price</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory">
     <Value>Warehouses</Value>
   </LocaleResource>
@@ -4643,6 +4649,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.TierPrices.Edit">
     <Value>Edit tier price details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.CurrencyCode">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.CurrencyCode.Hint">
+    <Value>The currency code.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.CustomerRole">
     <Value>Customer role</Value>
@@ -13258,6 +13270,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.CreatedOn.Hint">
     <Value>The date/time the gift card was created/purchased.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.CurrencyCode">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.CurrencyCode.Hint">
+    <Value>The currency code.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode">
     <Value>Coupon code</Value>

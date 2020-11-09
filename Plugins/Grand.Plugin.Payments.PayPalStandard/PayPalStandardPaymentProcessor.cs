@@ -268,34 +268,34 @@ namespace Grand.Plugin.Payments.PayPalStandard
             var roundedCartTotal = decimal.Zero;
             var itemCount = 1;
 
-            var rate = postProcessPaymentRequest.Order.CurrencyRate;
-
             //add shopping cart items
             foreach (var item in postProcessPaymentRequest.Order.OrderItems)
             {
                 var product = await _productService.GetProductById(item.ProductId);
 
-                var roundedItemPrice = Math.Round(item.UnitPriceExclTax * rate, 2);
+                var roundedItemPrice = Math.Round(item.UnitPriceExclTax, 2);
 
                 //add query parameters
                 parameters.Add($"item_name_{itemCount}", product.Name);
                 parameters.Add($"amount_{itemCount}", roundedItemPrice.ToString("0.00", CultureInfo.InvariantCulture));
                 parameters.Add($"quantity_{itemCount}", item.Quantity.ToString());
 
-                cartTotal += (item.PriceExclTax * rate);
+                cartTotal += (item.PriceExclTax);
                 roundedCartTotal += roundedItemPrice * item.Quantity;
                 itemCount++;
             }
 
             //add checkout attributes as order items
             var checkoutAttributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValue(postProcessPaymentRequest.Order.CheckoutAttributesXml);
+            var currencyService = _serviceProvider.GetRequiredService<ICurrencyService>();
+            var workContext = _serviceProvider.GetRequiredService<IWorkContext>();
             var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(postProcessPaymentRequest.Order.CustomerId);
             foreach (var attributeValue in checkoutAttributeValues)
             {
                 var attributePrice = await _taxService.GetCheckoutAttributePrice(attributeValue.ca, attributeValue.cav, false, customer);
                 if (attributePrice.checkoutPrice > 0)
                 {
-                    var roundedAttributePrice = Math.Round(attributePrice.checkoutPrice * rate, 2);
+                    decimal roundedAttributePrice = Math.Round(await currencyService.ConvertFromPrimaryStoreCurrency(attributePrice.checkoutPrice, workContext.WorkingCurrency),2);
                     //add query parameters
                     if (attributeValue.ca != null)
                     {
@@ -311,48 +311,48 @@ namespace Grand.Plugin.Payments.PayPalStandard
             }
 
             //add shipping fee as a separate order item, if it has price
-            var roundedShippingPrice = Math.Round(postProcessPaymentRequest.Order.OrderShippingExclTax * rate, 2);
+            var roundedShippingPrice = Math.Round(postProcessPaymentRequest.Order.OrderShippingExclTax, 2);
             if (roundedShippingPrice > decimal.Zero)
             {
                 parameters.Add($"item_name_{itemCount}", "Shipping fee");
                 parameters.Add($"amount_{itemCount}", roundedShippingPrice.ToString("0.00", CultureInfo.InvariantCulture));
                 parameters.Add($"quantity_{itemCount}", "1");
 
-                cartTotal += (postProcessPaymentRequest.Order.OrderShippingExclTax * rate);
+                cartTotal += (postProcessPaymentRequest.Order.OrderShippingExclTax);
                 roundedCartTotal += roundedShippingPrice;
                 itemCount++;
             }
 
             //add payment method additional fee as a separate order item, if it has price
-            var roundedPaymentMethodPrice = Math.Round(postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax * rate, 2);
+            var roundedPaymentMethodPrice = Math.Round(postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax, 2);
             if (roundedPaymentMethodPrice > decimal.Zero)
             {
                 parameters.Add($"item_name_{itemCount}", "Payment method fee");
                 parameters.Add($"amount_{itemCount}", roundedPaymentMethodPrice.ToString("0.00", CultureInfo.InvariantCulture));
                 parameters.Add($"quantity_{itemCount}", "1");
 
-                cartTotal += (postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax * rate);
+                cartTotal += (postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax);
                 roundedCartTotal += roundedPaymentMethodPrice;
                 itemCount++;
             }
 
             //add tax as a separate order item, if it has positive amount
-            var roundedTaxAmount = Math.Round(postProcessPaymentRequest.Order.OrderTax * rate, 2);
+            var roundedTaxAmount = Math.Round(postProcessPaymentRequest.Order.OrderTax, 2);
             if (roundedTaxAmount > decimal.Zero)
             {
                 parameters.Add($"item_name_{itemCount}", "Tax amount");
                 parameters.Add($"amount_{itemCount}", roundedTaxAmount.ToString("0.00", CultureInfo.InvariantCulture));
                 parameters.Add($"quantity_{itemCount}", "1");
 
-                cartTotal += (postProcessPaymentRequest.Order.OrderTax * rate);
+                cartTotal += (postProcessPaymentRequest.Order.OrderTax);
                 roundedCartTotal += roundedTaxAmount;
                 itemCount++;
             }
 
-            if (cartTotal * rate > postProcessPaymentRequest.Order.OrderTotal * rate)
+            if (cartTotal  > postProcessPaymentRequest.Order.OrderTotal)
             {
                 //get the difference between what the order total is and what it should be and use that as the "discount"
-                var discountTotal = Math.Round(cartTotal - (postProcessPaymentRequest.Order.OrderTotal * rate), 2);
+                var discountTotal = Math.Round(cartTotal - (postProcessPaymentRequest.Order.OrderTotal), 2);
                 roundedCartTotal -= discountTotal;
 
                 //gift card or rewarded point amount applied to cart in nopCommerce - shows in PayPal as "discount"
@@ -371,10 +371,10 @@ namespace Grand.Plugin.Payments.PayPalStandard
         private async Task AddOrderTotalParameters(IDictionary<string, string> parameters, PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //round order total
-            var roundedOrderTotal = Math.Round(postProcessPaymentRequest.Order.OrderTotal * postProcessPaymentRequest.Order.CurrencyRate, 2);
+            var roundedOrderTotal = Math.Round(postProcessPaymentRequest.Order.OrderTotal, 2);
 
             parameters.Add("cmd", "_xclick");
-            parameters.Add("item_name", $"Order Number {postProcessPaymentRequest.Order.OrderNumber.ToString()}");
+            parameters.Add("item_name", $"Order Number {postProcessPaymentRequest.Order.OrderNumber}");
             parameters.Add("amount", roundedOrderTotal.ToString("0.00", CultureInfo.InvariantCulture));
 
             //save order total that actually sent to PayPal (used for PDT order total validation)

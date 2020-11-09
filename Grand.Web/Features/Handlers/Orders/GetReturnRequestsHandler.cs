@@ -67,14 +67,12 @@ namespace Grand.Web.Features.Handlers.Orders
                     if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {
                         //including tax
-                        var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                        total += unitPriceInclTaxInCustomerCurrency * rrItem.Quantity;
+                        total += orderItem.UnitPriceInclTax * rrItem.Quantity;
                     }
                     else
                     {
                         //excluding tax
-                        var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                        total += unitPriceExclTaxInCustomerCurrency * rrItem.Quantity;
+                        total += orderItem.UnitPriceExclTax * rrItem.Quantity;
                     }
                 }
 

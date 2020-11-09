@@ -41,10 +41,24 @@
         <div class="form-group">
             <admin-label asp-for="Amount" />
             <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Amount" /> [@Model.PrimaryStoreCurrencyCode]
+                <admin-input asp-for="Amount" />
+                @if (!String.IsNullOrEmpty(Model.Id))
+                {
+                    <text>[@Model.CurrencyCode]</text>
+                }
                 <span asp-validation-for="Amount"></span>
             </div>
         </div>
+        @if (String.IsNullOrEmpty(Model.Id))
+        {
+            <div class="form-group">
+                <admin-label asp-for="CurrencyCode" class="col-sm-3 control-label" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-select asp-for="CurrencyCode" asp-items="Model.AvailableCurrencies" />
+                    <span asp-validation-for="CurrencyCode"></span>
+                </div>
+            </div>
+        }
         @if (!String.IsNullOrEmpty(Model.Id))
         {
             <div class="form-group">
@@ -59,7 +73,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IsGiftCardActivated" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IsGiftCardActivated"></span>
             </div>
