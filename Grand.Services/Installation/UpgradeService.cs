@@ -1,10 +1,11 @@
-﻿using Grand.Domain;
-using Grand.Domain.Data;
+﻿using Grand.Core;
+using Grand.Domain;
 using Grand.Domain.AdminSearch;
 using Grand.Domain.Blogs;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
+using Grand.Domain.Data;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.Localization;
 using Grand.Domain.Logging;
@@ -35,8 +36,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Grand.Core.Data;
-using Grand.Core;
 
 namespace Grand.Services.Installation
 {
@@ -56,6 +55,7 @@ namespace Grand.Services.Installation
         private const string version_460 = "4.60";
         private const string version_470 = "4.70";
         private const string version_480 = "4.80";
+        private const string version_490 = "4.90";
 
         #endregion
 
@@ -120,7 +120,11 @@ namespace Grand.Services.Installation
                 await From470To480();
                 fromversion = version_480;
             }
-
+            if (fromversion == version_480)
+            {
+                await From480To490();
+                fromversion = version_490;
+            }
             if (fromversion == toversion)
             {
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
@@ -1046,6 +1050,16 @@ namespace Grand.Services.Installation
 
             #endregion
         }
+
+        private async Task From480To490()
+        {
+            #region Install String resources
+
+            await InstallStringResources("EN_480_490.xml");
+
+            #endregion
+        }
+
 
         private async Task InstallStringResources(string filenames)
         {
