@@ -32,6 +32,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -1062,11 +1063,94 @@ namespace Grand.Services.Installation
             #region Insert activities
 
             var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
-            await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
-                SystemKeyword = "CustomerAdmin.UpdateCartCustomer",
-                Enabled = true,
-                Name = "Update shopping cart"
-            });
+            if (!_activityLogTypeRepository.Table.Where(x => x.SystemKeyword == "CustomerAdmin.UpdateCartCustomer").Any())
+            {
+                await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
+                    SystemKeyword = "CustomerAdmin.UpdateCartCustomer",
+                    Enabled = true,
+                    Name = "Update shopping cart"
+                });
+            }
+            #endregion
+
+            #region Upgrade orders
+
+            var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
+            var query = orderRepository.Table.Where(x => x.CurrencyRate != 1 && (x.Rate != 1 || x.Rate != 0)).ToList();
+
+            foreach (var order in query)
+            {
+                var rate = order.CurrencyRate;
+
+                if (order.OrderSubtotalInclTax > 0)
+                    order.OrderSubtotalInclTax = Math.Round(order.OrderSubtotalInclTax * rate, 2);
+
+                if (order.OrderSubtotalExclTax > 0)
+                    order.OrderSubtotalExclTax = Math.Round(order.OrderSubtotalExclTax * rate, 2);
+
+                if (order.OrderSubTotalDiscountInclTax > 0)
+                    order.OrderSubTotalDiscountInclTax = Math.Round(order.OrderSubTotalDiscountInclTax * rate, 2);
+
+                if (order.OrderSubTotalDiscountExclTax > 0)
+                    order.OrderSubTotalDiscountExclTax = Math.Round(order.OrderSubTotalDiscountExclTax * rate, 2);
+
+                if (order.OrderShippingInclTax > 0)
+                    order.OrderShippingInclTax = Math.Round(order.OrderShippingInclTax * rate, 2);
+
+                if (order.OrderShippingExclTax > 0)
+                    order.OrderShippingExclTax = Math.Round(order.OrderShippingExclTax * rate, 2);
+
+                if (order.PaymentMethodAdditionalFeeInclTax > 0)
+                    order.PaymentMethodAdditionalFeeInclTax = Math.Round(order.PaymentMethodAdditionalFeeInclTax * rate, 2);
+
+                if (order.PaymentMethodAdditionalFeeExclTax > 0)
+                    order.PaymentMethodAdditionalFeeExclTax = Math.Round(order.PaymentMethodAdditionalFeeExclTax * rate, 2);
+
+                if (order.OrderTax > 0)
+                    order.OrderTax = Math.Round(order.OrderTax * rate, 2);
+
+                if (order.OrderDiscount > 0)
+                    order.OrderDiscount = Math.Round(order.OrderDiscount * rate, 2);
+
+                if (order.OrderTotal > 0)
+                    order.OrderTotal = Math.Round(order.OrderTotal * rate, 2);
+
+                if (order.RefundedAmount > 0)
+                    order.RefundedAmount = Math.Round(order.RefundedAmount * rate, 2);
+
+                //tax rates
+                var taxes = order.TaxRatesDictionary;
+                order.TaxRates = "";
+                foreach (var kvp in taxes)
+                {
+                    var taxRate = kvp.Key;
+                    var taxValue = kvp.Value;
+                    taxValue *= rate;
+                    order.TaxRates += string.Format("{0}:{1};   ", taxRate.ToString(CultureInfo.InvariantCulture), Math.Round(taxValue, 2).ToString(CultureInfo.InvariantCulture));
+                }
+
+                foreach (var orderItems in order.OrderItems)
+                {
+                    if (orderItems.UnitPriceWithoutDiscInclTax > 0)
+                        orderItems.UnitPriceWithoutDiscInclTax = Math.Round(orderItems.UnitPriceWithoutDiscInclTax * rate, 2);
+                    if (orderItems.UnitPriceWithoutDiscExclTax > 0)
+                        orderItems.UnitPriceWithoutDiscExclTax = Math.Round(orderItems.UnitPriceWithoutDiscExclTax * rate, 2);
+                    if (orderItems.UnitPriceInclTax > 0)
+                        orderItems.UnitPriceInclTax = Math.Round(orderItems.UnitPriceInclTax * rate, 2);
+                    if (orderItems.UnitPriceExclTax > 0)
+                        orderItems.UnitPriceExclTax = Math.Round(orderItems.UnitPriceExclTax * rate, 2);
+                    if (orderItems.PriceInclTax > 0)
+                        orderItems.PriceInclTax = Math.Round(orderItems.PriceInclTax * rate, 2);
+                    if (orderItems.PriceExclTax > 0)
+                        orderItems.PriceExclTax = Math.Round(orderItems.PriceExclTax * rate, 2);
+                    if (orderItems.DiscountAmountInclTax > 0)
+                        orderItems.DiscountAmountInclTax = Math.Round(orderItems.DiscountAmountInclTax * rate, 2);
+                    if (orderItems.DiscountAmountExclTax > 0)
+                        orderItems.DiscountAmountExclTax = Math.Round(orderItems.DiscountAmountExclTax * rate, 2);
+                }
+
+                await orderRepository.UpdateAsync(order);
+            }
 
             #endregion
 
