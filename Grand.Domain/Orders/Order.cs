@@ -94,6 +94,12 @@ namespace Grand.Domain.Orders
         public decimal CurrencyRate { get; set; }
 
         /// <summary>
+        /// Gets or sets the currency rate
+        /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
+        public decimal Rate { get; set; }
+
+        /// <summary>
         /// Gets or sets the customer tax display type identifier
         /// </summary>
         public int CustomerTaxDisplayTypeId { get; set; }

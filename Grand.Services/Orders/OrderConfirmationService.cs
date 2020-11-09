@@ -1070,6 +1070,7 @@ namespace Grand.Services.Orders
                 CustomerCurrencyCode = details.Currency.CurrencyCode,
                 PrimaryCurrencyCode = details.PrimaryCurrencyCode,
                 CurrencyRate = details.CustomerCurrencyRate,
+                Rate = details.Currency.Rate,
                 AffiliateId = details.AffiliateId,
                 OrderStatus = OrderStatus.Pending,
                 AllowStoringCreditCardNumber = processPaymentResult.AllowStoringCreditCardNumber,
