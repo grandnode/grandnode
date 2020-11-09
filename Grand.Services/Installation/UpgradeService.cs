@@ -142,7 +142,7 @@ namespace Grand.Services.Installation
         private async Task From400To410()
         {
             #region Install String resources
-            await InstallStringResources("EN_400_410.nopres.xml");
+            await InstallStringResources("EN_400_410.xml");
             #endregion
 
             #region Install product reservation
@@ -258,7 +258,7 @@ namespace Grand.Services.Installation
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
 
             #region Install String resources
-            await InstallStringResources("EN_410_420.nopres.xml");
+            await InstallStringResources("EN_410_420.xml");
             #endregion
 
             #region Update string resources
@@ -417,7 +417,7 @@ namespace Grand.Services.Installation
         {
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
 
-            await InstallStringResources("EN_420_430.nopres.xml");
+            await InstallStringResources("EN_420_430.xml");
 
             #region Settings
 
@@ -595,7 +595,7 @@ namespace Grand.Services.Installation
         private async Task From430To440()
         {
             #region Install String resources
-            await InstallStringResources("430_440.nopres.xml");
+            await InstallStringResources("430_440.xml");
             #endregion
 
             #region Permisions
@@ -689,7 +689,7 @@ namespace Grand.Services.Installation
         private async Task From440To450()
         {
             #region Install String resources
-            await InstallStringResources("EN_440_450.nopres.xml");
+            await InstallStringResources("EN_440_450.xml");
             #endregion
 
             #region Update task
@@ -772,7 +772,7 @@ namespace Grand.Services.Installation
 
             #region Install String resources
 
-            await InstallStringResources("EN_450_460.nopres.xml");
+            await InstallStringResources("EN_450_460.xml");
 
             #endregion
 
@@ -904,7 +904,7 @@ namespace Grand.Services.Installation
         private async Task From460To470()
         {
             #region Install String resources
-            await InstallStringResources("EN_460_470.nopres.xml");
+            await InstallStringResources("EN_460_470.xml");
             #endregion
 
             #region MessageTemplates
@@ -999,7 +999,7 @@ namespace Grand.Services.Installation
         {
             #region Install String resources
 
-            await InstallStringResources("EN_470_480.nopres.xml");
+            await InstallStringResources("EN_470_480.xml");
 
             #endregion
 
