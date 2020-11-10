@@ -397,7 +397,6 @@ namespace Grand.Domain.MongoDB
                 cm.UnmapMember(c => c.PaymentStatus);
                 cm.UnmapMember(c => c.ShippingStatus);
                 cm.UnmapMember(c => c.CustomerTaxDisplayType);
-                cm.UnmapMember(c => c.TaxRatesDictionary);
             });
         }
         private static void RegisterClassShipmentItem()

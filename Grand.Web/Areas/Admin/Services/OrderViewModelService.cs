@@ -495,20 +495,19 @@ namespace Grand.Web.Areas.Admin.Services
 
             //tax
             model.Tax = await _priceFormatter.FormatPrice(order.OrderTax, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
-            SortedDictionary<decimal, decimal> taxRates = order.TaxRatesDictionary;
-            bool displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
+            bool displayTaxRates = _taxSettings.DisplayTaxRates && order.OrderTaxes.Any();
             bool displayTax = !displayTaxRates;
-            foreach (var tr in order.TaxRatesDictionary)
+            foreach (var tr in order.OrderTaxes)
             {
                 model.TaxRates.Add(new OrderModel.TaxRate {
-                    Rate = _priceFormatter.FormatTaxRate(tr.Key),
-                    Value = await _priceFormatter.FormatPrice(tr.Value, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
+                    Rate = _priceFormatter.FormatTaxRate(tr.Percent),
+                    Value = await _priceFormatter.FormatPrice(tr.Amount, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
                 });
             }
             model.DisplayTaxRates = displayTaxRates;
             model.DisplayTax = displayTax;
             model.TaxValue = order.OrderTax;
-            model.TaxRatesValue = order.TaxRates;
+            //model.TaxRatesValue = order.TaxRates;
 
             //discount
             if (order.OrderDiscount > 0)

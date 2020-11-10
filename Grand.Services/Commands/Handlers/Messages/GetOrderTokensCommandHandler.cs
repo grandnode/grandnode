@@ -149,10 +149,10 @@ namespace Grand.Services.Commands.Handlers.Messages
             liquidOrder.AmountRefunded = _priceFormatter.FormatPrice(request.RefundedAmount, true, currency, language, false);
 
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            foreach (var item in request.Order.TaxRatesDictionary)
+            foreach (var item in request.Order.OrderTaxes)
             {
-                string taxRate = string.Format(_localizationService.GetResource("Messages.Order.TaxRateLine"), _priceFormatter.FormatTaxRate(item.Key));
-                string taxValue = _priceFormatter.FormatPrice(item.Value, true, currency, language, false);
+                string taxRate = string.Format(_localizationService.GetResource("Messages.Order.TaxRateLine"), _priceFormatter.FormatTaxRate(item.Percent));
+                string taxValue = _priceFormatter.FormatPrice(item.Amount, true, currency, language, false);
                 dict.Add(taxRate, taxValue);
             }
             liquidOrder.TaxRates = dict;
@@ -261,11 +261,7 @@ namespace Grand.Services.Commands.Handlers.Messages
                     }
                     else
                     {
-                        var _taxRates = new SortedDictionary<decimal, decimal>();
-                        foreach (var tr in request.Order.TaxRatesDictionary)
-                            _taxRates.Add(tr.Key, tr.Value);
-
-                        _displayTaxRates = _taxSettings.DisplayTaxRates && _taxRates.Any();
+                        _displayTaxRates = _taxSettings.DisplayTaxRates && request.Order.OrderTaxes.Any();
                         _displayTax = !_displayTaxRates;
 
                         string taxStr = _priceFormatter.FormatPrice(request.Order.OrderTax, true, currency, language, request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);

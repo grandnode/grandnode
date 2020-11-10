@@ -277,16 +277,16 @@ namespace Grand.Web.Features.Handlers.Orders
                 }
                 else
                 {
-                    displayTaxRates = _taxSettings.DisplayTaxRates && request.Order.TaxRatesDictionary.Any();
+                    displayTaxRates = _taxSettings.DisplayTaxRates && request.Order.OrderTaxes.Any();
                     displayTax = !displayTaxRates;
 
                     model.Tax = await _priceFormatter.FormatPrice(request.Order.OrderTax, true, request.Order.CustomerCurrencyCode, false, request.Language);
 
-                    foreach (var tr in request.Order.TaxRatesDictionary)
+                    foreach (var tr in request.Order.OrderTaxes)
                     {
                         model.TaxRates.Add(new OrderDetailsModel.TaxRate {
-                            Rate = _priceFormatter.FormatTaxRate(tr.Key),
-                            Value = await _priceFormatter.FormatPrice(tr.Value, true, request.Order.CustomerCurrencyCode, false, request.Language),
+                            Rate = _priceFormatter.FormatTaxRate(tr.Percent),
+                            Value = await _priceFormatter.FormatPrice(tr.Amount, true, request.Order.CustomerCurrencyCode, false, request.Language),
                         });
                     }
                 }

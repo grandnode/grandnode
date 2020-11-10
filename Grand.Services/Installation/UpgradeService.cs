@@ -1078,9 +1078,11 @@ namespace Grand.Services.Installation
             var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
             var query = orderRepository.Table.Where(x => x.CurrencyRate != 1 && (x.Rate != 1 || x.Rate != 0)).ToList();
 
+            //upgrade Currency value
             foreach (var order in query)
             {
                 var rate = order.CurrencyRate;
+                order.Rate = rate;
 
                 if (order.OrderSubtotalInclTax > 0)
                     order.OrderSubtotalInclTax = Math.Round(order.OrderSubtotalInclTax * rate, 2);
@@ -1118,17 +1120,6 @@ namespace Grand.Services.Installation
                 if (order.RefundedAmount > 0)
                     order.RefundedAmount = Math.Round(order.RefundedAmount * rate, 2);
 
-                //tax rates
-                var taxes = order.TaxRatesDictionary;
-                order.TaxRates = "";
-                foreach (var kvp in taxes)
-                {
-                    var taxRate = kvp.Key;
-                    var taxValue = kvp.Value;
-                    taxValue *= rate;
-                    order.TaxRates += string.Format("{0}:{1};   ", taxRate.ToString(CultureInfo.InvariantCulture), Math.Round(taxValue, 2).ToString(CultureInfo.InvariantCulture));
-                }
-
                 foreach (var orderItems in order.OrderItems)
                 {
                     if (orderItems.UnitPriceWithoutDiscInclTax > 0)
@@ -1152,10 +1143,28 @@ namespace Grand.Services.Installation
                 await orderRepository.UpdateAsync(order);
             }
 
+            //upgrade Taxes on the order
+            var dBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
+            var orderTaxRepository = dBContext.Database().GetCollection<OldOrders>("Order");
+            await orderTaxRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
+            {
+                if (!o.OrderTaxes.Any())
+                {
+                    var taxes = o.ParseTaxRates(o.TaxRates);
+                    foreach (var item in taxes)
+                    {
+                        o.OrderTaxes.Add(new OrderTax() {
+                            Percent = item.Key,
+                            Amount = Math.Round(item.Value * o.CurrencyRate, 4)
+                        });
+                    }
+                    await orderTaxRepository.ReplaceOneAsync(x => x.Id == o.Id, o); 
+                }
+            });
+
             #endregion
 
         }
-
 
         private async Task InstallStringResources(string filenames)
         {
@@ -1193,6 +1202,11 @@ namespace Grand.Services.Installation
             public int ReturnRequestStatusId { get; set; }
             public DateTime CreatedOnUtc { get; set; }
             public DateTime UpdatedOnUtc { get; set; }
+        }
+
+        class OldOrders : Order
+        {
+            public string TaxRates { get; set; }
         }
     }
 }

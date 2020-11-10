@@ -728,7 +728,6 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("OrderShippingExclTax", null, order.OrderShippingExclTax.ToString());
                 xmlWriter.WriteElementString("PaymentMethodAdditionalFeeInclTax", null, order.PaymentMethodAdditionalFeeInclTax.ToString());
                 xmlWriter.WriteElementString("PaymentMethodAdditionalFeeExclTax", null, order.PaymentMethodAdditionalFeeExclTax.ToString());
-                xmlWriter.WriteElementString("TaxRates", null, order.TaxRates);
                 xmlWriter.WriteElementString("OrderTax", null, order.OrderTax.ToString());
                 xmlWriter.WriteElementString("OrderTotal", null, order.OrderTotal.ToString());
                 xmlWriter.WriteElementString("RefundedAmount", null, order.RefundedAmount.ToString());
@@ -1198,7 +1197,6 @@ namespace Grand.Services.ExportImport
                     new PropertyByName<Order>("OrderShippingExclTax", p=>p.OrderShippingExclTax),
                     new PropertyByName<Order>("PaymentMethodAdditionalFeeInclTax", p=>p.PaymentMethodAdditionalFeeInclTax),
                     new PropertyByName<Order>("PaymentMethodAdditionalFeeExclTax", p=>p.PaymentMethodAdditionalFeeExclTax),
-                    new PropertyByName<Order>("TaxRates", p=>p.TaxRates),
                     new PropertyByName<Order>("OrderTax", p=>p.OrderTax),
                     new PropertyByName<Order>("OrderTotal", p=>p.OrderTotal),
                     new PropertyByName<Order>("RefundedAmount", p=>p.RefundedAmount),

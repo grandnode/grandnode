@@ -232,7 +232,7 @@ namespace Grand.Services.Orders
             details.PaymentAdditionalFeeInclTax = details.InitialOrder.PaymentMethodAdditionalFeeInclTax;
             details.PaymentAdditionalFeeExclTax = details.InitialOrder.PaymentMethodAdditionalFeeExclTax;
             details.OrderTaxTotal = details.InitialOrder.OrderTax;
-            details.TaxRates = details.InitialOrder.TaxRates;
+            details.Taxes = details.InitialOrder.OrderTaxes.ToList();
             details.IsRecurringShoppingCart = true;
             processPaymentRequest.OrderTotal = details.OrderTotal;
 
@@ -545,17 +545,16 @@ namespace Grand.Services.Orders
             //tax total
             //tax amount
             var (taxtotal, taxRates) = await _orderTotalCalculationService.GetTaxTotal(details.Cart);
-            SortedDictionary<decimal, decimal> taxRatesDictionary = taxRates;
             details.OrderTaxTotal = taxtotal;
 
             //tax rates
-            foreach (var kvp in taxRatesDictionary)
+            foreach (var kvp in taxRates)
             {
-                var taxRate = kvp.Key;
-                var taxValue = kvp.Value;
-                details.TaxRates += string.Format("{0}:{1};   ", taxRate.ToString(CultureInfo.InvariantCulture), taxValue.ToString(CultureInfo.InvariantCulture));
+                details.Taxes.Add(new OrderTax() { 
+                    Percent = Math.Round(kvp.Key,2),
+                    Amount = kvp.Value
+                });
             }
-
 
             //order total (and applied discounts, gift cards, reward points)
             var shoppingCartTotal = await _orderTotalCalculationService.GetShoppingCartTotal(details.Cart);
@@ -1060,7 +1059,6 @@ namespace Grand.Services.Orders
                 OrderShippingExclTax = Math.Round(details.OrderShippingTotalExclTax, 6),
                 PaymentMethodAdditionalFeeInclTax = Math.Round(details.PaymentAdditionalFeeInclTax, 6),
                 PaymentMethodAdditionalFeeExclTax = Math.Round(details.PaymentAdditionalFeeExclTax, 6),
-                TaxRates = details.TaxRates,
                 OrderTax = Math.Round(details.OrderTaxTotal, 6),
                 OrderTotal = Math.Round(details.OrderTotal, 6),
                 RefundedAmount = decimal.Zero,
@@ -1107,9 +1105,13 @@ namespace Grand.Services.Orders
                 UrlReferrer = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastUrlReferrer),
                 ShippingOptionAttributeDescription = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ShippingOptionAttributeDescription, processPaymentRequest.StoreId),
                 ShippingOptionAttributeXml = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ShippingOptionAttributeXml, processPaymentRequest.StoreId),
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,                
             };
 
+            foreach (var item in details.Taxes)
+            {
+                order.OrderTaxes.Add(item);
+            }
             return order;
         }
 
