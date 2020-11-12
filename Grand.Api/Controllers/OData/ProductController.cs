@@ -83,7 +83,7 @@ namespace Grand.Api.Controllers.OData
 
         [SwaggerOperation(summary: "Partially update entity in Product", OperationId = "PartiallyUpdateProduct")]
         [HttpPatch]
-        public async Task<IActionResult> Patch([FromODataUri] string key, JsonPatchDocument<ProductDto> model)
+        public async Task<IActionResult> Patch([FromODataUri] string key, [FromBody] JsonPatchDocument<ProductDto> model)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
@@ -93,7 +93,7 @@ namespace Grand.Api.Controllers.OData
                 return NotFound();
 
             var pr = product.FirstOrDefault();
-            model.ApplyTo(pr);
+            model.ApplyTo(pr, ModelState);
 
             if (ModelState.IsValid)
             {
