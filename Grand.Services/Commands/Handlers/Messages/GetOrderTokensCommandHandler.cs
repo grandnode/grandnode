@@ -170,7 +170,7 @@ namespace Grand.Services.Commands.Handlers.Messages
             if (request.Order.RedeemedRewardPointsEntry != null)
             {
                 liquidOrder.RPTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", language.Id), -request.Order.RedeemedRewardPointsEntry?.Points);
-                liquidOrder.RPAmount = _priceFormatter.FormatPrice(-request.Order.RedeemedRewardPointsEntry.UsedAmount, true, currency, language, false);
+                liquidOrder.RPAmount = _priceFormatter.FormatPrice(-request.Order.RedeemedRewardPointsEntry.UsedAmount, true, currency, language, true, false);
             }
             void CalculateSubTotals()
             {
