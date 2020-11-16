@@ -11,6 +11,7 @@ using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
 using Grand.Framework.Themes;
 using Grand.Services.Common;
+using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -18,6 +19,7 @@ using Grand.Services.Messages;
 using Grand.Services.Stores;
 using Grand.Services.Topics;
 using Grand.Web.Commands.Models.Common;
+using Grand.Web.Commands.Models.Customers;
 using Grand.Web.Events;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Models.Common;
@@ -564,6 +566,19 @@ namespace Grand.Web.Controllers
                 success = !result.Any(),
                 errors = result
             });
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> SaveCurrentPosition(
+            LocationModel model,
+            [FromServices] CustomerSettings customerSettings)
+        {
+            if(!customerSettings.GeoEnabled)
+                return Content("");
+
+            await _mediator.Send(new CurrentPositionCommand() { Customer = _workContext.CurrentCustomer, Model = model });
+
+            return Content("");
         }
 
         #endregion
