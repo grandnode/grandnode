@@ -163,7 +163,7 @@ namespace Grand.Services.Commands.Handlers.Messages
             {
                 var giftCard = await _giftCardService.GetGiftCardById(gcuh.GiftCardId);
                 string giftCardText = string.Format(_localizationService.GetResource("Messages.Order.GiftCardInfo", language.Id), WebUtility.HtmlEncode(giftCard.GiftCardCouponCode));
-                string giftCardAmount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, currency, language, false);
+                string giftCardAmount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, currency, language, true, false);
                 cards.Add(giftCardText, giftCardAmount);
             }
             liquidOrder.GiftCards = cards;
