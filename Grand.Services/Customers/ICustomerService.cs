@@ -5,6 +5,7 @@ using Grand.Domain.Orders;
 using Grand.Domain.Stores;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
@@ -46,7 +47,7 @@ namespace Grand.Services.Customers
             string firstName = null, string lastName = null,
             string company = null, string phone = null, string zipPostalCode = null,
             bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = int.MaxValue); //Int32.MaxValue
+            int pageIndex = 0, int pageSize = int.MaxValue, Expression<Func<Customer, object>> orderBySelector = null); 
 
         /// <summary>
         /// Gets all customers by customer format (including deleted ones)
@@ -226,7 +227,7 @@ namespace Grand.Services.Customers
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true);
-        
+
         /// <summary>
         /// Delete guest customer records
         /// </summary>

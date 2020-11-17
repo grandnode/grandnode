@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Grand.Services.Customers
 {
@@ -121,7 +122,7 @@ namespace Grand.Services.Customers
             string firstName = null, string lastName = null,
             string company = null, string phone = null, string zipPostalCode = null,
             bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = 2147483647)
+            int pageIndex = 0, int pageSize = 2147483647, Expression<Func<Customer, object>> orderBySelector = null)
         {
             var query = _customerRepository.Table;
 
@@ -190,7 +191,11 @@ namespace Grand.Services.Customers
                     query.Where(c => c.ShoppingCartItems.Count() > 0);
             }
 
-            query = query.OrderByDescending(c => c.CreatedOnUtc);
+            if(orderBySelector == null)
+                query = query.OrderByDescending(c => c.CreatedOnUtc);
+            else
+                query = query.OrderByDescending(orderBySelector);
+
             return await PagedList<Customer>.Create(query, pageIndex, pageSize);
         }
 
