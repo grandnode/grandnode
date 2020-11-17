@@ -10,6 +10,7 @@ using Grand.Services.Helpers;
 using Grand.Services.Messages;
 using Grand.Services.Tax;
 using Grand.Web.Commands.Models.Customers;
+using Grand.Web.Events;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace Grand.Web.Commands.Handler.Customers
         private readonly IVatService _checkVatService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly IMediator _mediator;
 
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly CustomerSettings _customerSettings;
@@ -40,6 +42,7 @@ namespace Grand.Web.Commands.Handler.Customers
             IVatService checkVatService,
             IWorkflowMessageService workflowMessageService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IMediator mediator,
             DateTimeSettings dateTimeSettings,
             CustomerSettings customerSettings,
             TaxSettings taxSettings,
@@ -52,6 +55,7 @@ namespace Grand.Web.Commands.Handler.Customers
             _checkVatService = checkVatService;
             _workflowMessageService = workflowMessageService;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _mediator = mediator;
             _dateTimeSettings = dateTimeSettings;
             _customerSettings = customerSettings;
             _taxSettings = taxSettings;
@@ -107,6 +111,9 @@ namespace Grand.Web.Commands.Handler.Customers
 
             //save customer attributes
             await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.CustomCustomerAttributes, request.CustomerAttributesXml);
+
+            //notification
+            await _mediator.Publish(new CustomerInfoEvent(request.Customer, request.Model, request.Form, request.CustomerAttributesXml));
 
             return true;
 
