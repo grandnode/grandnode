@@ -1,5 +1,6 @@
 ﻿using Grand.Domain.Catalog;
 using Grand.Domain.Orders;
+using Grand.Domain.Tax;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Customers;
@@ -17,15 +18,18 @@ namespace Grand.Services.Commands.Handlers.Orders
         private readonly ICustomerService _customerService;
         private readonly IProductService _productService;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly TaxSettings _taxSettings;
 
         public ReOrderCommandHandler(
             ICustomerService customerService, 
             IProductService productService, 
-            IShoppingCartService shoppingCartService)
+            IShoppingCartService shoppingCartService,
+            TaxSettings taxSettings)
         {
             _customerService = customerService;
             _productService = productService;
             _shoppingCartService = shoppingCartService;
+            _taxSettings = taxSettings;
         }
 
         public async Task<IList<string>> Handle(ReOrderCommand request, CancellationToken cancellationToken)
@@ -46,7 +50,9 @@ namespace Grand.Services.Commands.Handlers.Orders
                         warnings.AddRange(await _shoppingCartService.AddToCart(customer, orderItem.ProductId,
                             ShoppingCartType.ShoppingCart, request.Order.StoreId, orderItem.WarehouseId,
                             orderItem.AttributesXml, 
-                            product.CustomerEntersPrice ? orderItem.UnitPriceExclTax : (decimal?)default,
+                            product.CustomerEntersPrice ?
+                            _taxSettings.PricesIncludeTax ? orderItem.UnitPriceInclTax : orderItem.UnitPriceExclTax
+                            : (decimal?)default,
                             orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
                             orderItem.Quantity, false));
                     }
