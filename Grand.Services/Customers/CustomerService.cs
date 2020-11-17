@@ -1042,6 +1042,9 @@ namespace Grand.Services.Customers
             var update = updatebuilder.Pull(p => p.Addresses, address);
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", address.CustomerId), update);
 
+            //event notification
+            await _mediator.EntityDeleted(address);
+
         }
 
         public virtual async Task InsertAddress(Address address)
