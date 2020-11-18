@@ -63,12 +63,43 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        public IActionResult Component(string component, object arguments)
+        public IActionResult Component([FromQuery] string name, [FromBody] Dictionary<string, object> arguments)
         {
-            if (string.IsNullOrEmpty(component))
-                return Content("");
 
-            return ViewComponent(component, arguments);
+            /*
+                Sample request:
+                var data = { productThumbPictureSize: 10};
+                    $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: 'Common/Component?Name=HomePageProducts',
+                            contentType: "application/json",
+                            data: JSON.stringify(data)
+                        }).done(function (data) {
+                            console.log(data)
+                    });
+             */
+
+            if (string.IsNullOrEmpty(name))
+                return Content("");
+            if (arguments != null)
+            {
+                var args = new Dictionary<string, object>();
+                foreach (var arg in arguments)
+                {
+                    var key = arg.Key;
+                    var value = arg.Value;
+                    if (arg.Value is long)
+                    {
+                        int.TryParse(arg.Value.ToString(), out var parsevalue);
+                        args.Add(key, parsevalue);
+                    }
+                    else
+                        args.Add(key, value);
+                }
+                return ViewComponent(name, args);
+            }
+            return ViewComponent(name);
         }
 
         //page not found
