@@ -17,6 +17,7 @@
     var logoPicture = await _pictureService.GetPictureById(_pdfSettings.LogoPictureId);
     var logoExists = logoPicture != null;
     var companyName = _storeContext.CurrentStore.CompanyName;
+    var limitbyVendor = _workContext.CurrentVendor != null;
 }
 <style>
     html {
@@ -165,7 +166,7 @@
                 <th>@(_localizationService.GetResource("PDFInvoice.ProductQuantity", order.CustomerLanguageId))</th>
                 <th>@(_localizationService.GetResource("PDFInvoice.ProductTotal", order.CustomerLanguageId))</th>
             </tr>
-            @foreach (var item in order.OrderItems)
+            @foreach (var item in order.OrderItems.Where(x => x.VendorId == _workContext.CurrentVendor?.Id || !limitbyVendor).ToList())
             {
                 <tr>
                     <td>
@@ -182,41 +183,43 @@
                 </tr>
             }
         </table>
-
-        <div class="summary">
-            <hr />
-            <div class="right">
-                <ul>
-                    <li>@(_localizationService.GetResource("PDFInvoice.Sub-Total", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
-                    @if (order.OrderSubTotalDiscountInclTax > decimal.Zero)
-                    {
-                        <li>@(_localizationService.GetResource("PDFInvoice.Discount", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
-                    }
-                    @if (order.PaymentMethodAdditionalFeeInclTax > decimal.Zero)
-                    {
-                        <li>@(_localizationService.GetResource("PDFInvoice.PaymentmethodAdditionalFee", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
-                    }
-                    <li>@(_localizationService.GetResource("PDFInvoice.Shipping", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
-                    @if (order.OrderDiscount > decimal.Zero)
-                    {
-                        <li>@(_localizationService.GetResource("PDFInvoice.Discount", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
-                    }
-                    @foreach (var gcuh in await _giftCardService.GetAllGiftCardUsageHistory(order.Id))
-                    {
-                        if (gcuh.UsedValue > decimal.Zero)
+        @if (!limitbyVendor)
+        {
+            <div class="summary">
+                <hr />
+                <div class="right">
+                    <ul>
+                        <li>@(_localizationService.GetResource("PDFInvoice.Sub-Total", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
+                        @if (order.OrderSubTotalDiscountInclTax > decimal.Zero)
                         {
-                            var giftcard = await _giftCardService.GetGiftCardById(gcuh.GiftCardId);
-                            <li>@(string.Format(_localizationService.GetResource("PDFInvoice.GiftCardInfo", order.CustomerLanguageId), giftcard.GiftCardCouponCode)) @(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate))</li>
+                            <li>@(_localizationService.GetResource("PDFInvoice.Discount", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
                         }
-                    }
-                    @if (order.OrderTax > decimal.Zero)
-                    {
-                        <li>@(_localizationService.GetResource("PDFInvoice.Tax", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
-                    }
-                    <li>@(_localizationService.GetResource("PDFInvoice.OrderTotal", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
-                </ul>
+                        @if (order.PaymentMethodAdditionalFeeInclTax > decimal.Zero)
+                        {
+                            <li>@(_localizationService.GetResource("PDFInvoice.PaymentmethodAdditionalFee", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
+                        }
+                        <li>@(_localizationService.GetResource("PDFInvoice.Shipping", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
+                        @if (order.OrderDiscount > decimal.Zero)
+                        {
+                            <li>@(_localizationService.GetResource("PDFInvoice.Discount", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
+                        }
+                        @foreach (var gcuh in await _giftCardService.GetAllGiftCardUsageHistory(order.Id))
+                        {
+                            if (gcuh.UsedValue > decimal.Zero)
+                            {
+                                var giftcard = await _giftCardService.GetGiftCardById(gcuh.GiftCardId);
+                                <li>@(string.Format(_localizationService.GetResource("PDFInvoice.GiftCardInfo", order.CustomerLanguageId), giftcard.GiftCardCouponCode)) @(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate))</li>
+                            }
+                        }
+                        @if (order.OrderTax > decimal.Zero)
+                        {
+                            <li>@(_localizationService.GetResource("PDFInvoice.Tax", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
+                        }
+                        <li>@(_localizationService.GetResource("PDFInvoice.OrderTotal", order.CustomerLanguageId)) @(_currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate)) @order.CustomerCurrencyCode</li>
+                    </ul>
+                </div>
             </div>
-        </div>
+        }
         if (!string.IsNullOrEmpty(_pdfSettings.InvoiceFooterText))
         {
             <footer class="footer">
