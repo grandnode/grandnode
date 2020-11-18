@@ -109,6 +109,9 @@ namespace Grand.Services.Messages
                 throw new ArgumentNullException("newsLetterSubscription");
             }
 
+            //get previous newsLetterSubscription record
+            var prevnewsLetterSubscription = await _subscriptionRepository.GetByIdAsync(newsLetterSubscription.Id);
+
             //Handle e-mail
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
@@ -118,6 +121,16 @@ namespace Grand.Services.Messages
             //save history
             await newsLetterSubscription.SaveHistory<NewsLetterSubscription>(_historyService);
 
+            //Publish the un/subscribe event 
+            if (prevnewsLetterSubscription != null)
+            {
+                if (newsLetterSubscription.Active && !prevnewsLetterSubscription.Active)
+                    await PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
+
+                if (!newsLetterSubscription.Active && prevnewsLetterSubscription.Active)
+                    await PublishSubscriptionEvent(newsLetterSubscription.Email, false, publishSubscriptionEvents);
+
+            }
             //Publish event
             await _mediator.EntityUpdated(newsLetterSubscription);
         }
