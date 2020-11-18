@@ -20,6 +20,7 @@
     var logoPicture = await _pictureService.GetPictureById(_pdfSettings.LogoPictureId);
     var logoExists = logoPicture != null;
     var companyName = _storeContext.CurrentStore.CompanyName;
+    var limitbyVendor = _workContext.CurrentVendor != null;
 }
 
 <style>
@@ -145,19 +146,22 @@
                 @foreach (var item in shipment.ShipmentItems)
                 {
                     var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
-                    <tr>
-                        <td>
-                            @((await _productService.GetProductByIdIncludeArch(item.ProductId)).Name)
-                            @if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
-                            {
-                                <br />
-                                <small>@(Html.Raw(orderItem.AttributeDescription))</small>
-                            }
-                        </td>
+                    if (orderItem != null && (orderItem.VendorId == _workContext.CurrentVendor?.Id || !limitbyVendor))
+                    {
+                        <tr>
+                            <td>
+                                @((await _productService.GetProductByIdIncludeArch(item.ProductId)).Name)
+                                @if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
+                                {
+                                    <br />
+                                    <small>@(Html.Raw(orderItem.AttributeDescription))</small>
+                                }
+                            </td>
 
-                        <td>@((await _productService.GetProductByIdIncludeArch(item.ProductId)).Sku)</td>
-                        <td>@item.Quantity</td>
-                    </tr>
+                            <td>@((await _productService.GetProductByIdIncludeArch(item.ProductId)).Sku)</td>
+                            <td>@item.Quantity</td>
+                        </tr>
+                    }
                 }
             </table>
 
