@@ -63,6 +63,14 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
+        public IActionResult Component(string component, object arguments)
+        {
+            if (string.IsNullOrEmpty(component))
+                return Content("");
+
+            return ViewComponent(component, arguments);
+        }
+
         //page not found
         public virtual IActionResult PageNotFound()
         {
