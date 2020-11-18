@@ -57,10 +57,10 @@ status](https://ci.appveyor.com/api/projects/status/ox0qebg3wv3dp30e/branch/deve
 
 GrandNode is an e-commerce platform for developing online stores. It gives you possibility to create highly advanced, good-looking online stores which have unlimited power of customization. 
 
-### The business challenges
+### The store owner challenges
 
 GrandNode was designed to solve the most important business challenges from the world of digital shopping. The goal for us is to provide the platform with:
-* The high performance front-end, rendeded within miliseconds,
+* The high performance front-end, rendered within miliseconds,
 * The high performance application to handle temporary and permanent traffic overloads,
 * Highly advanced e-commerce platform with unlimited possibilities of integration with existing third-party softwares
 * Fast development with modern codebase
