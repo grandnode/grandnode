@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Configuration;
+using Grand.Core.ModelBinding;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
@@ -84,24 +85,24 @@ namespace Grand.Web.Controllers
 
             if (string.IsNullOrEmpty(name))
                 return Content("");
-            if (arguments != null)
-            {
-                var args = new Dictionary<string, object>();
-                foreach (var arg in arguments)
-                {
-                    var key = arg.Key;
-                    var value = arg.Value;
-                    if (arg.Value is long)
-                    {
-                        int.TryParse(arg.Value.ToString(), out var parsevalue);
-                        args.Add(key, parsevalue);
-                    }
-                    else
-                        args.Add(key, value);
-                }
-                return ViewComponent(name, args);
-            }
-            return ViewComponent(name);
+            //if (arguments != null)
+            //{
+            //    var args = new Dictionary<string, object>();
+            //    foreach (var arg in arguments)
+            //    {
+            //        var key = arg.Key;
+            //        var value = arg.Value;
+            //        if (arg.Value is long)
+            //        {
+            //            int.TryParse(arg.Value.ToString(), out var parsevalue);
+            //            args.Add(key, parsevalue);
+            //        }
+            //        else
+            //            args.Add(key, value);
+            //    }
+            //    return ViewComponent(name, args);
+            //}
+            return ViewComponent(name, arguments);
         }
 
         //page not found

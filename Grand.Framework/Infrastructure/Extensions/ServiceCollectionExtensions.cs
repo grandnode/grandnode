@@ -246,6 +246,10 @@ namespace Grand.Framework.Infrastructure.Extensions
             {
                 //add custom display metadata provider
                 options.ModelMetadataDetailsProviders.Add(new GrandMetadataProvider());
+
+                //add binder provider for the type Dictionary String Object
+                options.ModelBinderProviders.Insert(0, new DictionaryStringObjectModelBinderProvider());
+
                 //for API - ignore for PWA
                 options.Conventions.Add(new ApiExplorerIgnores());
             });
