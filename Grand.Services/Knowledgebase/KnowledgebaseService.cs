@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Security;
 
 namespace Grand.Services.Knowledgebase
 {
@@ -109,6 +110,7 @@ namespace Grand.Services.Knowledgebase
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IRepository<KnowledgebaseArticleComment> _articleCommentRepository;
+        private readonly IPermissionService _permissionService;
 
         /// <summary>
         /// Ctor
@@ -119,7 +121,7 @@ namespace Grand.Services.Knowledgebase
         public KnowledgebaseService(IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
             IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IMediator mediator, CommonSettings commonSettings,
             CatalogSettings catalogSettings, IWorkContext workContext, ICacheManager cacheManager, IStoreContext storeContext,
-            IRepository<KnowledgebaseArticleComment> articleCommentRepository)
+            IRepository<KnowledgebaseArticleComment> articleCommentRepository, IPermissionService permissionService)
         {
             _knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
             _knowledgebaseArticleRepository = knowledgebaseArticleRepository;
@@ -130,6 +132,7 @@ namespace Grand.Services.Knowledgebase
             _cacheManager = cacheManager;
             _storeContext = storeContext;
             _articleCommentRepository = articleCommentRepository;
+            _permissionService = permissionService;
         }
 
         /// <summary>
@@ -252,7 +255,12 @@ namespace Grand.Services.Knowledgebase
         {
             var builder = Builders<KnowledgebaseArticle>.Filter;
             var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
-            filter &= builder.Where(x => x.Published);
+            var customer = _workContext.CurrentCustomer;
+            var gotACL = false;
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && await _permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase, customer))
+                gotACL = true;
+            if(!gotACL)
+                filter &= builder.Where(x => x.Published);
 
             if (!_catalogSettings.IgnoreAcl)
             {

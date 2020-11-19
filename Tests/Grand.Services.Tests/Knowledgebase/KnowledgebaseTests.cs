@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Security;
 
 namespace Grand.Services.Tests.Knowledgebase
 {
@@ -33,6 +34,7 @@ namespace Grand.Services.Tests.Knowledgebase
         private IStoreContext _storeContext;
         private CommonSettings _commonSettings;
         private CatalogSettings _catalogSettings;
+        private IPermissionService _permissionService;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -65,11 +67,14 @@ namespace Grand.Services.Tests.Knowledgebase
             var commonSettings = new Mock<CommonSettings>();
             _commonSettings = commonSettings.Object;
 
+            var permissionService = new Mock<IPermissionService>();
+            _permissionService = permissionService.Object;
+
             var _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
             
 
             _knowledgebaseService = new KnowledgebaseService(_categoryRepository, _articleRepository, _eventPublisher, _commonSettings, _catalogSettings,
-                _workContext, _cacheManager, _storeContext, _articleCommentRepository);
+                _workContext, _cacheManager, _storeContext, _articleCommentRepository, _permissionService);
         }
 
         [TestMethod()]
