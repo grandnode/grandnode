@@ -34,7 +34,7 @@ namespace Grand.Services.Tests.Knowledgebase
         private IStoreContext _storeContext;
         private CommonSettings _commonSettings;
         private CatalogSettings _catalogSettings;
-        private readonly IPermissionService _permissionService;
+        private IPermissionService _permissionService;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -66,6 +66,9 @@ namespace Grand.Services.Tests.Knowledgebase
 
             var commonSettings = new Mock<CommonSettings>();
             _commonSettings = commonSettings.Object;
+
+            var permissionService = new Mock<IPermissionService>();
+            _permissionService = permissionService.Object;
 
             var _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
             
