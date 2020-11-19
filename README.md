@@ -149,7 +149,7 @@ Install GrandNode with one click on [DigitalOcean](https://marketplace.digitaloc
 
 ### Online demo 
 #### Frontend #### 
-[https://demo.grandnode.com/](https://demo.grandnode.com//?utm_source=github&utm_medium=link&utm_campaign=readme)
+[https://demo.grandnode.com/](https://demo.grandnode.com/?utm_source=github&utm_medium=link&utm_campaign=readme)
 
 #### Backend #### 
 [https://demo.grandnode.com/admin](https://demo.grandnode.com/admin/?utm_source=github&utm_medium=link&utm_campaign=readme) 

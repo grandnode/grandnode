@@ -45,12 +45,13 @@ namespace Grand.Web.Controllers
         private readonly CustomerSettings _customerSettings;
         private readonly MediaSettings _mediaSettings;
         private readonly IPictureService _pictureService;
+        private readonly IPermissionService _permissionService;
 
         public KnowledgebaseController(KnowledgebaseSettings knowledgebaseSettings, IKnowledgebaseService knowledgebaseService, IWorkContext workContext,
             IStoreContext storeContext, ICacheManager cacheManager, IAclService aclService, IStoreMappingService storeMappingService, ILocalizationService localizationService,
             CaptchaSettings captchaSettings, LocalizationSettings localizationSettings, IWorkflowMessageService workflowMessageService,
             ICustomerActivityService customerActivityService, IDateTimeHelper dateTimeHelper, CustomerSettings customerSettings,
-            MediaSettings mediaSettings, IPictureService pictureService)
+            MediaSettings mediaSettings, IPictureService pictureService, IPermissionService permissionService)
         {
             _knowledgebaseSettings = knowledgebaseSettings;
             _knowledgebaseService = knowledgebaseService;
@@ -68,6 +69,7 @@ namespace Grand.Web.Controllers
             _customerSettings = customerSettings;
             _mediaSettings = mediaSettings;
             _pictureService = pictureService;
+            _permissionService = permissionService;
         }
 
         public virtual IActionResult List()
@@ -98,6 +100,11 @@ namespace Grand.Web.Controllers
                 SeName = x.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id),
                 IsArticle = true
             }));
+
+            //display "edit" (manage) link
+            var customer = _workContext.CurrentCustomer;
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && await _permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase, customer))
+                DisplayEditLink(Url.Action("EditCategory", "Knowledgebase", new { id = categoryId, area = "Admin" }));
 
             model.CurrentCategoryId = categoryId;
 
@@ -179,6 +186,10 @@ namespace Grand.Web.Controllers
             //Store mapping
             if (!_storeMappingService.Authorize(article))
                 return InvokeHttp404();
+
+            //display "edit" (manage) link
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && await _permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase, customer))
+                DisplayEditLink(Url.Action("EditArticle", "Knowledgebase", new { id = article.Id, area = "Admin" }));
 
             var model = new KnowledgebaseArticleModel();
 
