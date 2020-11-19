@@ -5076,6 +5076,7 @@ namespace Grand.Services.Installation
                 DownloadableProductsValidateUser = true,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
                 GenderEnabled = false,
+                GeoEnabled = false,
                 DateOfBirthEnabled = false,
                 DateOfBirthRequired = false,
                 DateOfBirthMinimumAge = 0,
