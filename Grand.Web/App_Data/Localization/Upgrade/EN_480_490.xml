@@ -74,4 +74,10 @@
   <LocaleResource Name="Admin.GiftCards.Fields.CurrencyCode.Hint">
     <Value>The currency code.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.GeoEnabled">
+    <Value>Geo-coordinates enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.GeoEnabled.Hint">
+    <Value>Check if you want to save the geo coordinates on each customer</Value>
+  </LocaleResource>
 </Language>

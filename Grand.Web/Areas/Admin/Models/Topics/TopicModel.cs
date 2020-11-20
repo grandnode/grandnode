@@ -5,6 +5,7 @@ using Grand.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using Grand.Framework.Mvc.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Topics
 {
@@ -55,6 +56,7 @@ namespace Grand.Web.Areas.Admin.Models.Topics
         public bool Published { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.Password")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.URL")]
