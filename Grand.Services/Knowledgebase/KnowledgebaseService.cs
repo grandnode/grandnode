@@ -1,9 +1,9 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Domain;
-using Grand.Domain.Data;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
+using Grand.Domain.Data;
 using Grand.Domain.Knowledgebase;
 using Grand.Services.Customers;
 using Grand.Services.Events;
@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Grand.Services.Security;
 
 namespace Grand.Services.Knowledgebase
 {
@@ -103,36 +102,38 @@ namespace Grand.Services.Knowledgebase
 
         private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
         private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
+        private readonly IRepository<KnowledgebaseArticleComment> _articleCommentRepository;
         private readonly IMediator _mediator;
-        private readonly CommonSettings _commonSettings;
-        private readonly CatalogSettings _catalogSettings;
         private readonly IWorkContext _workContext;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
-        private readonly IRepository<KnowledgebaseArticleComment> _articleCommentRepository;
-        private readonly IPermissionService _permissionService;
+        private readonly CommonSettings _commonSettings;
+        private readonly CatalogSettings _catalogSettings;
 
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="knowledgebaseCategoryRepository"></param>
-        /// <param name="knowledgebaseArticleRepository"></param>
-        /// <param name="mediator">Mediator</param>
-        public KnowledgebaseService(IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
-            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IMediator mediator, CommonSettings commonSettings,
-            CatalogSettings catalogSettings, IWorkContext workContext, ICacheManager cacheManager, IStoreContext storeContext,
-            IRepository<KnowledgebaseArticleComment> articleCommentRepository, IPermissionService permissionService)
+        public KnowledgebaseService
+            (IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
+            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository,
+            IRepository<KnowledgebaseArticleComment> articleCommentRepository,
+            IMediator mediator,
+            IWorkContext workContext,
+            ICacheManager cacheManager,
+            IStoreContext storeContext,
+            CommonSettings commonSettings,
+            CatalogSettings catalogSettings
+            )
         {
             _knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
             _knowledgebaseArticleRepository = knowledgebaseArticleRepository;
+            _articleCommentRepository = articleCommentRepository;
             _mediator = mediator;
-            _commonSettings = commonSettings;
-            _catalogSettings = catalogSettings;
             _workContext = workContext;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
-            _articleCommentRepository = articleCommentRepository;
-            _permissionService = permissionService;
+            _commonSettings = commonSettings;
+            _catalogSettings = catalogSettings;
         }
 
         /// <summary>
@@ -191,20 +192,20 @@ namespace Grand.Services.Knowledgebase
             {
                 var builder = Builders<KnowledgebaseCategory>.Filter;
                 var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
-                filter = filter & builder.Where(x => x.Published);
-                filter = filter & builder.Where(x => x.Id == id);
+                filter &= builder.Where(x => x.Published);
+                filter &= builder.Where(x => x.Id == id);
 
                 if (!_catalogSettings.IgnoreAcl)
                 {
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-                    filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+                    filter &= (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
                 }
 
                 if (!_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
                     var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
-                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
+                    filter &= (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                 }
 
                 var toReturn = _knowledgebaseCategoryRepository.Collection.Find(filter);
@@ -220,9 +221,12 @@ namespace Grand.Services.Knowledgebase
         {
             kc.CreatedOnUtc = DateTime.UtcNow;
             kc.UpdatedOnUtc = DateTime.UtcNow;
+
             await _knowledgebaseCategoryRepository.InsertAsync(kc);
+
             await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
+
             await _mediator.EntityInserted(kc);
         }
 
@@ -256,11 +260,6 @@ namespace Grand.Services.Knowledgebase
             var builder = Builders<KnowledgebaseArticle>.Filter;
             var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
             var customer = _workContext.CurrentCustomer;
-            var gotACL = false;
-            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && await _permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase, customer))
-                gotACL = true;
-            if(!gotACL)
-                filter &= builder.Where(x => x.Published);
 
             if (!_catalogSettings.IgnoreAcl)
             {

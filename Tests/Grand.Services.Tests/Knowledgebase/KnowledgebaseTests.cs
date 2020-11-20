@@ -1,15 +1,14 @@
 ﻿using Grand.Core;
-using Grand.Core.Caching;
-using Grand.Domain.Data;
+using Grand.Core.Tests.Caching;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
+using Grand.Domain.Data;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.Localization;
 using Grand.Domain.Stores;
-using Grand.Core.Tests.Caching;
-using Grand.Services.Events;
 using Grand.Services.Knowledgebase;
+using Grand.Services.Security;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Grand.Services.Security;
 
 namespace Grand.Services.Tests.Knowledgebase
 {
@@ -71,10 +69,10 @@ namespace Grand.Services.Tests.Knowledgebase
             _permissionService = permissionService.Object;
 
             var _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
-            
 
-            _knowledgebaseService = new KnowledgebaseService(_categoryRepository, _articleRepository, _eventPublisher, _commonSettings, _catalogSettings,
-                _workContext, _cacheManager, _storeContext, _articleCommentRepository, _permissionService);
+
+            _knowledgebaseService = new KnowledgebaseService(_categoryRepository, _articleRepository, _articleCommentRepository, _eventPublisher,
+                _workContext, _cacheManager, _storeContext, _commonSettings, _catalogSettings);
         }
 
         [TestMethod()]
@@ -82,8 +80,7 @@ namespace Grand.Services.Tests.Knowledgebase
         {
             DateTime date = DateTime.UtcNow;
 
-            await _knowledgebaseService.InsertKnowledgebaseArticle(new KnowledgebaseArticle
-            {
+            await _knowledgebaseService.InsertKnowledgebaseArticle(new KnowledgebaseArticle {
                 Content = "Content",
                 CustomerRoles = new List<string> { "Role" },
                 DisplayOrder = 1,
@@ -135,8 +132,7 @@ namespace Grand.Services.Tests.Knowledgebase
         {
             DateTime date = DateTime.UtcNow;
 
-            await _knowledgebaseService.InsertKnowledgebaseCategory(new KnowledgebaseCategory
-            {
+            await _knowledgebaseService.InsertKnowledgebaseCategory(new KnowledgebaseCategory {
                 CustomerRoles = new List<string> { "Role" },
                 DisplayOrder = 1,
                 LimitedToStores = true,
@@ -443,22 +439,19 @@ namespace Grand.Services.Tests.Knowledgebase
         {
             ClearArticleRepository();
 
-            var article1 = new KnowledgebaseArticle
-            {
+            var article1 = new KnowledgebaseArticle {
                 Name = "CanGetPublicKnowledgebaseArticlesByCategory1",
                 Published = true,
                 ParentCategoryId = "CanGetPublicKnowledgebaseArticlesByCategory1"
             };
 
-            var article2 = new KnowledgebaseArticle
-            {
+            var article2 = new KnowledgebaseArticle {
                 Name = "CanGetPublicKnowledgebaseArticlesByCategory2",
                 Published = true,
                 ParentCategoryId = "CanGetPublicKnowledgebaseArticlesByCategory1"
             };
 
-            var article3 = new KnowledgebaseArticle
-            {
+            var article3 = new KnowledgebaseArticle {
                 Name = "CanGetPublicKnowledgebaseArticlesByCategory3",
                 Published = true,
                 ParentCategoryId = "CanGetPublicKnowledgebaseArticlesByCategory3"
@@ -481,21 +474,18 @@ namespace Grand.Services.Tests.Knowledgebase
         {
             ClearArticleRepository();
 
-            var article1 = new KnowledgebaseArticle
-            {
+            var article1 = new KnowledgebaseArticle {
                 Name = "CanGetPublicKnowledgebaseArticlesByKeyword1",
                 Published = true,
             };
 
-            var article2 = new KnowledgebaseArticle
-            {
+            var article2 = new KnowledgebaseArticle {
                 Name = "test",
                 Content = "CanGetPublicKnowledgebaseArticlesByKeyword2",
                 Published = true,
             };
 
-            var article3 = new KnowledgebaseArticle
-            {
+            var article3 = new KnowledgebaseArticle {
                 Name = "Tomato",
                 Content = "Tomato",
                 Published = true,
@@ -518,20 +508,17 @@ namespace Grand.Services.Tests.Knowledgebase
         {
             ClearArticleRepository();
 
-            var article = new KnowledgebaseArticle
-            {
+            var article = new KnowledgebaseArticle {
                 Name = "CanGetRelatedKnowledgebaseArticlesMain",
                 Published = true
             };
 
-            var related1 = new KnowledgebaseArticle
-            {
+            var related1 = new KnowledgebaseArticle {
                 Name = "CanGetRelatedKnowledgebaseArticlesRelated1",
                 Published = true
             };
 
-            var related2 = new KnowledgebaseArticle
-            {
+            var related2 = new KnowledgebaseArticle {
                 Name = "CanGetRelatedKnowledgebaseArticlesRelated2",
                 Published = true
             };
@@ -547,8 +534,8 @@ namespace Grand.Services.Tests.Knowledgebase
             var found = await _knowledgebaseService.GetRelatedKnowledgebaseArticles(article.Id);
 
             Assert.AreEqual(2, found.Count);
-            Assert.AreEqual(true, found.Any(x=>x.Name == "CanGetRelatedKnowledgebaseArticlesRelated1"));
-            Assert.AreEqual(true, found.Any(x=>x.Name == "CanGetRelatedKnowledgebaseArticlesRelated2"));
+            Assert.AreEqual(true, found.Any(x => x.Name == "CanGetRelatedKnowledgebaseArticlesRelated1"));
+            Assert.AreEqual(true, found.Any(x => x.Name == "CanGetRelatedKnowledgebaseArticlesRelated2"));
         }
     }
 }
