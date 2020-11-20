@@ -206,9 +206,11 @@ namespace Grand.Web.Controllers
             model.SeName = article.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id);
             model.AllowComments = article.AllowComments;
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnArticleCommentPage;
-            model.MetaTitle = article.MetaTitle;
-            model.MetaDescription = article.MetaDescription;
-            model.MetaKeywords = article.MetaKeywords;
+
+            model.MetaTitle = article.GetLocalized(y => y.MetaTitle, _workContext.WorkingLanguage.Id);
+            model.MetaDescription = article.GetLocalized(y => y.MetaDescription, _workContext.WorkingLanguage.Id);
+            model.MetaKeywords = article.GetLocalized(y => y.MetaKeywords, _workContext.WorkingLanguage.Id);
+
             var articleComments = await _knowledgebaseService.GetArticleCommentsByArticleId(article.Id);
             foreach (var ac in articleComments)
             {
