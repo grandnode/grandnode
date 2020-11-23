@@ -20,7 +20,6 @@ using Grand.Domain.Messages;
 using Grand.Domain.News;
 using Grand.Domain.Orders;
 using Grand.Domain.Payments;
-using Grand.Domain.Polls;
 using Grand.Domain.PushNotifications;
 using Grand.Domain.Security;
 using Grand.Domain.Seo;
@@ -105,7 +104,6 @@ namespace Grand.Services.Installation
         private readonly IRepository<Topic> _topicRepository;
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<NewsLetterSubscription> _newslettersubscriptionRepository;
-        private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
@@ -196,7 +194,6 @@ namespace Grand.Services.Installation
             _productReviewRepository = serviceProvider.GetRequiredService<IRepository<ProductReview>>();
             _newsItemRepository = serviceProvider.GetRequiredService<IRepository<NewsItem>>();
             _newslettersubscriptionRepository = serviceProvider.GetRequiredService<IRepository<NewsLetterSubscription>>();
-            _pollRepository = serviceProvider.GetRequiredService<IRepository<Poll>>();
             _shippingMethodRepository = serviceProvider.GetRequiredService<IRepository<ShippingMethod>>();
             _deliveryDateRepository = serviceProvider.GetRequiredService<IRepository<DeliveryDate>>();
             _activityLogTypeRepository = serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
@@ -9644,41 +9641,6 @@ namespace Grand.Services.Installation
 
         }
 
-        protected virtual async Task InstallPolls()
-        {
-            var defaultLanguage = _languageRepository.Table.FirstOrDefault();
-            var poll1 = new Poll {
-                Name = "Do you like Grandnode for MongoDB?",
-                SystemKeyword = "",
-                Published = true,
-                ShowOnHomePage = true,
-                DisplayOrder = 1,
-            };
-            poll1.PollAnswers.Add(new PollAnswer {
-                Name = "Like very much",
-                DisplayOrder = 1,
-            });
-            poll1.PollAnswers.Add(new PollAnswer {
-                Name = "Like",
-                DisplayOrder = 2,
-            });
-            poll1.PollAnswers.Add(new PollAnswer {
-                Name = "Neither Like nor Dislike",
-                DisplayOrder = 3,
-            });
-            poll1.PollAnswers.Add(new PollAnswer {
-                Name = "Dislike",
-                DisplayOrder = 4,
-
-            });
-            poll1.PollAnswers.Add(new PollAnswer {
-                Name = "Dislike very much",
-                DisplayOrder = 5,
-
-            });
-            await _pollRepository.InsertAsync(poll1);
-        }
-
         protected virtual async Task InstallActivityLogTypes()
         {
             var activityLogTypes = new List<ActivityLogType>
@@ -10934,7 +10896,6 @@ namespace Grand.Services.Installation
                 await InstallDiscounts();
                 await InstallBlogPosts();
                 await InstallNews();
-                await InstallPolls();
                 await InstallWarehouses();
                 await InstallPickupPoints();
                 await InstallVendors();
