@@ -444,7 +444,6 @@ namespace Grand.Services.Catalog
 
             //cache
             await _cacheManager.RemoveByPrefix(CacheKey.CATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTCATEGORIES_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
 
             //event notification
@@ -478,7 +477,6 @@ namespace Grand.Services.Catalog
 
             //cache
             await _cacheManager.RemoveByPrefix(CacheKey.CATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTCATEGORIES_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
 
             //event notification
@@ -499,7 +497,6 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productCategory.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.CATEGORIES_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTCATEGORIES_PATTERN_KEY);
             await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
@@ -583,7 +580,6 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productCategory.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.CATEGORIES_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTCATEGORIES_PATTERN_KEY);
             await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
@@ -611,7 +607,6 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.CATEGORIES_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTCATEGORIES_PATTERN_KEY);
             await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
