@@ -144,7 +144,7 @@ namespace Grand.Services.Media
         protected virtual Task DeletePictureThumbs(Picture picture)
         {
             string filter = string.Format("{0}*.*", picture.Id);
-            var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "content/images/thumbs");
+            var thumbDirectoryPath = Path.Combine(GetPictureLocalPath(), "/thumbs");
             string[] currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
             foreach (string currentFileName in currentFiles)
             {
@@ -165,7 +165,7 @@ namespace Grand.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected virtual string GetThumbLocalPath(string thumbFileName)
         {
-            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "content/images/thumbs");
+            var thumbsDirectoryPath = Path.Combine(GetPictureLocalPath(), "/thumbs");
             if (_mediaSettings.MultipleThumbDirectories)
             {
                 //get the first two letters of the file name
@@ -198,6 +198,7 @@ namespace Grand.Services.Media
                                     _storeContext.CurrentStore.SslEnabled ? _storeContext.CurrentStore.SecureUrl : _storeContext.CurrentStore.Url :
                                     _mediaSettings.StoreLocation;
 
+            //TODO: THIS ONE SHOULD BE CHANGED ALSO
             var url = storeLocation + "content/images/thumbs/";
 
             if (_mediaSettings.MultipleThumbDirectories)
@@ -222,7 +223,17 @@ namespace Grand.Services.Media
         /// <returns>Local picture path</returns>
         protected virtual string GetPictureLocalPath(string fileName)
         {
-            return Path.Combine(_hostingEnvironment.WebRootPath, "content/images", fileName);
+            return Path.Combine(GetPictureLocalPath(), fileName);
+        }
+
+        protected virtual string GetPictureLocalPath()
+        {
+            if (string.IsNullOrEmpty(_mediaSettings.PhysicalPath))
+            {
+                return Path.Combine(_hostingEnvironment.WebRootPath,"content/images");
+            }
+
+            return Path.Combine(_mediaSettings.PhysicalPath, "content/images");
         }
 
         /// <summary>
@@ -242,7 +253,6 @@ namespace Grand.Services.Media
 
             return result;
         }
-
 
 
         /// <summary>
@@ -267,7 +277,6 @@ namespace Grand.Services.Media
             File.WriteAllBytes(thumbFilePath, binary ?? new byte[0]);
             return Task.CompletedTask;
         }
-
 
         #endregion
 
@@ -308,11 +317,13 @@ namespace Grand.Services.Media
             switch (defaultPictureType)
             {
                 case PictureType.Avatar:
-                    defaultImageFileName = _settingService.GetSettingByKey("Media.Customer.DefaultAvatarImageName", "default-avatar.jpg");
+                    defaultImageFileName = _settingService.GetSettingByKey("Media.Customer.DefaultAvatarImageName",
+                        "default-avatar.jpg");
                     break;
                 case PictureType.Entity:
                 default:
-                    defaultImageFileName = _settingService.GetSettingByKey("Media.DefaultImageName", "default-image.png");
+                    defaultImageFileName =
+                        _settingService.GetSettingByKey("Media.DefaultImageName", "default-image.png");
                     break;
             }
 
@@ -322,14 +333,17 @@ namespace Grand.Services.Media
             {
                 return "";
             }
+
             if (targetSize == 0)
             {
+                //TODO: THIS ONE SHOULD BE CHANGED ALSO
                 return !string.IsNullOrEmpty(storeLocation)
-                        ? storeLocation
-                        : string.IsNullOrEmpty(_mediaSettings.StoreLocation) ?
-                        _storeContext.CurrentStore.SslEnabled ? _storeContext.CurrentStore.SecureUrl : _storeContext.CurrentStore.Url :
-                        _mediaSettings.StoreLocation
-                        + "content/images/" + defaultImageFileName;
+                    ? storeLocation
+                    : string.IsNullOrEmpty(_mediaSettings.StoreLocation)
+                        ? _storeContext.CurrentStore.SslEnabled ? _storeContext.CurrentStore.SecureUrl :
+                        _storeContext.CurrentStore.Url
+                        : _mediaSettings.StoreLocation
+                          + "content/images/" + defaultImageFileName;
             }
             else
             {
@@ -352,8 +366,10 @@ namespace Grand.Services.Media
                         var pictureBinary = ApplyResize(image, EncodedImageFormat(fileExtension), targetSize);
                         await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                     }
+
                     mutex.ReleaseMutex();
                 }
+
                 var url = GetThumbUrl(thumbFileName, storeLocation);
                 return url;
             }
@@ -374,7 +390,8 @@ namespace Grand.Services.Media
             string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
-            var pictureKey = string.Format(PICTURE_BY_KEY, pictureId, _storeContext.CurrentStore?.Id, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
+            var pictureKey = string.Format(PICTURE_BY_KEY, pictureId, _storeContext.CurrentStore?.Id, targetSize,
+                showDefaultPicture, storeLocation, defaultPictureType);
             return await _cacheManager.GetAsync(pictureKey, async () =>
             {
                 var picture = await GetPictureById(pictureId);
@@ -399,7 +416,9 @@ namespace Grand.Services.Media
         {
             if (picture == null)
             {
-                return showDefaultPicture ? await GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation) : string.Empty;
+                return showDefaultPicture
+                    ? await GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation)
+                    : string.Empty;
             }
 
             byte[] pictureBinary = null;
@@ -430,9 +449,9 @@ namespace Grand.Services.Media
 
             if (targetSize == 0)
             {
-                thumbFileName = !string.IsNullOrEmpty(seoFileName) ?
-                    string.Format("{0}_{1}.{2}", picture.Id, seoFileName, lastPart) :
-                    string.Format("{0}.{1}", picture.Id, lastPart);
+                thumbFileName = !string.IsNullOrEmpty(seoFileName)
+                    ? string.Format("{0}_{1}.{2}", picture.Id, seoFileName, lastPart)
+                    : string.Format("{0}.{1}", picture.Id, lastPart);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
 
                 if (await GeneratedThumbExists(thumbFilePath, thumbFileName))
@@ -451,9 +470,9 @@ namespace Grand.Services.Media
             }
             else
             {
-                thumbFileName = !string.IsNullOrEmpty(seoFileName) ?
-                    string.Format("{0}_{1}_{2}.{3}", picture.Id, seoFileName, targetSize, lastPart) :
-                    string.Format("{0}_{1}.{2}", picture.Id, targetSize, lastPart);
+                thumbFileName = !string.IsNullOrEmpty(seoFileName)
+                    ? string.Format("{0}_{1}_{2}.{3}", picture.Id, seoFileName, targetSize, lastPart)
+                    : string.Format("{0}_{1}.{2}", picture.Id, targetSize, lastPart);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
 
                 if (await GeneratedThumbExists(thumbFilePath, thumbFileName))
@@ -475,11 +494,13 @@ namespace Grand.Services.Media
                         }
                         catch { }
                     }
+
                     await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
 
                     mutex.ReleaseMutex();
                 }
             }
+
             return GetThumbUrl(thumbFileName, storeLocation);
         }
 
@@ -490,7 +511,8 @@ namespace Grand.Services.Media
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <returns></returns>
-        public virtual async Task<string> GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true)
+        public virtual async Task<string> GetThumbLocalPath(Picture picture, int targetSize = 0,
+            bool showDefaultPicture = true)
         {
             string url = await GetPictureUrl(picture, targetSize, showDefaultPicture);
             if (string.IsNullOrEmpty(url))
@@ -512,7 +534,10 @@ namespace Grand.Services.Media
         {
             var query = _pictureRepository.Table
                 .Where(p => p.Id == pictureId)
-                .Select(p => new Picture { Id = p.Id, AltAttribute = p.AltAttribute, IsNew = p.IsNew, MimeType = p.MimeType, SeoFilename = p.SeoFilename, TitleAttribute = p.TitleAttribute });
+                .Select(p => new Picture {
+                    Id = p.Id, AltAttribute = p.AltAttribute, IsNew = p.IsNew, MimeType = p.MimeType,
+                    SeoFilename = p.SeoFilename, TitleAttribute = p.TitleAttribute
+                });
             return query.FirstOrDefaultAsync();
         }
 
@@ -558,12 +583,12 @@ namespace Grand.Services.Media
         }
 
         /// <summary>
-        /// Clears only physical Picture files located at ~/wwwroot/content/images/thumbs/, it won't affect Pictures stored in database
+        /// Clears only physical Picture files located at GetPictureLocalPath()/thumbs/, it won't affect Pictures stored in database
         /// </summary>
         public virtual async Task ClearThumbs()
         {
             const string searchPattern = "*.*";
-            string path = Path.Combine(_hostingEnvironment.WebRootPath, "content/images/thumbs");
+            string path = Path.Combine(GetPictureLocalPath(), "/thumbs");
 
             if (!System.IO.Directory.Exists(path))
                 return;
@@ -581,6 +606,7 @@ namespace Grand.Services.Media
                     _logger.Error(ex.Message, ex);
                 }
             }
+
             await Task.CompletedTask;
         }
 
@@ -593,8 +619,8 @@ namespace Grand.Services.Media
         public virtual IPagedList<Picture> GetPictures(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from p in _pictureRepository.Table
-                        orderby p.Id descending
-                        select p;
+                orderby p.Id descending
+                select p;
             var pictures = new PagedList<Picture>(query, pageIndex, pageSize);
             return pictures;
         }
@@ -747,6 +773,7 @@ namespace Grand.Services.Media
                     true,
                     false);
             }
+
             return picture;
         }
 
@@ -768,7 +795,8 @@ namespace Grand.Services.Media
                         if (image.Width >= image.Height)
                         {
                             //horizontal rectangle or square
-                            if (image.Width > _mediaSettings.MaximumImageSize && image.Height > _mediaSettings.MaximumImageSize)
+                            if (image.Width > _mediaSettings.MaximumImageSize &&
+                                image.Height > _mediaSettings.MaximumImageSize)
                                 byteArray = ApplyResize(image, format, _mediaSettings.MaximumImageSize);
                         }
                         else if (image.Width < image.Height)
@@ -777,6 +805,7 @@ namespace Grand.Services.Media
                             if (image.Width > _mediaSettings.MaximumImageSize)
                                 byteArray = ApplyResize(image, format, _mediaSettings.MaximumImageSize);
                         }
+
                         return byteArray;
                     }
                 }
@@ -786,6 +815,7 @@ namespace Grand.Services.Media
                 return byteArray;
             }
         }
+
         protected SKEncodedImageFormat EncodedImageFormat(string mimetype)
         {
             SKEncodedImageFormat defaultFormat = SKEncodedImageFormat.Jpeg;
@@ -817,8 +847,8 @@ namespace Grand.Services.Media
                 return SKEncodedImageFormat.Ico;
 
             return defaultFormat;
-
         }
+
         protected byte[] ApplyResize(SKBitmap image, SKEncodedImageFormat format, int targetSize)
         {
             if (image == null)
@@ -828,6 +858,7 @@ namespace Grand.Services.Media
             {
                 targetSize = 800;
             }
+
             float width, height;
             if (image.Height > image.Width)
             {
@@ -847,6 +878,7 @@ namespace Grand.Services.Media
                 width = image.Width;
                 height = image.Height;
             }
+
             try
             {
                 using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.Medium))
@@ -861,10 +893,8 @@ namespace Grand.Services.Media
             {
                 return image.Bytes;
             }
-
         }
 
         #endregion
-
     }
 }
