@@ -5,13 +5,13 @@
     ViewBag.Title = T("Admin.System.CustomJs").Text;
 }
 @{
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/codemirror.js", excludeFromBundle: true);
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/mode/javascript/javascript.js", excludeFromBundle: true);
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/hint/show-hint.js", excludeFromBundle: true);
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/hint/javascript-hint.js", excludeFromBundle: true);
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/edit/matchbrackets.js", excludeFromBundle: true);
-    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/codemirror/codemirror.css", excludeFromBundle: true);
-    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/codemirror/hint/show-hint.css", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/administration/codemirror/codemirror.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/administration/codemirror/mode/javascript/javascript.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/administration/codemirror/hint/show-hint.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/administration/codemirror/hint/javascript-hint.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/administration/codemirror/edit/matchbrackets.js", excludeFromBundle: true);
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/administration/codemirror/codemirror.css", excludeFromBundle: true);
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/administration/codemirror/hint/show-hint.css", excludeFromBundle: true);
 }
 <style>
     .CodeMirror {

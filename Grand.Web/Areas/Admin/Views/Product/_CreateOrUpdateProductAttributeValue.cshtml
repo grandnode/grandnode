@@ -2,8 +2,8 @@
 @model ProductModel.ProductAttributeValueModel
 @inject IPageHeadBuilder pagebuilder
 @{
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/scripts/farbtastic.js", excludeFromBundle: true);
-    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/farbtastic/farbtastic.css", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/administration/farbtastic/farbtastic.js", excludeFromBundle: true);
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/administration/farbtastic/farbtastic.css", excludeFromBundle: true);
 }
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
