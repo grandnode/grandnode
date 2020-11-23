@@ -35,12 +35,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <summary>
         /// Path to directory of language files
         /// </summary>
-        private const string LANGUAGE_DIRECTORY = "/content/roxy_fileman/lang";
+        private const string LANGUAGE_DIRECTORY = "/administration/roxy_fileman/lang";
 
         /// <summary>
         /// Path to configuration file
         /// </summary>
-        private const string CONFIGURATION_FILE = "/content/roxy_fileman/conf.json";
+        private const string CONFIGURATION_FILE = "/administration/roxy_fileman/conf.json";
 
         #endregion
 
