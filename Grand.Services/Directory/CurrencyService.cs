@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Directory
 {
@@ -20,35 +21,6 @@ namespace Grand.Services.Directory
     /// </summary>
     public partial class CurrencyService : ICurrencyService
     {
-        #region Constants
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : currency ID
-        /// </remarks>
-        private const string CURRENCIES_BY_ID_KEY = "Grand.currency.id-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : currency code
-        /// </remarks>
-        private const string CURRENCIES_BY_CODE = "Grand.currency.code-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// </remarks>
-        private const string CURRENCIES_ALL_KEY = "Grand.currency.all-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CURRENCIES_PATTERN_KEY = "Grand.currency.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Currency> _currencyRepository;
@@ -116,7 +88,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.DeleteAsync(currency);
 
-            await _cacheManager.RemoveByPrefix(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(currency);
@@ -129,7 +101,7 @@ namespace Grand.Services.Directory
         /// <returns>Currency</returns>
         public virtual Task<Currency> GetCurrencyById(string currencyId)
         {
-            string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
+            string key = string.Format(CacheKey.CURRENCIES_BY_ID_KEY, currencyId);
             return _cacheManager.GetAsync(key, () => _currencyRepository.GetByIdAsync(currencyId));
         }
 
@@ -167,7 +139,7 @@ namespace Grand.Services.Directory
             if (string.IsNullOrEmpty(currencyCode))
                 return null;
 
-            var key = string.Format(CURRENCIES_BY_CODE, currencyCode);
+            var key = string.Format(CacheKey.CURRENCIES_BY_CODE, currencyCode);
             return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from q in _currencyRepository.Table
@@ -185,7 +157,7 @@ namespace Grand.Services.Directory
         /// <returns>Currencies</returns>
         public virtual async Task<IList<Currency>> GetAllCurrencies(bool showHidden = false, string storeId = "")
         {
-            string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
+            string key = string.Format(CacheKey.CURRENCIES_ALL_KEY, showHidden);
             var currencies = await _cacheManager.GetAsync(key, () =>
             {
                 var query = _currencyRepository.Table;
@@ -215,7 +187,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.InsertAsync(currency);
 
-            await _cacheManager.RemoveByPrefix(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(currency);
@@ -232,7 +204,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.UpdateAsync(currency);
 
-            await _cacheManager.RemoveByPrefix(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(currency);

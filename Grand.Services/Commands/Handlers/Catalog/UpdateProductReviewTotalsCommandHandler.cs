@@ -8,22 +8,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Grand.Services.Catalog;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Commands.Handlers.Catalog
 {
     public class UpdateProductReviewTotalsCommandHandler : IRequestHandler<UpdateProductReviewTotalsCommand, bool>
     {
-        #region Constants
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product ID
-        /// </remarks>
-        private const string PRODUCTS_BY_ID_KEY = "Grand.product.id-{0}";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Product> _productRepository;
@@ -81,7 +71,7 @@ namespace Grand.Services.Commands.Handlers.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, request.Product.Id));
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, request.Product.Id));
 
             return true;
         }

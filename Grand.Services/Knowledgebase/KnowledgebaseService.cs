@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
@@ -19,87 +20,6 @@ namespace Grand.Services.Knowledgebase
 {
     public class KnowledgebaseService : IKnowledgebaseService
     {
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CATEGORIES_PATTERN_KEY = "Knowledgebase.category.";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string ARTICLES_PATTERN_KEY = "Knowledgebase.article.";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : category ID
-        /// {1} : customer roles
-        /// {2} : store id
-        /// </remarks>
-        private const string CATEGORY_BY_ID = "Knowledgebase.category.id-{0}-{1}-{2}";
-
-        /// <summary>
-        /// Key for caching
-        /// {0} : customer roles
-        /// {1} : store id
-        /// </summary>
-        private const string CATEGORIES = "Knowledgebase.category.all-{0}-{1}";
-
-        /// <summary>
-        /// Key for caching
-        /// {0} : customer roles
-        /// {1} : store id
-        /// </summary>
-        private const string ARTICLES = "Knowledgebase.article.all-{0}-{1}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : article ID
-        /// {1} : customer roles
-        /// {2} : store id
-        /// </remarks>
-        private const string ARTICLE_BY_ID = "Knowledgebase.article.id-{0}-{1}-{2}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : category ID
-        /// {1} : customer roles
-        /// {2} : store id
-        /// </remarks>
-        private const string ARTICLES_BY_CATEGORY_ID = "Knowledgebase.article.categoryid-{0}-{1}-{2}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : keyword
-        /// {1} : customer roles
-        /// {2} : store id
-        /// </remarks>
-        private const string ARTICLES_BY_KEYWORD = "Knowledgebase.article.keyword-{0}-{1}-{2}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : keyword
-        /// {1} : customer roles
-        /// {2} : store id
-        /// </remarks>
-        private const string CATEGORIES_BY_KEYWORD = "Knowledgebase.category.keyword-{0}-{1}-{2}";
-
-        /// <summary>
-        /// Key for caching
-        /// {0} : customer roles
-        /// {1} : store id
-        /// </summary>
-        private const string HOMEPAGE_ARTICLES = "Knowledgebase.article.homepage-{0}-{1}";
-
         private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
         private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
         private readonly IRepository<KnowledgebaseArticleComment> _articleCommentRepository;
@@ -150,8 +70,8 @@ namespace Grand.Services.Knowledgebase
                 await UpdateKnowledgebaseCategory(child);
             }
 
-            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.KNOWLEDGEBASE_CATEGORIES_PATTERN_KEY);
 
             await _mediator.EntityDeleted(kc);
         }
@@ -164,8 +84,8 @@ namespace Grand.Services.Knowledgebase
         {
             kc.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseCategoryRepository.UpdateAsync(kc);
-            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.KNOWLEDGEBASE_CATEGORIES_PATTERN_KEY);
             await _mediator.EntityUpdated(kc);
         }
 
@@ -186,7 +106,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>knowledgebase category</returns>
         public virtual async Task<KnowledgebaseCategory> GetPublicKnowledgebaseCategory(string id)
         {
-            string key = string.Format(CATEGORY_BY_ID, id, _workContext.CurrentCustomer.GetCustomerRoleIds(),
+            string key = string.Format(CacheKey.KNOWLEDGEBASE_CATEGORY_BY_ID, id, _workContext.CurrentCustomer.GetCustomerRoleIds(),
                 _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(key, () =>
             {
@@ -224,8 +144,8 @@ namespace Grand.Services.Knowledgebase
 
             await _knowledgebaseCategoryRepository.InsertAsync(kc);
 
-            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.KNOWLEDGEBASE_CATEGORIES_PATTERN_KEY);
 
             await _mediator.EntityInserted(kc);
         }
@@ -288,8 +208,8 @@ namespace Grand.Services.Knowledgebase
             ka.CreatedOnUtc = DateTime.UtcNow;
             ka.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseArticleRepository.InsertAsync(ka);
-            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.KNOWLEDGEBASE_CATEGORIES_PATTERN_KEY);
             await _mediator.EntityInserted(ka);
         }
 
@@ -301,8 +221,8 @@ namespace Grand.Services.Knowledgebase
         {
             ka.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseArticleRepository.UpdateAsync(ka);
-            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.KNOWLEDGEBASE_CATEGORIES_PATTERN_KEY);
             await _mediator.EntityUpdated(ka);
         }
 
@@ -313,8 +233,8 @@ namespace Grand.Services.Knowledgebase
         public virtual async Task DeleteKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
             await _knowledgebaseArticleRepository.DeleteAsync(ka);
-            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.KNOWLEDGEBASE_CATEGORIES_PATTERN_KEY);
             await _mediator.EntityDeleted(ka);
         }
 
@@ -335,7 +255,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase categories</returns>
         public virtual async Task<List<KnowledgebaseCategory>> GetPublicKnowledgebaseCategories()
         {
-            var key = string.Format(CATEGORIES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(CacheKey.KNOWLEDGEBASE_CATEGORIES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(key, () =>
             {
@@ -368,8 +288,9 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public virtual async Task<List<KnowledgebaseArticle>> GetPublicKnowledgebaseArticles()
         {
-            var key = string.Format(ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(CacheKey.ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
+
             return await _cacheManager.GetAsync(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
@@ -401,7 +322,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>knowledgebase article</returns>
         public virtual async Task<KnowledgebaseArticle> GetPublicKnowledgebaseArticle(string id)
         {
-            var key = string.Format(ARTICLE_BY_ID, id, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(CacheKey.ARTICLE_BY_ID, id, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(key, () =>
             {
@@ -433,7 +354,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public virtual async Task<List<KnowledgebaseArticle>> GetPublicKnowledgebaseArticlesByCategory(string categoryId)
         {
-            var key = string.Format(ARTICLES_BY_CATEGORY_ID, categoryId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(CacheKey.ARTICLES_BY_CATEGORY_ID, categoryId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(key, () =>
             {
@@ -467,7 +388,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public virtual async Task<List<KnowledgebaseArticle>> GetPublicKnowledgebaseArticlesByKeyword(string keyword)
         {
-            var key = string.Format(ARTICLES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(CacheKey.ARTICLES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(key, () =>
             {
@@ -513,7 +434,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase categories</returns>
         public virtual async Task<List<KnowledgebaseCategory>> GetPublicKnowledgebaseCategoriesByKeyword(string keyword)
         {
-            var key = string.Format(CATEGORIES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(CacheKey.KNOWLEDGEBASE_CATEGORIES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(key, () =>
             {
@@ -559,7 +480,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of homepage knowledgebase articles</returns>
         public virtual async Task<List<KnowledgebaseArticle>> GetHomepageKnowledgebaseArticles()
         {
-            var key = string.Format(HOMEPAGE_ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(CacheKey.HOMEPAGE_ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(key, () =>
             {

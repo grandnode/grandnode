@@ -1,4 +1,5 @@
 using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain.Data;
 using Grand.Domain.Localization;
 using Grand.Services.Events;
@@ -17,29 +18,6 @@ namespace Grand.Services.Localization
     /// </summary>
     public partial class LanguageService : ILanguageService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        private const string LANGUAGES_BY_ID_KEY = "Grand.language.id-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// </remarks>
-        private const string LANGUAGES_ALL_KEY = "Grand.language.all-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string LANGUAGES_PATTERN_KEY = "Grand.language.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Language> _languageRepository;
@@ -81,7 +59,7 @@ namespace Grand.Services.Localization
             await _languageRepository.DeleteAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(language);
@@ -95,7 +73,7 @@ namespace Grand.Services.Localization
         /// <returns>Languages</returns>
         public virtual async Task<IList<Language>> GetAllLanguages(bool showHidden = false, string storeId = "")
         {
-            string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
+            string key = string.Format(CacheKey.LANGUAGES_ALL_KEY, showHidden);
             var languages = await _cacheManager.GetAsync(key, () =>
             {
                 var query = _languageRepository.Table;
@@ -123,7 +101,7 @@ namespace Grand.Services.Localization
         /// <returns>Language</returns>
         public virtual Task<Language> GetLanguageById(string languageId)
         {
-            string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
+            string key = string.Format(CacheKey.LANGUAGES_BY_ID_KEY, languageId);
             return _cacheManager.GetAsync(key, () => _languageRepository.GetByIdAsync(languageId));
         }
 
@@ -139,7 +117,7 @@ namespace Grand.Services.Localization
             await _languageRepository.InsertAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(language);
@@ -158,7 +136,7 @@ namespace Grand.Services.Localization
             await _languageRepository.UpdateAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(language);

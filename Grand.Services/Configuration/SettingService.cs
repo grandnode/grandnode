@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain.Configuration;
 using Grand.Domain.Data;
 using Grand.Services.Commands.Models.Common;
@@ -21,19 +22,6 @@ namespace Grand.Services.Configuration
     /// </summary>
     public partial class SettingService : ISettingService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string SETTINGS_ALL_KEY = "Grand.setting.all";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string SETTINGS_PATTERN_KEY = "Grand.setting.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Setting> _settingRepository;
@@ -87,7 +75,7 @@ namespace Grand.Services.Configuration
                 return _allSettings;
 
             //cache
-            string key = string.Format(SETTINGS_ALL_KEY);
+            string key = string.Format(CacheKey.SETTINGS_ALL_KEY);
             _allSettings = _cacheManager.Get(key, () =>
             {
                 //we use no tracking here for performance optimization
@@ -487,7 +475,7 @@ namespace Grand.Services.Configuration
         /// </summary>
         public virtual async Task ClearCache()
         {
-            await _cacheManager.RemoveByPrefix(SETTINGS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.SETTINGS_PATTERN_KEY);
         }
 
         #endregion

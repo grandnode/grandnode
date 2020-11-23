@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain.Customers;
 using Grand.Domain.Data;
 using Grand.Domain.Security;
@@ -17,33 +18,6 @@ namespace Grand.Services.Security
     /// </summary>
     public partial class PermissionService : IPermissionService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer role ID
-        /// {1} : permission system name
-        /// </remarks>
-        private const string PERMISSIONS_ALLOWED_KEY = "Grand.permission.allowed-{0}-{1}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer role ID
-        /// {1} : permission system name
-        /// {2} : permission action name
-        /// </remarks>
-        private const string PERMISSIONS_ALLOWED_ACTION_KEY = "Grand.permission.allowed.action-{0}-{1}-{2}";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PERMISSIONS_PATTERN_KEY = "Grand.permission.";
-        #endregion
-
         #region Fields
 
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
@@ -89,7 +63,7 @@ namespace Grand.Services.Security
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
-            string key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
+            string key = string.Format(CacheKey.PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
             return await _cacheManager.GetAsync(key, async () =>
             {
                 var permissionRecord = await _permissionRecordRepository.Table.FirstOrDefaultAsync(x => x.SystemName == permissionRecordSystemName);
@@ -112,7 +86,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.DeleteAsync(permission);
 
-            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -166,7 +140,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.InsertAsync(permission);
 
-            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -180,7 +154,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.UpdateAsync(permission);
 
-            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -265,7 +239,7 @@ namespace Grand.Services.Security
             //insert
             await _permissionActionRepository.InsertAsync(permissionAction);
             //clear cache
-            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -280,7 +254,7 @@ namespace Grand.Services.Security
             //delete
             await _permissionActionRepository.DeleteAsync(permissionAction);
             //clear cache
-            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -303,7 +277,7 @@ namespace Grand.Services.Security
                 if (!await Authorize(permissionRecordSystemName, role))
                     continue;
 
-                var key = string.Format(PERMISSIONS_ALLOWED_ACTION_KEY, role.Id, permissionRecordSystemName, permissionActionName);
+                var key = string.Format(CacheKey.PERMISSIONS_ALLOWED_ACTION_KEY, role.Id, permissionRecordSystemName, permissionActionName);
                 var permissionAction = await _cacheManager.GetAsync(key, async () =>
                 {
                     return await _permissionActionRepository.Table

@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Topics
 {
@@ -21,40 +22,6 @@ namespace Grand.Services.Topics
     /// </summary>
     public partial class TopicService : ITopicService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : store ID
-        /// {1} : ignore ACL?
-        /// </remarks>
-        private const string TOPICS_ALL_KEY = "Grand.topics.all-{0}-{1}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic ID
-        /// </remarks>
-        private const string TOPICS_BY_ID_KEY = "Grand.topics.id-{0}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic systemname
-        /// {1} : store id
-        /// </remarks>
-        private const string TOPICS_BY_SYSTEMNAME = "Grand.topics.systemname-{0}-{1}";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string TOPICS_PATTERN_KEY = "Grand.topics.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Topic> _topicRepository;
@@ -99,7 +66,7 @@ namespace Grand.Services.Topics
             await _topicRepository.DeleteAsync(topic);
 
             //cache
-            await _cacheManager.RemoveByPrefix(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.TOPICS_PATTERN_KEY);
             //event notification
             await _mediator.EntityDeleted(topic);
         }
@@ -111,7 +78,7 @@ namespace Grand.Services.Topics
         /// <returns>Topic</returns>
         public virtual Task<Topic> GetTopicById(string topicId)
         {
-            string key = string.Format(TOPICS_BY_ID_KEY, topicId);
+            string key = string.Format(CacheKey.TOPICS_BY_ID_KEY, topicId);
             return _cacheManager.GetAsync(key, () => _topicRepository.GetByIdAsync(topicId));
         }
 
@@ -126,7 +93,7 @@ namespace Grand.Services.Topics
             if (string.IsNullOrEmpty(systemName))
                 return null;
 
-            string key = string.Format(TOPICS_BY_SYSTEMNAME, systemName, storeId);
+            string key = string.Format(CacheKey.TOPICS_BY_SYSTEMNAME, systemName, storeId);
             return await _cacheManager.GetAsync(key, async () =>
             {
 
@@ -149,7 +116,7 @@ namespace Grand.Services.Topics
         /// <returns>Topics</returns>
         public virtual async Task<IList<Topic>> GetAllTopics(string storeId, bool ignorAcl = false)
         {
-            string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl);
+            string key = string.Format(CacheKey.TOPICS_ALL_KEY, storeId, ignorAcl);
             return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _topicRepository.Table;
@@ -192,7 +159,7 @@ namespace Grand.Services.Topics
             await _topicRepository.InsertAsync(topic);
 
             //cache
-            await _cacheManager.RemoveByPrefix(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.TOPICS_PATTERN_KEY);
             //event notification
             await _mediator.EntityInserted(topic);
         }
@@ -209,7 +176,7 @@ namespace Grand.Services.Topics
             await _topicRepository.UpdateAsync(topic);
 
             //cache
-            await _cacheManager.RemoveByPrefix(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.TOPICS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(topic);

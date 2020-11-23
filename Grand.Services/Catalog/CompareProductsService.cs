@@ -1,4 +1,5 @@
 using Grand.Core;
+using Grand.Core.Caching.Constants;
 using Grand.Domain.Catalog;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -13,15 +14,6 @@ namespace Grand.Services.Catalog
     /// </summary>
     public partial class CompareProductsService : ICompareProductsService
     {
-        #region Constants
-
-        /// <summary>
-        /// Compare products cookie name
-        /// </summary>
-        private const string COMPARE_PRODUCTS_COOKIE_NAME = "Grand.CompareProducts";
-
-        #endregion
-
         #region Fields
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -38,7 +30,7 @@ namespace Grand.Services.Catalog
         protected virtual void AddCompareProductsCookie(IEnumerable<string> comparedProductIds)
         {
             //delete current cookie if exists
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete(COMPARE_PRODUCTS_COOKIE_NAME);
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(CacheKey.PRODUCTS_COMPARE_COOKIE_NAME);
 
             //create cookie value
             var comparedProductIdsCookie = string.Join(",", comparedProductIds);
@@ -51,7 +43,7 @@ namespace Grand.Services.Catalog
             };
 
             //add cookie
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(COMPARE_PRODUCTS_COOKIE_NAME, comparedProductIdsCookie, cookieOptions);
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(CacheKey.PRODUCTS_COMPARE_COOKIE_NAME, comparedProductIdsCookie, cookieOptions);
         }
 
         #endregion
@@ -85,7 +77,7 @@ namespace Grand.Services.Catalog
                 return new List<string>();
 
             //try to get cookie
-            if (!httpContext.Request.Cookies.TryGetValue(COMPARE_PRODUCTS_COOKIE_NAME, out string productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
+            if (!httpContext.Request.Cookies.TryGetValue(CacheKey.PRODUCTS_COMPARE_COOKIE_NAME, out string productIdsCookie) || string.IsNullOrEmpty(productIdsCookie))
                 return new List<string>();
 
             //get array of string product identifiers from cookie
@@ -108,7 +100,7 @@ namespace Grand.Services.Catalog
                 return;
 
             //sets an expired cookie
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete(COMPARE_PRODUCTS_COOKIE_NAME);
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(CacheKey.PRODUCTS_COMPARE_COOKIE_NAME);
         }
 
         /// <summary>
