@@ -225,7 +225,6 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.MANUFACTURERS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTMANUFACTURERS_PATTERN_KEY);
             await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
@@ -317,7 +316,6 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.MANUFACTURERS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTMANUFACTURERS_PATTERN_KEY);
             await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
@@ -345,7 +343,6 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.MANUFACTURERS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTMANUFACTURERS_PATTERN_KEY);
             await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
