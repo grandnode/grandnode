@@ -54,6 +54,19 @@
                                     </div>
                                 </div>
                             </div>
+                            @if (!Model.PicturesStoredIntoDatabase)
+                            {
+                            <div class="form-group">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.PhysicalPath_OverrideForStore, model => model.PhysicalPath, Model.ActiveStoreScopeConfiguration)
+                                    <admin-label asp-for="PhysicalPath" class="control-label"/>
+                                </div>
+                                <div class="col-4">
+                                    <admin-input asp-for="PhysicalPath" />
+                                    <span asp-validation-for="PhysicalPath"></span>
+                                </div>
+                            </div>
+                            }        
                             <div class="form-group">
                                 <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AvatarPictureSize_OverrideForStore, model => model.AvatarPictureSize, Model.ActiveStoreScopeConfiguration)

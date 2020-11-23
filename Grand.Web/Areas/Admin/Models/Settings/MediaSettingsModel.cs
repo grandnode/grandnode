@@ -62,6 +62,10 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         [GrandResourceDisplayName("Admin.Configuration.Settings.Media.DefaultImageQuality")]
         public int DefaultImageQuality { get; set; }
         public bool DefaultImageQuality_OverrideForStore { get; set; }
+        
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Media.PhysicalPath")]
+        public string PhysicalPath { get; set; }
+        public bool PhysicalPath_OverrideForStore { get; set; }
 
         #endregion
 

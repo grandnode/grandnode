@@ -1390,6 +1390,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.MaximumImageSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MaximumImageSize, storeScope);
                 model.MultipleThumbDirectories_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MultipleThumbDirectories, storeScope);
                 model.DefaultImageQuality_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.DefaultImageQuality, storeScope);
+                model.PhysicalPath_OverrideForStore = _settingService.SettingExists(mediaSettings, x=> x.PhysicalPath, storeScope);
 
             }
             var mediaStoreSetting = _settingService.LoadSetting<MediaSettings>("");
@@ -1400,35 +1401,47 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public async Task<IActionResult> Media(MediaSettingsModel model)
         {
-            //load settings for a chosen store scope
-            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
-            var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
-            mediaSettings = model.ToEntity(mediaSettings);
+            if(ModelState.IsValid)
+            {
+                //load settings for a chosen store scope
+                var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
+                var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
+                mediaSettings = model.ToEntity(mediaSettings);
 
-            await UpdateOverrideForStore(storeScope, model.AvatarPictureSize_OverrideForStore, mediaSettings, x => x.AvatarPictureSize);
-            await UpdateOverrideForStore(storeScope, model.ProductThumbPictureSize_OverrideForStore, mediaSettings, x => x.ProductThumbPictureSize);
-            await UpdateOverrideForStore(storeScope, model.ProductDetailsPictureSize_OverrideForStore, mediaSettings, x => x.ProductDetailsPictureSize);
-            await UpdateOverrideForStore(storeScope, model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore, mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage);
-            await UpdateOverrideForStore(storeScope, model.AssociatedProductPictureSize_OverrideForStore, mediaSettings, x => x.AssociatedProductPictureSize);
-            await UpdateOverrideForStore(storeScope, model.CategoryThumbPictureSize_OverrideForStore, mediaSettings, x => x.CategoryThumbPictureSize);
-            await UpdateOverrideForStore(storeScope, model.ManufacturerThumbPictureSize_OverrideForStore, mediaSettings, x => x.ManufacturerThumbPictureSize);
-            await UpdateOverrideForStore(storeScope, model.VendorThumbPictureSize_OverrideForStore, mediaSettings, x => x.VendorThumbPictureSize);
-            await UpdateOverrideForStore(storeScope, model.CartThumbPictureSize_OverrideForStore, mediaSettings, x => x.CartThumbPictureSize);
-            await UpdateOverrideForStore(storeScope, model.MiniCartThumbPictureSize_OverrideForStore, mediaSettings, x => x.MiniCartThumbPictureSize);
-            await UpdateOverrideForStore(storeScope, model.MaximumImageSize_OverrideForStore, mediaSettings, x => x.MaximumImageSize);
-            await UpdateOverrideForStore(storeScope, model.MultipleThumbDirectories_OverrideForStore, mediaSettings, x => x.MultipleThumbDirectories);
-            await UpdateOverrideForStore(storeScope, model.DefaultImageQuality_OverrideForStore, mediaSettings, x => x.DefaultImageQuality);
+                await UpdateOverrideForStore(storeScope, model.AvatarPictureSize_OverrideForStore, mediaSettings, x => x.AvatarPictureSize);
+                await UpdateOverrideForStore(storeScope, model.ProductThumbPictureSize_OverrideForStore, mediaSettings, x => x.ProductThumbPictureSize);
+                await UpdateOverrideForStore(storeScope, model.ProductDetailsPictureSize_OverrideForStore, mediaSettings, x => x.ProductDetailsPictureSize);
+                await UpdateOverrideForStore(storeScope, model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore, mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage);
+                await UpdateOverrideForStore(storeScope, model.AssociatedProductPictureSize_OverrideForStore, mediaSettings, x => x.AssociatedProductPictureSize);
+                await UpdateOverrideForStore(storeScope, model.CategoryThumbPictureSize_OverrideForStore, mediaSettings, x => x.CategoryThumbPictureSize);
+                await UpdateOverrideForStore(storeScope, model.ManufacturerThumbPictureSize_OverrideForStore, mediaSettings, x => x.ManufacturerThumbPictureSize);
+                await UpdateOverrideForStore(storeScope, model.VendorThumbPictureSize_OverrideForStore, mediaSettings, x => x.VendorThumbPictureSize);
+                await UpdateOverrideForStore(storeScope, model.CartThumbPictureSize_OverrideForStore, mediaSettings, x => x.CartThumbPictureSize);
+                await UpdateOverrideForStore(storeScope, model.MiniCartThumbPictureSize_OverrideForStore, mediaSettings, x => x.MiniCartThumbPictureSize);
+                await UpdateOverrideForStore(storeScope, model.MaximumImageSize_OverrideForStore, mediaSettings, x => x.MaximumImageSize);
+                await UpdateOverrideForStore(storeScope, model.MultipleThumbDirectories_OverrideForStore, mediaSettings, x => x.MultipleThumbDirectories);
+                await UpdateOverrideForStore(storeScope, model.DefaultImageQuality_OverrideForStore, mediaSettings, x => x.DefaultImageQuality);
+                await UpdateOverrideForStore(storeScope, model.PhysicalPath_OverrideForStore, mediaSettings, x => x.PhysicalPath);
+                
+                //now clear cache
+                await ClearCache();
 
-            //now clear cache
-            await ClearCache();
+                //clear old Thumbs
+                await _pictureService.ClearThumbs();
 
-            //clear old Thumbs
-            await _pictureService.ClearThumbs();
+                //activity log
+                await _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            //activity log
-            await _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
-
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            }
+            else
+            {
+                //If we got this far, something failed, redisplay form
+                foreach (var modelState in ModelState.Values)
+                foreach (var error in modelState.Errors)
+                    ErrorNotification(error.ErrorMessage);
+            }
+            
             return RedirectToAction("Media");
         }
         [HttpPost, ActionName("Media")]
