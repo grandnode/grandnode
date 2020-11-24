@@ -849,7 +849,7 @@ namespace Grand.Services.ExportImport
         /// Export customer - personal info to XLSX
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual async Task<byte[]> ExportCustomerToXlsx(Customer customer, string stroreId)
+        public virtual async Task<byte[]> ExportCustomerToXlsx(Customer customer, string storeId)
         {
             using (var stream = new MemoryStream())
             {
@@ -926,7 +926,7 @@ namespace Grand.Services.ExportImport
 
                 //Newsletter subscribe - history of change
                 var newsletterService = _serviceProvider.GetRequiredService<INewsLetterSubscriptionService>();
-                var newsletter = await newsletterService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, stroreId);
+                var newsletter = await newsletterService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, storeId);
                 if (newsletter != null)
                 {
                     var worksheetNewsletter = xlPackage.CreateSheet("Newsletter subscribe - history of change");
