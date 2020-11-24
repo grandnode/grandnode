@@ -1,4 +1,5 @@
 using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain.Data;
 using Grand.Domain.Tax;
 using Grand.Services.Events;
@@ -17,32 +18,6 @@ namespace Grand.Services.Tax
     /// </summary>
     public partial class TaxCategoryService : ITaxCategoryService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string TAXCATEGORIES_ALL_KEY = "Grand.taxcategory.all";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : tax category ID
-        /// </remarks>
-        private const string TAXCATEGORIES_BY_ID_KEY = "Grand.taxcategory.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string TAXCATEGORIES_PATTERN_KEY = "Grand.taxcategory.";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
-
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
@@ -84,10 +59,10 @@ namespace Grand.Services.Tax
             await _taxCategoryRepository.DeleteAsync(taxCategory);
 
             //clear tax categories cache
-            await _cacheManager.RemoveByPrefix(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.TAXCATEGORIES_PATTERN_KEY);
 
             //clear product cache
-            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(taxCategory);
@@ -99,7 +74,7 @@ namespace Grand.Services.Tax
         /// <returns>Tax categories</returns>
         public virtual async Task<IList<TaxCategory>> GetAllTaxCategories()
         {
-            string key = string.Format(TAXCATEGORIES_ALL_KEY);
+            string key = string.Format(CacheKey.TAXCATEGORIES_ALL_KEY);
             return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from tc in _taxCategoryRepository.Table
@@ -116,7 +91,7 @@ namespace Grand.Services.Tax
         /// <returns>Tax category</returns>
         public virtual Task<TaxCategory> GetTaxCategoryById(string taxCategoryId)
         {
-            string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
+            string key = string.Format(CacheKey.TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
             return _cacheManager.GetAsync(key, () => _taxCategoryRepository.GetByIdAsync(taxCategoryId));
         }
 
@@ -131,7 +106,7 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.InsertAsync(taxCategory);
 
-            await _cacheManager.RemoveByPrefix(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(taxCategory);
@@ -148,7 +123,7 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.UpdateAsync(taxCategory);
 
-            await _cacheManager.RemoveByPrefix(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(taxCategory);

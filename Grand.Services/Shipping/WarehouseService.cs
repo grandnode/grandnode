@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain.Data;
 using Grand.Domain.Shipping;
 using Grand.Services.Events;
@@ -14,34 +15,6 @@ namespace Grand.Services.Shipping
 {
     public class WarehouseService : IWarehouseService
     {
-
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : warehouse ID
-        /// </remarks>
-        private const string WAREHOUSES_BY_ID_KEY = "Grand.warehouse.id-{0}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string WAREHOUSES_ALL = "Grand.warehouse.all";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string WAREHOUSES_PATTERN_KEY = "Grand.warehouse.";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Warehouse> _warehouseRepository;
@@ -76,7 +49,7 @@ namespace Grand.Services.Shipping
         /// <returns>Warehouse</returns>
         public virtual Task<Warehouse> GetWarehouseById(string warehouseId)
         {
-            string key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
+            string key = string.Format(CacheKey.WAREHOUSES_BY_ID_KEY, warehouseId);
             return _cacheManager.GetAsync(key, () => _warehouseRepository.GetByIdAsync(warehouseId));
         }
 
@@ -86,7 +59,7 @@ namespace Grand.Services.Shipping
         /// <returns>Warehouses</returns>
         public virtual async Task<IList<Warehouse>> GetAllWarehouses()
         {
-            return await _cacheManager.GetAsync(WAREHOUSES_ALL, () =>
+            return await _cacheManager.GetAsync(CacheKey.WAREHOUSES_ALL, () =>
             {
                 var query = from wh in _warehouseRepository.Table
                             orderby wh.DisplayOrder
@@ -107,7 +80,7 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.InsertAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(warehouse);
@@ -125,7 +98,7 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.UpdateAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(warehouse);
@@ -143,9 +116,9 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.DeleteAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.WAREHOUSES_PATTERN_KEY);
             //clear product cache
-            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(warehouse);

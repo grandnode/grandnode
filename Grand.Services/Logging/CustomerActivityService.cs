@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Logging
 {
@@ -18,19 +19,6 @@ namespace Grand.Services.Logging
     /// </summary>
     public class CustomerActivityService : ICustomerActivityService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string ACTIVITYTYPE_ALL_KEY = "Grand.activitytype.all";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string ACTIVITYTYPE_PATTERN_KEY = "Grand.activitytype.";
-
-        #endregion
-
         #region Fields
 
         /// <summary>
@@ -94,7 +82,7 @@ namespace Grand.Services.Logging
         protected virtual async Task<IList<ActivityLogTypeForCaching>> GetAllActivityTypesCached()
         {
             //cache
-            string key = string.Format(ACTIVITYTYPE_ALL_KEY);
+            string key = string.Format(CacheKey.ACTIVITYTYPE_ALL_KEY);
             return await _cacheManager.GetAsync(key, async () =>
             {
                 var result = new List<ActivityLogTypeForCaching>();
@@ -128,7 +116,7 @@ namespace Grand.Services.Logging
                 throw new ArgumentNullException("activityLogType");
 
             await _activityLogTypeRepository.InsertAsync(activityLogType);
-            await _cacheManager.RemoveByPrefix(ACTIVITYTYPE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ACTIVITYTYPE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -141,7 +129,7 @@ namespace Grand.Services.Logging
                 throw new ArgumentNullException("activityLogType");
 
             await _activityLogTypeRepository.UpdateAsync(activityLogType);
-            await _cacheManager.RemoveByPrefix(ACTIVITYTYPE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ACTIVITYTYPE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -154,7 +142,7 @@ namespace Grand.Services.Logging
                 throw new ArgumentNullException("activityLogType");
 
             await _activityLogTypeRepository.DeleteAsync(activityLogType);
-            await _cacheManager.RemoveByPrefix(ACTIVITYTYPE_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ACTIVITYTYPE_PATTERN_KEY);
         }
 
         /// <summary>

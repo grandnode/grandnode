@@ -22,7 +22,7 @@ namespace Grand.Web.Areas.Admin.Extensions
             var languageCulture = workContext.WorkingLanguage.LanguageCulture;
 
             var langFile = string.Format("{0}.js", languageCulture);
-            var path = Path.Combine(webHostEnvironment.WebRootPath, "content\\tinymce\\langs");
+            var path = Path.Combine(webHostEnvironment.WebRootPath, "administration\\tinymce\\langs");
             var fileExists = File.Exists(string.Format("{0}{1}{2}", path, "/", langFile));
 
             if (!fileExists)

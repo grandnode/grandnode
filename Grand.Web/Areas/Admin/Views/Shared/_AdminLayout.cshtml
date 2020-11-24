@@ -26,7 +26,7 @@
     //CSS
     if (supportRtl)
     {
-        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/content/kendo/{0}/kendo.rtl.min.css", kendoVersion), excludeFromBundle: true);
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/administration/kendo/styles/{0}/kendo.rtl.min.css", kendoVersion), excludeFromBundle: true);
         pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/build/css/custom-rtl.css", excludeFromBundle: true);
         pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/bootstrap/css/bootstrap-rtl.min.css", excludeFromBundle: true);
     }
@@ -34,11 +34,11 @@
     {
         pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/build/css/custom.css", excludeFromBundle: true);
     }
-    pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/content/kendo/{0}/kendo.common-material.min.css", kendoVersion), excludeFromBundle: true);
-    pagebuilder.AppendCssFileParts(ResourceLocation.Head, $"~/content/kendo/{kendoVersion}/kendo.material.min.css", excludeFromBundle: true);
-    pagebuilder.AppendCssFileParts(ResourceLocation.Head, $"~/content/kendo/{kendoVersion}/kendo.material.mobile.min.css", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/administration/kendo/styles/{0}/kendo.common-material.min.css", kendoVersion), excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, $"~/administration/kendo/styles/{kendoVersion}/kendo.material.min.css", excludeFromBundle: true);
+    pagebuilder.AppendCssFileParts(ResourceLocation.Head, $"~/administration/kendo/styles/{kendoVersion}/kendo.material.mobile.min.css", excludeFromBundle: true);
     pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css", excludeFromBundle: true);
-    pagebuilder.AddScriptParts(location: ResourceLocation.Footer, src: "~/content/tinymce/tinymce.min.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(location: ResourceLocation.Footer, src: "~/administration/tinymce/tinymce.min.js", excludeFromBundle: true);
 
     //administration
 
@@ -54,15 +54,15 @@
 
     //js
     //available list of culture https://github.com/telerik/kendo-ui-core/tree/master/src/cultures
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, "en-US"), excludeFromBundle: true);
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/scripts/kendo/{0}/kendo.grid.js", kendoVersion), excludeFromBundle: true);
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/scripts/kendo/{0}/kendo.ui.core.min.js", kendoVersion), excludeFromBundle: true);
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/admin.common.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/administration/kendo/scripts/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, "en-US"), excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/administration/kendo/scripts/{0}/kendo.grid.js", kendoVersion), excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/administration/kendo/scripts/{0}/kendo.ui.core.min.js", kendoVersion), excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/administration/admin.common.js", excludeFromBundle: true);
     pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js", excludeFromBundle: true);
     pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/jquery.validate.unobtrusive.min.js", excludeFromBundle: true);
     pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/jquery.validate.min.js", excludeFromBundle: true);
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/admin.search.js", excludeFromBundle: true);
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/scripts/typeahead.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/administration/admin.search.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, "~/administration/typeahead.js", excludeFromBundle: true);
 
     pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/simple-line-icons/simple-line-icons.min.css", excludeFromBundle: true);
     pagebuilder.AppendCssFileParts(ResourceLocation.Head, "~/administration/build/css/font-awesome.min.css", excludeFromBundle: true);
@@ -90,8 +90,8 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <head-custom>
-        <css-files asp-location="Head" bundle-files="false">
-            <script-files asp-location="Head" bundle-files="false">
+    <css-files asp-location="Head" bundle-files="false">
+    <script-files asp-location="Head" bundle-files="false">
 </head>
 <body>
     @Html.AntiForgeryToken()
@@ -346,28 +346,27 @@
         </div>
     </div>
     <css-files asp-location="Footer">
-        <script-files asp-location="Footer">
-
-            <div class="page-footer">
-                <div class="page-footer-inner">
-                    <a href="https://grandnode.com/" target="_blank">@DateTime.UtcNow.Year Powered by GrandNode ®</a>
-                </div>
-                <div class="scroll-to-top">
-                    <i class="icon-arrow-up"></i>
-                </div>
-            </div>
-            <script>
-            $(document).ready(function () {
-                $("#restart-application").click(function (e) {
-                    event.preventDefault();
-                    showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
-                    $("html, body").animate({ scrollTop: 0 }, 400);
-                    $.get($(this).attr("href"), function (data) { });
-                    setTimeout(function () {
-                        location.reload();
-                    }, 10000);
-                });
+    <script-files asp-location="Footer">
+    <div class="page-footer">
+        <div class="page-footer-inner">
+            <a href="https://grandnode.com/" target="_blank">@DateTime.UtcNow.Year Powered by GrandNode ®</a>
+        </div>
+        <div class="scroll-to-top">
+            <i class="icon-arrow-up"></i>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#restart-application").click(function (e) {
+                event.preventDefault();
+                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
+                $("html, body").animate({ scrollTop: 0 }, 400);
+                $.get($(this).attr("href"), function (data) { });
+                setTimeout(function () {
+                    location.reload();
+                }, 10000);
             });
-            </script>
+        });
+    </script>
 </body>
 </html>

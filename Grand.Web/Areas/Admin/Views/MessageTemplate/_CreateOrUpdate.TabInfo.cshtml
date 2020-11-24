@@ -1,9 +1,9 @@
 ﻿@model MessageTemplateModel
 @inject IPageHeadBuilder pagebuilder
 @{
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/codemirror.js", excludeFromBundle: true);
-    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/content/codemirror/mode/xml/xml.js", excludeFromBundle: true);
-    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/content/codemirror/codemirror.css", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/administration/codemirror/codemirror.js", excludeFromBundle: true);
+    pagebuilder.AddScriptParts(ResourceLocation.Head, "~/administration/codemirror/mode/xml/xml.js", excludeFromBundle: true);
+    pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/administration/codemirror/codemirror.css", excludeFromBundle: true);
 }
 
 <div class="form-horizontal">
