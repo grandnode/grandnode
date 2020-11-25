@@ -171,16 +171,6 @@ namespace Grand.Web.Infrastructure.Cache
         public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "Grand.pres.category.childidentifiers";
 
         /// <summary>
-        /// Key for SpecificationAttributeOptionFilter caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : comma separated list of specification attribute option IDs
-        /// {1} : language id
-        /// </remarks>
-        public const string SPECS_FILTER_MODEL_KEY = "Grand.pres.filter.specs-{0}-{1}";
-        public const string SPECS_FILTER_PATTERN_KEY = "Grand.pres.filter.specs";
-
-        /// <summary>
         /// Key for ProductBreadcrumbModel caching
         /// </summary>
         /// <remarks>
@@ -225,17 +215,6 @@ namespace Grand.Web.Infrastructure.Cache
         public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "Grand.pres.product.manufacturers-{0}-{1}-{2}-{3}";
         public const string PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY = "Grand.pres.product.manufacturers-{0}";
         public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "Grand.pres.product.manufacturers";
-
-        /// <summary>
-        /// Key for ProductSpecificationModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : language id
-        /// </remarks>
-        public const string PRODUCT_SPECS_MODEL_KEY = "Grand.pres.product.specs-{0}-{1}";
-        public const string PRODUCT_SPECS_PATTERN_KEY = "Grand.pres.product.specs-{0}";
-        public const string PRODUCT_SPECS_PATTERN = "Grand.pres.product.specs";
 
         /// <summary>
         /// Key for CategoryTemplate caching

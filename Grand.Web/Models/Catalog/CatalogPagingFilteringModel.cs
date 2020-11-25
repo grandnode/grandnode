@@ -307,33 +307,27 @@ namespace Grand.Web.Models.Catalog
                 IWebHelper webHelper, ICacheManager cacheManager, string langId)
             {
                 Enabled = false;
-                var optionIds = filterableSpecificationAttributeOptionIds != null
-                    ? string.Join(",", filterableSpecificationAttributeOptionIds.Union(alreadyFilteredSpecOptionIds)) : string.Empty;
-                var cacheKey = string.Format(ModelCacheEventConst.SPECS_FILTER_MODEL_KEY, optionIds, langId);
 
-                var allFilters = await cacheManager.GetAsync(cacheKey, async () =>
+                var allFilters = new List<SpecificationAttributeOptionFilter>();
+                foreach (var sao in filterableSpecificationAttributeOptionIds.Union(alreadyFilteredSpecOptionIds))
                 {
-                    var _allFilters = new List<SpecificationAttributeOptionFilter>();
-                    foreach (var sao in filterableSpecificationAttributeOptionIds.Union(alreadyFilteredSpecOptionIds))
+                    var sa = await specificationAttributeService.GetSpecificationAttributeByOptionId(sao);
+                    if (sa != null)
                     {
-                        var sa = await specificationAttributeService.GetSpecificationAttributeByOptionId(sao);
-                        if (sa != null)
-                        {
-                            _allFilters.Add(new SpecificationAttributeOptionFilter {
-                                SpecificationAttributeId = sa.Id,
-                                SpecificationAttributeName = sa.GetLocalized(x => x.Name, langId),
-                                SpecificationAttributeSeName = sa.SeName,
-                                SpecificationAttributeDisplayOrder = sa.DisplayOrder,
-                                SpecificationAttributeOptionId = sao,
-                                SpecificationAttributeOptionName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).GetLocalized(x => x.Name, langId),
-                                SpecificationAttributeOptionSeName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).SeName,
-                                SpecificationAttributeOptionDisplayOrder = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).DisplayOrder,
-                                SpecificationAttributeOptionColorRgb = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).ColorSquaresRgb,
-                            });
-                        }
+                        allFilters.Add(new SpecificationAttributeOptionFilter {
+                            SpecificationAttributeId = sa.Id,
+                            SpecificationAttributeName = sa.GetLocalized(x => x.Name, langId),
+                            SpecificationAttributeSeName = sa.SeName,
+                            SpecificationAttributeDisplayOrder = sa.DisplayOrder,
+                            SpecificationAttributeOptionId = sao,
+                            SpecificationAttributeOptionName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).GetLocalized(x => x.Name, langId),
+                            SpecificationAttributeOptionSeName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).SeName,
+                            SpecificationAttributeOptionDisplayOrder = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).DisplayOrder,
+                            SpecificationAttributeOptionColorRgb = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).ColorSquaresRgb,
+                        });
                     }
-                    return _allFilters.ToList();
-                });
+                }
+
                 if (!allFilters.Any())
                     return;
 
