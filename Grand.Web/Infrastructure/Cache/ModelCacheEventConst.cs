@@ -452,16 +452,6 @@ namespace Grand.Web.Infrastructure.Cache
         public const string AVAILABLE_STORES_MODEL_KEY = "Grand.pres.stores.all";
 
         /// <summary>
-        /// Key for caching of a value indicating whether we have checkout attributes
-        /// </summary>
-        /// <remarks>
-        /// {0} : current store ID
-        /// {1} : true - all attributes, false - only shippable attributes
-        /// </remarks>
-        public const string CHECKOUTATTRIBUTES_EXIST_KEY = "Grand.pres.checkoutattributes.exist-{0}-{1}";
-        public const string CHECKOUTATTRIBUTES_PATTERN_KEY = "Grand.pres.checkoutattributes";
-
-        /// <summary>
         /// Key for sitemap on the sitemap page
         /// </summary>
         /// <remarks>

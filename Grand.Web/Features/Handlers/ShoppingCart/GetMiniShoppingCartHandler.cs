@@ -117,17 +117,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     model.SubTotal = _priceFormatter.FormatPrice(shoppingCartSubTotal.subTotalWithoutDiscount, false, request.Currency, request.Language, subTotalIncludingTax);
 
                     var requiresShipping = cart.RequiresShipping();
-                    //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
-                    //1. "terms of service" are enabled
-                    //2. min order sub-total is OK
-                    //3. we have at least one checkout attribute
-                    var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConst.CHECKOUTATTRIBUTES_EXIST_KEY,
-                        request.Store.Id, requiresShipping);
-                    var checkoutAttributesExist = await _cacheManager.GetAsync(checkoutAttributesExistCacheKey, async () =>
-                    {
-                        var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes(request.Store.Id, !requiresShipping);
-                        return checkoutAttributes.Any();
-                    });
+                    var checkoutAttributesExist = (await _checkoutAttributeService.GetAllCheckoutAttributes(request.Store.Id, !requiresShipping)).Any();
 
                     var minOrderSubtotalAmountOk = await _mediator.Send(new ValidateMinShoppingCartSubtotalAmountCommand() {
                         Customer = request.Customer,
