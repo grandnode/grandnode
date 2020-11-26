@@ -101,8 +101,7 @@ namespace Grand.Services.Orders
             string billingCountryId = "",
             int orderBy = 1,
             int pageIndex = 0, int pageSize = int.MaxValue,
-            bool showHidden = false,
-            bool includeUnpublished = false);
+            bool showHidden = false);
 
 
         /// <summary>

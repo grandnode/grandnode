@@ -106,8 +106,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 orderBy: orderBy,
                 pageIndex: pageIndex,
                 pageSize: pageSize,
-                showHidden: true,
-                includeUnpublished: true);
+                showHidden: true);
             var result = new List<BestsellersReportLineModel>();
             foreach (var x in items)
             {
@@ -261,8 +260,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
                 showHidden: true,
-                storeId: model.StoreId,
-                includeUnpublished: true);
+                storeId: model.StoreId);
 
             var result = new List<BestsellersReportLineModel>();
             foreach (var x in items)

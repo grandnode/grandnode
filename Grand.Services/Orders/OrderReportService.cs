@@ -382,8 +382,7 @@ namespace Grand.Services.Orders
             string billingCountryId = "",
             int orderBy = 1,
             int pageIndex = 0, int pageSize = int.MaxValue,
-            bool showHidden = false,
-            bool includeUnpublished = false)
+            bool showHidden = false)
         {
 
 
@@ -448,7 +447,7 @@ namespace Grand.Services.Orders
                 .Lookup("Product", "OrderItems.ProductId", "_id", "Product")
                 .Group(groupBy);
 
-            if (!includeUnpublished)
+            if (!showHidden)
             {
                 var filterPublishedProduct = new BsonDocument(nameof(Product.Published), true);
                 query.Match(filterPublishedProduct);
