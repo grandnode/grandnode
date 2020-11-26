@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain.Catalog;
 using Grand.Domain.Data;
 using Grand.Services.Commands.Models.Catalog;
@@ -13,14 +14,6 @@ namespace Grand.Services.Commands.Handlers.Catalog
 {
     public class UpdateIntervalPropertiesCommandHandler : IRequestHandler<UpdateIntervalPropertiesCommand, bool>
     {
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product ID
-        /// </remarks>
-        private const string PRODUCTS_BY_ID_KEY = "Grand.product.id-{0}";
-
         private readonly IRepository<Product> _productRepository;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
@@ -46,7 +39,7 @@ namespace Grand.Services.Commands.Handlers.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, request.Product.Id));
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, request.Product.Id));
 
             //event notification
             await _mediator.EntityUpdated(request.Product);

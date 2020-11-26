@@ -446,16 +446,19 @@ namespace Grand.Services.Tax
             Customer customer,
             decimal unitPrice,
             decimal unitPricewithoutDisc,
+            int quantity,
             decimal subTotal,
             decimal discountAmount,
             bool priceIncludesTax
             )
         {
-
-            var productPrice = new TaxProductPrice();
-
             var taxrates = await GetTaxRate(product, product.TaxCategoryId, customer, 0);
-            productPrice.taxRate = taxrates.taxRate;
+
+            var productPrice = new TaxProductPrice {
+                taxRate = taxrates.taxRate,
+                Quantity = quantity
+            };
+
             if (priceIncludesTax)
             {
                 if (taxrates.isTaxable)

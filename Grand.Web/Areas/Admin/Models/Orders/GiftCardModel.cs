@@ -1,11 +1,17 @@
 ﻿using Grand.Core.ModelBinding;
 using Grand.Core.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
     public partial class GiftCardModel : BaseEntityModel
     {
+        public GiftCardModel()
+        {
+            AvailableCurrencies = new List<SelectListItem>();
+        }
         [GrandResourceDisplayName("Admin.GiftCards.Fields.GiftCardType")]
         public int GiftCardTypeId { get; set; }
 
@@ -15,6 +21,11 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 
         [GrandResourceDisplayName("Admin.GiftCards.Fields.Amount")]
         public decimal Amount { get; set; }
+
+        [GrandResourceDisplayName("Admin.GiftCards.Fields.CurrencyCode")]
+        public string CurrencyCode { get; set; }
+        public IList<SelectListItem> AvailableCurrencies { get; set; }
+
 
         [GrandResourceDisplayName("Admin.GiftCards.Fields.Amount")]
         public string AmountStr { get; set; }
@@ -54,8 +65,6 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 
         [GrandResourceDisplayName("Admin.GiftCards.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
-
-        public string PrimaryStoreCurrencyCode { get; set; }
 
         #region Nested classes
 

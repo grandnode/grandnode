@@ -19,6 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Domain.Directory;
+using Grand.Services.Directory;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Discounts
 {
@@ -27,37 +30,13 @@ namespace Grand.Services.Discounts
     /// </summary>
     public partial class DiscountService : IDiscountService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : discont ID
-        /// </remarks>
-        private const string DISCOUNTS_BY_ID_KEY = "Grand.discount.id-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// {1} : store ident
-        /// {2} : coupon code
-        /// {3} : discount name
-        /// </remarks>
-        private const string DISCOUNTS_ALL_KEY = "Grand.discount.all-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string DISCOUNTS_PATTERN_KEY = "Grand.discount.";
-
-        #endregion
-
+        
         #region Fields
 
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountCoupon> _discountCouponRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
+        private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -77,6 +56,7 @@ namespace Grand.Services.Discounts
             IRepository<Discount> discountRepository,
             IRepository<DiscountCoupon> discountCouponRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
+            ICurrencyService currencyService,
             ILocalizationService localizationService,
             IStoreContext storeContext,
             IPluginFinder pluginFinder,
@@ -89,6 +69,7 @@ namespace Grand.Services.Discounts
             _discountRepository = discountRepository;
             _discountCouponRepository = discountCouponRepository;
             _discountUsageHistoryRepository = discountUsageHistoryRepository;
+            _currencyService = currencyService;
             _localizationService = localizationService;
             _storeContext = storeContext;
             _pluginFinder = pluginFinder;
@@ -116,7 +97,7 @@ namespace Grand.Services.Discounts
 
             await _discountRepository.DeleteAsync(discount);
 
-            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(discount);
@@ -129,7 +110,7 @@ namespace Grand.Services.Discounts
         /// <returns>Discount</returns>
         public virtual Task<Discount> GetDiscountById(string discountId)
         {
-            string key = string.Format(DISCOUNTS_BY_ID_KEY, discountId);
+            string key = string.Format(CacheKey.DISCOUNTS_BY_ID_KEY, discountId);
             return _cacheManager.GetAsync(key, () => _discountRepository.GetByIdAsync(discountId));
         }
 
@@ -147,7 +128,7 @@ namespace Grand.Services.Discounts
             //we load all discounts, and filter them by passed "discountType" parameter later
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, storeId, couponCode, discountName);
+            string key = string.Format(CacheKey.DISCOUNTS_ALL_KEY, showHidden, storeId, couponCode, discountName);
             var result = await _cacheManager.GetAsync(key, () =>
             {
                 var query = _discountRepository.Table;
@@ -203,7 +184,7 @@ namespace Grand.Services.Discounts
 
             await _discountRepository.InsertAsync(discount);
 
-            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(discount);
@@ -225,7 +206,7 @@ namespace Grand.Services.Discounts
 
             await _discountRepository.UpdateAsync(discount);
 
-            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(discount);
@@ -250,7 +231,7 @@ namespace Grand.Services.Discounts
             discount.DiscountRequirements.Remove(req);
             await UpdateDiscount(discount);
 
-            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(discountRequirement);
@@ -484,11 +465,6 @@ namespace Grand.Services.Discounts
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            //invalid by default
-
-            //string key = $"DiscountValidationResult_{customer.Id}_{discount.Id}_{string.Join("_", couponCodesToValidate)}";
-            //var validationResult = await _perRequestCache.GetAsync(key, async () =>
-            //{
             var result = new DiscountValidationResult();
 
             //check is enabled
@@ -689,7 +665,7 @@ namespace Grand.Services.Discounts
             //Support for couponcode
             await DiscountCouponSetAsUsed(discountUsageHistory.CouponCode, true);
 
-            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(discountUsageHistory);
@@ -707,7 +683,7 @@ namespace Grand.Services.Discounts
 
             await _discountUsageHistoryRepository.UpdateAsync(discountUsageHistory);
 
-            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(discountUsageHistory);
@@ -724,19 +700,21 @@ namespace Grand.Services.Discounts
 
             await _discountUsageHistoryRepository.DeleteAsync(discountUsageHistory);
 
-            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(discountUsageHistory);
         }
 
         /// <summary>
-        /// Get discount amount
+        /// Get discount amount from plugin
         /// </summary>
-        /// <param name="discount"></param>
-        /// <param name="amount"></param>
-        /// <returns></returns>
-        public async Task<decimal> GetDiscountAmount(Discount discount, Customer customer, Product product, decimal amount)
+        /// <param name="discount">Discount</param>
+        /// <param name="amount">Amount</param>
+        /// <param name="currency">currency</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="product">Product</param>
+        public async Task<decimal> GetDiscountAmount(Discount discount, Customer customer, Currency currency, Product product, decimal amount)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -748,7 +726,9 @@ namespace Grand.Services.Discounts
                 if (discount.UsePercentage)
                     result = (decimal)((((float)amount) * ((float)discount.DiscountPercentage)) / 100f);
                 else
-                    result = discount.DiscountAmount;
+                {
+                    result = await _currencyService.ConvertFromPrimaryStoreCurrency(discount.DiscountAmount, currency);
+                }
             }
             else
             {
@@ -771,13 +751,14 @@ namespace Grand.Services.Discounts
         /// Get preferred discount (with maximum discount value)
         /// </summary>
         /// <param name="discounts">A list of discounts to check</param>
-        /// <param name="customer"
+        /// <param name="customer">customer</param>
+        /// <param name="currency">currency</param>
         /// <param name="product"></param>
         /// <param name="amount">Amount</param>
         /// <param name="discountAmount"></param>
         /// <returns>Preferred discount</returns>
-        public virtual async Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(IList<AppliedDiscount> discounts,
-            Customer customer, Product product,
+        public virtual async Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(
+            IList<AppliedDiscount> discounts, Customer customer, Currency currency, Product product,
             decimal amount)
         {
             if (discounts == null)
@@ -792,7 +773,7 @@ namespace Grand.Services.Discounts
             foreach (var applieddiscount in discounts)
             {
                 var discount = await GetDiscountById(applieddiscount.DiscountId);
-                decimal currentDiscountValue = await GetDiscountAmount(discount, customer, product, amount);
+                decimal currentDiscountValue = await GetDiscountAmount(discount, customer, currency, product, amount);
                 if (currentDiscountValue > discountAmount)
                 {
                     discountAmount = currentDiscountValue;
@@ -810,7 +791,7 @@ namespace Grand.Services.Discounts
                 foreach (var item in cumulativeDiscounts)
                 {
                     var discount = await GetDiscountById(item.DiscountId);
-                    cumulativeDiscountAmount += await GetDiscountAmount(discount, customer, product, amount);
+                    cumulativeDiscountAmount += await GetDiscountAmount(discount, customer, currency, product, amount);
                 }
                 if (cumulativeDiscountAmount > discountAmount)
                 {
@@ -827,15 +808,18 @@ namespace Grand.Services.Discounts
         /// Get preferred discount (with maximum discount value)
         /// </summary>
         /// <param name="discounts">A list of discounts to check</param>
-        /// <param name="customer"
+        /// <param name="customer"></param>
+        /// <param name="currency">currency</param>
         /// <param name="amount">Amount</param>
         /// <param name="discountAmount"></param>
         /// <returns>Preferred discount</returns>
-        public virtual async Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(IList<AppliedDiscount> discounts,
+        public virtual async Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(
+            IList<AppliedDiscount> discounts,
             Customer customer,
+            Currency currency,
             decimal amount)
         {
-            return await GetPreferredDiscount(discounts, customer, null, amount);
+            return await GetPreferredDiscount(discounts, customer, currency, null, amount);
         }
 
         /// <summary>

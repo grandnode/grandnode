@@ -949,8 +949,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             order.OrderShippingInclTax = model.OrderShippingInclTaxValue;
             order.OrderShippingExclTax = model.OrderShippingExclTaxValue;
             order.PaymentMethodAdditionalFeeInclTax = model.PaymentMethodAdditionalFeeInclTaxValue;
-            order.PaymentMethodAdditionalFeeExclTax = model.PaymentMethodAdditionalFeeExclTaxValue;
-            order.TaxRates = model.TaxRatesValue;
+            order.PaymentMethodAdditionalFeeExclTax = model.PaymentMethodAdditionalFeeExclTaxValue;            
             order.OrderTax = model.TaxValue;
             order.OrderDiscount = model.OrderTotalDiscountValue;
             order.OrderTotal = model.OrderTotalValue;

@@ -434,7 +434,8 @@ namespace Grand.Services.ExportImport
                     xmlWriter.WriteStartElement("TierPrice");
                     xmlWriter.WriteElementString("TierPriceId", null, tierPrice.Id);
                     xmlWriter.WriteElementString("StoreId", null, tierPrice.StoreId);
-                    xmlWriter.WriteElementString("CustomerRoleId", null, !String.IsNullOrEmpty(tierPrice.CustomerRoleId) ? tierPrice.CustomerRoleId : "");
+                    xmlWriter.WriteElementString("CustomerRoleId", null, !string.IsNullOrEmpty(tierPrice.CustomerRoleId) ? tierPrice.CustomerRoleId : "");
+                    xmlWriter.WriteElementString("CurrencyCode", null, tierPrice.CurrencyCode);
                     xmlWriter.WriteElementString("Quantity", null, tierPrice.Quantity.ToString());
                     xmlWriter.WriteElementString("Price", null, tierPrice.Price.ToString());
                     xmlWriter.WriteElementString("StartDateTimeUtc", tierPrice.StartDateTimeUtc.HasValue ? tierPrice.StartDateTimeUtc.Value.ToString() : "");
@@ -727,7 +728,6 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("OrderShippingExclTax", null, order.OrderShippingExclTax.ToString());
                 xmlWriter.WriteElementString("PaymentMethodAdditionalFeeInclTax", null, order.PaymentMethodAdditionalFeeInclTax.ToString());
                 xmlWriter.WriteElementString("PaymentMethodAdditionalFeeExclTax", null, order.PaymentMethodAdditionalFeeExclTax.ToString());
-                xmlWriter.WriteElementString("TaxRates", null, order.TaxRates);
                 xmlWriter.WriteElementString("OrderTax", null, order.OrderTax.ToString());
                 xmlWriter.WriteElementString("OrderTotal", null, order.OrderTotal.ToString());
                 xmlWriter.WriteElementString("RefundedAmount", null, order.RefundedAmount.ToString());
@@ -849,7 +849,7 @@ namespace Grand.Services.ExportImport
         /// Export customer - personal info to XLSX
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual async Task<byte[]> ExportCustomerToXlsx(Customer customer, string stroreId)
+        public virtual async Task<byte[]> ExportCustomerToXlsx(Customer customer, string storeId)
         {
             using (var stream = new MemoryStream())
             {
@@ -926,7 +926,7 @@ namespace Grand.Services.ExportImport
 
                 //Newsletter subscribe - history of change
                 var newsletterService = _serviceProvider.GetRequiredService<INewsLetterSubscriptionService>();
-                var newsletter = await newsletterService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, stroreId);
+                var newsletter = await newsletterService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, storeId);
                 if (newsletter != null)
                 {
                     var worksheetNewsletter = xlPackage.CreateSheet("Newsletter subscribe - history of change");
@@ -1197,7 +1197,6 @@ namespace Grand.Services.ExportImport
                     new PropertyByName<Order>("OrderShippingExclTax", p=>p.OrderShippingExclTax),
                     new PropertyByName<Order>("PaymentMethodAdditionalFeeInclTax", p=>p.PaymentMethodAdditionalFeeInclTax),
                     new PropertyByName<Order>("PaymentMethodAdditionalFeeExclTax", p=>p.PaymentMethodAdditionalFeeExclTax),
-                    new PropertyByName<Order>("TaxRates", p=>p.TaxRates),
                     new PropertyByName<Order>("OrderTax", p=>p.OrderTax),
                     new PropertyByName<Order>("OrderTotal", p=>p.OrderTotal),
                     new PropertyByName<Order>("RefundedAmount", p=>p.RefundedAmount),

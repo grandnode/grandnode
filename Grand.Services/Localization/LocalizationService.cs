@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain.Data;
 using Grand.Domain.Localization;
 using Grand.Services.Events;
@@ -23,26 +24,6 @@ namespace Grand.Services.Localization
     public partial class LocalizationService : ILocalizationService
     {
         #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        private const string LOCALSTRINGRESOURCES_ALL_KEY = "Grand.lsr.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// {1} : resource key
-        /// </remarks>
-        private const string LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY = "Grand.lsr.{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string LOCALSTRINGRESOURCES_PATTERN_KEY = "Grand.lsr.";
 
         private Dictionary<string, LocaleStringResource> _alllocaleStringResource = null;
 
@@ -99,7 +80,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.DeleteAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(localeStringResource);
@@ -160,7 +141,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.InsertAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(localeStringResource);
@@ -179,7 +160,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.UpdateAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(localeStringResource);
@@ -224,7 +205,7 @@ namespace Grand.Services.Localization
                 }
                 else
                 {
-                    string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
+                    string key = string.Format(CacheKey.LOCALSTRINGRESOURCES_ALL_KEY, languageId);
                     _alllocaleStringResource = _cacheManager.Get(key, () =>
                     {
                         var dictionary = new Dictionary<string, LocaleStringResource>();
@@ -248,7 +229,7 @@ namespace Grand.Services.Localization
             else
             {
                 //gradual loading
-                string key = string.Format(LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKey);
+                string key = string.Format(CacheKey.LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKey);
                 string lsr = _cacheManager.Get(key, () =>
                 {
                     var builder = Builders<LocaleStringResource>.Filter;
@@ -376,7 +357,7 @@ namespace Grand.Services.Localization
 
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -420,7 +401,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.InsertManyAsync(localeStringResources);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
         }
 
         #endregion

@@ -26,6 +26,11 @@ namespace Grand.Domain.Payments
         public bool BypassPaymentMethodSelectionIfOnlyOne { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether we should show payment method if cart is zero
+        /// </summary>
+        public bool ShowPaymentMethodIfCartIsZero { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to show payment method descriptions on checkout pages in the public store
         /// </summary>
         public bool ShowPaymentMethodDescriptions { get; set; }

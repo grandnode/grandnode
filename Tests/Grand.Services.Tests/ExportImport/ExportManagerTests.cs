@@ -70,7 +70,6 @@ namespace Grand.Services.ExportImport.Tests
                 OrderShippingExclTax = 7.1M,
                 PaymentMethodAdditionalFeeInclTax = 8.1M,
                 PaymentMethodAdditionalFeeExclTax = 9.1M,
-                TaxRates = "1,3,5,7",
                 OrderTax = 10.1M,
                 OrderDiscount = 11.1M,
                 OrderTotal = 12.1M,

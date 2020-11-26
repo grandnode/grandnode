@@ -11,19 +11,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Queries.Handlers.Catalog
 {
     public class GetPersonalizedProductsQueryHandler : IRequestHandler<GetPersonalizedProductsQuery, IList<Product>>
     {
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer ID
-        /// </remarks>
-        private const string PRODUCTS_CUSTOMER_PERSONAL = "Grand.product.personal-{0}";
-
+        
         private readonly IProductService _productService;
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<CustomerProduct> _customerProductRepository;
@@ -40,7 +34,7 @@ namespace Grand.Services.Queries.Handlers.Catalog
 
         public async Task<IList<Product>> Handle(GetPersonalizedProductsQuery request, CancellationToken cancellationToken)
         {
-            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_PERSONAL, request.CustomerId), async () =>
+            return await _cacheManager.GetAsync(string.Format(CacheKey.PRODUCTS_CUSTOMER_PERSONAL_KEY, request.CustomerId), async () =>
             {
                 var query = from cr in _customerProductRepository.Table
                             where cr.CustomerId == request.CustomerId

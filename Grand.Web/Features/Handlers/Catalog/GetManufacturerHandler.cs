@@ -71,7 +71,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             model.PagingFilteringContext = options.command;
 
             //price ranges
-            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(request.Manufacturer.PriceRanges, _webHelper, _priceFormatter);
+            await model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(request.Manufacturer.PriceRanges, _webHelper, _priceFormatter, _currencyService, request.Currency);
             var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, request.Manufacturer.PriceRanges);
             decimal? minPriceConverted = null;
             decimal? maxPriceConverted = null;

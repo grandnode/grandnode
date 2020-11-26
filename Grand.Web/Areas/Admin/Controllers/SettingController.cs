@@ -198,6 +198,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.ShowBlogOnHomePage_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.ShowBlogOnHomePage, storeScope);
                 model.HomePageBlogCount_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.HomePageBlogCount, storeScope);
                 model.MaxTextSizeHomePage_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.MaxTextSizeHomePage, storeScope);
+                model.ShowBlogPostsInSearchAutoComplete_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.ShowBlogPostsInSearchAutoComplete, storeScope);
             }
 
             return View(model);
@@ -219,6 +220,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await UpdateOverrideForStore(storeScope, model.ShowBlogOnHomePage_OverrideForStore, blogSettings, x => x.ShowBlogOnHomePage);
             await UpdateOverrideForStore(storeScope, model.HomePageBlogCount_OverrideForStore, blogSettings, x => x.HomePageBlogCount);
             await UpdateOverrideForStore(storeScope, model.MaxTextSizeHomePage_OverrideForStore, blogSettings, x => x.MaxTextSizeHomePage);
+            await UpdateOverrideForStore(storeScope, model.ShowBlogPostsInSearchAutoComplete_OverrideForStore, blogSettings, x => x.ShowBlogPostsInSearchAutoComplete);
 
             //now clear cache
             await ClearCache();

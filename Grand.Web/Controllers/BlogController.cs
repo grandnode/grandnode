@@ -156,8 +156,7 @@ namespace Grand.Web.Controllers
         [AutoValidateAntiforgeryToken]
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
-        public virtual async Task<IActionResult> BlogCommentAdd(string blogPostId, BlogPostModel model, bool captchaValid,
-                       [FromServices] IWorkContext workContext)
+        public virtual async Task<IActionResult> BlogCommentAdd(string blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -166,7 +165,7 @@ namespace Grand.Web.Controllers
             if (blogPost == null || !blogPost.AllowComments)
                 return RedirectToRoute("HomePage");
 
-            if (workContext.CurrentCustomer.IsGuest() && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
+            if (_workContext.CurrentCustomer.IsGuest() && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
             }

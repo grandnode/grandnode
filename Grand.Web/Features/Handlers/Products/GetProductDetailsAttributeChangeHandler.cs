@@ -93,6 +93,7 @@ namespace Grand.Web.Features.Handlers.Products
                 //we do not calculate price of "customer enters price" option is enabled
                 var unitprice = await _priceCalculationService.GetUnitPrice(request.Product,
                     request.Customer,
+                    request.Currency,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, (decimal?)default,
                     rentalStartDate, rentalEndDate,
@@ -102,9 +103,8 @@ namespace Grand.Web.Features.Handlers.Products
                 List<AppliedDiscount> scDiscounts = unitprice.appliedDiscounts;
                 decimal finalPrice = unitprice.unitprice;
                 var productprice = await _taxService.GetProductPrice(request.Product, finalPrice);
-                decimal finalPriceWithDiscountBase = productprice.productprice;
+                decimal finalPriceWithDiscount = productprice.productprice;
                 decimal taxRate = productprice.taxRate;
-                decimal finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, request.Currency);
                 model.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }
             //stock

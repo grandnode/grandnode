@@ -1,0 +1,145 @@
+﻿@model ProductModel
+@inject Grand.Services.Directory.ICurrencyService currencyService
+@{ 
+    var currencies = await currencyService.GetAllCurrencies();
+    var defaultCurrency = await currencyService.GetPrimaryStoreCurrency();
+    currencies = currencies.Where(x => x.Id != defaultCurrency.Id).ToList();
+}
+@if (!String.IsNullOrEmpty(Model.Id) && currencies.Count > 0)
+{
+    if (Model.AvailableCategories.Count > 0)
+    { 
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="productprices-grid"></div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $("#productprices-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ProductPriceList", "Product", new { productId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            create: {
+                                url: "@Html.Raw(Url.Action("ProductPriceInsert", "Product", new { productId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            update: {
+                                url:"@Html.Raw(Url.Action("ProductPriceUpdate", "Product", new { productId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ProductPriceDelete", "Product", new { productId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    CurrencyCode: { editable: true, type: "string" },
+                                    Price: { editable: true, type: "number" },
+                                    Id: { editable: false, type: "string" }
+                                }
+                            }
+                        },
+                        requestEnd: function (e) {
+                            if (e.type == "create" || e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                    editable: {
+                        confirmation: true,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                            field: "CurrencyCode",
+                            title: "@T("Admin.Catalog.Products.ProductPrices.Fields.CurrencyCode")",
+                            width: 200,
+                            editor: currencyDropDownEditor,
+                            template: '#:CurrencyCode#'
+                        },
+                        {
+                            field: "Price",
+                            title: "@T("Admin.Catalog.Products.ProductPrices.Fields.Price")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            format: "{0:n2}"
+                        }, {
+                        command: [{
+                            name: "edit",
+                            text: {
+                                edit: "@T("Admin.Common.Edit")",
+                                update: "@T("Admin.Common.Update")",
+                                cancel: "@T("Admin.Common.Cancel")"
+                            }
+                        }, {
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 200
+                    }]
+                });
+            });
+
+            //local datasource
+            var allCurrencies = [
+                @for (int i = 0; i < currencies.Count; i++)
+                {
+                    var currencyItem = currencies[i];
+                    <text>
+                        {
+                            Id: '@(currencyItem.CurrencyCode)',
+                            Name: "@(currencyItem.CurrencyCode)"
+                        }
+                        </text>
+                    if (i != currencies.Count - 1)
+                    {
+                        <text>,</text>
+                    }
+                }
+            ];
+
+            function currencyDropDownEditor(container, options) {
+                $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CurrencyCode"/>')
+                    .appendTo(container)
+                    .kendoDropDownList({
+                        autoBind: true,
+                        dataSource: allCurrencies
+                    });
+            }
+        </script>
+    }
+}

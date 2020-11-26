@@ -1,5 +1,6 @@
 using Grand.Domain.Common;
 using Grand.Domain.Orders;
+using MongoDB.Driver.GeoJsonObjectModel;
 using System;
 using System.Collections.Generic;
 
@@ -203,6 +204,11 @@ namespace Grand.Domain.Customers
         /// </summary>
         public virtual Address ShippingAddress { get; set; }
 
+        /// <summary>
+        /// Gets or sets the coordinates
+        /// </summary>
+        public GeoJson2DCoordinates Coordinates { get; set; }
+        
         /// <summary>
         /// Gets or sets customer addresses
         /// </summary>

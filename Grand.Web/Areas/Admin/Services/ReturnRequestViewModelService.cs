@@ -109,7 +109,7 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var item in returnRequest.ReturnRequestItems)
             {
                 var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).First();
-                unitPriceInclTaxInCustomerCurrency += _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate) * item.Quantity;
+                unitPriceInclTaxInCustomerCurrency += orderItem.UnitPriceInclTax * item.Quantity;
             }
 
             model.Total = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency);
@@ -244,7 +244,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new ReturnReqestListModel {
                 //Return request status
-                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList().ToList()
+                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList(_localizationService, _workContext, false).ToList()
             };
             model.ReturnRequestStatus.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
 

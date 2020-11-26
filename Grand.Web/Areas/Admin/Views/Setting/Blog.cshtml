@@ -40,7 +40,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="Enabled" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="Enabled"></span>
                                 </div>
@@ -63,7 +63,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowNotRegisteredUsersToLeaveComments" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="AllowNotRegisteredUsersToLeaveComments"></span>
                                 </div>
@@ -76,7 +76,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="NotifyAboutNewBlogComments" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="NotifyAboutNewBlogComments"></span>
                                 </div>
@@ -99,7 +99,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShowHeaderRssUrl" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="ShowHeaderRssUrl"></span>
                                 </div>
@@ -112,7 +112,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShowBlogOnHomePage" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="ShowBlogOnHomePage"></span>
                                 </div>
@@ -135,6 +135,19 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="MaxTextSizeHomePage" />
                                     <span asp-validation-for="MaxTextSizeHomePage"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShowBlogPostsInSearchAutoComplete_OverrideForStore, model => model.ShowBlogPostsInSearchAutoComplete, Model.ActiveStoreScopeConfiguration)
+                                    <admin-label asp-for="ShowBlogPostsInSearchAutoComplete" class="control-label" />
+                                </div>
+                                <div class="col-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                                        <admin-input asp-for="ShowBlogPostsInSearchAutoComplete" />
+                                        <div class="control__indicator"></div>
+                                    </label>
+                                    <span asp-validation-for="ShowBlogPostsInSearchAutoComplete"></span>
                                 </div>
                             </div>
                         </div>

@@ -18,6 +18,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using Grand.Services.Directory;
 
 namespace Grand.Services.Discounts.Tests
 {
@@ -31,6 +32,7 @@ namespace Grand.Services.Discounts.Tests
         private ILocalizationService _localizationService;
         private IDiscountService _discountService;
         private IStoreContext _storeContext;
+        private ICurrencyService _currencyService;
         private IServiceProvider _serviceProvider;
 
         private ShoppingCartSettings _shoppingCartSettings;
@@ -82,9 +84,9 @@ namespace Grand.Services.Discounts.Tests
             _localizationService = new Mock<ILocalizationService>().Object;
             _shoppingCartSettings = new Mock<ShoppingCartSettings>().Object;
             _catalogSettings = new Mock<CatalogSettings>().Object;
-
+            _currencyService = new Mock<ICurrencyService>().Object;
             _discountService = new DiscountService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher), _discountRepo, _discountCouponRepo,
-                _discountUsageHistoryRepo, _localizationService, _storeContext,
+                _discountUsageHistoryRepo, _currencyService, _localizationService, _storeContext,
                 new PluginFinder(_serviceProvider), _eventPublisher, 
                 _shoppingCartSettings, _catalogSettings);
         }

@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Catalog
 {
@@ -21,8 +22,6 @@ namespace Grand.Services.Catalog
     /// </summary>
     public partial class AuctionService : IAuctionService
     {
-        private const string PRODUCTS_BY_ID_KEY = "Grand.product.id-{0}";
-
         private readonly IRepository<Bid> _bidRepository;
         private readonly IProductService _productService;
         private readonly IRepository<Product> _productRepository;
@@ -110,7 +109,7 @@ namespace Grand.Services.Catalog
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             await _mediator.EntityUpdated(product);
         }
@@ -134,7 +133,7 @@ namespace Grand.Services.Catalog
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             await _mediator.EntityUpdated(product);
         }

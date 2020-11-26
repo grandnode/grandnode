@@ -11,14 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="3.5.1.18" />
-    <PackageReference Include="AWSSDK.S3" Version="3.5.1.10" />
+    <PackageReference Include="AWSSDK.Core" Version="3.5.1.37" />
+    <PackageReference Include="AWSSDK.S3" Version="3.5.4.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.7.0" />
     <PackageReference Include="Google.Apis" Version="1.49.0" />
-    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.49.0.2091" />
+    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.49.0.2128" />
     <PackageReference Include="MailKit" Version="2.9.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.3.0" />
-    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.2" />
-    <PackageReference Include="Microsoft.Azure.Storage.Common" Version="11.2.2" />
     <PackageReference Include="NPOI" Version="2.5.1" />
     <PackageReference Include="SkiaSharp" Version="2.80.2" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.2" />

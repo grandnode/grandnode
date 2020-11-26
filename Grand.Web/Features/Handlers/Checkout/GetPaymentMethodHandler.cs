@@ -65,8 +65,7 @@ namespace Grand.Web.Features.Handlers.Checkout
             if (_rewardPointsSettings.Enabled && !request.Cart.IsRecurring())
             {
                 int rewardPointsBalance = await _rewardPointsService.GetRewardPointsBalance(request.Customer.Id, request.Store.Id);
-                decimal rewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-                decimal rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, request.Currency);
+                decimal rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(await _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance), request.Currency);
                 if (rewardPointsAmount > decimal.Zero &&
                     _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {

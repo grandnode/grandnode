@@ -148,9 +148,9 @@ namespace Grand.Services.Messages
             await _mediator.EntityTokensAdded(returnRequest, liquidReturnRequest, liquidObject);
         }
 
-        public async Task AddGiftCardTokens(LiquidObject liquidObject, GiftCard giftCard)
+        public async Task AddGiftCardTokens(LiquidObject liquidObject, GiftCard giftCard, Language language)
         {
-            var liquidGiftCart = await _mediator.Send(new GetGiftCardTokensCommand() { GiftCard = giftCard });
+            var liquidGiftCart = await _mediator.Send(new GetGiftCardTokensCommand() { GiftCard = giftCard, Language = language });
             liquidObject.GiftCard = liquidGiftCart;
             await _mediator.EntityTokensAdded(giftCard, liquidGiftCart, liquidObject);
         }

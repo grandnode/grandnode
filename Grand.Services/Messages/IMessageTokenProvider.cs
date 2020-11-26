@@ -21,7 +21,7 @@ namespace Grand.Services.Messages
         Task AddShipmentTokens(LiquidObject liquidObject, Shipment shipment, Order order, Store store, Language language);
         Task AddRecurringPaymentTokens(LiquidObject liquidObject, RecurringPayment recurringPayment);
         Task AddReturnRequestTokens(LiquidObject liquidObject, ReturnRequest returnRequest, Store store, Order orderItem, Language language, ReturnRequestNote returnRequestNote = null);
-        Task AddGiftCardTokens(LiquidObject liquidObject, GiftCard giftCard);
+        Task AddGiftCardTokens(LiquidObject liquidObject, GiftCard giftCard, Language language);
         Task AddCustomerTokens(LiquidObject liquidObject, Customer customer, Store store, Language language, CustomerNote customerNote = null);
         Task AddShoppingCartTokens(LiquidObject liquidObject, Customer customer, Store store, Language language, string personalMessage = "", string customerEmail = "");
         Task AddVendorTokens(LiquidObject liquidObject, Vendor vendor, Language language);

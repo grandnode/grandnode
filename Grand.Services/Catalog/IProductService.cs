@@ -303,6 +303,28 @@ namespace Grand.Services.Catalog
 
         #endregion
 
+        #region Product prices
+
+        /// <summary>
+        /// Deletes a product price
+        /// </summary>
+        /// <param name="productPrice">Product price</param>
+        Task DeleteProductPrice(ProductPrice productPrice);
+
+        /// <summary>
+        /// Inserts a product price
+        /// </summary>
+        /// <param name="productPrice">Product price</param>
+        Task InsertProductPrice(ProductPrice productPrice);
+
+        /// <summary>
+        /// Updates the product price
+        /// </summary>
+        /// <param name="productPrice">Product price</param>
+        Task UpdateProductPrice(ProductPrice productPrice);
+
+        #endregion
+
         #region Product pictures
 
         /// <summary>

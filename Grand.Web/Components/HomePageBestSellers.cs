@@ -4,8 +4,6 @@ using Grand.Domain.Catalog;
 using Grand.Framework.Components;
 using Grand.Services.Catalog;
 using Grand.Services.Orders;
-using Grand.Services.Security;
-using Grand.Services.Stores;
 using Grand.Web.Features.Models.Products;
 using Grand.Web.Infrastructure.Cache;
 using MediatR;
@@ -67,7 +65,7 @@ namespace Grand.Web.Components
 
             //load products
             var products = await _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
-            
+
             if (!products.Any())
                 return Content("");
 

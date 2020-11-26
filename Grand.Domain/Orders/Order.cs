@@ -16,9 +16,8 @@ namespace Grand.Domain.Orders
     public partial class Order : BaseEntity
     {
         private ICollection<OrderItem> _orderItems;
+        private ICollection<OrderTax> _orderTaxes;
         private ICollection<string> _orderTags;
-
-
 
         #region Properties
 
@@ -92,6 +91,12 @@ namespace Grand.Domain.Orders
         /// </summary>
         [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal CurrencyRate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the currency rate
+        /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
+        public decimal Rate { get; set; }
 
         /// <summary>
         /// Gets or sets the customer tax display type identifier
@@ -175,11 +180,6 @@ namespace Grand.Domain.Orders
         /// </summary>
         [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal PaymentMethodAdditionalFeeExclTax { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tax rates
-        /// </summary>
-        public string TaxRates { get; set; }
 
         /// <summary>
         /// Gets or sets the order tax
@@ -391,13 +391,20 @@ namespace Grand.Domain.Orders
         }
 
         /// <summary>
+        /// Gets or sets order taxes
+        /// </summary>
+        public virtual ICollection<OrderTax> OrderTaxes {
+            get { return _orderTaxes ??= new List<OrderTax>(); }
+            protected set { _orderTaxes = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the order's tags
         /// </summary>
         public virtual ICollection<string> OrderTags 
         {
             get { return _orderTags ??= new List<string>(); }
             protected set { _orderTags = value; }
-
         }
 
         #endregion
@@ -461,17 +468,6 @@ namespace Grand.Domain.Orders
             set
             {
                 CustomerTaxDisplayTypeId = (int)value;
-            }
-        }
-
-        /// <summary>
-        /// Gets the applied tax rates
-        /// </summary>
-        public SortedDictionary<decimal, decimal> TaxRatesDictionary
-        {
-            get
-            {
-                return this.ParseTaxRates(TaxRates);
             }
         }
         

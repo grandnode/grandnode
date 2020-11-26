@@ -20,6 +20,12 @@ namespace Grand.Core
         Task<Store> SetCurrentStore();
 
         /// <summary>
+        /// Set the current store by BackgroundService
+        /// </summary>
+        /// <returns></returns>
+        Task<Store> SetCurrentStore(string storeId);
+
+        /// <summary>
         /// Set store cookie
         /// </summary>
         /// <param name="storeId">Store ident</param>

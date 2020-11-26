@@ -24,6 +24,12 @@ namespace Grand.Core
         Task<Customer> SetCurrentCustomer();
 
         /// <summary>
+        /// Set the current customer 
+        /// </summary>
+        /// <returns></returns>
+        Task<Customer> SetCurrentCustomer(Customer customer);
+
+        /// <summary>
         /// Gets or sets the original customer (in case the current one is impersonated)
         /// </summary>
         Customer OriginalCustomerIfImpersonated { get; }

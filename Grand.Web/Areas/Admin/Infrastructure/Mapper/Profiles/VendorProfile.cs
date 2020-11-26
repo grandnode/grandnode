@@ -22,6 +22,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
             CreateMap<VendorModel, Vendor>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Coordinates, mo => mo.Ignore())
                 .ForMember(dest => dest.Deleted, mo => mo.Ignore());
         }
 

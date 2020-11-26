@@ -7,6 +7,7 @@ using System.Linq;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Catalog
 {
@@ -15,26 +16,6 @@ namespace Grand.Services.Catalog
     /// </summary>
     public partial class RecentlyViewedProductsService : IRecentlyViewedProductsService
     {
-
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer id
-        /// {1} : number
-        /// </remarks>
-        private const string RECENTLY_VIEW_PRODUCTS_KEY = "Grand.recentlyviewedproducts-{0}-{1}";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// {0} customer id
-        /// </summary>
-        private const string RECENTLY_VIEW_PRODUCTS_PATTERN_KEY = "Grand.recentlyviewedproducts-{0}";
-
-        #endregion
-
         #region Fields
 
         private readonly IProductService _productService;
@@ -86,7 +67,7 @@ namespace Grand.Services.Catalog
         /// <returns>"recently viewed products" list</returns>
         protected async Task<IList<string>> GetRecentlyViewedProductsIds(string customerId, int number)
         {
-            string key = string.Format(RECENTLY_VIEW_PRODUCTS_KEY, customerId, number);
+            string key = string.Format(CacheKey.RECENTLY_VIEW_PRODUCTS_KEY, customerId, number);
             return await _cacheManager.GetAsync(key, async () =>
             {
                 var query = from p in _recentlyViewedProducts.Table
@@ -147,7 +128,7 @@ namespace Grand.Services.Catalog
             }
 
             //Clear cache
-            await _cacheManager.RemoveByPrefixAsync(string.Format(RECENTLY_VIEW_PRODUCTS_PATTERN_KEY, customerId));
+            await _cacheManager.RemoveByPrefixAsync(string.Format(CacheKey.RECENTLY_VIEW_PRODUCTS_PATTERN_KEY, customerId));
 
         }
 

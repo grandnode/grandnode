@@ -870,7 +870,8 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("Confirm")]
-        public virtual async Task<IActionResult> ConfirmOrder([FromServices] IOrderProcessingService orderProcessingService)
+        public virtual async Task<IActionResult> ConfirmOrder(
+            [FromServices] IOrderConfirmationService orderConfirmationService)
         {
             //validation
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
@@ -911,7 +912,7 @@ namespace Grand.Web.Controllers
                 processPaymentRequest.PaymentMethodSystemName = await _workContext.CurrentCustomer.GetAttribute<string>(
                     _genericAttributeService, SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _storeContext.CurrentStore.Id);
-                var placeOrderResult = await orderProcessingService.PlaceOrder(processPaymentRequest);
+                var placeOrderResult = await orderConfirmationService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
                     await _customerActivityService.InsertActivity("PublicStore.PlaceOrder", "", _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), placeOrderResult.PlacedOrder.Id);
@@ -1622,7 +1623,8 @@ namespace Grand.Web.Controllers
             }
         }
 
-        public virtual async Task<IActionResult> OpcConfirmOrder([FromServices] IOrderProcessingService orderProcessingService)
+        public virtual async Task<IActionResult> OpcConfirmOrder(
+            [FromServices] IOrderConfirmationService orderConfirmationService)
         {
             try
             {
@@ -1655,7 +1657,7 @@ namespace Grand.Web.Controllers
                 processPaymentRequest.PaymentMethodSystemName = await _workContext.CurrentCustomer.GetAttribute<string>(
                     _genericAttributeService, SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _storeContext.CurrentStore.Id);
-                var placeOrderResult = await orderProcessingService.PlaceOrder(processPaymentRequest);
+                var placeOrderResult = await orderConfirmationService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
                     await _customerActivityService.InsertActivity("PublicStore.PlaceOrder", "", _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), placeOrderResult.PlacedOrder.Id);

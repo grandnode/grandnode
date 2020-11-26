@@ -32,7 +32,6 @@ namespace Grand.Services.Commands.Handlers.Messages
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IPaymentService _paymentService;
         private readonly ILocalizationService _localizationService;
@@ -51,7 +50,6 @@ namespace Grand.Services.Commands.Handlers.Messages
             IProductAttributeParser productAttributeParser, 
             ICountryService countryService, 
             IStateProvinceService stateProvinceService, 
-            IAddressAttributeParser addressAttributeParser, 
             IAddressAttributeFormatter addressAttributeFormatter, 
             IPaymentService paymentService, 
             ILocalizationService localizationService, 
@@ -68,7 +66,6 @@ namespace Grand.Services.Commands.Handlers.Messages
             _productAttributeParser = productAttributeParser;
             _countryService = countryService;
             _stateProvinceService = stateProvinceService;
-            _addressAttributeParser = addressAttributeParser;
             _addressAttributeFormatter = addressAttributeFormatter;
             _paymentService = paymentService;
             _localizationService = localizationService;
@@ -101,14 +98,12 @@ namespace Grand.Services.Commands.Handlers.Messages
                 if (request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
-                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(item.UnitPriceInclTax, request.Order.CurrencyRate);
-                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, currency, language, true);
+                    unitPriceStr = _priceFormatter.FormatPrice(item.UnitPriceInclTax, true, currency, language, true);
                 }
                 else
                 {
                     //excluding tax
-                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(item.UnitPriceExclTax, request.Order.CurrencyRate);
-                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, currency, language, false);
+                    unitPriceStr = _priceFormatter.FormatPrice(item.UnitPriceExclTax, true, currency, language, false);
                 }
                 liqitem.UnitPrice = unitPriceStr;
 
@@ -119,14 +114,12 @@ namespace Grand.Services.Commands.Handlers.Messages
                 if (request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
-                    var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(item.PriceInclTax, request.Order.CurrencyRate);
-                    priceStr = _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, currency, language, true);
+                    priceStr = _priceFormatter.FormatPrice(item.PriceInclTax, true, currency, language, true);
                 }
                 else
                 {
                     //excluding tax
-                    var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(item.PriceExclTax, request.Order.CurrencyRate);
-                    priceStr = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, currency, language, false);
+                    priceStr = _priceFormatter.FormatPrice(item.PriceExclTax, true, currency, language, false);
                 }
                 liqitem.TotalPrice = priceStr;
 
@@ -156,10 +149,10 @@ namespace Grand.Services.Commands.Handlers.Messages
             liquidOrder.AmountRefunded = _priceFormatter.FormatPrice(request.RefundedAmount, true, currency, language, false);
 
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            foreach (var item in request.Order.TaxRatesDictionary)
+            foreach (var item in request.Order.OrderTaxes)
             {
-                string taxRate = string.Format(_localizationService.GetResource("Messages.Order.TaxRateLine"), _priceFormatter.FormatTaxRate(item.Key));
-                string taxValue = _priceFormatter.FormatPrice(item.Value, true, currency, language, false);
+                string taxRate = string.Format(_localizationService.GetResource("Messages.Order.TaxRateLine"), _priceFormatter.FormatTaxRate(item.Percent));
+                string taxValue = _priceFormatter.FormatPrice(item.Amount, true, currency, language, false);
                 dict.Add(taxRate, taxValue);
             }
             liquidOrder.TaxRates = dict;
@@ -170,14 +163,14 @@ namespace Grand.Services.Commands.Handlers.Messages
             {
                 var giftCard = await _giftCardService.GetGiftCardById(gcuh.GiftCardId);
                 string giftCardText = string.Format(_localizationService.GetResource("Messages.Order.GiftCardInfo", language.Id), WebUtility.HtmlEncode(giftCard.GiftCardCouponCode));
-                string giftCardAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, request.Order.CurrencyRate)), true, currency, language, false);
+                string giftCardAmount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, currency, language, true, false);
                 cards.Add(giftCardText, giftCardAmount);
             }
             liquidOrder.GiftCards = cards;
             if (request.Order.RedeemedRewardPointsEntry != null)
             {
                 liquidOrder.RPTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", language.Id), -request.Order.RedeemedRewardPointsEntry?.Points);
-                liquidOrder.RPAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(request.Order.RedeemedRewardPointsEntry.UsedAmount, request.Order.CurrencyRate)), true, currency, language, false);
+                liquidOrder.RPAmount = _priceFormatter.FormatPrice(-request.Order.RedeemedRewardPointsEntry.UsedAmount, true, currency, language, true, false);
             }
             void CalculateSubTotals()
             {
@@ -200,13 +193,11 @@ namespace Grand.Services.Commands.Handlers.Messages
                     //including tax
 
                     //subtotal
-                    var orderSubtotalInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.OrderSubtotalInclTax, request.Order.CurrencyRate);
-                    _cusSubTotal = _priceFormatter.FormatPrice(orderSubtotalInclTaxInCustomerCurrency, true, currency, language, true);
+                    _cusSubTotal = _priceFormatter.FormatPrice(request.Order.OrderSubtotalInclTax, true, currency, language, true);
                     //discount (applied to order subtotal)
-                    var orderSubTotalDiscountInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.OrderSubTotalDiscountInclTax, request.Order.CurrencyRate);
-                    if (orderSubTotalDiscountInclTaxInCustomerCurrency > decimal.Zero)
+                    if (request.Order.OrderSubTotalDiscountInclTax > decimal.Zero)
                     {
-                        _cusSubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, currency, language, true);
+                        _cusSubTotalDiscount = _priceFormatter.FormatPrice(-request.Order.OrderSubTotalDiscountInclTax, true, currency, language, true);
                         _displaySubTotalDiscount = true;
                     }
                 }
@@ -215,13 +206,11 @@ namespace Grand.Services.Commands.Handlers.Messages
                     //exсluding tax
 
                     //subtotal
-                    var orderSubtotalExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.OrderSubtotalExclTax, request.Order.CurrencyRate);
-                    _cusSubTotal = _priceFormatter.FormatPrice(orderSubtotalExclTaxInCustomerCurrency, true, currency, language, false);
+                    _cusSubTotal = _priceFormatter.FormatPrice(request.Order.OrderSubtotalExclTax, true, currency, language, false);
                     //discount (applied to order subtotal)
-                    var orderSubTotalDiscountExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.OrderSubTotalDiscountExclTax, request.Order.CurrencyRate);
-                    if (orderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
+                    if (request.Order.OrderSubTotalDiscountExclTax > decimal.Zero)
                     {
-                        _cusSubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, currency, language, false);
+                        _cusSubTotalDiscount = _priceFormatter.FormatPrice(-request.Order.OrderSubTotalDiscountExclTax, true, currency, language, false);
                         _displaySubTotalDiscount = true;
                     }
                 }
@@ -235,22 +224,18 @@ namespace Grand.Services.Commands.Handlers.Messages
                     //including tax
 
                     //shipping
-                    var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.OrderShippingInclTax, request.Order.CurrencyRate);
-                    _cusShipTotal = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, currency, language, true);
+                    _cusShipTotal = _priceFormatter.FormatShippingPrice(request.Order.OrderShippingInclTax, true, currency, language, true);
                     //payment method additional fee
-                    var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.PaymentMethodAdditionalFeeInclTax, request.Order.CurrencyRate);
-                    _cusPaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, currency, language, true);
+                    _cusPaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(request.Order.PaymentMethodAdditionalFeeInclTax, true, currency, language, true);
                 }
                 else
                 {
                     //excluding tax
 
                     //shipping
-                    var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.OrderShippingExclTax, request.Order.CurrencyRate);
-                    _cusShipTotal = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, currency, language, false);
+                    _cusShipTotal = _priceFormatter.FormatShippingPrice(request.Order.OrderShippingExclTax, true, currency, language, false);
                     //payment method additional fee
-                    var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.PaymentMethodAdditionalFeeExclTax, request.Order.CurrencyRate);
-                    _cusPaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, currency, language, false);
+                    _cusPaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(request.Order.PaymentMethodAdditionalFeeExclTax, true, currency, language, false);
                 }
 
                 //shipping
@@ -276,15 +261,10 @@ namespace Grand.Services.Commands.Handlers.Messages
                     }
                     else
                     {
-                        var _taxRates = new SortedDictionary<decimal, decimal>();
-                        foreach (var tr in request.Order.TaxRatesDictionary)
-                            _taxRates.Add(tr.Key, _currencyService.ConvertCurrency(tr.Value, request.Order.CurrencyRate));
-
-                        _displayTaxRates = _taxSettings.DisplayTaxRates && _taxRates.Any();
+                        _displayTaxRates = _taxSettings.DisplayTaxRates && request.Order.OrderTaxes.Any();
                         _displayTax = !_displayTaxRates;
 
-                        var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.OrderTax, request.Order.CurrencyRate);
-                        string taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, currency, language, request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
+                        string taxStr = _priceFormatter.FormatPrice(request.Order.OrderTax, true, currency, language, request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
                         _cusTaxTotal = taxStr;
                     }
                 }
@@ -293,14 +273,12 @@ namespace Grand.Services.Commands.Handlers.Messages
                 _displayDiscount = false;
                 if (request.Order.OrderDiscount > decimal.Zero)
                 {
-                    var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.OrderDiscount, request.Order.CurrencyRate);
-                    _cusDiscount = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, currency, language, request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
+                    _cusDiscount = _priceFormatter.FormatPrice(-request.Order.OrderDiscount, true, currency, language, request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
                     _displayDiscount = true;
                 }
 
                 //total
-                var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(request.Order.OrderTotal, request.Order.CurrencyRate);
-                _cusTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, currency, language, request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
+                _cusTotal = _priceFormatter.FormatPrice(request.Order.OrderTotal, true, currency, language, request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
 
 
                 liquidOrder.SubTotal = _cusSubTotal;

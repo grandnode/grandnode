@@ -14,14 +14,16 @@ namespace Grand.Plugin.DiscountRequirements.ShoppingCart
     {
         private readonly IWorkContext _workContext;
         private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public ShoppingCartDiscountRequirementRule(IWorkContext workContext, IPriceCalculationService priceCalculationService,
-            ISettingService settingService, ShoppingCartSettings shoppingCartSettings)
+            IProductService productService, ISettingService settingService, ShoppingCartSettings shoppingCartSettings)
         {
             _workContext = workContext;
             _priceCalculationService = priceCalculationService;
+            _productService = productService;
             _settingService = settingService;
             _shoppingCartSettings = shoppingCartSettings;
         }
@@ -60,7 +62,9 @@ namespace Grand.Plugin.DiscountRequirements.ShoppingCart
             foreach (var ca in cart)
             {
                 bool calculateWithDiscount = false;
-                spentAmount += (await _priceCalculationService.GetSubTotal(ca, calculateWithDiscount)).subTotal;
+                var product = await _productService.GetProductById(ca.ProductId);
+                if (product != null)
+                    spentAmount += (await _priceCalculationService.GetSubTotal(ca, product, calculateWithDiscount)).subTotal;
             }
 
             result.IsValid = spentAmount > spentAmountRequirement;

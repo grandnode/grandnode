@@ -167,14 +167,12 @@ namespace Grand.Web.Features.Handlers.Orders
                     if (request.Order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {
                         //including tax
-                        var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, request.Order.CurrencyRate);
-                        orderItemModel.UnitPrice = await _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, request.Order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
+                        orderItemModel.UnitPrice = await _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax, true, request.Order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
                     }
                     else
                     {
                         //excluding tax
-                        var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, request.Order.CurrencyRate);
-                        orderItemModel.UnitPrice = await _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, request.Order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
+                        orderItemModel.UnitPrice = await _priceFormatter.FormatPrice(orderItem.UnitPriceExclTax, true, request.Order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
                     }
                 }
             }

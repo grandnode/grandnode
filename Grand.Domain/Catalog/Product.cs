@@ -25,6 +25,7 @@ namespace Grand.Domain.Catalog
         private ICollection<RelatedProduct> _relatedProduct;
         private ICollection<SimilarProduct> _similarProduct;
         private ICollection<BundleProduct> _bundleProduct;
+        private ICollection<ProductPrice> _productprices;
         private ICollection<string> _productTags;
         public Product()
         {
@@ -728,7 +729,13 @@ namespace Grand.Domain.Catalog
             get { return _productAttributeCombinations ??= new List<ProductAttributeCombination>(); }
             protected set { _productAttributeCombinations = value; }
         }
-
+        /// <summary>
+        /// Gets or sets the product prices
+        /// </summary>
+        public virtual ICollection<ProductPrice> ProductPrices {
+            get { return _productprices ??= new List<ProductPrice>(); }
+            protected set { _productprices = value; }
+        }
         /// <summary>
         /// Gets or sets the tier prices
         /// </summary>

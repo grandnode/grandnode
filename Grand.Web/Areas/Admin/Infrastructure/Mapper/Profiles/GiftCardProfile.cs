@@ -13,8 +13,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                 .ForMember(dest => dest.PurchasedWithOrderId, mo => mo.Ignore())
                 .ForMember(dest => dest.AmountStr, mo => mo.Ignore())
                 .ForMember(dest => dest.RemainingAmountStr, mo => mo.Ignore())
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
-                .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore());
+                .ForMember(dest => dest.AvailableCurrencies, mo => mo.Ignore())
+                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
             CreateMap<GiftCardModel, GiftCard>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCardType, mo => mo.Ignore())

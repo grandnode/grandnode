@@ -1,4 +1,5 @@
 using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain.Data;
 using Grand.Domain.Stores;
 using Grand.Services.Events;
@@ -16,22 +17,6 @@ namespace Grand.Services.Stores
     /// </summary>
     public partial class StoreService : IStoreService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string STORES_ALL_KEY = "Grand.stores.all";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : store ID
-        /// </remarks>
-        private const string STORES_BY_ID_KEY = "Grand.stores.id-{0}";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Store> _storeRepository;
@@ -93,7 +78,7 @@ namespace Grand.Services.Stores
         {
             if (_allStores == null)
             {
-                _allStores = await _cacheManager.GetAsync(STORES_ALL_KEY, () => {
+                _allStores = await _cacheManager.GetAsync(CacheKey.STORES_ALL_KEY, () => {
                     return _storeRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToListAsync();
                 });
             }
@@ -107,7 +92,7 @@ namespace Grand.Services.Stores
         /// <returns>Store</returns>
         public virtual Task<Store> GetStoreById(string storeId)
         {
-            string key = string.Format(STORES_BY_ID_KEY, storeId);
+            string key = string.Format(CacheKey.STORES_BY_ID_KEY, storeId);
             return _cacheManager.GetAsync(key, () => _storeRepository.GetByIdAsync(storeId));
         }
 

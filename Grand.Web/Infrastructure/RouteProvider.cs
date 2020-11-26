@@ -395,6 +395,11 @@ namespace Grand.Web.Infrastructure
                             pattern + "uploadfilecontactattribute/{attributeId}",
                             new { controller = "Common", action = "UploadFileContactAttribute" });
 
+            //CurrentPosition Save
+            routeBuilder.MapControllerRoute("CurrentPosition",
+                pattern + "currentposition",
+                new { controller = "Common", action = "SaveCurrentPosition" });
+
             //robots.txt
             routeBuilder.MapControllerRoute("robots.txt",
                             "robots.txt",

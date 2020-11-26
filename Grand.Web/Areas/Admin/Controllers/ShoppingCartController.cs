@@ -71,12 +71,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 loadOnlyWithShoppingCart: true,
                 sct: ShoppingCartType.ShoppingCart,
                 pageIndex: command.Page - 1,
-                pageSize: command.PageSize);
+                pageSize: command.PageSize,
+                orderBySelector: x => x.LastUpdateCartDateUtc);
 
-            var gridModel = new DataSourceResult
-            {
-                Data = customers.Select(x => new ShoppingCartModel
-                {
+            var gridModel = new DataSourceResult {
+                Data = customers.Select(x => new ShoppingCartModel {
                     CustomerId = x.Id,
                     CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
                     TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).Sum(y => y.Quantity)
@@ -97,22 +96,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var store = await _storeService.GetStoreById(sci.StoreId);
                 var product = await _productService.GetProductById(sci.ProductId);
-                var sciModel = new ShoppingCartItemModel
-                {
+                var sciModel = new ShoppingCartItemModel {
                     Id = sci.Id,
                     Store = store != null ? store.Shortcut : "Unknown",
                     ProductId = sci.ProductId,
                     Quantity = sci.Quantity,
                     ProductName = product.Name,
                     AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml, customer),
-                    UnitPrice = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci)).unitprice)).productprice),
-                    Total = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetSubTotal(sci)).subTotal)).productprice),
+                    UnitPrice = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci, product)).unitprice)).productprice),
+                    Total = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetSubTotal(sci, product)).subTotal)).productprice),
                     UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
                 };
                 items.Add(sciModel);
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = cart.Count
             };
@@ -127,12 +124,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 loadOnlyWithShoppingCart: true,
                 sct: ShoppingCartType.Wishlist,
                 pageIndex: command.Page - 1,
-                pageSize: command.PageSize);
+                pageSize: command.PageSize,
+                orderBySelector: x => x.LastUpdateWishListDateUtc);
 
-            var gridModel = new DataSourceResult
-            {
-                Data = customers.Select(x => new ShoppingCartModel
-                {
+            var gridModel = new DataSourceResult {
+                Data = customers.Select(x => new ShoppingCartModel {
                     CustomerId = x.Id,
                     CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
                     TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).Sum(y => y.Quantity)
@@ -153,22 +149,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var store = await _storeService.GetStoreById(sci.StoreId);
                 var product = await _productService.GetProductById(sci.ProductId);
-                var sciModel = new ShoppingCartItemModel
-                {
+                var sciModel = new ShoppingCartItemModel {
                     Id = sci.Id,
                     Store = store != null ? store.Shortcut : "Unknown",
                     ProductId = sci.ProductId,
                     Quantity = sci.Quantity,
                     ProductName = product.Name,
                     AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml, customer),
-                    UnitPrice = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci)).unitprice)).productprice),
-                    Total = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetSubTotal(sci)).subTotal)).productprice),
+                    UnitPrice = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci, product)).unitprice)).productprice),
+                    Total = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetSubTotal(sci, product)).subTotal)).productprice),
                     UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
                 };
                 items.Add(sciModel);
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = cart.Count
             };

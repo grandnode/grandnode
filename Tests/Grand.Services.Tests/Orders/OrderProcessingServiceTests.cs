@@ -237,20 +237,11 @@ namespace Grand.Services.Orders.Tests
             _localizationSettings = new LocalizationSettings();
             ICustomerActionEventService tempICustomerActionEventService = new Mock<ICustomerActionEventService>().Object;
 
-            _orderProcessingService = new OrderProcessingService(_orderService, _webHelper,
-                _localizationService, _languageService,
-                _productService, _inventoryManageService, _paymentService, _logger,
-                _orderTotalCalcService, _priceCalcService, _priceFormatter,
-                _productAttributeParser, _productAttributeFormatter,
-                _giftCardService, _shoppingCartService, _checkoutAttributeFormatter,
-                _shippingService, _taxService,
-                _customerService, _discountService,
-                _encryptionService, _workContext,
-                _workflowMessageService, _vendorService,
-                _currencyService, _affiliateService,
-                _eventPublisher, _pdfService, null, _storeContext, _productReservationService, _auctionService, _countryService,
-                _shippingSettings, _shoppingCartSettings,  _paymentSettings, 
-                _orderSettings, _taxSettings, _localizationSettings);
+            _orderProcessingService = new OrderProcessingService(_orderService, 
+                 _paymentService, _logger,
+                _workflowMessageService, 
+                _eventPublisher, 
+                _localizationSettings);
         }
 
         [TestMethod()]

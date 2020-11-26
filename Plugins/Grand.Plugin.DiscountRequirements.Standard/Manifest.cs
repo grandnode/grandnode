@@ -7,5 +7,5 @@ using Grand.Core.Plugins;
     SystemName = "DiscountRequirements.Standard",
     SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
-    Version = "1.02"
+    Version = "1.03"
 )]

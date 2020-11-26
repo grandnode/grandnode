@@ -39,6 +39,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")]
         [UIHint("DecimalNullable")]
         public decimal? OverriddenPrice { get; set; }
+        public string PrimaryStoreCurrencyCode { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
         public int NotifyAdminForQuantityBelow { get; set; }

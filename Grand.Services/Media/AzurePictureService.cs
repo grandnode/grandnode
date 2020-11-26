@@ -1,4 +1,5 @@
-﻿using Grand.Core;
+﻿using Azure.Storage.Blobs;
+using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
 using Grand.Domain.Data;
@@ -7,10 +8,9 @@ using Grand.Services.Configuration;
 using Grand.Services.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Media
@@ -22,9 +22,7 @@ namespace Grand.Services.Media
     {
         #region Fields
 
-        private static CloudStorageAccount _storageAccount = null;
-        private static CloudBlobClient blobClient = null;
-        private static CloudBlobContainer container_thumb = null;
+        private static BlobContainerClient container = null;
 
         private readonly GrandConfig _config;
         #endregion
@@ -58,29 +56,13 @@ namespace Grand.Services.Media
             if (string.IsNullOrEmpty(_config.AzureBlobStorageEndPoint))
                 throw new Exception("Azure end point for BLOB is not specified");
 
-            _storageAccount = CloudStorageAccount.Parse(_config.AzureBlobStorageConnectionString);
-            if (_storageAccount == null)
-                throw new Exception("Azure connection string for BLOB is not wrong");
+            container = new BlobContainerClient(_config.AzureBlobStorageConnectionString, _config.AzureBlobStorageContainerName);
 
-            //should we do it for each HTTP request?
-            blobClient = _storageAccount.CreateCloudBlobClient();
         }
 
         #endregion
 
         #region Utilities
-
-        protected async Task InitContainerThumb()
-        {
-            if (container_thumb == null)
-            {
-                var containerPermissions = new BlobContainerPermissions();
-                containerPermissions.PublicAccess = BlobContainerPublicAccessType.Blob;
-                container_thumb = blobClient.GetContainerReference(_config.AzureBlobStorageContainerName);
-                await container_thumb.CreateIfNotExistsAsync();
-                await container_thumb.SetPermissionsAsync(containerPermissions);
-            }
-        }
 
         /// <summary>
         /// Delete picture thumbs
@@ -88,16 +70,12 @@ namespace Grand.Services.Media
         /// <param name="picture">Picture</param>
         protected override async Task DeletePictureThumbs(Picture picture)
         {
-            await InitContainerThumb();
-
-            BlobContinuationToken continuationToken = null;
             string filter = string.Format("{0}", picture.Id);
-            var files = await container_thumb.ListBlobsSegmentedAsync(filter, true, BlobListingDetails.All, int.MaxValue, continuationToken, null, null);
+            var blobs = container.GetBlobs(Azure.Storage.Blobs.Models.BlobTraits.All, Azure.Storage.Blobs.Models.BlobStates.All, filter);
 
-            foreach (var ff in files.Results)
+            foreach (var blob in blobs)
             {
-                CloudBlockBlob blockBlob = (CloudBlockBlob)ff;
-                await blockBlob.DeleteAsync();
+                await container.DeleteBlobAsync(blob.Name);
             }
         }
 
@@ -121,8 +99,7 @@ namespace Grand.Services.Media
         protected override string GetThumbUrl(string thumbFileName, string storeLocation = null)
         {
             var url = _config.AzureBlobStorageEndPoint + _config.AzureBlobStorageContainerName + "/";
-
-            url = url + thumbFileName;
+            url += thumbFileName;
             return url;
         }
 
@@ -136,9 +113,11 @@ namespace Grand.Services.Media
         {
             try
             {
-                await InitContainerThumb();
-                CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
-                return await blockBlob.ExistsAsync();
+                await foreach (var blob in container.GetBlobsAsync(Azure.Storage.Blobs.Models.BlobTraits.All, Azure.Storage.Blobs.Models.BlobStates.All, thumbFileName))
+                {
+                    return true;
+                }
+                return false;
             }
             catch (Exception ex)
             {
@@ -155,9 +134,8 @@ namespace Grand.Services.Media
         /// <param name="binary">Picture binary</param>
         protected override Task SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
-            InitContainerThumb().Wait();
-            CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
-            blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length).Wait();
+            Stream stream = new MemoryStream(binary);
+            container.UploadBlob(thumbFileName, stream);
             return Task.CompletedTask;
         }
 

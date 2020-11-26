@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace Grand.Domain.Tasks
 {
@@ -15,5 +14,6 @@ namespace Grand.Domain.Tasks
         public string LeasedByMachineName { get; set; }
         public DateTime? LeasedUntilUtc { get; set; }
         public int TimeInterval { get; set; }
+        public string StoreId { get; set; }
     }
 }

@@ -56,8 +56,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                 //do not round. otherwise, it can cause issues
                 await _measureService.ConvertWeight(productAmount, productUnit, referenceUnit, false) *
                 referenceAmount;
-            decimal basePriceInCurrentCurrency = await _currencyService.ConvertFromPrimaryStoreCurrency(basePrice, request.Currency);
-            string basePriceStr = _priceFormatter.FormatPrice(basePriceInCurrentCurrency, true, false);
+            string basePriceStr = _priceFormatter.FormatPrice(basePrice, true, false);
 
             var result = string.Format(_localizationService.GetResource("Products.BasePrice"),
                 basePriceStr, referenceAmount.ToString("G29"), referenceUnit.Name);
