@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain.Customers;
 using Grand.Domain.Data;
 using Grand.Domain.Shipping;
@@ -15,28 +16,6 @@ namespace Grand.Services.Shipping
 {
     public class ShippingMethodService : IShippingMethodService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : shippingmethod ID
-        /// </remarks>
-        private const string SHIPPINGMETHOD_BY_ID_KEY = "Grand.shippingmethod.id-{0}";
-
-        /// <summary>
-        /// Key to cache
-        /// </summary>
-        private const string SHIPPINGMETHOD_ALL = "Grand.shippingmethod.all";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string SHIPPINGMETHOD_PATTERN_KEY = "Grand.shippingmethod.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
@@ -77,7 +56,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.DeleteAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(shippingMethod);
@@ -90,7 +69,7 @@ namespace Grand.Services.Shipping
         /// <returns>Shipping method</returns>
         public virtual Task<ShippingMethod> GetShippingMethodById(string shippingMethodId)
         {
-            string key = string.Format(SHIPPINGMETHOD_BY_ID_KEY, shippingMethodId);
+            string key = string.Format(CacheKey.SHIPPINGMETHOD_BY_ID_KEY, shippingMethodId);
             return _cacheManager.GetAsync(key, () => _shippingMethodRepository.GetByIdAsync(shippingMethodId));
         }
 
@@ -103,7 +82,7 @@ namespace Grand.Services.Shipping
         {
             var shippingMethods = new List<ShippingMethod>();
 
-            shippingMethods = await _cacheManager.GetAsync(SHIPPINGMETHOD_ALL, () =>
+            shippingMethods = await _cacheManager.GetAsync(CacheKey.SHIPPINGMETHOD_ALL, () =>
             {
                 var query = from sm in _shippingMethodRepository.Table
                             orderby sm.DisplayOrder
@@ -135,7 +114,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.InsertAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(shippingMethod);
@@ -153,7 +132,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.UpdateAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(shippingMethod);

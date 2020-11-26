@@ -1,0 +1,83 @@
+<Language>
+  <LocaleResource Name="ActivityLog.UpdateCartCustomer">
+    <Value>Edited price for customer {0} (ID: {1}) price: {2}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.List.Text">
+    <Value>Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.List.Text.Hint">
+    <Value>Allow searching by subject or body email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Latitude">
+    <Value>Latitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Latitude.Hint">
+    <Value>Enter a warehouse latitude.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Longitude">
+    <Value>Longitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Longitude.Hint">
+    <Value>Enter a warehouse longitude.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Latitude">
+    <Value>Latitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Latitude.Hint">
+    <Value>Enter a pickup point latitude.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Longitude">
+    <Value>Longitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Longitude.Hint">
+    <Value>Enter a pickup point longitude.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.DisplayOrder.hint">
+    <Value>Display order of the warehouse.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultCurrency">
+    <Value>Default currency</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultCurrency.Hint">
+    <Value>This property allows a store owner to specify a default currency for a store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogPostsInSearchAutoComplete">
+    <Value>Show blog posts in search autocomplete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogPostsInSearchAutoComplete.Hint">
+    <Value>Check this box if you want to show blog posts in search autocomplete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.StoreId">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.StoreId.Hint">
+    <Value>A store name in which this task run (storecontext).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductPrices.Fields.CurrencyCode">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductPrices.Fields.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.CurrencyCode">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.CurrencyCode.Hint">
+    <Value>The currency code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.CurrencyCode">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.CurrencyCode.Hint">
+    <Value>The currency code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.GeoEnabled">
+    <Value>Geo-coordinates enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.GeoEnabled.Hint">
+    <Value>Check if you want to save the geo coordinates on each customer</Value>
+  </LocaleResource>
+</Language>

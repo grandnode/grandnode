@@ -60,7 +60,7 @@ namespace Grand.Services.Tests.Catalog
             await _categoryService.InsertCategory(new Category());
             _categoryRepositoryMock.Verify(c => c.InsertAsync(It.IsAny<Category>()), Times.Once);
             _mediatorMock.Verify(c => c.Publish(It.IsAny<EntityInserted<Category>>(), default(CancellationToken)), Times.Once);
-            _casheManagerMock.Verify(c => c.RemoveByPrefix(It.IsAny<string>(), true), Times.Exactly(3));
+            _casheManagerMock.Verify(c => c.RemoveByPrefix(It.IsAny<string>(), true), Times.Exactly(2));
         }
 
 
@@ -76,7 +76,7 @@ namespace Grand.Services.Tests.Catalog
             await _categoryService.UpdateCategory(new Category());
             _categoryRepositoryMock.Verify(c => c.UpdateAsync(It.IsAny<Category>()), Times.Once);
             _mediatorMock.Verify(c => c.Publish(It.IsAny<EntityUpdated<Category>>(), default(CancellationToken)), Times.Once);
-            _casheManagerMock.Verify(c => c.RemoveByPrefix(It.IsAny<string>(), true), Times.Exactly(3));
+            _casheManagerMock.Verify(c => c.RemoveByPrefix(It.IsAny<string>(), true), Times.Exactly(2));
         }
 
         [TestMethod()]
@@ -147,7 +147,7 @@ namespace Grand.Services.Tests.Catalog
             await _categoryService.DeleteProductCategory(new ProductCategory() { ProductId = "1" });
             collectonMock.Verify(c => c.UpdateOneAsync(It.IsAny<FilterDefinition<Product>>(), It.IsAny<UpdateDefinition<Product>>(), null, default(CancellationToken)), Times.Once);
             _mediatorMock.Verify(c => c.Publish(It.IsAny<EntityDeleted<ProductCategory>>(), default(CancellationToken)), Times.Once);
-            _casheManagerMock.Verify(c => c.RemoveByPrefix(It.IsAny<string>(), true), Times.Exactly(2));
+            _casheManagerMock.Verify(c => c.RemoveByPrefix(It.IsAny<string>(), true), Times.Exactly(1));
             _casheManagerMock.Verify(c => c.RemoveAsync(It.IsAny<string>(), true), Times.Once);
         }
 
@@ -165,7 +165,7 @@ namespace Grand.Services.Tests.Catalog
             await _categoryService.InsertProductCategory(new ProductCategory() { ProductId = "1" });
             collectonMock.Verify(c => c.UpdateOneAsync(It.IsAny<FilterDefinition<Product>>(), It.IsAny<UpdateDefinition<Product>>(), null, default(CancellationToken)), Times.Once);
             _mediatorMock.Verify(c => c.Publish(It.IsAny<EntityInserted<ProductCategory>>(), default(CancellationToken)), Times.Once);
-            _casheManagerMock.Verify(c => c.RemoveByPrefix(It.IsAny<string>(), true), Times.Exactly(2));
+            _casheManagerMock.Verify(c => c.RemoveByPrefix(It.IsAny<string>(), true), Times.Exactly(1));
             _casheManagerMock.Verify(c => c.RemoveAsync(It.IsAny<string>(), true), Times.Once);
         }
 

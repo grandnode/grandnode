@@ -224,6 +224,11 @@ namespace Grand.Domain.Customers
         /// </summary>
         public TwoFactorAuthenticationType TwoFactorAuthenticationType { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether geo-location is enabled
+        /// </summary>
+        public bool GeoEnabled { get; set; }
+
         #region Form fields
 
         /// <summary>

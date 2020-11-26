@@ -249,15 +249,12 @@ namespace Grand.Web.Features.Handlers.Catalog
         {
             string price, priceWithDiscount;
 
-            decimal finalPriceWithoutDiscountBase =
+            decimal finalPriceWithoutDiscount =
                 (await (_taxService.GetProductPrice(product,
-                (await _priceCalculationService.GetFinalPrice(product, request.Customer, includeDiscounts: false)).finalPrice))).productprice;
+                (await _priceCalculationService.GetFinalPrice(product, request.Customer, request.Currency, includeDiscounts: false)).finalPrice))).productprice;
 
-            var appliedPrice = (await _priceCalculationService.GetFinalPrice(product, request.Customer, includeDiscounts: true));
-            var finalPriceWithDiscountBase = (await _taxService.GetProductPrice(product, appliedPrice.finalPrice)).productprice;
-
-            var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, request.Currency);
-            var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, request.Currency);
+            var appliedPrice = (await _priceCalculationService.GetFinalPrice(product, request.Customer, request.Currency, includeDiscounts: true));
+            var finalPriceWithDiscount = (await _taxService.GetProductPrice(product, appliedPrice.finalPrice)).productprice;
 
             price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
             priceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);

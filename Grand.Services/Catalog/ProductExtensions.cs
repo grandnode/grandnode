@@ -20,7 +20,7 @@ namespace Grand.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Price</returns>
-        public static TierPrice GetPreferredTierPrice(this Product product, Customer customer, string storeId, int quantity)
+        public static TierPrice GetPreferredTierPrice(this Product product, Customer customer, string storeId, string currencyCode, int quantity)
         {
             if (!product.TierPrices.Any())
                 return null;
@@ -28,6 +28,7 @@ namespace Grand.Services.Catalog
             //get actual tier prices
             var actualTierPrices = product.TierPrices.OrderBy(price => price.Quantity).ToList()
                 .FilterByStore(storeId)
+                .FilterByCurrency(currencyCode)
                 .FilterForCustomer(customer)
                 .FilterByDate()
                 .RemoveDuplicatedQuantities();

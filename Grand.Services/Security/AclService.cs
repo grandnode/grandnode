@@ -10,6 +10,7 @@ using MediatR;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Security
 {
@@ -18,15 +19,6 @@ namespace Grand.Services.Security
     /// </summary>
     public partial class AclService : IAclService
     {
-        #region Constants
-        
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string ACLRECORD_PATTERN_KEY = "Grand.aclrecord.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<AclRecord> _aclRecordRepository;
@@ -76,7 +68,7 @@ namespace Grand.Services.Security
             await _aclRecordRepository.DeleteAsync(aclRecord);
 
             //cache
-            await _cacheManager.RemoveByPrefix(ACLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ACLRECORD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(aclRecord);
@@ -105,7 +97,7 @@ namespace Grand.Services.Security
             await _aclRecordRepository.InsertAsync(aclRecord);
 
             //cache
-            await _cacheManager.RemoveByPrefix(ACLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ACLRECORD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(aclRecord);
@@ -123,7 +115,7 @@ namespace Grand.Services.Security
             await _aclRecordRepository.UpdateAsync(aclRecord);
 
             //cache
-            await _cacheManager.RemoveByPrefix(ACLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ACLRECORD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(aclRecord);

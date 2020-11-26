@@ -39,7 +39,7 @@
                 type: "GET",
                 url: "@(Url.Action("CreateConfiguration", "RoxyFileman"))",
                 success: function (data) {
-                    var roxyFileman = '@Url.Content("~/content/roxy_fileman/index.html")';
+                    var roxyFileman = '@Url.Content("~/administration/roxy_fileman/index.html")';
                     if (roxyFileman.indexOf("?") < 0) {
                         roxyFileman += "?type=" + type;
                     } else {

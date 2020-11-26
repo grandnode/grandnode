@@ -44,6 +44,20 @@ namespace Grand.Services.Catalog
         }
 
         /// <summary>
+        /// Filter tier prices by a currency
+        /// </summary>
+        /// <param name="source">Tier prices</param>
+        /// <param name="currencyCode">currencyCode</param>
+        /// <returns>Filtered tier prices</returns>
+        public static IEnumerable<TierPrice> FilterByCurrency(this IEnumerable<TierPrice> source, string currencyCode)
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+
+            return source.Where(tierPrice => string.IsNullOrEmpty(tierPrice.CurrencyCode) || tierPrice.CurrencyCode == currencyCode);
+        }
+
+        /// <summary>
         /// Remove duplicated quantities (leave only an tier price with minimum price)
         /// </summary>
         /// <param name="source">Tier prices</param>

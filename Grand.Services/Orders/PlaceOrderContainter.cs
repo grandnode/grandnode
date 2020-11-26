@@ -1,5 +1,6 @@
 ﻿using Grand.Domain.Common;
 using Grand.Domain.Customers;
+using Grand.Domain.Directory;
 using Grand.Domain.Localization;
 using Grand.Domain.Orders;
 using Grand.Domain.Shipping;
@@ -14,15 +15,16 @@ namespace Grand.Services.Orders
         public PlaceOrderContainter()
         {
             Cart = new List<ShoppingCartItem>();
+            Taxes = new List<OrderTax>();
             AppliedDiscounts = new List<AppliedDiscount>();
             AppliedGiftCards = new List<AppliedGiftCard>();
         }
 
         public Customer Customer { get; set; }
         public Language CustomerLanguage { get; set; }
+        public Currency Currency { get; set; }
         public string AffiliateId { get; set; }
         public TaxDisplayType CustomerTaxDisplayType { get; set; }
-        public string CustomerCurrencyCode { get; set; }
         public decimal CustomerCurrencyRate { get; set; }
         public string PrimaryCurrencyCode { get; set; }
 
@@ -41,6 +43,8 @@ namespace Grand.Services.Orders
         public string CheckoutAttributesXml { get; set; }
 
         public IList<ShoppingCartItem> Cart { get; set; }
+        public IList<OrderTax> Taxes { get; set; }
+
         public List<AppliedDiscount> AppliedDiscounts { get; set; }
         public List<AppliedGiftCard> AppliedGiftCards { get; set; }
 
@@ -53,7 +57,6 @@ namespace Grand.Services.Orders
         public decimal PaymentAdditionalFeeInclTax { get; set; }
         public decimal PaymentAdditionalFeeExclTax { get; set; }
         public decimal OrderTaxTotal { get; set; }
-        public string TaxRates { get; set; }
         public decimal OrderDiscountAmount { get; set; }
         public int RedeemedRewardPoints { get; set; }
         public decimal RedeemedRewardPointsAmount { get; set; }

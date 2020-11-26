@@ -18,8 +18,9 @@ namespace Grand.Services.Commands.Handlers.Messages
 
         public async Task<LiquidGiftCard> Handle(GetGiftCardTokensCommand request, CancellationToken cancellationToken)
         {
-            var liquidGiftCart = new LiquidGiftCard(request.GiftCard);
-            liquidGiftCart.Amount = _priceFormatter.FormatPrice(request.GiftCard.Amount, true, false);
+            var liquidGiftCart = new LiquidGiftCard(request.GiftCard) {
+                Amount = await _priceFormatter.FormatPrice(request.GiftCard.Amount, true, request.GiftCard.CurrencyCode, false, request.Language)
+            };
             return await Task.FromResult(liquidGiftCart);
         }
     }

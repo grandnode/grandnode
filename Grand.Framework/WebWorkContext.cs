@@ -168,6 +168,13 @@ namespace Grand.Framework
             {
                 //in this case return built-in customer record for background task
                 customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
+                //if customer comes from background task, doesn't need to create cookies
+                if (customer != null)
+                {
+                    //cache the found customer
+                    _cachedCustomer = customer;
+                    return customer;
+                }
             }
 
             //set customer as a background task if method setted as AllowAnonymous
@@ -252,6 +259,19 @@ namespace Grand.Framework
             return _cachedCustomer = customer ?? throw new Exception("No customer could be loaded");
         }
 
+        /// <summary>
+        /// Set the current customer
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<Customer> SetCurrentCustomer(Customer customer)
+        {
+            if (customer == null || customer.Deleted || !customer.Active)
+            {
+                //if the current customer is null/not active then set background task customer
+                customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
+            }
+            return _cachedCustomer = customer ?? throw new Exception("No customer could be loaded");
+        }
 
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)

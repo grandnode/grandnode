@@ -101,7 +101,7 @@ namespace Grand.Services.Orders
                           {
                               CountryId = result.Key,
                               TotalOrders = result.Count(),
-                              SumOrders = result.Sum(o => o.OrderTotal)
+                              SumOrders = result.Sum(o => o.OrderTotal / o.CurrencyRate)
                           }
                        )
                        .OrderByDescending(x => x.SumOrders)
@@ -146,12 +146,12 @@ namespace Grand.Services.Orders
             {
                 var query = await _orderRepository.Collection.Aggregate().Match(filter).Group(x =>
                     new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month },
-                    g => new { Period = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x => x.Period).ToListAsync();
+                    g => new { Period = g.Key, Amount = g.Sum(x => x.OrderTotal / x.CurrencyRate), Count = g.Count() }).SortBy(x => x.Period).ToListAsync();
                 foreach (var item in query)
                 {
                     report.Add(new OrderByTimeReportLine() {
                         Time = item.Period.Year.ToString() + "-" + item.Period.Month.ToString(),
-                        SumOrders = item.Amount,
+                        SumOrders = Math.Round(item.Amount, 2),
                         TotalOrders = item.Count,
                     });
                 }
@@ -160,12 +160,12 @@ namespace Grand.Services.Orders
             {
                 var query = await _orderRepository.Collection.Aggregate().Match(filter).Group(x =>
                     new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month, Day = x.CreatedOnUtc.Day },
-                    g => new { Period = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x => x.Period).ToListAsync();
+                    g => new { Period = g.Key, Amount = g.Sum(x => x.OrderTotal / x.CurrencyRate), Count = g.Count() }).SortBy(x => x.Period).ToListAsync();
                 foreach (var item in query)
                 {
                     report.Add(new OrderByTimeReportLine() {
                         Time = item.Period.Year.ToString() + "-" + item.Period.Month.ToString() + "-" + item.Period.Day.ToString(),
-                        SumOrders = item.Amount,
+                        SumOrders = Math.Round(item.Amount, 2),
                         TotalOrders = item.Count,
                     });
                 }
@@ -221,7 +221,7 @@ namespace Grand.Services.Orders
                 filter = filter & builder.Where(o => o.StoreId == storeId);
 
             if (!String.IsNullOrEmpty(orderId))
-                filter = filter & builder.Where(o => o.StoreId == storeId);
+                filter = filter & builder.Where(o => o.Id == orderId);
 
             if (!string.IsNullOrEmpty(customerId))
                 filter = filter & builder.Where(o => o.CustomerId == customerId);
@@ -274,9 +274,9 @@ namespace Grand.Services.Orders
                     .Match(filter)
                     .Group(x => 1, g => new OrderAverageReportLine {
                         CountOrders = g.Count(),
-                        SumShippingExclTax = g.Sum(o => o.OrderShippingExclTax),
-                        SumTax = g.Sum(o => o.OrderTax),
-                        SumOrders = g.Sum(o => o.OrderTotal)
+                        SumShippingExclTax = g.Sum(o => o.OrderShippingExclTax / o.CurrencyRate),
+                        SumTax = g.Sum(o => o.OrderTax / o.CurrencyRate),
+                        SumOrders = g.Sum(o => o.OrderTotal / o.CurrencyRate)
                     }).ToListAsync();
 
 
@@ -435,7 +435,7 @@ namespace Grand.Services.Orders
             var groupBy = new BsonDocument
             {
                  new BsonElement("_id", "$OrderItems.ProductId"),
-                 new BsonElement("TotalAmount", new BsonDocument("$sum", "$OrderItems.PriceExclTax")),
+                 new BsonElement("TotalAmount", new BsonDocument("$sum", new BsonDocument("$divide",new BsonArray { "$OrderItems.PriceExclTax", "$CurrencyRate" }))),
                  new BsonElement("TotalQuantity", new BsonDocument("$sum", "$OrderItems.Quantity"))
             };
 
@@ -484,13 +484,16 @@ namespace Grand.Services.Orders
         /// <returns>ReportPeriodOrder</returns>
         public virtual async Task<ReportPeriodOrder> GetOrderPeriodReport(int days, string storeId)
         {
-            DateTime date = days != 0 ? _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days).Date : _dateTimeHelper.ConvertToUserTime(DateTime.Now).Date;
+            var currentdate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
+            DateTime date = days != 0 ? 
+                _dateTimeHelper.ConvertToUtcTime(currentdate, _dateTimeHelper.CurrentTimeZone).AddDays(-days) : 
+                _dateTimeHelper.ConvertToUtcTime(currentdate, _dateTimeHelper.CurrentTimeZone);
 
             var query = from o in _orderRepository.Table
                         where !o.Deleted && o.CreatedOnUtc >= date
                         && (string.IsNullOrEmpty(storeId) || o.StoreId == storeId)
                         group o by 1 into g
-                        select new ReportPeriodOrder() { Amount = g.Sum(x => x.OrderTotal), Count = g.Count() };
+                        select new ReportPeriodOrder() { Amount = g.Sum(x => x.OrderTotal / x.CurrencyRate), Count = g.Count() };
             var report = (await query.ToListAsync())?.FirstOrDefault();
             if (report == null)
                 report = new ReportPeriodOrder();

@@ -88,6 +88,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productAttribute");
 
             await _productReservationRepository.InsertAsync(productReservation);
+
             await _mediator.EntityInserted(productReservation);
         }
 
@@ -101,7 +102,8 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productAttribute");
 
             await _productReservationRepository.UpdateAsync(productReservation);
-            await _mediator.EntityInserted(productReservation);
+
+            await _mediator.EntityUpdated(productReservation);
         }
 
         /// <summary>
@@ -124,6 +126,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("CustomerReservationsHelper");
 
             await _customerReservationsHelperRepository.InsertAsync(crh);
+
             await _mediator.EntityInserted(crh);
         }
 
@@ -137,6 +140,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("CustomerReservationsHelper");
 
             await _customerReservationsHelperRepository.DeleteAsync(crh);
+
             await _mediator.EntityDeleted(crh);
         }
 

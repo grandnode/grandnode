@@ -9,6 +9,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Common
 {
@@ -17,21 +18,6 @@ namespace Grand.Services.Common
     /// </summary>
     public partial class AddressService : IAddressService
     {
-        #region Constants
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : address ID
-        /// </remarks>
-        private const string ADDRESSES_BY_ID_KEY = "Grand.address.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string ADDRESSES_PATTERN_KEY = "Grand.address.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Address> _addressRepository;
@@ -119,7 +105,7 @@ namespace Grand.Services.Common
             if (String.IsNullOrEmpty(addressId))
                 return null;
 
-            string key = string.Format(ADDRESSES_BY_ID_KEY, addressId);
+            string key = string.Format(CacheKey.ADDRESSES_BY_ID_KEY, addressId);
             return await _cacheManager.GetAsync(key, () => _addressRepository.GetByIdAsync(addressId));
         }
 
@@ -136,7 +122,7 @@ namespace Grand.Services.Common
             await _addressRepository.InsertAsync(address);
 
             //cache
-            await _cacheManager.RemoveByPrefix(ADDRESSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ADDRESSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(address);
@@ -154,7 +140,7 @@ namespace Grand.Services.Common
             await _addressRepository.UpdateAsync(address);
 
             //cache
-            await _cacheManager.RemoveByPrefix(ADDRESSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ADDRESSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(address);

@@ -49,6 +49,7 @@ namespace Grand.Domain.MongoDB
             RegisterClassRelatedProduct();
             RegisterClassBundleProduct();
             RegisterClassTierPrice();
+            RegisterClassProductPrice();
             RegisterClassAddress();
             RegisterClassCustomer();
             RegisterClassShoppingCartItem();
@@ -191,6 +192,14 @@ namespace Grand.Domain.MongoDB
         private static void RegisterClassTierPrice()
         {
             BsonClassMap.RegisterClassMap<TierPrice>(cm =>
+            {
+                cm.AutoMap();
+                cm.UnmapMember(c => c.ProductId);
+            });
+        }
+        private static void RegisterClassProductPrice()
+        {
+            BsonClassMap.RegisterClassMap<ProductPrice>(cm =>
             {
                 cm.AutoMap();
                 cm.UnmapMember(c => c.ProductId);
@@ -388,7 +397,6 @@ namespace Grand.Domain.MongoDB
                 cm.UnmapMember(c => c.PaymentStatus);
                 cm.UnmapMember(c => c.ShippingStatus);
                 cm.UnmapMember(c => c.CustomerTaxDisplayType);
-                cm.UnmapMember(c => c.TaxRatesDictionary);
             });
         }
         private static void RegisterClassShipmentItem()

@@ -10,47 +10,13 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Grand.Services.Events;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Orders
 {
     public partial class OrderTagService : IOrderTagService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : store ID
-        /// </remarks>
-        private const string ORDERTAG_COUNT_KEY = "Grand.ordertag.count-{0}";
-
-        /// <summary>
-        /// Key for all tags
-        /// </summary>
-        private const string ORDERTAG_ALL_KEY = "Grand.ordertag.all";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string ORDERTAG_PATTERN_KEY = "Grand.ordertag.";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : order ID
-        /// </remarks>
-        private const string ORDERS_BY_ID_KEY = "Grand.order.id-{0}";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>        
-        private const string ORDERS_PATTERN_KEY = "Grand.order.";
-
-
-        #endregion
-
+        
         #region Fields
 
         private readonly IRepository<OrderTag> _orderTagRepository;
@@ -85,7 +51,7 @@ namespace Grand.Services.Orders
         /// <returns>Dictionary of "order's tag ID : order's count"</returns>
         private async Task<Dictionary<string, int>> GetOrderCount(string orderTagId)
         {
-            string key = string.Format(ORDERTAG_COUNT_KEY, orderTagId);
+            string key = string.Format(CacheKey.ORDERTAG_COUNT_KEY, orderTagId);
             return await _cacheManager.GetAsync(key, async () => 
             {
                 var query = from ot in _orderTagRepository.Table
@@ -120,8 +86,8 @@ namespace Grand.Services.Orders
             await _orderTagRepository.DeleteAsync(orderTag);
 
             //cache
-            await _cacheManager.RemoveByPrefix(ORDERTAG_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ORDERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ORDERTAG_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ORDERS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(orderTag);
@@ -173,7 +139,7 @@ namespace Grand.Services.Orders
             await _orderTagRepository.InsertAsync(orderTag);
 
             //cache
-            await _cacheManager.RemoveByPrefix(ORDERTAG_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ORDERTAG_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(orderTag);
@@ -191,7 +157,7 @@ namespace Grand.Services.Orders
             await _orderTagRepository.UpdateAsync(orderTag);
 
             //cache
-            await _cacheManager.RemoveByPrefix(ORDERTAG_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.ORDERTAG_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(orderTag);
@@ -215,8 +181,8 @@ namespace Grand.Services.Orders
             var orderTag =   await _orderTagRepository.GetByIdAsync(orderTagId);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, orderId));
-            await _cacheManager.RemoveAsync(string.Format(ORDERTAG_COUNT_KEY, orderTagId));
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.ORDERS_BY_ID_KEY, orderId));
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.ORDERTAG_COUNT_KEY, orderTagId));
 
             //event notification
             await _mediator.EntityUpdated(orderTag);
@@ -237,8 +203,8 @@ namespace Grand.Services.Orders
             await _orderTagRepository.Collection.UpdateManyAsync(new BsonDocument("_id", orderTagId), updateTag);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(ORDERS_BY_ID_KEY, orderId));
-            await _cacheManager.RemoveAsync(string.Format(ORDERTAG_COUNT_KEY, orderTagId));
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.ORDERS_BY_ID_KEY, orderId));
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.ORDERTAG_COUNT_KEY, orderTagId));
         }
 
         /// <summary>

@@ -17,6 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Customers
 {
@@ -27,27 +29,7 @@ namespace Grand.Services.Customers
     {
         #region Constants
 
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : system name
-        /// </remarks>
-        private const string CUSTOMERROLES_BY_SYSTEMNAME_KEY = "Grand.customerrole.systemname-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CUSTOMERROLES_PATTERN_KEY = "Grand.customerrole.";
-        private const string CUSTOMERROLESPRODUCTS_PATTERN_KEY = "Grand.product.cr";
-
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer role Id?
-        /// </remarks>
-        private const string CUSTOMERROLESPRODUCTS_ROLE_KEY = "Grand.customerroleproducts.role-{0}";
+       
 
         #endregion
 
@@ -121,7 +103,7 @@ namespace Grand.Services.Customers
             string firstName = null, string lastName = null,
             string company = null, string phone = null, string zipPostalCode = null,
             bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = 2147483647)
+            int pageIndex = 0, int pageSize = 2147483647, Expression<Func<Customer, object>> orderBySelector = null)
         {
             var query = _customerRepository.Table;
 
@@ -190,7 +172,11 @@ namespace Grand.Services.Customers
                     query.Where(c => c.ShoppingCartItems.Count() > 0);
             }
 
-            query = query.OrderByDescending(c => c.CreatedOnUtc);
+            if(orderBySelector == null)
+                query = query.OrderByDescending(c => c.CreatedOnUtc);
+            else
+                query = query.OrderByDescending(orderBySelector);
+
             return await PagedList<Customer>.Create(query, pageIndex, pageSize);
         }
 
@@ -800,7 +786,7 @@ namespace Grand.Services.Customers
             var updatefilter = builder.PullFilter(x => x.CustomerRoles, y => y.Id == customerRole.Id);
             await _customerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
-            await _cacheManager.RemoveByPrefix(CUSTOMERROLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(customerRole);
@@ -826,7 +812,7 @@ namespace Grand.Services.Customers
         /// <returns>Customer role</returns>
         public virtual Task<CustomerRole> GetCustomerRoleBySystemName(string systemName)
         {
-            string key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
+            string key = string.Format(CacheKey.CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
             return _cacheManager.GetAsync(key, () =>
             {
                 var filter = Builders<CustomerRole>.Filter.Eq(x => x.SystemName, systemName);
@@ -860,7 +846,7 @@ namespace Grand.Services.Customers
 
             await _customerRoleRepository.InsertAsync(customerRole);
 
-            await _cacheManager.RemoveByPrefix(CUSTOMERROLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(customerRole);
@@ -884,7 +870,7 @@ namespace Grand.Services.Customers
 
             await _customerRepository.Collection.UpdateManyAsync(filter, update);
 
-            await _cacheManager.RemoveByPrefix(CUSTOMERROLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CacheKey.CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(customerRole);
@@ -932,8 +918,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.DeleteAsync(customerRoleProduct);
 
             //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPrefix(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_ROLE_PATTERN);
 
             //event notification
             await _mediator.EntityDeleted(customerRoleProduct);
@@ -952,8 +938,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.InsertAsync(customerRoleProduct);
 
             //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPrefix(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_ROLE_PATTERN);
 
             //event notification
             await _mediator.EntityInserted(customerRoleProduct);
@@ -975,8 +961,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.Collection.UpdateOneAsync(filter, update);
 
             //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPrefix(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_ROLE_PATTERN);
 
             //event notification
             await _mediator.EntityUpdated(customerRoleProduct);
@@ -990,7 +976,7 @@ namespace Grand.Services.Customers
         /// <returns>Customer role products</returns>
         public virtual async Task<IList<CustomerRoleProduct>> GetCustomerRoleProducts(string customerRoleId)
         {
-            string key = string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleId);
+            string key = string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleId);
             return await _cacheManager.GetAsync(key, () =>
             {
                 var filter = Builders<CustomerRoleProduct>.Filter.Eq(x => x.CustomerRoleId, customerRoleId);
@@ -1041,6 +1027,9 @@ namespace Grand.Services.Customers
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.Pull(p => p.Addresses, address);
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", address.CustomerId), update);
+
+            //event notification
+            await _mediator.EntityDeleted(address);
 
         }
 

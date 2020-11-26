@@ -11,19 +11,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Customers
 {
     public partial class CustomerActionEventService : ICustomerActionEventService
     {
         #region Fields
-        private const string CUSTOMER_ACTION_TYPE = "Grand.customer.action.type";
 
         private readonly IRepository<CustomerAction> _customerActionRepository;
         private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IMediator _mediator;
+
         #endregion
 
         #region Ctor
@@ -48,7 +49,7 @@ namespace Grand.Services.Customers
 
         protected async Task<IList<CustomerActionType>> GetAllCustomerActionType()
         {
-            return await _cacheManager.GetAsync(CUSTOMER_ACTION_TYPE, () =>
+            return await _cacheManager.GetAsync(CacheKey.CUSTOMER_ACTION_TYPE, () =>
             {
                 return _customerActionTypeRepository.Table.ToListAsync();
             });

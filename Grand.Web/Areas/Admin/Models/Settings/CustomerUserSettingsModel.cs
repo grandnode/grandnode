@@ -45,6 +45,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultAvatarEnabled")]
             public bool DefaultAvatarEnabled { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GeoEnabled")]
+            public bool GeoEnabled { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation")]
             public bool ShowCustomersLocation { get; set; }
 

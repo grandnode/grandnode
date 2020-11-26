@@ -795,6 +795,13 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public bool IsLoggedInAsVendor { get; set; }
         }
 
+        public partial class ProductPriceModel : BaseEntityModel
+        {
+            public string CurrencyCode { get; set; }
+
+            public decimal Price { get; set; }
+        }
+
         public partial class TierPriceModel : BaseEntityModel
         {
 
@@ -802,6 +809,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             {
                 AvailableStores = new List<SelectListItem>();
                 AvailableCustomerRoles = new List<SelectListItem>();
+                AvailableCurrencies = new List<SelectListItem>();
             }
             public string ProductId { get; set; }
 
@@ -814,6 +822,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string StoreId { get; set; }
             public IList<SelectListItem> AvailableStores { get; set; }
             public string Store { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CurrencyCode")]
+            public string CurrencyCode { get; set; }
+            public IList<SelectListItem> AvailableCurrencies { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Quantity")]
             public int Quantity { get; set; }
@@ -1048,7 +1060,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")]
             //used only on the values list page
             public string PriceAdjustmentStr { get; set; }
-
+            public string PrimaryStoreCurrencyCode { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")]
             public decimal WeightAdjustment { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")]

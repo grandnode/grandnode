@@ -2,8 +2,6 @@
 using Grand.Services.Configuration;
 using Grand.Services.Orders;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Tasks

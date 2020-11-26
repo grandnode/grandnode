@@ -1,4 +1,6 @@
-﻿using Grand.Services.Logging;
+﻿using Grand.Core;
+using Grand.Domain.Tasks;
+using Grand.Services.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -55,6 +57,12 @@ namespace Grand.Services.Tasks
                             var scheduleTask = serviceProvider.GetServices<IScheduleTask>().FirstOrDefault(x => x.GetType() == typeofTask);
                             if (scheduleTask != null)
                             {
+                                //assign current store (from task)
+                                await StoreContext(serviceProvider, task);
+
+                                //assign current customer (background task)
+                                await WorkContext(serviceProvider);
+
                                 task.LastStartUtc = DateTime.UtcNow;
                                 try
                                 {
@@ -96,6 +104,16 @@ namespace Grand.Services.Tasks
 
 
             }
+        }
+        protected async Task StoreContext(IServiceProvider serviceProvider, ScheduleTask scheduleTask)
+        {
+            var storeContext = serviceProvider.GetRequiredService<IStoreContext>();
+            await storeContext.SetCurrentStore(scheduleTask.StoreId);
+        }
+        protected async Task WorkContext(IServiceProvider serviceProvider)
+        {
+            var workContext = serviceProvider.GetRequiredService<IWorkContext>();
+            await workContext.SetCurrentCustomer();
         }
     }
 }

@@ -1,9 +1,8 @@
-using Grand.Domain.Catalog;
-using Grand.Domain.Orders;
-using Grand.Domain.Payments;
-using Grand.Domain.Tax;
 using Grand.Core.ModelBinding;
 using Grand.Core.Models;
+using Grand.Domain.Catalog;
+using Grand.Domain.Payments;
+using Grand.Domain.Tax;
 using Grand.Web.Areas.Admin.Models.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -154,22 +153,22 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         //credit card info
         public bool AllowStoringCreditCardNumber { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.CardType")]
-        
+
         public string CardType { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.CardName")]
-        
+
         public string CardName { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.CardNumber")]
-        
+
         public string CardNumber { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.CardCVV2")]
-        
+
         public string CardCvv2 { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.CardExpirationMonth")]
-        
+
         public string CardExpirationMonth { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.CardExpirationYear")]
-        
+
         public string CardExpirationYear { get; set; }
 
         //misc payment info
@@ -202,7 +201,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public AddressModel BillingAddress { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.VatNumber")]
         public string VatNumber { get; set; }
-        
+
         //gift cards
         public IList<GiftCard> GiftCards { get; set; }
 
@@ -222,7 +221,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         [GrandResourceDisplayName("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")]
         public bool AddOrderNoteDisplayToCustomer { get; set; }
         [GrandResourceDisplayName("Admin.Orders.OrderNotes.Fields.Note")]
-        
+
         public string AddOrderNoteMessage { get; set; }
         public bool AddOrderNoteHasDownload { get; set; }
         [GrandResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
@@ -296,7 +295,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             public Guid LicenseDownloadGuid { get; set; }
 
             public string Commission { get; set; }
-            public decimal CommissionValue { get; set; } 
+            public decimal CommissionValue { get; set; }
         }
 
         public partial class TaxRate : BaseModel
@@ -350,7 +349,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            
+
             public string SearchProductName { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
@@ -366,15 +365,15 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             public string OrderId { get; set; }
             public int OrderNumber { get; set; }
             #region Nested classes
-            
+
             public partial class ProductModel : BaseEntityModel
             {
                 [GrandResourceDisplayName("Admin.Orders.Products.AddNew.Name")]
-                
+
                 public string Name { get; set; }
 
                 [GrandResourceDisplayName("Admin.Orders.Products.AddNew.SKU")]
-                
+
                 public string Sku { get; set; }
             }
 
@@ -451,19 +450,19 @@ namespace Grand.Web.Areas.Admin.Models.Orders
                 public bool IsGiftCard { get; set; }
 
                 [GrandResourceDisplayName("Admin.Orders.Products.GiftCard.RecipientName")]
-                
+
                 public string RecipientName { get; set; }
                 [GrandResourceDisplayName("Admin.Orders.Products.GiftCard.RecipientEmail")]
-                
+
                 public string RecipientEmail { get; set; }
                 [GrandResourceDisplayName("Admin.Orders.Products.GiftCard.SenderName")]
-                
+
                 public string SenderName { get; set; }
                 [GrandResourceDisplayName("Admin.Orders.Products.GiftCard.SenderEmail")]
-                
+
                 public string SenderEmail { get; set; }
                 [GrandResourceDisplayName("Admin.Orders.Products.GiftCard.Message")]
-                
+
                 public string Message { get; set; }
 
                 public GiftCardType GiftCardType { get; set; }
@@ -471,7 +470,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             #endregion
         }
 
-        public partial class UsedDiscountModel:BaseModel
+        public partial class UsedDiscountModel : BaseModel
         {
             public string DiscountId { get; set; }
             public string DiscountName { get; set; }

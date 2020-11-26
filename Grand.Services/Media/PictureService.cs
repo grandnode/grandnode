@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Caching.Constants;
 using Grand.Domain;
 using Grand.Domain.Data;
 using Grand.Domain.Media;
@@ -25,18 +26,6 @@ namespace Grand.Services.Media
     /// </summary>
     public partial class PictureService : IPictureService
     {
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : picture ID
-        /// {1} : store ID
-        /// {2} : target size
-        /// {3} : showDefaultPicture
-        /// {4} : storeLocation
-        /// {5} : pictureType
-        /// </remarks>
-        private const string PICTURE_BY_KEY = "Grand.picture-{0}-{1}-{2}-{3}-{4}-{5}";
 
         #region Const
 
@@ -374,7 +363,7 @@ namespace Grand.Services.Media
             string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
-            var pictureKey = string.Format(PICTURE_BY_KEY, pictureId, _storeContext.CurrentStore?.Id, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
+            var pictureKey = string.Format(CacheKey.PICTURE_BY_KEY, pictureId, _storeContext.CurrentStore?.Id, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
             return await _cacheManager.GetAsync(pictureKey, async () =>
             {
                 var picture = await GetPictureById(pictureId);

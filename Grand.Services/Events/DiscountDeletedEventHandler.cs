@@ -9,32 +9,13 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Threading;
 using System.Threading.Tasks;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Events
 {
     public class DiscountDeletedEventHandler : INotificationHandler<EntityDeleted<Discount>>
     {
-        #region Constants
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string MANUFACTURERS_PATTERN_KEY = "Grand.manufacturer.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string CATEGORIES_PATTERN_KEY = "Grand.category.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string VENDORS_PATTERN_KEY = "Grand.vendor.";
-
-        #endregion
-
+        
         #region Fields
 
         private readonly IRepository<Product> _productRepository;
@@ -74,7 +55,7 @@ namespace Grand.Services.Events
                 var builderproduct = Builders<Product>.Update;
                 var updatefilter = builderproduct.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
+                await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
             }
 
             if (discount.DiscountType == DiscountType.AssignedToCategories)
@@ -82,7 +63,7 @@ namespace Grand.Services.Events
                 var buildercategory = Builders<Category>.Update;
                 var updatefilter = buildercategory.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _categoryRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
+                await _cacheManager.RemoveByPrefix(CacheKey.CATEGORIES_PATTERN_KEY);
             }
 
             if (discount.DiscountType == DiscountType.AssignedToManufacturers)
@@ -90,14 +71,14 @@ namespace Grand.Services.Events
                 var buildermanufacturer = Builders<Manufacturer>.Update;
                 var updatefilter = buildermanufacturer.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _manufacturerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+                await _cacheManager.RemoveByPrefix(CacheKey.MANUFACTURERS_PATTERN_KEY);
             }
             if (discount.DiscountType == DiscountType.AssignedToVendors)
             {
                 var buildervendor = Builders<Vendor>.Update;
                 var updatefilter = buildervendor.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _vendorRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(VENDORS_PATTERN_KEY);
+                await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
             }
 
             //remove coupon codes

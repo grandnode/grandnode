@@ -1605,7 +1605,7 @@ namespace Grand.Services.Messages
 
             LiquidObject liquidObject = new LiquidObject();
             await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
-            await _messageTokenProvider.AddGiftCardTokens(liquidObject, giftCard);
+            await _messageTokenProvider.AddGiftCardTokens(liquidObject, giftCard, language);
 
             //event notification
             await _mediator.MessageTokensAdded(messageTemplate, liquidObject);

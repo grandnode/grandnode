@@ -11,19 +11,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Grand.Core.Caching.Constants;
 
 namespace Grand.Services.Queries.Handlers.Catalog
 {
     public class GetSuggestedProductsQueryHandler : IRequestHandler<GetSuggestedProductsQuery, IList<Product>>
     {
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer ID
-        /// </remarks>
-        private const string PRODUCTS_CUSTOMER_TAG = "Grand.product.ct-{0}";
-
         #region Fields
 
         private readonly IProductService _productService;
@@ -44,7 +37,7 @@ namespace Grand.Services.Queries.Handlers.Catalog
 
         public async Task<IList<Product>> Handle(GetSuggestedProductsQuery request, CancellationToken cancellationToken)
         {
-            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_TAG, string.Join(",", request.CustomerTagIds)), async () =>
+            return await _cacheManager.GetAsync(string.Format(CacheKey.PRODUCTS_CUSTOMER_TAG, string.Join(",", request.CustomerTagIds)), async () =>
             {
                 var query = from cr in _customerTagProductRepository.Table
                             where request.CustomerTagIds.Contains(cr.CustomerTagId)

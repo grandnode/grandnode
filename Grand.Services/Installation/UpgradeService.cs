@@ -1,10 +1,11 @@
-﻿using Grand.Domain;
-using Grand.Domain.Data;
+﻿using Grand.Core;
+using Grand.Domain;
 using Grand.Domain.AdminSearch;
 using Grand.Domain.Blogs;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
+using Grand.Domain.Data;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.Localization;
 using Grand.Domain.Logging;
@@ -31,12 +32,11 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Grand.Core.Data;
-using Grand.Core;
 
 namespace Grand.Services.Installation
 {
@@ -56,6 +56,7 @@ namespace Grand.Services.Installation
         private const string version_460 = "4.60";
         private const string version_470 = "4.70";
         private const string version_480 = "4.80";
+        private const string version_490 = "4.90";
 
         #endregion
 
@@ -120,7 +121,11 @@ namespace Grand.Services.Installation
                 await From470To480();
                 fromversion = version_480;
             }
-
+            if (fromversion == version_480)
+            {
+                await From480To490();
+                fromversion = version_490;
+            }
             if (fromversion == toversion)
             {
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
@@ -142,7 +147,7 @@ namespace Grand.Services.Installation
         private async Task From400To410()
         {
             #region Install String resources
-            await InstallStringResources("EN_400_410.nopres.xml");
+            await InstallStringResources("EN_400_410.xml");
             #endregion
 
             #region Install product reservation
@@ -258,7 +263,7 @@ namespace Grand.Services.Installation
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
 
             #region Install String resources
-            await InstallStringResources("EN_410_420.nopres.xml");
+            await InstallStringResources("EN_410_420.xml");
             #endregion
 
             #region Update string resources
@@ -417,7 +422,7 @@ namespace Grand.Services.Installation
         {
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
 
-            await InstallStringResources("EN_420_430.nopres.xml");
+            await InstallStringResources("EN_420_430.xml");
 
             #region Settings
 
@@ -595,7 +600,7 @@ namespace Grand.Services.Installation
         private async Task From430To440()
         {
             #region Install String resources
-            await InstallStringResources("430_440.nopres.xml");
+            await InstallStringResources("430_440.xml");
             #endregion
 
             #region Permisions
@@ -689,7 +694,7 @@ namespace Grand.Services.Installation
         private async Task From440To450()
         {
             #region Install String resources
-            await InstallStringResources("EN_440_450.nopres.xml");
+            await InstallStringResources("EN_440_450.xml");
             #endregion
 
             #region Update task
@@ -772,7 +777,7 @@ namespace Grand.Services.Installation
 
             #region Install String resources
 
-            await InstallStringResources("EN_450_460.nopres.xml");
+            await InstallStringResources("EN_450_460.xml");
 
             #endregion
 
@@ -904,7 +909,7 @@ namespace Grand.Services.Installation
         private async Task From460To470()
         {
             #region Install String resources
-            await InstallStringResources("EN_460_470.nopres.xml");
+            await InstallStringResources("EN_460_470.xml");
             #endregion
 
             #region MessageTemplates
@@ -999,7 +1004,7 @@ namespace Grand.Services.Installation
         {
             #region Install String resources
 
-            await InstallStringResources("EN_470_480.nopres.xml");
+            await InstallStringResources("EN_470_480.xml");
 
             #endregion
 
@@ -1047,6 +1052,120 @@ namespace Grand.Services.Installation
             #endregion
         }
 
+        private async Task From480To490()
+        {
+            #region Install String resources
+
+            await InstallStringResources("EN_480_490.xml");
+
+            #endregion
+
+            #region Insert activities
+
+            var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
+            if (!_activityLogTypeRepository.Table.Where(x => x.SystemKeyword == "CustomerAdmin.UpdateCartCustomer").Any())
+            {
+                await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
+                    SystemKeyword = "CustomerAdmin.UpdateCartCustomer",
+                    Enabled = true,
+                    Name = "Update shopping cart"
+                });
+            }
+            #endregion
+
+            #region Upgrade orders
+
+            var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
+            var query = orderRepository.Table.Where(x => x.CurrencyRate != 1 && (x.Rate != 1 || x.Rate != 0)).ToList();
+
+            //upgrade Currency value
+            foreach (var order in query)
+            {
+                var rate = order.CurrencyRate;
+                order.Rate = rate;
+
+                if (order.OrderSubtotalInclTax > 0)
+                    order.OrderSubtotalInclTax = Math.Round(order.OrderSubtotalInclTax * rate, 2);
+
+                if (order.OrderSubtotalExclTax > 0)
+                    order.OrderSubtotalExclTax = Math.Round(order.OrderSubtotalExclTax * rate, 2);
+
+                if (order.OrderSubTotalDiscountInclTax > 0)
+                    order.OrderSubTotalDiscountInclTax = Math.Round(order.OrderSubTotalDiscountInclTax * rate, 2);
+
+                if (order.OrderSubTotalDiscountExclTax > 0)
+                    order.OrderSubTotalDiscountExclTax = Math.Round(order.OrderSubTotalDiscountExclTax * rate, 2);
+
+                if (order.OrderShippingInclTax > 0)
+                    order.OrderShippingInclTax = Math.Round(order.OrderShippingInclTax * rate, 2);
+
+                if (order.OrderShippingExclTax > 0)
+                    order.OrderShippingExclTax = Math.Round(order.OrderShippingExclTax * rate, 2);
+
+                if (order.PaymentMethodAdditionalFeeInclTax > 0)
+                    order.PaymentMethodAdditionalFeeInclTax = Math.Round(order.PaymentMethodAdditionalFeeInclTax * rate, 2);
+
+                if (order.PaymentMethodAdditionalFeeExclTax > 0)
+                    order.PaymentMethodAdditionalFeeExclTax = Math.Round(order.PaymentMethodAdditionalFeeExclTax * rate, 2);
+
+                if (order.OrderTax > 0)
+                    order.OrderTax = Math.Round(order.OrderTax * rate, 2);
+
+                if (order.OrderDiscount > 0)
+                    order.OrderDiscount = Math.Round(order.OrderDiscount * rate, 2);
+
+                if (order.OrderTotal > 0)
+                    order.OrderTotal = Math.Round(order.OrderTotal * rate, 2);
+
+                if (order.RefundedAmount > 0)
+                    order.RefundedAmount = Math.Round(order.RefundedAmount * rate, 2);
+
+                foreach (var orderItems in order.OrderItems)
+                {
+                    if (orderItems.UnitPriceWithoutDiscInclTax > 0)
+                        orderItems.UnitPriceWithoutDiscInclTax = Math.Round(orderItems.UnitPriceWithoutDiscInclTax * rate, 2);
+                    if (orderItems.UnitPriceWithoutDiscExclTax > 0)
+                        orderItems.UnitPriceWithoutDiscExclTax = Math.Round(orderItems.UnitPriceWithoutDiscExclTax * rate, 2);
+                    if (orderItems.UnitPriceInclTax > 0)
+                        orderItems.UnitPriceInclTax = Math.Round(orderItems.UnitPriceInclTax * rate, 2);
+                    if (orderItems.UnitPriceExclTax > 0)
+                        orderItems.UnitPriceExclTax = Math.Round(orderItems.UnitPriceExclTax * rate, 2);
+                    if (orderItems.PriceInclTax > 0)
+                        orderItems.PriceInclTax = Math.Round(orderItems.PriceInclTax * rate, 2);
+                    if (orderItems.PriceExclTax > 0)
+                        orderItems.PriceExclTax = Math.Round(orderItems.PriceExclTax * rate, 2);
+                    if (orderItems.DiscountAmountInclTax > 0)
+                        orderItems.DiscountAmountInclTax = Math.Round(orderItems.DiscountAmountInclTax * rate, 2);
+                    if (orderItems.DiscountAmountExclTax > 0)
+                        orderItems.DiscountAmountExclTax = Math.Round(orderItems.DiscountAmountExclTax * rate, 2);
+                }
+
+                await orderRepository.UpdateAsync(order);
+            }
+
+            //upgrade Taxes on the order
+            var dBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
+            var orderTaxRepository = dBContext.Database().GetCollection<OldOrders>("Order");
+            await orderTaxRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
+            {
+                if (!o.OrderTaxes.Any())
+                {
+                    var taxes = o.ParseTaxRates(o.TaxRates);
+                    foreach (var item in taxes)
+                    {
+                        o.OrderTaxes.Add(new OrderTax() {
+                            Percent = item.Key,
+                            Amount = Math.Round(item.Value * o.CurrencyRate, 4)
+                        });
+                    }
+                    await orderTaxRepository.ReplaceOneAsync(x => x.Id == o.Id, o); 
+                }
+            });
+
+            #endregion
+
+        }
+
         private async Task InstallStringResources(string filenames)
         {
             //'English' language            
@@ -1083,6 +1202,11 @@ namespace Grand.Services.Installation
             public int ReturnRequestStatusId { get; set; }
             public DateTime CreatedOnUtc { get; set; }
             public DateTime UpdatedOnUtc { get; set; }
+        }
+
+        class OldOrders : Order
+        {
+            public string TaxRates { get; set; }
         }
     }
 }

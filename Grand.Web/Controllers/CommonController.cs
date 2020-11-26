@@ -18,6 +18,7 @@ using Grand.Services.Messages;
 using Grand.Services.Stores;
 using Grand.Services.Topics;
 using Grand.Web.Commands.Models.Common;
+using Grand.Web.Commands.Models.Customers;
 using Grand.Web.Events;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Models.Common;
@@ -63,6 +64,45 @@ namespace Grand.Web.Controllers
         #endregion
 
         #region Methods
+
+        public IActionResult Component([FromQuery] string name, [FromBody] Dictionary<string, object> arguments)
+        {
+
+            /*
+                Sample request:
+                var data = { productThumbPictureSize: 10};
+                    $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: 'Common/Component?Name=HomePageProducts',
+                            contentType: "application/json",
+                            data: JSON.stringify(data)
+                        }).done(function (data) {
+                            console.log(data)
+                    });
+             */
+
+            if (string.IsNullOrEmpty(name))
+                return Content("");
+            if (arguments != null)
+            {
+                var args = new Dictionary<string, object>();
+                foreach (var arg in arguments)
+                {
+                    var key = arg.Key;
+                    var value = arg.Value;
+                    if (arg.Value is long)
+                    {
+                        int.TryParse(arg.Value.ToString(), out var parsevalue);
+                        args.Add(key, parsevalue);
+                    }
+                    else
+                        args.Add(key, value);
+                }
+                return ViewComponent(name, args);
+            }
+            return ViewComponent(name);
+        }
 
         //page not found
         public virtual IActionResult PageNotFound()
@@ -564,6 +604,19 @@ namespace Grand.Web.Controllers
                 success = !result.Any(),
                 errors = result
             });
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> SaveCurrentPosition(
+            LocationModel model,
+            [FromServices] CustomerSettings customerSettings)
+        {
+            if (!customerSettings.GeoEnabled)
+                return Content("");
+
+            await _mediator.Send(new CurrentPositionCommand() { Customer = _workContext.CurrentCustomer, Model = model });
+
+            return Content("");
         }
 
         #endregion

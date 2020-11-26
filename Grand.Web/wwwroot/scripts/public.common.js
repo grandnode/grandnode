@@ -494,6 +494,7 @@ function GetPrivacyPreference(href) {
         }
     });
 }
+
 function SavePrivacyPreference(href) {
     $.ajax({
         cache: false,
@@ -508,6 +509,19 @@ function SavePrivacyPreference(href) {
         }
     });
 }
+
+function SaveCurrentPossition(href, latitude, longitude) {    
+    $.ajax({
+        cache: false,
+        url: href,
+        data: { latitude: latitude, longitude: longitude },
+        type: 'post',
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert('Failed to save current possition.');
+        }
+    });
+}
+
 function newAddress(isNew) {
     if (isNew) {
         this.resetSelectedAddress();

@@ -32,7 +32,6 @@ namespace Grand.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly IPaymentService _paymentService;
         private readonly ILocalizationService _localizationService;
         private readonly IMediator _mediator;
@@ -45,7 +44,6 @@ namespace Grand.Web.Controllers
         public OrderController(IOrderService orderService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IOrderProcessingService orderProcessingService,
             IPaymentService paymentService,
             ILocalizationService localizationService,
             IMediator mediator,
@@ -54,7 +52,6 @@ namespace Grand.Web.Controllers
             _orderService = orderService;
             _workContext = workContext;
             _storeContext = storeContext;
-            _orderProcessingService = orderProcessingService;
             _paymentService = paymentService;
             _localizationService = localizationService;
             _mediator = mediator;
@@ -83,7 +80,8 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("CustomerOrders")]
         [AutoValidateAntiforgeryToken]
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
-        public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form)
+        public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form, 
+            [FromServices] IOrderRecurringPayment orderRecurringPayment)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -100,9 +98,9 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerOrders");
             }
 
-            if (await _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment))
+            if (await orderRecurringPayment.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment))
             {
-                var errors = await _orderProcessingService.CancelRecurringPayment(recurringPayment);
+                var errors = await orderRecurringPayment.CancelRecurringPayment(recurringPayment);
 
                 var model = await _mediator.Send(new GetCustomerOrderList() {
                     Customer = _workContext.CurrentCustomer,
