@@ -222,6 +222,9 @@ namespace Grand.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
+            model.TermsOfServiceEnabled = _vendorSettings.TermsOfServiceEnabled;
+            model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
+
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
             model.Address = await _mediator.Send(new GetVendorAddress() {
                 Language = _workContext.WorkingLanguage,
