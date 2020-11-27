@@ -6,21 +6,23 @@ namespace Grand.Framework.Themes
 {
     public class ThemeableViewLocationExpander : IViewLocationExpander
     {
-        private const string THEME_KEY = "grand.themename";
+        private const string THEME_KEY = "Theme";
+        private const string AREA_ADMIN_KEY = "AdminTheme";
+
 
         public void PopulateValues(ViewLocationExpanderContext context)
         {
-            if (context.AreaName?.Equals("Admin") ?? false)
-                return;
-
             var themeContext = (IThemeContext)context.ActionContext.HttpContext.RequestServices.GetService(typeof(IThemeContext));
-            context.Values[THEME_KEY] = themeContext.WorkingThemeName;
+
+            if (context.AreaName?.Equals("Admin") ?? false)
+                context.Values[AREA_ADMIN_KEY] = themeContext.AdminAreaThemeName;
+            else
+                context.Values[THEME_KEY] = themeContext.WorkingThemeName;
         }
 
         public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
         {
-            string theme = null;
-            if (context.Values.TryGetValue(THEME_KEY, out theme))
+            if (context.AreaName == null && context.Values.TryGetValue(THEME_KEY, out var theme))
             {
                 viewLocations = new[] {
                         $"/Themes/{theme}/Views/{{1}}/{{0}}.cshtml",
@@ -28,8 +30,14 @@ namespace Grand.Framework.Themes
                     }
                     .Concat(viewLocations);
             }
-
-
+            if ((context.AreaName?.Equals("Admin") ?? false) && context.Values.TryGetValue(AREA_ADMIN_KEY, out var admintheme))
+            {
+                viewLocations = new[] {
+                        $"/Areas/{{2}}/Themes/{admintheme}/Views/{{1}}/{{0}}.cshtml",
+                        $"/Areas/{{2}}/Themes/{admintheme}/Views/Shared/{{0}}.cshtml",
+                    }
+                    .Concat(viewLocations);
+            }
             return viewLocations;
         }
     }

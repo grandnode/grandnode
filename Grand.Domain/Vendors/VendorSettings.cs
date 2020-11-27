@@ -81,6 +81,11 @@ namespace Grand.Domain.Vendors
         /// </summary>
         public bool DefaultAllowCustomerReview { get; set; }
 
+        /// <summary>
+        /// Gets or sets the identifier of the default admin theme for the vendors
+        /// </summary>
+        public string DefaultAdminTheme { get; set; }
+
         #region Address settings
 
         /// <summary>

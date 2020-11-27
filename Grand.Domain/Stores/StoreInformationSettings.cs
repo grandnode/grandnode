@@ -20,6 +20,11 @@ namespace Grand.Domain.Stores
         public bool AllowCustomerToSelectTheme { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether customers are allowed to select a admin theme
+        /// </summary>
+        public bool AllowToSelectAdminTheme { get; set; }
+
+        /// <summary>
         /// Gets or sets a picture identifier of the logo. If 0, then the default one will be used
         /// </summary>
         public string LogoPictureId { get; set; }

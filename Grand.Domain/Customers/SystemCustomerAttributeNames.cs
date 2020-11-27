@@ -55,6 +55,7 @@ namespace Grand.Domain.Customers
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
         public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }
         public static string WorkingThemeName { get { return "WorkingThemeName"; } }
+        public static string AdminThemeName { get { return "AdminThemeName"; } }
         public static string TaxDisplayTypeId { get { return "TaxDisplayTypeId"; } }
         public static string UseRewardPointsDuringCheckout { get { return "UseRewardPointsDuringCheckout"; } }
         public static string EuCookieLawAccepted { get { return "EuCookieLaw.Accepted"; } }

@@ -13,6 +13,11 @@ namespace Grand.Framework.Themes
         string WorkingThemeName { get; }
 
         /// <summary>
+        /// Get admin area current theme name
+        /// </summary>
+        string AdminAreaThemeName { get; }
+
+        /// <summary>
         /// Set current theme system name
         /// </summary>
         Task SetWorkingTheme(string themeName);

@@ -99,6 +99,11 @@ namespace Grand.Domain.Stores
         public string CompanyHours { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of the default admin theme for this store
+        /// </summary>
+        public string DefaultAdminTheme { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }
