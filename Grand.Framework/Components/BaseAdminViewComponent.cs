@@ -3,9 +3,13 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 namespace Grand.Framework.Components
 {
-    [BaseViewComponent(AdminAccess = false)]
-    public abstract class BaseViewComponent : ViewComponent
+    [BaseViewComponent(AdminAccess = true)]
+    public abstract class BaseAdminViewComponent : ViewComponent
     {
+        public BaseAdminViewComponent()
+        {
+
+        }
         public new ViewViewComponentResult View<TModel>(string viewName, TModel model)
         {
             return base.View<TModel>(viewName, model);
