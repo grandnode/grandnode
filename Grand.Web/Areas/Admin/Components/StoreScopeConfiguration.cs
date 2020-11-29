@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class StoreScopeConfigurationViewComponent : BaseViewComponent
+    public class StoreScopeConfigurationViewComponent : BaseAdminViewComponent
     {
         #region Fields
 

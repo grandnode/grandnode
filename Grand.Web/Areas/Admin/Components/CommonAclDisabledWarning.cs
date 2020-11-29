@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class CommonAclDisabledWarningViewComponent : BaseViewComponent
+    public class CommonAclDisabledWarningViewComponent : BaseAdminViewComponent
     {
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;

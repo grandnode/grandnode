@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class AffiliateViewComponent : BaseViewComponent
+    public class AffiliateViewComponent : BaseAdminViewComponent
     {
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;

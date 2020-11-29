@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class CommonLanguageSelectorViewComponent : BaseViewComponent
+    public class CommonLanguageSelectorViewComponent : BaseAdminViewComponent
     {
         private readonly IWorkContext _workContext;
         private readonly ILanguageService _languageService;
