@@ -6,6 +6,7 @@ using Grand.Domain.Customers;
 using Grand.Domain.Media;
 using Grand.Domain.Stores;
 using Grand.Domain.Tax;
+using Grand.Framework.Components;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
@@ -25,11 +26,13 @@ using Grand.Web.Models.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
@@ -64,45 +67,6 @@ namespace Grand.Web.Controllers
         #endregion
 
         #region Methods
-
-        public IActionResult Component([FromQuery] string name, [FromBody] Dictionary<string, object> arguments)
-        {
-
-            /*
-                Sample request:
-                var data = { productThumbPictureSize: 10};
-                    $.ajax({
-                            cache: false,
-                            type: "POST",
-                            url: 'Common/Component?Name=HomePageProducts',
-                            contentType: "application/json",
-                            data: JSON.stringify(data)
-                        }).done(function (data) {
-                            console.log(data)
-                    });
-             */
-
-            if (string.IsNullOrEmpty(name))
-                return Content("");
-            if (arguments != null)
-            {
-                var args = new Dictionary<string, object>();
-                foreach (var arg in arguments)
-                {
-                    var key = arg.Key;
-                    var value = arg.Value;
-                    if (arg.Value is long)
-                    {
-                        int.TryParse(arg.Value.ToString(), out var parsevalue);
-                        args.Add(key, parsevalue);
-                    }
-                    else
-                        args.Add(key, value);
-                }
-                return ViewComponent(name, args);
-            }
-            return ViewComponent(name);
-        }
 
         //page not found
         public virtual IActionResult PageNotFound()
