@@ -20,14 +20,18 @@ namespace Grand.Web.Components
 
         public IViewComponentResult Invoke()
         {
-            var model = new PublicInfoModel();
-            model.PublicApiKey = _pushNotificationsSettings.PublicApiKey;
-            model.SenderId = _pushNotificationsSettings.SenderId;
-            model.AuthDomain = _pushNotificationsSettings.AuthDomain;
-            model.ProjectId = _pushNotificationsSettings.ProjectId;
-            model.StorageBucket = _pushNotificationsSettings.StorageBucket;
-            model.DatabaseUrl = _pushNotificationsSettings.DatabaseUrl;
-            model.AppId = _pushNotificationsSettings.AppId;
+            if(!_pushNotificationsSettings.Enabled)
+                return Content("");
+
+            var model = new PublicInfoModel {
+                PublicApiKey = _pushNotificationsSettings.PublicApiKey,
+                SenderId = _pushNotificationsSettings.SenderId,
+                AuthDomain = _pushNotificationsSettings.AuthDomain,
+                ProjectId = _pushNotificationsSettings.ProjectId,
+                StorageBucket = _pushNotificationsSettings.StorageBucket,
+                DatabaseUrl = _pushNotificationsSettings.DatabaseUrl,
+                AppId = _pushNotificationsSettings.AppId
+            };
             if (_pushNotificationsSettings.Enabled)
             {
                 if (!_pushNotificationsSettings.AllowGuestNotifications && _workContext.CurrentCustomer.IsGuest())
