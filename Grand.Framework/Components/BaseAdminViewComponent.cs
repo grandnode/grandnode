@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 namespace Grand.Framework.Components
 {
@@ -10,17 +9,17 @@ namespace Grand.Framework.Components
         {
 
         }
-        public new ViewViewComponentResult View<TModel>(string viewName, TModel model)
+        public new IViewComponentResult View<TModel>(string viewName, TModel model)
         {
             return base.View<TModel>(viewName, model);
         }
 
-        public new ViewViewComponentResult View<TModel>(TModel model)
+        public new IViewComponentResult View<TModel>(TModel model)
         {
             return base.View<TModel>(model);
         }
 
-        public new ViewViewComponentResult View(string viewName)
+        public new IViewComponentResult View(string viewName)
         {
             return base.View(viewName);
         }

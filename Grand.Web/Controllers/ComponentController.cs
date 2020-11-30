@@ -20,6 +20,7 @@ namespace Grand.Web.Controllers
 
             /*
                 Sample request:
+                //To return Json use header: X-Response-View = Json
                 var data = { productThumbPictureSize: 10};
                     $.ajax({
                             cache: false,
@@ -43,6 +44,8 @@ namespace Grand.Web.Controllers
             if (attribute == null || attribute.AdminAccess)
                 return Content("Component - Attribute admin access limited");
 
+            string content;
+
             if (arguments != null)
             {
                 var args = new Dictionary<string, object>();
@@ -58,9 +61,16 @@ namespace Grand.Web.Controllers
                     else
                         args.Add(key, value);
                 }
-                return ViewComponent(name, args);
+                content = RenderViewComponentToString(name, args);
             }
-            return ViewComponent(name);
+            else
+                content = RenderViewComponentToString(name);
+
+            var viewComponentJsonModel = TempData["ViewComponentJsonModel"];
+            if (viewComponentJsonModel != null)
+                return Json(viewComponentJsonModel);
+
+            return Content(content);
         }
 
     }

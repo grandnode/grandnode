@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Customers;
+using Grand.Framework.Components;
 using Grand.Framework.Events;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Localization;
@@ -98,7 +99,6 @@ namespace Grand.Framework.Controllers
                 return writer.ToString();
             }
         }
-
         /// <summary>
         /// Render partial view to string
         /// </summary>
