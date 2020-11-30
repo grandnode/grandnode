@@ -9050,6 +9050,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.DefaultAdminTheme.Hint">
     <Value>Enter the name of the default admin theme</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange">
+    <Value>Notify about vendor information changes</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange.Hint">
     <Value>Check to notify a store owner about vendor information changes.</Value>
   </LocaleResource>

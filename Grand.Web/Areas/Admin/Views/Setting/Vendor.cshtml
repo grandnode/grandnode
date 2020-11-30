@@ -259,8 +259,21 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-8 col-md-4 col-sm-4 text-right">
-                                <admin-label asp-for="DefaultAdminTheme" class="control-label" />
-                                    </div>
+                                    @Html.OverrideStoreCheckboxFor(model => model.NotifyVendorAboutNewVendorReviews_OverrideForStore, model => model.NotifyVendorAboutNewVendorReviews, Model.ActiveStoreScopeConfiguration)
+                                    <admin-label asp-for="NotifyVendorAboutNewVendorReviews" class="control-label" />
+                                </div>
+                                <div class="col-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                                        <admin-input asp-for="NotifyVendorAboutNewVendorReviews" />
+                                        <div class="control__indicator"></div>
+                                    </label>
+                                    <span asp-validation-for="NotifyVendorAboutNewVendorReviews"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
+                                    <admin-label asp-for="DefaultAdminTheme" class="control-label" />
+                                </div>
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="DefaultAdminTheme" />
                                     <span asp-validation-for="DefaultAdminTheme"></span>
