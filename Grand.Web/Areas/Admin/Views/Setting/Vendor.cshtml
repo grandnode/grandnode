@@ -134,7 +134,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShowVendorOnProductDetailsPage" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="ShowVendorOnProductDetailsPage"></span>
                                 </div>
@@ -147,7 +147,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowCustomersToContactVendors" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="AllowCustomersToContactVendors"></span>
                                 </div>
@@ -160,7 +160,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowCustomersToApplyForVendorAccount" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="AllowCustomersToApplyForVendorAccount"></span>
                                 </div>
@@ -173,7 +173,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowSearchByVendor" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="AllowSearchByVendor"></span>
                                 </div>
@@ -186,7 +186,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowVendorsToEditInfo" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="AllowVendorsToEditInfo"></span>
                                 </div>
@@ -199,7 +199,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="NotifyStoreOwnerAboutVendorInformationChange" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="NotifyStoreOwnerAboutVendorInformationChange"></span>
                                 </div>
@@ -212,7 +212,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="TermsOfServiceEnabled" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="TermsOfServiceEnabled"></span>
                                 </div>
@@ -226,7 +226,7 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="VendorReviewsMustBeApproved" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="VendorReviewsMustBeApproved"></span>
                                 </div>
@@ -239,22 +239,9 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowAnonymousUsersToReviewVendor" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="AllowAnonymousUsersToReviewVendor"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-8 col-md-4 col-sm-4 text-right">
-                                    @Html.OverrideStoreCheckboxFor(model => model.NotifyVendorAboutNewVendorReviews_OverrideForStore, model => model.NotifyVendorAboutNewVendorReviews, Model.ActiveStoreScopeConfiguration)
-                                    <admin-label asp-for="NotifyVendorAboutNewVendorReviews" class="control-label" />
-                                </div>
-                                <div class="col-4 col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                                        <admin-input asp-for="NotifyVendorAboutNewVendorReviews" />
-                                         <div class="control__indicator"></div>
-                                    </label>
-                                    <span asp-validation-for="NotifyVendorAboutNewVendorReviews"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -265,12 +252,33 @@
                                 <div class="col-4 col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="VendorReviewPossibleOnlyAfterPurchasing" />
-                                         <div class="control__indicator"></div>
+                                        <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="VendorReviewPossibleOnlyAfterPurchasing"></span>
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.NotifyVendorAboutNewVendorReviews_OverrideForStore, model => model.NotifyVendorAboutNewVendorReviews, Model.ActiveStoreScopeConfiguration)
+                                    <admin-label asp-for="NotifyVendorAboutNewVendorReviews" class="control-label" />
+                                </div>
+                                <div class="col-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                                        <admin-input asp-for="NotifyVendorAboutNewVendorReviews" />
+                                        <div class="control__indicator"></div>
+                                    </label>
+                                    <span asp-validation-for="NotifyVendorAboutNewVendorReviews"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-8 col-md-4 col-sm-4 text-right">
+                                    <admin-label asp-for="DefaultAdminTheme" class="control-label" />
+                                </div>
+                                <div class="col-4 col-md-8 col-sm-8">
+                                    <admin-input asp-for="DefaultAdminTheme" />
+                                    <span asp-validation-for="DefaultAdminTheme"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="panel panel-default">

@@ -99,6 +99,13 @@
             </div>
         </div>
         <div class="form-group">
+            <admin-label asp-for="DefaultAdminTheme " />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="DefaultAdminTheme " />
+                <span asp-validation-for="DefaultAdminTheme "></span>
+            </div>
+        </div>
+        <div class="form-group">
             <admin-label asp-for="DefaultLanguageId" />
             <div class="col-md-9 col-sm-9">
                 <admin-select asp-for="DefaultLanguageId" asp-items="Model.AvailableLanguages" />

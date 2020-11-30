@@ -9044,6 +9044,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo.Hint">
     <Value>Check to allow vendors to edit information about themselves (in public store)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.DefaultAdminTheme">
+    <Value>Default admin theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.DefaultAdminTheme.Hint">
+    <Value>Enter the name of the default admin theme</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange">
     <Value>Notify about vendor information changes</Value>
   </LocaleResource>
@@ -9445,6 +9451,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyVat.Hint">
     <Value>Enter your company VAT (the European Union Value Added Tax)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultAdminTheme">
+    <Value>Default admin theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultAdminTheme.Hint">
+    <Value>Enter the name of the default admin theme</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultCountry">
     <Value>Default country</Value>
