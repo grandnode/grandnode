@@ -44,8 +44,6 @@ namespace Grand.Web.Controllers
             if (attribute == null || attribute.AdminAccess)
                 return Content("Component - Attribute admin access limited");
 
-            string content;
-
             if (arguments != null)
             {
                 var args = new Dictionary<string, object>();
@@ -61,16 +59,9 @@ namespace Grand.Web.Controllers
                     else
                         args.Add(key, value);
                 }
-                content = RenderViewComponentToString(name, args);
+                return ViewComponent(name, args);
             }
-            else
-                content = RenderViewComponentToString(name);
-
-            var viewComponentJsonModel = TempData["ViewComponentJsonModel"];
-            if (viewComponentJsonModel != null)
-                return Json(viewComponentJsonModel);
-
-            return Content(content);
+            return ViewComponent(name);
         }
 
     }
