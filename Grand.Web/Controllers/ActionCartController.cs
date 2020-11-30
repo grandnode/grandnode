@@ -22,7 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Web.Controllers
 {
-    public partial class AddToCartController : BasePublicController
+    public partial class ActionCartController : BasePublicController
     {
         #region Fields
 
@@ -41,7 +41,7 @@ namespace Grand.Web.Controllers
 
         #region CTOR
 
-        public AddToCartController(IProductService productService,
+        public ActionCartController(IProductService productService,
             IShoppingCartService shoppingCartService,
             IWorkContext workContext,
             IStoreContext storeContext,

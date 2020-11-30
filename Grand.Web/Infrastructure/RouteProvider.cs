@@ -494,21 +494,21 @@ namespace Grand.Web.Infrastructure
             //add product to cart (without any attributes and options). used on catalog pages.
             routeBuilder.MapControllerRoute("AddProductToCart-Catalog",
                             pattern + "addproducttocart/catalog/{productId}/{shoppingCartTypeId}",
-                            new { controller = "AddToCart", action = "AddProductToCart_Catalog" },
+                            new { controller = "ActionCart", action = "AddProductToCart_Catalog" },
                             new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
                             new[] { "Grand.Web.Controllers" });
 
             //add product to cart (with attributes and options). used on the product details pages.
             routeBuilder.MapControllerRoute("AddProductToCart-Details",
                             pattern + "addproducttocart/details/{productId}/{shoppingCartTypeId}",
-                            new { controller = "AddToCart", action = "AddProductToCart_Details" },
+                            new { controller = "ActionCart", action = "AddProductToCart_Details" },
                             new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
                             new[] { "Grand.Web.Controllers" });
 
             //add product to bid, use on the product details page
             routeBuilder.MapControllerRoute("AddBid",
                             pattern + "addbid/AddBid/{productId}/{shoppingCartTypeId}",
-                            new { controller = "AddToCart", action = "AddBid" },
+                            new { controller = "ActionCart", action = "AddBid" },
                             new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
                             new[] { "Grand.Web.Controllers" });
 
