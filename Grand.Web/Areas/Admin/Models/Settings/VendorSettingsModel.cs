@@ -54,6 +54,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public bool AllowAnonymousUsersToReviewVendor { get; set; }
         public bool AllowAnonymousUsersToReviewVendor_OverrideForStore { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.DefaultAdminTheme")]
+        public string DefaultAdminTheme { get; set; }
+
         [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.VendorReviewPossibleOnlyAfterPurchasing")]
         public bool VendorReviewPossibleOnlyAfterPurchasing { get; set; }
         public bool VendorReviewPossibleOnlyAfterPurchasing_OverrideForStore { get; set; }

@@ -35,6 +35,9 @@ namespace Grand.Web.Areas.Admin.Models.Stores
         [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.Hosts")]
         public string Hosts { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultAdminTheme")]
+        public string DefaultAdminTheme { get; set; }
+
         [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
