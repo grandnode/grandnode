@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class CommonPopularSearchTermsReportViewComponent : BaseViewComponent
+    public class CommonPopularSearchTermsReportViewComponent : BaseAdminViewComponent
     {
         private readonly IPermissionService _permissionService;
 

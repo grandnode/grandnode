@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class OrderBestsellersBriefReportByQuantityViewComponent : BaseViewComponent
+    public class OrderBestsellersBriefReportByQuantityViewComponent : BaseAdminViewComponent
     {
         private readonly IPermissionService _permissionService;
 

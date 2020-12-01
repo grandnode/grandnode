@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class AdminWidgetViewComponent : BaseViewComponent
+    public class AdminWidgetViewComponent : BaseAdminViewComponent
     {
         #region Fields
 

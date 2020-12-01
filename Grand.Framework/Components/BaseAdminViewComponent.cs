@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Framework.Components
 {
-    [BaseViewComponent(AdminAccess = false)]
-    public abstract class BaseViewComponent : ViewComponent
+    [BaseViewComponent(AdminAccess = true)]
+    public abstract class BaseAdminViewComponent : ViewComponent
     {
+        public BaseAdminViewComponent()
+        {
+
+        }
         public new IViewComponentResult View<TModel>(string viewName, TModel model)
         {
             return base.View<TModel>(viewName, model);
@@ -14,11 +16,6 @@ namespace Grand.Framework.Components
 
         public new IViewComponentResult View<TModel>(TModel model)
         {
-            var viewJson = Request?.Headers["X-Response-View"];
-            if (viewJson?.Equals("Json") ?? false)
-            {
-                return new JsonContentViewComponentResult(new HtmlString(JsonConvert.SerializeObject(model)));
-            }
             return base.View<TModel>(model);
         }
 
