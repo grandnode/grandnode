@@ -225,5 +225,10 @@ namespace Grand.Core.Configuration
         /// Gets or sets a value indicating - (Serilog) use middleware for smarter HTTP request logging
         /// </summary>
         public bool UseSerilogRequestLogging { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating for allow to request with JSON response for Public Controller 
+        /// </summary>
+        public bool AllowToJsonResponse { get; set; }
     }
 }

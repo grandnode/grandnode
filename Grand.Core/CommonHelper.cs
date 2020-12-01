@@ -266,5 +266,10 @@ namespace Grand.Core
         /// </summary>
         public static int CookieAuthExpires { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating for allow to request with JSON response for Public Controller 
+        /// </summary>
+        public static bool AllowToJsonResponse { get; set; }
+
     }
 }
