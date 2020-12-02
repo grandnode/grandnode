@@ -126,10 +126,10 @@ namespace Grand.Domain.Topics
         /// <summary>
         /// Gets or sets a start date of topic
         /// </summary>
-        public DateTime StartDateUtc { get; set; }
+        public DateTime? StartDateUtc { get; set; }
         /// <summary>
         /// Gets or sets a end date of topic
         /// </summary>
-        public DateTime EndDateUtc { get; set; }
+        public DateTime? EndDateUtc { get; set; }
     }
 }

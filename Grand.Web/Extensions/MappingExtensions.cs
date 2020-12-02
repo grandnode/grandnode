@@ -124,7 +124,7 @@ namespace Grand.Web.Extensions
         //topic
         public static TopicModel ToModel(this Topic entity, Language language, IDateTimeHelper dateTimeHelper, string password = "")
         {
-            var model = new TopicModel  {
+            var model = new TopicModel {
                 Id = entity.Id,
                 SystemName = entity.SystemName,
                 IncludeInSitemap = entity.IncludeInSitemap,
@@ -138,8 +138,8 @@ namespace Grand.Web.Extensions
                 SeName = entity.GetSeName(language.Id),
                 TopicTemplateId = entity.TopicTemplateId,
                 Published = entity.Published,
-                StartDate = dateTimeHelper.ConvertToUserTime(entity.StartDateUtc),
-                EndDate = dateTimeHelper.ConvertToUserTime(entity.EndDateUtc)
+                StartDate = entity.StartDateUtc.HasValue ? dateTimeHelper.ConvertToUserTime(entity.StartDateUtc.Value) : default,
+                EndDate = entity.EndDateUtc.HasValue ? dateTimeHelper.ConvertToUserTime(entity.EndDateUtc.Value) : default
             };
             return model;
 
