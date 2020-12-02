@@ -31,12 +31,14 @@ namespace Grand.Web.Commands.Handler.Common
 
         public async Task<ContactUsModel> Handle(ContactUsCommand request, CancellationToken cancellationToken)
         {
-            var model = new ContactUsModel {
+            var model = request.Model ?? new ContactUsModel {
                 Email = request.Customer.Email,
                 FullName = request.Customer.GetFullName(),
-                SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
-                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage
             };
+
+            model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
+
             model.ContactAttributes = await PrepareContactAttributeModel(request);
 
             return model;
@@ -55,8 +57,23 @@ namespace Grand.Web.Commands.Handler.Common
                     TextPrompt = attribute.GetLocalized(x => x.TextPrompt, request.Language.Id),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
-                    DefaultValue = attribute.DefaultValue
+                    DefaultValue = request.Form?[$"contact_attribute_{attribute.Id}"] ?? attribute.DefaultValue,
                 };
+                if(attribute.AttributeControlType == Domain.Catalog.AttributeControlType.Datepicker)
+                {
+                    int.TryParse(request.Form?[$"contact_attribute_{attribute.Id}_day"], out var selectedDay);
+                    if (selectedDay > 0)
+                        attributeModel.SelectedDay = selectedDay;
+
+                    int.TryParse(request.Form?[$"contact_attribute_{attribute.Id}_month"], out var selectedMonth);
+                    if (selectedMonth > 0)
+                        attributeModel.SelectedMonth = selectedMonth;
+
+                    int.TryParse(request.Form?[$"contact_attribute_{attribute.Id}_year"], out var selectedYear);
+                    if (selectedYear > 0)
+                        attributeModel.SelectedYear = selectedYear;
+                }
+
                 if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
                     attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
@@ -70,11 +87,12 @@ namespace Grand.Web.Commands.Handler.Common
                     var attributeValues = attribute.ContactAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
+                        var preSelected = request.Form?[$"contact_attribute_{attribute.Id}"].ToString();
                         var attributeValueModel = new ContactUsModel.ContactAttributeValueModel {
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name, request.Language.Id),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb,
-                            IsPreSelected = attributeValue.IsPreSelected,
+                            IsPreSelected = string.IsNullOrEmpty(preSelected) ? attributeValue.IsPreSelected : (preSelected.Contains(attributeValue.Id)), 
                             DisplayOrder = attributeValue.DisplayOrder,
                         };
                         attributeModel.Values.Add(attributeValueModel);
