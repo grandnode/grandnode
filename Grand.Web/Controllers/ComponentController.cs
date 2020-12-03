@@ -15,7 +15,30 @@ namespace Grand.Web.Controllers
             _viewComponentSelector = viewComponentSelector;
         }
 
-        public IActionResult Index([FromQuery] string name, [FromBody] Dictionary<string, object> arguments)
+        protected bool ValidRequest(string name, out string error)
+        {
+            error = string.Empty;
+            if (string.IsNullOrEmpty(name))
+            {
+                error = "Component name is empty";
+                return false;
+            }
+            var component = _viewComponentSelector.SelectComponent(name);
+            if (component == null)
+            {
+                error = "Component not exists";
+                return false;
+            }
+            var attribute = component.TypeInfo.GetCustomAttribute<BaseViewComponentAttribute>();
+            if (attribute == null || attribute.AdminAccess)
+            {
+                error = "Component - Attribute admin access limited";
+                return false;
+            }
+            return true;
+        }
+
+        public IActionResult Index(string name, [FromBody] Dictionary<string, object> arguments)
         {
 
             /*
@@ -33,16 +56,8 @@ namespace Grand.Web.Controllers
                     });
              */
 
-            if (string.IsNullOrEmpty(name))
-                return Content("");
-
-            var component = _viewComponentSelector.SelectComponent(name);
-            if (component == null)
-                return Content("Component not exists");
-
-            var attribute = component.TypeInfo.GetCustomAttribute<BaseViewComponentAttribute>();
-            if (attribute == null || attribute.AdminAccess)
-                return Content("Component - Attribute admin access limited");
+            if (!ValidRequest(name, out var error))
+                return Content(error);
 
             if (arguments != null)
             {
@@ -64,5 +79,30 @@ namespace Grand.Web.Controllers
             return ViewComponent(name);
         }
 
+        public IActionResult Form(string name)
+        {
+
+            /*
+                Sample request:
+                var form = new FormData();
+                form.append('key', 'value');
+                //To return Json use header: X-Response-View = Json
+                    $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: 'Component/Form?Name=HomePageProducts',
+                            processData: false,
+                            contentType: false,
+                            data: form
+                        }).done(function (data) {
+                            console.log(data)
+                    });
+             */
+
+            if (!ValidRequest(name, out var error))
+                return Content(error);
+
+            return ViewComponent(name);
+        }
     }
 }
