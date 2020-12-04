@@ -432,7 +432,9 @@ namespace Grand.Services.Orders
             if (createdToUtc.HasValue)
                 filter = filter & builder.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
 
-            FilterDefinition<BsonDocument> filterPublishedProduct = new BsonDocument("Product.Published", true);
+            FilterDefinition<BsonDocument> filterPublishedProduct = 
+                !showHidden ? new BsonDocument("Product.Published", true) : new BsonDocument();
+
             var groupBy = new BsonDocument
             {
                  new BsonElement("_id", "$OrderItems.ProductId"),
