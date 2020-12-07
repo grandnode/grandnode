@@ -141,6 +141,7 @@ namespace Grand.Web.Controllers
                 enabledattributeids = enabledAttributeIds.ToArray(),
                 disabledattributeids = disabledAttributeIds.ToArray(),
                 htmlordertotal = await RenderPartialViewToString("Components/OrderTotals/Default", model),
+                model = model,
                 checkoutattributeinfo = await checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
             });
         }
@@ -305,7 +306,8 @@ namespace Grand.Web.Controllers
             return Json(new
             {
                 totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.Items.Sum(x => x.Quantity)),
-                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model }),
+                model = model
             });
         }
 
@@ -356,7 +358,8 @@ namespace Grand.Web.Controllers
                 return Json(new
                 {
                     totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
-                    flyoutshoppingcart = this.RenderViewComponentToString("FlyoutShoppingCart", model)
+                    flyoutshoppingcart = this.RenderViewComponentToString("FlyoutShoppingCart", model),
+                    model = model
                 });
             }
             else
@@ -375,7 +378,9 @@ namespace Grand.Web.Controllers
                 {
                     totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
                     flyoutshoppingcart = RenderViewComponentToString("FlyoutShoppingCart", model),
-                    cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel })
+                    flyoutshoppingcartmodel = model,
+                    cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel }),
+                    model = shoppingcartmodel,
                 });
             }
         }
@@ -423,7 +428,8 @@ namespace Grand.Web.Controllers
 
             return Json(new
             {
-                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel }),
+                model = shoppingcartmodel
             });
 
         }
@@ -572,7 +578,8 @@ namespace Grand.Web.Controllers
 
             return Json(new
             {
-                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model }),
+                model = model
             });
         }
 
@@ -636,7 +643,8 @@ namespace Grand.Web.Controllers
 
             return Json(new
             {
-                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model }),
+                model = model
             });
         }
 
@@ -691,7 +699,8 @@ namespace Grand.Web.Controllers
 
             return Json(new
             {
-                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model }),
+                model = model
             });
         }
 
@@ -722,7 +731,8 @@ namespace Grand.Web.Controllers
 
             return Json(new
             {
-                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model }),
+                model = model
             });
 
         }

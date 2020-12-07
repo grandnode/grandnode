@@ -219,6 +219,7 @@ namespace Grand.Web.Controllers
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
                             html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
+                            model = addtoCartModel
                         });
                     }
                 case ShoppingCartType.ShoppingCart:
@@ -257,7 +258,8 @@ namespace Grand.Web.Controllers
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
                             html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
-                            updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
+                            updateflyoutcartsectionhtml = updateflyoutcartsectionhtml,
+                            model = addtoCartModel
                         });
                     }
             }
@@ -555,6 +557,7 @@ namespace Grand.Web.Controllers
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
                             updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
                             html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
+                            model = addtoCartModel
                         });
                     }
                 case ShoppingCartType.ShoppingCart:
@@ -594,7 +597,8 @@ namespace Grand.Web.Controllers
                             html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
                             updateflyoutcartsectionhtml = updateflyoutcartsectionhtml,
-                            refreshreservation = product.ProductType == ProductType.Reservation && product.IntervalUnitType != IntervalUnit.Day
+                            refreshreservation = product.ProductType == ProductType.Reservation && product.IntervalUnitType != IntervalUnit.Day,
+                            model = addtoCartModel
                         });
                     }
             }
@@ -703,7 +707,8 @@ namespace Grand.Web.Controllers
             {
                 success = true,
                 message = _localizationService.GetResource("ShoppingCart.Yourbidhasbeenplaced"),
-                html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel)
+                html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
+                model = addtoCartModel
             });
         }
 
