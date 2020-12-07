@@ -5935,20 +5935,20 @@ namespace Grand.Services.Installation
                 throw new Exception("Manufacturer template cannot be loaded");
 
             var allManufacturers = new List<Manufacturer>();
-            var manufacturerAsus = new Manufacturer {
-                Name = "Apple",
+            var manufacturerXiaomi = new Manufacturer {
+                Name = "Xiaomi",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apple"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_xiaomi.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Xiaomi"))).Id,
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _manufacturerRepository.InsertAsync(manufacturerAsus);
-            allManufacturers.Add(manufacturerAsus);
+            await _manufacturerRepository.InsertAsync(manufacturerXiaomi);
+            allManufacturers.Add(manufacturerXiaomi);
 
 
             var manufacturerHp = new Manufacturer {
@@ -6316,10 +6316,10 @@ namespace Grand.Services.Installation
 
             #region Notebooks
 
-            var productAppleMacBookPro = new Product {
+            var productMiNotebook = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Apple MacBook Pro 13-inch",
+                Name = "Mi Notebook 14",
                 ShortDescription = "A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors. Together, these features take the notebook to a new level of performance. And they will do the same for you in everything you create.",
                 FullDescription = "<p>With fifth-generation Intel Core processors, the latest graphics, and faster flash storage, the incredibly advanced MacBook Pro with Retina display moves even further ahead in performance and battery life.* *Compared with the previous generation.</p><p>Retina display with 2560-by-1600 resolution</p><p>Fifth-generation dual-core Intel Core i5 processor</p><p>Intel Iris Graphics</p><p>Up to 9 hours of battery life1</p><p>Faster flash storage2</p><p>802.11ac Wi-Fi</p><p>Two Thunderbolt 2 ports for connecting high-performance devices and transferring data at lightning speed</p><p>Two USB 3 ports (compatible with USB 2 devices) and HDMI</p><p>FaceTime HD camera</p><p>Pages, Numbers, Keynote, iPhoto, iMovie, GarageBand included</p><p>OS X, the world's most advanced desktop operating system</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6358,7 +6358,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductManufacturer
                     {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Apple").Id,
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
                         DisplayOrder = 2,
                     }
                 },
@@ -6390,16 +6390,16 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productAppleMacBookPro);
-            productAppleMacBookPro.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name))).Id,
+            allProducts.Add(productMiNotebook);
+            productMiNotebook.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_notebook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiNotebook.Name))).Id,
                 DisplayOrder = 1,
             });
-            productAppleMacBookPro.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name))).Id,
+            productMiNotebook.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_notebook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiNotebook.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productAppleMacBookPro);
+            await _productRepository.InsertAsync(productMiNotebook);
 
 
             var productAsusN551JK = new Product {
@@ -7154,10 +7154,10 @@ namespace Grand.Services.Installation
 
             #region Cell Phone
 
-            var productHtcOne = new Product {
+            var productRedmiK30 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HTC One M8 Android L 5.0 Lollipop",
+                Name = "Redmi K30 Ultra",
                 ShortDescription = "HTC - One (M8) 4G LTE Cell Phone with 32GB Memory - Gunmetal (Sprint)",
                 FullDescription = "<p><b>HTC One (M8) Cell Phone for Sprint:</b> With its brushed-metal design and wrap-around unibody frame, the HTC One (M8) is designed to fit beautifully in your hand. It's fun to use with amped up sound and a large Full HD touch screen, and intuitive gesture controls make it seem like your phone almost knows what you need before you do. <br><br>Sprint Easy Pay option available in store.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7193,18 +7193,18 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productHtcOne);
-            productHtcOne.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOne.Name))).Id,
+            allProducts.Add(productRedmiK30);
+            productRedmiK30.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_K30.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiK30.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productHtcOne);
+            await _productRepository.InsertAsync(productRedmiK30);
 
 
-            var productHtcOneMini = new Product {
+            var productRedmiNote9 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HTC One Mini Blue",
+                Name = "Redmi Note 9",
                 ShortDescription = "HTC One and HTC One Mini now available in bright blue hue",
                 FullDescription = "<p>HTC One mini smartphone with 4.30-inch 720x1280 display powered by 1.4GHz processor alongside 1GB RAM and 4-Ultrapixel rear camera.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7237,22 +7237,22 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productHtcOneMini);
-            productHtcOneMini.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name))).Id,
+            allProducts.Add(productRedmiNote9);
+            productRedmiNote9.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_Note_9_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiNote9.Name))).Id,
                 DisplayOrder = 1,
             });
-            productHtcOneMini.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name))).Id,
+            productRedmiNote9.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_Note_9_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiNote9.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productHtcOneMini);
+            await _productRepository.InsertAsync(productRedmiNote9);
 
 
-            var productNokiaLumia = new Product {
+            var productPocoF2Pro = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Nokia Lumia 1020",
+                Name = "POCO F2 Pro",
                 ShortDescription = "Nokia Lumia 1020 4G Cell Phone (Unlocked)",
                 FullDescription = "<p>Capture special moments for friends and family with this Nokia Lumia 1020 32GB WHITE cell phone that features an easy-to-use 41.0MP rear-facing camera and a 1.2MP front-facing camera. The AMOLED touch screen offers 768 x 1280 resolution for crisp visuals.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7285,12 +7285,12 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productNokiaLumia);
-            productNokiaLumia.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNokiaLumia.Name))).Id,
+            allProducts.Add(productPocoF2Pro);
+            productPocoF2Pro.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_POCO_F2_Pro.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPocoF2Pro.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productNokiaLumia);
+            await _productRepository.InsertAsync(productPocoF2Pro);
 
 
             #endregion
@@ -7299,12 +7299,12 @@ namespace Grand.Services.Installation
 
 
 
-            var productBeatsPill = new Product {
+            var productMiSmartBand = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Beats Pill 2.0 Wireless Speaker",
-                ShortDescription = "<b>Pill 2.0 Portable Bluetooth Speaker (1-Piece):</b> Watch your favorite movies and listen to music with striking sound quality. This lightweight, portable speaker is easy to take with you as you travel to any destination, keeping you entertained wherever you are. ",
-                FullDescription = "<p><ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills? together for twice the sound with Beats Bond?</li></ul></p>",
+                Name = "Mi Smart Band 3i",
+                ShortDescription = "<b>Mi Smart Band 3i:</b> Ignite your fitness journey with water resistant smart watch. Intuitive and Easy to View with large 0.78 inch OLED touch display. Get moving with the Fit App. Activity tracker and sleep tracker included.",
+                FullDescription = "<p><b>Mi Smart Band 3i:</b> Ignite your fitness journey with water resistant smart watch. Intuitive and Easy to View with large 0.78 inch OLED touch display. Get moving with the Fit App. Activity tracker and sleep tracker included.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 79.99M,
@@ -7357,16 +7357,16 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productBeatsPill);
-            productBeatsPill.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name))).Id,
+            allProducts.Add(productMiSmartBand);
+            productMiSmartBand.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mi_Smart_Band_3i_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiSmartBand.Name))).Id,
                 DisplayOrder = 1,
             });
-            productBeatsPill.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name))).Id,
+            productMiSmartBand.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mi_Smart_Band_3i_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiSmartBand.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productBeatsPill);
+            await _productRepository.InsertAsync(productMiSmartBand);
 
 
             var productUniversalTabletCover = new Product {
@@ -8943,7 +8943,7 @@ namespace Grand.Services.Installation
             productAsusN551JK.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productAsusN551JK.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
             productAsusN551JK.RelatedProducts.Add(
@@ -8967,7 +8967,7 @@ namespace Grand.Services.Installation
             productLenovoThinkpad.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLenovoThinkpad.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
@@ -8982,27 +8982,27 @@ namespace Grand.Services.Installation
                      ProductId2 = productHpEnvy.Id,
                  });
 
-            productAppleMacBookPro.RelatedProducts.Add(
+            productMiNotebook.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAppleMacBookPro.Id,
+                    ProductId1 = productMiNotebook.Id,
                     ProductId2 = productLenovoThinkpad.Id,
                 });
 
-            productAppleMacBookPro.RelatedProducts.Add(
+            productMiNotebook.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAppleMacBookPro.Id,
+                    ProductId1 = productMiNotebook.Id,
                     ProductId2 = productSamsungSeries.Id,
                 });
 
-            productAppleMacBookPro.RelatedProducts.Add(
+            productMiNotebook.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAppleMacBookPro.Id,
+                    ProductId1 = productMiNotebook.Id,
                     ProductId2 = productAsusN551JK.Id,
                 });
 
-            productAppleMacBookPro.RelatedProducts.Add(
+            productMiNotebook.RelatedProducts.Add(
                  new RelatedProduct {
-                     ProductId1 = productAppleMacBookPro.Id,
+                     ProductId1 = productMiNotebook.Id,
                      ProductId2 = productHpSpectre.Id,
                  });
 
@@ -9039,7 +9039,7 @@ namespace Grand.Services.Installation
             productHpEnvy.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productHpEnvy.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
             productHpEnvy.RelatedProducts.Add(
@@ -9061,7 +9061,7 @@ namespace Grand.Services.Installation
             productSamsungSeries.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productSamsungSeries.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
             productSamsungSeries.RelatedProducts.Add(
@@ -9077,7 +9077,7 @@ namespace Grand.Services.Installation
             productLeica.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLeica.Id,
-                    ProductId2 = productHtcOneMini.Id,
+                    ProductId2 = productRedmiNote9.Id,
                 });
 
             productLeica.RelatedProducts.Add(
@@ -9095,71 +9095,71 @@ namespace Grand.Services.Installation
             productLeica.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLeica.Id,
-                    ProductId2 = productNokiaLumia.Id,
+                    ProductId2 = productPocoF2Pro.Id,
                 });
-            productHtcOne.RelatedProducts.Add(
+            productRedmiK30.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOne.Id,
-                    ProductId2 = productHtcOneMini.Id,
-                });
-
-            productHtcOne.RelatedProducts.Add(
-                new RelatedProduct {
-                    ProductId1 = productHtcOne.Id,
-                    ProductId2 = productNokiaLumia.Id,
-                });
-            productHtcOne.RelatedProducts.Add(
-                new RelatedProduct {
-                    ProductId1 = productHtcOne.Id,
-                    ProductId2 = productBeatsPill.Id,
+                    ProductId1 = productRedmiK30.Id,
+                    ProductId2 = productRedmiNote9.Id,
                 });
 
-            productHtcOne.RelatedProducts.Add(
+            productRedmiK30.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOne.Id,
+                    ProductId1 = productRedmiK30.Id,
+                    ProductId2 = productPocoF2Pro.Id,
+                });
+            productRedmiK30.RelatedProducts.Add(
+                new RelatedProduct {
+                    ProductId1 = productRedmiK30.Id,
+                    ProductId2 = productMiSmartBand.Id,
+                });
+
+            productRedmiK30.RelatedProducts.Add(
+                new RelatedProduct {
+                    ProductId1 = productRedmiK30.Id,
                     ProductId2 = productPortableSoundSpeakers.Id,
                 });
 
-            productHtcOneMini.RelatedProducts.Add(
+            productRedmiNote9.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOneMini.Id,
-                    ProductId2 = productHtcOne.Id,
+                    ProductId1 = productRedmiNote9.Id,
+                    ProductId2 = productRedmiK30.Id,
                 });
-            productHtcOneMini.RelatedProducts.Add(
+            productRedmiNote9.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOneMini.Id,
-                    ProductId2 = productNokiaLumia.Id,
+                    ProductId1 = productRedmiNote9.Id,
+                    ProductId2 = productPocoF2Pro.Id,
                 });
 
-            productHtcOneMini.RelatedProducts.Add(
+            productRedmiNote9.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOneMini.Id,
-                    ProductId2 = productBeatsPill.Id,
+                    ProductId1 = productRedmiNote9.Id,
+                    ProductId2 = productMiSmartBand.Id,
                 });
-            productHtcOneMini.RelatedProducts.Add(
+            productRedmiNote9.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOneMini.Id,
+                    ProductId1 = productRedmiNote9.Id,
                     ProductId2 = productPortableSoundSpeakers.Id,
                 });
-            productNokiaLumia.RelatedProducts.Add(
+            productPocoF2Pro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productNokiaLumia.Id,
-                    ProductId2 = productHtcOne.Id,
+                    ProductId1 = productPocoF2Pro.Id,
+                    ProductId2 = productRedmiK30.Id,
                 });
-            productNokiaLumia.RelatedProducts.Add(
+            productPocoF2Pro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productNokiaLumia.Id,
-                    ProductId2 = productHtcOneMini.Id,
+                    ProductId1 = productPocoF2Pro.Id,
+                    ProductId2 = productRedmiNote9.Id,
                 });
 
-            productNokiaLumia.RelatedProducts.Add(
+            productPocoF2Pro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productNokiaLumia.Id,
-                    ProductId2 = productBeatsPill.Id,
+                    ProductId1 = productPocoF2Pro.Id,
+                    ProductId2 = productMiSmartBand.Id,
                 });
-            productNokiaLumia.RelatedProducts.Add(
+            productPocoF2Pro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productNokiaLumia.Id,
+                    ProductId1 = productPocoF2Pro.Id,
                     ProductId2 = productPortableSoundSpeakers.Id,
                 });
 
@@ -9246,7 +9246,7 @@ namespace Grand.Services.Installation
             productDigitalStorm.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productDigitalStorm.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
             productLenovoIdeaCentre.RelatedProducts.Add(
@@ -9270,7 +9270,7 @@ namespace Grand.Services.Installation
             productLenovoIdeaCentre.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLenovoIdeaCentre.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
 
@@ -9284,8 +9284,8 @@ namespace Grand.Services.Installation
             await AddProductTag(productNikeTailwind, "cool");
             await AddProductTag(productNikeTailwind, "apparel");
             await AddProductTag(productNikeTailwind, "shirt");
-            await AddProductTag(productBeatsPill, "computer");
-            await AddProductTag(productBeatsPill, "cool");
+            await AddProductTag(productMiSmartBand, "computer");
+            await AddProductTag(productMiSmartBand, "cool");
             await AddProductTag(productNikeFloral, "cool");
             await AddProductTag(productNikeFloral, "shoes");
             await AddProductTag(productNikeFloral, "apparel");
@@ -9296,18 +9296,18 @@ namespace Grand.Services.Installation
             await AddProductTag(productOversizedWomenTShirt, "cool");
             await AddProductTag(productOversizedWomenTShirt, "apparel");
             await AddProductTag(productOversizedWomenTShirt, "shirt");
-            await AddProductTag(productAppleMacBookPro, "compact");
-            await AddProductTag(productAppleMacBookPro, "awesome");
-            await AddProductTag(productAppleMacBookPro, "computer");
+            await AddProductTag(productMiNotebook, "compact");
+            await AddProductTag(productMiNotebook, "awesome");
+            await AddProductTag(productMiNotebook, "computer");
             await AddProductTag(productAsusN551JK, "compact");
             await AddProductTag(productAsusN551JK, "awesome");
             await AddProductTag(productAsusN551JK, "computer");
             await AddProductTag(productFahrenheit, "awesome");
             await AddProductTag(productFahrenheit, "book");
             await AddProductTag(productFahrenheit, "nice");
-            await AddProductTag(productHtcOne, "cell");
-            await AddProductTag(productHtcOne, "compact");
-            await AddProductTag(productHtcOne, "awesome");
+            await AddProductTag(productRedmiK30, "cell");
+            await AddProductTag(productRedmiK30, "compact");
+            await AddProductTag(productRedmiK30, "awesome");
             await AddProductTag(productBuildComputer, "awesome");
             await AddProductTag(productBuildComputer, "computer");
             await AddProductTag(productNikonD5500DSLR, "cool");
@@ -9351,14 +9351,14 @@ namespace Grand.Services.Installation
             await AddProductTag(productNightVision, "digital");
             await AddProductTag(productSunglasses, "apparel");
             await AddProductTag(productSunglasses, "cool");
-            await AddProductTag(productHtcOneMini, "awesome");
-            await AddProductTag(productHtcOneMini, "compact");
-            await AddProductTag(productHtcOneMini, "cell");
+            await AddProductTag(productRedmiNote9, "awesome");
+            await AddProductTag(productRedmiNote9, "compact");
+            await AddProductTag(productRedmiNote9, "cell");
             await AddProductTag(productIfYouWait, "digital");
             await AddProductTag(productIfYouWait, "awesome");
-            await AddProductTag(productNokiaLumia, "awesome");
-            await AddProductTag(productNokiaLumia, "cool");
-            await AddProductTag(productNokiaLumia, "camera");
+            await AddProductTag(productPocoF2Pro, "awesome");
+            await AddProductTag(productPocoF2Pro, "cool");
+            await AddProductTag(productPocoF2Pro, "camera");
             await AddProductTag(productScienceAndFaith, "digital");
             await AddProductTag(productScienceAndFaith, "awesome");
             await AddProductTag(productPrideAndPrejudice, "book");
