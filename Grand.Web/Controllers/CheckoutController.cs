@@ -998,8 +998,8 @@ namespace Grand.Web.Controllers
             {
                 update_section = new UpdateSectionJsonModel {
                     name = "shipping-method",
-                    html = await RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel),
-                    model = paymentMethodModel
+                    html = await RenderPartialViewToString("OpcShippingMethods", shippingMethodModel),
+                    model = shippingMethodModel
                 },
                 goto_section = "shipping_method"
             });
