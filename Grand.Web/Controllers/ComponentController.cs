@@ -30,7 +30,7 @@ namespace Grand.Web.Controllers
                 return false;
             }
             var attribute = component.TypeInfo.GetCustomAttribute<BaseViewComponentAttribute>();
-            if (attribute == null || attribute.AdminAccess)
+            if (attribute != null && attribute.AdminAccess)
             {
                 error = "Component - Attribute admin access limited";
                 return false;
