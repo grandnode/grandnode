@@ -17,7 +17,7 @@ namespace Grand.Framework.Components
             var viewJson = Request?.Headers["X-Response-View"];
             if (viewJson?.Equals("Json") ?? false)
             {
-                return new JsonContentViewComponentResult(new HtmlString(JsonConvert.SerializeObject(model)));
+                return new JsonContentViewComponentResult(JsonConvert.SerializeObject(model));
             }
             return base.View<TModel>(model);
         }
