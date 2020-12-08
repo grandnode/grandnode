@@ -7,5 +7,5 @@ using Grand.Core.Plugins;
     SystemName = "Shipping.ShippingPoint",
     SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
-    Version = "1.03"
+    Version = "1.04"
 )]
