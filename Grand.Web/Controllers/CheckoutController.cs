@@ -1057,7 +1057,8 @@ namespace Grand.Web.Controllers
                 {
                     update_section = new UpdateSectionJsonModel {
                         name = "payment-method",
-                        html = await RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
+                        html = await RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel),
+                        model = paymentMethodModel
                     },
                     goto_section = "payment_method"
                 });
@@ -1072,7 +1073,8 @@ namespace Grand.Web.Controllers
             {
                 update_section = new UpdateSectionJsonModel {
                     name = "confirm-order",
-                    html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                    html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel),
+                    model = confirmOrderModel
                 },
                 goto_section = "confirm_order"
             });
