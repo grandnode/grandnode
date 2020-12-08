@@ -7,5 +7,5 @@ using Grand.Core.Plugins;
     SystemName = "Payments.BrainTree",
     SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
-    Version = "1.05"
+    Version = "1.06"
 )]

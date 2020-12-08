@@ -57,9 +57,8 @@
 <input type="hidden" asp-for="Errors" />
 <div style="color:red; margin:0 auto" id="braintree-errors"></div>
 <div id="braintree-authentication"></div>
-
-<script asp-location="Footer">
-    $(document).ready(function () {
+<div class="script-tag-info">
+    <script>
         var authorization = '@ViewBag.ClientToken';
         var submitForm = false;
         var stepBack = false;
@@ -70,7 +69,7 @@
             hostedFields: null
         };
         var bankFrame = document.querySelector('#braintree-authentication');
-        $('.payment-info-next-step-button').attr('onclick', null);
+        document.querySelector('.payment-info-next-step-button').setAttribute('onclick', null);
         braintree.client.create({
             authorization: authorization
         }, onClientCreate);
@@ -141,8 +140,8 @@
                 }
             }, function (err, payload) {
                 if (err) {
-                    var currentErrorvalue = $('#@Html.IdFor(model => model.Errors)').val();
-                    $('#@Html.IdFor(model => model.Errors)').val(currentErrorvalue + '|' + err.message);
+                    var currentErrorvalue = document.querySelector('#@Html.IdFor(model => model.Errors)').value;
+                    document.querySelector('#@Html.IdFor(model => model.Errors)').value = currentErrorvalue + '|' + err.message;
                     return;
                 }
                 // Add the nonce to the form and submit
@@ -152,16 +151,15 @@
                 }
             });
         }
-        $('input.payment-info-next-step-button').on('click', function (data) {
-            $('#braintree-errors').html('');
+        document.querySelector('input.payment-info-next-step-button').addEventListener('click', function (data) {
+            document.querySelector('#braintree-errors').innerHTML = '';
             if (!submitForm) {
                 if (!stepBack) {
                     components.hostedFields.tokenize(function (err, payload) {
                         if (err) {
-                            console.log('tokenization error:', err);
-                            var currentErrorvalue = $('#@Html.IdFor(model => model.Errors)').val();
-                            $('#@Html.IdFor(model => model.Errors)').val(currentErrorvalue + '|' + err.message);
-                            $('#braintree-errors').html(err.message);
+                            var currentErrorvalue = document.querySelector('#@Html.IdFor(model => model.Errors)').value;
+                            document.querySelector('#@Html.IdFor(model => model.Errors)').value = currentErrorvalue + '|' + err.message;
+                            document.querySelector('#braintree-errors').innerHTML = err.message;
                             return;
                         }
                         verifyCard(payload);
@@ -174,5 +172,5 @@
                 PaymentInfo.save();
             }
         });
-    });
-</script>
+    </script>
+</div>

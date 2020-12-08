@@ -43,3 +43,7 @@
         </div>
     </div>
 </div>
+@if (!string.IsNullOrEmpty(Model.Errors))
+{
+    <div class="text-danger">@Model.Errors</div>
+}
