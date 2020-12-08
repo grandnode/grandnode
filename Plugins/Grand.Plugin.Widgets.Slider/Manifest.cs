@@ -7,5 +7,5 @@ using Grand.Core.Plugins;
     SystemName = "Widgets.Slider",
     SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
-    Version = "1.07"
+    Version = "1.08"
 )]
