@@ -1,0 +1,85 @@
+﻿@model PollModel
+@using System.Text.Encodings.Web
+<div class="text-md-center text-left poll generalMarginSupporter" id="poll-block-@(Model.Id)">
+    <h3 class="h5 poll-display-text">@Model.Name</h3>
+    @if (Model.AlreadyVoted)
+    {
+        <b-col cols="12" class="poll-item px-0">
+            <div class="d-flex justify-content-center">
+                <ul class="list-group col-md-6">
+                    @foreach (var item in Model.Answers)
+                    {
+                        <li class="list-group-item flex-column">
+                            @string.Format(T("Polls.VotesResultLine").Text, item.Name, item.NumberOfVotes, item.PercentOfTotalVotes.ToString("0.0"))
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width:@string.Format(item.PercentOfTotalVotes.ToString("0"))%" aria-valuenow="@string.Format(item.PercentOfTotalVotes.ToString("0"))" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </b-col>
+        <b-col cols="12">
+            <h4 class="poll-total-votes text-center">@string.Format(T("Polls.TotalVotes").Text, Model.TotalVotes)</h4>
+        </b-col>
+
+    }
+    else
+    {
+        <fieldset class="rate">
+            <legend class="d-none">@Model.Name</legend>
+            @foreach (var item in Model.Answers)
+            {
+                <label for="pollanswers-@(item.Id)-@(Model.Id)" class="custom-control custom-radio">
+                    <input id="pollanswers-@(item.Id)-@(Model.Id)" class="custom-control-input" type="radio" name="pollanswers-@(Model.Id)" value="@item.Id" />
+                    <span class="sr-only">pollanswers</span>
+                    <span class="custom-control-label"></span>
+                    <span class="custom-control-description">@item.Name</span>
+                </label>
+                
+            }
+        </fieldset>
+        <div class="buttons mt-1 mb-1 text-center">
+            <input type="button" value="@T("Polls.Vote")" id="vote-poll-@(Model.Id)" class="btn btn-outline-secondary" />
+            <span id="poll-voting-progress-@(Model.Id)" style="display: none;" class="col-12 please-wait">@T("Common.Wait...")</span>
+            <div class="poll-vote-error text-danger col-form-label" id="block-poll-vote-error-@(Model.Id)">
+            </div>
+        </div>
+        
+        <script asp-location="Footer">
+            document.getElementById('vote-poll-@(Model.Id)').addEventListener('click', function () {
+                if (document.querySelector("input[name=pollanswers-@(Model.Id)]:checked") !== null) {
+                    var pollAnswerId = document.querySelector("input[name=pollanswers-@(Model.Id)]:checked").value;
+                }
+                if (typeof (pollAnswerId) == 'undefined') {
+                    alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Polls.SelectAnswer").Text))');
+                }
+                else {
+                    var voteProgress = document.getElementById("poll-voting-progress-@(Model.Id)");
+                    voteProgress.style.display = "block";
+                    axios({
+                        method: 'post',
+                        url: "@(Url.RouteUrl("PollVote"))",
+                        params: { "pollAnswerId": pollAnswerId, "pollId": '@(Model.Id)' },
+                    }).then(function (response) {
+
+                            voteProgress.style.display = "none";
+                            if (response.data.error) {
+                                document.getElementById("block-poll-vote-error-@(Model.Id)").innerHTML = response.data.error;
+                                document.getElementById('block-poll-vote-error-@(Model.Id)').style.display = "block";
+                                setTimeout(function () { document.getElementById('block-poll-vote-error-@(Model.Id)').style.display = "none"; }, 1000);
+                            }
+
+                        if (response.data.html) {
+                            document.getElementById("poll-block-@(Model.Id)").innerHTML = response.data.html;
+                        }
+                    }).catch(function (error) {
+                        alert(error);
+                        voteProgress.style.display = "none";
+                    });
+                }
+                return false;
+            });
+        </script>
+    }
+</div>

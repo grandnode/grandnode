@@ -1,0 +1,25 @@
+﻿  <div v-if="vmorder.cart.GiftCardBox.Display" class="giftcard-box">
+        <h2 class="h5">
+            <strong>@T("ShoppingCart.GiftCardCouponCode")</strong>
+        </h2>
+        <div class="coupon-code">
+            <div class="form-group">
+                <span class="col-form-label">@T("ShoppingCart.GiftCardCouponCode.Tooltip")</span>
+                <div class="input-group">
+                    <input id="giftcardcouponcode" name="giftcardcouponcode" type="text" class="form-control gift-card-coupon-code" />
+                    <label for="giftcardcouponcode" class="sr-only">@T("ShoppingCart.GiftCardCouponCode.Button")</label>
+                    <span class="input-group-append">
+                        <button type="button" name="applygiftcardcouponcode" id="applygiftcardcouponcode" @@click="vmorder.ApplyGiftCard('@Url.RouteUrl("ApplyGiftCard")')" class="btn btn-outline-secondary apply-discount-coupon-code-button">
+                            @T("ShoppingCart.GiftCardCouponCode.Button")
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div v-if="vmorder.cart.GiftCardBox.Message !== null && vmorder.cart.GiftCardBox.IsApplied" class="alert alert-success message-success text-center">
+            {{vmorder.cart.GiftCardBox.Message}}
+        </div>
+        <div v-if="vmorder.cart.GiftCardBox.Message !== null && vmorder.cart.GiftCardBox.IsApplied == false" class="alert alert-danger message-failure text-center">
+            {{vmorder.cart.GiftCardBox.Message}}
+        </div>
+    </div>

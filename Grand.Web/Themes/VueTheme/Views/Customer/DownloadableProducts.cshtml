@@ -1,0 +1,66 @@
+﻿@model CustomerDownloadableProductsModel
+@using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
+}
+<section class="page account-page downloadable-products-page pl-lg-3 pt-lg-0 pt-3">
+    <h1 class="h2 generalTitle">@T("Account.DownloadableProducts")</h1>
+    @if (Model.Items.Any())
+    {
+
+                        <div id="downloadable-products"></div>
+                        <script>
+                                var DownloadableProducts = Vue.extend({
+                                    template: '<b-table :fields="fields" :items="items" responsive><template v-slot:cell(order)="data"><div v-html="data.value.order"></div></template><template v-slot:cell(date)="data"><div v-html="data.value.date"></div></template><template v-slot:cell(product)="data"><div v-html="data.value.product"></div></template><template v-slot:cell(download)="data"><div v-html="data.value.download"></div></template></b-table>',
+                                    data: function () {
+                                        return {
+                                            fields: [
+                                                { key: 'order', label: '@T("DownloadableProducts.Fields.Order")'},
+                                                { key: 'date', label: '@T("DownloadableProducts.Fields.Date")'},
+                                                { key: 'product', label: '@T("DownloadableProducts.Fields.Product")'},
+                                                { key: 'download', label: '@T("DownloadableProducts.Fields.Download")'},
+                                            ],
+                                            items: [
+                                                @for (int i = 0; i < Model.Items.Count; i++)
+                                                {
+                                                    var item = Model.Items[i];
+                                                    <text>
+                                                {
+                                                    order: {
+                                                        order: '<a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.OrderNumber</a>'
+                                                    },
+                                                    date: {
+                                                        date: '@item.CreatedOn.ToString("d")'
+                                                    },
+                                                    product: {
+                                                        product: '<a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>@if (!String.IsNullOrEmpty(item.ProductAttributes)) {<div class="attributes">@Html.Raw(item.ProductAttributes)</div>}'
+                                                    },
+                                                    download: {
+                                                        download: '@if (!String.IsNullOrEmpty(item.DownloadId)) { <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>}else {@T("DownloadableProducts.Fields.Download.NA")}@if (!String.IsNullOrEmpty(item.LicenseId))@if (!String.IsNullOrEmpty(item.LicenseId)) {<a href="@Url.RouteUrl("GetLicense", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.DownloadLicense")</a> }'
+                                                    },
+
+                                                },
+                                                    </text>
+                                                }
+                                            ]
+                                        }
+                                    }
+                                })
+                            new DownloadableProducts().$mount('#downloadable-products')
+                        </script>
+    }
+    else
+    {
+        <div class="no-data alert alert-info">
+            @T("DownloadableProducts.NoItems")
+        </div>
+    }
+</section>

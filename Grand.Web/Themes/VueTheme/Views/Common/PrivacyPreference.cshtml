@@ -1,0 +1,28 @@
+﻿@model IList<PrivacyPreferenceModel>
+<b-modal ref="ModalPrivacyPreference" title="@T("PrivacyPreference.Center")" id="ModalPrivacyPreference" centered hide-footer>
+    <b-alert show>
+        @T("PrivacyPreference.Description")
+    </b-alert>
+    @if (Model.Any())
+    {
+        <form id="frmPrivacyPreference">
+            <div class="mt-3">
+                @foreach (var item in Model)
+                {
+                    <div class="d-inline-flex align-items-start justify-content-between w-100 mb-3">
+                        <div class="d-flex flex-column">
+                            <div class="h5">@item.Name</div>
+                            <div>@item.Description</div>
+                        </div>
+                        <div class="custom-control custom-switch">
+                            <input @if (!(item.AllowToDisable)) { <text> disabled checked</text> } @if (item.State == true) { <text> checked</text> } type="checkbox"
+                                   value="@item.SystemName" class="custom-control-input" id="ConsentCookies_@item.SystemName" name="ConsentCookies_@item.SystemName">
+                            <label class="custom-control-label" for="ConsentCookies_@item.SystemName"></label>
+                        </div>
+                    </div>
+                }
+                <input type="button" class="btn btn-info w-100" @@click="$bvModal.hide('ModalPrivacyPreference')" value="Save" onclick="SavePrivacyPreference('@Url.RouteUrl("PrivacyPreference")');" />
+            </div>
+        </form>
+    }
+</b-modal>

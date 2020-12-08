@@ -1,0 +1,20 @@
+﻿@model CategoryNavigationModel
+@if (Model.Categories.Any())
+{
+    <div id="block-category-navigation" class="block block-category-navigation d-lg-block d-none">
+            <h2 class="h5"><strong>@T("Categories")</strong></h2>
+            <div class="viewBox listbox">
+                <ul class="list">
+                    @foreach (var category in Model.Categories)
+                    {
+                        var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
+                        {
+                            CurrentCategoryId = Model.CurrentCategoryId,
+                            Category = category
+                        };
+                        <partial name="_CategoryLine.Navigation" model="categoryLineModel" />
+                    }
+                </ul>
+            </div>
+    </div>
+}

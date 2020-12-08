@@ -1,0 +1,33 @@
+﻿@using Grand.Framework.Themes
+@inject IThemeContext themeContext
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_Root.Head";
+    var themeName = themeContext.WorkingThemeName;
+    pagebuilder.AppendScriptParts(ResourceLocation.Footer, string.Format("~/Themes/{0}/Content/script/app.js", themeName));
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
+<div id="app" v-cloak>
+    <div class="page-loader-container">
+        <div class="page-loader"></div>
+    </div>
+    <partial name="_Notifications" />
+    <partial name="_JavaScriptDisabledWarning" />
+    <partial name="_OldInternetExplorerWarning" />
+    <partial name="Header" />
+    <b-container :fluid="fluid" class="main-container">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+    </b-container>
+    @await Component.InvokeAsync("Footer")
+    @await Component.InvokeAsync("EuCookieLaw")
+</div>
+<script asp-location="Footer">
+    AxiosCart.init('.cart-qty', '.wishlist-qty', '.flyout-cart');
+</script>
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })

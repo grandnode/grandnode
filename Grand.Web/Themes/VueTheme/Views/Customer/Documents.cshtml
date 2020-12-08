@@ -1,0 +1,66 @@
+﻿@model DocumentsModel
+@using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Documents").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Documents })
+}
+
+<div class="page account-page auction-list-page pl-lg-3 pt-3 pt-lg-0">
+    <h1 class="h2 generalTitle">@T("Account.Documents")</h1>
+    @if (Model.DocumentList.Any())
+    {
+        foreach (var item in Model.DocumentList)
+        {
+            <div class="card mb-3">
+                <div class="card-header d-sm-inline-flex flex-sm-row d-flex flex-column px-sm-3 px-2">
+                    <div class="pr-3">
+                        <strong>@item.Number</strong> <small>(@item.Status)</small>
+                    </div>
+                    @if (item.DocDate.HasValue)
+                    {
+                        <div class="ml-auto">
+                            <span class="pr-1">@T("Account.Documents.DocDate")</span>
+                            <i class="far fa-clock pr-1 text-muted"></i>
+                            <span class="text-muted">@item.DocDate.Value.ToShortDateString()</span>
+                        </div>
+                    }
+                    @if (item.DueDate.HasValue)
+                    {
+                        <div class="ml-auto">
+                            <span class="pr-1">@T("Account.Documents.DueDate")</span>
+                            <i class="far fa-clock pr-1 text-muted"></i>
+                            <span class="text-muted">@item.DueDate.Value.ToShortDateString()</span>
+                        </div>
+                    }
+                </div>
+                @if (!string.IsNullOrEmpty(item.Description))
+                {
+                    <div class="card-body px-sm-3 px-2">
+                        @Html.Raw(item.Description)
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(item.DownloadId))
+                {
+                    <div class="d-inline-flex p-sm-3 p-2 border-top">
+                        <span class="mb-2">
+                            @T("Account.Documents.Attachment"):
+                            <a href="@Url.RouteUrl("GetDocumentFile", new { documentId = item.Id})">@T("Account.Documents.Download")</a>
+                        </span>
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <div class="no-data alert alert-info">
+            @T("Account.Documents.NoExists")
+        </div>
+    }
+</div>

@@ -1,0 +1,17 @@
+﻿@model BoardsIndexModel
+@using Grand.Web.Models.Boards;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    pagebuilder.AddTitleParts(T("Forum.PageTitle.Default").Text);
+}
+<div class="page forums-main-page">
+    @await Component.InvokeAsync("TopicBlock", new { systemName = "ForumWelcomeMessage" })
+    <partial name="_ForumHeader" />
+    @foreach (var forumGroup in Model.ForumGroups)
+    {
+        await Html.RenderPartialAsync("_ForumGroup", forumGroup);
+    }
+    @await Component.InvokeAsync("ForumActiveDiscussionsSmall")
+</div>

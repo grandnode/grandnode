@@ -1,0 +1,37 @@
+﻿<div v-if="vmorder.cart.DiscountBox.Display" class="coupon-box">
+    <h2 class="h5">
+        <strong>
+            @T("ShoppingCart.DiscountCouponCode.Tooltip")
+        </strong>
+    </h2>
+    <div class="coupon-code">
+        <div class="form-group">
+            <span class="col-form-label">@T("ShoppingCart.DiscountCouponCode")</span>
+            <div class="input-group">
+                <input type="text" id="discountcouponcode" name="discountcouponcode" class="form-control discount-coupon-code">
+                <label for="discountcouponcode" class="sr-only">@T("ShoppingCart.GiftCardCouponCode.Button")</label>
+                <span class="input-group-append">
+                    <button type="button" name="applydiscountcouponcode" id="applydiscountcouponcode" @@click="vmorder.ApplyDiscountCode('@Url.RouteUrl("ApplyDiscountCoupon")')" class="btn btn-outline-secondary apply-discount-coupon-code-button">
+                        @T("ShoppingCart.DiscountCouponCode.Button")
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div v-if="vmorder.cart.DiscountBox.Message !== null && vmorder.cart.DiscountBox.IsApplied" class="alert alert-success message-success text-center">
+        {{vmorder.cart.DiscountBox.Message}}
+    </div>
+    <div v-if="vmorder.cart.DiscountBox.Message !== null && vmorder.cart.DiscountBox.IsApplied == false" class="alert alert-danger message-failure text-center">
+        {{vmorder.cart.DiscountBox.Message}}
+    </div>
+        <div v-if="vmorder.cart.DiscountBox.AppliedDiscountsWithCodes[0]" v-for="discount in vmorder.cart.DiscountBox.AppliedDiscountsWithCodes" class="alert alert-success text-center">
+            <span>@T("ShoppingCart.DiscountCouponCode.CurrentCode").Text.Replace("{0}", "{{discount.CouponCode}}")</span>
+            <b-link name="removediscount"
+                    title="@T("Common.Remove")"
+                    class="mx-1"
+                    @@click="vmorder.ApplyDiscountCode('/removediscountcoupon?discountId=' + discount.Id)">
+                <b-icon icon="trash" variant="danger"></b-icon>
+            </b-link>
+        </div>
+</div>

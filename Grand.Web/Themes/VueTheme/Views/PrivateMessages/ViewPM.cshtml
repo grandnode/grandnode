@@ -1,0 +1,35 @@
+﻿@model PrivateMessageModel
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    pagebuilder.AddTitleParts(T("PageTitle.ViewPM").Text);
+}
+<div class="page private-messages private-message-view-page">
+    <h1 class="h4 generalTitle text-xs-center">@T("PrivateMessages.View.ViewMessage")</h1>
+    <b-card class="view-message">
+        <template v-slot:header>
+            <h5>@T("PrivateMessages.View.Subject"): <span>@Model.Subject</span></h5>
+        </template>
+        <div class="message-body">
+            @Html.Raw(Model.Message)
+        </div>
+        <template v-slot:footer>
+            <label><strong>@T("PrivateMessages.View.From")</strong></label>
+            <span>@Model.CustomerFromName</span>
+            <label><strong>@T("PrivateMessages.View.To")</strong></label>
+            <span>@Model.CustomerToName</span>
+        </template>
+    </b-card>
+    <b-btn-group class="mt-3">
+        <b-button variant="secondary" class="reply-pm-button" onclick="location = ('@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')">
+        @T("PrivateMessages.View.ReplyButton")
+        </b-button>
+        <b-button variant="secondary" class="delete-pm-button" onclick="location = ('@Url.RouteUrl("DeletePM", new { privateMessageId = Model.Id })')">
+            @T("PrivateMessages.View.DeleteButton")
+        </b-button>
+        <b-button variant="secondary" class="back-pm-button" onclick="location = ('@Url.RouteUrl("PrivateMessages")')">
+            @T("PrivateMessages.View.BackButton")
+        </b-button>
+    </b-btn-group>
+</div>

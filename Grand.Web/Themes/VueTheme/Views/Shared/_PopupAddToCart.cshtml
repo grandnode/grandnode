@@ -1,0 +1,178 @@
+﻿@model AddToCartModel
+@{
+    string text = "";
+    if (Model.CartType == ShoppingCartType.ShoppingCart)
+    {
+        text = string.Format(T("AddToCart.Cart.Items").Text, Model.TotalItems);
+    }
+    else if (Model.CartType == ShoppingCartType.Wishlist)
+    {
+        text = string.Format(T("AddToCart.Wishlist.Items").Text, Model.TotalItems);
+    }
+    else if (Model.CartType == ShoppingCartType.Auctions)
+    {
+        text = string.Format(T("Addtocart.Auctions.Ongoing").Text, Model.TotalItems);
+    }
+}
+    <b-modal ref="ModalAddToCart" id="ModalAddToCart" body-class="p-0" size="lg" @@shown="onShown" centered hide-footer hide-header>
+        <b-button class="modal-close" block @@click="$bvModal.hide('ModalAddToCart')"><b-icon icon="x" variant="white"></b-icon></b-button>
+        <b-card header-tag="header" footer-tag="footer" header-bg-variant="info" footer-bg-variant="white" footer-class="pt-0 border-0">
+            <template v-slot:header>
+                <h5 class="mb-0 text-white">
+                    @if (Model.CartType == ShoppingCartType.ShoppingCart || Model.CartType == ShoppingCartType.OnHoldCart)
+                    {
+                        @T("AddToCart.ShoppingCart")
+                    }
+                    else if (Model.CartType == ShoppingCartType.Wishlist)
+                    {
+                        @T("AddToCart.Wishlist")
+                    }
+                    else if (Model.CartType == ShoppingCartType.Auctions)
+                    {
+                        @T("shoppingcart.yourbidhasbeenplaced")
+                    }
+                </h5>
+            </template>
+            <b-col cols="12" class="px-0">
+                <b-form-row>
+                    <b-col xl="2" lg="3" cols="4" class="d-sm-block d-none">
+                        <b-card-img-lazy src="@Model.Picture.ImageUrl" alt="@Model.Picture.AlternateText" title="@Model.Picture.Title"></b-card-img-lazy>
+                    </b-col>
+                    <b-col>
+                        <b-link href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })"><h4>@Model.ProductName</h4></b-link>
+                        @if (!string.IsNullOrEmpty(Model.AttributeDescription))
+                        {
+                            <div class="form-group col-12 px-0 d-none d-md-block my-2">
+                                <label class="w-100 mb-0"><strong>@T("AddToCart.Attributes")</strong></label>
+                                <div class="attributes p-2">
+                                    @Html.Raw(Model.AttributeDescription)
+                                </div>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ReservationInfo))
+                        {
+                            <div class="form-group col-12 px-0 d-none d-md-block">
+                                <label class="w-100"><strong>@T("AddToCart.ReservationInfo")</strong></label>
+                                <div class="attributes p-2">
+                                    @Html.Raw(Model.ReservationInfo)
+                                </div>
+                            </div>
+                        }
+                        @if (!Model.IsAuction)
+                        {
+                            <div class="form-group col-12 pl-0 mb-0 d-flex">
+                                <label class="mb-0"><strong>@T("AddToCart.Qty")</strong></label>
+                                <label class="pl-3 mb-0">@Model.Quantity</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group col-12 pl-0 mb-0 d-flex">
+                                @if (Model.EndTime.HasValue)
+                                {
+                                    <div>
+                                        @if (Model.EndTime > DateTime.UtcNow)
+                                        {
+                                            <countdown :end-time="@Model.EndTime.Value.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds">
+                                                <template v-slot:process="{ timeObj }">
+                                                    <span class="col-form-label">@T("AddToCart.Timeleft"):</span>
+                                                    <span>{{ `${timeObj.d}` }} </span>
+                                                    <span>: {{ `${timeObj.h}` }} </span>
+                                                    <span>: {{ `${timeObj.m}` }} </span>
+                                                    <span>: {{ `${timeObj.s}` }}</span>
+                                                </template>
+                                                <template v-slot:finish>
+                                                    <span>@T("ShoppingCart.Auctionends")</span>
+                                                </template>
+                                            </countdown>
+                                        }
+                                        else
+                                        {
+                                            <label>@T("ShoppingCart.Auctionends"): @Model.EndTime.Value.ToString()</label>
+                                        }
+                                    </div>
+                                    <script asp-location="Footer">
+                                        $(document).ready(function () {
+                                            var cd = $('#popupEndTime');
+                                            var finalDate = cd.data('countdown');
+                                            cd.countdown(finalDate, function (event) {
+                                                if (event.strftime('%D') > 0) {
+                                                    cd.html(event.strftime('%D days %H:%M:%S'));
+                                                }
+                                                else {
+                                                    cd.html(event.strftime('%H:%M:%S'));
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                }
+                            </div>
+                        }
+
+                        <div class="form-group col-12 pl-0 mb-1 d-flex">
+                            @if (Model.IsAuction)
+                            {
+                                <label class=""><strong>@T("AddToCart.Yourbid"):</strong></label>
+                                <label class="pl-3 mb-0">@Model.HighestBid</label>
+                            }
+                            else
+                            {
+                                <label class=""><strong>@T("AddToCart.Price")</strong></label>
+                                <label class="pl-3 mb-0">@Model.Price</label>
+                            }
+                        </div>
+                    </b-col>
+                    <b-col cols="12">
+                        <b-jumbotron header-tag="h5" header-level="5" lead-tag="div" class="mt-3 mb-0 p-3 text-center">
+                            <template v-slot:header>
+                                @text
+                            </template>
+                            <template v-slot:lead>
+                                @if (!string.IsNullOrEmpty(Model.SubTotalDiscount))
+                                {
+                                    <div class="form-group mb-1 d-flex justify-content-center">
+                                        <label class="text-muted mb-0">@T("AddToCart.SubTotalDiscount")</label>
+                                        <label class="pl-3 mb-0 text-muted">@Model.SubTotalDiscount</label>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.SubTotal))
+                                {
+                                    <div class="form-group mb-0 d-flex justify-content-center">
+                                        <label class="text-dark mb-0">@T("AddToCart.SubTotal")</label>
+                                        <label class="pl-3 mb-0 text-dark mb-0">@Model.SubTotal</label>
+                                    </div>
+                                }
+                            </template>
+                        </b-jumbotron>
+                    </b-col>
+                </b-form-row>
+            </b-col>
+            <template v-slot:footer>
+                <b-button-group class="w-100">
+                    @if (Model.CartType == ShoppingCartType.Auctions)
+                    {
+                        <b-button variant="outline-info" class="text-uppercase" @@click='$bvModal.hide("ModalAddToCart")'>@T("AddToCart.Continue")</b-button>
+                    }
+                    else
+                    {
+                        <b-button variant="outline-info" class="text-uppercase" @@click='$bvModal.hide("ModalAddToCart")'>@T("AddToCart.Continue")</b-button>
+                    }
+                    @if (Model.CartType == ShoppingCartType.ShoppingCart || Model.CartType == ShoppingCartType.OnHoldCart)
+                    {
+                        <b-button variant="info" class="text-uppercase" @@click="location='@(Url.RouteUrl("ShoppingCart"))'">@T("AddToCart.ViewCart")</b-button>
+                    }
+                    else if (Model.CartType == ShoppingCartType.Wishlist)
+                    {
+                        <b-button variant="info" class="text-uppercase" @@click="location='@(Url.RouteUrl("Wishlist"))'">@T("AddToCart.ViewWishlist")</b-button>
+                    }
+                    else if (Model.CartType == ShoppingCartType.Auctions)
+                    {
+                        <b-button variant="info" class="text-uppercase" @@click="location='@(Url.RouteUrl("CustomerAuctions"))'">@T("AddToCart.ViewAuctions")</b-button>
+                    }
+                </b-button-group>
+            </template>
+        </b-card>
+    </b-modal>
+    <div class="script-tag">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "popup_add_to_cart_content_before", additionalData = Model })
+    </div>

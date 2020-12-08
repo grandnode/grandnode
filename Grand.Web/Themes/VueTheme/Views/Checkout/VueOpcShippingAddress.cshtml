@@ -1,0 +1,104 @@
+﻿<div v-if="vmorder.ShippingAddress" class="col-12 checkout-data px-0">
+    <div v-if="vmorder.ShippingAllowPickUpInStore && vmorder.ShippingPickUpInStoreOnly == false && vmorder.ShippingPickupPoints[0]" class="section pickup-in-store">
+        <p class="selector">
+            <label class="custom-control custom-checkbox">
+                <input class="custom-control-input" onclick="Shipping.togglePickUpInStore(this)" type="checkbox" id="PickUpInStore" name="PickUpInStore" value="true">
+                <span class="custom-control-label"></span>
+                <span class="custom-control-description" for="PickUpInStore">
+                    @T("Checkout.PickupPoints").Text
+                </span>
+            </label>
+        </p>
+        <p class="description">
+            <i>@T("Checkout.PickupPoints.Description")</i>
+        </p>
+        <script>
+            Shipping.togglePickUpInStore(document.querySelector('#PickUpInStore'));
+        </script>
+    </div>
+    <div v-if="vmorder.ShippingAllowPickUpInStore">
+        <div class="pickup-points" id="pickup-points-form" style="display:none;">
+            <template v-if="vmorder.ShippingPickupPoints[0]">
+                <input v-if="vmorder.ShippingPickUpInStoreOnly" id="PickUpInStore" name="PickUpInStore" type="hidden" />
+                <template v-if="vmorder.ShippingPickupPoints[1] == null">
+                    <template v-for="point in vmorder.ShippingPickupPoints">
+                        <input id="pickup-point-id" name="pickup-point-id" type="hidden" :value="point.Id">
+                        <div class="section single-pickup-point">
+                            <ul>
+                                <li class="single-pickup-point name">{{point.Name}}</li>
+                                <li class="single-pickup-point address">{{point.Address.City}} {{point.Address.ZipPostalCode}} {{point.Address.Address1}}</li>
+                                <li v-if="point.PickupFee !== null" class="single-pickup-point fee">{{point.PickupFee}}</li>
+                            </ul>
+                        </div>
+                    </template>
+                </template>
+                <template v-else>
+                    <label for="pickup-points-select">@T("Checkout.PickupPoints.SelectPickupPoint")</label>
+                    <select name="pickup-point-id" id="pickup-points-select" class="custom-select address-select" title="">
+                        <template v-for="point in vmorder.ShippingPickupPoints">
+                            <option :value="point.Id">
+                                {{point.Name}}
+                                <template v-if="point.Address.City !== null">
+                                    , {{point.Address.City}}
+                                </template>
+                                <template v-if="point.Address.ZipPostalCode !== null">
+                                    , {{point.Address.ZipPostalCode}}
+                                </template>
+                                <template v-if="point.Address.Address1 !== null">
+                                    , {{point.Address.Address1}}
+                                </template>
+                                <template v-if="point.PickupFee !== null">
+                                    , {{point.PickupFee}}
+                                </template>
+                            </option>
+                        </template>
+                    </select>
+                </template>
+            </template>
+        </div>
+    </div>
+    <div v-if="vmorder.ShippingPickUpInStoreOnly == false" class="shipping-addresses" id="shipping-addresses-form">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_top" })
+        <div class="section select-shipping-address" v-if="vmorder.ShippingExistingAddresses[0]">
+            <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>
+            <div>
+                <select name="shipping_address_id" id="shipping-address-select" class="custom-select address-select" title="" onchange="Shipping.newAddress(!this.value)">
+                    <template v-for="address in vmorder.ShippingExistingAddresses">
+                        <option :value="address.Id">
+                            {{address.FirstName}}
+                            {{address.LastName}}
+                            <template v-if="address.StreetAddressEnabled && address.Address1 !== null">
+                                , {{address.Address1}}
+                            </template>
+                            <template v-if="address.CityEnabled && address.City !== null">
+                                , {{address.City}}
+                            </template>
+                            <template v-if="address.StateProvinceEnabled && address.StateProvinceName !== null">
+                                , {{address.StateProvinceName}}
+                            </template>
+                            <template v-if="address.ZipPostalCodeEnabled && address.ZipPostalCode !== null">
+                                , {{address.ZipPostalCode}}
+                            </template>
+                            <template v-if="address.CountryEnabled && address.CountryName !== null">
+                                , {{address.CountryName}}
+                            </template>
+                        </option>
+                    </template>
+                    <option value="" :selected="vmorder.ShippingNewAddressPreselected">@T("Checkout.NewAddress")</option>
+                </select>
+            </div>
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_middle" })
+        <div class="section new-shipping-address" id="shipping-new-address-form" style="display:none;">
+            <div class="enter-address">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                @{
+                    var dataDictAddress = new ViewDataDictionary(ViewData);
+                    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                    <partial name="_CreateOrUpdateAddress" model="Model.BillingAddress.NewAddress" view-data="dataDictAddress" />
+                }
+            </div>
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_bottom" })
+    </div>
+</div>

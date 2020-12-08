@@ -1,0 +1,90 @@
+﻿@model CheckoutShippingMethodModel
+@inject IWebHelper webHelper
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Checkout").Text);
+    var storeLocation = webHelper.GetStoreLocation();
+}
+<script asp-location="Footer">
+    function loadPartialView(arg_value) {
+        var url = '@(storeLocation)checkout/GetShippingFormPartialView?shippingOption=' + arg_value;
+        axios({
+            url: url,
+            method: 'post',
+        }).then(function (response) {
+            document.getElementById('shipping_form').innerHTML = response.data;
+        })
+    }
+</script>
+
+<div class="page checkout-page shipping-method-page">
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Shipping })
+    <h2 class="generalTitle text-sm-center ">@T("Checkout.SelectShippingMethod")</h2>
+    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+    <div class="shipping-method">
+        <form asp-route="CheckoutShippingMethod" method="post" v-on:submit.prevent="validateBeforeSubmitParam($event, 'nextstep')">
+            @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_top" })
+            @if (Model.Warnings.Count == 0)
+            {
+                var selectedShippingMethod = Model.ShippingMethods.FirstOrDefault(x => x.Selected);
+                if (selectedShippingMethod != null)
+                {
+                    <script asp-location="Footer">
+                                loadPartialView('@(selectedShippingMethod.Name)___@(selectedShippingMethod.ShippingRateComputationMethodSystemName)');
+                    </script>
+                }
+
+                <ul class="method-list px-0">
+                    @for (int i = 0; i < Model.ShippingMethods.Count; i++)
+                    {
+                        var shippingMethod = Model.ShippingMethods[i];
+                        <li>
+                            <label class="custom-control custom-checkbox">
+                                <input id="shippingoption_@(i)" type="radio" onclick="loadPartialView(value)" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" checked="@shippingMethod.Selected" class="custom-control-input">
+                                <span class="custom-control-label"></span>
+                                <span for="shippingoption_@(i)" class="custom-control-description">
+                                    @T("Checkout.SelectShippingMethod.MethodAndFee", shippingMethod.Name, shippingMethod.Fee)
+
+                                    @if (!String.IsNullOrEmpty(shippingMethod.Description))
+                                    {
+                                        @Html.Raw(shippingMethod.Description)
+                                    }
+
+                                </span>
+                            </label>
+                        </li>
+                    }
+                </ul>
+                @if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
+                {
+                    <div class="multiple-locations">
+                        @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
+                    </div>
+                }
+                <div id="shipping_form"></div>
+                <div class="buttons">
+                    <input type="submit" value="@T("Checkout.NextButton")" class="btn btn-info mt-1 mb-1 shipping-method-next-step-button" />
+                </div>
+            }
+            else
+            {
+                <div class="message-error alert alert-danger my-3">
+                    <ul>
+                        @foreach (var warning in Model.Warnings)
+                        {
+                            <li>@warning</li>
+                        }
+                    </ul>
+                </div>
+            }
+            @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_bottom" })
+        </form>
+    </div>
+    <div class="order-summary">
+        <h5 class="generalTitle"><strong>@T("Checkout.OrderSummary")</strong></h5>
+        <partial name="OrderSummary" model="null" />
+    </div>
+</div>

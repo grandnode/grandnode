@@ -1,0 +1,30 @@
+﻿@model CustomerAddressEditModel
+@using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
+}
+<vc:widget widget-zone="customer-address-edit-before" additional-data="@Model"></vc:widget>
+<form asp-route="CustomerAddressEdit" method="post" v-on:submit.prevent="validateBeforeSubmit($event)">
+    <div class="page account-page address-edit-page pl-lg-3 mb-3 pt-lg-0 pt-3">
+        <h1 class="h2 generalTitle">@T("Account.CustomerAddresses.Edit")</h1>
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        @{
+            var dataDictAddress = new ViewDataDictionary(ViewData);
+            dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+            <partial name="_CreateOrUpdateAddress" model="Model.Address" view-data="dataDictAddress" />
+        }
+        <vc:widget widget-zone="customer-address-edit-form" additional-data="@Model"></vc:widget>
+        <div class="buttons generalMarginSupporter">
+            <input type="submit" class="btn btn-info save-address-button" value="@T("Common.Save")" />
+        </div>
+    </div>
+</form>
+<vc:widget widget-zone="customer-address-edit-after" additional-data="@Model"></vc:widget>

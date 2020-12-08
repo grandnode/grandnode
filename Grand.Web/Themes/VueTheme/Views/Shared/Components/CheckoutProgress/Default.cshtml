@@ -1,0 +1,43 @@
+﻿@model CheckoutProgressModel
+<b-col cols="12" class="px-0">
+    <b-row class="order-progress my-3 d-none d-md-flex">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_progress_before" })
+        <div class="col-12 col-md-4 col-lg-2 mb-1 active-step">
+            <b-button @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" variant=\"info\" class=\"p-3 w-100\"", Url.RouteUrl("ShoppingCart"))) : @Html.Raw(string.Format("variant=\"info\" class=\"p-3 w-100\" disabled")))>
+                <b-icon icon="cart"></b-icon>
+                <span class="ml-2">1. @T("Checkout.Progress.Cart")</span>
+            </b-button>
+        </div>
+        <div @(Model.CheckoutProgressStep == CheckoutProgressStep.Address || Model.CheckoutProgressStep == CheckoutProgressStep.Shipping || Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 active-step\"") : @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 inactive-step\""))>
+            <b-button @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"col-sm-12 btn btn-block btn-secondary p-3\"", Url.RouteUrl("CheckoutBillingAddress"))) : @Html.Raw(string.Format("variant=\"info\" class=\"p-3 w-100\" disabled")))>
+                <b-icon icon="house-door"></b-icon>
+                <span class="ml-2">2. @T("Checkout.Progress.Address")</span>
+            </b-button>
+        </div>
+        <div @(Model.CheckoutProgressStep == CheckoutProgressStep.Shipping || Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 active-step\"") : @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 inactive-step\""))>
+            <b-button @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"col-sm-12 btn btn-block btn-secondary p-3\"", Url.RouteUrl("CheckoutShippingMethod"))) : @Html.Raw(string.Format("variant=\"info\" class=\"p-3 w-100\" disabled")))>
+                <b-icon icon="truck"></b-icon>
+                <span class="ml-2">3. @T("Checkout.Progress.Shipping")</span>
+            </b-button>
+        </div>
+        <div @(Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 active-step\"") : @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 inactive-step\""))>
+            <b-button @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"col-sm-12 btn btn-block btn-secondary p-3\"", Url.RouteUrl("CheckoutPaymentMethod"))) : @Html.Raw(string.Format("variant=\"info\" class=\"p-3 w-100\" disabled")))>
+                <b-icon icon="cash-stack"></b-icon>
+                <span class="ml-2">4. @T("Checkout.Progress.Payment")</span>
+            </b-button>
+        </div>
+        <div @(Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 active-step\"") : @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 inactive-step\""))>
+            <b-button @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Payment && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"col-sm-12 btn btn-block btn-secondary p-3\" ", Url.RouteUrl("CheckoutConfirm"))) : @Html.Raw(string.Format("variant=\"info\" class=\"p-3 w-100\" disabled")))>
+                <b-icon icon="calendar2-check"></b-icon>
+                <span class="ml-2">5. @T("Checkout.Progress.Confirm")</span>
+            </b-button>
+        </div>
+        <div @(Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 active-step\"") : @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 inactive-step\""))>
+            <b-button @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Payment && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"col-sm-12 btn btn-block btn-secondary p-3\"", Url.RouteUrl("CheckoutConfirm"))) : @Html.Raw(string.Format("variant=\"info\" class=\"p-3 w-100\" disabled")))>
+                <b-icon icon="cart-check"></b-icon>
+                <span class="ml-2">6. @T("Checkout.Progress.Complete")</span>
+            </b-button>
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_progress_after" })
+    </b-row>
+</b-col>

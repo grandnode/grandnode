@@ -1,0 +1,27 @@
+﻿@model ProductDetailsModel
+<div class="product-bundle my-3">
+    @foreach (var item in Model.ProductBundleModels)
+    {
+        <b-card class="mb-2">
+                <b-row>
+                    <b-col md="3" cols="4" class="d-flex justify-content-center align-items-start pr-0">
+                        <div class="img-fluid text-center">
+                            <img class="img-fluid" alt="@item.DefaultPictureModel.AlternateText" src="@item.DefaultPictureModel.ImageUrl" title="@item.DefaultPictureModel.Title" />
+                        </div>
+                    </b-col>
+                    <b-col md="9" cols="8" class="col-md-9 col-8">
+                        <h6 class="card-title">@item.Quantity x <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })"> @item.Name </a>(@item.Price)</h6>
+                        <p class="card-text small">@Html.Raw(item.ShortDescription)</p>
+                    </b-col>
+                </b-row>
+            @if (item.ProductAttributes.Any())
+            {
+                var dataDictAttributes = new ViewDataDictionary(ViewData);
+                dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", item.ProductId);
+                <b-col cols="12" class="pt-1">
+                    <partial name="_ProductAttributesBundle" model="item.ProductAttributes" view-data="dataDictAttributes" />
+                </b-col>
+            }
+        </b-card>
+    }
+</div>

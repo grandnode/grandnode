@@ -1,0 +1,51 @@
+﻿@model ProductDetailsModel
+
+@if (Model.ProductWarehouses.Any())
+{
+    <div>
+        <label for="warehouseId" class="col-form-label">@T("Products.Warehouse"):</label>
+        <select class="custom-select form-control" name="WarehouseId" id="WarehouseId">
+            @foreach (var warehouse in Model.ProductWarehouses)
+            {
+                <option selected="@(warehouse.Selected)" value="@warehouse.WarehouseId">@(warehouse.Name)</option>
+            }
+        </select>
+    </div>
+    @if (Model.ProductAttributes.Any())
+    {
+        <script asp-location="Footer">
+        @{
+            var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}();", Model.Id);
+        }
+
+            document.getElementById('WarehouseId').addEventListener('change', function () { @attributeChangeHandlerFuncName });
+        </script>
+    }
+    else
+    {
+<script asp-location="Footer">
+        function warehouse_change_handler() {
+                var bodyFormData = new FormData();
+                bodyFormData.append('warehouseId', document.getElementById('WarehouseId').value);
+                axios({
+                    url: '@Html.Raw(Url.Action("productdetails_warehousechange", "product", new { productId = Model.Id }))',
+                    data: bodyFormData,
+                    params: { product: '@Model.Id' },
+                    method: 'post',
+                }).then(function (response) {
+                    if (response.data.stockAvailability) {
+                        if (document.getElementById('stock-availability-value-@Model.Id')) {
+                            document.getElementById('stock-availability-value-@Model.Id').innerText = response.data.stockAvailability
+                        }
+                    }
+                })
+
+            }
+                document.getElementById('WarehouseId').addEventListener('change', function() {
+                    warehouse_change_handler();
+                });
+                warehouse_change_handler();
+
+</script>
+    }
+}

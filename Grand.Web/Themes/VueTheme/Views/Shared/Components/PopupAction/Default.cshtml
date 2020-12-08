@@ -1,0 +1,75 @@
+﻿@model PopupModel
+@if (Model.PopupType == Grand.Domain.Messages.PopupType.Banner)
+{
+    <b-modal id="ModalBanner" ref="ModalBanner" centered hide-footer hide-header>
+        <b-button class="modal-close" block @@click="$bvModal.hide('ModalBanner')"><b-icon icon="x"></b-icon></b-button>
+        <div>
+            @Html.Raw(Model.Body)
+        </div>
+    </b-modal>
+}
+@if (Model.PopupType == Grand.Domain.Messages.PopupType.InteractiveForm)
+{
+    <b-modal id="ModalBanner" ref="ModalBanner" centered hide-footer hide-header>
+        <b-button class="modal-close" block @@click="$bvModal.hide('ModalBanner')"><b-icon icon="x"></b-icon></b-button>
+        <form asp-route="PopupInteractiveForm" method="post" id="interactive-form">
+            <div id="action-body-form">@Html.Raw(Model.Body)</div>
+        </form>
+    </b-modal>
+}
+<script>
+
+    var BannerMixin = {
+        created: function () {
+            this.showBanner();
+            this.addEventListenerInteractiveForm();
+        },
+        methods: {
+            showBanner: function () {
+                setTimeout(function () {
+                    if (vm.$refs['ModalBanner']) {
+                        vm.$bvModal.show('ModalBanner');
+                    }
+                }, 300);
+            },
+            addEventListenerInteractiveForm: function () {
+                var interactiveform = document.getElementById('interactive-form');
+                if(interactiveform) {
+                    document.addEventListener('submit', this.sendInteractiveForm);
+                }
+            },
+            sendInteractiveForm: function () {
+                var url = event.srcElement.action;
+                var data = new FormData(event.srcElement);
+                axios({
+                    method: "post",
+                    baseURL: url,
+                    data: data,
+                }).then(function (response) {
+                    if (response.data.success == true) {
+                        vm.$bvModal.hide('ModalBanner')
+                    }
+                    else {
+                        var element = document.getElementById('errorMessages');
+                        if (element)
+                            element.innerHTML = ''
+                        for (var error in response.data.errors) {
+                            if (element)
+                                element.innerHTML += response.data.errors[error] + '<br />';
+                        }
+                    }
+                }).catch(function (error) {
+                    alert(error);
+                });
+                event.preventDefault();
+            }
+        }
+    }
+    // define a component that uses this mixin
+    var Banner = Vue.extend({
+        mixins: [BannerMixin]
+    })
+
+    var banner = new Banner();
+
+</script>

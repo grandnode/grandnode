@@ -1,0 +1,17 @@
+﻿@using Grand.Core.Infrastructure
+@using Grand.Services.Helpers
+@inject IDateTimeHelper dateTimeHelper
+
+<div class="forums-header generalMarginSupporter">
+        <div class="row d-flex justify-content-end">
+            <div class="col-12 col-md-6 current-time">
+                <div class="d-inline-flex align-items-center">
+                    <b-icon variant="info" icon="calendar2-check"></b-icon>
+                    <small class="text-muted mx-2">@dateTimeHelper.ConvertToUserTime(DateTime.UtcNow).ToString("F")</small>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 ml-auto text-sm-right">
+                <partial name="_SearchBox"/>
+            </div>
+        </div>
+</div>

@@ -1,0 +1,22 @@
+﻿@model IList<ProductOverviewModel>
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.RecentlyViewedProducts").Text);
+}
+<b-col cols="12" class="page recently-viewed-products-page px-0">
+    <h1 class="generalTitle h2">@T("Products.RecentlyViewedProducts")</h1>
+    @if (Model.Any())
+    {
+        <b-form-row class="product-grid">
+            @foreach (var product in Model)
+            {
+                <b-col lg="4" sm="6" cols="6" class="product-container mb-2">
+                    <partial name="_ProductBox" model="product" />
+                </b-col>
+            }
+        </b-form-row>
+    }
+</b-col>

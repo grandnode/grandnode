@@ -1,0 +1,166 @@
+﻿@model CustomerAddressListModel
+@using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
+}
+<div class="page account-page address-list-page pl-lg-3 pt-lg-0 pt-3">
+    @Html.AntiForgeryToken()
+    <b-button variant="info" class="add-address-button float-sm-right mt-2" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'">
+        <b-icon icon="clipboard-plus"></b-icon> @T("Common.AddNew")
+    </b-button>
+    <h1 class="h2 generalTitle">@T("Account.CustomerAddresses")</h1>
+    @if (Model.Addresses.Any())
+    {
+        <b-col cols="12" class="px-0">
+            <b-row class="address-list">
+                @for (int i = 0; i < Model.Addresses.Count; i++)
+                {
+                    var address = Model.Addresses[i];
+                    <b-col md="6" cols="12" class="mb-3">
+                        <b-card>
+                            <template v-slot:header>
+                                <h3 class="h5 mb-0">
+                                    @address.FirstName @address.LastName
+                                </h3>
+                            </template>
+                            <b-card-text>
+                                <div class="address-item">
+                                    <ul class="info mb-0 px-0">
+                                        <li class="name">
+                                            @address.FirstName @address.LastName
+                                        </li>
+                                        <li class="email">
+                                            <label class="mb-0"><strong>@T("Address.Fields.Email"):</strong></label>
+                                            @address.Email
+                                        </li>
+                                        @if (address.PhoneEnabled)
+                                        {
+                                            <li class="phone">
+                                                <label class="mb-0"><strong>@T("Address.Fields.PhoneNumber"):</strong></label>
+                                                @address.PhoneNumber
+                                            </li>
+                                        }
+                                        @if (address.FaxEnabled)
+                                        {
+                                            <li class="fax">
+                                                <label class="mb-0"><strong>@T("Address.Fields.FaxNumber"):</strong></label>
+                                                @address.FaxNumber
+                                            </li>
+                                        }
+                                        @if (address.CompanyEnabled && !String.IsNullOrEmpty(address.Company))
+                                        {
+                                            <li class="company">@address.Company</li>
+                                        }
+                                        @if (address.VatNumberEnabled && !String.IsNullOrEmpty(address.VatNumber))
+                                        {
+                                            <li class="vatnumber">@address.VatNumber</li>
+                                        }
+                                        @if (address.StreetAddressEnabled)
+                                        {
+                                            <li class="address1">
+                                                @address.Address1
+                                            </li>
+                                        }
+                                        @if (address.StreetAddress2Enabled && !String.IsNullOrEmpty(address.Address2))
+                                        {
+                                            <li class="address2">
+                                                @address.Address2
+                                            </li>
+                                        }
+                                        @if (address.CityEnabled || address.StateProvinceEnabled || address.ZipPostalCodeEnabled)
+                                        {
+                                            var cityStateZip = "";
+                                            if (address.CityEnabled)
+                                            {
+                                                cityStateZip = address.City;
+                                                if (address.StateProvinceEnabled || address.ZipPostalCodeEnabled)
+                                                {
+                                                    cityStateZip += ",";
+                                                }
+                                            }
+                                            if (address.StateProvinceEnabled)
+                                            {
+                                                if (!String.IsNullOrEmpty(cityStateZip))
+                                                {
+                                                    cityStateZip += " ";
+                                                }
+                                                cityStateZip += address.StateProvinceName;
+                                            }
+                                            if (address.ZipPostalCodeEnabled)
+                                            {
+                                                if (!String.IsNullOrEmpty(cityStateZip))
+                                                {
+                                                    cityStateZip += " ";
+                                                }
+                                                cityStateZip += address.ZipPostalCode;
+                                            }
+                                            <li class="city-state-zip">
+                                                @cityStateZip
+                                            </li>
+                                        }
+                                        @if (address.CountryEnabled && !String.IsNullOrEmpty(address.CountryName))
+                                        {
+                                            <li class="country">
+                                                @address.CountryName
+                                            </li>
+                                        }
+                                        @if (!String.IsNullOrEmpty(address.FormattedCustomAddressAttributes))
+                                        {
+                                            <li class="custom-attributes-view">
+                                                @Html.Raw(address.FormattedCustomAddressAttributes)
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </b-card-text>
+                            <template v-slot:footer>
+                                <b-btn-group>
+                                    <b-button variant="secondary" class="edit-address-button" onclick="location.href='@(Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id }))'">
+                                        @T("Common.Edit")
+                                    </b-button>
+                                    <b-button variant="danger" class="delete-address-button" onclick="deletecustomeraddress('@(address.Id)')">
+                                        @T("Common.Delete")
+                                    </b-button>
+                                </b-btn-group>
+                            </template>
+                        </b-card>
+                    </b-col>
+                }
+            </b-row>
+        </b-col>
+        <script asp-location="Footer">
+                function deletecustomeraddress(addressId) {
+                    if (confirm('@T("Admin.Common.AreYouSure")')) {
+
+                        var bodyFormData = new FormData();
+                        bodyFormData.append('addressId', addressId);
+                        bodyFormData.append('__RequestVerificationToken', document.querySelector('input[name=__RequestVerificationToken]').value);
+
+                        axios({
+                            url: '@Url.Action("AddressDelete", "Customer")',
+                            data: bodyFormData,
+                            method: 'post',
+                        }).then(function (response) {
+                            location = response.data.redirect;
+                        }).catch(function (error) {
+                            alert(error)
+                        })
+                    }
+                }
+        </script>
+    }
+    else
+    {
+        <div class="no-data alert alert-info">
+            @T("Account.CustomerAddresses.NoAddresses")
+        </div>
+    }
+</div>

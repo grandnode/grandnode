@@ -1,0 +1,22 @@
+﻿@model PrivateMessageIndexModel
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    pagebuilder.AddTitleParts(T("PageTitle.PrivateMessages").Text);
+}
+<div class="page private-messages private-messages-page">
+    <h2 class="text-xs-center generalTitle">@T("PrivateMessages.PrivateMessages")</h2>
+    <div>
+        <b-card no-body class="tabs inbox-tabs" id="tabs">
+            <b-tabs card>
+                <b-tab title="@T("PrivateMessages.Inbox")" active>
+                    <b-card-text>@await Component.InvokeAsync("PrivateMessagesInbox", new { pageNumber = Model.InboxPage, tab = "inbox" })</b-card-text>
+                </b-tab>
+                <b-tab title="@T("PrivateMessages.SentItems")">
+                    <b-card-text>@await Component.InvokeAsync("PrivateMessagesSentItems", new { pageNumber = Model.SentItemsPage, tab = "sent" })</b-card-text>
+                </b-tab>
+            </b-tabs>
+        </b-card>
+    </div>
+</div>

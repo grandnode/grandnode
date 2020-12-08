@@ -1,0 +1,20 @@
+﻿.block-account-navigation ul li a {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: .25rem;
+    margin: 0 0 5px 0;
+}
+.block-account-navigation ul li a.active, .block-account-navigation ul li a:hover  {
+    color: #17a2b8;
+    border-color: #17a2b8;
+}
+.block-account-navigation ul li svg {
+    font-size: 28px;
+    margin: 0 10px 0 0;
+}
+.block-account-navigation ul li span {
+    font-size: 16px;
+}

@@ -1,0 +1,15 @@
+﻿@model IList<ProductOverviewModel>
+@if (Model.Any())
+{
+    <b-col class="col-12 px-0 customGrid cross-sell-container">
+        <h5 class="generalTitle text-center"><strong>@T("ShoppingCart.CrossSells")</strong></h5>
+        <b-form-row class="flex-grid mx-0">
+            @foreach (var product in Model)
+            {
+                <b-col lg="3" md="4" sm="6" cols="6" class="product-container mb-2">
+                    <partial name="_ProductBox" model="product" />
+                </b-col>
+            }
+        </b-form-row>
+    </b-col>
+}

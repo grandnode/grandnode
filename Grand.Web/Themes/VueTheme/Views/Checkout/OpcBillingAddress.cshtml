@@ -1,0 +1,71 @@
+﻿@model CheckoutBillingAddressModel
+<div class="checkout-data">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_top" })
+        @if (Model.ShipToSameAddressAllowed)
+        {
+            <div class="ship-to-same-address">
+                 <p class="selector">
+                     <label class="custom-control custom-checkbox">
+                         <input asp-for="ShipToSameAddress" class="custom-control-input" />
+                         <span class="custom-control-label"></span>
+                         <span class="custom-control-description">@T("Checkout.ShipToSameAddress")</span>
+                     </label>
+                 </p>
+             </div>
+        }
+
+        @if(Model.ExistingAddresses.Any())
+        {
+            <div class="select-billing-address">
+                <div class="col-12 px-0">
+                    <label class="genera" for="billing-address-select">@T("Checkout.SelectBillingAddressOrEnterNewOne")</label>
+                </div>
+                <div class="col-12 px-0">
+                    <select name="billing_address_id" id="billing-address-select" class="custom-select address-select"
+                            title="" onchange="Billing.newAddress(!this.value)">
+                        @foreach (var address in Model.ExistingAddresses)
+                        {
+                            var addressLine = "";
+                            addressLine += address.FirstName;
+                            addressLine += " " + address.LastName;
+                            if (address.StreetAddressEnabled && !String.IsNullOrEmpty(address.Address1))
+                            {
+                                addressLine += ", " + address.Address1;
+                            }
+                            if (address.CityEnabled && !String.IsNullOrEmpty(address.City))
+                            {
+                                addressLine += ", " + address.City;
+                            }
+                            if (address.StateProvinceEnabled && !String.IsNullOrEmpty(address.StateProvinceName))
+                            {
+                                addressLine += ", " + address.StateProvinceName;
+                            }
+                            if (address.ZipPostalCodeEnabled && !String.IsNullOrEmpty(address.ZipPostalCode))
+                            {
+                                addressLine += " " + address.ZipPostalCode;
+                            }
+                            if (address.CountryEnabled && !String.IsNullOrWhiteSpace(address.CountryName))
+                            {
+                                addressLine += ", " + address.CountryName;
+                            }
+                            //how should we render "FormattedCustomAddressAttributes" here?
+                            <option value="@(address.Id)">@(addressLine)</option>
+                        }
+                        <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
+                    </select>
+                </div>
+            </div>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_middle" })
+        <div class="new-billing-address" id="billing-new-address-form">
+            <div class="enter-address">
+                @{
+                    var dataDictAddress = new ViewDataDictionary(ViewData);
+                    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
+                    <partial name="_CreateOrUpdateAddress" model="Model.NewAddress" view-data="dataDictAddress" />
+                }
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            </div>
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_bottom" })
+    </div>

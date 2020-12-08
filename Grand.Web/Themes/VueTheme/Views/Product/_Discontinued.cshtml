@@ -1,0 +1,7 @@
+﻿@model ProductDetailsModel
+@if (Model.DisplayDiscontinuedMessage)
+{
+    <div class="discontinued-product">
+        <h2>@T("Products.Discontinued")</h2>
+    </div>
+}

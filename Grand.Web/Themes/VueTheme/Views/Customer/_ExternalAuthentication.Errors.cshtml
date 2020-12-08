@@ -1,0 +1,16 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor
+@using Grand.Services.Authentication.External;
+@{
+    var errors = ExternalAuthorizerHelper.RetrieveErrorsToDisplay(true, httpContextAccessor);
+}
+@if (errors != null && errors.Any())
+{
+    <div class="external-auth-errors alert alert-danger my-3">
+        <ul>
+            @foreach (var error in errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}

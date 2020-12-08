@@ -1,0 +1,42 @@
+﻿@model CheckoutCompletedModel
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Checkout").Text);
+
+    var supportRtl = workContext.WorkingLanguage.Rtl;
+    var themeName = themeContext.WorkingThemeName;
+
+    if (supportRtl)
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/common/common.rtl.css", themeName));
+    }
+    else
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/common/common.css", themeName));
+    }
+}
+<div class="page checkout-page order-completed-page text-xs-center">
+    @if (!Model.OnePageCheckoutEnabled)
+    {
+        @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Complete })
+    }
+    <div class="checkout-data mt-3">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_completed_top", additionalData = Model.OrderId })
+        <b-jumbotron header="@T("Checkout.ThankYou")" lead="@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")">
+            <div class="h5 mb-0">@T("Checkout.OrderNumber"): <span class="text-info">@Model.OrderNumber</span></div>
+            <hr class="my-4">
+            <div class="buttons">
+                <a class="btn btn-secondary mb-1" href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
+                <button type="button" class="btn btn-info order-completed-continue-button mb-1" onclick="location=('@Url.RouteUrl("HomePage")')">
+                    @T("Checkout.ThankYou.Continue")
+                </button>
+            </div>
+        </b-jumbotron>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_completed_bottom", additionalData = Model.OrderId })
+    </div>
+</div>

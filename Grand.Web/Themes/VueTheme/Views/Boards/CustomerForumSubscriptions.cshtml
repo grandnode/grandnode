@@ -1,0 +1,110 @@
+﻿@model CustomerForumSubscriptionsModel
+@using Grand.Web.Models.Boards;
+@using Grand.Web.Models.Customer;
+@inject Grand.Services.Localization.ILocalizationService localizationService
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    pagebuilder.AddTitleParts(T("PageTitle.ForumSubscriptions").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ForumSubscriptions })
+}
+<div class="page account-page forum-subscriptions-page pt-3 pt-lg-0">
+    <h2 class="generalTitle">@T("Account.ForumSubscriptions")</h2>
+    @if (Model.ForumSubscriptions.Any())
+    {
+        <div class="description">
+            @T("Account.ForumSubscriptions.Description")
+        </div>
+        <script asp-location="Footer">
+
+            document.getElementById('selectall').addEventListener('click', function () {
+                if (document.querySelector('.subscription-list .rowcheckbox').checked) {
+                    document.querySelector('.subscription-list .rowcheckbox').checked = false;
+                } else {
+                    document.querySelector('.subscription-list .rowcheckbox').checked = true;
+                }
+            });
+
+                document.querySelector('.subscription-list .rowcheckbox').addEventListener('change', function (e) {
+                    var numChkBoxes = document.querySelector('.subscription-list .rowcheckbox').length;
+                    var numChkBoxesChecked = document.querySelector('.subscription-list .rowcheckbox:checked').length;
+                    document.getElementById('selectall').setAttribute('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                });
+        </script>
+        <form asp-route="CustomerForumSubscriptions" method="post">
+            <div class="subscription-list">
+                <div class="table-responsive">
+                    <table class="table table-hover data-table">
+                        <colgroup>
+                            <col width="1" />
+                            <col />
+                        </colgroup>
+                        <thead class="table-inverse">
+                            <tr>
+                                <th class="select-boxes">
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="selectall" />
+                                        <span class="custom-control-label"></span>
+                                        <span class="sr-only">@T("Account.ForumSubscriptions.InfoColumn")</span>
+                                        <span class="custom-control-description">&nbsp;</span>
+                                    </label>
+                                </th>
+                                <th class="info">
+                                    @T("Account.ForumSubscriptions.InfoColumn")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.ForumSubscriptions.Count; i++)
+                            {
+                                var item = Model.ForumSubscriptions[i];
+                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                    <td class="select-boxes">
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" name="fs@(item.Id)" class="custom-control-input rowcheckbox" />
+                                            <span class="custom-control-label"></span>
+                                            <span class="sr-only">fs@(item.Id)</span>
+                                            <span class="custom-control-description">&nbsp;</span>
+                                        </label>
+                                    </td>
+                                    <td class="info">
+                                        @if (item.TopicSubscription)
+                                        {
+                                            @Html.RouteLink(item.Title, "TopicSlug", new { Id = item.ForumTopicId, slug = item.Slug })
+                                        }
+                                        else
+                                        {
+                                            @Html.RouteLink(item.Title, "ForumSlug", new { Id = item.ForumId, slug = item.Slug })
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @{
+                    var pager = Html.Pager(localizationService, Model.PagerModel);
+                }
+                @if (pager != null)
+                {
+                    <div class="pager">
+                        @pager
+                    </div>
+                }
+                <div class="buttons">
+                    <input type="submit" value="@T("Account.ForumSubscriptions.DeleteSelected")" class="btn btn-secondary delete-selected-fs-button" />
+                </div>
+            </div>
+        </form>
+    }
+    else
+    {
+        <div class="no-data alert alert-info my-3 text-center">
+            @T("Account.ForumSubscriptions.NoSubscriptions")
+        </div>
+    }
+</div>

@@ -1,0 +1,8 @@
+﻿@model ProductDetailsModel
+@if (Model.AskQuestionEnabled)
+{
+        <b-button type="button" variant="secondary" value="@T("Products.AskQuestion")" class="ask-a-question-button mr-1" onclick="location = ('@Url.RouteUrl("AskQuestion", new { productId = Model.Id })')" v-b-tooltip.hover.bottom title="@T("Products.AskQuestion")">
+            <b-icon icon="question-circle"></b-icon>
+            <span class="sr-only">@T("Products.AskQuestion")</span>
+        </b-button>
+}

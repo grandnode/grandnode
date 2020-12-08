@@ -1,0 +1,242 @@
+﻿@model OnePageCheckoutModel
+@inject IWebHelper webHelper
+@using Grand.Framework.Themes
+@using Grand.Framework.UI
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@inject IPageHeadBuilder pagebuilder
+
+@{
+    Layout = "_ColumnsOne";
+
+    var supportRtl = workContext.WorkingLanguage.Rtl;
+    var themeName = themeContext.WorkingThemeName;
+
+    if (supportRtl)
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/common/common.rtl.css", themeName));
+    }
+    else
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/common/common.css", themeName));
+    }
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/public.onepagecheckout.js", themeName));
+
+    var storeLocation = webHelper.GetStoreLocation();
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+@{
+    //step numbers
+    int billingAddressStepNumber = 1;
+    int shippingAddressStepNumber = 2;
+    int shippingMethodStepNumber = 3;
+    int paymentMethodStepNumber = 4;
+    int paymentInfoStepNumber = 5;
+    int confirmOrderStepNumber = 6;
+    if (!Model.ShippingRequired)
+    {
+        paymentMethodStepNumber = paymentMethodStepNumber - 2;
+        paymentInfoStepNumber = paymentInfoStepNumber - 2;
+        confirmOrderStepNumber = confirmOrderStepNumber - 2;
+    }
+    if (Model.DisableBillingAddressCheckoutStep)
+    {
+        shippingAddressStepNumber--;
+        shippingMethodStepNumber--;
+        paymentMethodStepNumber--;
+        paymentInfoStepNumber--;
+        confirmOrderStepNumber--;
+    }
+}
+<div class="page checkout-page">
+    <h1 class="generalTitle h2">@T("Checkout")</h1>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "opc_content_before" })
+    <b-col cols="12" class="px-0">
+        <b-form-row>
+            <b-col xl="7" cols="12">
+                <template>
+                    <div class="accordion opc" id="checkout-steps" role="tablist">
+                        <b-card id="billing_card" no-body class="mb-1" @if (Model.DisableBillingAddressCheckoutStep) { <text> style="display:none;" </text> }>
+                            <b-card-header header-tag="header" class="p-1" role="tab">
+                                <b-button block v-b-toggle.opc-billing id="button-billing" class="allow" variant="info" onclick="resetSteps(this)">@billingAddressStepNumber. @T("Checkout.BillingAddress")</b-button>
+                            </b-card-header>
+                            <b-collapse id="opc-billing" visible accordion="my-accordion" role="tabpanel" appear>
+                                <b-card-body>
+                                    <form id="co-billing-form" action="">
+                                        <div id="checkout-billing-load">
+                                            <partial name="OpcBillingAddress" model="Model.BillingAddress" />
+                                        </div>
+                                    </form>
+                                    <script asp-location="Footer">
+                                        Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/', @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()));
+                                        if (document.querySelector("#billing-address-select")) {
+                                            Billing.newAddress(!document.querySelector('#billing-address-select').value);
+                                        }
+                                    </script>
+                                    <div class="col-12 buttons pb-2 pt-2 px-0 my-0" id="billing-buttons-container">
+                                        <input type="button" title="@T("Common.Continue")" @@click="validateBeforeClick($event)" class="btn btn-info new-address-next-step-button" onclick="Billing.save()" value="@T("Common.Continue")" />
+                                        <span class="please-wait" id="billing-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
+                                    </div>
+                                </b-card-body>
+                            </b-collapse>
+                        </b-card>
+                        @if (Model.ShippingRequired)
+                        {
+                            <b-card no-body class="mb-1">
+                                <b-card-header header-tag="header" class="p-1" role="tab">
+                                    <b-button block v-b-toggle.opc-shipping id="button-shipping" variant="info" onclick="resetSteps(this)">@shippingAddressStepNumber. @T("Checkout.ShippingAddress")</b-button>
+                                </b-card-header>
+                                <b-collapse id="opc-shipping" accordion="my-accordion" role="tabpanel" appear>
+                                    <b-card-body>
+                                        <form action="" id="co-shipping-form">
+                                            <div id="checkout-shipping-load">
+                                                @*shipping address content will be loaded here*@
+                                                <partial name="VueOpcShippingAddress" model="Model" />
+                                            </div>
+                                        </form>
+                                        <script asp-location="Footer">
+                                            Shipping.init('#co-shipping-form', '@(storeLocation)checkout/OpcSaveShipping/');
+                                            if (document.querySelector("#shipping-address-select")) {
+                                                Shipping.newAddress(!document.querySelector('#shipping-address-select').value);
+                                            }
+                                        </script>
+                                        <div class="col-12 buttons pt-1 pb-1 px-0 my-3" id="shipping-buttons-container">
+                                            @if (!Model.DisableBillingAddressCheckoutStep)
+                                            {
+                                                <a class="btn btn-secondary" id="back-shipping" href="#" onclick="Checkout.back(); return false; ">@T("Common.Back")</a>
+
+                                            }
+                                            <input type="button" class="btn btn-info new-address-next-step-button" @@click="validateBeforeClick($event)" title="@T("Common.Continue")" onclick="Shipping.save()" value="@T("Common.Continue")" />
+                                            <span id="shipping-please-wait" class="please-wait" style="display: none;"> @T("Common.LoadingNextStep")</span>
+                                        </div>
+                                    </b-card-body>
+                                </b-collapse>
+                            </b-card>
+                            <b-card no-body class="mb-1">
+                                <b-card-header header-tag="header" class="p-1" role="tab">
+                                    <b-button block v-b-toggle.opc-shipping-method id="button-shipping-method" variant="info" onclick="resetSteps(this)">@shippingMethodStepNumber. @T("Checkout.ShippingMethod")</b-button>
+                                </b-card-header>
+                                <b-collapse id="opc-shipping-method" accordion="my-accordion" role="tabpanel" appear>
+                                    <b-card-body>
+                                        <form id="co-shipping-method-form" action="">
+                                            <div id="checkout-shipping-method-load">
+                                                @*shipping methods content will be loaded here*@
+                                                <partial name="VueOpcShippingMethods" model="Model" />
+                                            </div>
+                                            <script asp-location="Footer">
+                                            ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/');
+                                            </script>
+                                            <div class="col-12 buttons pt-1 pb-1 px-0 my-3" id="shipping-method-buttons-container">
+                                                <a class="btn btn-secondary" href="#" id="back-shipping_method" onclick="Checkout.back(); return false;">@T("Common.Back")</a>
+                                                <input type="button" class="btn btn-info shipping-method-next-step-button" onclick="ShippingMethod.save()" value="@T("Common.Continue")" />
+                                                <span id="shipping-method-please-wait" class="please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
+                                            </div>
+                                        </form>
+                                    </b-card-body>
+                                </b-collapse>
+                            </b-card>
+                        }
+                        <b-card no-body class="mb-1">
+                            <b-card-header header-tag="header" class="p-1" role="tab">
+                                <b-button block v-b-toggle.opc-payment-method id="button-payment-method" variant="info" onclick="resetSteps(this)">@paymentMethodStepNumber. @T("Checkout.PaymentMethod")</b-button>
+                            </b-card-header>
+                            <b-collapse id="opc-payment-method" accordion="my-accordion" role="tabpanel" appear>
+                                <b-card-body>
+                                    <form action="" id="co-payment-method-form">
+                                        <div id="checkout-payment-method-load">
+                                            @*payment methods content will be loaded here*@
+                                            <partial name="VueOpcPaymentMethods" model="Model" />
+                                        </div>
+                                    </form>
+                                    <script asp-location="Footer">
+                                        PaymentMethod.init('#co-payment-method-form', '@(storeLocation)checkout/OpcSavePaymentMethod/');
+                                    </script>
+                                    <div class="col-12 buttons pt-1 pb-1 my-3 px-0" id="payment-method-buttons-container">
+                                        @if (paymentMethodStepNumber > 1)
+                                        {
+                                            <a class="btn btn-secondary" href="#" id="back-payment_method" onclick="Checkout.back(); return false;">@T("Common.Back")</a>
+                                        }
+                                        <input type="button" class="btn btn-info payment-method-next-step-button" onclick="PaymentMethod.save()" value="@T("Common.Continue")" />
+                                        <span class="please-wait" id="payment-method-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
+                                    </div>
+                                </b-card-body>
+                            </b-collapse>
+                        </b-card>
+                        <b-card no-body class="mb-1">
+                            <b-card-header header-tag="header" class="p-1" role="tab">
+                                <b-button block v-b-toggle.opc-payment-info id="button-payment-info" variant="info" onclick="resetSteps(this)">@paymentInfoStepNumber. @T("Checkout.PaymentInfo")</b-button>
+                            </b-card-header>
+                            <b-collapse id="opc-payment-info" accordion="my-accordion" role="tabpanel" appear>
+                                <b-card-body>
+                                    <form action="" id="co-payment-info-form">
+                                        <div id="checkout-payment-info-load">
+                                            @*payment info content will be loaded here*@
+                                            <partial name="VueOpcPaymentInfo" />
+                                        </div>
+                                    </form>
+                                    <script asp-location="Footer">
+                                        PaymentInfo.init('#co-payment-info-form', '@(storeLocation)checkout/OpcSavePaymentInfo/');
+                                    </script>
+                                    <div class="col-12 buttons pt-1 pb-1 my-3 px-0" id="payment-info-buttons-container">
+                                        @if (!Model.HasSinglePaymentMethod || paymentMethodStepNumber > 1)
+                                        {
+                                            <a class="btn btn-secondary" href="#" id="back-payment_info" onclick="Checkout.back();return false;">@T("Common.Back")</a>
+                                        }
+                                        <input type="button" class="btn btn-info payment-info-next-step-button" onclick="PaymentInfo.save()" value="@T("Common.Continue")" />
+                                        <span class="please-wait" id="payment-info-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
+                                    </div>
+                                </b-card-body>
+                            </b-collapse>
+                        </b-card>
+                        <b-card no-body class="mb-1">
+                            <b-card-header header-tag="header" class="p-1" role="tab">
+                                <b-button block v-b-toggle.opc-confirm-order id="button-confirm-order" variant="info" onclick="resetSteps(this)">@confirmOrderStepNumber. @T("Checkout.ConfirmOrder")</b-button>
+                            </b-card-header>
+                            <b-collapse id="opc-confirm-order" accordion="my-accordion" role="tabpanel" appear>
+                                <b-card-body>
+                                    <div id="checkout-confirm-order-load">
+                                        @*confirm order content will be loaded here*@
+                                        <partial name="VueOpcConfirmOrder" />
+                                    </div>
+                                    <script asp-location="Footer">
+                                        ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@(storeLocation)checkout/completed/');
+                                    </script>
+                                    <div id="confirm-order-buttons-container">
+                                        <a class="btn btn-secondary sr-only" href="#" id="back-confirm_order" onclick="Checkout.back(); return false;">@T("Common.Back")</a>
+                                        <span class="please-wait" id="confirm-order-please-wait" style="display: none;">@T("Checkout.SubmittingOrder")</span>
+                                    </div>
+                                </b-card-body>
+                            </b-collapse>
+                        </b-card>
+                    </div>
+                </template>
+            </b-col>
+            <b-col xl="5" class="d-xl-block d-none">
+                <div class="opc-totals">
+                    <partial name="OrderTotals" />
+                </div>
+            </b-col>
+        </b-form-row>
+    </b-col>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "opc_content_after" })
+</div>
+<script asp-location="Footer">
+        Checkout.init('@(storeLocation)cart/');
+        if (Billing.disableBillingAddressCheckoutStep)
+        {
+            Billing.save();
+    }
+    var getClosest = function (elem, selector) {
+        for (; elem && elem !== document; elem = elem.parentNode) {
+            if (elem.matches(selector)) return elem;
+        }
+        return null;
+    };
+    function resetSteps(e) {
+        var card = getClosest(e, '.card');
+        document.querySelectorAll('.opc > .card').forEach(function (e) { e.classList.remove('active'); });
+        card.classList.add('active');
+    }
+</script>

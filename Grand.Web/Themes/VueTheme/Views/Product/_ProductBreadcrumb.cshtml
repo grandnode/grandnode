@@ -1,0 +1,30 @@
+﻿@model ProductDetailsModel.ProductBreadcrumbModel
+@if (Model.Enabled)
+{
+    var count = 1;
+        <b-container class="px-0">
+            <b-breadcrumb class="mb-0" itemscope itemtype="http://schema.org/BreadcrumbList">
+                @await Component.InvokeAsync("Widget", new { widgetZone = "productbreadcrumb_before" })
+                <b-breadcrumb-item href="@Url.RouteUrl("HomePage")" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <b-icon icon="house-door" scale="1.25" shift-v="1.25" aria-hidden="true"></b-icon>
+                    <span itemprop="name">@T("Products.Breadcrumb.Top")</span>
+                    <meta itemprop="position" content="@count" />
+                </b-breadcrumb-item>
+                @foreach (var category in Model.CategoryBreadcrumb)
+                {
+                    count++;
+                    <b-breadcrumb-item href="@Url.RouteUrl("Category", new { SeName = category.SeName })" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <span itemprop="name">@category.Name</span>
+                        <meta itemprop="position" content="@count" />
+                    </b-breadcrumb-item>
+                }
+                <b-breadcrumb-item active itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <strong class="current-item" itemprop="name">@Model.ProductName</strong>
+                    <span itemprop="item" itemscope itemtype="http://schema.org/Thing"
+                          id="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">
+                    </span>
+                    <meta itemprop="position" content="@(count+1)" />
+                </b-breadcrumb-item>
+            </b-breadcrumb>      
+        </b-container>
+}

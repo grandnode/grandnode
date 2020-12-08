@@ -1,0 +1,25 @@
+﻿@model TaxTypeSelectorModel
+@inject IWebHelper webHelper
+@{
+    var returnUrl = webHelper.GetRawUrl(Context.Request);
+    var taxTypes = new List<SelectListItem>();
+    taxTypes.Add(new SelectListItem
+    {
+        Text = T("Tax.Inclusive").Text,
+        Value = Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax), returnUrl }),
+        Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
+    });
+    taxTypes.Add(new SelectListItem
+    {
+        Text = T("Tax.Exclusive").Text,
+        Value = Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax), returnUrl }),
+        Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
+    });
+}
+<b-dropdown class="mr-2" text="@taxTypes.FirstOrDefault(x => x.Selected).Text">
+    @foreach (var item in taxTypes)
+    {
+        var className = item.Selected ? "active" : "";
+        <b-dropdown-item class="@className" href="@item.Value">@item.Text</b-dropdown-item>
+    }
+</b-dropdown>

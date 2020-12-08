@@ -1,0 +1,74 @@
+﻿@model CatalogPagingFilteringModel
+
+<div class="generalMarginSupporter categoryGrid catalog-selectors mb-3">
+    @*mobile left side trigger*@
+    <div class="d-flex flex-row row px-3">
+        @*sorting*@
+        @if (Model.AllowProductSorting)
+        {
+            <div class="sort-container">
+                <label class="col-form-label">@T("Catalog.OrderBy")</label>
+                <select name="products-orderby" class="form-control custom-select" asp-items="Model.AvailableSortOptions"
+                        onchange = "location = (this.value);" ></select>                
+            </div>
+        }
+        <div class="item-statistics d-sm-flex d-none align-items-center mx-auto order-2" id="items_statistics">
+            <div class="items-page-size d-none">@Model.PageSize</div>
+            <div class="items-per-page d-lg-inline-flex"><span>@T("catalog.selectors.items")</span>
+                <span class="number">
+                @{ 
+                    var totalpages = Model.TotalPages;
+                    var totalitems = Model.TotalItems;
+                    var pagenumber = Model.PageNumber;
+                    var pagesize = Model.PageSize;
+
+                    int result;
+                    int result2;
+                } 
+                    @if (totalpages == pagenumber)
+                    {
+                        result = totalitems;
+                        result2 = (pagesize * pagenumber) - pagesize + 1;
+                        @result2 <text>-</text> @result
+                    } else
+                    {
+                        result = (pagesize * pagenumber);
+                        result2 = (pagesize * pagenumber) - pagesize + 1;
+                        @result2 <text>-</text> @result
+                    }
+                </span>
+            </div>
+            <div class="items-separator">@T("catalog.selectors.of")</div>
+            <div class="items-total">@Model.TotalItems</div>
+        </div>
+        @*page size*@
+        @if (Model.AllowCustomersToSelectPageSize)
+        {
+            <div class="sort-container">
+                <label class="col-form-label">@T("Catalog.PageSize")</label>
+                @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { @class = "custom-select form-control", onchange = "window.location.replace(this.value);" })
+            </div>
+        }
+        @*view mode*@
+        @if (Model.AllowProductViewModeChanging)
+        {
+
+            <div class="sort-container order-3 d-inline-flex ml-sm-0 ml-auto change-view">
+                @if (Model.AvailableViewModes.Count > 1)
+                {
+                    var gridMode = Model.AvailableViewModes[0];
+                    var listMode = Model.AvailableViewModes[1];
+                    @*<label class="mb-0">@T("Catalog.ViewMode")</label>*@
+                    <b-link class="viewmode-icon d-flex align-items-center grid mr-4 @if(gridMode.Selected){<text>selected text-info</text>}" href="@gridMode.Value" title="@gridMode.Text">
+                        <b-icon scale="2" icon="@if(gridMode.Selected){<text>grid3x2-gap-fill</text>} else { <text>grid3x2-gap</text> }"></b-icon>
+                        <span class="sr-only">viewmode grid</span>
+                    </b-link>
+                    <b-link class="viewmode-icon d-flex align-items-center list @if (listMode.Selected){<text>selected text-info</text>}" href="@listMode.Value" title="@listMode.Text">
+                        <b-icon scale="2" icon="list"></b-icon>
+                        <span class="sr-only">viewmode list</span>
+                    </b-link>
+                }
+            </div>
+        }
+    </div>
+</div>

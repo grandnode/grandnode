@@ -1,0 +1,63 @@
+﻿@model CategoryNavigationModel.CategoryLineModel
+@functions{
+    public bool BreadCrumbContainsCurrentCategoryId(CategorySimpleModel category)
+    {
+        if (String.IsNullOrEmpty(Model.CurrentCategoryId))
+            return false;
+
+        if (category.Id == Model.CurrentCategoryId)
+            return true;
+
+        foreach (var subCategory in category.SubCategories)
+        {
+            if (BreadCrumbContainsCurrentCategoryId(subCategory))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+@{
+    bool active = Model.Category.Id == Model.CurrentCategoryId || Model.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
+    bool last = Model.Category.Id == Model.CurrentCategoryId;
+    string liClass = active ? "active" : "inactive";
+    if (last)
+    {
+        liClass += " last";
+    }
+}
+<li class="@liClass">
+    <a href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+        @if (!string.IsNullOrEmpty(Model.Category.Icon))
+        {
+            <span class="category-icon @Model.Category.Icon"></span>
+        }
+        @Model.Category.Name
+        @if (Model.Category.NumberOfProducts.HasValue)
+        {
+            <span class="total">@T("Categories.TotalProducts", Model.Category.NumberOfProducts.Value)</span>
+        }
+    </a>
+    @{
+        if (Model.Category.Id == Model.CurrentCategoryId ||
+            Model.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0)
+        {
+            if (Model.Category.SubCategories.Any())
+            {
+                <ul class="sublist">
+                    @foreach (var subCategory in Model.Category.SubCategories)
+                    {
+                        var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
+                        {
+                            CurrentCategoryId = Model.CurrentCategoryId,
+                            Category = subCategory
+                        };
+                        <partial name="_CategoryLine.Navigation" model="categoryLineModel" />
+                    }
+                </ul>
+            }
+        }
+    }
+</li>

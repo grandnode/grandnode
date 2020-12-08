@@ -1,0 +1,100 @@
+﻿@model TopicModel
+@inject SeoSettings seoSettings
+@inject IPageHeadBuilder pagebuilder
+@{
+    var isPopup = ViewBag.IsPopup;
+    if (isPopup == null || isPopup == false)
+    {
+        Layout = "_ColumnsOne";
+    }
+    else
+    {
+        /*pop-up windows*/
+        Layout = "_RootPopup";
+    }
+
+    if (!Model.IsPasswordProtected)
+    {
+        pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+        pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+        pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
+    }
+
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        pagebuilder.AddCanonicalUrlParts(topicUrl);
+    }
+}
+@if (Model.IsPasswordProtected)
+{
+    // For popup topics, use a minimal layout that includes the Axios and scripts
+    if (isPopup != null && isPopup == true)
+    {
+        Layout = "_RootPopup";
+    }
+
+<script asp-location="Footer">
+
+        document.getElementById('button-password').addEventListener('click', function () {
+            var postData = {
+                id: document.getElementById("@Html.FieldIdFor(model => model.Id)").value,
+                password: document.getElementById('password').value
+            };
+            addAntiForgeryToken(postData);
+
+            var bodyFormData = new FormData();
+            bodyFormData.append('id', document.getElementById("@Html.FieldIdFor(model => model.Id)").value);
+            bodyFormData.append('password', document.getElementById('password').value);
+            bodyFormData.append('__RequestVerificationToken', document.querySelector('input[name=__RequestVerificationToken]').value);
+            axios({
+                method: 'post',
+                url: '@Url.RouteUrl("TopicAuthenticate")',
+                data: bodyFormData,
+                headers: { 'Content-Type': 'multipart/form-data' }
+            }).then(function (response) {
+                if (response.data.Authenticated) {
+                    document.querySelector('#ph-topic #ph-title h1').innerHTML = response.data.Title;
+                    if (document.querySelector('#ph-topic #ph-title h1').innerText == '') {
+                        document.getElementById('ph-title').style.display = "none";
+                    }
+                    document.querySelector('#ph-topic .page-body').innerHTML = response.data.Body;
+                    document.getElementById('ph-password').style.display = "none";
+                    document.getElementById('ph-topic').style.display = "block";
+                }
+                else {
+                    document.getElementById('password-error').innerText = response.data.Error;
+                }
+            }) 
+        });
+
+        document.getElementById('ph-topic').style.display = "none";
+    
+</script>
+    <div class="page topic-password" id="ph-password">
+        <form asp-route="TopicAuthenticate" method="post">
+            <input asp-for="Id" type="hidden" />
+            <div class="enter-password-title">
+                @T("Topic.EnterPassword")
+            </div>
+            <div class="enter-password-form">
+                @Html.Password("password", null, new { @class = "form-control mt-1" })
+                <b-button id="button-password" variant="secondary" class="topic-password-button mt-1 mb-1">
+                    @T("Topic.Button")
+                </b-button>
+            </div>
+            <div class="password-error text-danger h5 mt-1 mb-1">
+                <span id="password-error"></span>
+            </div>
+        </form>
+    </div>
+}
+<div class="page topic-page" id="ph-topic">
+    <div class="page-title" id="ph-title">
+        <h1>@Model.Title</h1>
+    </div>
+    <div class="page-body">
+        @Html.Raw(Model.Body)
+    </div>
+</div>

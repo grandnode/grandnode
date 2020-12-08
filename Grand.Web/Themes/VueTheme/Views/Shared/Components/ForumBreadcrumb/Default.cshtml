@@ -1,0 +1,40 @@
+﻿@model ForumBreadcrumbModel
+@inject CommonSettings commonSettings
+@{
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+}
+    <b-container class="px-0">
+        <b-breadcrumb class="mb-0">
+            <b-breadcrumb-item class="breadcrumb-item"  href="@Url.RouteUrl("HomePage")" title="@T("Forum.Breadcrumb.HomeTitle")">
+                    <b-icon icon="house-door" scale="1.25" shift-v="1.25" aria-hidden="true"></b-icon>
+                    <span itemprop="name">@T("Forum.Home")</span>
+            </b-breadcrumb-item>
+            <b-breadcrumb-item href="@Url.RouteUrl("Boards")">
+                @Html.RouteLink(T("Forum.Forums").Text, "Boards", null, new { title = T("Forum.Breadcrumb.ForumHomeTitle") })
+            </b-breadcrumb-item>
+            @if (!String.IsNullOrEmpty(Model.ForumGroupId))
+            {
+                <li class="breadcrumb-item">
+                    @Html.RouteLink(Model.ForumGroupName, "ForumGroupSlug",
+                    new { id = Model.ForumGroupId, slug = Model.ForumGroupSeName },
+                    new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.ForumGroupTitle"), Model.ForumGroupName) })
+                </li>
+            }
+            @if (!String.IsNullOrEmpty(Model.ForumId))
+            {
+                <li class="breadcrumb-item">
+                    @Html.RouteLink(Model.ForumName, "ForumSlug",
+                    new { id = Model.ForumId, slug = Model.ForumSeName },
+                    new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.ForumTitle"), Model.ForumName) })
+                </li>
+            }
+            @if (!String.IsNullOrEmpty(Model.ForumTopicId))
+            {
+                <li class="breadcrumb-item active">
+                    @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug",
+                    new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName },
+                    new { title = String.Format("{0}: {1} ", T("Forum.BreadCrumb.ForumTitle"), Model.ForumTopicSubject) })
+                </li>
+            }
+        </b-breadcrumb>
+    </b-container>

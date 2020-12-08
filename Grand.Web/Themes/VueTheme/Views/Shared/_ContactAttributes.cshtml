@@ -1,0 +1,257 @@
+﻿@model IList<Grand.Web.Models.Common.ContactUsModel.ContactAttributeModel>
+@using Grand.Core.Infrastructure;
+@using Grand.Domain.Media;
+@using System.Text;
+@inject Grand.Services.Media.IDownloadService downloadService
+
+@if (Model.Any())
+{
+    var attributeChangeScriptsBuilder = new StringBuilder();
+    <div class="contact-attributes mb-3">
+        @foreach (var attribute in Model)
+        {
+            string controlId = string.Format("contact_attribute_{0}", attribute.Id);
+            string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+        <div id="@string.Format("contact_attribute_label_{0}", attribute.Id)" class="col-12 px-0">
+            <span class="col-form-label text-prompt">
+                @textPrompt
+            </span>
+            @if (attribute.IsRequired)
+            {
+                <span class="required">*</span>
+            }
+
+            @switch (attribute.AttributeControlType)
+            {
+                case AttributeControlType.TextBox:
+                    {
+                        <label for="@(controlId)" class="sr-only">"@(controlId)</label>
+                        <input name="@(controlId)" type="text" class="form-control textbox" id="@(controlId)" value="@(attribute.DefaultValue)"/>
+                    }
+                    break;
+                case AttributeControlType.DropdownList:
+                    {
+                        <label for="@(controlId)" class="sr-only">"@(controlId)</label>
+                        <select id="@(controlId)" class="form-control custom-select" name="@(controlId)">
+                            @if (!attribute.IsRequired)
+                            {
+                                <option value="0">---</option>
+                            }
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                var attributeName = attributeValue.Name;
+                                <option selected="@attributeValue.IsPreSelected" value="@(attributeValue.Id)">@attributeName</option>
+                            }
+                        </select>
+                        attributeChangeScriptsBuilder.AppendFormat("document.querySelector('#{0}').addEventListener('change',function(){{contactAttributeChange();}});\n", controlId);
+                    }
+                    break;
+                case AttributeControlType.RadioList:
+                    {
+                        <ul class="option-list pl-0">
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                var attributeName = attributeValue.Name;
+                                <li>
+                                    <fieldset>
+                                        <legend class="sr-only">
+                                            @(controlId)
+                                        </legend>
+                                        <label class="custom-control custom-radio">
+                                            <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                            <span class="custom-control-label"></span>
+                                            <span class="custom-control-description" for="@(controlId)_@(attributeValue.Id)">@attributeName</span>
+                                        </label>
+
+                                    </fieldset>
+                                </li>
+                                attributeChangeScriptsBuilder.AppendFormat("document.querySelector('#{0}_{1}').addEventListener('click',function(){{contactAttributeChange();}});\n", controlId, attributeValue.Id);
+                            }
+                        </ul>
+                    }
+                    break;
+                case AttributeControlType.Checkboxes:
+                case AttributeControlType.ReadonlyCheckboxes:
+                    {
+                        <fieldset>
+                            <ul class="option-list pl-0">
+                                @foreach (var attributeValue in attribute.Values.OrderBy(x => x.DisplayOrder))
+                                {
+                                    var attributeName = attributeValue.Name;
+                                    <li>
+                                        <label class="custom-control custom-checkbox">
+                                            <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@(attributeValue.Id)" checked="@(attributeValue.IsPreSelected)" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                            <span class="custom-control-label"></span>
+                                            <span class="custom-control-description" for="@(controlId)_@(attributeValue.Id)">@attributeName</span>
+                                        </label>
+                                    </li>
+                                    attributeChangeScriptsBuilder.AppendFormat("document.querySelector('#{0}_{1}').addEventListener('click',function(){{contactAttributeChange();}});\n", controlId, attributeValue.Id);
+                                }
+                            </ul>
+                        </fieldset>
+                    }
+                    break;
+
+                case AttributeControlType.MultilineTextbox:
+                    {
+                        <textarea id="@(controlId)" name="@(controlId)">@(attribute.DefaultValue)</textarea>
+                    }
+                    break;
+                case AttributeControlType.Datepicker:
+                    {
+                        <date-picker-dropdown control-day="@(controlId + "_day")"
+                                              control-month="@(controlId + "_month")"
+                                              control-year="@(controlId + "_year")"
+                                              begin-year="@(DateTime.Now.Year)"
+                                              end-year="@(DateTime.Now.Year+1)"
+                                              selected-day="(attribute.SelectedDay.HasValue ? attribute.SelectedDay.Value : 0)"
+                                              selected-month="(attribute.SelectedMonth.HasValue ? attribute.SelectedMonth.Value : 0)"
+                                              selected-year="(attribute.SelectedYear.HasValue ? attribute.SelectedYear.Value : 0)"
+                                              class="input-group" />
+                    }
+                    break;
+                case AttributeControlType.FileUpload:
+                    {
+                        Download download = null;
+                        if (!String.IsNullOrEmpty(attribute.DefaultValue))
+                        {
+                            download = await downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
+                        }
+
+                        //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
+                        var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "" + x.Trim() + "").ToList());
+
+                        if (download != null)
+                        {
+                            <input id="@(controlId)" name="@(controlId)" type="hidden" value="@download.DownloadGuid" />
+                        }
+                        else
+                        {
+                            <input id="@(controlId)" name="@(controlId)" type="hidden" />
+                        }
+                        <template>
+                            <b-form-file accept="@Html.Raw(allowedFileExtensions)" type="file" id="qqfile" name="qqfile" onchange="uploadFile(this)" />
+                        </template>
+                        <input class="hidden-upload-input" type="hidden" onchange="checkoutAttributeChange()" id="@(controlId)" name="@(controlId)" />
+                        <div id="download-message" class="alert my-2" style="display:none;"></div>
+                        <div id="@(controlId)downloadurl'" class="download-file" style="display:none;">
+                            <a class="btn btn-outline-info">
+                                Download
+                            </a>
+                        </div>
+                        <script asp-location="Footer">
+                            function uploadFile(e) {
+                                var formData = new FormData();
+                                formData.append("image", qqfile.files[0]);
+                                axios.post('@(Url.RouteUrl("UploadFileContactAttribute", new {attributeId = attribute.Id}))', formData, {
+                                    headers: {
+                                        'Content-Type': 'multipart/form-data'
+                                    }
+                                }).then(function (response) {
+                                    if (response.data.success) {
+                                        var message = response.data.message;
+                                        var downloadGuid = response.data.downloadGuid;
+                                        var downloadUrl = response.data.downloadUrl;
+                                        var downloadBtn = document.querySelector('.download-file');
+                                        var messageContainer = document.getElementById('download-message');
+
+                                        document.querySelector('.hidden-upload-input').setAttribute('value', downloadGuid);
+                                        contactAttributeChange();
+
+                                        messageContainer.style.display = "block";
+                                        messageContainer.classList.remove('alert-danger');
+                                        messageContainer.classList.add('alert-info');
+                                        messageContainer.innerText = message;
+
+                                        downloadBtn.style.display = "block";
+                                        downloadBtn.setAttribute('href', downloadUrl);
+
+                                    } else {
+                                        var message = response.data.message;
+                                        var messageContainer = document.getElementById('download-message');
+                                        messageContainer.style.display = "block";
+                                        messageContainer.classList.remove('alert-info');
+                                        messageContainer.classList.add('alert-danger');
+                                        messageContainer.innerText = message;
+                                        contactAttributeChange();
+                                    }
+                                })
+                            }
+                        </script>
+                    }
+                    break;
+                case AttributeControlType.ColorSquares:
+                    {
+                        <ul class="option-list color-squares w-100 d-inline-flex flex-wrap px-0 mb-0" id="color-squares-@(attribute.Id)">
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                var attributeName = attributeValue.Name;
+                                <li class="mr-1 p-0" @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value border border-primary\"") : null)>
+                                    <label for="@(controlId)_@(attributeValue.Id)" class="mb-0">
+                                        <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                        <span class="color-container" title="@attributeName">
+                                            <span class="color" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
+                                        </span>
+                                    </label>
+                                </li>
+                                attributeChangeScriptsBuilder.AppendFormat("document.querySelector('#{0}_{1}').addEventListener('click',function(){{contactAttributeChange();}});\n", controlId, attributeValue.Id);
+                            }
+                        </ul>
+                        <script asp-location="Footer">
+                                    var btnContainer = document.querySelector(".contact-attributes #color-squares-@(attribute.Id)");
+                                    var btns = btnContainer.getElementsByTagName("li");
+                                    for (var i = 0; i < btns.length; i++) {
+                                        btns[i].addEventListener("click", function () {
+                                            (document.querySelector('.selected-value')) ? document.querySelector('.selected-value').classList.remove('selected-value') : '';
+                                            this.classList.add('selected-value');
+                                        });
+                                    }
+                        </script>
+                    }
+                    break;
+                case AttributeControlType.ImageSquares:
+                    {
+                        //not support attribute type
+                    }
+                    break;
+            }
+        </div>
+        }
+    </div>
+
+    <script asp-location="Footer">
+        contactAttributeChange();
+        @Html.Raw(attributeChangeScriptsBuilder.ToString())
+
+        function contactAttributeChange() {
+            var form = document.querySelector('#contactus-form');
+            var data = new FormData(form);
+            axios({
+                method: 'post',
+                data: data,
+                url: '@Html.Raw(Url.Action("contactattributechange", "common"))',
+            }).then(function (response) {
+                if (response.data.enabledattributeids) {
+                    for (var i = 0; i < response.data.enabledattributeids.length; i++) {
+                        if (document.querySelector('#contact_attribute_label_' + response.data.enabledattributeids[i])) {
+                            document.querySelector('#contact_attribute_label_' + response.data.enabledattributeids[i]).style.display = 'block';
+                        }
+                        if (document.querySelector('#contact_attribute_input_' + response.data.enabledattributeids[i])) {
+                            document.querySelector('#contact_attribute_input_' + response.data.enabledattributeids[i]).style.display = 'block';
+                        }
+                    }
+                }
+                if (response.data.disabledattributeids) {
+                    for (var i = 0; i < response.data.disabledattributeids.length; i++) {
+                        if (document.querySelector('#contact_attribute_label_' + response.data.disabledattributeids[i])) {
+                            document.querySelector('#contact_attribute_label_' + response.data.disabledattributeids[i]).style.display = 'none';
+                        }
+                        if (document.querySelector('#contact_attribute_input_' + response.data.disabledattributeids[i])) {
+                            document.querySelector('#contact_attribute_input_' + response.data.disabledattributeids[i]).style.display = 'none';
+                        }                      
+                    }
+                }
+            })
+        }
+    </script>
+}

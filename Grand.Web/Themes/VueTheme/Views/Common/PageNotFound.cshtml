@@ -1,0 +1,15 @@
+﻿@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.PageNotFound").Text);
+}
+<div class="page text-xs-center not-found-page">
+    <b-alert show class="my-3">
+        <h1 class="h2 generalTitle text-center mb-0">
+            <b-icon icon="exclamation-circle"></b-icon> @T("PageTitle.PageNotFound")
+        </h1>
+    </b-alert>
+    @await Component.InvokeAsync("TopicBlock", new { systemName = "PageNotFound" })
+</div>

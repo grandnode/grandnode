@@ -1,0 +1,147 @@
+﻿@model ForumTopicPageModel
+@inject Grand.Services.Localization.ILocalizationService localizationService
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    pagebuilder.AddTitleParts(Model.Subject);
+}
+<div class="page forum-topic-page">
+    @Html.AntiForgeryToken()
+    @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
+    <partial name="_ForumHeader" />
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model.Id })
+    <h2 class="generalTitle text--center">@Model.Subject</h2>
+    <div class="topic-actions upper">
+        <div class="btn-group btn-group-sm" role="group">
+            @if (Model.IsCustomerAllowedToEditTopic)
+            {
+                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "btn btn-secondary edit-topic-button" })
+            }
+            @if (Model.IsCustomerAllowedToDeleteTopic)
+            {
+                <a href="#" class="btn btn-secondary delete-topic-button" onclick="deletetopic('@(Model.Id)')">
+                    <span class="d-none d-md-block">@T("Forum.DeleteTopic").Text</span>
+                    <b-icon icon="trash" class="mx-1 d-md-none"></b-icon>
+                </a>
+            }
+            @if (Model.IsCustomerAllowedToMoveTopic)
+            {
+                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "btn btn-secondary move-topic-button" })
+            }
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "btn btn-secondary reply-topic-button" })
+            @if (Model.IsCustomerAllowedToSubscribe)
+            {
+                <a class="btn btn-secondary watch-topic-button" href="#" id="watch-topic-top">
+                    <span class="d-none d-md-block">@Model.WatchTopicText</span>
+                </a>
+            }
+        </div>
+        @{
+            var pager = Html.Pager(localizationService, new PagerModel(localizationService)
+            {
+                PageSize = Model.PostsPageSize,
+                TotalRecords = Model.PostsTotalRecords,
+                PageIndex = Model.PostsPageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "TopicSlugPaged",
+                UseRouteLinks = true,
+                RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+            });
+        }
+        @if (pager != null)
+        {
+            <div class="pager upper my-3">
+                @pager
+            </div>
+        }
+    </div>
+    <div class="topic-posts">
+        @foreach (var post in @Model.ForumPostModels)
+        {
+            await Html.RenderPartialAsync("_ForumPost", post);
+        }
+    </div>
+    <div class="topic-actions">
+        <div class="actions">
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "btn btn-secondary reply-topic-button mt-1 mb-1" })
+            @if (Model.IsCustomerAllowedToSubscribe)
+            {
+                <a class="btn btn-secondary watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
+            }
+        </div>
+        @if (pager != null)
+        {
+            <div class="pager lower">
+                @pager
+            </div>
+        }
+    </div>
+</div>
+
+<script asp-location="Footer">
+        function deletepost(postId) {
+            if (confirm('@T("Common.AreYouSure")')) {
+                
+                var bodyFormData = new FormData();
+                bodyFormData.append('Id', postId);
+                bodyFormData.append('__RequestVerificationToken', document.querySelector('input[name=__RequestVerificationToken]').value);
+                axios({
+                    method: 'post',
+                    url: '@Url.Action("PostDelete", "Boards")',
+                    data: bodyFormData,                  
+                }).then(function (response) {
+                    location = response.data.redirect;
+                }).catch(function (error) {
+                    alert(error);
+                })
+            }
+            return false;
+        }
+        function deletetopic(topicId) {
+            if (confirm('@T("Common.AreYouSure")')) {
+                var bodyFormData = new FormData();
+                bodyFormData.append('Id', topicId);
+                bodyFormData.append('__RequestVerificationToken', document.querySelector('input[name=__RequestVerificationToken]').value);
+
+                axios({
+                    method: 'post',
+                    url: '@Url.Action("TopicDelete", "Boards")',
+                    data: bodyFormData,
+                    
+                }).then(function (response) {
+                    location = response.data.redirect;
+                }).catch(function (error) {
+                    alert(error);
+                })
+            }
+            return false;
+    }
+    document.getElementById('watch-topic-bottom').addEventListener('click',function () {
+                var postData = {};
+                addAntiForgeryToken(postData);
+                var bodyFormData = new FormData();
+                axios({
+                    method: 'post',
+                    url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                    data: bodyFormData,
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }).then(function (response) {
+                    document.getElementById('watch-topic-top').innerText = response.data.Text;
+                    document.getElementById('watch-topic-bottom').innerText = response.data.Text;
+                }).catch(function (error) {
+                    alert(error);
+                })
+            });
+    document.getElementById('watch-topic-top').addEventListener('click', function () {
+                axios({
+                    method: 'post',
+                    url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                }).then(function (response) {
+                    document.getElementById('watch-topic-top').innerText = response.data.Text;
+                    document.getElementById('watch-topic-bottom').innerText = response.data.Text;
+                }).catch(function (error) {
+                    alert(error);
+                })
+            });
+</script>

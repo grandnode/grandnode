@@ -1,0 +1,31 @@
+﻿@model IList<VendorModel>
+@using Grand.Web.Models.Catalog
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Vendors").Text);
+}
+
+<div class="page vendor-list-page">
+    <h1 class="generalTitle h2">@T("Vendors.List")</h1>
+    <div class="vendor-grid">
+        <b-form-row class="flex-grid">
+            @foreach (var item in Model)
+            {
+                <b-col md="4" cols="6">
+                    <b-link class="mb-2" href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                        <b-card no-body
+                                tag="article">
+                            <b-card-img-lazy src="@item.PictureModel.ImageUrl" alt="@item.PictureModel.AlternateText"></b-card-img-lazy>
+                            <b-card-body>
+                                <h5>@item.Name</h5>
+                            </b-card-body>
+                        </b-card>
+                    </b-link>
+                </b-col>
+            }
+        </b-form-row>
+    </div>
+</div>

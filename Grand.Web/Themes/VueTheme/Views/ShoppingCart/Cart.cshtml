@@ -1,0 +1,18 @@
+﻿@model ShoppingCartModel
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.ShoppingCart").Text);
+}
+@if (!Model.OnePageCheckoutEnabled)
+{
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Cart })
+}
+<div class="page shopping-cart-page">
+    <h2 class="generalTitle text-center mt-3">@T("ShoppingCart")</h2>
+    <div class="page-body">
+        <partial name="OrderSummary" model="Model" />
+    </div>
+</div>

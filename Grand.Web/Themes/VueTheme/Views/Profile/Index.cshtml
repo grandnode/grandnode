@@ -1,0 +1,29 @@
+﻿@model ProfileIndexModel
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    pagebuilder.AddTitleParts(T("PageTitle.Profile").Text);
+}
+<div class="page profile-page">
+    <h1 class="h2 text-xs-center generalTitle">@Model.ProfileTitle</h1>
+    <div>
+        <b-card class="inbox-tabs" no-body>
+            <b-tabs card>
+                <b-tab title="@T("Profile.PersonalInfo")" active>
+                    <b-card-text>
+                        @await Component.InvokeAsync("ProfileInfo", new { customerProfileId = Model.CustomerProfileId })
+                    </b-card-text>
+                </b-tab>
+                @if (Model.ForumsEnabled)
+                {
+                    <b-tab title="@T("Profile.LatestPosts")">
+                        <b-card-text>
+                            @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, pageNumber = Model.PostsPage })
+                        </b-card-text>
+                    </b-tab>
+                }
+            </b-tabs>
+        </b-card>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿@model ManufacturerNavigationModel
+<div id="block-manufacturer-navigation" class="block block-manufacturer-navigation">    
+    <h2 class="h5 d-block"><strong>@T("Manufacturers")</strong>
+        </h2>
+    <div class="viewBox">
+        <ul>
+            @foreach (var manufacturer in Model.Manufacturers)
+            {
+                <li class="@(manufacturer.IsActive ? "active" : "inactive")">
+                    <a href="@Url.RouteUrl("Manufacturer", new { SeName = manufacturer.SeName })">
+                        @if (!string.IsNullOrEmpty(manufacturer.Icon))
+                        {
+                            <span class="category-icon @manufacturer.Icon"></span>
+                        }
+                        @manufacturer.Name
+                    </a>
+                </li>
+            }
+        </ul>
+        @if (Model.TotalManufacturers > Model.Manufacturers.Count)
+        {
+            <div class="view-all mb-1">
+                <b-button size="sm" variant="outline-info" href="@Url.RouteUrl("ManufacturerList")">@T("Manufacturers.ViewAll")</b-button>
+            </div>
+        }
+    </div>
+</div>

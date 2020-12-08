@@ -1,0 +1,15 @@
+﻿@model Grand.Web.Models.PushNotifications.PublicInfoModel
+@inject IPageHeadBuilder pagebuilder
+@inject IThemeContext themeContext
+@{
+    var themeName = themeContext.WorkingThemeName;
+
+    pagebuilder.AddScriptParts(ResourceLocation.Footer, "https://www.gstatic.com/firebasejs/7.21.0/firebase.js", excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/vue.push.notifications.js", themeName));
+}
+
+<script asp-location="Footer">
+        PushNotifications.init("@Model.PublicApiKey", "@Model.SenderId", "@Model.ProjectId", "@Model.AuthDomain", "@Model.StorageBucket", "@Model.AppId",
+            "@Model.DatabaseUrl", "@Url.Action("ProcessRegistration", "PushNotifications")");
+        PushNotifications.process();
+</script>
