@@ -283,7 +283,13 @@ namespace Grand.Web.Controllers
                     return View(model);
                 }
             }
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
+            model = await _mediator.Send(new ContactUsCommand() {
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                Model = model,
+                Form = form
+            });
 
             return View(model);
         }
