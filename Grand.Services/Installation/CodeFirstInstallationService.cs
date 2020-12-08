@@ -4734,7 +4734,7 @@ namespace Grand.Services.Installation
                                            IsPasswordProtected = false,
                                            DisplayOrder = 1,
                                            Title = "",
-                                           Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
+                                           Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
                                        },
@@ -4922,6 +4922,7 @@ namespace Grand.Services.Installation
                         "config",
                         "eucookielawaccept",
                         "page-not-found",
+                        "home",
                         //system names are not allowed (anyway they will cause a runtime error),
                         "con",
                         "lpt1",
@@ -5658,8 +5659,8 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryNotebooks);
 
-            var categorySoftware = new Category {
-                Name = "Software",
+            var categoryAccessories = new Category {
+                Name = "Accessories",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
@@ -5672,7 +5673,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categorySoftware);
+            allCategories.Add(categoryAccessories);
 
             var categoryElectronics = new Category {
                 Name = "Electronics",
@@ -5791,7 +5792,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryClothing);
 
-            var categoryAccessories = new Category {
+            var categoryAccessories1 = new Category {
                 Name = "Accessories",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5806,7 +5807,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryAccessories);
+            allCategories.Add(categoryAccessories1);
 
             var categoryDigitalDownloads = new Category {
                 Name = "Digital downloads",
@@ -6226,7 +6227,7 @@ namespace Grand.Services.Installation
             productBuildComputer.ProductPictures.Add(productpicture2);
             await _productRepository.UpdateAsync(productBuildComputer);
 
-            var productDigitalStorm = new Product {
+            var productSonyPS5Pad = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Digital Storm VANQUISH 3 Custom Performance PC",
@@ -6262,17 +6263,21 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productDigitalStorm);
-            productDigitalStorm.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDigitalStorm.Name))).Id,
+            allProducts.Add(productSonyPS5Pad);
+            productSonyPS5Pad.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_pad_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyPS5Pad.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productDigitalStorm);
+            productSonyPS5Pad.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_pad_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyPS5Pad.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productSonyPS5Pad);
 
-            var productLenovoIdeaCentre = new Product {
+            var productLenovoIdeaPadDual = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Lenovo IdeaCentre 600 All-in-One PC",
+                Name = "Lenovo IdeaPad Dual 3i",
                 ShortDescription = "",
                 FullDescription = "<p>The A600 features a 21.5in screen, DVD or optional Blu-Ray drive, support for the full beans 1920 x 1080 HD, Dolby Home Cinema certification and an optional hybrid analogue/digital TV tuner.</p><p>Connectivity is handled by 802.11a/b/g - 802.11n is optional - and an ethernet port. You also get four USB ports, a Firewire slot, a six-in-one card reader and a 1.3- or two-megapixel webcam.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6305,12 +6310,16 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productLenovoIdeaCentre);
-            productLenovoIdeaCentre.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaCentre.Name))).Id,
+            allProducts.Add(productLenovoIdeaPadDual);
+            productLenovoIdeaPadDual.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_ideapad_dual_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaPadDual.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productLenovoIdeaCentre);
+            productLenovoIdeaPadDual.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_ideapad_dual_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaPadDual.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLenovoIdeaPadDual);
 
             #endregion
 
@@ -6402,10 +6411,10 @@ namespace Grand.Services.Installation
             await _productRepository.InsertAsync(productMiNotebook);
 
 
-            var productAsusN551JK = new Product {
+            var productLenovoLegionY740 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Asus N551JK-XO076H Laptop",
+                Name = "Lenovo Legion Y740",
                 ShortDescription = "Laptop Asus N551JK Intel Core i7-4710HQ 2.5 GHz, RAM 16GB, HDD 1TB, Video NVidia GTX 850M 4GB, BluRay, 15.6, Full HD, Win 8.1",
                 FullDescription = "<p>The ASUS N550JX combines cutting-edge audio and visual technology to deliver an unsurpassed multimedia experience. A full HD wide-view IPS panel is tailor-made for watching movies and the intuitive touchscreen makes for easy, seamless navigation. ASUS has paired the N550JX?s impressive display with SonicMaster Premium, co-developed with Bang & Olufsen ICEpower® audio experts, for true surround sound. A quad-speaker array and external subwoofer combine for distinct vocals and a low bass that you can feel.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6473,12 +6482,16 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productAsusN551JK);
-            productAsusN551JK.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusN551JK.Name))).Id,
+            allProducts.Add(productLenovoLegionY740);
+            productLenovoLegionY740.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_legion_y740_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoLegionY740.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productAsusN551JK);
+            productLenovoLegionY740.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_legion_y740_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoLegionY740.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLenovoLegionY740);
 
 
             var productSamsungSeries = new Product {
@@ -6801,13 +6814,13 @@ namespace Grand.Services.Installation
 
             #endregion
 
-            #region Software
+            #region Accessories
 
 
-            var productAdobePhotoshop = new Product {
+            var productLenovoYogaDuet = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Adobe Photoshop CS4",
+                Name = "Lenovo Yoga Duet",
                 ShortDescription = "Easily find and view all your photos",
                 FullDescription = "<p>Adobe Photoshop CS4 software combines power and simplicity so you can make ordinary photos extraordinary; tell engaging stories in beautiful, personalized creations for print and web; and easily find and view all your photos. New Photoshop.com membership* works with Photoshop CS4 so you can protect your photos with automatic online backup and 2 GB of storage; view your photos anywhere you are; and share your photos in fun, interactive ways with invitation-only Online Albums.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6835,23 +6848,27 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productAdobePhotoshop);
-            productAdobePhotoshop.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name))).Id,
+            allProducts.Add(productLenovoYogaDuet);
+            productLenovoYogaDuet.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_yoga_duet_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoYogaDuet.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productAdobePhotoshop);
+            productLenovoYogaDuet.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_yoga_duet_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoYogaDuet.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLenovoYogaDuet);
 
 
-            var productWindows8Pro = new Product {
+            var productLenovoSmartTab = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Windows 8 Pro",
+                Name = "Lenovo Smart Tab",
                 ShortDescription = "Windows 8 is a Microsoft operating system that was released in 2012 as part of the company's Windows NT OS family. ",
                 FullDescription = "<p>Windows 8 Pro is comparable to Windows 7 Professional and Ultimate and is targeted towards enthusiasts and business users; it includes all the features of Windows 8. Additional features include the ability to receive Remote Desktop connections, the ability to participate in a Windows Server domain, Encrypting File System, Hyper-V, and Virtual Hard Disk Booting, Group Policy as well as BitLocker and BitLocker To Go. Windows Media Center functionality is available only for Windows 8 Pro as a separate software package.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6879,23 +6896,27 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productWindows8Pro);
-            productWindows8Pro.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWindows8Pro.Name))).Id,
+            allProducts.Add(productLenovoSmartTab);
+            productLenovoSmartTab.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_smart_tab_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoSmartTab.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productWindows8Pro);
+            productLenovoSmartTab.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_smart_tab_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoSmartTab.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLenovoSmartTab);
 
 
-            var productSoundForge = new Product {
+            var productAsusMixedReality = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Sound Forge Pro 11",
+                Name = "Asus Mixed Reality",
                 ShortDescription = "Advanced audio waveform editor.",
                 FullDescription = "<p>Sound Forge? Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6923,17 +6944,21 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productSoundForge);
-            productSoundForge.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoundForge.Name))).Id,
+            allProducts.Add(productAsusMixedReality);
+            productAsusMixedReality.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asus_mixed_reality_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusMixedReality.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productSoundForge);
+            productAsusMixedReality.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asus_mixed_reality_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusMixedReality.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productAsusMixedReality);
 
 
             #endregion
@@ -7133,14 +7158,6 @@ namespace Grand.Services.Installation
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
                         DisplayOrder = 2,
                     }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Apple").Id,
-                        DisplayOrder = 1,
-                    }
                 }
             };
             allProducts.Add(productAppleICam);
@@ -7243,7 +7260,7 @@ namespace Grand.Services.Installation
                 DisplayOrder = 1,
             });
             productRedmiNote9.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_Note_9_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiNote9.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_Note_9_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiNote9.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productRedmiNote9);
@@ -7413,10 +7430,10 @@ namespace Grand.Services.Installation
             await _productRepository.InsertAsync(productUniversalTabletCover);
 
 
-            var productPortableSoundSpeakers = new Product {
+            var productMiBeard = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Portable Sound Speakers",
+                Name = "Xiaomi Mi Beard",
                 ShortDescription = "Universall portable sound speakers",
                 FullDescription = "<p>Your phone cut the cord, now it's time for you to set your music free and buy a Bluetooth speaker. Thankfully, there's one suited for everyone out there.</p><p>Some Bluetooth speakers excel at packing in as much functionality as the unit can handle while keeping the price down. Other speakers shuck excess functionality in favor of premium build materials instead. Whatever path you choose to go down, you'll be greeted with many options to suit your personal tastes.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7449,12 +7466,16 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productPortableSoundSpeakers);
-            productPortableSoundSpeakers.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPortableSoundSpeakers.Name))).Id,
+            allProducts.Add(productMiBeard);
+            productMiBeard.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_beard_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiBeard.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productPortableSoundSpeakers);
+            productMiBeard.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_beard_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiBeard.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productMiBeard);
 
 
             #endregion
@@ -8934,34 +8955,34 @@ namespace Grand.Services.Installation
                     ProductId2 = productPrideAndPrejudice.Id,
                 });
 
-            productAsusN551JK.RelatedProducts.Add(
+            productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAsusN551JK.Id,
+                    ProductId1 = productLenovoLegionY740.Id,
                     ProductId2 = productLenovoThinkpad.Id,
                 });
 
-            productAsusN551JK.RelatedProducts.Add(
+            productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAsusN551JK.Id,
+                    ProductId1 = productLenovoLegionY740.Id,
                     ProductId2 = productMiNotebook.Id,
                 });
 
-            productAsusN551JK.RelatedProducts.Add(
+            productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAsusN551JK.Id,
+                    ProductId1 = productLenovoLegionY740.Id,
                     ProductId2 = productSamsungSeries.Id,
                 });
 
-            productAsusN551JK.RelatedProducts.Add(
+            productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAsusN551JK.Id,
+                    ProductId1 = productLenovoLegionY740.Id,
                     ProductId2 = productHpSpectre.Id,
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLenovoThinkpad.Id,
-                    ProductId2 = productAsusN551JK.Id,
+                    ProductId2 = productLenovoLegionY740.Id,
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
@@ -8997,7 +9018,7 @@ namespace Grand.Services.Installation
             productMiNotebook.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productMiNotebook.Id,
-                    ProductId2 = productAsusN551JK.Id,
+                    ProductId2 = productLenovoLegionY740.Id,
                 });
 
             productMiNotebook.RelatedProducts.Add(
@@ -9021,7 +9042,7 @@ namespace Grand.Services.Installation
             productHpSpectre.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productHpSpectre.Id,
-                    ProductId2 = productAsusN551JK.Id,
+                    ProductId2 = productLenovoLegionY740.Id,
                 });
 
             productHpSpectre.RelatedProducts.Add(
@@ -9033,7 +9054,7 @@ namespace Grand.Services.Installation
             productHpEnvy.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productHpEnvy.Id,
-                    ProductId2 = productAsusN551JK.Id,
+                    ProductId2 = productLenovoLegionY740.Id,
                 });
 
             productHpEnvy.RelatedProducts.Add(
@@ -9056,7 +9077,7 @@ namespace Grand.Services.Installation
             productSamsungSeries.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productSamsungSeries.Id,
-                    ProductId2 = productAsusN551JK.Id,
+                    ProductId2 = productLenovoLegionY740.Id,
                 });
             productSamsungSeries.RelatedProducts.Add(
                 new RelatedProduct {
@@ -9117,7 +9138,7 @@ namespace Grand.Services.Installation
             productRedmiK30.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productRedmiK30.Id,
-                    ProductId2 = productPortableSoundSpeakers.Id,
+                    ProductId2 = productMiBeard.Id,
                 });
 
             productRedmiNote9.RelatedProducts.Add(
@@ -9139,7 +9160,7 @@ namespace Grand.Services.Installation
             productRedmiNote9.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productRedmiNote9.Id,
-                    ProductId2 = productPortableSoundSpeakers.Id,
+                    ProductId2 = productMiBeard.Id,
                 });
             productPocoF2Pro.RelatedProducts.Add(
                 new RelatedProduct {
@@ -9160,7 +9181,7 @@ namespace Grand.Services.Installation
             productPocoF2Pro.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productPocoF2Pro.Id,
-                    ProductId2 = productPortableSoundSpeakers.Id,
+                    ProductId2 = productMiBeard.Id,
                 });
 
             productAdidas.RelatedProducts.Add(
@@ -9228,48 +9249,48 @@ namespace Grand.Services.Installation
                     ProductId1 = productCustomTShirt.Id,
                     ProductId2 = productObeyHat.Id,
                 });
-            productDigitalStorm.RelatedProducts.Add(
+            productSonyPS5Pad.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productDigitalStorm.Id,
+                    ProductId1 = productSonyPS5Pad.Id,
                     ProductId2 = productBuildComputer.Id,
                 });
-            productDigitalStorm.RelatedProducts.Add(
+            productSonyPS5Pad.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productDigitalStorm.Id,
-                    ProductId2 = productLenovoIdeaCentre.Id,
+                    ProductId1 = productSonyPS5Pad.Id,
+                    ProductId2 = productLenovoIdeaPadDual.Id,
                 });
-            productDigitalStorm.RelatedProducts.Add(
+            productSonyPS5Pad.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productDigitalStorm.Id,
+                    ProductId1 = productSonyPS5Pad.Id,
                     ProductId2 = productLenovoThinkpad.Id,
                 });
-            productDigitalStorm.RelatedProducts.Add(
+            productSonyPS5Pad.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productDigitalStorm.Id,
+                    ProductId1 = productSonyPS5Pad.Id,
                     ProductId2 = productMiNotebook.Id,
                 });
 
-            productLenovoIdeaCentre.RelatedProducts.Add(
+            productLenovoIdeaPadDual.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoIdeaCentre.Id,
+                    ProductId1 = productLenovoIdeaPadDual.Id,
                     ProductId2 = productBuildComputer.Id,
                 });
 
-            productLenovoIdeaCentre.RelatedProducts.Add(
+            productLenovoIdeaPadDual.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoIdeaCentre.Id,
-                    ProductId2 = productDigitalStorm.Id,
+                    ProductId1 = productLenovoIdeaPadDual.Id,
+                    ProductId2 = productSonyPS5Pad.Id,
                 });
 
-            productLenovoIdeaCentre.RelatedProducts.Add(
+            productLenovoIdeaPadDual.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoIdeaCentre.Id,
+                    ProductId1 = productLenovoIdeaPadDual.Id,
                     ProductId2 = productLenovoThinkpad.Id,
                 });
 
-            productLenovoIdeaCentre.RelatedProducts.Add(
+            productLenovoIdeaPadDual.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoIdeaCentre.Id,
+                    ProductId1 = productLenovoIdeaPadDual.Id,
                     ProductId2 = productMiNotebook.Id,
                 });
 
@@ -9289,8 +9310,8 @@ namespace Grand.Services.Installation
             await AddProductTag(productNikeFloral, "cool");
             await AddProductTag(productNikeFloral, "shoes");
             await AddProductTag(productNikeFloral, "apparel");
-            await AddProductTag(productAdobePhotoshop, "computer");
-            await AddProductTag(productAdobePhotoshop, "awesome");
+            await AddProductTag(productLenovoYogaDuet, "tablet");
+            await AddProductTag(productLenovoYogaDuet, "awesome");
             await AddProductTag(productUniversalTabletCover, "computer");
             await AddProductTag(productUniversalTabletCover, "cool");
             await AddProductTag(productOversizedWomenTShirt, "cool");
@@ -9299,9 +9320,9 @@ namespace Grand.Services.Installation
             await AddProductTag(productMiNotebook, "compact");
             await AddProductTag(productMiNotebook, "awesome");
             await AddProductTag(productMiNotebook, "computer");
-            await AddProductTag(productAsusN551JK, "compact");
-            await AddProductTag(productAsusN551JK, "awesome");
-            await AddProductTag(productAsusN551JK, "computer");
+            await AddProductTag(productLenovoLegionY740, "compact");
+            await AddProductTag(productLenovoLegionY740, "awesome");
+            await AddProductTag(productLenovoLegionY740, "computer");
             await AddProductTag(productFahrenheit, "awesome");
             await AddProductTag(productFahrenheit, "book");
             await AddProductTag(productFahrenheit, "nice");
@@ -9314,10 +9335,10 @@ namespace Grand.Services.Installation
             await AddProductTag(productNikonD5500DSLR, "camera");
             await AddProductTag(productLeica, "camera");
             await AddProductTag(productLeica, "cool");
-            await AddProductTag(productDigitalStorm, "cool");
-            await AddProductTag(productDigitalStorm, "computer");
-            await AddProductTag(productWindows8Pro, "awesome");
-            await AddProductTag(productWindows8Pro, "computer");
+            await AddProductTag(productSonyPS5Pad, "cool");
+            await AddProductTag(productSonyPS5Pad, "computer");
+            await AddProductTag(productLenovoSmartTab, "awesome");
+            await AddProductTag(productLenovoSmartTab, "tablet");
             await AddProductTag(productCustomTShirt, "cool");
             await AddProductTag(productCustomTShirt, "shirt");
             await AddProductTag(productCustomTShirt, "apparel");
@@ -9329,8 +9350,8 @@ namespace Grand.Services.Installation
             await AddProductTag(productAdidas, "cool");
             await AddProductTag(productAdidas, "shoes");
             await AddProductTag(productAdidas, "apparel");
-            await AddProductTag(productLenovoIdeaCentre, "awesome");
-            await AddProductTag(productLenovoIdeaCentre, "computer");
+            await AddProductTag(productLenovoIdeaPadDual, "awesome");
+            await AddProductTag(productLenovoIdeaPadDual, "tablet");
             await AddProductTag(productSamsungSeries, "nice");
             await AddProductTag(productSamsungSeries, "computer");
             await AddProductTag(productSamsungSeries, "compact");
@@ -9344,9 +9365,9 @@ namespace Grand.Services.Installation
             await AddProductTag(productLeviJeans, "cool");
             await AddProductTag(productLeviJeans, "jeans");
             await AddProductTag(productLeviJeans, "apparel");
-            await AddProductTag(productSoundForge, "game");
-            await AddProductTag(productSoundForge, "computer");
-            await AddProductTag(productSoundForge, "cool");
+            await AddProductTag(productAsusMixedReality, "game");
+            await AddProductTag(productAsusMixedReality, "computer");
+            await AddProductTag(productAsusMixedReality, "cool");
             await AddProductTag(productNightVision, "awesome");
             await AddProductTag(productNightVision, "digital");
             await AddProductTag(productSunglasses, "apparel");
