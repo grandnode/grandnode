@@ -340,25 +340,6 @@ function runScripts($container) {
 function sendcontactusform(urladd) {
     if (document.querySelector('#ModalQuickView') == null) {
         if (document.querySelector(".product-standard #product-details-form").checkValidity()) {
-            if (document.querySelector("textarea[id^='g-recaptcha-response']")) {
-                var contactData = {
-                    AskQuestionEmail: document.querySelector('.product-standard #AskQuestionEmail').value,
-                    AskQuestionFullName: document.querySelector('.product-standard #AskQuestionFullName').value,
-                    AskQuestionPhone: document.querySelector('.product-standard #AskQuestionPhone').value,
-                    AskQuestionMessage: document.querySelector('.product-standard #AskQuestionMessage').value,
-                    Id: document.querySelector('.product-standard #AskQuestionProductId').value,
-                    'g-recaptcha-response-value': document.querySelector(".product-standard textarea[id^='g-recaptcha-response']").value
-                };
-            } else {
-                var contactData = {
-                    AskQuestionEmail: document.querySelector('.product-standard #AskQuestionEmail').value,
-                    AskQuestionFullName: document.querySelector('.product-standard #AskQuestionFullName').value,
-                    AskQuestionPhone: document.querySelector('.product-standard #AskQuestionPhone').value,
-                    AskQuestionMessage: document.querySelector('.product-standard #AskQuestionMessage').value,
-                    Id: document.querySelector('.product-standard #AskQuestionProductId').value
-                };
-            }
-            addAntiForgeryToken(contactData);
             var bodyFormData = new FormData();
             bodyFormData.append('AskQuestionEmail', document.querySelector('.product-standard #AskQuestionEmail').value);
             bodyFormData.append('AskQuestionFullName', document.querySelector('.product-standard #AskQuestionFullName').value);
@@ -391,25 +372,6 @@ function sendcontactusform(urladd) {
         }
     } else {
         if (document.querySelector("#ModalQuickView #product-details-form").checkValidity()) {
-            if (document.querySelector("textarea[id^='g-recaptcha-response']")) {
-                var contactData = {
-                    AskQuestionEmail: document.querySelector('#ModalQuickView #AskQuestionEmail').value,
-                    AskQuestionFullName: document.querySelector('#ModalQuickView #AskQuestionFullName').value,
-                    AskQuestionPhone: document.querySelector('#ModalQuickView #AskQuestionPhone').value,
-                    AskQuestionMessage: document.querySelector('#ModalQuickView #AskQuestionMessage').value,
-                    Id: document.querySelector('#ModalQuickView #AskQuestionProductId').value,
-                    'g-recaptcha-response-value': document.querySelector("#ModalQuickView textarea[id^='g-recaptcha-response']").value
-                };
-            } else {
-                var contactData = {
-                    AskQuestionEmail: document.querySelector('#ModalQuickView #AskQuestionEmail').value,
-                    AskQuestionFullName: document.querySelector('#ModalQuickView #AskQuestionFullName').value,
-                    AskQuestionPhone: document.querySelector('#ModalQuickView #AskQuestionPhone').value,
-                    AskQuestionMessage: document.querySelector('#ModalQuickView #AskQuestionMessage').value,
-                    Id: document.querySelector('#ModalQuickView #AskQuestionProductId').value
-                };
-            }
-            addAntiForgeryToken(contactData);
             var bodyFormData = new FormData();
             bodyFormData.append('AskQuestionEmail', document.querySelector('#ModalQuickView #AskQuestionEmail').value);
             bodyFormData.append('AskQuestionFullName', document.querySelector('#ModalQuickView #AskQuestionFullName').value);
