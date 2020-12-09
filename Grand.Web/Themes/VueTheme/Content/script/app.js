@@ -116,6 +116,16 @@ var vm = new Vue({
                     event.srcElement.appendChild(para);
                     event.srcElement.submit();
                     return
+                } else {
+                    if ((vm.$refs.selected !== undefined && vm.$refs.selected.checked) ||
+                        (vm.$refs.visible !== undefined && vm.$refs.visible.style.display == "none")){
+                        var para = document.createElement("input");
+                        para.name = param;
+                        para.type = 'hidden';
+                        event.srcElement.appendChild(para);
+                        event.srcElement.submit();
+                        return
+                    }
                 }
             });
         },
