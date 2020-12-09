@@ -13,11 +13,11 @@
                     @T("ShoppingCart.Mini.NoItems")
                 </template>
                 <div v-for="item in flycartitems" class="item d-inline-flex no-wrap">
-                    <b-link :href="item.ProductSeName" :title="item.Picture.Title" v-if="item.Picture.ImageUrl">
+                    <b-link :href="'/' + item.ProductSeName" :title="item.Picture.Title" v-if="item.Picture.ImageUrl">
                         <b-img :alt="item.Picture.AlternateText" :src="item.Picture.ImageUrl" :title="item.Picture.Title" fluid></b-img>
                     </b-link>
                     <b-col>
-                        <b-link :href="item.ProductSeName">{{item.ProductName}}</b-link>
+                        <b-link :href="'/' + item.ProductSeName">{{item.ProductName}}</b-link>
                         <div class="attributes p-2" v-if="item.AttributeInfo">
                             <div v-html="item.AttributeInfo"></div>
                         </div>
