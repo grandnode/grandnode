@@ -38,7 +38,7 @@
             <label class="col-form-label" asp-for="ExpireMonth">@T("Payment.ExpirationDate"):</label>
         </div>
         <div class="col-md-4 col-12 text-right d-md-flex input-group">
-            <div class="braintree-input form-control col-md-4 col-12" id="braintree-expiration-date"></div>
+            <div class="braintree-input form-control col-md-6 col-12" id="braintree-expiration-date"></div>
         </div>
     </div>
 
@@ -58,6 +58,11 @@
 <div style="color:red; margin:0 auto" id="braintree-errors"></div>
 <div id="braintree-authentication"></div>
 <div class="script-tag-info">
+    @*
+        Used when disable settings one page checkout
+        <script asp-location="Footer">
+
+    *@
     <script>
         var authorization = '@ViewBag.ClientToken';
         var submitForm = false;
@@ -69,10 +74,13 @@
             hostedFields: null
         };
         var bankFrame = document.querySelector('#braintree-authentication');
-        document.querySelector('.payment-info-next-step-button').setAttribute('onclick', null);
-        braintree.client.create({
-            authorization: authorization
-        }, onClientCreate);
+
+        if (onePageCheckout) {
+            document.querySelector('.payment-info-next-step-button').setAttribute('onclick', null);
+        }
+
+        braintree.client.create({ authorization: authorization }, onClientCreate);
+
         function onClientCreate(err, client) {
             if (err) {
                 //console.log('client error:', err);
@@ -105,7 +113,6 @@
             return function (err, component) {
                 if (err)
                     return;
-
                 components[name] = component;
             }
         }
@@ -148,10 +155,44 @@
                 if (payload.liabilityShiftPossible && payload.liabilityShifted) {
                     document.querySelector('#CardNonce').value = payload.nonce;
                     submitForm = true;
+                    if (!onePageCheckout);
+                    {
+                        document.querySelector('.payment-info-next-step-button').removeEventListener("click", hostedFields, false);
+                        document.querySelector('.payment-info-next-step-button').click();
+                    }
                 }
             });
         }
-        document.querySelector('input.payment-info-next-step-button').addEventListener('click', function (data) {
+
+        if (!onePageCheckout) {
+            document.querySelector('.payment-info-next-step-button').addEventListener("click", hostedFields, false);
+        }
+        else {
+            document.querySelector('input.payment-info-next-step-button').addEventListener('click', function (data) {
+                document.querySelector('#braintree-errors').innerHTML = '';
+                if (!submitForm) {
+                    if (!stepBack) {
+                        components.hostedFields.tokenize(function (err, payload) {
+                            if (err) {
+                                var currentErrorvalue = document.querySelector('#@Html.IdFor(model => model.Errors)').value;
+                                document.querySelector('#@Html.IdFor(model => model.Errors)').value = currentErrorvalue + '|' + err.message;
+                                document.querySelector('#braintree-errors').innerHTML = err.message;
+                                return;
+                            }
+                            verifyCard(payload);
+                        });
+                    }
+                    return false;
+                }
+                else if (onePageCheckout) {
+                    submitForm = false;
+                    PaymentInfo.save();
+                }
+            });
+        }
+
+        function hostedFields() {
+            event.preventDefault();
             document.querySelector('#braintree-errors').innerHTML = '';
             if (!submitForm) {
                 if (!stepBack) {
@@ -171,6 +212,7 @@
                 submitForm = false;
                 PaymentInfo.save();
             }
-        });
+        }
+
     </script>
 </div>
