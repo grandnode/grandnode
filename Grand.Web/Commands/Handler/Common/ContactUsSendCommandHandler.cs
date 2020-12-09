@@ -241,13 +241,17 @@ namespace Grand.Web.Commands.Handler.Common
                     if (ca.AttributeControlType == AttributeControlType.TextBox ||
                         ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, ca.Id);
-                        var enteredText = valuesStr.FirstOrDefault();
-                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
-
-                        if (ca.ValidationMinLength.Value > enteredTextLength)
+                        var conditionMet = await _contactAttributeParser.IsConditionMet(ca, contactAttributesXml);
+                        if (ca.IsRequired && ((conditionMet.HasValue && conditionMet.Value) || !conditionMet.HasValue))
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMinimumLength"), ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), ca.ValidationMinLength.Value));
+                            var valuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, ca.Id);
+                            var enteredText = valuesStr.FirstOrDefault();
+                            int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                            if (ca.ValidationMinLength.Value > enteredTextLength)
+                            {
+                                warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMinimumLength"), ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), ca.ValidationMinLength.Value));
+                            }
                         }
                     }
                 }
@@ -258,13 +262,17 @@ namespace Grand.Web.Commands.Handler.Common
                     if (ca.AttributeControlType == AttributeControlType.TextBox ||
                         ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, ca.Id);
-                        var enteredText = valuesStr.FirstOrDefault();
-                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
-
-                        if (ca.ValidationMaxLength.Value < enteredTextLength)
+                        var conditionMet = await _contactAttributeParser.IsConditionMet(ca, contactAttributesXml);
+                        if (ca.IsRequired && ((conditionMet.HasValue && conditionMet.Value) || !conditionMet.HasValue))
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMaximumLength"), ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), ca.ValidationMaxLength.Value));
+                            var valuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, ca.Id);
+                            var enteredText = valuesStr.FirstOrDefault();
+                            int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                            if (ca.ValidationMaxLength.Value < enteredTextLength)
+                            {
+                                warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMaximumLength"), ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), ca.ValidationMaxLength.Value));
+                            }
                         }
                     }
                 }
