@@ -1,11 +1,14 @@
 ﻿/* commons */
 
 a {
-    color: #17a2b8;
+    color: #0C5D6A;
 }
 a:hover {
     color: #02899C;
     text-decoration: none;
+}
+.date-text {
+    color: #4C5357;
 }
 .dropdown-menu {
     min-width: unset;
@@ -206,7 +209,6 @@ ul.Menu.-vertical {
  .Menu li {
      display: flex;
      align-items: center;
-     justify-content: space-between;
      word-break: break-word;
      border-bottom: 1px solid #f2f2f2;
      cursor: pointer;
@@ -220,7 +222,12 @@ ul.Menu.-vertical {
      font-weight: 500;
 }
  .Menu li .back {
-     background: #f2f2f2;
+    background: #f2f2f2;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    font-weight: 500;
 }
  .Menu li .back .b-icon.bi {
      font-size: 16px;
@@ -274,7 +281,7 @@ ul.Menu.-vertical {
      padding-right: 0px !important;
 }
 /* Submenu chevrons */
- .Menu li.-hasSubmenu > a:after {
+ .Menu li.-hasSubmenu > a:after, .Menu li.-hasSubmenu > div:after {
      display: block;
      position: absolute;
      width: 8px;
@@ -289,7 +296,7 @@ ul.Menu.-vertical {
      border-style: solid solid none none;
      content: "";
 }
- .Menu li.-hasSubmenu.-noChevron > a:after {
+ .Menu li.-hasSubmenu.-noChevron > a:after, .Menu li.-hasSubmenu.-noChevron > div:after {
      display: none;
 }
  .Menu {
@@ -318,7 +325,7 @@ ul.Menu.-vertical {
 }
 /* Colouring of menus */
 /* Foreground */
- .Menu, .Menu li.-hasSubmenu > a:after {
+ .Menu, .Menu li.-hasSubmenu > a:after, .Menu li.-hasSubmenu > div:after {
      color: black;
      border-color: black;
     /* chevron colour */
@@ -343,7 +350,7 @@ ul.Menu.-vertical {
      min-width: 200px;
 }
 /* Styling of hyperlink text */
- .Menu li > a {
+ .Menu li > a, .Menu li > div {
      display: flex;
      align-items: center;
      width: 100%;
@@ -674,7 +681,7 @@ input:checked ~ .color-container .color::before {
     flex-wrap: wrap;
 }
 .product-box .actual-price {
-    color: #17a2b8;
+    color: #000000;
     font-size: 18px;
     font-weight: 500;
     line-height: 1;

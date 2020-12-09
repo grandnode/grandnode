@@ -40,6 +40,10 @@
 
 /* flyout-cart */
 
+.flyout-cart {
+    padding-left: 0;
+}
+
 .flyout-cart .item {
     position: relative;
     width: 100%;
