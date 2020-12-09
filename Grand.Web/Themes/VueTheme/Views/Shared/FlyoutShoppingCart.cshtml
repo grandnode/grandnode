@@ -1,13 +1,14 @@
 ﻿
-    <div class="flyout-cart">
-        <b-nav-item>
-            <b-icon icon="cart" variant="dark" v-b-toggle.sidebar-cart></b-icon>
-            <div class="qty-indicator cart-qty">{{flycartindicator}}</div>
-        </b-nav-item>
-        <b-sidebar id="sidebar-cart" backdrop right>
-            <template v-slot:title v-if="flycartindicator > 0">
-                @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\">{1}</a>", "/cart", string.Format(T("ShoppingCart.Mini.Items").Text, "{{flycartindicator}}"))))
-            </template>
+    <li>
+        <ul class="flyout-cart">
+            <b-nav-item>
+                <b-icon icon="cart" variant="dark" v-b-toggle.sidebar-cart></b-icon>
+                <div class="qty-indicator cart-qty">{{flycartindicator}}</div>
+            </b-nav-item>
+            <b-sidebar id="sidebar-cart" backdrop right>
+                <template v-slot:title v-if="flycartindicator > 0">
+                    @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\">{1}</a>", "/cart", string.Format(T("ShoppingCart.Mini.Items").Text, "{{flycartindicator}}"))))
+                </template>
                 <template v-slot:title v-else>
                     @T("ShoppingCart.Mini.NoItems")
                 </template>
@@ -49,10 +50,11 @@
                             </b-col>
                         </b-row>
                     </b-col>
-                </template> 
+                </template>
                 <div v-else class="d-flex flex-column justify-content-center align-items-center">
                     <b-icon icon="cart-x" font-scale="7.5" variant="secondary"></b-icon>
                     <div class="text-center text-muted mt-3">@T("ShoppingCart.Mini.NoDataText")</div>
                 </div>
-        </b-sidebar>
-    </div>
+            </b-sidebar>
+        </ul>
+    </li>

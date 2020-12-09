@@ -50,11 +50,11 @@
         </b-button>
     </div>
     <b-card-body>
-        <h5 class="card-title mb-0">
+        <h3 class="card-title mb-0">
             <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">
                 @Model.Name
             </a>
-        </h5>
+        </h3>
         @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
         {
             <span class="sku">@Model.Sku</span>
@@ -69,7 +69,7 @@
                 }
                 <template>
                     <div class="rating">
-                        <b-form-rating id="rating-inline-grid-@Model.Id" class="p-0" variant="warning" no-border size="sm" show-value precision="2" readonly inline value="@(ratingValue)"></b-form-rating>
+                        <b-form-rating id="rating-inline-grid-@Model.Id" aria-label="Rating" class="p-0" variant="warning" no-border size="sm" show-value aria-valuenow="@(ratingValue)" precision="2" readonly inline value="@(ratingValue)"></b-form-rating>
                         <b-link href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.ReviewOverviewModel.TotalReviews @T("Reviews.Overview.Reviews")</b-link>
                     </div>
                 </template>

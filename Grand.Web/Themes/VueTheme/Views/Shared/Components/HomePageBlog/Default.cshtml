@@ -3,7 +3,7 @@
 @if (Model.Items.Any())
 {
     <div class="blog-list-homepage my-3 order-@order.HomePageBlog">
-        <h2 class="generalTitle text-center mb-3">
+        <h2 class="generalTitle h5 text-center mb-3">
             @T("Blog.Latest")
         </h2>
         <b-col cols="12" class="px-0">
@@ -23,7 +23,7 @@
                                 @Html.Raw(item.Short)
                             </div>
                             <template v-slot:footer>
-                                <small class="text-muted">@item.CreatedOn.ToString("D")</small>
+                                <small class="date-text">@item.CreatedOn.ToString("D")</small>
                             </template>
                         </b-card>
                     </b-col>
