@@ -21,8 +21,7 @@
                 <b-avatar src="@(Model.AvatarUrl)" size="6rem"></b-avatar>
             }
             <label class="btn btn-info" for="my-file-selector">
-                <input id="my-file-selector" name="uploadedFile" type="file" accept="image/*" style="display:none;" onchange="$('#upload-file-info').html($(this).val());">
-                @T("admin.download.uploadfile")
+                <input id="my-file-selector" name="uploadedFile" type="file" accept="image/*">
             </label>
             <span class='label label-info' id="upload-file-info"></span>
         </div>
