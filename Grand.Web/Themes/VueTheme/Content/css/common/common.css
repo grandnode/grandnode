@@ -45,6 +45,18 @@ a:hover {
 body:not(.modal-open) {
     overflow-x: hidden;
 }
+.modal {
+    -webkit-transition: none;
+    transition: none;
+}
+.modal + .modal-backdrop {
+    opacity: 0;
+    -webkit-transition: opacity .15s linear;
+    transition: opacity .15s linear;
+}
+.modal.fade + .modal-backdrop  {
+    opacity: .5;
+}
 [v-cloak] .page-loader-container::before {
     content: '';
     position: fixed;
