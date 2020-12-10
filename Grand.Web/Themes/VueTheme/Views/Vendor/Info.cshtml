@@ -12,7 +12,7 @@
 }
 <div class="page vendorinfo-page">
     <h1 class="text-center generalTitle h2">@T("Account.MyAccount") - @T("Account.VendorInfo")</h1>
-    <form asp-route="CustomerVendorInfo" method="post" enctype="multipart/form-data">
+    <form asp-route="CustomerVendorInfo" method="post" enctype="multipart/form-data" v-on:submit.prevent="validateBeforeSubmitParam($event, 'save-info-button')">
         <div asp-validation-summary="ModelOnly" class="message-error alert alert-danger" my-3></div>
         <div class="form-fields">
             <div class="form-group">

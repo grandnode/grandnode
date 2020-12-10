@@ -279,7 +279,7 @@ namespace Grand.Web.Controllers
             string contentType = string.Empty;
             byte[] vendorPictureBinary = null;
 
-            if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
+            if (ModelState.IsValid && uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {
                 try
                 {
