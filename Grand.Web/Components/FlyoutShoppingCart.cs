@@ -3,6 +3,7 @@ using Grand.Domain.Orders;
 using Grand.Framework.Components;
 using Grand.Services.Security;
 using Grand.Web.Features.Models.ShoppingCart;
+using Grand.Web.Models.ShoppingCart;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Grand.Web.ViewComponents
             _storeContext = storeContext;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(MiniShoppingCartModel model)
         {
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)
                 return Content("");
@@ -38,7 +39,7 @@ namespace Grand.Web.ViewComponents
             if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return Content("");
 
-            var model = await _mediator.Send(new GetMiniShoppingCart() {
+            model ??=  await _mediator.Send(new GetMiniShoppingCart() {
                 Customer = _workContext.CurrentCustomer,
                 Currency = _workContext.WorkingCurrency,
                 Language = _workContext.WorkingLanguage,
