@@ -17,15 +17,16 @@
 <div class="header-nav">
     <b-navbar type="light">
         <b-container :fluid="fluid" id="header-container">
-            <b-button aria-label="menu-toggler" class="menu-toggler" v-b-toggle.sidebar-menu><span></span><span></span><span></span></b-button>
-            <b-sidebar id="sidebar-menu"
-                       backdrop
-                       left
-                       shadow>
-                <ul class="Menu -vertical">
-                    @await Component.InvokeAsync("TopMenu")
-                 </ul>
-            </b-sidebar>
+            <template>
+                <b-button aria-label="menu-toggler" class="menu-toggler" v-b-toggle.sidebar-menu><span></span><span></span><span></span></b-button>
+                <b-sidebar id="sidebar-menu"
+                           backdrop
+                           shadow>
+                    <ul class="Menu -vertical">
+                        @await Component.InvokeAsync("TopMenu")
+                    </ul>
+                </b-sidebar>
+            </template>
             @await Component.InvokeAsync("Logo")
             <b-navbar-nav class="top-header-items order-3">
                 <b-nav-item class="d-lg-block d-none">
@@ -41,16 +42,18 @@
                 <b-nav-item>
                     <b-icon icon="gear" variant="dark" v-b-toggle.sidebar-right></b-icon>
                 </b-nav-item>
-                <b-sidebar id="sidebar-right" body-class="user-panel" title="@T("Account.MyAccount")" @if (supportRtl) { <text> left</text> } else { <text>right</text> } backdrop>
-                    <div class="d-inline-flex flex-wrap mb-2">
-                        @await Component.InvokeAsync("TaxTypeSelector")
-                        @await Component.InvokeAsync("CurrencySelector")
-                        @await Component.InvokeAsync("LanguageSelector")
-                        @await Component.InvokeAsync("StoreSelector")
-                        @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
-                    </div>
-                    @await Component.InvokeAsync("HeaderLinks")
-                </b-sidebar>
+                <template>
+                    <b-sidebar id="sidebar-right" body-class="user-panel" title="@T("Account.MyAccount")" @if (supportRtl) { <text> left</text> } else { <text>right</text> } backdrop>
+                        <div class="d-inline-flex flex-wrap mb-2">
+                            @await Component.InvokeAsync("TaxTypeSelector")
+                            @await Component.InvokeAsync("CurrencySelector")
+                            @await Component.InvokeAsync("LanguageSelector")
+                            @await Component.InvokeAsync("StoreSelector")
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
+                        </div>
+                        @await Component.InvokeAsync("HeaderLinks")
+                    </b-sidebar>
+                </template>
                 @await Component.InvokeAsync("ShoppingCartLinks")
             </b-navbar-nav>
         </b-container>
