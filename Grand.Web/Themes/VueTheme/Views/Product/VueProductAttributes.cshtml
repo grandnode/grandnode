@@ -77,10 +77,20 @@
                                     document.querySelector('#stock-availability-value-@productId').innerText = response.data.stockAvailability;
                                 }
                                 if (response.data.backInStockSubscription) {
-                                    document.querySelector('#back-in-stock-subscribe-@productId').style.display = "block";
+                                    var element = document.querySelector('#back-in-stock-subscribe-@productId');
+                                    if (element)
+                                        element.style.display = "block";
+                                }
+                                if (response.data.backInStockSubscription && response.data.backInStockSubscription == false) {
+                                    var element = document.querySelector('#back-in-stock-subscribe-@productId');
+                                    if (element) {
+                                        element.style.display = "none";
+                                    }
                                 }
                                 if (response.data.buttonTextBackInStockSubscription) {
-                                    document.querySelector('#back-in-stock-subscribe-@productId').value = response.data.buttonTextBackInStockSubscription;
+                                    var element = document.querySelector('#back-in-stock-subscribe-@productId');
+                                    if (element)
+                                        element.value = response.data.buttonTextBackInStockSubscription;
                                 }
                                 if (response.data.enabledattributemappingids) {
                                     for (var i = 0; i < response.data.enabledattributemappingids.length; i++) {
