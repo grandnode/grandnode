@@ -445,8 +445,7 @@
                 }).then(function (response) {
                     vmorder.cart = response.data.model;
                     if (document.querySelector('.flyout-cart')) {
-                        var flyoutcart = response.data.flyoutshoppingcart;
-                        var newfly = JSON.parse(flyoutcart);
+                        var newfly = response.data.flyoutshoppingcartmodel;
                         vm.flycart = newfly;
                         vm.flycartitems = newfly.Items;
                         vm.flycartindicator = newfly.TotalProducts;

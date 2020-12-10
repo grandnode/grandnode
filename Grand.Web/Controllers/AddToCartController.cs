@@ -211,9 +211,8 @@ namespace Grand.Web.Controllers
                         }
 
                         //display notification message and update appropriate blocks
-                        var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
-                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist)
-                                .Sum(x => x.Quantity));
+                        var qty = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist).Sum(x => x.Quantity);
+                        var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"), qty);
 
                         return Json(new
                         {
@@ -221,6 +220,7 @@ namespace Grand.Web.Controllers
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
                             html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
+                            wishlistqty = qty,
                             model = addtoCartModel
                         });
                     }
@@ -250,9 +250,15 @@ namespace Grand.Web.Controllers
                             _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, shoppingCartTypes.ToArray())
                                 .Sum(x => x.Quantity));
 
-                        var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? this.RenderViewComponentToString("FlyoutShoppingCart")
-                            : "";
+                        var miniShoppingCartmodel = _shoppingCartSettings.MiniShoppingCartEnabled ? await _mediator.Send(new GetMiniShoppingCart() {
+                            Customer = _workContext.CurrentCustomer,
+                            Currency = _workContext.WorkingCurrency,
+                            Language = _workContext.WorkingLanguage,
+                            TaxDisplayType = _workContext.TaxDisplayType,
+                            Store = _storeContext.CurrentStore
+                        }) : null;
+
+                        var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled ? RenderViewComponentToString("FlyoutShoppingCart", miniShoppingCartmodel) : "";
 
                         return Json(new
                         {
@@ -261,6 +267,7 @@ namespace Grand.Web.Controllers
                             html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
                             updateflyoutcartsectionhtml = updateflyoutcartsectionhtml,
+                            flyoutshoppingcartmodel = miniShoppingCartmodel,
                             model = addtoCartModel
                         });
                     }
@@ -549,15 +556,15 @@ namespace Grand.Web.Controllers
                         }
 
                         //display notification message and update appropriate blocks
-                        var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
-                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist)
-                                .Sum(x => x.Quantity));
+                        var qty = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist).Sum(x => x.Quantity);
+                        var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"), qty);
 
                         return Json(new
                         {
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
                             updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
+                            wishlistqty = qty,
                             html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             model = addtoCartModel
                         });
@@ -588,9 +595,15 @@ namespace Grand.Web.Controllers
                             _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, shoppingCartTypes.ToArray())
                                 .Sum(x => x.Quantity));
 
-                        var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? this.RenderViewComponentToString("FlyoutShoppingCart")
-                            : "";
+                        var miniShoppingCartmodel = _shoppingCartSettings.MiniShoppingCartEnabled ? await _mediator.Send(new GetMiniShoppingCart() {
+                            Customer = _workContext.CurrentCustomer,
+                            Currency = _workContext.WorkingCurrency,
+                            Language = _workContext.WorkingLanguage,
+                            TaxDisplayType = _workContext.TaxDisplayType,
+                            Store = _storeContext.CurrentStore
+                        }) : null;
+
+                        var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled ? RenderViewComponentToString("FlyoutShoppingCart", miniShoppingCartmodel) : "";
 
                         return Json(new
                         {
@@ -599,6 +612,7 @@ namespace Grand.Web.Controllers
                             html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
                             updateflyoutcartsectionhtml = updateflyoutcartsectionhtml,
+                            flyoutshoppingcartmodel = miniShoppingCartmodel,
                             refreshreservation = product.ProductType == ProductType.Reservation && product.IntervalUnitType != IntervalUnit.Day,
                             model = addtoCartModel
                         });

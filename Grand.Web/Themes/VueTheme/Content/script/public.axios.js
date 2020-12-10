@@ -130,9 +130,8 @@ var AxiosCart = {
         if (response.data.updatetopwishlistsectionhtml) {
             document.querySelector(AxiosCart.topwishlistselector).innerHTML = response.data.updatetopwishlistsectionhtml;
         }
-        if (response.data.updateflyoutcartsectionhtml) {
-            var flyoutcart = response.data.updateflyoutcartsectionhtml;
-            var newfly = JSON.parse(flyoutcart);
+        if (response.data.flyoutshoppingcartmodel) {
+            var newfly = response.data.flyoutshoppingcartmodel;
             this.flycart = newfly;
             this.flycartitems = newfly.Items;
             this.flycartindicator = newfly.TotalProducts;

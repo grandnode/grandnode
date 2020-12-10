@@ -3,8 +3,7 @@
         method: "post",
         baseURL: '/deletecartitem/'+ href +''
     }).then(function (response) {
-        var flyoutcart = response.data.flyoutshoppingcart;
-        var newfly = JSON.parse(flyoutcart);
+        var newfly = response.data.flyoutshoppingcartmodel;
         this.flycart = newfly;
         this.flycartitems = newfly.Items;
         this.flycartindicator = newfly.TotalProducts;
