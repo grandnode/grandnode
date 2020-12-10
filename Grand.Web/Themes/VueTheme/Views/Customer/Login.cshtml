@@ -118,12 +118,11 @@
                 <b-col cols="12" class="mx-lg-0 mx-auto mt-3">
                     <b-card no-header no-footer>
                         <b-card-text>
-                            <div class="text generalMarginSupporter">
-                                @T("Account.Login.NewCustomerText")
+                            <div class="text-center generalMarginSupporter">
+                                @T("Account.Login.NewCustomer")
                             </div>
                             <div class="d-inline-flex align-items-center justify-content-center w-100">
-                                <a><strong>@T("Account.Login.NewCustomer")</strong></a>
-                                <a class="ml-3 register-button" href="@registerUrl">
+                                <a class="btn btn-info ml-3 register-button px-5" href="@registerUrl">
                                     @T("Account.Register")
                                 </a>
                             </div>
@@ -133,9 +132,4 @@
             }
         </b-form-row>
     </b-col>
-    <b-row>
-        <b-col cols="12" class="mb-3">
-            @await Component.InvokeAsync("TopicBlock", new { systemName = "LoginRegistrationInfo" })
-        </b-col>
-    </b-row>
 </div>
