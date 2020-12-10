@@ -110,7 +110,7 @@ namespace Grand.Services.Orders
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
-            if (shoppingCartItem.RentalStartDateUtc.HasValue && shoppingCartItem.RentalEndDateUtc.HasValue)
+            if ((shoppingCartItem.RentalStartDateUtc.HasValue && shoppingCartItem.RentalEndDateUtc.HasValue) || !string.IsNullOrEmpty(shoppingCartItem.ReservationId))
             {
                 var reserved = await _productReservationService.GetCustomerReservationsHelperBySciId(shoppingCartItem.Id);
                 foreach (var res in reserved)
@@ -1197,6 +1197,14 @@ namespace Grand.Services.Orders
                 return warnings;
             }
 
+            if (!string.IsNullOrEmpty(reservationId))
+            {
+                var reservations = await _productReservationService.GetCustomerReservationsHelpers(_workContext.CurrentCustomer.Id);
+                if (reservations.Where(x => x.ReservationId == reservationId).Any())
+                    warnings.Add(_localizationService.GetResource("ShoppingCart.AlreadyReservation"));
+            }
+
+
             IGrouping<string, ProductReservation> groupToBook = null;
             if (rentalStartDate.HasValue && rentalEndDate.HasValue)
             {
@@ -1368,6 +1376,16 @@ namespace Grand.Services.Orders
                     }
                 }
             }
+            if (!warnings.Any() && !string.IsNullOrEmpty(reservationId))
+            {
+                await _productReservationService.InsertCustomerReservationsHelper(new CustomerReservationsHelper {
+                    CustomerId = customer.Id,
+                    ReservationId = reservationId,
+                    ShoppingCartItemId = shoppingCartItem.Id
+                });
+            }
+
+
             return warnings;
         }
 
