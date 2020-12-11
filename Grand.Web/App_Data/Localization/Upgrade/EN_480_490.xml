@@ -92,4 +92,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.DefaultAdminTheme.Hint">
     <Value>Enter the name of the default admin theme</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.Products">
+    <Value>Products</Value>
+  </LocaleResource>
 </Language>

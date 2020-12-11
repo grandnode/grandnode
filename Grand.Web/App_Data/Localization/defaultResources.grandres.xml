@@ -20929,6 +20929,9 @@
   <LocaleResource Name="Search.Category">
     <Value>Category</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.Products">
+    <Value>Products</Value>
+  </LocaleResource>
   <LocaleResource Name="Search.EnterSearchTerms">
     <Value>Please enter some search keyword</Value>
   </LocaleResource>
