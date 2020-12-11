@@ -117,6 +117,9 @@
   <LocaleResource Name="Account.ChangePassword.Fields.NewPassword.Required">
     <Value>New password is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Fields.NewPassword.Validation">
+    <Value>Your password does not meet our requirements</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.ChangePassword.Fields.OldPassword">
     <Value>Old password</Value>
   </LocaleResource>
@@ -464,6 +467,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Password.Required">
     <Value>Password is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Password.Validation">
+    <Value>Your password does not meet our requirements</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Phone">
     <Value>Phone</Value>
@@ -7058,6 +7064,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid.Hint">
     <Value>Enter number of days for password recovery link. Set to 0 if it doesn't expire..</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRegularExpression">
+    <Value>Regular Expression for password validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRegularExpression.hint">
+    <Value>Enter the regular expression for password validation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneEnabled">
     <Value>'Phone number' enabled</Value>

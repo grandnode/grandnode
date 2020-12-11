@@ -311,6 +311,29 @@
             </div>
         </div>
         <div class="form-group">
+
+            <div class="col-8 col-md-4 col-sm-4 text-right">
+                <admin-label asp-for="CustomerSettings.PasswordRegularExpression" class="control-label" />
+            </div>
+            <div class="col-4 col-md-8 col-sm-8">
+                <admin-input asp-for="CustomerSettings.PasswordRegularExpression" />
+                <span asp-validation-for="CustomerSettings.PasswordRegularExpression"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="note note-info">
+                You can use this regex: <br>
+                ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@@$%^&*-]).{8,}$<br>
+                This regex will enforce these rules:<br>
+                • At least one upper case english letter<br>
+                • At least one lower case english letter<br>
+                • At least one digit<br>
+                • At least one special character<br>
+                • Minimum 8 in length
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.PasswordLifetime" class="control-label" />
             </div>
