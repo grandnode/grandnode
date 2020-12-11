@@ -109,7 +109,7 @@ namespace Grand.Services.Orders
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
-            if (shoppingCartItem.RentalStartDateUtc.HasValue && shoppingCartItem.RentalEndDateUtc.HasValue)
+            if ((shoppingCartItem.RentalStartDateUtc.HasValue && shoppingCartItem.RentalEndDateUtc.HasValue) || !string.IsNullOrEmpty(shoppingCartItem.ReservationId))
             {
                 var reserved = await _productReservationService.GetCustomerReservationsHelperBySciId(shoppingCartItem.Id);
                 foreach (var res in reserved)
@@ -1153,61 +1153,38 @@ namespace Grand.Services.Orders
             return null;
         }
 
-        /// <summary>
-        /// Add a product to shopping cart
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="product">Product</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="customerEnteredPrice">The price enter by a customer</param>
-        /// <param name="rentalStartDate">Rental start date</param>
-        /// <param name="rentalEndDate">Rental end date</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
-        /// <returns>Warnings</returns>
-        public virtual async Task<IList<string>> AddToCart(Customer customer, string productId,
-            ShoppingCartType shoppingCartType, string storeId, string warehouseId = null, string attributesXml = null,
-            decimal? customerEnteredPrice = null,
-            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
-            string reservationId = "", string parameter = "", string duration = "")
+        private async Task CheckCommonWarnings(List<string> warnings, Customer customer, Product product, IGrouping<string, ProductReservation> groupToBook,
+             ShoppingCartType shoppingCartType, DateTime? rentalStartDate, DateTime? rentalEndDate, int quantity, string reservationId)
         {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            if (string.IsNullOrEmpty(productId))
-                throw new ArgumentNullException("product");
-
-            var warnings = new List<string>();
             if (shoppingCartType == ShoppingCartType.ShoppingCart && !await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, customer))
             {
                 warnings.Add("Shopping cart is disabled");
-                return warnings;
+                return;
             }
             if (shoppingCartType == ShoppingCartType.Wishlist && !await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, customer))
             {
                 warnings.Add("Wishlist is disabled");
-                return warnings;
+                return;
             }
             if (customer.IsSearchEngineAccount())
             {
                 warnings.Add("Search engine can't add to cart");
-                return warnings;
+                return;
             }
 
             if (quantity <= 0)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
-                return warnings;
+                return;
             }
 
-            IGrouping<string, ProductReservation> groupToBook = null;
+            if (!string.IsNullOrEmpty(reservationId))
+            {
+                var reservations = await _productReservationService.GetCustomerReservationsHelpers(_workContext.CurrentCustomer.Id);
+                if (reservations.Where(x => x.ReservationId == reservationId).Any())
+                    warnings.Add(_localizationService.GetResource("ShoppingCart.AlreadyReservation"));
+            }
+
             if (rentalStartDate.HasValue && rentalEndDate.HasValue)
             {
                 var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, null);
@@ -1257,9 +1234,49 @@ namespace Grand.Services.Orders
                 if (groupToBook == null)
                 {
                     warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.NoFreeReservationsInThisPeriod"));
-                    return warnings;
+                    return;
                 }
             }
+        }
+
+        /// <summary>
+        /// Add a product to shopping cart
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="product">Product</param>
+        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customerEnteredPrice">The price enter by a customer</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
+        /// <returns>Warnings</returns>
+        public virtual async Task<IList<string>> AddToCart(Customer customer, string productId,
+            ShoppingCartType shoppingCartType, string storeId, string warehouseId = null, string attributesXml = null,
+            decimal? customerEnteredPrice = null,
+            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
+            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
+            string reservationId = "", string parameter = "", string duration = "")
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (string.IsNullOrEmpty(productId))
+                throw new ArgumentNullException("product");
+
+            var warnings = new List<string>();
+            IGrouping<string, ProductReservation> groupToBook = null;
+
+            await CheckCommonWarnings(warnings, customer, product, groupToBook, shoppingCartType, rentalStartDate, rentalEndDate, quantity, reservationId);
+
+            if (warnings.Any())
+                return warnings;
 
             //reset checkout info
             await _customerService.ResetCheckoutData(customer, storeId);
@@ -1377,6 +1394,14 @@ namespace Grand.Services.Orders
                         });
                     }
                 }
+            }
+            if (!warnings.Any() && !string.IsNullOrEmpty(reservationId))
+            {
+                await _productReservationService.InsertCustomerReservationsHelper(new CustomerReservationsHelper {
+                    CustomerId = customer.Id,
+                    ReservationId = reservationId,
+                    ShoppingCartItemId = shoppingCartItem.Id
+                });
             }
             return warnings;
         }
