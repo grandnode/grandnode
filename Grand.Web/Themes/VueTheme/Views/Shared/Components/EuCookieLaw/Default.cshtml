@@ -10,7 +10,6 @@
             url: '@Url.RouteUrl("EuCookieLawAccept")',
             params: postData,
         }).then(function (response) {
-            console.log(response);
             document.getElementById('eu-cookie-bar-notification').style.display = "none";
         }).catch(function (error) {
             alert(error);

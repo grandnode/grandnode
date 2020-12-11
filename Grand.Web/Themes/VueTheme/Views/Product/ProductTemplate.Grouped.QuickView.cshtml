@@ -9,8 +9,6 @@
 
 @{
     Layout = "";
-    @*<script src="~/scripts/public.reservation.js"></script>
-        <link href="~/content/jquery-ui-themes/smoothness/jquery-ui.calendar.min.css" rel="stylesheet" type="text/css" />*@
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_quickview_after_breadcrumb", additionalData = Model.Id })
 <b-modal ref="ModalQuickView" id="ModalQuickView" @@shown="onShown" size="xl" centered hide-footer hide-header>
