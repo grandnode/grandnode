@@ -26,14 +26,14 @@
                         <label asp-for="FullName" class="col-form-label">@T("ContactUs.FullName"):</label>
                         <span class="required">*</span>
                         <input asp-for="FullName" placeholder="@T("ContactUs.FullName.Hint")" class="fullname form-control" v-validate="'required'" />
-                        <span class="field-validation-error"></span>
+                        <span class="field-validation-error">{{veeErrors.first('FullName')}}</span>
                         <span asp-validation-for="FullName"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Email" class="col-form-label">@T("ContactUs.Email"):</label>
                         <span class="required">*</span>
                         <input asp-for="Email" placeholder="@T("ContactUs.Email.Hint")" class="form-control email" v-validate="'required|email'" />
-                        <span class="field-validation-error"></span>
+                        <span class="field-validation-error">{{veeErrors.first('Email')}}</span>
                         <span asp-validation-for="Email"></span>
                     </div>
                     @if (Model.SubjectEnabled)
@@ -42,7 +42,7 @@
                             <label asp-for="Subject" class="col-form-label">@T("ContactUs.Subject"):</label>
                             <span class="required">*</span>
                             <input asp-for="Subject" placeholder="@T("ContactUs.Subject.Hint")" class="form-control subject" v-validate="'required'" />
-                            <span class="field-validation-error"></span>
+                            <span class="field-validation-error">{{veeErrors.first('Subject')}}</span>
                             <span asp-validation-for="Subject"></span>
                         </div>
                     }
@@ -50,7 +50,7 @@
                     <label asp-for="Enquiry" class="col-form-label">@T("ContactUs.Enquiry"):</label>
                     <span class="required">*</span>
                     <textarea asp-for="Enquiry" placeholder="@T("ContactUs.Enquiry.Hint")" class="form-control enquiry" v-validate="'required'"></textarea>
-                    <span class="field-validation-error"></span>
+                    <span class="field-validation-error">{{veeErrors.first('Enquiry')}}</span>
                     <span asp-validation-for="Enquiry"></span>
                 </div>
                 </div>

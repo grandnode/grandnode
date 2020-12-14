@@ -22,8 +22,9 @@
             <div class="form-fields">
                 <fieldset class="form-group">
                     <label asp-for="Password" class="col-form-label">@T("Account.DeleteAccount.Fields.Password"):</label>
-                    <input asp-for="Password" class="form-control" v-validate="'required'"/>
-                    <span class="field-validation-error"></span>
+                    <input asp-for="Password" class="form-control" v-validate="'required'" />
+                    <span class="field-validation-error">{{veeErrors.first('Password')}}</span>
+                    <span asp-validation-for="Password"></span>
                 </fieldset>
             </div>
         </fieldset>

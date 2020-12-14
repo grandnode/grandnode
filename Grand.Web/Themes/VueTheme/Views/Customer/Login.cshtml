@@ -46,8 +46,10 @@
                                             <label asp-for="Email" class="col-form-label">@T("Account.Login.Fields.Email"):</label>
                                         </b-col>
                                         <b-col lg="9" cols="12">
-                                            <input asp-for="Email" class="form-control email" autofocus="autofocus" v-validate="'required|email'" />
-                                            <span class="field-validation-error"></span>
+                                            <input asp-for="Email" class="form-control email" autofocus="autofocus"
+                                                   v-validate="'required|email'" />
+                                            <span class="field-validation-error">{{veeErrors.first('Email')}}</span>
+                                            <span asp-validation-for="Email"></span>
                                         </b-col>
                                     </b-form-row>
                                 }
@@ -56,9 +58,10 @@
                                         <label asp-for="Password" class="col-form-label">@T("Account.Login.Fields.Password"):</label>
                                     </b-col>
                                     <b-col lg="9" cols="12">
-                                        <input asp-for="Password" class="form-control password" v-validate="'required'"/>
-                                        <span v-if="veeErrors.first('Password')" class="field-validation-error">@T("account.login.fields.password")</span>
-                                        <span class="field-validation-error"></span>
+                                        <input asp-for="Password" class="form-control password"
+                                               v-validate="'required'" />
+                                        <span class="field-validation-error">{{veeErrors.first('Password')}}</span>
+                                        <span asp-validation-for="Password"></span>
                                     </b-col>
                                 </b-form-row>
                                 <div class="inputs d-flex flex-sm-row flex-column justify-content-center">

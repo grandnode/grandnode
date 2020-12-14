@@ -16,8 +16,9 @@
                 <div class="form-fields">
                     <div class="form-group">
                         <label asp-for="Note" class="col-form-label">@T("OrderNote.Fields.Title"):</label>
-                        <textarea asp-for="Note" class="form-control review-title"  v-validate="'required'"></textarea>
-                        <span class="field-validation-error"></span>
+                        <textarea asp-for="Note" class="form-control review-title"
+                                  v-validate="'required'"></textarea>
+                        <span class="field-validation-error">{{veeErrors.first('Note')}}</span>
                     </div>
                 </div>
             </fieldset>
