@@ -113,7 +113,7 @@
                     return
                 } else {
                     if ((vm.$refs.selected !== undefined && vm.$refs.selected.checked) ||
-                        (vm.$refs.visible !== undefined && vm.$refs.visible.style.display == "none")){
+                        (vm.$refs.visible !== undefined && vm.$refs.visible.style.display == "none")) {
                         var para = document.createElement("input");
                         para.name = param;
                         para.type = 'hidden';
@@ -126,6 +126,6 @@
         },
         isMobile() {
             return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
-        }
+        },
     }
 });

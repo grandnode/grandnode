@@ -583,7 +583,7 @@ function backToTop() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    validation();
+   // validation();
     CloseSearchBox();
     backToTop();
 }); 
