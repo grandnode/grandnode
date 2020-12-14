@@ -1,5 +1,6 @@
 ﻿using Grand.Core.ModelBinding;
 using Grand.Core.Models;
+using Grand.Framework.Mvc.Validation;
 using Grand.Web.Models.Newsletter;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -18,6 +19,7 @@ namespace Grand.Web.Models.Customer
             CustomerAttributes = new List<CustomerAttributeModel>();
             NewsletterCategories = new List<NewsletterSimpleCategory>();
         }
+
         [DataType(DataType.EmailAddress)]
         [GrandResourceDisplayName("Account.Fields.Email")]
         public string Email { get; set; }
