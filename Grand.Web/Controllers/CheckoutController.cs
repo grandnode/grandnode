@@ -1,11 +1,11 @@
 ﻿using Grand.Core;
+using Grand.Core.Http;
+using Grand.Core.Plugins;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Orders;
 using Grand.Domain.Payments;
 using Grand.Domain.Shipping;
-using Grand.Core.Http;
-using Grand.Core.Plugins;
 using Grand.Framework.Controllers;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -22,6 +22,7 @@ using Grand.Web.Models.Checkout;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,6 +125,21 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", warning);
             return warnings;
         }
+
+        protected IList<string> SerializeModelState(ModelStateDictionary modelState)
+        {
+            var errors = new List<string>();
+            var valuerrors = modelState.Where(entry => entry.Value.Errors.Any());
+            foreach (var item in valuerrors)
+            {
+                foreach (var er in item.Value.Errors)
+                {
+                    errors.Add(er.ErrorMessage);
+                }
+            }
+            return errors;
+        }
+
 
         #endregion
 
@@ -1205,9 +1221,10 @@ namespace Grand.Web.Controllers
                             update_section = new UpdateSectionJsonModel {
                                 name = "billing",
                                 html = await RenderPartialViewToString("OpcBillingAddress", billingAddressModel),
-                                model = billingAddressModel
+                                model = billingAddressModel,
                             },
                             wrong_billing_address = true,
+                            model_state = SerializeModelState(ModelState)
                         });
                     }
 
@@ -1402,7 +1419,9 @@ namespace Grand.Web.Controllers
                                 name = "shipping",
                                 html = await RenderPartialViewToString("OpcShippingAddress", shippingAddressModel),
                                 model = shippingAddressModel
-                            }
+                            },
+                            wrong_shipping_address = true,
+                            model_state = SerializeModelState(ModelState)
                         });
                     }
 
