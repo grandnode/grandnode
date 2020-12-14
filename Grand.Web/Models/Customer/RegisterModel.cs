@@ -1,6 +1,5 @@
 ﻿using Grand.Core.ModelBinding;
 using Grand.Core.Models;
-using Grand.Framework.Mvc.Validation;
 using Grand.Web.Models.Newsletter;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
