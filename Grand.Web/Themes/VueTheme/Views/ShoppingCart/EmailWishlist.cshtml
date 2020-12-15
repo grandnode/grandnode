@@ -22,12 +22,14 @@
                 <div class="inputs pb-1">
                     <label class="col-form-label" asp-for="FriendEmail">@T("Wishlist.EmailAFriend.FriendEmail"):</label>
                     <input asp-for="FriendEmail" class="form-control friend-email" placeholder="@T("Wishlist.EmailAFriend.FriendEmail.Hint")" v-validate="'required|email'" />
-                    <span class="field-validation-error"></span>
+                    <span class="field-validation-error">{{veeErrors.first('FriendEmail')}}</span>
+                    <span asp-validation-for="FriendEmail"></span>
                 </div>
                 <div class="inputs pb-1">
                     <label class="col-form-label" asp-for="YourEmailAddress">@T("Wishlist.EmailAFriend.YourEmailAddress"):</label>
                     <input asp-for="YourEmailAddress" class="form-control your-email" placeholder="@T("Wishlist.EmailAFriend.YourEmailAddress.Hint")" v-validate="'required'" />
-                    <span class="field-validation-error"></span>
+                    <span class="field-validation-error">{{veeErrors.first('YourEmailAddress')}}</span>
+                    <span asp-validation-for="YourEmailAddress"></span>
                 </div>
                 <div class="inputs pb-1">
                     <label class="col-form-label" asp-for="PersonalMessage">@T("Wishlist.EmailAFriend.PersonalMessage"):</label>

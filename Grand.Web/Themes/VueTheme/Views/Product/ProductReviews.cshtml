@@ -24,8 +24,10 @@
                     <div class="form-fields">
                         <div class="form-group">
                             <label asp-for="AddProductReview.Title" class="col-form-label">@T("Reviews.Fields.Title"):</label>
-                            <input asp-for="AddProductReview.Title" class="form-control review-title" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)" v-validate="'required'" />
-                            <span class="field-validation-error"></span>
+                            <input asp-for="AddProductReview.Title" class="form-control review-title" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)" 
+                                   v-validate="'required'" />
+                            <span class="field-validation-error">{{veeErrors.first('AddProductReview.Title')}}</span>
+                            <span asp-validation-for="AddProductReview.Title"></span>
                         </div>
                         <label asp-for="AddProductReview.ReviewText" class="col-form-label">@T("Reviews.Fields.ReviewText"):</label>
                         <textarea asp-for="AddProductReview.ReviewText" class="form-control review-text" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)" v-validate="'required'"></textarea>

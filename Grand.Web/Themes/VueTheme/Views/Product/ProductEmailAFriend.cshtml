@@ -26,18 +26,22 @@
                     <div class="form-fields">
                         <div class="form-group">
                             <label asp-for="FriendEmail" class="col-form-label">@T("Products.EmailAFriend.FriendEmail"):</label>
-                            <input asp-for="FriendEmail" class="form-control friend-email" v-validate="'required|email'" placeholder="@T("Products.EmailAFriend.FriendEmail.Hint")" />
-                            <span class="field-validation-error"></span>
+                            <input asp-for="FriendEmail" class="form-control friend-email"
+                                   v-validate="'required|email'" placeholder="@T("Products.EmailAFriend.FriendEmail.Hint")" />
+                            <span class="field-validation-error">{{veeErrors.first('FriendEmail')}}</span>
+                            <span asp-validation-for="FriendEmail"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="YourEmailAddress" class="col-form-label">@T("Products.EmailAFriend.YourEmailAddress"):</label>
                             <input asp-for="YourEmailAddress" class="form-control your-email" v-validate="'required|email'" placeholder="@T("Products.EmailAFriend.YourEmailAddress.Hint")" />
-                            <span class="field-validation-error"></span>
+                            <span class="field-validation-error">{{veeErrors.first('YourEmailAddress')}}</span>
+                            <span asp-validation-for="YourEmailAddress"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="PersonalMessage" class="col-form-label">@T("Products.EmailAFriend.PersonalMessage"):</label>
                             <textarea asp-for="PersonalMessage" class="form-control your-email" placeholder="@T("Products.EmailAFriend.PersonalMessage.Hint")" v-validate="'required'"></textarea>
-                            <span class="field-validation-error"></span>
+                            <span class="field-validation-error">{{veeErrors.first('PersonalMessage')}}</span>
+                            <span asp-validation-for="PersonalMessage"></span>
                         </div>
                         @if (Model.DisplayCaptcha)
                         {

@@ -176,7 +176,7 @@
                     <div class="form-group">
                         @T("ReturnRequests.PickupDate"):
                         <input asp-for="PickupDate" type="date" class="form-control datepicker" v-validate="'required'" required="@Model.PickupDateRequired" />
-                         <span class="field-validation-error"></span>
+                        <span class="field-validation-error">{{veeErrors.first('PickupDate')}}</span>
                     </div>
                 }
             </div>

@@ -26,14 +26,14 @@
                     <label asp-for="Name" class="col-form-label">@T("Vendors.ApplyAccount.Name"):</label>
                     <span class="required">*</span>
                     <input asp-for="Name" class="form-control name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")" v-validate="'required'" />
-                    <span class="field-validation-error"></span>
+                    <span class="field-validation-error">{{veeErrors.first('Name')}}</span>
                     <span asp-validation-for="Name"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Email" class="col-form-label">@T("Vendors.ApplyAccount.Email"):</label>
                     <span class="required">*</span>
                     <input asp-for="Email" class="form-control name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")" v-validate="'required|email'" />
-                    <span class="field-validation-error"></span>
+                    <span class="field-validation-error">{{veeErrors.first('Email')}}</span>
                     <span asp-validation-for="Email"></span>
                 </div>
                 <div class="form-group">

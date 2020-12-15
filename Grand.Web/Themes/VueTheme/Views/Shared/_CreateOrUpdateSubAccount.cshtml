@@ -8,26 +8,30 @@
     <div class="form-group col-sm-12 col-md-6">
         <label asp-for="FirstName" class="col-form-label">@T("Account.Fields.FirstName"):</label>
         <span class="required">*</span>
-        <input asp-for="FirstName" class="form-control"  v-validate="'required'" />
-        <span class="field-validation-error"></span>
+        <input asp-for="FirstName" class="form-control" v-validate="'required'" />
+        <span class="field-validation-error">{{veeErrors.first('FirstName')}}</span>
+        <span asp-validation-for="FirstName"></span>
     </div>
     <div class="form-group col-sm-12 col-md-6">
         <label asp-for="LastName" class="col-form-label">@T("Account.Fields.LastName"):</label>
         <span class="required">*</span>
-        <input asp-for="LastName" class="form-control"  v-validate="'required'"/>
-        <span class="field-validation-error"></span>
+        <input asp-for="LastName" class="form-control" v-validate="'required'" />
+        <span class="field-validation-error">{{veeErrors.first('LastName')}}</span>
+        <span asp-validation-for="LastName"></span>
     </div>
     <div class="form-group col-sm-12">
         <label asp-for="Email" class="col-form-label">@T("Account.Fields.Email"):</label>
         <span class="required">*</span>
         <input asp-for="Email" class="form-control" v-validate="'required|email'" asp-readonly=@edit_email />
-        <span class="field-validation-error"></span>
+        <span class="field-validation-error">{{veeErrors.first('Email')}}</span>
+        <span asp-validation-for="Email"></span>
     </div>
     <div class="form-group col-sm-12">
         <label asp-for="Password" class="col-form-label">@T("Account.Fields.Password"):</label>
         <span class="required">*</span>
-        <input asp-for="Password" class="form-control password" v-validate="'required'" />
-        <span class="field-validation-error"></span>
+        <input asp-for="Password" class="form-control password" v-validate="'required|min:Password'" />
+        <span class="field-validation-error">{{veeErrors.first('Password')}}</span>
+        <span asp-validation-for="Password"></span>
     </div>
     <div class="form-group col-sm-12">
         <label asp-for="Active" class="col-form-label">@T("Account.Fields.Active"):</label>
