@@ -35,7 +35,8 @@
                                         </b-col>
                                         <b-col lg="9" cols="12">
                                             <input asp-for="Username" class="form-control username" autofocus="autofocus" v-validate="'required'" />
-                                            <span class="field-validation-error"></span>
+                                            <span class="field-validation-error">{{veeErrors.first('Username')}}</span>
+                                            <span asp-validation-for="Username"></span>
                                         </b-col>
                                     </b-form-row>
                                 }
