@@ -21,28 +21,28 @@ namespace Grand.Framework.Components
         /// <summary>
         /// Initializes a new <see cref="HtmlContentViewComponentResult"/>.
         /// </summary>
-        public JsonContentViewComponentResult(IHtmlContent encodedContent)
+        public JsonContentViewComponentResult(string content)
         {
-            EncodedContent = encodedContent ?? throw new ArgumentNullException(nameof(encodedContent));
+            EncodedContent = content ?? throw new ArgumentNullException(nameof(content));
         }
 
         /// <summary>
         /// Gets the encoded content.
         /// </summary>
-        public IHtmlContent EncodedContent { get; }
+        public string EncodedContent { get; }
 
         /// <summary>
-        /// Writes the <see cref="EncodedContent"/>.
+        /// Set content type for reponse
         /// </summary>
-        /// <param name="context">The <see cref="ViewComponentContext"/>.</param>
+        /// <param name="context"></param>
+        protected void ContentType(ViewComponentContext context)
+        {
+            context.ViewContext.HttpContext.Response.ContentType = "application/json";
+        }
+
         public void Execute(ViewComponentContext context)
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            context.ViewContext.HttpContext.Response.ContentType = "application/json";
+            ContentType(context);
             context.Writer.Write(EncodedContent);
         }
 
@@ -51,11 +51,10 @@ namespace Grand.Framework.Components
         /// </summary>
         /// <param name="context">The <see cref="ViewComponentContext"/>.</param>
         /// <returns>A completed <see cref="Task"/>.</returns>
-        public Task ExecuteAsync(ViewComponentContext context)
+        public async Task ExecuteAsync(ViewComponentContext context)
         {
-            Execute(context);
-
-            return Task.CompletedTask;
+            ContentType(context);
+            await context.Writer.WriteAsync(EncodedContent);
         }
     }
 }

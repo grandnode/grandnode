@@ -99,7 +99,7 @@ namespace Grand.Web.Commands.Handler.Common
                     case AttributeControlType.ImageSquares:
                         {
                             var ctrlAttributes = request.Form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
                                 attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
                                         attribute, ctrlAttributes);
@@ -110,7 +110,7 @@ namespace Grand.Web.Commands.Handler.Common
                     case AttributeControlType.Checkboxes:
                         {
                             var cblAttributes = request.Form[controlId].ToString();
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            if (!string.IsNullOrEmpty(cblAttributes))
                             {
                                 foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
@@ -137,9 +137,9 @@ namespace Grand.Web.Commands.Handler.Common
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = request.Form[controlId].ToString();
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = ctrlAttributes.Trim();
+                                var enteredText = ctrlAttributes.Trim();
                                 attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
                                     attribute, enteredText);
                             }
@@ -165,8 +165,7 @@ namespace Grand.Web.Commands.Handler.Common
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid downloadGuid;
-                            Guid.TryParse(request.Form[controlId], out downloadGuid);
+                            Guid.TryParse(request.Form[controlId], out Guid downloadGuid);
                             var download = await _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -204,15 +203,15 @@ namespace Grand.Web.Commands.Handler.Common
                 var conditionMet = await _contactAttributeParser.IsConditionMet(a2, contactAttributesXml);
                 if (a2.IsRequired && ((conditionMet.HasValue && conditionMet.Value) || !conditionMet.HasValue))
                 {
-                    bool found = false;
+                    var found = false;
                     //selected checkout attributes
                     foreach (var a1 in attributes1)
                     {
                         if (a1.Id == a2.Id)
                         {
                             var attributeValuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, a1.Id);
-                            foreach (string str1 in attributeValuesStr)
-                                if (!String.IsNullOrEmpty(str1.Trim()))
+                            foreach (var str1 in attributeValuesStr)
+                                if (!string.IsNullOrEmpty(str1.Trim()))
                                 {
                                     found = true;
                                     break;
@@ -238,16 +237,21 @@ namespace Grand.Web.Commands.Handler.Common
             {
                 if (ca.ValidationMinLength.HasValue)
                 {
+
                     if (ca.AttributeControlType == AttributeControlType.TextBox ||
                         ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, ca.Id);
-                        var enteredText = valuesStr.FirstOrDefault();
-                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
-
-                        if (ca.ValidationMinLength.Value > enteredTextLength)
+                        var conditionMet = await _contactAttributeParser.IsConditionMet(ca, contactAttributesXml);
+                        if (ca.IsRequired && ((conditionMet.HasValue && conditionMet.Value) || !conditionMet.HasValue))
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMinimumLength"), ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), ca.ValidationMinLength.Value));
+                            var valuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, ca.Id);
+                            var enteredText = valuesStr.FirstOrDefault();
+                            var enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                            if (ca.ValidationMinLength.Value > enteredTextLength)
+                            {
+                                warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMinimumLength"), ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), ca.ValidationMinLength.Value));
+                            }
                         }
                     }
                 }
@@ -258,13 +262,17 @@ namespace Grand.Web.Commands.Handler.Common
                     if (ca.AttributeControlType == AttributeControlType.TextBox ||
                         ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, ca.Id);
-                        var enteredText = valuesStr.FirstOrDefault();
-                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
-
-                        if (ca.ValidationMaxLength.Value < enteredTextLength)
+                        var conditionMet = await _contactAttributeParser.IsConditionMet(ca, contactAttributesXml);
+                        if (ca.IsRequired && ((conditionMet.HasValue && conditionMet.Value) || !conditionMet.HasValue))
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMaximumLength"), ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), ca.ValidationMaxLength.Value));
+                            var valuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, ca.Id);
+                            var enteredText = valuesStr.FirstOrDefault();
+                            var enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                            if (ca.ValidationMaxLength.Value < enteredTextLength)
+                            {
+                                warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMaximumLength"), ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), ca.ValidationMaxLength.Value));
+                            }
                         }
                     }
                 }
@@ -288,7 +296,7 @@ namespace Grand.Web.Commands.Handler.Common
                     AttributeControlType = attribute.AttributeControlType,
                     DefaultValue = attribute.DefaultValue
                 };
-                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
                     attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
@@ -320,7 +328,7 @@ namespace Grand.Web.Commands.Handler.Common
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.ImageSquares:
                         {
-                            if (!String.IsNullOrEmpty(selectedContactAttributes))
+                            if (!string.IsNullOrEmpty(selectedContactAttributes))
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
@@ -345,7 +353,7 @@ namespace Grand.Web.Commands.Handler.Common
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!String.IsNullOrEmpty(selectedContactAttributes))
+                            if (!string.IsNullOrEmpty(selectedContactAttributes))
                             {
                                 var enteredText = _contactAttributeParser.ParseValues(selectedContactAttributes, attribute.Id);
                                 if (enteredText.Any())
@@ -374,11 +382,10 @@ namespace Grand.Web.Commands.Handler.Common
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            if (!String.IsNullOrEmpty(selectedContactAttributes))
+                            if (!string.IsNullOrEmpty(selectedContactAttributes))
                             {
                                 var downloadGuidStr = _contactAttributeParser.ParseValues(selectedContactAttributes, attribute.Id).FirstOrDefault();
-                                Guid downloadGuid;
-                                Guid.TryParse(downloadGuidStr, out downloadGuid);
+                                Guid.TryParse(downloadGuidStr, out Guid downloadGuid);
                                 var download = await _downloadService.GetDownloadByGuid(downloadGuid);
                                 if (download != null)
                                     attributeModel.DefaultValue = download.DownloadGuid.ToString();
@@ -397,8 +404,8 @@ namespace Grand.Web.Commands.Handler.Common
 
         private async Task<ContactUsModel> SendContactUs(ContactUsModel model, Store store)
         {
-            string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-            string body = Core.Html.HtmlHelper.FormatText(model.Enquiry);
+            var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
+            var body = Core.Html.HtmlHelper.FormatText(model.Enquiry);
 
             await _workflowMessageService.SendContactUsMessage(_workContext.CurrentCustomer, store, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body, model.ContactAttributeInfo, model.ContactAttributeXml);
 

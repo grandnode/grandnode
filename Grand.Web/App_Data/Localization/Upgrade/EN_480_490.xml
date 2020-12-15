@@ -92,6 +92,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.DefaultAdminTheme.Hint">
     <Value>Enter the name of the default admin theme</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.Password.Validation">
+    <Value>Your password does not meet our requirements</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Fields.NewPassword.Validation">
+    <Value>Your password does not meet our requirements</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRegularExpression">
+    <Value>Regular Expression for password validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRegularExpression.hint">
+    <Value>Enter the regular expression for password validation</Value>
+  </LocaleResource>
   <LocaleResource Name="Search.Products">
     <Value>Products</Value>
   </LocaleResource>

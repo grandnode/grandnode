@@ -24,6 +24,10 @@ namespace Grand.Web.Validators.Customer
             RuleFor(x => x.Password).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Password.Required")).When(subaccount => string.IsNullOrEmpty(subaccount.Id));
             RuleFor(x => x.Password).Length(customerSettings.PasswordMinLength, 999).WithMessage(string.Format(localizationService.GetResource("Account.Fields.Password.LengthValidation"), customerSettings.PasswordMinLength))
                 .When(subaccount => string.IsNullOrEmpty(subaccount.Id));
+
+            if (!string.IsNullOrEmpty(customerSettings.PasswordRegularExpression))
+                RuleFor(x => x.Password).Matches(customerSettings.PasswordRegularExpression).WithMessage(string.Format(localizationService.GetResource("Account.Fields.Password.Validation")))
+                    .When(subaccount => string.IsNullOrEmpty(subaccount.Id)); 
         }
     }
 }

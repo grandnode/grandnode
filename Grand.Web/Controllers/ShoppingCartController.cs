@@ -346,7 +346,7 @@ namespace Grand.Web.Controllers
                 await _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, item, ensureOnlyActiveCheckoutAttributes: true);
             }
 
-            var model = await _mediator.Send(new GetMiniShoppingCart() {
+            var miniShoppingCartmodel = await _mediator.Send(new GetMiniShoppingCart() {
                 Customer = _workContext.CurrentCustomer,
                 Currency = _workContext.WorkingCurrency,
                 Language = _workContext.WorkingLanguage,
@@ -357,9 +357,9 @@ namespace Grand.Web.Controllers
             {
                 return Json(new
                 {
-                    totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
-                    flyoutshoppingcart = this.RenderViewComponentToString("FlyoutShoppingCart", model),
-                    model = model
+                    totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), miniShoppingCartmodel.TotalProducts),
+                    flyoutshoppingcart = this.RenderViewComponentToString("FlyoutShoppingCart", miniShoppingCartmodel),
+                    flyoutshoppingcartmodel = miniShoppingCartmodel,
                 });
             }
             else
@@ -376,9 +376,9 @@ namespace Grand.Web.Controllers
 
                 return Json(new
                 {
-                    totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
-                    flyoutshoppingcart = RenderViewComponentToString("FlyoutShoppingCart", model),
-                    flyoutshoppingcartmodel = model,
+                    totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), miniShoppingCartmodel.TotalProducts),
+                    flyoutshoppingcart = RenderViewComponentToString("FlyoutShoppingCart", miniShoppingCartmodel),
+                    flyoutshoppingcartmodel = miniShoppingCartmodel,
                     cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel }),
                     model = shoppingcartmodel,
                 });
@@ -408,7 +408,7 @@ namespace Grand.Web.Controllers
                 await _customerService.UpdateShoppingCartItem(_workContext.CurrentCustomer.Id, item);
             }
 
-            var model = await _mediator.Send(new GetMiniShoppingCart() {
+            var miniShoppingCart = await _mediator.Send(new GetMiniShoppingCart() {
                 Customer = _workContext.CurrentCustomer,
                 Currency = _workContext.WorkingCurrency,
                 Language = _workContext.WorkingLanguage,
@@ -429,7 +429,8 @@ namespace Grand.Web.Controllers
             return Json(new
             {
                 cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel }),
-                model = shoppingcartmodel
+                model = shoppingcartmodel,
+                flyoutshoppingcartmodel = miniShoppingCart
             });
 
         }

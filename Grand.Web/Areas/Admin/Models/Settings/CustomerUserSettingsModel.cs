@@ -82,6 +82,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordMinLength")]
             public int PasswordMinLength { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordRegularExpression")]
+            public string PasswordRegularExpression { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UnduplicatedPasswordsNumber")]
             public int UnduplicatedPasswordsNumber { get; set; }
 
