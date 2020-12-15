@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Grand.Web.Controllers
 {
@@ -126,6 +127,20 @@ namespace Grand.Web.Controllers
             foreach (var warning in warnings)
                 ModelState.AddModelError("", warning);
             return warnings;
+        }
+
+        protected IList<string> SerializeModelState(ModelStateDictionary modelState)
+        {
+            var errors = new List<string>();
+            var valuerrors = modelState.Where(entry => entry.Value.Errors.Any());
+            foreach (var item in valuerrors)
+            {
+                foreach (var er in item.Value.Errors)
+                {
+                    errors.Add(er.ErrorMessage);
+                }
+            }
+            return errors;
         }
 
         #endregion
@@ -1212,6 +1227,7 @@ namespace Grand.Web.Controllers
                                 model = billingAddressModel
                             },
                             wrong_billing_address = true,
+                            model_state = SerializeModelState(ModelState)
                         });
                     }
 
@@ -1406,7 +1422,9 @@ namespace Grand.Web.Controllers
                                 name = "shipping",
                                 html = await RenderPartialViewToString("OpcShippingAddress", shippingAddressModel),
                                 model = shippingAddressModel
-                            }
+                            },
+                            wrong_shipping_address = true,
+                            model_state = SerializeModelState(ModelState)
                         });
                     }
 
