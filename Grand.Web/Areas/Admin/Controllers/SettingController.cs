@@ -1471,6 +1471,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //activity log
             await _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
+            //now clear cache
+            await ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Media");
@@ -1534,6 +1536,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //selected tab
             await SaveSelectedTabIndex();
+            //now clear cache
+            await ClearCache();
 
             return RedirectToAction("CustomerUser");
         }
@@ -2018,6 +2022,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             //selected tab
             await SaveSelectedTabIndex();
 
+            //now clear cache
+            await ClearCache();
+
             return RedirectToAction("GeneralCommon");
         }
         [HttpPost, ActionName("GeneralCommon")]
@@ -2189,6 +2196,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+
+            //now clear cache
+            await ClearCache();
+
             return await PushNotifications();
         }
 
@@ -2253,6 +2264,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _settingService.SaveSetting(settings);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            
+            //now clear cache
+            await ClearCache();
+
             return await AdminSearch();
         }
 
