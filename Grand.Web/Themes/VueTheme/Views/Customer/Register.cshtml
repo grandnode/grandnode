@@ -413,9 +413,8 @@
                     {
                         <div class="form-group">
                             <label for="Newsletter" class="ml-1 custom-control custom-checkbox">
-                                <input class="custom-control-input" asp-for="Newsletter" />
-                                <span class="custom-control-label"></span>
-                                <span class="custom-control-description">@T("account.fields.newsletter")</span>
+                                <input class="custom-control-input" asp-for="Newsletter" onchange="toggleNewsletterCat()" />
+                                <span class="custom-control-label">@T("account.fields.newsletter")</span>
                                 <span class="sr-only">@T("account.fields.newsletter")</span>
                             </label>
                             <span asp-validation-for="Newsletter"></span>

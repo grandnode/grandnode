@@ -411,11 +411,12 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="form-group">
-                                <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" asp-for="Newsletter" />
-                                    <span class="custom-control-label"></span>
-                                    <label asp-for="Newsletter" class="custom-control-description">@T("Account.Fields.Newsletter")</label>
-                                </div>
+                                <label for="Newsletter" class="ml-1 custom-control custom-checkbox">
+                                    <input class="custom-control-input" asp-for="Newsletter" onchange="toggleNewsletterCat()" />
+                                    <span class="custom-control-label">@T("account.fields.newsletter")</span>
+                                    <span class="sr-only">@T("account.fields.newsletter")</span>
+                                </label>
+                                <span asp-validation-for="Newsletter"></span>
                             </div>
                             <partial name="_NewsLetterCategories" model="Model.NewsletterCategories" />
                         }
