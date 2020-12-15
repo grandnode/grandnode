@@ -121,7 +121,10 @@ namespace Grand.Services.Customers
             if (customer.CannotLoginUntilDateUtc.HasValue && customer.CannotLoginUntilDateUtc.Value > DateTime.UtcNow)
                 return CustomerLoginResults.LockedOut;
 
-            string pwd = "";
+            if(string.IsNullOrEmpty(password))
+                return CustomerLoginResults.WrongPassword;
+
+            var pwd = "";
             switch (customer.PasswordFormat)
             {
                 case PasswordFormat.Encrypted:
@@ -135,7 +138,7 @@ namespace Grand.Services.Customers
                     break;
             }
 
-            bool isValid = pwd == customer.Password;
+            var isValid = pwd == customer.Password;
             if (!isValid)
             {
                 //wrong password
