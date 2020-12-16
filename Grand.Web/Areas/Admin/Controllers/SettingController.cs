@@ -1306,6 +1306,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var rra = model.ToEntity();
                 await _returnRequestService.InsertReturnRequestAction(rra);
+                //now clear cache
+                await ClearCache();
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Added"));
                 return continueEditing ? RedirectToAction("ReturnRequestActionEdit", new { id = rra.Id }) : RedirectToAction("ReturnRequestActionList");
             }
@@ -1469,8 +1471,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
             }
 
+            
             //activity log
             await _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
+            
+            //now clear cache
+            await ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Media");
@@ -1527,11 +1533,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             externalAuthenticationSettings.AutoRegisterEnabled = model.ExternalAuthenticationSettings.AutoRegisterEnabled;
             await _settingService.SaveSetting(externalAuthenticationSettings);
 
+            //now clear cache
+            await ClearCache();
+
             //activity log
             await _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-
+            
             //selected tab
             await SaveSelectedTabIndex();
 
@@ -2018,6 +2027,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             //selected tab
             await SaveSelectedTabIndex();
 
+            //now clear cache
+            await ClearCache();
+
             return RedirectToAction("GeneralCommon");
         }
         [HttpPost, ActionName("GeneralCommon")]
@@ -2082,6 +2094,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                     StoreId = string.IsNullOrEmpty(x.StoreId) ? " " : x.StoreId
                 };
                 settings.Add(settingModel);
+
+                //now clear cache
+                await ClearCache();
             }
 
             if (model != null)
@@ -2137,6 +2152,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             settings.AppId = model.AppId;
             settings.Enabled = model.Enabled;
             await _settingService.SaveSetting(settings);
+
+            //now clear cache
+            await ClearCache();
 
             //edit js file needed by firebase
             var jsFilePath = CommonHelper.WebMapPath("firebase-messaging-sw.js");
@@ -2251,6 +2269,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             settings.MenuDisplayOrder = model.MenuDisplayOrder;
 
             await _settingService.SaveSetting(settings);
+
+            //now clear cache
+            await ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return await AdminSearch();
