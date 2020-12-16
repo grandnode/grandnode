@@ -18,20 +18,20 @@
     {
         <div class="write-review" id="review-form">
             <h5 class="generalTitle"><strong>@T("Reviews.Write")</strong></h5>
-            <form asp-route="ProductReviews" method="post" v-on:submit.prevent="validateBeforeSubmit($event)">
+            <form asp-route="ProductReviews" method="post" v-on:submit.prevent="validateBeforeSubmitParam($event, 'add-review')">
                 <div asp-validation-summary="ModelOnly" class="message-error alert alert-danger my-3"></div>
                 <fieldset>
                     <div class="form-fields">
                         <div class="form-group">
                             <label asp-for="AddProductReview.Title" class="col-form-label">@T("Reviews.Fields.Title"):</label>
-                            <input asp-for="AddProductReview.Title" class="form-control review-title" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)" 
-                                   v-validate="'required'" />
+                            <input asp-for="AddProductReview.Title" class="form-control review-title" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)" v-validate="'required'" />
                             <span class="field-validation-error">{{veeErrors.first('AddProductReview.Title')}}</span>
                             <span asp-validation-for="AddProductReview.Title"></span>
                         </div>
                         <label asp-for="AddProductReview.ReviewText" class="col-form-label">@T("Reviews.Fields.ReviewText"):</label>
                         <textarea asp-for="AddProductReview.ReviewText" class="form-control review-text" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)" v-validate="'required'"></textarea>
-                        <span class="field-validation-error"></span>
+                        <span class="field-validation-error">{{veeErrors.first('AddProductReview.ReviewText')}}</span>
+                        <span asp-validation-for="AddProductReview.ReviewText"></span>
                         <div class="form-group review-rating d-flex flex-wrap">
                             <label asp-for="AddProductReview.Rating" class="col-form-label w-100">@T("Reviews.Fields.Rating"):</label>
                             <b-form-rating v-model="value" variant="warning" show-value value="5" inline></b-form-rating>
@@ -46,8 +46,7 @@
                     </div>
                 </fieldset>
                 <div class="buttons my-3">
-                    <input name="add-review" value="add-review" type="hidden"/>
-                    <input type="submit" class="btn btn-info write-product-review-button" value="@T("Reviews.SubmitButton")" />
+                    <input type="submit" class="btn btn-info write-product-review-button" value="@T("Reviews.SubmitButton")" disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"/>
                 </div>
             </form>
         </div>
