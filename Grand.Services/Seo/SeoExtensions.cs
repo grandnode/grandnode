@@ -34,7 +34,7 @@ namespace Grand.Services.Seo
         {
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
-            string seName = GenerateSlug(productTag.GetLocalized(x => x.Name, languageId), false, false);
+            var seName = GenerateSlug(productTag.GetLocalized(x => x.Name, languageId), false, false);
             return seName;
         }
 
@@ -51,7 +51,7 @@ namespace Grand.Services.Seo
         {
             if (forumGroup == null)
                 throw new ArgumentNullException("forumGroup");
-            string seName = GenerateSlug(forumGroup.Name, false, false);
+            var seName = GenerateSlug(forumGroup.Name, false, true);
             return seName;
         }
 
@@ -64,7 +64,7 @@ namespace Grand.Services.Seo
         {
             if (forum == null)
                 throw new ArgumentNullException("forum");
-            string seName = GenerateSlug(forum.Name, false, false);
+            var seName = GenerateSlug(forum.Name, false, true);
             return seName;
         }
 
@@ -77,7 +77,7 @@ namespace Grand.Services.Seo
         {
             if (forumTopic == null)
                 throw new ArgumentNullException("forumTopic");
-            string seName = GenerateSlug(forumTopic.Subject, false, false);
+            var seName = GenerateSlug(forumTopic.Subject, false, true);
 
             // Trim SE name to avoid URLs that are too long
             var maxLength = 100;
@@ -107,7 +107,7 @@ namespace Grand.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            string seName = string.Empty;
+            var seName = string.Empty;
             if (!string.IsNullOrEmpty(languageId))
             {
                 var value = entity.Locales.Where(x => x.LanguageId == languageId && x.LocaleKey == "SeName").FirstOrDefault();
@@ -141,7 +141,7 @@ namespace Grand.Services.Seo
                 throw new ArgumentNullException("entity");
 
             //use name if sename is not specified
-            if (String.IsNullOrWhiteSpace(seName) && !String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(seName) && !string.IsNullOrWhiteSpace(name))
                 seName = name;
 
             //validation
@@ -153,7 +153,7 @@ namespace Grand.Services.Seo
             //that's why we limit it to 200 here (consider a store URL + probably added {0}-{1} below)
             seName = CommonHelper.EnsureMaximumLength(seName, 200);
 
-            if (String.IsNullOrWhiteSpace(seName))
+            if (string.IsNullOrWhiteSpace(seName))
             {
                 if (ensureNotEmpty)
                 {
@@ -168,8 +168,8 @@ namespace Grand.Services.Seo
             }
 
             //ensure this sename is not reserved yet
-            string entityName = typeof(T).Name;
-            int i = 2;
+            var entityName = typeof(T).Name;
+            var i = 2;
             var tempSeName = seName;
             while (true)
             {
@@ -213,7 +213,7 @@ namespace Grand.Services.Seo
             if (string.IsNullOrEmpty(name))
                 return name;
 
-            string okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
+            var okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
             name = name.Trim().ToLowerInvariant();
 
             if (convertNonWesternChars)
@@ -223,9 +223,9 @@ namespace Grand.Services.Seo
             }
 
             var sb = new StringBuilder();
-            foreach (char c in name.ToCharArray())
+            foreach (var c in name.ToCharArray())
             {
-                string c2 = c.ToString();
+                var c2 = c.ToString();
                 if (convertNonWesternChars && _seoCharacterTable != null)
                 {
                     if (_seoCharacterTable.ContainsKey(c2))
@@ -242,7 +242,7 @@ namespace Grand.Services.Seo
                     sb.Append(c2);
                 }
             }
-            string name2 = sb.ToString();
+            var name2 = sb.ToString();
             name2 = name2.Replace(" ", "-");
             while (name2.Contains("--"))
                 name2 = name2.Replace("--", "-");
