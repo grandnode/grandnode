@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Components\PaymentPayPalStandardcs.cs" />
+    <None Include="Components\PaymentPayPalStandardViewComponent.cs" />
   </ItemGroup>
 
   <ItemGroup>

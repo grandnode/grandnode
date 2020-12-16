@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Grand.Framework.Components;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 {
     [ViewComponent(Name = "PaymentPayPalStandard")]
-    public class PaymentPayPalStandardViewComponent : ViewComponent
+    public class PaymentPayPalStandardViewComponent : BaseViewComponent
     {
         public IViewComponentResult Invoke()
         {
