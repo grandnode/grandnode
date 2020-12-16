@@ -1,20 +1,20 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Braintree;
+﻿using Braintree;
 using Grand.Core;
 using Grand.Domain.Orders;
-using Grand.Plugin.Payments.BrainTree;
+using Grand.Framework.Components;
 using Grand.Plugin.Payments.BrainTree.Models;
 using Grand.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Payments.BrainTree.Components
 {
     [ViewComponent(Name = "PaymentBrainTree")]
-    public class PaymentBrainTreeViewComponent : ViewComponent
+    public class PaymentBrainTreeViewComponent : BaseViewComponent
     {
         private readonly BrainTreePaymentSettings _brainTreePaymentSettings;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
@@ -22,7 +22,7 @@ namespace Grand.Plugin.Payments.BrainTree.Components
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
-        public PaymentBrainTreeViewComponent(BrainTreePaymentSettings brainTreePaymentSettings, 
+        public PaymentBrainTreeViewComponent(BrainTreePaymentSettings brainTreePaymentSettings,
             IOrderTotalCalculationService orderTotalCalculationService,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
@@ -69,8 +69,7 @@ namespace Grand.Plugin.Payments.BrainTree.Components
             for (var i = 0; i < 15; i++)
             {
                 var year = Convert.ToString(DateTime.Now.Year + i);
-                model.ExpireYears.Add(new SelectListItem
-                {
+                model.ExpireYears.Add(new SelectListItem {
                     Text = year,
                     Value = year,
                 });
@@ -80,8 +79,7 @@ namespace Grand.Plugin.Payments.BrainTree.Components
             for (var i = 1; i <= 12; i++)
             {
                 var text = (i < 10) ? "0" + i : i.ToString();
-                model.ExpireMonths.Add(new SelectListItem
-                {
+                model.ExpireMonths.Add(new SelectListItem {
                     Text = text,
                     Value = i.ToString(),
                 });
