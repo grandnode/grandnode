@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Framework.Components;
 using Grand.Plugin.Payments.CashOnDelivery.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Plugin.Payments.CashOnDelivery.Components
 {
-    public class PaymentCashOnDeliveryViewComponent : ViewComponent
+    public class PaymentCashOnDeliveryViewComponent : BaseViewComponent
     {
         private readonly IWorkContext _workContext;
         private readonly ISettingService _settingService;

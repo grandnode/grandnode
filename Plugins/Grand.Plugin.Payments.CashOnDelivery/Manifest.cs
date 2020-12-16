@@ -7,5 +7,5 @@ using Grand.Core.Plugins;
     SystemName = "Payments.CashOnDelivery",
     SupportedVersion = GrandVersion.SupportedPluginVersion,
     Author = "grandnode team",
-    Version = "1.16"
+    Version = "1.17"
 )]
