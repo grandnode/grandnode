@@ -51,7 +51,7 @@ namespace Grand.Services.Seo
         {
             if (forumGroup == null)
                 throw new ArgumentNullException("forumGroup");
-            string seName = GetSeName(forumGroup.Name, false, false);
+            string seName = GetSeName(forumGroup.Name, false, true);
             return seName;
         }
 
@@ -64,7 +64,7 @@ namespace Grand.Services.Seo
         {
             if (forum == null)
                 throw new ArgumentNullException("forum");
-            string seName = GetSeName(forum.Name, false, false);
+            string seName = GetSeName(forum.Name, false, true);
             return seName;
         }
 
@@ -77,7 +77,7 @@ namespace Grand.Services.Seo
         {
             if (forumTopic == null)
                 throw new ArgumentNullException("forumTopic");
-            string seName = GetSeName(forumTopic.Subject, false, false);
+            string seName = GetSeName(forumTopic.Subject, false, true);
 
             // Trim SE name to avoid URLs that are too long
             var maxLength = 100;
@@ -85,7 +85,6 @@ namespace Grand.Services.Seo
             {
                 seName = seName.Substring(0, maxLength);
             }
-
             return seName;
         }
 
