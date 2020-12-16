@@ -2,6 +2,7 @@
 @inject Grand.Domain.Customers.CustomerSettings customerSettings
 @{
     var edit_email = !string.IsNullOrEmpty(Model.Id) && !customerSettings.AllowUsersToChangeEmail;
+    var validPassword = string.IsNullOrEmpty(Model.Id) ? "'required|min:Password'" : "";
 }
 <input asp-for="Id" type="hidden" />
 <div class="edit-subaccount row">
@@ -29,7 +30,7 @@
     <div class="form-group col-sm-12">
         <label asp-for="Password" class="col-form-label">@T("Account.Fields.Password"):</label>
         <span class="required">*</span>
-        <input asp-for="Password" class="form-control password" v-validate="'required|min:Password'" />
+        <input asp-for="Password" class="form-control password" v-validate="@validPassword" autocomplete="new-password" />
         <span class="field-validation-error">{{veeErrors.first('Password')}}</span>
         <span asp-validation-for="Password"></span>
     </div>
