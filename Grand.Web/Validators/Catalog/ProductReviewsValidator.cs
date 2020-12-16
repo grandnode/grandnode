@@ -6,16 +6,16 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Validators.Catalog
 {
-    public class ProductReviewsValidator : BaseGrandValidator<ProductReviewsModel>
+    public class ProductReviewsValidator : BaseGrandValidator<AddProductReviewModel>
     {
         public ProductReviewsValidator(
-            IEnumerable<IValidatorConsumer<ProductReviewsModel>> validators,
+            IEnumerable<IValidatorConsumer<AddProductReviewModel>> validators,
             ILocalizationService localizationService)
             : base(validators)
         {
-            RuleFor(x => x.AddProductReview.Title).NotEmpty().WithMessage(localizationService.GetResource("Reviews.Fields.Title.Required")).When(x => x.AddProductReview != null);
-            RuleFor(x => x.AddProductReview.Title).Length(1, 200).WithMessage(string.Format(localizationService.GetResource("Reviews.Fields.Title.MaxLengthValidation"), 200)).When(x => x.AddProductReview != null && !string.IsNullOrEmpty(x.AddProductReview.Title));
-            RuleFor(x => x.AddProductReview.ReviewText).NotEmpty().WithMessage(localizationService.GetResource("Reviews.Fields.ReviewText.Required")).When(x => x.AddProductReview != null);
+            RuleFor(x => x.Title).NotEmpty().WithMessage(localizationService.GetResource("Reviews.Fields.Title.Required"));
+            RuleFor(x => x.Title).Length(1, 200).WithMessage(string.Format(localizationService.GetResource("Reviews.Fields.Title.MaxLengthValidation"), 200));
+            RuleFor(x => x.ReviewText).NotEmpty().WithMessage(localizationService.GetResource("Reviews.Fields.ReviewText.Required"));
         }
     }
 }

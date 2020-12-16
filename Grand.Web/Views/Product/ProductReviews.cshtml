@@ -71,7 +71,7 @@
                     </div>
                 </fieldset>
                 <div class="buttons text-left my-3">
-                    <input type="submit" name="add-review" class="btn btn-info write-product-review-button" value="@T("Reviews.SubmitButton")" />
+                    <input type="submit" name="add-review" class="btn btn-info write-product-review-button" value="@T("Reviews.SubmitButton")" disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"/>
                 </div>
             </form>
         </div>
