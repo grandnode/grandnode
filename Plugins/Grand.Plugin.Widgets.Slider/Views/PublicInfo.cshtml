@@ -21,6 +21,8 @@
                 }
             });
         </script>
+
+        pagebuilder.AddCssFileParts(ResourceLocation.Head, "~/Plugins/Widgets.Slider/Content/vue-slider/style.css");
     }
     else
     {
@@ -48,7 +50,14 @@
             }
             else
             {
-                <b-carousel-slide img-src="@item.PictureUrl" text-html="@item.Description" @if (item.FullWidth) { <text> data-width="full" </text> } @if (!string.IsNullOrEmpty(item.Link)) { <text> class="link" onclick="window.location='@item.Link'" </text> }></b-carousel-slide>
+                <b-carousel-slide text-html="@item.Description" @if (item.FullWidth) { <text> data-width="full" class="img-desc wide-img @if (!string.IsNullOrEmpty(item.Link)) { <text> link </text> }" </text> } else { <text> class="img-desc no-wide-img @if (!string.IsNullOrEmpty(item.Link)) { <text> link </text> }" </text> } @if (!string.IsNullOrEmpty(item.Link)) { <text> onclick="window.location='@item.Link'" </text> }>
+                    <template #img>
+                        <picture>
+                            <source media="(max-width: 767px)" sizes="1px" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 1w" />
+                            <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="@item.Name" title="" />
+                        </picture>
+                    </template>
+                </b-carousel-slide>
             }
         }
     </b-carousel>
