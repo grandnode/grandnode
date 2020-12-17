@@ -1048,6 +1048,7 @@ namespace Grand.Services.Orders
                 Code = processPaymentRequest.OrderCode,
                 CustomerId = details.Customer.Id,
                 OwnerId = string.IsNullOrEmpty(details.Customer.OwnerId) ? details.Customer.Id : details.Customer.OwnerId,
+                SeId = details.Customer.SeId,
                 CustomerLanguageId = details.CustomerLanguage.Id,
                 CustomerTaxDisplayType = details.CustomerTaxDisplayType,
                 CustomerIp = _webHelper.GetCurrentIpAddress(),

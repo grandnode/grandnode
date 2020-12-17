@@ -69,6 +69,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly ISalesEmployeeService _salesEmployeeService;
         private readonly IServiceProvider _serviceProvider;
 
         private readonly DateTimeSettings _dateTimeSettings;
@@ -104,6 +105,7 @@ namespace Grand.Web.Areas.Admin.Services
             IProductService productService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
+            ISalesEmployeeService salesEmployeeService,
             IServiceProvider serviceProvider,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
@@ -143,6 +145,7 @@ namespace Grand.Web.Areas.Admin.Services
             _productService = productService;
             _categoryService = categoryService;
             _manufacturerService = manufacturerService;
+            _salesEmployeeService = salesEmployeeService;
             _serviceProvider = serviceProvider;
         }
 
@@ -283,6 +286,26 @@ namespace Grand.Web.Areas.Admin.Services
                 });
             }
         }
+
+        protected virtual async Task PrepareSelesEmployeeModel(CustomerModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableSalesEmployees.Add(new SelectListItem {
+                Text = _localizationService.GetResource("Admin.Customers.Customers.Fields.SalesEmployee.None"),
+                Value = ""
+            });
+            var employees = await _salesEmployeeService.GetAll();
+            foreach (var employee in employees.Where(x => x.Active))
+            {
+                model.AvailableSalesEmployees.Add(new SelectListItem {
+                    Text = employee.Name,
+                    Value = employee.Id
+                });
+            }
+        }
+
 
         protected virtual async Task PrepareStoresModel(CustomerModel model)
         {
@@ -443,6 +466,7 @@ namespace Grand.Web.Areas.Admin.Services
                     model.Username = customer.Username;
                     model.VendorId = customer.VendorId;
                     model.StaffStoreId = customer.StaffStoreId;
+                    model.SeId = customer.SeId;
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.FreeShipping = customer.FreeShipping;
@@ -528,6 +552,9 @@ namespace Grand.Web.Areas.Admin.Services
 
             //stores
             await PrepareStoresModel(model);
+
+            //employees
+            await PrepareSelesEmployeeModel(model);
 
             //customer attributes
             await PrepareCustomerAttributeModel(model, customer);
@@ -677,6 +704,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Username = model.Username,
                 VendorId = model.VendorId,
                 StaffStoreId = model.StaffStoreId,
+                SeId = model.SeId,
                 AdminComment = model.AdminComment,
                 IsTaxExempt = model.IsTaxExempt,
                 FreeShipping = model.FreeShipping,
@@ -883,6 +911,9 @@ namespace Grand.Web.Areas.Admin.Services
 
             //staff store
             customer.StaffStoreId = model.StaffStoreId;
+
+            //sales employee
+            customer.SeId = model.SeId;
 
             //form fields
             if (_dateTimeSettings.AllowCustomersToSetTimeZone)
@@ -1478,7 +1509,7 @@ namespace Grand.Web.Areas.Admin.Services
                     StoreName = store != null ? store.Shortcut : "Unknown",
                     ProductId = x.ProductId,
                     ProductName = product != null ? product.Name : "Unknown",
-                    AttributeDescription = string.IsNullOrEmpty(x.AttributeXml) ? "" : 
+                    AttributeDescription = string.IsNullOrEmpty(x.AttributeXml) ? "" :
                         await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, x.AttributeXml),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                 };

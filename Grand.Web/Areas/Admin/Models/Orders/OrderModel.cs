@@ -61,6 +61,11 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         [GrandResourceDisplayName("Admin.Orders.Fields.Affiliate")]
         public string AffiliateName { get; set; }
 
+        [GrandResourceDisplayName("Admin.Orders.Fields.SalesEmployee")]
+        public string SalesEmployeeId { get; set; }
+        [GrandResourceDisplayName("Admin.Orders.Fields.SalesEmployee")]
+        public string SalesEmployeeName { get; set; }
+
         //Used discounts
         [GrandResourceDisplayName("Admin.Orders.Fields.UsedDiscounts")]
         public IList<UsedDiscountModel> UsedDiscounts { get; set; }

@@ -183,6 +183,13 @@
                     <span asp-validation-for="Owner"></span>
                 </div>
             </div>
+            <div class="form-group">
+                <admin-label asp-for="SeId" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-select asp-for="SeId" asp-items="Model.AvailableSalesEmployees" />
+                    <span asp-validation-for="SeId"></span>
+                </div>
+            </div>
             @if (Model.GenderEnabled)
             {
                 <div class="form-group">

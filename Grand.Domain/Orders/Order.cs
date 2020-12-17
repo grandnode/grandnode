@@ -52,6 +52,11 @@ namespace Grand.Domain.Orders
         public string OwnerId { get; set; }
 
         /// <summary>
+        /// Gets or sets the sales employee identifier 
+        /// </summary>
+        public string SeId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether a customer chose "pick up in store" shipping option
         /// </summary>
         public bool PickUpInStore { get; set; }

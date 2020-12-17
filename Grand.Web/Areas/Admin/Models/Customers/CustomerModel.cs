@@ -22,6 +22,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             AvailableStates = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
             AvailableStores = new List<SelectListItem>();
+            AvailableSalesEmployees = new List<SelectListItem>();
             CustomerAttributes = new List<CustomerAttributeModel>();
             AvailableNewsletterSubscriptionStores = new List<StoreModel>();
             RewardPointsAvailableStores = new List<SelectListItem>();
@@ -48,7 +49,12 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Vendor")]
         public string VendorId { get; set; }
+
         public IList<SelectListItem> AvailableVendors { get; set; }
+
+        [GrandResourceDisplayName("Admin.Customers.Customers.Fields.SeId")]
+        public string SeId { get; set; }
+        public IList<SelectListItem> AvailableSalesEmployees { get; set; }
 
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.StaffStore")]
         public string StaffStoreId { get; set; }

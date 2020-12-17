@@ -128,4 +128,16 @@
   <LocaleResource Name="Admin.Customers.SalesEmployee.Fields.Name.Required">
     <Value>Sales employee name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.SeId">
+    <Value>Sales employee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.SeId.hint">
+    <Value>Choose a sales employee associated to this customer account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.SalesEmployee">
+    <Value>Sales employee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.SalesEmployee.None">
+    <Value>Not set</Value>
+  </LocaleResource>
 </Language>

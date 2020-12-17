@@ -68,7 +68,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IDownloadService _downloadService;
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
-        private readonly IShippingService _shippingService;
+        private readonly ISalesEmployeeService _salesEmployeeService;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
@@ -110,9 +110,9 @@ namespace Grand.Web.Areas.Admin.Services
             IProductAttributeParser productAttributeParser,
             IGiftCardService giftCardService,
             IDownloadService downloadService,
-            IShippingService shippingService,
             IStoreService storeService,
             IVendorService vendorService,
+            ISalesEmployeeService salesEmployeeService,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IAddressAttributeFormatter addressAttributeFormatter,
@@ -151,9 +151,9 @@ namespace Grand.Web.Areas.Admin.Services
             _productAttributeParser = productAttributeParser;
             _giftCardService = giftCardService;
             _downloadService = downloadService;
-            _shippingService = shippingService;
             _storeService = storeService;
             _vendorService = vendorService;
+            _salesEmployeeService = salesEmployeeService;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
             _addressAttributeFormatter = addressAttributeFormatter;
@@ -424,11 +424,24 @@ namespace Grand.Web.Areas.Admin.Services
             model.AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType;
             model.TaxDisplayType = _taxSettings.TaxDisplayType;
 
-            var affiliate = await _affiliateService.GetAffiliateById(order.AffiliateId);
-            if (affiliate != null)
+            if (!string.IsNullOrEmpty(order.AffiliateId))
             {
-                model.AffiliateId = affiliate.Id;
-                model.AffiliateName = affiliate.GetFullName();
+                var affiliate = await _affiliateService.GetAffiliateById(order.AffiliateId);
+                if (affiliate != null)
+                {
+                    model.AffiliateId = affiliate.Id;
+                    model.AffiliateName = affiliate.GetFullName();
+                }
+            }
+
+            if (!string.IsNullOrEmpty(order.SeId))
+            {
+                var salesEmployee = await _salesEmployeeService.GetSalesEmployeeById(order.SeId);
+                if (salesEmployee != null)
+                {
+                    model.SalesEmployeeId = salesEmployee.Id;
+                    model.SalesEmployeeName = salesEmployee.Name;
+                }
             }
 
             //a vendor should have access only to his products

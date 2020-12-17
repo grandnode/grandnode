@@ -12428,6 +12428,15 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.Phone.Required">
     <Value>Phone is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.SeId">
+    <Value>Sales employee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.SeId.hint">
+    <Value>Choose a sales employee associated to this customer account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.SalesEmployee.None">
+    <Value>Not set</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore">
     <Value>Manager of store</Value>
   </LocaleResource>
@@ -13947,6 +13956,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.RefundOffline">
     <Value>Refund (Offline)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.SalesEmployee">
+    <Value>Sales employee</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.SaveCC">
     <Value>Save credit card</Value>

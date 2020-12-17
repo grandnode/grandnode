@@ -594,6 +594,7 @@ namespace Grand.Services.Customers
                 .Set(x => x.Addresses, customer.Addresses)
                 .Set(x => x.FreeShipping, customer.FreeShipping)
                 .Set(x => x.VendorId, customer.VendorId)
+                .Set(x => x.SeId, customer.SeId)
                 .Set(x => x.OwnerId, customer.OwnerId)
                 .Set(x => x.StaffStoreId, customer.StaffStoreId);
 
