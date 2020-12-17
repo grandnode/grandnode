@@ -7,7 +7,6 @@ using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Models;
 using Grand.Framework.Security.Authorization;
-using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -40,7 +39,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWarehouseService _warehouseService;
         private readonly ShippingSettings _shippingSettings;
         private readonly ISettingService _settingService;
-        private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
@@ -62,7 +60,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWarehouseService warehouseService,
             ShippingSettings shippingSettings,
             ISettingService settingService,
-            IAddressService addressService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
             ILocalizationService localizationService,
@@ -79,7 +76,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             _warehouseService = warehouseService;
             _shippingSettings = shippingSettings;
             _settingService = settingService;
-            _addressService = addressService;
             _countryService = countryService;
             _stateProvinceService = stateProvinceService;
             _localizationService = localizationService;
