@@ -107,4 +107,25 @@
   <LocaleResource Name="Search.Products">
     <Value>Products</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.SalesEmployees">
+    <Value>Sales employees</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Salesemployee.Fields.Active">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.SalesEmployee.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.SalesEmployee.Fields.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.SalesEmployee.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.SalesEmployee.Fields.Phone">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.SalesEmployee.Fields.Name.Required">
+    <Value>Sales employee name is required</Value>
+  </LocaleResource>
 </Language>

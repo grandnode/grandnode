@@ -222,6 +222,7 @@ namespace Grand.Services.Infrastructure
             builder.RegisterType<CustomerReminderService>().As<ICustomerReminderService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerProductService>().As<ICustomerProductService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerCoordinatesService>().As<ICustomerCoordinatesService>().InstancePerLifetimeScope();
+            builder.RegisterType<SalesEmployeeService>().As<ISalesEmployeeService>().InstancePerLifetimeScope();
             builder.RegisterType<UserApiService>().As<IUserApiService>().InstancePerLifetimeScope();
 
         }

@@ -61,5 +61,27 @@
         public static string ACTIVITYTYPE_PATTERN_KEY => "Grand.activitytype.";
 
         #endregion
+
+        #region Sales person
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : salesemployee ID
+        /// </remarks>
+        public static string SALESEMPLOYEE_BY_ID_KEY => "Grand.salesemployee.id-{0}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        public static string SALESEMPLOYEE_ALL => "Grand.salesemployee.all";
+
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        public static string SALESEMPLOYEE_PATTERN_KEY => "Grand.salesemployee.";
+
+        #endregion
     }
 }

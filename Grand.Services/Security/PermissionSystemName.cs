@@ -18,6 +18,7 @@
         public const string Documents = "ManageDocuments";
         public const string Reports = "ManageReports";
         public const string CustomerRoles = "ManageCustomerRoles";
+        public const string SalesEmployees = "ManageSalesEmployees";
         public const string Actions = "ManageActions";
         public const string Reminders = "ManageReminders";
         public const string Vendors = "ManageVendors";

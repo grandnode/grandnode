@@ -1,0 +1,170 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.SalesEmployees").Text;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="x_panel light form-fit">
+            <div class="x_title">
+                <div class="caption level-caption">
+                    <i class="fa fa-users"></i>
+                    @T("Admin.Customers.SalesEmployees")
+                </div>
+            </div>
+            <div class="x_content form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="x_content">
+                            <div id="employees-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $("#employees-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "SalesEmployee"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    create: {
+                        url: "@Html.Raw(Url.Action("Add", "SalesEmployee"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    update: {
+                        url: "@Html.Raw(Url.Action("Update", "SalesEmployee"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("Delete", "SalesEmployee"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    parameterMap: function (data, operation) {
+                        return data;
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Name: { editable: true, type: "string", required: true },
+                            Email: { editable: true, type: "string" },
+                            Phone: { editable: true, type: "string" },
+                            Active: { editable: true, type: "boolean" },
+                            DisplayOrder: { editable: true, type: "number" },
+                            Id: { editable: false, type: "string" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "create" || e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+            editable: {
+                confirmation: true,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [
+            {
+                field: "Name",
+                title: "@T("Admin.Customers.SalesEmployee.Fields.Name")",
+                width: 200
+            }, {
+                field: "Email",
+                title: "@T("Admin.Customers.SalesEmployee.Fields.Email")",
+                width: 200
+            }, {
+                field: "Phone",
+                title: "@T("Admin.Customers.SalesEmployee.Fields.Phone")",
+                width: 100
+            }, {
+                field: "Active",
+                title: "@T("Admin.Customers.SalesEmployee.Fields.Active")",
+                width: 50,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(Active) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "DisplayOrder",
+                title: "@T("Admin.Customers.SalesEmployee.Fields.DisplayOrder")",
+                //integer format
+                format: "{0:0}",
+                width: 50
+            }, {
+                command: [
+                {
+                    name: "edit",
+                    text: {
+                        edit: "@T("Admin.Common.Edit")",
+                        update: "@T("Admin.Common.Update")",
+                        cancel: "@T("Admin.Common.Cancel")"
+                    }
+                }, {
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                        }
+                    ],
+                    width: 200
+                }
+            ]
+        });
+    });
+</script>
+<script>
+    function markAsPrimaryWeight(id) {
+        if (confirm('@T("Admin.Common.AreYouSure")')) {
+            var postData = {
+                id: id
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("MarkAsPrimaryWeight", "Measure"))",
+                data: postData,
+                success: function(data) {
+                    var grid = $("#measureweight-grid").data('kendoGrid');
+                    grid.dataSource.read();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert('Failed to update weight');
+                }
+            });
+        }
+    };
+</script>
