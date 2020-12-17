@@ -1025,13 +1025,17 @@ footer .list-group-item span:last-child {
         max-width: 25%;
     }
 }
+@media (max-width: 1199px) {
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 100%;
+    }
+}
 @media (max-width: 1024px) {
     .product-box::before {
         display: none;
     }
-    .product-box:hover .quick-view-button {
-        transform: translateY(100%);
-        -webkit-transform: translateY(100%);
+    .product-box .quick-view-button {
+        display: none;
     }
     .product-box:hover .card-footer {
         opacity: 0;

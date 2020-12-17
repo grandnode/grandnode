@@ -60,23 +60,15 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_manufacturer", additionalData = Model.Id })
 }
 <b-row id="TwoColumns" class="custom-container">
-    <template v-if="isMobile()">
+    <template v-if="MobileDevice">
         <div>
             <b-col cols="12">
-                <b-button variant="outline-info" v-b-toggle.sidebar-mobile><b-icon icon="layout-sidebar-inset"></b-icon> @T("catalog.selectors.fiters")</b-button>
+                <b-button id="sidebar-mobile-button" variant="outline-info" v-b-toggle.sidebar-mobile><b-icon icon="layout-sidebar-inset"></b-icon> @T("catalog.selectors.fiters")</b-button>
             </b-col>
             <b-sidebar id="sidebar-mobile"
                        backdrop
                        left
                        shadow>
-                <script asp-location="Footer">
-                    var leftSide = document.querySelector('.generalLeftSide');
-                    if (document.getElementById('sidebar-mobile')) {
-                        document.querySelector("#sidebar-mobile .b-sidebar-body").appendChild(leftSide);
-                    } else {
-                        document.getElementById("TwoColumns").appendChild(leftSide);
-                    }
-                </script>
             </b-sidebar>
         </div>
     </template>
@@ -109,3 +101,17 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })
     </b-col>
 </b-row>
+<script asp-location="Footer">
+    var leftSide = document.querySelector('.generalLeftSide');
+    function LeftSideBar() {
+        if (document.getElementById('sidebar-mobile-button')) {
+            document.querySelector("#sidebar-mobile .b-sidebar-body").appendChild(leftSide);
+        } else {
+            document.getElementById("TwoColumns").appendChild(leftSide);
+        }
+    }
+    LeftSideBar();
+    window.addEventListener("orientationchange", function () {
+        LeftSideBar();
+    });
+</script>

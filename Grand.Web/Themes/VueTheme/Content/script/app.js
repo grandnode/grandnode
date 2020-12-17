@@ -12,7 +12,8 @@
             searchcategories: null,
             searchmanufacturers: null,
             searchblog: null,
-            searchproducts: null
+            searchproducts: null,
+            MobileDevice: false
         }
     },
     props: {
@@ -24,9 +25,9 @@
         if (localStorage.fluid == "true") this.fluid = "fluid";
         if (localStorage.fluid == "fluid") this.fluid = "fluid";
         if (localStorage.fluid == "") this.fluid = "false";
-        window.addEventListener('scroll', this.handleScroll);
         this.isMobile();
         this.updateFly();
+        window.addEventListener("orientationchange", this.isMobile);
     },
     watch: {
         fluid(newName) {
@@ -125,7 +126,11 @@
             });
         },
         isMobile() {
-            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+            if (991 >= window.screen.width) {
+                this.MobileDevice = true;
+            } else {
+                this.MobileDevice = false;
+            }
         },
     }
 });
