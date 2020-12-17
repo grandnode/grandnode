@@ -16,7 +16,7 @@
         /// <summary>
         /// Gets the patch version
         /// </summary>
-        public const string PatchVersion = "1-develop";
+        public const string PatchVersion = "1";
 
         /// <summary>
         /// Gets the full version
