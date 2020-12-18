@@ -71,6 +71,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Utilities
+
+        protected virtual bool CheckSalesManager(Order order)
+        {
+            return (_workContext.CurrentCustomer.IsSalesManager()
+                && (_workContext.CurrentCustomer.SeId != order.SeId));
+        }
+
+        #endregion
+
         #region Order list
 
         public IActionResult Index() => RedirectToAction("List");
@@ -162,7 +172,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 order = orders.FirstOrDefault();
             }
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 return RedirectToAction("List");
 
             if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
@@ -294,7 +304,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CancelOrder(string id)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -331,7 +341,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CaptureOrder(string id)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -371,7 +381,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> SaveOrderTags(OrderModel orderModel)
         {
             var order = await _orderService.GetOrderById(orderModel.Id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -408,7 +418,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> MarkOrderAsPaid(string id)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -445,7 +455,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RefundOrder(string id)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -484,7 +494,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RefundOrderOffline(string id)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -521,7 +531,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> VoidOrder(string id)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -560,7 +570,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> VoidOrderOffline(string id)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -595,7 +605,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> PartiallyRefundOrderPopup(string id, bool online)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -620,7 +630,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> PartiallyRefundOrderPopup(string id, bool online, OrderModel model)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -678,7 +688,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ChangeOrderStatus(string id, OrderModel model)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -727,7 +737,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(string id)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null || order.Deleted)
+            if (order == null || order.Deleted || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -751,7 +761,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -783,8 +793,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 for (var i = 0; i < orders.Count; i++)
                 {
                     var order = orders[i];
-                    await _orderService.DeleteOrder(order);
-                    await customerActivityService.InsertActivity("DeleteOrder", order.Id, _localizationService.GetResource("ActivityLog.DeleteOrder"), order.Id);
+                    if (CheckSalesManager(order))
+                    {
+                        await _orderService.DeleteOrder(order);
+                        await customerActivityService.InsertActivity("DeleteOrder", order.Id, _localizationService.GetResource("ActivityLog.DeleteOrder"), order.Id);
+                    }
                 }
             }
 
@@ -802,7 +815,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             var order = await _orderService.GetOrderById(orderId);
-            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            if ((_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId) || CheckSalesManager(order))
             {
                 return RedirectToAction("List");
             }
@@ -893,7 +906,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> EditCreditCardInfo(string id, OrderModel model)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -929,7 +942,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> EditOrderTotals(string id, OrderModel model)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -975,7 +988,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> EditShippingMethod(string id, OrderModel model)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1012,7 +1025,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> EditGenericAttributes(string id, OrderModel model)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1045,7 +1058,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             [FromServices] IProductService productService, [FromServices] IInventoryManageService inventoryManageService)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1137,7 +1150,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             [FromServices] IShipmentService shipmentService)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1223,7 +1236,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ResetDownloadCount(string id, IFormCollection form)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1266,7 +1279,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ActivateDownloadItem(string id, IFormCollection form)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1305,7 +1318,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> UploadLicenseFilePopup(string id, string orderItemId, [FromServices] IProductService productService)
         {
             var order = await _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1342,7 +1355,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> UploadLicenseFilePopup(OrderModel.UploadLicenseModel model)
         {
             var order = await _orderService.GetOrderById(model.OrderId);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1379,7 +1392,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteLicenseFilePopup(OrderModel.UploadLicenseModel model)
         {
             var order = await _orderService.GetOrderById(model.OrderId);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1415,7 +1428,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1473,7 +1486,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 return RedirectToAction("List");
 
             if (order == null)
@@ -1497,7 +1510,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 return RedirectToAction("List");
 
             if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
@@ -1526,7 +1539,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddressEdit(string addressId, string orderId)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1561,7 +1574,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             [FromServices] IAddressAttributeParser addressAttributeParser)
         {
             var order = await _orderService.GetOrderById(model.OrderId);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 //No order found with the specified id
                 return RedirectToAction("List");
 
@@ -1614,7 +1627,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> OrderNotesSelect(string orderId, DataSourceRequest command)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 throw new ArgumentException("No order found with the specified id");
 
             //a vendor does not have access to this functionality
@@ -1638,7 +1651,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> OrderNoteAdd(string orderId, string downloadId, bool displayToCustomer, string message)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 return Json(new { Result = false });
 
             //a vendor does not have access to this functionality
@@ -1659,7 +1672,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> OrderNoteDelete(string id, string orderId)
         {
             var order = await _orderService.GetOrderById(orderId);
-            if (order == null)
+            if (order == null || CheckSalesManager(order))
                 throw new ArgumentException("No order found with the specified id");
 
             //a vendor does not have access to this functionality

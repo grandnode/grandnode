@@ -294,6 +294,8 @@ namespace Grand.Web.Areas.Admin.Services
             if (product != null && _workContext.HasAccessToProduct(product))
                 filterByProductId = model.ProductId;
 
+            var salesEmployeeId = _workContext.CurrentCustomer.IsSalesManager() ? _workContext.CurrentCustomer.SeId : "";
+
             //load orders
             var orders = await _orderService.SearchOrders(
                 storeId: model.StoreId,
@@ -301,6 +303,7 @@ namespace Grand.Web.Areas.Admin.Services
                 customerId: model.CustomerId,
                 productId: filterByProductId,
                 warehouseId: model.WarehouseId,
+                salesemployeeId: salesEmployeeId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
@@ -1365,10 +1368,13 @@ namespace Grand.Web.Areas.Admin.Services
             if (product != null && _workContext.HasAccessToProduct(product))
                 filterByProductId = model.ProductId;
 
+            var salesEmployeeId = _workContext.CurrentCustomer.IsSalesManager() ? _workContext.CurrentCustomer.SeId : "";
+
             //load orders
             var orders = await _orderService.SearchOrders(storeId: model.StoreId,
                 vendorId: model.VendorId,
                 productId: filterByProductId,
+                salesemployeeId: salesEmployeeId,
                 warehouseId: model.WarehouseId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,

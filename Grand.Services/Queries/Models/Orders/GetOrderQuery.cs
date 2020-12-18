@@ -18,6 +18,7 @@ namespace Grand.Services.Queries.Models.Orders
         public string WarehouseId { get; set; } = "";
         public string BillingCountryId { get; set; } = "";
         public string OwnerId { get; set; } = "";
+        public string SalesEmployeeId { get; set; } = "";
         public string PaymentMethodSystemName { get; set; } = null;
         public DateTime? CreatedFromUtc { get; set; } = null;
         public DateTime? CreatedToUtc { get; set; } = null;

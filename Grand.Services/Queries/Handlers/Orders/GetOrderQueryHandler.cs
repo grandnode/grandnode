@@ -52,6 +52,12 @@ namespace Grand.Services.Queries.Handlers.Orders
             if (!string.IsNullOrEmpty(request.CustomerId))
                 query = query.Where(o => o.CustomerId == request.CustomerId);
 
+            if (!string.IsNullOrEmpty(request.CustomerId))
+                query = query.Where(o => o.CustomerId == request.CustomerId);
+
+            if (!string.IsNullOrEmpty(request.SalesEmployeeId))
+                query = query.Where(o => o.SeId == request.SalesEmployeeId);
+
             if (!string.IsNullOrEmpty(request.ProductId))
             {
                 query = query
