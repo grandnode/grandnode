@@ -1,0 +1,30 @@
+﻿@model IList<ManufacturerModel>
+@inject DisplayOrderHomePage order
+<b-col cols="12" class="product-grid px-0 order-@order.ManufacturerFeaturedProducts">
+    <b-form-row>
+        @foreach (var item in Model)
+        {
+            <b-col xl="@order.MF_m_Xl" lg="@order.MF_m_Lg" md="@order.MF_m_Md" sm="@order.MF_m_Sm" cols="@order.MF_m_Col" class="categoryGrid mb-3">
+                <b-link href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                    <b-card no-body
+                            tag="article">
+                        <b-card-img-lazy src="@item.PictureModel.ImageUrl" alt="@item.PictureModel.AlternateText"></b-card-img-lazy>
+                        <b-card-body>
+                            <h4>@item.Name</h4>
+                        </b-card-body>
+                    </b-card>
+                </b-link>
+            </b-col>
+            <div class="col-xl-@order.MF_p_Xl col-lg-@order.MF_p_Lg col-md-@order.MF_p_Md col-sm-@order.MF_p_Sm col-@order.MF_p_Col">
+                <div class="form-row flex-grid">
+                    @foreach (var product in item.FeaturedProducts)
+                    {
+                        <div class="col-xl-@order.MF_pp_Xl col-lg-@order.MF_pp_Lg col-md-@order.MF_pp_Md col-sm-@order.MF_pp_Sm col-@order.MF_pp_Col featured-product-container mb-2">
+                            <partial name="_ProductBox" model="product" />
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </b-form-row>
+</b-col>
