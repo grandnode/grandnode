@@ -182,6 +182,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             return attributesXml;
         }
 
+        protected virtual bool CheckSalesManager(Customer customer)
+        {
+            return (_workContext.CurrentCustomer.IsSalesManager()
+                && (_workContext.CurrentCustomer.SeId != customer.SeId));
+        }
+
         #region Customers
 
         public IActionResult Index() => RedirectToAction("List");
@@ -272,12 +278,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                             ErrorNotification(changePassError);
                     }
                 }
-
                 if (customer.IsAdmin() && !string.IsNullOrEmpty(model.VendorId))
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                 }
-
                 if (newCustomerRoles.Any(x => x.SystemName == SystemCustomerRoleNames.Vendors) && string.IsNullOrEmpty(model.VendorId))
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
@@ -285,6 +289,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (newCustomerRoles.Any(x => x.SystemName == SystemCustomerRoleNames.Staff) && string.IsNullOrEmpty(model.StaffStoreId))
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInStaffRoleWithoutStaffAssociated"));
+                }
+                if (newCustomerRoles.Any(x => x.SystemName == SystemCustomerRoleNames.SalesManager) && string.IsNullOrEmpty(model.SeId))
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInSalesManagerRoleWithoutSalesEmployeeAssociated"));
                 }
                 if (customer.IsStaff() && customer.IsVendor())
                 {
@@ -304,7 +312,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(string id)
         {
             var customer = await _customerService.GetCustomerById(id);
-            if (customer == null || customer.Deleted)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -319,7 +327,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(CustomerModel model, bool continueEditing, IFormCollection form)
         {
             var customer = await _customerService.GetCustomerById(model.Id);
-            if (customer == null || customer.Deleted)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -330,7 +338,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
             var customerRolesError = _customerViewModelService.ValidateCustomerRoles(newCustomerRoles);
-            if (!String.IsNullOrEmpty(customerRolesError))
+            if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
@@ -354,13 +362,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                     {
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                     }
-                    if (customer.IsVendor() && string.IsNullOrEmpty(model.VendorId))
+                    if (newCustomerRoles.Any(x => x.SystemName == SystemCustomerRoleNames.Vendors) && string.IsNullOrEmpty(model.VendorId))
                     {
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
-                    if (customer.IsStaff() && string.IsNullOrEmpty(model.StaffStoreId))
+                    if (newCustomerRoles.Any(x => x.SystemName == SystemCustomerRoleNames.Staff) && string.IsNullOrEmpty(model.StaffStoreId))
                     {
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInStaffRoleWithoutStaffAssociated"));
+                    }
+                    if (newCustomerRoles.Any(x => x.SystemName == SystemCustomerRoleNames.SalesManager) && string.IsNullOrEmpty(model.SeId))
+                    {
+                        ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInSalesManagerRoleWithoutSalesEmployeeAssociated"));
                     }
                     if (customer.IsStaff() && customer.IsVendor())
                     {
@@ -392,7 +404,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ChangePassword(CustomerModel model)
         {
             var customer = await _customerService.GetCustomerById(model.Id);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -417,7 +429,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> MarkVatNumberAsValid(CustomerModel model)
         {
             var customer = await _customerService.GetCustomerById(model.Id);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -434,7 +446,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> MarkVatNumberAsInvalid(CustomerModel model)
         {
             var customer = await _customerService.GetCustomerById(model.Id);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -451,7 +463,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RemoveAffiliate(CustomerModel model)
         {
             var customer = await _customerService.GetCustomerById(model.Id);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -465,9 +477,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var customer = await _customerService.GetCustomerById(id);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
+
             if (customer.Id == _workContext.CurrentCustomer.Id)
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.NoSelfDelete"));
@@ -509,7 +522,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Impersonate(string id)
         {
             var customer = await _customerService.GetCustomerById(id);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -533,7 +546,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> SendWelcomeMessage(CustomerModel model)
         {
             var customer = await _customerService.GetCustomerById(model.Id);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -550,7 +563,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ReSendActivationMessage(CustomerModel model)
         {
             var customer = await _customerService.GetCustomerById(model.Id);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -567,7 +580,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> SendEmail(CustomerModel model)
         {
             var customer = await _customerService.GetCustomerById(model.Id);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -598,7 +611,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> SendPm(CustomerModel model, [FromServices] ForumSettings forumSettings)
         {
             var customer = await _customerService.GetCustomerById(model.Id);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -634,7 +647,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RewardPointsHistorySelect(string customerId)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 throw new ArgumentException("No customer found with the specified id");
 
             var model = (await _customerViewModelService.PrepareRewardPointsHistoryModel(customerId)).ToList();
@@ -650,7 +663,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RewardPointsHistoryAdd(string customerId, string storeId, int addRewardPointsValue, string addRewardPointsMessage)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 return Json(new { Result = false });
 
             await _customerViewModelService.InsertRewardPointsHistory(customerId, storeId, addRewardPointsValue, addRewardPointsMessage);
@@ -667,7 +680,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddressesSelect(string customerId, DataSourceRequest command)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 throw new ArgumentException("No customer found with the specified id", "customerId");
 
             var addresses = (await _customerViewModelService.PrepareAddressModel(customer)).ToList();
@@ -684,7 +697,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddressDelete(string id, string customerId)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 throw new ArgumentException("No customer found with the specified id", "customerId");
 
             var address = customer.Addresses.FirstOrDefault(a => a.Id == id);
@@ -703,7 +716,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddressCreate(string customerId)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -718,7 +731,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddressCreate(CustomerAddressModel model, IFormCollection form)
         {
             var customer = await _customerService.GetCustomerById(model.CustomerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -746,7 +759,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddressEdit(string addressId, string customerId)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -766,7 +779,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddressEdit(CustomerAddressModel model, IFormCollection form)
         {
             var customer = await _customerService.GetCustomerById(model.CustomerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
@@ -921,7 +934,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateCart(string id, string customerId, decimal? unitPriceValue)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 throw new ArgumentException("No customer found with the specified id", "customerId");
 
             var warnings = await _customerViewModelService.UpdateCart(customer, id, unitPriceValue);
@@ -935,7 +948,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteCart(string id, string customerId)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 throw new ArgumentException("No customer found with the specified id", "customerId");
 
             await _customerViewModelService.DeleteCart(customer, id);
@@ -1092,7 +1105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CustomerNotesSelect(string customerId, DataSourceRequest command)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 throw new ArgumentException("No customer found with the specified id");
 
             //a vendor does not have access to this functionality
@@ -1112,7 +1125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CustomerNoteAdd(string customerId, string downloadId, bool displayToCustomer, string title, string message)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 return Json(new { Result = false });
 
             //a vendor does not have access to this functionality
@@ -1129,7 +1142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CustomerNoteDelete(string id, string customerId)
         {
             var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null)
+            if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 throw new ArgumentException("No customer found with the specified id");
 
             //a vendor does not have access to this functionality
@@ -1151,8 +1164,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportexcel-all")]
         public async Task<IActionResult> ExportExcelAll(CustomerListModel model)
         {
+            var salesEmployeeId =
+                _workContext.CurrentCustomer.IsSalesManager() ? _workContext.CurrentCustomer.SeId : "";
+
             var customers = await _customerService.GetAllCustomers(
                 customerRoleIds: model.SearchCustomerRoleIds.ToArray(),
+                salesEmployeeId: salesEmployeeId,
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
@@ -1197,8 +1214,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportxml-all")]
         public async Task<IActionResult> ExportXmlAll(CustomerListModel model)
         {
+            var salesEmployeeId =
+                _workContext.CurrentCustomer.IsSalesManager() ? _workContext.CurrentCustomer.SeId : "";
+
             var customers = await _customerService.GetAllCustomers(
                 customerRoleIds: model.SearchCustomerRoleIds.ToArray(),
+                salesEmployeeId: salesEmployeeId,
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,

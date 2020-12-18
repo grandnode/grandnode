@@ -13,5 +13,6 @@ namespace Grand.Domain.Customers
         public static string Vendors { get { return "Vendors"; } }
 
         public static string Staff { get { return "Staff"; } }
+        public static string SalesManager { get { return "SalesManager"; } }
     }
 }

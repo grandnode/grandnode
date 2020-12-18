@@ -323,6 +323,17 @@ namespace Grand.Services.Security
                         ManageReturnRequests,
                         ManageReports
                     }
+                },
+
+                new DefaultPermissionRecord
+                {
+                    CustomerRoleSystemName = SystemCustomerRoleNames.SalesManager,
+                    PermissionRecords = new[]
+                    {
+                        AccessAdminPanel,
+                        ManageOrders,
+                        ManageCustomers
+                    }
                 }
             };
         }

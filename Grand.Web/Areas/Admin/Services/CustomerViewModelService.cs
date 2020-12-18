@@ -431,6 +431,9 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<(IEnumerable<CustomerModel> customerModelList, int totalCount)> PrepareCustomerList(CustomerListModel model,
             string[] searchCustomerRoleIds, string[] searchCustomerTagIds, int pageIndex, int pageSize)
         {
+            var salesEmployeeId =
+                _workContext.CurrentCustomer.IsSalesManager() ? _workContext.CurrentCustomer.SeId : "";
+
             var customers = await _customerService.GetAllCustomers(
                 customerRoleIds: searchCustomerRoleIds,
                 customerTagIds: searchCustomerTagIds,
@@ -442,6 +445,7 @@ namespace Grand.Web.Areas.Admin.Services
                 phone: model.SearchPhone,
                 zipPostalCode: model.SearchZipPostalCode,
                 loadOnlyWithShoppingCart: false,
+                salesEmployeeId: salesEmployeeId,
                 pageIndex: pageIndex - 1,
                 pageSize: pageSize);
 
@@ -531,6 +535,10 @@ namespace Grand.Web.Areas.Admin.Services
                     model.Phone = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Phone);
                     model.Fax = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Fax);
                 }
+            }
+            else
+            {
+                model.SeId = _workContext.CurrentCustomer.SeId;
             }
 
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
@@ -677,12 +685,21 @@ namespace Grand.Web.Areas.Admin.Services
 
             //ensure a customer is not added to both 'Guests' and 'Registered' customer roles
             //ensure that a customer is in at least one required role ('Guests' and 'Registered')
-            bool isInGuestsRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests) != null;
-            bool isInRegisteredRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Registered) != null;
+            var isInGuestsRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests) != null;
+            var isInRegisteredRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Registered) != null;
+            var isAdminRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Administrators) != null;
+
             if (isInGuestsRole && isInRegisteredRole)
                 return "The customer cannot be in both 'Guests' and 'Registered' customer roles";
+
             if (!isInGuestsRole && !isInRegisteredRole)
                 return "Add the customer to 'Guests' or 'Registered' customer role";
+
+            if(_workContext.CurrentCustomer.IsSalesManager() && ((isInGuestsRole && !isInRegisteredRole) || customerRoles.Count != 1))
+                return "Sales manager can assign role 'Registered' only";
+
+            if (!_workContext.CurrentCustomer.IsAdmin() && isAdminRole)
+                return "Only administrators can assign role 'Administrators'";
 
             //no errors
             return "";
@@ -791,11 +808,6 @@ namespace Grand.Web.Areas.Admin.Services
             //customer roles
             foreach (var customerRole in newCustomerRoles)
             {
-                //ensure that the current customer cannot add to "Administrators" system role if he's not an admin himself
-                if (customerRole.SystemName == SystemCustomerRoleNames.Administrators &&
-                    !_workContext.CurrentCustomer.IsAdmin())
-                    continue;
-
                 customer.CustomerRoles.Add(customerRole);
                 customerRole.CustomerId = customer.Id;
                 await _customerService.InsertCustomerRoleInCustomer(customerRole);
@@ -821,6 +833,7 @@ namespace Grand.Web.Areas.Admin.Services
                 vendorRole.CustomerId = customer.Id;
                 await _customerService.DeleteCustomerRoleInCustomer(vendorRole);
             }
+
             //ensure that a customer in the Staff role has a staff account associated.
             //otherwise, he will have access to ALL products
             if (customer.IsStaff() && string.IsNullOrEmpty(customer.StaffStoreId))
@@ -832,6 +845,19 @@ namespace Grand.Web.Areas.Admin.Services
                 staffRole.CustomerId = customer.Id;
                 await _customerService.DeleteCustomerRoleInCustomer(staffRole);
             }
+
+            //ensure that a customer in the Sales manager role has a staff employee associated.
+            //otherwise, he will have access to ALL customers
+            if (customer.IsSalesManager() && string.IsNullOrEmpty(customer.SeId))
+            {
+                var salesRole = customer
+                    .CustomerRoles
+                    .FirstOrDefault(x => x.SystemName == SystemCustomerRoleNames.SalesManager);
+                customer.CustomerRoles.Remove(salesRole);
+                salesRole.CustomerId = customer.Id;
+                await _customerService.DeleteCustomerRoleInCustomer(salesRole);
+            }
+
             //tags
             await SaveCustomerTags(customer, ParseCustomerTags(model.CustomerTags));
 
@@ -981,21 +1007,12 @@ namespace Grand.Web.Areas.Admin.Services
                 }
             }
             var allCustomerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
-            var newCustomerRoles = new List<CustomerRole>();
-            foreach (var customerRole in allCustomerRoles)
-                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
-                    newCustomerRoles.Add(customerRole);
+
             //customer roles
             foreach (var customerRole in allCustomerRoles)
             {
-                //ensure that the current customer cannot add/remove to/from "Administrators" system role
-                //if he's not an admin himself
-                if (customerRole.SystemName == SystemCustomerRoleNames.Administrators &&
-                    !_workContext.CurrentCustomer.IsAdmin())
-                    continue;
-
                 if (model.SelectedCustomerRoleIds != null &&
-                    model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
                     if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
@@ -1015,7 +1032,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //ensure that a customer with a vendor associated is not in "Administrators" role
             //otherwise, he won't have access to the other functionality in admin area
-            if (customer.IsAdmin() && !String.IsNullOrEmpty(customer.VendorId))
+            if (customer.IsAdmin() && !string.IsNullOrEmpty(customer.VendorId))
             {
                 customer.VendorId = "";
                 await _customerService.UpdateCustomerinAdminPanel(customer);
@@ -1023,7 +1040,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //ensure that a customer with a staff associated is not in "Administrators" role
             //otherwise, he won't have access to the other functionality in admin area
-            if (customer.IsAdmin() && !String.IsNullOrEmpty(customer.StaffStoreId))
+            if (customer.IsAdmin() && !string.IsNullOrEmpty(customer.StaffStoreId))
             {
                 customer.StaffStoreId = "";
                 await _customerService.UpdateCustomerinAdminPanel(customer);
@@ -1031,7 +1048,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //ensure that a customer in the Vendors role has a vendor account associated.
             //otherwise, he will have access to ALL products
-            if (customer.IsVendor() && String.IsNullOrEmpty(customer.VendorId))
+            if (customer.IsVendor() && string.IsNullOrEmpty(customer.VendorId))
             {
                 var vendorRole = customer
                     .CustomerRoles
@@ -1039,6 +1056,30 @@ namespace Grand.Web.Areas.Admin.Services
                 customer.CustomerRoles.Remove(vendorRole);
                 vendorRole.CustomerId = customer.Id;
                 await _customerService.DeleteCustomerRoleInCustomer(vendorRole);
+            }
+
+            //ensure that a customer in the Sales manager role has a staff employee associated.
+            //otherwise, he will have access to ALL customers
+            if (customer.IsSalesManager() && string.IsNullOrEmpty(customer.SeId))
+            {
+                var salesRole = customer
+                    .CustomerRoles
+                    .FirstOrDefault(x => x.SystemName == SystemCustomerRoleNames.SalesManager);
+                customer.CustomerRoles.Remove(salesRole);
+                salesRole.CustomerId = customer.Id;
+                await _customerService.DeleteCustomerRoleInCustomer(salesRole);
+            }
+
+            //ensure that a customer in the Staff role has a staff account associated.
+            //otherwise, he will have access to ALL products
+            if (customer.IsStaff() && string.IsNullOrEmpty(customer.StaffStoreId))
+            {
+                var staffRole = customer
+                    .CustomerRoles
+                    .FirstOrDefault(x => x.SystemName == SystemCustomerRoleNames.Staff);
+                customer.CustomerRoles.Remove(staffRole);
+                staffRole.CustomerId = customer.Id;
+                await _customerService.DeleteCustomerRoleInCustomer(staffRole);
             }
 
             //tags

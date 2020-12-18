@@ -1164,6 +1164,17 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Insert new system customer role - sales manager
+
+            var crSalesManager = new CustomerRole {
+                Name = "Sales manager",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.SalesManager,
+            };
+            await _serviceProvider.GetRequiredService<IRepository<CustomerRole>>().InsertAsync(crSalesManager);
+
+            #endregion
         }
 
         private async Task InstallStringResources(string filenames)

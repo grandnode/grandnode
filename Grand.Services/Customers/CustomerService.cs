@@ -82,6 +82,7 @@ namespace Grand.Services.Customers
         /// <param name="vendorId">Vendor identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="ownerId">Owner identifier</param>
+        /// <param name="salesEmployeeId">Sales employee identifier</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="email">Email; null to load all customers</param>
         /// <param name="username">Username; null to load all customers</param>
@@ -99,7 +100,7 @@ namespace Grand.Services.Customers
         /// <returns>Customers</returns>
         public virtual async Task<IPagedList<Customer>> GetAllCustomers(DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, string affiliateId = "", string vendorId = "", string storeId = "", string ownerId = "",
-            string[] customerRoleIds = null, string[] customerTagIds = null, string email = null, string username = null,
+            string salesEmployeeId = "", string[] customerRoleIds = null, string[] customerTagIds = null, string email = null, string username = null,
             string firstName = null, string lastName = null,
             string company = null, string phone = null, string zipPostalCode = null,
             bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
@@ -119,6 +120,8 @@ namespace Grand.Services.Customers
                 query = query.Where(c => c.StoreId == storeId);
             if (!string.IsNullOrEmpty(ownerId))
                 query = query.Where(c => c.OwnerId == ownerId);
+            if (!string.IsNullOrEmpty(salesEmployeeId))
+                query = query.Where(c => c.SeId == salesEmployeeId);
 
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)

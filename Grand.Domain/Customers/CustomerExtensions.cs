@@ -85,6 +85,16 @@ namespace Grand.Domain.Customers
         }
 
         /// <summary>
+        /// Gets a value indicating whether customer is sales manager
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public static bool IsSalesManager(this Customer customer)
+        {
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.SalesManager);
+        }
+
+        /// <summary>
         /// Gets a value indicating whether customer is a forum moderator
         /// </summary>
         /// <param name="customer">Customer</param>
