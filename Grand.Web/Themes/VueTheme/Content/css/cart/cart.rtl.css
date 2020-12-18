@@ -70,7 +70,13 @@
 .opc .shopping-cart .qty-input  {
     padding: 0;
 }
-
+@media (max-width: 1200px) {
+    .opc .order-summary .cart-footer {
+        visibility: visible;
+        opacity: 1;
+        height: auto;
+    }
+}
 @media (max-width: 991px) {
     .shopping-cart {
         border-bottom: 0;
