@@ -18,9 +18,17 @@ namespace Grand.Domain.Payments
         /// </summary>
         Paid = 30,
         /// <summary>
+        /// Pending Partially Refunded
+        /// </summary>
+        PendingPartiallyRefunded = 34,
+        /// <summary>
         /// Partially Refunded
         /// </summary>
         PartiallyRefunded = 35,
+        /// <summary>
+        /// Pending Refunded
+        /// </summary>
+        PendingRefunded = 39,
         /// <summary>
         /// Refunded
         /// </summary>
