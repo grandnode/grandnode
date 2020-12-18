@@ -12209,6 +12209,9 @@
   <LocaleResource Name="Admin.Customers.Customers.BackToList">
     <Value>back to customer list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CannotBeInSalesManagerRoleWithoutSalesEmployeeAssociated">
+    <Value>A customer in the Sales manager role should have a sales employee account associated.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.CannotBeInStaffRoleWithoutStaffAssociated">
     <Value>A customer in the Staff role should have a staff account associated.</Value>
   </LocaleResource>

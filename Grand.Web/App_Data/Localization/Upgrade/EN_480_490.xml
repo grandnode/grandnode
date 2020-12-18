@@ -140,4 +140,7 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.SalesEmployee.None">
     <Value>Not set</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CannotBeInSalesManagerRoleWithoutSalesEmployeeAssociated">
+    <Value>A customer in the Sales manager role should have a sales employee account associated.</Value>
+  </LocaleResource>
 </Language>
