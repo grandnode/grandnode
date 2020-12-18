@@ -664,6 +664,10 @@ var a, l;
                 "FileEarmarkRuled",
                 '<path fill-rule="evenodd" d="M5 10H3V9h10v1H6v2h7v1H6v2H5v-2H3v-1h2v-2z"/><path d="M4 0h5.5v1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h1V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/><path d="M9.5 3V0L14 4.5h-3A1.5 1.5 0 0 1 9.5 3z"/>'
             ),
+            Wl = ma(
+                "AspectRatio",
+                '<path fill-rule="evenodd" d="M0 3.5A1.5 1.5 0 0 1 1.5 2h13A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5v-9zM1.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/><path fill-rule="evenodd" d="M2 4.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1H3v2.5a.5.5 0 0 1-1 0v-3zm12 7a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H13V8.5a.5.5 0 0 1 1 0v3z"/>'
+            ),
             TL = function a(l, e) {
                 return l ? (l.$options || {}).components[e] || a(l.$parent, e) : null;
             },
@@ -760,6 +764,7 @@ var a, l;
                                 BIconArrowClockwise: Oa,
                                 BIconFileEarmarkLock2: $i,
                                 BIconFileEarmarkRuled: mr,
+                                BIconAspectRatio: Wl,
                             },
                         }),
                     },
