@@ -5,6 +5,7 @@
 }
 <form asp-area="@Constants.AreaAdmin" asp-controller="Order" asp-action="AddressEdit"
       asp-route-addressId="@Context.Request.Query["addressId"]"
+      asp-route-billingAddress="@Context.Request.Query["BillingAddress"]"
       asp-route-orderId="@Context.Request.Query["orderId"]">
     
     <div class="row">
