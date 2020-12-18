@@ -337,6 +337,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
+
             var customerRolesError = _customerViewModelService.ValidateCustomerRoles(newCustomerRoles);
             if (!string.IsNullOrEmpty(customerRolesError))
             {
@@ -352,6 +353,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (model.Owner.ToLower() == model.Email.ToLower())
                     ModelState.AddModelError("", "You can't assign own email");
             }
+
+            if(_workContext.CurrentCustomer.IsSalesManager() && customer.Id == _workContext.CurrentCustomer.Id)
+                ModelState.AddModelError("", "You can't edit own data from admin panel");
+
             if (ModelState.IsValid)
             {
                 try
