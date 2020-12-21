@@ -3,6 +3,7 @@ using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
+using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Customers;
@@ -19,15 +20,20 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ISalesEmployeeService _salesEmployeeService;
-
+        private readonly ICustomerService _customerService;
+        private readonly IOrderService _orderService;
         #endregion
 
         #region Constructors
 
         public SalesEmployeeController(
-            ISalesEmployeeService salesEmployeeService)
+            ISalesEmployeeService salesEmployeeService,
+            ICustomerService customerService,
+            IOrderService orderService)
         {
             _salesEmployeeService = salesEmployeeService;
+            _customerService = customerService;
+            _orderService = orderService;
         }
 
         #endregion
@@ -90,6 +96,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             var salesemployee = await _salesEmployeeService.GetSalesEmployeeById(id);
             if (salesemployee == null)
                 throw new ArgumentException("No sales employee found with the specified id");
+
+            var customers = await _customerService.GetAllCustomers(salesEmployeeId: id);
+            if (customers.Any())
+                return Json(new DataSourceResult { Errors = "Sales employee is related with customers" });
+
+            var orders = await _orderService.SearchOrders(salesEmployeeId: id);
+            if (orders.Any())
+                return Json(new DataSourceResult { Errors = "Sales employee is related with orders" });
 
             await _salesEmployeeService.DeleteSalesEmployee(salesemployee);
 

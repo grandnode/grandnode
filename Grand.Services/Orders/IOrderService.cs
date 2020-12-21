@@ -91,7 +91,7 @@ namespace Grand.Services.Orders
         Task<IPagedList<Order>> SearchOrders(string storeId = "",
             string vendorId = "", string customerId = "",
             string productId = "", string affiliateId = "", string warehouseId = "",
-            string billingCountryId = "", string ownerId = "", string salesemployeeId = "", string paymentMethodSystemName = null,
+            string billingCountryId = "", string ownerId = "", string salesEmployeeId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderGuid = null,
