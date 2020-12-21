@@ -36,7 +36,7 @@
 
 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_before_content", additionalData = Model })
 <div class="w-100 mb-3 border-bottom">
-    <b-card no-body tag="article" class="product-box list mb-3" @@mouseover="hover = true" @@mouseleave="hover = false">
+    <b-card no-body tag="article" v-bind:class="{ mobile: isMobile()}" class="product-box list mb-3" @@mouseover="hover = true" @@mouseleave="hover = false">
         <div class="picture-container">
             <b-link href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
                 <b-card-img-lazy alt="@Model.DefaultPictureModel.AlternateText" class="main-product-img" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title"></b-card-img-lazy>

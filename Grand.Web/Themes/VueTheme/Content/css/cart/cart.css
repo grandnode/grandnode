@@ -87,7 +87,6 @@
     }
     .shopping-cart tbody {
         display: inline-flex;
-        justify-content: space-between;
         flex-wrap: wrap;
         width: 100%;
     }
@@ -96,7 +95,7 @@
         flex-direction: column;
         align-items: center;
         width: calc(33.3333% - 5px);
-        margin: 0 0 10px 0;
+        margin: 0 5px 5px 0;
     }
     .shopping-cart.table td {
         width: 100%;
