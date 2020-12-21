@@ -30,6 +30,11 @@ namespace Grand.Domain.Orders
         public string WarehouseId { get; set; }
 
         /// <summary>
+        /// Gets or sets the sales employee identifier 
+        /// </summary>
+        public string SeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the quantity
         /// </summary>
         public int Quantity { get; set; }
@@ -139,5 +144,6 @@ namespace Grand.Domain.Orders
         /// </summary>
         [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal Commission { get; set; }
+
     }
 }
