@@ -1522,7 +1522,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Addresses
 
         [PermissionAuthorizeAction(PermissionActionName.Preview)]
-        public async Task<IActionResult> AddressEdit(string addressId, string orderId)
+        public async Task<IActionResult> AddressEdit(string addressId, string orderId, bool billingAddress)
         {
             var order = await _orderService.GetOrderById(orderId);
             if (order == null)
@@ -1539,10 +1539,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             var address = new Address();
-            if (order.BillingAddress != null)
+            if (billingAddress && order.BillingAddress != null)
                 if (order.BillingAddress.Id == addressId)
                     address = order.BillingAddress;
-            if (order.ShippingAddress != null)
+            if (!billingAddress && order.ShippingAddress != null)
                 if (order.ShippingAddress.Id == addressId)
                     address = order.ShippingAddress;
 
@@ -1574,10 +1574,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             var address = new Address();
-            if (order.BillingAddress != null)
+            if (model.BillingAddress && order.BillingAddress != null)
                 if (order.BillingAddress.Id == model.Address.Id)
                     address = order.BillingAddress;
-            if (order.ShippingAddress != null)
+            if (!model.BillingAddress && order.ShippingAddress != null)
                 if (order.ShippingAddress.Id == model.Address.Id)
                     address = order.ShippingAddress;
 
@@ -1594,12 +1594,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                address = await _orderViewModelService.UpdateOrderAddress(order, address, model, customAttributes);
-                return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, orderId = model.OrderId });
+                await _orderViewModelService.UpdateOrderAddress(order, address, model, customAttributes);
+                return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, orderId = model.OrderId, BillingAddress = model.BillingAddress });
             }
 
             //If we got this far, something failed, redisplay form
             model = await _orderViewModelService.PrepareOrderAddressModel(order, address);
+            model.BillingAddress = model.BillingAddress;
 
             return View(model);
         }
