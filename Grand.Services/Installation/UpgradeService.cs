@@ -1071,8 +1071,32 @@ namespace Grand.Services.Installation
                     Name = "Update shopping cart"
                 });
             }
+            if (!_activityLogTypeRepository.Table.Where(x => x.SystemKeyword == "AddNewSalesEmployee").Any())
+            {
+                await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
+                    SystemKeyword = "AddNewSalesEmployee",
+                    Enabled = true,
+                    Name = "Add a sales employee"
+                });
+            }
+            if (!_activityLogTypeRepository.Table.Where(x => x.SystemKeyword == "EditSalesEmployee").Any())
+            {
+                await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
+                    SystemKeyword = "EditSalesEmployee",
+                    Enabled = true,
+                    Name = "Edit a sales employee"
+                });
+            }
+            if (!_activityLogTypeRepository.Table.Where(x => x.SystemKeyword == "DeleteSalesEmployee").Any())
+            {
+                await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
+                    SystemKeyword = "DeleteSalesEmployee",
+                    Enabled = true,
+                    Name = "Delete a sales employee"
+                });
+            }
             #endregion
-
+            
             #region Upgrade orders
 
             var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
@@ -1175,6 +1199,7 @@ namespace Grand.Services.Installation
             await _serviceProvider.GetRequiredService<IRepository<CustomerRole>>().InsertAsync(crSalesManager);
 
             #endregion
+            
         }
 
         private async Task InstallStringResources(string filenames)

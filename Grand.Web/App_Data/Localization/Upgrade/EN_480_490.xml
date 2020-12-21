@@ -143,4 +143,13 @@
   <LocaleResource Name="Admin.Customers.Customers.CannotBeInSalesManagerRoleWithoutSalesEmployeeAssociated">
     <Value>A customer in the Sales manager role should have a sales employee account associated.</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewSalesEmployee">
+    <Value>Added a new sales employee ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditSalesEmployee">
+    <Value>Edited a sales employee ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteSalesEmployee">
+    <Value>Deleted a sales employee ('{0}')</Value>
+  </LocaleResource>
 </Language>

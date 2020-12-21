@@ -3,6 +3,8 @@ using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
+using Grand.Services.Localization;
+using Grand.Services.Logging;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Extensions;
@@ -22,6 +24,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ISalesEmployeeService _salesEmployeeService;
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
+
         #endregion
 
         #region Constructors
@@ -29,11 +34,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         public SalesEmployeeController(
             ISalesEmployeeService salesEmployeeService,
             ICustomerService customerService,
-            IOrderService orderService)
+            IOrderService orderService,
+            ICustomerActivityService customerActivityService,
+            ILocalizationService localizationService)
         {
             _salesEmployeeService = salesEmployeeService;
             _customerService = customerService;
             _orderService = orderService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
         }
 
         #endregion
@@ -70,6 +79,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             salesemployee = model.ToEntity(salesemployee);
             await _salesEmployeeService.UpdateSalesEmployee(salesemployee);
 
+            //activity log
+            await _customerActivityService.InsertActivity("EditSalesEmployee", salesemployee.Id, _localizationService.GetResource("ActivityLog.EditSalesEmployee"),
+                salesemployee.Name);
+
             return new NullJsonResult();
         }
 
@@ -85,6 +98,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             var salesEmployee = new SalesEmployee();
             salesEmployee = model.ToEntity(salesEmployee);
             await _salesEmployeeService.InsertSalesEmployee(salesEmployee);
+
+            //activity log
+            await _customerActivityService.InsertActivity("AddNewSalesEmployee", salesEmployee.Id, _localizationService.GetResource("ActivityLog.AddNewSalesEmployee"),
+                salesEmployee.Name);
 
             return new NullJsonResult();
         }
@@ -106,6 +123,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Json(new DataSourceResult { Errors = "Sales employee is related with orders" });
 
             await _salesEmployeeService.DeleteSalesEmployee(salesemployee);
+
+            //activity log
+            await _customerActivityService.InsertActivity("DeleteSalesEmployee", salesemployee.Id, _localizationService.GetResource("ActivityLog.DeleteSalesEmployee"),
+                salesemployee.Name);
 
             return new NullJsonResult();
         }

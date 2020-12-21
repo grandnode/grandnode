@@ -969,6 +969,9 @@
   <LocaleResource Name="ActivityLog.AddNewProductAttribute">
     <Value>Added a new product attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewSalesEmployee">
+    <Value>Added a new sales employee ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewSetting">
     <Value>Added a new setting ('{0}')</Value>
   </LocaleResource>
@@ -1056,6 +1059,9 @@
   <LocaleResource Name="ActivityLog.DeleteReturnRequest">
     <Value>Deleted a return request (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteSalesEmployee">
+    <Value>Deleted a sales employee ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteSetting">
     <Value>Deleted a setting ('{0}')</Value>
   </LocaleResource>
@@ -1133,6 +1139,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditReturnRequest">
     <Value>Edited a return request (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditSalesEmployee">
+    <Value>Edited a sales employee ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditSettings">
     <Value>Edited settings</Value>
