@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Grand.Services.Tests.Customers
 {
@@ -65,7 +64,7 @@ namespace Grand.Services.Tests.Customers
         [TestMethod()]
         public void FormatUserName_ReturnGuestCustomer()
         {
-            customer.CustomerRoles.Add(new CustomerRole() { SystemName = SystemCustomerRoleNames.Guests,Active=true });
+            customer.CustomerRoles.Add(new CustomerRole() { SystemName = SystemCustomerRoleNames.Guests,Active=true, IsSystemRole = true });
             var result = customer.FormatUserName(CustomerNameFormat.ShowEmails);
             Assert.IsTrue(result.Equals("Customer.Guest"));
         }

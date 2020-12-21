@@ -89,7 +89,7 @@ namespace Grand.Services.Tests.Authentication
         public async Task GetAuthenticatedCustomer_UsernameEnableRegisterd_ReturnCustomer()
         {
             var expectedCustomer = new Customer() { Username = "John",Active=true};
-            expectedCustomer.CustomerRoles.Add(new CustomerRole { SystemName= SystemCustomerRoleNames.Registered,Active=true});
+            expectedCustomer.CustomerRoles.Add(new CustomerRole { SystemName= SystemCustomerRoleNames.Registered,Active=true, IsSystemRole = true});
             _customerSettings.UsernamesEnabled = true;
             var cliaim = new Claim(ClaimTypes.Name, "Johny","", "grandnode");
             IList <Claim> claims = new List<Claim>

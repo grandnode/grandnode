@@ -14,9 +14,10 @@ namespace Grand.Domain.Customers
         /// <param name="customer">Customer</param>
         /// <param name="customerRoleSystemName">Customer role system name</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <param name="isSystemRoles">A value indicating whether we should look only in system roles</param>
         /// <returns>Result</returns>
         public static bool IsInCustomerRole(this Customer customer,
-            string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
+            string customerRoleSystemName, bool onlyActiveCustomerRoles = true, bool? isSystemRoles = null)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -25,7 +26,9 @@ namespace Grand.Domain.Customers
                 throw new ArgumentNullException("customerRoleSystemName");
 
             var result = customer.CustomerRoles
-                .FirstOrDefault(cr => (!onlyActiveCustomerRoles || cr.Active) && (cr.SystemName == customerRoleSystemName)) != null;
+                .FirstOrDefault(cr => (!onlyActiveCustomerRoles || cr.Active) 
+                && (cr.SystemName == customerRoleSystemName) 
+                && (!isSystemRoles.HasValue || cr.IsSystemRole == isSystemRoles)) != null;
             return result;
         }
 
@@ -39,7 +42,7 @@ namespace Grand.Domain.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            if (!customer.IsSystemAccount || String.IsNullOrEmpty(customer.SystemName))
+            if (!customer.IsSystemAccount || string.IsNullOrEmpty(customer.SystemName))
                 return false;
 
             var result = customer.SystemName.Equals(SystemCustomerNames.SearchEngine, StringComparison.OrdinalIgnoreCase);
@@ -67,11 +70,10 @@ namespace Grand.Domain.Customers
         /// Gets a value indicating whether customer is administrator
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
-        public static bool IsAdmin(this Customer customer, bool onlyActiveCustomerRoles = true)
+        public static bool IsAdmin(this Customer customer)
         {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.Administrators, onlyActiveCustomerRoles);
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.Administrators, true, true);
         }
 
         /// <summary>
@@ -81,7 +83,7 @@ namespace Grand.Domain.Customers
         /// <returns>Result</returns>
         public static bool IsStaff(this Customer customer)
         {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.Staff);
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.Staff, true, true);
         }
 
         /// <summary>
@@ -91,51 +93,47 @@ namespace Grand.Domain.Customers
         /// <returns>Result</returns>
         public static bool IsSalesManager(this Customer customer)
         {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.SalesManager);
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.SalesManager, true, true);
         }
 
         /// <summary>
         /// Gets a value indicating whether customer is a forum moderator
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
-        public static bool IsForumModerator(this Customer customer, bool onlyActiveCustomerRoles = true)
+        public static bool IsForumModerator(this Customer customer)
         {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.ForumModerators, onlyActiveCustomerRoles);
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.ForumModerators);
         }
 
         /// <summary>
         /// Gets a value indicating whether customer is registered
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
-        public static bool IsRegistered(this Customer customer, bool onlyActiveCustomerRoles = true)
+        public static bool IsRegistered(this Customer customer)
         {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.Registered, onlyActiveCustomerRoles);
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.Registered, true, true);
         }
 
         /// <summary>
         /// Gets a value indicating whether customer is guest
         /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <param name="customer">Customer</param>        
         /// <returns>Result</returns>
-        public static bool IsGuest(this Customer customer, bool onlyActiveCustomerRoles = true)
+        public static bool IsGuest(this Customer customer)
         {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.Guests, onlyActiveCustomerRoles);
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.Guests, true, true);
         }
 
         /// <summary>
         /// Gets a value indicating whether customer is vendor
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
-        public static bool IsVendor(this Customer customer, bool onlyActiveCustomerRoles = true)
+        public static bool IsVendor(this Customer customer)
         {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.Vendors, onlyActiveCustomerRoles);
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.Vendors, true, true);
         }
 
         /// <summary>
