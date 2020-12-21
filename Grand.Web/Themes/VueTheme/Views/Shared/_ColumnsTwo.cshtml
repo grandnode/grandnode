@@ -60,8 +60,7 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_manufacturer", additionalData = Model.Id })
 }
 <b-row id="TwoColumns" class="custom-container">
-    <template v-if="MobileDevice">
-        <div>
+        <div class="d-lg-none d-block">
             <b-col cols="12">
                 <b-button id="sidebar-mobile-button" variant="outline-info" v-b-toggle.sidebar-mobile><b-icon icon="layout-sidebar-inset"></b-icon> @T("catalog.selectors.fiters")</b-button>
             </b-col>
@@ -71,7 +70,6 @@
                        shadow>
             </b-sidebar>
         </div>
-    </template>
     <b-col lg="3" md="12" class="generalLeftSide order-1">
         @if (IsSectionDefined("left"))
         {
@@ -104,14 +102,15 @@
 <script asp-location="Footer">
     var leftSide = document.querySelector('.generalLeftSide');
     function LeftSideBar() {
-        if (document.getElementById('sidebar-mobile-button')) {
+        if (991 > window.outerWidth) {
             document.querySelector("#sidebar-mobile .b-sidebar-body").appendChild(leftSide);
         } else {
+            console.log('no-mibile')
             document.getElementById("TwoColumns").appendChild(leftSide);
         }
     }
     LeftSideBar();
-    window.addEventListener("orientationchange", function () {
+    window.addEventListener("resize", function () {
         LeftSideBar();
-    });
+    }, false);
 </script>

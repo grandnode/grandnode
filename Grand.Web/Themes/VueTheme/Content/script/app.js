@@ -13,7 +13,6 @@
             searchmanufacturers: null,
             searchblog: null,
             searchproducts: null,
-            MobileDevice: false
         }
     },
     props: {
@@ -25,9 +24,7 @@
         if (localStorage.fluid == "true") this.fluid = "fluid";
         if (localStorage.fluid == "fluid") this.fluid = "fluid";
         if (localStorage.fluid == "") this.fluid = "false";
-        this.isMobile();
         this.updateFly();
-        window.addEventListener("orientationchange", this.isMobile);
     },
     watch: {
         fluid(newName) {
@@ -124,13 +121,6 @@
                     }
                 }
             });
-        },
-        isMobile() {
-            if (991 >= window.screen.width) {
-                this.MobileDevice = true;
-            } else {
-                this.MobileDevice = false;
-            }
         },
     }
 });
