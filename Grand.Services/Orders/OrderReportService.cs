@@ -179,11 +179,12 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Get order average report
         /// </summary>
-        /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
-        /// <param name="customerId">Customer identifier; pass 0 to ignore this parameter</param>
-        /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
-        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
-        /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="salesEmployeeId">Sales employee identifier</param>
+        /// <param name="billingCountryId">Billing country identifier</param>
+        /// <param name="orderId">Order identifier</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="os">Order status</param>
         /// <param name="ps">Payment status</param>
@@ -195,7 +196,7 @@ namespace Grand.Services.Orders
         /// <param name="tagid">Tag ident.</param>
         /// <returns>Result</returns>
         public virtual async Task<OrderAverageReportLine> GetOrderAverageReportLine(string storeId = "", string customerId = "",
-            string vendorId = "", string billingCountryId = "",
+            string vendorId = "", string salesEmployeeId = "", string billingCountryId = "",
             string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
@@ -217,57 +218,60 @@ namespace Grand.Services.Orders
             var builder = Builders<Order>.Filter;
 
             var filter = builder.Where(o => !o.Deleted);
-            if (!String.IsNullOrEmpty(storeId))
-                filter = filter & builder.Where(o => o.StoreId == storeId);
+            if (!string.IsNullOrEmpty(storeId))
+                filter &= builder.Where(o => o.StoreId == storeId);
 
-            if (!String.IsNullOrEmpty(orderId))
-                filter = filter & builder.Where(o => o.Id == orderId);
+            if (!string.IsNullOrEmpty(orderId))
+                filter &= builder.Where(o => o.Id == orderId);
 
             if (!string.IsNullOrEmpty(customerId))
-                filter = filter & builder.Where(o => o.CustomerId == customerId);
+                filter &= builder.Where(o => o.CustomerId == customerId);
 
-            if (!String.IsNullOrEmpty(vendorId))
+            if (!string.IsNullOrEmpty(vendorId))
             {
-                filter = filter & builder
+                filter &= builder
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.VendorId == vendorId));
             }
-            if (!String.IsNullOrEmpty(billingCountryId))
-                filter = filter & builder.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
+            if (!string.IsNullOrEmpty(salesEmployeeId))
+                filter &= builder.Where(o => o.SeId == salesEmployeeId);
+
+            if (!string.IsNullOrEmpty(billingCountryId))
+                filter &= builder.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
 
             if (ignoreCancelledOrders)
             {
                 var cancelledOrderStatusId = (int)OrderStatus.Cancelled;
-                filter = filter & builder.Where(o => o.OrderStatusId != cancelledOrderStatusId);
+                filter &= builder.Where(o => o.OrderStatusId != cancelledOrderStatusId);
 
             }
-            if (!String.IsNullOrEmpty(paymentMethodSystemName))
-                filter = filter & builder.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
+            if (!string.IsNullOrEmpty(paymentMethodSystemName))
+                filter &= builder.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
 
             if (orderStatusId.HasValue)
-                filter = filter & builder.Where(o => o.OrderStatusId == orderStatusId.Value);
+                filter &= builder.Where(o => o.OrderStatusId == orderStatusId.Value);
 
             if (paymentStatusId.HasValue)
-                filter = filter & builder.Where(o => o.PaymentStatusId == paymentStatusId.Value);
+                filter &= builder.Where(o => o.PaymentStatusId == paymentStatusId.Value);
 
             if (shippingStatusId.HasValue)
-                filter = filter & builder.Where(o => o.ShippingStatusId == shippingStatusId.Value);
+                filter &= builder.Where(o => o.ShippingStatusId == shippingStatusId.Value);
 
             if (startTimeUtc.HasValue)
-                filter = filter & builder.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
+                filter &= builder.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
 
             if (endTimeUtc.HasValue)
-                filter = filter & builder.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
+                filter &= builder.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
 
-            if (!String.IsNullOrEmpty(billingEmail))
-                filter = filter & builder.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
+            if (!string.IsNullOrEmpty(billingEmail))
+                filter &= builder.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
 
-            if (!String.IsNullOrEmpty(billingLastName))
-                filter = filter & builder.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
+            if (!string.IsNullOrEmpty(billingLastName))
+                filter &= builder.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
 
             //tag filtering 
             if (!string.IsNullOrEmpty(tagid))
-                filter = filter & builder.Where(o => o.OrderTags.Any(y => y == tagid));
+                filter &= builder.Where(o => o.OrderTags.Any(y => y == tagid));
 
             var query = await _orderRepository.Collection
                     .Aggregate()
@@ -360,10 +364,10 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Get best sellers report
         /// </summary>
-        /// <param name="storeId">Store identifier; "" to load all records</param>
-        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
-        /// <param name="categoryId">Category identifier; "" to load all records</param>
-        /// <param name="manufacturerId">Manufacturer identifier; "" to load all records</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="categoryId">Category identifier</param>
+        /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -403,34 +407,34 @@ namespace Grand.Services.Orders
 
             var filter = builder.Where(o => !o.Deleted);
             var filterItem = builderItem.Where(x => true);
-            if (!String.IsNullOrEmpty(vendorId))
+            if (!string.IsNullOrEmpty(vendorId))
             {
-                filterItem = filterItem & builderItem.Where(x => x.OrderItems.VendorId == vendorId);
+                filterItem &= builderItem.Where(x => x.OrderItems.VendorId == vendorId);
             }
 
-            if (!String.IsNullOrEmpty(storeId))
-                filter = filter & builder.Where(o => o.StoreId == storeId);
+            if (!string.IsNullOrEmpty(storeId))
+                filter &= builder.Where(o => o.StoreId == storeId);
 
-            if (!String.IsNullOrEmpty(vendorId))
+            if (!string.IsNullOrEmpty(vendorId))
             {
-                filter = filter & builder
+                filter &= builder
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.VendorId == vendorId));
             }
-            if (!String.IsNullOrEmpty(billingCountryId))
-                filter = filter & builder.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
+            if (!string.IsNullOrEmpty(billingCountryId))
+                filter &= builder.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
 
 
             if (orderStatusId.HasValue)
-                filter = filter & builder.Where(o => o.OrderStatusId == orderStatusId.Value);
+                filter &= builder.Where(o => o.OrderStatusId == orderStatusId.Value);
             if (paymentStatusId.HasValue)
-                filter = filter & builder.Where(o => o.PaymentStatusId == paymentStatusId.Value);
+                filter &= builder.Where(o => o.PaymentStatusId == paymentStatusId.Value);
             if (shippingStatusId.HasValue)
-                filter = filter & builder.Where(o => o.ShippingStatusId == shippingStatusId.Value);
+                filter &= builder.Where(o => o.ShippingStatusId == shippingStatusId.Value);
             if (createdFromUtc.HasValue)
-                filter = filter & builder.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
+                filter &= builder.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
-                filter = filter & builder.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
+                filter &= builder.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
 
             FilterDefinition<BsonDocument> filterPublishedProduct = 
                 !showHidden ? new BsonDocument("Product.Published", true) : new BsonDocument();
@@ -580,11 +584,12 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Get profit report
         /// </summary>
-        /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
-        /// <param name="CustomerId">Customer identifier; pass 0 to ignore this parameter</param>
-        /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
-        /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="CustomerId">Customer identifier</param>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="salesEmployeeId">Sales employee identifier</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
+        /// <param name="orderId">Order identifier</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
@@ -594,7 +599,7 @@ namespace Grand.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="tagid">Tag ident.</param>
         /// <returns>Result</returns>
-        public virtual async Task<decimal> ProfitReport(string storeId = "", string customerId = "", string vendorId = "",
+        public virtual async Task<decimal> ProfitReport(string storeId = "", string customerId = "", string vendorId = "", string salesEmployeeId = "",
             string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
@@ -616,26 +621,29 @@ namespace Grand.Services.Orders
 
             query = query.Where(o => !o.Deleted);
 
-            if (!String.IsNullOrEmpty(storeId))
+            if (!string.IsNullOrEmpty(storeId))
                 query = query.Where(o => o.StoreId == storeId);
 
-            if (!String.IsNullOrEmpty(customerId))
+            if (!string.IsNullOrEmpty(customerId))
                 query = query.Where(o => o.CustomerId == customerId);
 
-            if (!String.IsNullOrEmpty(orderId))
+            if (!string.IsNullOrEmpty(orderId))
                 query = query.Where(o => o.Id == orderId);
 
-            if (!String.IsNullOrEmpty(vendorId))
+            if (!string.IsNullOrEmpty(vendorId))
             {
                 query = query
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.VendorId == vendorId));
             }
 
-            if (!String.IsNullOrEmpty(billingCountryId))
+            if (!string.IsNullOrEmpty(salesEmployeeId))
+                query = query.Where(o => o.SeId == salesEmployeeId);
+
+            if (!string.IsNullOrEmpty(billingCountryId))
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
 
-            if (!String.IsNullOrEmpty(paymentMethodSystemName))
+            if (!string.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
             if (orderStatusId.HasValue)
                 query = query.Where(o => o.OrderStatusId == orderStatusId.Value);
@@ -647,10 +655,12 @@ namespace Grand.Services.Orders
                 query = query.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
             if (endTimeUtc.HasValue)
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
-            if (!String.IsNullOrEmpty(billingEmail))
-                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
-            if (!String.IsNullOrEmpty(billingLastName))
-                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
+            
+            if (!string.IsNullOrEmpty(billingEmail))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
+
+            if (!string.IsNullOrEmpty(billingLastName))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
 
             //tag filtering 
             if (!string.IsNullOrEmpty(tagid))
@@ -666,6 +676,7 @@ namespace Grand.Services.Orders
             var reportSummary = await GetOrderAverageReportLine(
                 storeId: storeId,
                 vendorId: vendorId,
+                salesEmployeeId: salesEmployeeId,
                 customerId: customerId,
                 billingCountryId: billingCountryId,
                 orderId: orderId,

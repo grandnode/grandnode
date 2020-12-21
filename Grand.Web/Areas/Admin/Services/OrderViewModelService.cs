@@ -325,6 +325,7 @@ namespace Grand.Web.Areas.Admin.Services
                 storeId: model.StoreId,
                 customerId: model.CustomerId,
                 vendorId: model.VendorId,
+                salesEmployeeId: salesEmployeeId,
                 orderId: "",
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 os: orderStatus,
@@ -340,6 +341,7 @@ namespace Grand.Web.Areas.Admin.Services
             var profit = await _orderReportService.ProfitReport(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
+                salesEmployeeId: salesEmployeeId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 os: orderStatus,
                 ps: paymentStatus,
