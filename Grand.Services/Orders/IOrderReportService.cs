@@ -109,8 +109,9 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="days">Orders in the last days</param>
         /// <param name="storeId">Store ident</param>
+        /// <param name="salesEmployeeId">Sales employee ident</param>
         /// <returns>ReportPeriodOrder</returns>
-        Task<ReportPeriodOrder> GetOrderPeriodReport(int days, string storeId);
+        Task<ReportPeriodOrder> GetOrderPeriodReport(int days, string storeId = "", string salesEmployeeId = "");
 
         /// <summary>
         /// Gets a list of products (identifiers) purchased by other customers who purchased a specified product

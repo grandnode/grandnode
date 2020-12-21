@@ -1,4 +1,5 @@
 ﻿@model DashboardModel
+@using Grand.Domain.Customers
 @inject Grand.Services.Security.IPermissionService permissionService
 @inject Grand.Domain.Customers.CustomerSettings customerSettings
 @inject Grand.Services.Customers.ICustomerService customerService
@@ -8,11 +9,12 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Dashboard").Text;
+    var isAdminAccess = workContext.CurrentCustomer.IsAdmin();
     var canAccessReports = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageReports);
     var canManageOrders = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageOrders);
-    var customersOnline = (await customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineCustomerMinutes), null, 1, 1, workContext.CurrentCustomer.StaffStoreId)).TotalCount;
-    var customersShoppingCart = await customerService.GetCountOnlineShoppingCart(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineShoppingCartMinutes), workContext.CurrentCustomer.StaffStoreId);
-    var ordersToday = await orderReportService.GetOrderPeriodReport(0, workContext.CurrentCustomer.StaffStoreId);
+    var customersOnline = (await customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineCustomerMinutes), null, workContext.CurrentCustomer.StaffStoreId, workContext.CurrentCustomer.SeId, 1, 1)).TotalCount;
+    var customersShoppingCart = await customerService.GetCountOnlineShoppingCart(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineShoppingCartMinutes), workContext.CurrentCustomer.StaffStoreId, workContext.CurrentCustomer.SeId);
+    var ordersToday = await orderReportService.GetOrderPeriodReport(0, workContext.CurrentCustomer.StaffStoreId, workContext.CurrentCustomer.SeId);
     var ordersAmount = priceFormatter.FormatPrice(ordersToday.Amount, true, false);
 }
 
@@ -99,21 +101,24 @@
                             @await Component.InvokeAsync("CustomerReportCustomerTimeChart")
                         </div>
                     }
-                    <div class="col-cs-12 col-sm-12 col-lg-4 col-md-12">
-                        <div class="x_panel">
-                            <div class="x_title">
-                                <h2>
-                                    @T("Admin.Dashboard.ActivityOverview")
-                                </h2>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="x_content-body">
-                                <div class="partialContents" data-url="@Url.Action("DashboardActivity")">
-                                    <img src="~/administration/build/images/loading.gif" /> Loading ...
+                    @if (isAdminAccess)
+                    { 
+                        <div class="col-cs-12 col-sm-12 col-lg-4 col-md-12">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>
+                                        @T("Admin.Dashboard.ActivityOverview")
+                                    </h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content-body">
+                                    <div class="partialContents" data-url="@Url.Action("DashboardActivity")">
+                                        <img src="~/administration/build/images/loading.gif" /> Loading ...
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>

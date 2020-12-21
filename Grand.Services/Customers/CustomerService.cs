@@ -203,12 +203,14 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="lastActivityFromUtc">Customer last activity date (from)</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
+        /// <param name="storeId">Store ident</param>
+        /// <param name="salesEmployeeId">Sales employee ident</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="storeId">Store ident</param>
+
         /// <returns>Customers</returns>
         public virtual async Task<IPagedList<Customer>> GetOnlineCustomers(DateTime lastActivityFromUtc,
-            string[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue, string storeId = "")
+            string[] customerRoleIds, string storeId = "", string salesEmployeeId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _customerRepository.Table;
             query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
@@ -220,19 +222,32 @@ namespace Grand.Services.Customers
             if (!string.IsNullOrEmpty(storeId))
                 query = query.Where(c => c.StoreId == storeId);
 
+            if (!string.IsNullOrEmpty(salesEmployeeId))
+                query = query.Where(c => c.SeId == salesEmployeeId);
+
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
             return await PagedList<Customer>.Create(query, pageIndex, pageSize);
         }
 
-
-        public virtual Task<int> GetCountOnlineShoppingCart(DateTime lastActivityFromUtc, string storeId)
+        /// <summary>
+        /// Gets count online customers
+        /// </summary>
+        /// <param name="lastActivityFromUtc">Customer last activity date (from)</param>
+        /// <param name="storeId">Store ident</param>
+        /// <param name="salesEmployeeId">Sales employee ident</param>
+        /// <returns>Int</returns>
+        public virtual Task<int> GetCountOnlineShoppingCart(DateTime lastActivityFromUtc, string storeId = "", string salesEmployeeId = "")
         {
             var query = _customerRepository.Table;
             query = query.Where(c => c.Active);
             query = query.Where(c => lastActivityFromUtc <= c.LastUpdateCartDateUtc);
             query = query.Where(c => c.ShoppingCartItems.Any(y=>y.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart));
+
             if (!string.IsNullOrEmpty(storeId))
                 query = query.Where(c => c.StoreId == storeId);
+
+            if (!string.IsNullOrEmpty(salesEmployeeId))
+                query = query.Where(c => c.SeId == salesEmployeeId);
 
             return query.CountAsync();
         }

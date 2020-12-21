@@ -479,8 +479,9 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="days">Orders in the last days</param>
         /// <param name="storeId">Store ident</param>
+        /// <param name="salesEmployeeId">Sales employee ident</param>
         /// <returns>ReportPeriodOrder</returns>
-        public virtual async Task<ReportPeriodOrder> GetOrderPeriodReport(int days, string storeId)
+        public virtual async Task<ReportPeriodOrder> GetOrderPeriodReport(int days, string storeId = "", string salesEmployeeId = "")
         {
             var currentdate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
             DateTime date = days != 0 ? 
@@ -490,6 +491,7 @@ namespace Grand.Services.Orders
             var query = from o in _orderRepository.Table
                         where !o.Deleted && o.CreatedOnUtc >= date
                         && (string.IsNullOrEmpty(storeId) || o.StoreId == storeId)
+                        && (string.IsNullOrEmpty(salesEmployeeId) || o.SeId == salesEmployeeId)
                         group o by 1 into g
                         select new ReportPeriodOrder() { Amount = g.Sum(x => x.OrderTotal / x.CurrencyRate), Count = g.Count() };
             var report = (await query.ToListAsync())?.FirstOrDefault();

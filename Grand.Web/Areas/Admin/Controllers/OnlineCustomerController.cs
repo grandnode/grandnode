@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Customers;
+﻿using Grand.Core;
+using Grand.Domain.Customers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Common;
@@ -25,7 +26,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly CustomerSettings _customerSettings;
         private readonly ILocalizationService _localizationService;
-
+        private readonly IWorkContext _workContext;
         #endregion
 
         #region Constructors
@@ -33,13 +34,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         public OnlineCustomerController(ICustomerService customerService,
             IGeoLookupService geoLookupService, IDateTimeHelper dateTimeHelper,
             CustomerSettings customerSettings,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IWorkContext workContext)
         {
             _customerService = customerService;
             _geoLookupService = geoLookupService;
             _dateTimeHelper = dateTimeHelper;
             _customerSettings = customerSettings;
             _localizationService = localizationService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -53,7 +56,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> List(DataSourceRequest command)
         {
             var customers = await _customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes),
-                null, command.Page - 1, command.PageSize);
+                null, _workContext.CurrentCustomer.StaffStoreId, _workContext.CurrentCustomer.SeId, command.Page - 1, command.PageSize);
             var items = new List<OnlineCustomerModel>();
             foreach (var x in customers)
             {
