@@ -79,44 +79,44 @@ namespace Grand.Services.Orders
         private readonly LocalizationSettings _localizationSettings;
 
         public OrderConfirmationService(
-            IOrderService orderService, 
-            IWebHelper webHelper, 
-            ILocalizationService localizationService, 
-            ILanguageService languageService, 
-            IProductService productService, 
-            IInventoryManageService inventoryManageService, 
-            IPaymentService paymentService, 
-            ILogger logger, 
-            IOrderTotalCalculationService orderTotalCalculationService, 
-            IPriceCalculationService priceCalculationService, 
-            IPriceFormatter priceFormatter, 
-            IProductAttributeParser productAttributeParser, 
-            IProductAttributeFormatter productAttributeFormatter, 
-            IGiftCardService giftCardService, 
-            IShoppingCartService shoppingCartService, 
-            ICheckoutAttributeFormatter checkoutAttributeFormatter, 
-            IShippingService shippingService, 
-            ITaxService taxService, 
-            ICustomerService customerService, 
-            IDiscountService discountService, 
-            IEncryptionService encryptionService, 
-            IWorkContext workContext, 
-            IWorkflowMessageService workflowMessageService, 
-            IVendorService vendorService, 
-            ICurrencyService currencyService, 
-            IAffiliateService affiliateService, 
-            IMediator mediator, 
-            IPdfService pdfService, 
-            IRewardPointsService rewardPointsService, 
-            IStoreContext storeContext, 
-            IProductReservationService productReservationService, 
-            IAuctionService auctionService, 
-            ICountryService countryService, 
-            ShippingSettings shippingSettings, 
-            ShoppingCartSettings shoppingCartSettings, 
-            PaymentSettings paymentSettings, 
-            OrderSettings orderSettings, 
-            TaxSettings taxSettings, 
+            IOrderService orderService,
+            IWebHelper webHelper,
+            ILocalizationService localizationService,
+            ILanguageService languageService,
+            IProductService productService,
+            IInventoryManageService inventoryManageService,
+            IPaymentService paymentService,
+            ILogger logger,
+            IOrderTotalCalculationService orderTotalCalculationService,
+            IPriceCalculationService priceCalculationService,
+            IPriceFormatter priceFormatter,
+            IProductAttributeParser productAttributeParser,
+            IProductAttributeFormatter productAttributeFormatter,
+            IGiftCardService giftCardService,
+            IShoppingCartService shoppingCartService,
+            ICheckoutAttributeFormatter checkoutAttributeFormatter,
+            IShippingService shippingService,
+            ITaxService taxService,
+            ICustomerService customerService,
+            IDiscountService discountService,
+            IEncryptionService encryptionService,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
+            IVendorService vendorService,
+            ICurrencyService currencyService,
+            IAffiliateService affiliateService,
+            IMediator mediator,
+            IPdfService pdfService,
+            IRewardPointsService rewardPointsService,
+            IStoreContext storeContext,
+            IProductReservationService productReservationService,
+            IAuctionService auctionService,
+            ICountryService countryService,
+            ShippingSettings shippingSettings,
+            ShoppingCartSettings shoppingCartSettings,
+            PaymentSettings paymentSettings,
+            OrderSettings orderSettings,
+            TaxSettings taxSettings,
             LocalizationSettings localizationSettings)
         {
             _orderService = orderService;
@@ -160,7 +160,7 @@ namespace Grand.Services.Orders
             _localizationSettings = localizationSettings;
         }
 
-        
+
         protected virtual async Task UpdateCustomer(Order order, PlaceOrderContainter details)
         {
             //Update customer reminder history
@@ -331,7 +331,7 @@ namespace Grand.Services.Orders
             return processPaymentResult;
         }
 
-        
+
 
         protected virtual async Task<PlaceOrderContainter> PreparePlaceOrderDetails(ProcessPaymentRequest processPaymentRequest)
         {
@@ -375,7 +375,7 @@ namespace Grand.Services.Orders
             if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
                 details.CustomerLanguage = _workContext.WorkingLanguage;
 
-            
+
 
             details.BillingAddress = details.Customer.BillingAddress;
             if (!string.IsNullOrEmpty(details.BillingAddress.CountryId))
@@ -550,8 +550,8 @@ namespace Grand.Services.Orders
             //tax rates
             foreach (var kvp in taxRates)
             {
-                details.Taxes.Add(new OrderTax() { 
-                    Percent = Math.Round(kvp.Key,2),
+                details.Taxes.Add(new OrderTax() {
+                    Percent = Math.Round(kvp.Key, 2),
                     Amount = kvp.Value
                 });
             }
@@ -601,7 +601,7 @@ namespace Grand.Services.Orders
             return details;
         }
 
-        
+
 
         protected virtual async Task<Order> SaveOrderDetailsForReccuringPayment(PlaceOrderContainter details, Order order)
         {
@@ -731,7 +731,7 @@ namespace Grand.Services.Orders
             decimal taxRate;
             List<AppliedDiscount> scDiscounts;
             decimal discountAmount;
-            decimal commissionRate;
+            decimal commissionRate = 0;
             decimal scUnitPrice = (await _priceCalculationService.GetUnitPrice(sc, product)).unitprice;
             decimal scUnitPriceWithoutDisc = (await _priceCalculationService.GetUnitPrice(sc, product, false)).unitprice;
 
@@ -740,13 +740,11 @@ namespace Grand.Services.Orders
             discountAmount = subtotal.discountAmount;
             scDiscounts = subtotal.appliedDiscounts;
 
-            if (string.IsNullOrEmpty(product.VendorId))
+            if (!string.IsNullOrEmpty(product.VendorId))
             {
-                commissionRate = 0;
-            }
-            else
-            {
-                commissionRate = (await _vendorService.GetVendorById(product.VendorId)).Commission;
+                var vendor = await _vendorService.GetVendorById(product.VendorId);
+                if (vendor != null && vendor.Commission.HasValue)
+                    commissionRate = vendor.Commission.Value;
             }
 
             var prices = await _taxService.GetTaxProductPrice(product, details.Customer, scUnitPrice, scUnitPriceWithoutDisc, sc.Quantity, scSubTotal, discountAmount, _taxSettings.PricesIncludeTax);
@@ -855,7 +853,7 @@ namespace Grand.Services.Orders
             for (int i = 0; i < sc.Quantity; i++)
             {
                 var amount = orderItem.UnitPriceInclTax;
-                if(product.OverriddenGiftCardAmount.HasValue)
+                if (product.OverriddenGiftCardAmount.HasValue)
                     amount = await _currencyService.ConvertFromPrimaryStoreCurrency(product.OverriddenGiftCardAmount.Value, details.Currency);
 
                 var gc = new GiftCard {
@@ -993,7 +991,7 @@ namespace Grand.Services.Orders
 
         protected virtual async Task UpdateBids(Order order, PlaceOrderContainter details)
         {
-            foreach (var sc in details.Cart.Where(x=>x.ShoppingCartType == ShoppingCartType.Auctions))
+            foreach (var sc in details.Cart.Where(x => x.ShoppingCartType == ShoppingCartType.Auctions))
             {
                 var bid = (await _auctionService.GetBidsByProductId(sc.Id)).Where(x => x.CustomerId == details.Customer.Id).FirstOrDefault();
                 if (bid != null)
@@ -1108,7 +1106,7 @@ namespace Grand.Services.Orders
                 UrlReferrer = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastUrlReferrer),
                 ShippingOptionAttributeDescription = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ShippingOptionAttributeDescription, processPaymentRequest.StoreId),
                 ShippingOptionAttributeXml = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ShippingOptionAttributeXml, processPaymentRequest.StoreId),
-                CreatedOnUtc = DateTime.UtcNow,                
+                CreatedOnUtc = DateTime.UtcNow,
             };
 
             foreach (var item in details.Taxes)

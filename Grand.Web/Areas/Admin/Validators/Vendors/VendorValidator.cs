@@ -23,11 +23,14 @@ namespace Grand.Web.Areas.Admin.Validators.Vendors
             RuleFor(x => x.Commission)
                 .Must(IsCommissionValid)
                 .WithMessage(localizationService.GetResource("Admin.Vendors.Fields.Commission.IsCommissionValid"));
-                
+
         }
-        
-        private bool IsCommissionValid(decimal commission)
+
+        private bool IsCommissionValid(decimal? commission)
         {
+            if (!commission.HasValue)
+                return true;
+
             if (commission < 0 || commission > 100)
                 return false;
 

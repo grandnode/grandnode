@@ -19,5 +19,6 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         [GrandResourceDisplayName("Admin.Customers.SalesEmployees.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
+
     }
 }
