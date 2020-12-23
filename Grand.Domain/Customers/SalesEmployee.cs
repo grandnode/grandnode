@@ -23,6 +23,11 @@
         public bool Active { get; set; }
 
         /// <summary>
+        /// Gets or sets the commission rate
+        /// </summary>
+        public decimal? Commission { get; set; }
+
+        /// <summary>
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }

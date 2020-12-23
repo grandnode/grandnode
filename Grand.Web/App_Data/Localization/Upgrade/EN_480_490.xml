@@ -128,6 +128,15 @@
   <LocaleResource Name="Admin.Customers.SalesEmployee.Fields.Name.Required">
     <Value>Sales employee name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.SalesEmployee.Fields.Commission">
+    <Value>Commisssion</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.SalesEmployee.Fields.Commission.Hint">
+    <Value>Commission percentage rate for each sales employee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.SalesEmployee.Fields.Commission.IsCommissionValid">
+    <Value>Commission`s rate is no valid</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.SeId">
     <Value>Sales employee</Value>
   </LocaleResource>

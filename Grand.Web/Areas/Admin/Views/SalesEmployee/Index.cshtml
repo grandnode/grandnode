@@ -67,7 +67,8 @@
                             Name: { editable: true, type: "string", required: true },
                             Email: { editable: true, type: "string" },
                             Phone: { editable: true, type: "string" },
-                            Active: { editable: true, type: "boolean" },
+                            Active: { editable: true, type: "boolean", defaultValue: true },
+                            Commission: { editable: true, type: "number", defaultValue: "" },
                             DisplayOrder: { editable: true, type: "number" },
                             Id: { editable: false, type: "string" }
                         }
@@ -119,6 +120,10 @@
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: '# if(Active) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "Commission",
+                title: "@T("Admin.Customers.SalesEmployee.Fields.Commission")",
+                width: 100
             }, {
                 field: "DisplayOrder",
                 title: "@T("Admin.Customers.SalesEmployee.Fields.DisplayOrder")",

@@ -3,6 +3,7 @@ using Grand.Core.Extensions;
 using Grand.Core.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Vendors;
+using Grand.Web.Areas.Admin.Validators.Common;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Validators.Vendors
@@ -21,20 +22,8 @@ namespace Grand.Web.Areas.Admin.Validators.Vendors
                 .Must(FluentValidationUtilities.PageSizeOptionsValidator)
                 .WithMessage(localizationService.GetResource("Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
             RuleFor(x => x.Commission)
-                .Must(IsCommissionValid)
+                .Must(CommonValid.IsCommissionValid)
                 .WithMessage(localizationService.GetResource("Admin.Vendors.Fields.Commission.IsCommissionValid"));
-
-        }
-
-        private bool IsCommissionValid(decimal? commission)
-        {
-            if (!commission.HasValue)
-                return true;
-
-            if (commission < 0 || commission > 100)
-                return false;
-
-            return true;
         }
     }
 }

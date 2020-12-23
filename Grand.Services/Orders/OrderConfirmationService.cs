@@ -39,7 +39,6 @@ namespace Grand.Services.Orders
     public class OrderConfirmationService : IOrderConfirmationService
     {
         private readonly IOrderService _orderService;
-        private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
         private readonly IProductService _productService;
@@ -62,6 +61,7 @@ namespace Grand.Services.Orders
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IVendorService _vendorService;
+        private readonly ISalesEmployeeService _salesEmployeeService;
         private readonly ICurrencyService _currencyService;
         private readonly IAffiliateService _affiliateService;
         private readonly IMediator _mediator;
@@ -80,7 +80,6 @@ namespace Grand.Services.Orders
 
         public OrderConfirmationService(
             IOrderService orderService,
-            IWebHelper webHelper,
             ILocalizationService localizationService,
             ILanguageService languageService,
             IProductService productService,
@@ -103,6 +102,7 @@ namespace Grand.Services.Orders
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             IVendorService vendorService,
+            ISalesEmployeeService salesEmployeeService,
             ICurrencyService currencyService,
             IAffiliateService affiliateService,
             IMediator mediator,
@@ -120,7 +120,6 @@ namespace Grand.Services.Orders
             LocalizationSettings localizationSettings)
         {
             _orderService = orderService;
-            _webHelper = webHelper;
             _localizationService = localizationService;
             _languageService = languageService;
             _productService = productService;
@@ -143,6 +142,7 @@ namespace Grand.Services.Orders
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
             _vendorService = vendorService;
+            _salesEmployeeService = salesEmployeeService;
             _currencyService = currencyService;
             _affiliateService = affiliateService;
             _mediator = mediator;
@@ -160,6 +160,28 @@ namespace Grand.Services.Orders
             _localizationSettings = localizationSettings;
         }
 
+        private async Task<decimal?> PrepareCommissionRate(Product product, PlaceOrderContainter details)
+        {
+            var commissionRate = default(decimal?);
+            if (!string.IsNullOrEmpty(product.VendorId))
+            {
+                var vendor = await _vendorService.GetVendorById(product.VendorId);
+                if (vendor != null && vendor.Commission.HasValue)
+                    commissionRate = vendor.Commission.Value;
+            }
+
+            if (!commissionRate.HasValue)
+            {
+                if (!string.IsNullOrEmpty(details.Customer.SeId))
+                {
+                    var salesEmployee = await _salesEmployeeService.GetSalesEmployeeById(details.Customer.SeId);
+                    if (salesEmployee != null && salesEmployee.Active && salesEmployee.Commission.HasValue)
+                        commissionRate = salesEmployee.Commission.Value;
+                }
+            }
+
+            return commissionRate;
+        }
 
         protected virtual async Task UpdateCustomer(Order order, PlaceOrderContainter details)
         {
@@ -181,7 +203,7 @@ namespace Grand.Services.Orders
             }
 
         }
-
+        
         protected virtual async Task<PlaceOrderContainter> PreparePlaceOrderDetailsForRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
             var details = new PlaceOrderContainter();
@@ -330,8 +352,6 @@ namespace Grand.Services.Orders
 
             return processPaymentResult;
         }
-
-
 
         protected virtual async Task<PlaceOrderContainter> PreparePlaceOrderDetails(ProcessPaymentRequest processPaymentRequest)
         {
@@ -601,8 +621,6 @@ namespace Grand.Services.Orders
             return details;
         }
 
-
-
         protected virtual async Task<Order> SaveOrderDetailsForReccuringPayment(PlaceOrderContainter details, Order order)
         {
             #region recurring payment
@@ -731,7 +749,6 @@ namespace Grand.Services.Orders
             decimal taxRate;
             List<AppliedDiscount> scDiscounts;
             decimal discountAmount;
-            decimal commissionRate = 0;
             decimal scUnitPrice = (await _priceCalculationService.GetUnitPrice(sc, product)).unitprice;
             decimal scUnitPriceWithoutDisc = (await _priceCalculationService.GetUnitPrice(sc, product, false)).unitprice;
 
@@ -740,12 +757,6 @@ namespace Grand.Services.Orders
             discountAmount = subtotal.discountAmount;
             scDiscounts = subtotal.appliedDiscounts;
 
-            if (!string.IsNullOrEmpty(product.VendorId))
-            {
-                var vendor = await _vendorService.GetVendorById(product.VendorId);
-                if (vendor != null && vendor.Commission.HasValue)
-                    commissionRate = vendor.Commission.Value;
-            }
 
             var prices = await _taxService.GetTaxProductPrice(product, details.Customer, scUnitPrice, scUnitPriceWithoutDisc, sc.Quantity, scSubTotal, discountAmount, _taxSettings.PricesIncludeTax);
             taxRate = prices.taxRate;
@@ -781,6 +792,10 @@ namespace Grand.Services.Orders
                 }
             }
 
+            var commissionRate = await PrepareCommissionRate(product, details);
+            var commision = commissionRate.HasValue ?
+                Math.Round((commissionRate.Value * scSubTotal / 100), 2) : 0;
+
             //save order item
             var orderItem = new OrderItem {
                 OrderItemGuid = Guid.NewGuid(),
@@ -807,7 +822,7 @@ namespace Grand.Services.Orders
                 RentalStartDateUtc = sc.RentalStartDateUtc,
                 RentalEndDateUtc = sc.RentalEndDateUtc,
                 CreatedOnUtc = DateTime.UtcNow,
-                Commission = Math.Round((commissionRate * scSubTotal / 100), 2),
+                Commission = commision,
             };
 
             string reservationInfo = "";
@@ -1051,7 +1066,7 @@ namespace Grand.Services.Orders
                 SeId = details.Customer.SeId,
                 CustomerLanguageId = details.CustomerLanguage.Id,
                 CustomerTaxDisplayType = details.CustomerTaxDisplayType,
-                CustomerIp = _webHelper.GetCurrentIpAddress(),
+                CustomerIp = details.Customer.LastIpAddress,
                 OrderSubtotalInclTax = Math.Round(details.OrderSubTotalInclTax, 6),
                 OrderSubtotalExclTax = Math.Round(details.OrderSubTotalExclTax, 6),
                 OrderSubTotalDiscountInclTax = Math.Round(details.OrderSubTotalDiscountInclTax, 6),
