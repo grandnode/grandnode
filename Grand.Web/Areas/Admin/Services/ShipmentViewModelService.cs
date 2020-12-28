@@ -581,6 +581,7 @@ namespace Grand.Web.Areas.Admin.Services
                     var adminComment = form["AdminComment"];
                     shipment = new Shipment {
                         OrderId = order.Id,
+                        SeId = order.SeId,
                         TrackingNumber = trackingNumber,
                         TotalWeight = null,
                         ShippedDateUtc = null,

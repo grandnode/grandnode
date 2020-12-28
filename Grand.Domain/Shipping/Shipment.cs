@@ -26,6 +26,11 @@ namespace Grand.Domain.Shipping
         public string VendorId { get; set; }
 
         /// <summary>
+        /// Gets or sets the sales employee identifier 
+        /// </summary>
+        public string SeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the tracking number of this shipment
         /// </summary>
         public string TrackingNumber { get; set; }
