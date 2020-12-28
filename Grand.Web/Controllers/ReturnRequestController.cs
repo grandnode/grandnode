@@ -61,7 +61,7 @@ namespace Grand.Web.Controllers
 
         #region Utilities
 
-        private async Task PrepareModelAddress(AddressModel addressModel)
+        private async Task PrepareModelAddress(AddressModel addressModel, Address address)
         {
             var countryService = HttpContext.RequestServices.GetRequiredService<ICountryService>();
             var countries = await countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
@@ -70,7 +70,7 @@ namespace Grand.Web.Controllers
                 Store = _storeContext.CurrentStore,
                 Customer = _workContext.CurrentCustomer,
                 Model = addressModel,
-                Address = null,
+                Address = address,
                 ExcludeProperties = true,
                 PrePopulateWithCustomerFields = true,
                 LoadCountries = () => countries
@@ -177,7 +177,7 @@ namespace Grand.Web.Controllers
                 returnmodel.NewAddress = model.NewAddress;
                 if (returnmodel.NewAddressPreselected || _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
                 {
-                    await PrepareModelAddress(model.NewAddress);
+                    await PrepareModelAddress(model.NewAddress, address);
                 }
                 return View(returnmodel);
             }
@@ -204,7 +204,7 @@ namespace Grand.Web.Controllers
                 returnmodel.NewAddress = model.NewAddress;
                 if (returnmodel.NewAddressPreselected || _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
                 {
-                    await PrepareModelAddress(model.NewAddress);
+                    await PrepareModelAddress(model.NewAddress, address);
                 }
                 return View(returnmodel);
             }
