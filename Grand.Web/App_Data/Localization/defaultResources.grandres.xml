@@ -13178,6 +13178,15 @@
   <LocaleResource Name="Admin.Documents.Document.Fields.Reference.Hint">
     <Value>Select the reference of the document.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.SeId">
+    <Value>Sales employee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.SeId.hint">
+    <Value>Choose a sales employee associated to this document.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.SeId.None">
+    <Value>None</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.documents.document.fields.status">
     <Value>Status</Value>
   </LocaleResource>

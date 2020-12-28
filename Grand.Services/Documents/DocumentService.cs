@@ -33,7 +33,7 @@ namespace Grand.Services.Documents
         }
 
         public virtual async Task<IPagedList<Document>> GetAll(string customerId = "", string name = "", string number = "", string email = "", string username = "",
-            int reference = 0, string objectId = "", int status = -1, int pageIndex = 0, int pageSize = int.MaxValue)
+            int reference = 0, string objectId = "", string seId = "", int status = -1, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from d in _documentRepository.Table
                         select d;
@@ -55,6 +55,9 @@ namespace Grand.Services.Documents
 
             if (!string.IsNullOrWhiteSpace(objectId))
                 query = query.Where(m => m.ObjectId == objectId);
+
+            if (!string.IsNullOrWhiteSpace(seId))
+                query = query.Where(m => m.SeId == seId);
 
             if (reference > 0)
                 query = query.Where(m => m.ReferenceId == reference);

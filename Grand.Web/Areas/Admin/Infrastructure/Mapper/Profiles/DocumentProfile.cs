@@ -16,7 +16,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
-               .ForMember(dest => dest.AvailableDocumentTypes, mo => mo.Ignore());
+               .ForMember(dest => dest.AvailableDocumentTypes, mo => mo.Ignore())
+               .ForMember(dest => dest.AvailableSelesEmployees, mo => mo.Ignore());
             CreateMap<DocumentModel, Document>()
                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())

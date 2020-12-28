@@ -29,6 +29,11 @@ namespace Grand.Domain.Documents
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the sales employee identifier 
+        /// </summary>
+        public string SeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the description
         /// </summary>
         public string Description { get; set; }

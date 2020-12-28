@@ -161,4 +161,13 @@
   <LocaleResource Name="ActivityLog.DeleteSalesEmployee">
     <Value>Deleted a sales employee ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.SeId">
+    <Value>Sales employee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.SeId.hint">
+    <Value>Choose a sales employee associated to this document.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.SeId.None">
+    <Value>None</Value>
+  </LocaleResource>
 </Language>

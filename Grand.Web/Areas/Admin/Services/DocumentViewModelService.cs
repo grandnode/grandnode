@@ -11,6 +11,7 @@ using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Documents;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
@@ -28,10 +29,22 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IVendorService _vendorService;
+        private readonly ISalesEmployeeService _salesEmployeeService;
 
-        public DocumentViewModelService(IDocumentService documentService, IDocumentTypeService documentTypeService, ICustomerService customerService,
-            IOrderService orderService, ILocalizationService localizationService, IProductService productService, IShipmentService shipmentService,
-            IReturnRequestService returnRequestService, ICategoryService categoryService, IManufacturerService manufacturerService, IVendorService vendorService)
+        public DocumentViewModelService(
+            IDocumentService documentService,
+            IDocumentTypeService documentTypeService,
+            ICustomerService customerService,
+            IOrderService orderService,
+            ILocalizationService localizationService,
+            IProductService productService,
+            IShipmentService shipmentService,
+            IReturnRequestService returnRequestService,
+            ICategoryService categoryService,
+            IManufacturerService manufacturerService,
+            IVendorService vendorService,
+            ISalesEmployeeService salesEmployeeService
+            )
         {
             _documentService = documentService;
             _documentTypeService = documentTypeService;
@@ -44,6 +57,7 @@ namespace Grand.Web.Areas.Admin.Services
             _categoryService = categoryService;
             _manufacturerService = manufacturerService;
             _vendorService = vendorService;
+            _salesEmployeeService = salesEmployeeService;
         }
 
         public virtual async Task<(IEnumerable<DocumentModel> documetListModel, int totalCount)> PrepareDocumentListModel(DocumentListModel model, int pageIndex, int pageSize)
@@ -159,6 +173,7 @@ namespace Grand.Web.Areas.Admin.Services
                         }
                 }
             }
+            //fill document types
             var types = await _documentTypeService.GetAll();
             foreach (var item in types)
             {
@@ -166,6 +181,21 @@ namespace Grand.Web.Areas.Admin.Services
                     Text = item.Name,
                     Value = item.Id
                 });
+            }
+
+            //fill sales employees
+            model.AvailableSelesEmployees.Add(new SelectListItem {
+                Text = _localizationService.GetResource("Admin.Documents.Document.Fields.SeId.None"),
+                Value = ""
+            });
+            var salesEmployees = await _salesEmployeeService.GetAll();
+            foreach (var item in salesEmployees.Where(x => x.Active))
+            {
+                model.AvailableSelesEmployees.Add(new SelectListItem {
+                    Text = item.Name,
+                    Value = item.Id
+                });
+
             }
             return model;
         }

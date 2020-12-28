@@ -3,6 +3,7 @@ using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
+using Grand.Services.Documents;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
@@ -26,6 +27,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
+        private readonly IDocumentService _documentService;
 
         #endregion
 
@@ -35,12 +37,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             ISalesEmployeeService salesEmployeeService,
             ICustomerService customerService,
             IOrderService orderService,
+            IDocumentService documentService,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService)
         {
             _salesEmployeeService = salesEmployeeService;
             _customerService = customerService;
             _orderService = orderService;
+            _documentService = documentService;
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
         }
@@ -121,6 +125,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             var orders = await _orderService.SearchOrders(salesEmployeeId: id);
             if (orders.Any())
                 return Json(new DataSourceResult { Errors = "Sales employee is related with orders" });
+
+            var documents = await _documentService.GetAll(seId: id);
+            if (documents.Any())
+                return Json(new DataSourceResult { Errors = "Sales employee is related with documents" });
 
             await _salesEmployeeService.DeleteSalesEmployee(salesemployee);
 
