@@ -377,7 +377,7 @@ namespace Grand.Services.Installation
                                {
                                    new TaxCategory
                                        {
-                                           Name = "Books",
+                                           Name = "Lego",
                                            DisplayOrder = 1,
                                        },
                                    new TaxCategory
@@ -5709,21 +5709,21 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryCameraPhoto);
 
-            var categoryCellPhones = new Category {
-                Name = "Cell phones",
+            var categorySmartphones = new Category {
+                Name = "Smartphones",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Cell phones"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Smartphones"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryCellPhones);
+            allCategories.Add(categorySmartphones);
 
             var categoryOthers = new Category {
                 Name = "Others",
@@ -5826,16 +5826,16 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryDigitalDownloads);
 
-            var categoryBooks = new Category {
-                Name = "Books",
+            var categoryLego = new Category {
+                Name = "Lego",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                MetaKeywords = "Books, Dictionary, Textbooks",
+                MetaKeywords = "Lego, Dictionary, Textbooks",
                 MetaDescription = "Books category description",
                 PageSize = 6,
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_lego.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Lego"))).Id,
                 PriceRanges = "-25;25-50;50-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5846,7 +5846,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryBooks);
+            allCategories.Add(categoryLego);
 
             var categoryJewelry = new Category {
                 Name = "Jewelry",
@@ -6230,7 +6230,7 @@ namespace Grand.Services.Installation
             var productSonyPS5Pad = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Digital Storm VANQUISH 3 Custom Performance PC",
+                Name = "Playstation 5 Gamepad",
                 ShortDescription = "Digital Storm Vanquish 3 Desktop PC",
                 FullDescription = "<p>Blow the doors off today?s most demanding games with maximum detail, speed, and power for an immersive gaming experience without breaking the bank.</p><p>Stay ahead of the competition, VANQUISH 3 is fully equipped to easily handle future upgrades, keeping your system on the cutting edge for years to come.</p><p>Each system is put through an extensive stress test, ensuring you experience zero bottlenecks and get the maximum performance from your hardware.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6317,7 +6317,7 @@ namespace Grand.Services.Installation
             });
             productLenovoIdeaPadDual.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_ideapad_dual_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaPadDual.Name))).Id,
-                DisplayOrder = 1,
+                DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productLenovoIdeaPadDual);
 
@@ -6494,10 +6494,10 @@ namespace Grand.Services.Installation
             await _productRepository.InsertAsync(productLenovoLegionY740);
 
 
-            var productSamsungSeries = new Product {
+            var productPs5Camera = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Samsung Series 9 NP900X4C Premium Ultrabook",
+                Name = "Playstation 5 Camera",
                 ShortDescription = "Samsung Series 9 NP900X4C-A06US 15-Inch Ultrabook (1.70 GHz Intel Core i5-3317U Processor, 8GB DDR3, 128GB SSD, Windows 8) Ash Black",
                 FullDescription = "<p>Designed with mobility in mind, Samsung's durable, ultra premium, lightweight Series 9 laptop (model NP900X4C-A01US) offers mobile professionals and power users a sophisticated laptop equally suited for work and entertainment. Featuring a minimalist look that is both simple and sophisticated, its polished aluminum uni-body design offers an iconic look and feel that pushes the envelope with an edge just 0.58 inches thin. This Series 9 laptop also includes a brilliant 15-inch SuperBright Plus display with HD+ technology, 128 GB Solid State Drive (SSD), 8 GB of system memory, and up to 10 hours of battery life.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6565,17 +6565,21 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productSamsungSeries);
-            productSamsungSeries.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungSeries.Name))).Id,
+            allProducts.Add(productPs5Camera);
+            productPs5Camera.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps5_camera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs5Camera.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productSamsungSeries);
+            productPs5Camera.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps5_camera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs5Camera.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productPs5Camera);
 
-            var productHpSpectre = new Product {
+            var productAcerNitro = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HP Spectre XT Pro UltraBook",
+                Name = "Acer Nitro 5",
                 ShortDescription = "HP Spectre XT Pro UltraBook / Intel Core i5-2467M / 13.3 / 4GB / 128GB / Windows 7 Professional / Laptop",
                 FullDescription = "<p>Introducing HP ENVY Spectre XT, the Ultrabook designed for those who want style without sacrificing substance. It's sleek. It's thin. And with Intel. Corer i5 processor and premium materials, it's designed to go anywhere from the bistro to the boardroom, it's unlike anything you've ever seen from HP.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6651,16 +6655,16 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productHpSpectre);
-            productHpSpectre.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name))).Id,
+            allProducts.Add(productAcerNitro);
+            productAcerNitro.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_nitro_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerNitro.Name))).Id,
                 DisplayOrder = 1,
             });
-            productHpSpectre.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name))).Id,
+            productAcerNitro.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_nitro_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerNitro.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productHpSpectre);
+            await _productRepository.InsertAsync(productAcerNitro);
 
 
             var productHpEnvy = new Product {
@@ -6843,15 +6847,7 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
-                        DisplayOrder = 1,
-                    }
-                }
+                UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productLenovoYogaDuet);
             productLenovoYogaDuet.ProductPictures.Add(new ProductPicture {
@@ -6891,15 +6887,7 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
-                        DisplayOrder = 1,
-                    }
-                }
+                UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productLenovoSmartTab);
             productLenovoSmartTab.ProductPictures.Add(new ProductPicture {
@@ -6939,15 +6927,7 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
-                        DisplayOrder = 1,
-                    }
-                }
+                UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productAsusMixedReality);
             productAsusMixedReality.ProductPictures.Add(new ProductPicture {
@@ -7080,10 +7060,10 @@ namespace Grand.Services.Installation
             });
             await _productRepository.InsertAsync(productNikonD5500DSLR_associated_2);
 
-            var productLeica = new Product {
+            var productAcerProjector = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Leica T Mirrorless Digital Camera",
+                Name = "Acer Projector C250",
                 ShortDescription = "Leica T (Typ 701) Silver",
                 FullDescription = "<p>The new Leica T offers a minimalist design that's crafted from a single block of aluminum.  Made in Germany and assembled by hand, this 16.3 effective mega pixel camera is easy to use.  With a massive 3.7 TFT LCD intuitive touch screen control, the user is able to configure and save their own menu system.  The Leica T has outstanding image quality and also has 16GB of built in memory.  This is Leica's first system camera to use Wi-Fi.  Add the T-App to your portable iOS device and be able to transfer and share your images (free download from the Apple App Store)</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7116,18 +7096,22 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productLeica);
-            productLeica.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLeica.Name))).Id,
+            allProducts.Add(productAcerProjector);
+            productAcerProjector.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_projector_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerProjector.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productLeica);
+            productAcerProjector.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_projector_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerProjector.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productAcerProjector);
 
 
-            var productAppleICam = new Product {
+            var productAcerMonitor = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Apple iCam",
+                Name = "Acer Nitro XZ2",
                 ShortDescription = "Photography becomes smart",
                 FullDescription = "<p>A few months ago we featured the amazing WVIL camera, by many considered the future of digital photography. This is another very good looking concept, iCam is the vision of Italian designer Antonio DeRosa, the idea is to have a device that attaches to the iPhone 5, which then allows the user to have a camera with interchangeable lenses. The device would also feature a front-touch screen and a projector. Would be great if apple picked up on this and made it reality.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7160,16 +7144,20 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productAppleICam);
-            productAppleICam.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleICam.Name))).Id,
+            allProducts.Add(productAcerMonitor);
+            productAcerMonitor.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_monitor_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerMonitor.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productAppleICam);
+            productAcerMonitor.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_monitor_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerMonitor.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productAcerMonitor);
 
             #endregion
 
-            #region Cell Phone
+            #region Smartphone
 
             var productRedmiK30 = new Product {
                 ProductType = ProductType.SimpleProduct,
@@ -7205,7 +7193,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartphones").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -7249,7 +7237,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartphones").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -7297,7 +7285,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartphones").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -7386,10 +7374,10 @@ namespace Grand.Services.Installation
             await _productRepository.InsertAsync(productMiSmartBand);
 
 
-            var productUniversalTabletCover = new Product {
+            var productPs4 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Universal 7-8 Inch Tablet Cover",
+                Name = "Playstation 4 Slim",
                 ShortDescription = "Universal protection for 7-inch & 8-inch tablets",
                 FullDescription = "<p>Made of durable polyurethane, our Universal Cover is slim, lightweight, and strong, with protective corners that stretch to hold most 7 and 8-inch tablets securely. This tough case helps protects your tablet from bumps, scuffs, and dings.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7422,12 +7410,16 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productUniversalTabletCover);
-            productUniversalTabletCover.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productUniversalTabletCover.Name))).Id,
+            allProducts.Add(productPs4);
+            productPs4.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs4.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productUniversalTabletCover);
+            productPs4.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs4.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productPs4);
 
 
             var productMiBeard = new Product {
@@ -7942,10 +7934,10 @@ namespace Grand.Services.Installation
             await _productRepository.InsertAsync(productOversizedWomenTShirt);
 
 
-            var productCustomTShirt = new Product {
+            var productDerbyShirt = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Custom T-Shirt",
+                Name = "Derby County Home Shirt",
                 ShortDescription = "T-Shirt - Add Your Content",
                 FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7988,13 +7980,118 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productCustomTShirt);
-            productCustomTShirt.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name))).Id,
+            allProducts.Add(productDerbyShirt);
+            productDerbyShirt.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyShirt.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productCustomTShirt);
+            await _productRepository.InsertAsync(productDerbyShirt);
 
+            var productDerbyShorts = new Product {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Derby County Home Shorts",
+                ShortDescription = "T-Shirt - Add Your Content",
+                FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Price = 15M,
+                IsShipEnabled = true,
+                Weight = 4,
+                Length = 3,
+                Width = 3,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductAttributeMappings =
+                {
+                    new ProductAttributeMapping
+                    {
+                        ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text").Id,
+                        TextPrompt = "Enter your text:",
+                        AttributeControlType = AttributeControlType.TextBox,
+                        IsRequired = true,
+                    }
+                },
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productDerbyShorts);
+            productDerbyShorts.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shorts_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyShorts.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDerbyShorts);
+
+            var productDerbySocks = new Product {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Derby County Home Socks",
+                ShortDescription = "T-Shirt - Add Your Content",
+                FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Price = 15M,
+                IsShipEnabled = true,
+                Weight = 4,
+                Length = 3,
+                Width = 3,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductAttributeMappings =
+                {
+                    new ProductAttributeMapping
+                    {
+                        ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text").Id,
+                        TextPrompt = "Enter your text:",
+                        AttributeControlType = AttributeControlType.TextBox,
+                        IsRequired = true,
+                    }
+                },
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productDerbySocks);
+            productDerbyShorts.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_socks_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbySocks.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDerbySocks);
 
             var productLeviJeans = new Product {
                 ProductType = ProductType.SimpleProduct,
@@ -8131,14 +8228,6 @@ namespace Grand.Services.Installation
                             }
                         }
                     }
-                },
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
-                        DisplayOrder = 1,
-                    }
                 }
             };
             allProducts.Add(productObeyHat);
@@ -8176,15 +8265,7 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
-                        DisplayOrder = 1,
-                    }
-                }
+                UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productBelt);
             productBelt.ProductPictures.Add(new ProductPicture {
@@ -8221,15 +8302,7 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
-                        DisplayOrder = 1,
-                    }
-                }
+                UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productSunglasses);
             productSunglasses.ProductPictures.Add(new ProductPicture {
@@ -8243,28 +8316,28 @@ namespace Grand.Services.Installation
             #region Digital Downloads
 
 
-            var downloadNightVision1 = new Download {
+            var downloadCyberpunk1 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_1.zip"),
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_cyberpunk_1.zip"),
                 Extension = ".zip",
-                Filename = "Night_Vision_1",
+                Filename = "Cyberpunk",
                 IsNew = true,
             };
-            await downloadService.InsertDownload(downloadNightVision1);
-            var downloadNightVision2 = new Download {
+            await downloadService.InsertDownload(downloadCyberpunk1);
+            var downloadCyberpunk2 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_2.txt"),
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_cyberpunk_2.txt"),
                 Extension = ".txt",
-                Filename = "Night_Vision_1",
+                Filename = "Cyberpunk",
                 IsNew = true,
             };
-            await downloadService.InsertDownload(downloadNightVision2);
-            var productNightVision = new Product {
+            await downloadService.InsertDownload(downloadCyberpunk2);
+            var productCyberpunk = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Night Visions",
+                Name = "Cyberpunk 2077",
                 ShortDescription = "Night Visions is the debut studio album by American rock band Imagine Dragons.",
                 FullDescription = "<p>Original Release Date: September 4, 2012</p><p>Release Date: September 4, 2012</p><p>Genre - Alternative rock, indie rock, electronic rock</p><p>Label - Interscope/KIDinaKORNER</p><p>Copyright: (C) 2011 Interscope Records</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8281,12 +8354,12 @@ namespace Grand.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 IsDownload = true,
-                DownloadId = downloadNightVision1.Id,
+                DownloadId = downloadCyberpunk1.Id,
                 DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
                 UnlimitedDownloads = true,
                 HasUserAgreement = false,
                 HasSampleDownload = true,
-                SampleDownloadId = downloadNightVision2.Id,
+                SampleDownloadId = downloadCyberpunk2.Id,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
@@ -8299,37 +8372,37 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productNightVision);
-            productNightVision.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNightVision.Name))).Id,
+            allProducts.Add(productCyberpunk);
+            productCyberpunk.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_cyberpunk_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCyberpunk.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productNightVision);
+            await _productRepository.InsertAsync(productCyberpunk);
 
 
 
-            var downloadIfYouWait1 = new Download {
+            var downloadGTA1 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_1.zip"),
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_GTA_1.zip"),
                 Extension = ".zip",
-                Filename = "If_You_Wait_1",
+                Filename = "GTA",
                 IsNew = true,
             };
-            await downloadService.InsertDownload(downloadIfYouWait1);
-            var downloadIfYouWait2 = new Download {
+            await downloadService.InsertDownload(downloadGTA1);
+            var downloadGTA2 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_2.txt"),
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_GTA_2.txt"),
                 Extension = ".txt",
-                Filename = "If_You_Wait_1",
+                Filename = "GTA",
                 IsNew = true,
             };
-            await downloadService.InsertDownload(downloadIfYouWait2);
-            var productIfYouWait = new Product {
+            await downloadService.InsertDownload(downloadGTA2);
+            var productGTA = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "If You Wait",
+                Name = "Grand Theft Auto 5",
                 ShortDescription = "If You Wait is the debut studio album by English indie pop band London Grammar",
                 FullDescription = "<p>Original Release Date: September 6, 2013</p><p>Genre - Electronica, dream pop downtempo, pop</p><p>Label - Metal & Dust/Ministry of Sound</p><p>Producer - Tim Bran, Roy Kerr London, Grammar</p><p>Length - 43:22</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8346,12 +8419,12 @@ namespace Grand.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 IsDownload = true,
-                DownloadId = downloadIfYouWait1.Id,
+                DownloadId = downloadGTA1.Id,
                 DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
                 UnlimitedDownloads = true,
                 HasUserAgreement = false,
                 HasSampleDownload = true,
-                SampleDownloadId = downloadIfYouWait2.Id,
+                SampleDownloadId = downloadGTA2.Id,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
@@ -8364,28 +8437,28 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productIfYouWait);
+            allProducts.Add(productGTA);
 
-            productIfYouWait.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productIfYouWait.Name))).Id,
+            productGTA.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_gta_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productGTA.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productIfYouWait);
+            await _productRepository.InsertAsync(productGTA);
 
 
-            var downloadScienceAndFaith = new Download {
+            var downloadCod = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_ScienceAndFaith_1.zip"),
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_cod_1.zip"),
                 Extension = ".zip",
-                Filename = "Science_And_Faith",
+                Filename = "Call of Duty",
                 IsNew = true,
             };
-            await downloadService.InsertDownload(downloadScienceAndFaith);
-            var productScienceAndFaith = new Product {
+            await downloadService.InsertDownload(downloadCod);
+            var productCod = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Science & Faith",
+                Name = "Call of Duty: ColdWar",
                 ShortDescription = "Science & Faith is the second studio album by Irish pop rock band The Script.",
                 FullDescription = "<p># Original Release Date: September 10, 2010<br /># Label: RCA, Epic/Phonogenic(America)<br /># Copyright: 2010 RCA Records.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8402,7 +8475,7 @@ namespace Grand.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 IsDownload = true,
-                DownloadId = downloadScienceAndFaith.Id,
+                DownloadId = downloadCod.Id,
                 DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
                 UnlimitedDownloads = true,
                 HasUserAgreement = false,
@@ -8418,23 +8491,23 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productScienceAndFaith);
-            productScienceAndFaith.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productScienceAndFaith.Name))).Id,
+            allProducts.Add(productCod);
+            productCod.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_cod_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCod.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productScienceAndFaith);
+            await _productRepository.InsertAsync(productCod);
 
 
 
             #endregion
 
-            #region Books
+            #region Lego
 
-            var productFahrenheit = new Product {
+            var productLegoFalcon = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Fahrenheit 451 by Ray Bradbury",
+                Name = "LEGO Millennium Falcon",
                 ShortDescription = "Fahrenheit 451 is a dystopian novel by Ray Bradbury published in 1953. It is regarded as one of his best works.",
                 FullDescription = "<p>The novel presents a future American society where books are outlawed and firemen burn any that are found. The title refers to the temperature that Bradbury understood to be the autoignition point of paper.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8447,7 +8520,7 @@ namespace Grand.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Lego").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8464,21 +8537,25 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Lego").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productFahrenheit);
-            productFahrenheit.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFahrenheit.Name))).Id,
+            allProducts.Add(productLegoFalcon);
+            productLegoFalcon.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_falcon_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoFalcon.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productFahrenheit);
+            productLegoFalcon.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_falcon_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoFalcon.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLegoFalcon);
 
 
 
-            var productFirstPrizePies = new Product {
+            var productLegoHogwarts = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "First Prize Pies",
@@ -8493,7 +8570,7 @@ namespace Grand.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Lego").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8510,22 +8587,26 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Lego").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productFirstPrizePies);
-            productFirstPrizePies.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFirstPrizePies.Name))).Id,
+            allProducts.Add(productLegoHogwarts);
+            productLegoHogwarts.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_hogwarts_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoHogwarts.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productFirstPrizePies);
+            productLegoHogwarts.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_hogwarts_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoHogwarts.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLegoHogwarts);
 
-            var productPrideAndPrejudice = new Product {
+            var productLegoCity = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Pride and Prejudice",
+                Name = "Lego City Police Base",
                 ShortDescription = "Pride and Prejudice is a novel of manners by Jane Austen, first published in 1813.",
                 FullDescription = "<p>Set in England in the early 19th century, Pride and Prejudice tells the story of Mr and Mrs Bennet's five unmarried daughters after the rich and eligible Mr Bingley and his status-conscious friend, Mr Darcy, have moved into their neighbourhood. While Bingley takes an immediate liking to the eldest Bennet daughter, Jane, Darcy has difficulty adapting to local society and repeatedly clashes with the second-eldest Bennet daughter, Elizabeth.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8537,7 +8618,7 @@ namespace Grand.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Lego").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8554,17 +8635,21 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Lego").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productPrideAndPrejudice);
-            productPrideAndPrejudice.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPrideAndPrejudice.Name))).Id,
+            allProducts.Add(productLegoCity);
+            productLegoCity.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LegoCity_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoCity.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productPrideAndPrejudice);
+            productLegoCity.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LegoCity_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoCity.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productLegoCity);
 
 
 
@@ -8895,64 +8980,64 @@ namespace Grand.Services.Installation
                     ProductId2 = productEngagementRing.Id,
                 });
 
-            productIfYouWait.RelatedProducts.Add(
+            productGTA.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productIfYouWait.Id,
-                    ProductId2 = productNightVision.Id,
+                    ProductId1 = productGTA.Id,
+                    ProductId2 = productCyberpunk.Id,
                 });
 
-            productIfYouWait.RelatedProducts.Add(
+            productGTA.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productIfYouWait.Id,
-                    ProductId2 = productScienceAndFaith.Id,
+                    ProductId1 = productGTA.Id,
+                    ProductId2 = productCod.Id,
                 });
 
-            productNightVision.RelatedProducts.Add(
+            productCyberpunk.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productNightVision.Id,
-                    ProductId2 = productIfYouWait.Id,
+                    ProductId1 = productCyberpunk.Id,
+                    ProductId2 = productGTA.Id,
                 });
 
-            productNightVision.RelatedProducts.Add(
+            productCyberpunk.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productNightVision.Id,
-                    ProductId2 = productScienceAndFaith.Id,
+                    ProductId1 = productCyberpunk.Id,
+                    ProductId2 = productCod.Id,
                 });
 
-            productPrideAndPrejudice.RelatedProducts.Add(
+            productLegoCity.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productPrideAndPrejudice.Id,
-                    ProductId2 = productFirstPrizePies.Id,
+                    ProductId1 = productLegoCity.Id,
+                    ProductId2 = productLegoHogwarts.Id,
                 });
 
-            productPrideAndPrejudice.RelatedProducts.Add(
+            productLegoCity.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productPrideAndPrejudice.Id,
-                    ProductId2 = productFahrenheit.Id,
+                    ProductId1 = productLegoCity.Id,
+                    ProductId2 = productLegoFalcon.Id,
                 });
 
-            productFirstPrizePies.RelatedProducts.Add(
+            productLegoHogwarts.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFirstPrizePies.Id,
-                    ProductId2 = productPrideAndPrejudice.Id,
+                    ProductId1 = productLegoHogwarts.Id,
+                    ProductId2 = productLegoCity.Id,
                 });
 
-            productFirstPrizePies.RelatedProducts.Add(
+            productLegoHogwarts.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFirstPrizePies.Id,
-                    ProductId2 = productFahrenheit.Id,
+                    ProductId1 = productLegoHogwarts.Id,
+                    ProductId2 = productLegoFalcon.Id,
                 });
 
-            productFahrenheit.RelatedProducts.Add(
+            productLegoFalcon.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFahrenheit.Id,
-                    ProductId2 = productFirstPrizePies.Id,
+                    ProductId1 = productLegoFalcon.Id,
+                    ProductId2 = productLegoHogwarts.Id,
                 });
 
-            productFahrenheit.RelatedProducts.Add(
+            productLegoFalcon.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFahrenheit.Id,
-                    ProductId2 = productPrideAndPrejudice.Id,
+                    ProductId1 = productLegoFalcon.Id,
+                    ProductId2 = productLegoCity.Id,
                 });
 
             productLenovoLegionY740.RelatedProducts.Add(
@@ -8970,13 +9055,13 @@ namespace Grand.Services.Installation
             productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLenovoLegionY740.Id,
-                    ProductId2 = productSamsungSeries.Id,
+                    ProductId2 = productPs5Camera.Id,
                 });
 
             productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLenovoLegionY740.Id,
-                    ProductId2 = productHpSpectre.Id,
+                    ProductId2 = productAcerNitro.Id,
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
@@ -8994,7 +9079,7 @@ namespace Grand.Services.Installation
             productLenovoThinkpad.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLenovoThinkpad.Id,
-                    ProductId2 = productSamsungSeries.Id,
+                    ProductId2 = productPs5Camera.Id,
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
@@ -9012,7 +9097,7 @@ namespace Grand.Services.Installation
             productMiNotebook.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productMiNotebook.Id,
-                    ProductId2 = productSamsungSeries.Id,
+                    ProductId2 = productPs5Camera.Id,
                 });
 
             productMiNotebook.RelatedProducts.Add(
@@ -9024,30 +9109,30 @@ namespace Grand.Services.Installation
             productMiNotebook.RelatedProducts.Add(
                  new RelatedProduct {
                      ProductId1 = productMiNotebook.Id,
-                     ProductId2 = productHpSpectre.Id,
+                     ProductId2 = productAcerNitro.Id,
                  });
 
-            productHpSpectre.RelatedProducts.Add(
+            productAcerNitro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpSpectre.Id,
+                    ProductId1 = productAcerNitro.Id,
                     ProductId2 = productLenovoThinkpad.Id,
                 });
 
-            productHpSpectre.RelatedProducts.Add(
+            productAcerNitro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpSpectre.Id,
-                    ProductId2 = productSamsungSeries.Id,
+                    ProductId1 = productAcerNitro.Id,
+                    ProductId2 = productPs5Camera.Id,
                 });
 
-            productHpSpectre.RelatedProducts.Add(
+            productAcerNitro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpSpectre.Id,
+                    ProductId1 = productAcerNitro.Id,
                     ProductId2 = productLenovoLegionY740.Id,
                 });
 
-            productHpSpectre.RelatedProducts.Add(
+            productAcerNitro.RelatedProducts.Add(
                  new RelatedProduct {
-                     ProductId1 = productHpSpectre.Id,
+                     ProductId1 = productAcerNitro.Id,
                      ProductId2 = productHpEnvy.Id,
                  });
 
@@ -9066,56 +9151,56 @@ namespace Grand.Services.Installation
             productHpEnvy.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productHpEnvy.Id,
-                    ProductId2 = productHpSpectre.Id,
+                    ProductId2 = productAcerNitro.Id,
                 });
 
             productHpEnvy.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productHpEnvy.Id,
-                    ProductId2 = productSamsungSeries.Id,
+                    ProductId2 = productPs5Camera.Id,
                 });
-            productSamsungSeries.RelatedProducts.Add(
+            productPs5Camera.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productSamsungSeries.Id,
+                    ProductId1 = productPs5Camera.Id,
                     ProductId2 = productLenovoLegionY740.Id,
                 });
-            productSamsungSeries.RelatedProducts.Add(
+            productPs5Camera.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productSamsungSeries.Id,
+                    ProductId1 = productPs5Camera.Id,
                     ProductId2 = productMiNotebook.Id,
                 });
 
-            productSamsungSeries.RelatedProducts.Add(
+            productPs5Camera.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productSamsungSeries.Id,
+                    ProductId1 = productPs5Camera.Id,
                     ProductId2 = productHpEnvy.Id,
                 });
-            productSamsungSeries.RelatedProducts.Add(
+            productPs5Camera.RelatedProducts.Add(
                  new RelatedProduct {
-                     ProductId1 = productSamsungSeries.Id,
-                     ProductId2 = productHpSpectre.Id,
+                     ProductId1 = productPs5Camera.Id,
+                     ProductId2 = productAcerNitro.Id,
                  });
-            productLeica.RelatedProducts.Add(
+            productAcerProjector.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeica.Id,
+                    ProductId1 = productAcerProjector.Id,
                     ProductId2 = productRedmiNote9.Id,
                 });
 
-            productLeica.RelatedProducts.Add(
+            productAcerProjector.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeica.Id,
+                    ProductId1 = productAcerProjector.Id,
                     ProductId2 = productNikonD5500DSLR.Id,
                 });
 
-            productLeica.RelatedProducts.Add(
+            productAcerProjector.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeica.Id,
-                    ProductId2 = productAppleICam.Id,
+                    ProductId1 = productAcerProjector.Id,
+                    ProductId2 = productAcerMonitor.Id,
                 });
 
-            productLeica.RelatedProducts.Add(
+            productAcerProjector.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeica.Id,
+                    ProductId1 = productAcerProjector.Id,
                     ProductId2 = productPocoF2Pro.Id,
                 });
             productRedmiK30.RelatedProducts.Add(
@@ -9228,25 +9313,25 @@ namespace Grand.Services.Installation
                     ProductId2 = productNikeTailwind.Id,
                 });
 
-            productCustomTShirt.RelatedProducts.Add(
+            productDerbyShirt.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productCustomTShirt.Id,
+                    ProductId1 = productDerbyShirt.Id,
                     ProductId2 = productLeviJeans.Id,
                 });
 
-            productCustomTShirt.RelatedProducts.Add(
+            productDerbyShirt.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productCustomTShirt.Id,
+                    ProductId1 = productDerbyShirt.Id,
                     ProductId2 = productNikeTailwind.Id,
                 });
-            productCustomTShirt.RelatedProducts.Add(
+            productDerbyShirt.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productCustomTShirt.Id,
+                    ProductId1 = productDerbyShirt.Id,
                     ProductId2 = productOversizedWomenTShirt.Id,
                 });
-            productCustomTShirt.RelatedProducts.Add(
+            productDerbyShirt.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productCustomTShirt.Id,
+                    ProductId1 = productDerbyShirt.Id,
                     ProductId2 = productObeyHat.Id,
                 });
             productSonyPS5Pad.RelatedProducts.Add(
@@ -9312,8 +9397,8 @@ namespace Grand.Services.Installation
             await AddProductTag(productNikeFloral, "apparel");
             await AddProductTag(productLenovoYogaDuet, "tablet");
             await AddProductTag(productLenovoYogaDuet, "awesome");
-            await AddProductTag(productUniversalTabletCover, "computer");
-            await AddProductTag(productUniversalTabletCover, "cool");
+            await AddProductTag(productPs4, "computer");
+            await AddProductTag(productPs4, "cool");
             await AddProductTag(productOversizedWomenTShirt, "cool");
             await AddProductTag(productOversizedWomenTShirt, "apparel");
             await AddProductTag(productOversizedWomenTShirt, "shirt");
@@ -9323,9 +9408,9 @@ namespace Grand.Services.Installation
             await AddProductTag(productLenovoLegionY740, "compact");
             await AddProductTag(productLenovoLegionY740, "awesome");
             await AddProductTag(productLenovoLegionY740, "computer");
-            await AddProductTag(productFahrenheit, "awesome");
-            await AddProductTag(productFahrenheit, "book");
-            await AddProductTag(productFahrenheit, "nice");
+            await AddProductTag(productLegoFalcon, "awesome");
+            await AddProductTag(productLegoFalcon, "lego");
+            await AddProductTag(productLegoFalcon, "nice");
             await AddProductTag(productRedmiK30, "cell");
             await AddProductTag(productRedmiK30, "compact");
             await AddProductTag(productRedmiK30, "awesome");
@@ -9333,30 +9418,30 @@ namespace Grand.Services.Installation
             await AddProductTag(productBuildComputer, "computer");
             await AddProductTag(productNikonD5500DSLR, "cool");
             await AddProductTag(productNikonD5500DSLR, "camera");
-            await AddProductTag(productLeica, "camera");
-            await AddProductTag(productLeica, "cool");
+            await AddProductTag(productAcerProjector, "projector");
+            await AddProductTag(productAcerProjector, "cool");
             await AddProductTag(productSonyPS5Pad, "cool");
             await AddProductTag(productSonyPS5Pad, "computer");
             await AddProductTag(productLenovoSmartTab, "awesome");
             await AddProductTag(productLenovoSmartTab, "tablet");
-            await AddProductTag(productCustomTShirt, "cool");
-            await AddProductTag(productCustomTShirt, "shirt");
-            await AddProductTag(productCustomTShirt, "apparel");
+            await AddProductTag(productDerbyShirt, "cool");
+            await AddProductTag(productDerbyShirt, "shirt");
+            await AddProductTag(productDerbyShirt, "apparel");
             await AddProductTag(productElegantGemstoneNecklace, "jewelry");
             await AddProductTag(productElegantGemstoneNecklace, "awesome");
             await AddProductTag(productFlowerGirlBracelet, "awesome");
             await AddProductTag(productFlowerGirlBracelet, "jewelry");
-            await AddProductTag(productFirstPrizePies, "book");
+            await AddProductTag(productLegoHogwarts, "lego");
             await AddProductTag(productAdidas, "cool");
             await AddProductTag(productAdidas, "shoes");
             await AddProductTag(productAdidas, "apparel");
             await AddProductTag(productLenovoIdeaPadDual, "awesome");
             await AddProductTag(productLenovoIdeaPadDual, "tablet");
-            await AddProductTag(productSamsungSeries, "nice");
-            await AddProductTag(productSamsungSeries, "computer");
-            await AddProductTag(productSamsungSeries, "compact");
-            await AddProductTag(productHpSpectre, "nice");
-            await AddProductTag(productHpSpectre, "computer");
+            await AddProductTag(productPs5Camera, "nice");
+            await AddProductTag(productPs5Camera, "computer");
+            await AddProductTag(productPs5Camera, "compact");
+            await AddProductTag(productAcerNitro, "nice");
+            await AddProductTag(productAcerNitro, "computer");
             await AddProductTag(productHpEnvy, "computer");
             await AddProductTag(productHpEnvy, "cool");
             await AddProductTag(productHpEnvy, "compact");
@@ -9368,21 +9453,21 @@ namespace Grand.Services.Installation
             await AddProductTag(productAsusMixedReality, "game");
             await AddProductTag(productAsusMixedReality, "computer");
             await AddProductTag(productAsusMixedReality, "cool");
-            await AddProductTag(productNightVision, "awesome");
-            await AddProductTag(productNightVision, "digital");
+            await AddProductTag(productCyberpunk, "awesome");
+            await AddProductTag(productCyberpunk, "digital");
             await AddProductTag(productSunglasses, "apparel");
             await AddProductTag(productSunglasses, "cool");
             await AddProductTag(productRedmiNote9, "awesome");
             await AddProductTag(productRedmiNote9, "compact");
             await AddProductTag(productRedmiNote9, "cell");
-            await AddProductTag(productIfYouWait, "digital");
-            await AddProductTag(productIfYouWait, "awesome");
+            await AddProductTag(productGTA, "digital");
+            await AddProductTag(productGTA, "game");
             await AddProductTag(productPocoF2Pro, "awesome");
             await AddProductTag(productPocoF2Pro, "cool");
             await AddProductTag(productPocoF2Pro, "camera");
-            await AddProductTag(productScienceAndFaith, "digital");
-            await AddProductTag(productScienceAndFaith, "awesome");
-            await AddProductTag(productPrideAndPrejudice, "book");
+            await AddProductTag(productCod, "digital");
+            await AddProductTag(productCod, "awesome");
+            await AddProductTag(productLegoCity, "lego");
             await AddProductTag(productLenovoThinkpad, "awesome");
             await AddProductTag(productLenovoThinkpad, "computer");
             await AddProductTag(productLenovoThinkpad, "compact");
