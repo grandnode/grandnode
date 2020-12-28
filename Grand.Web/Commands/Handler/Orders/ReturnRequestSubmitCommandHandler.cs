@@ -52,6 +52,7 @@ namespace Grand.Web.Commands.Handler.Orders
                 OrderId = request.Order.Id,
                 CustomerId = _workContext.CurrentCustomer.Id,
                 OwnerId = _workContext.CurrentCustomer.IsOwner() ? _workContext.CurrentCustomer.Id : _workContext.CurrentCustomer.OwnerId,
+                SeId = request.Order.SeId,
                 CustomerComments = request.Model.Comments,
                 StaffNotes = string.Empty,
                 ReturnRequestStatus = ReturnRequestStatus.Pending,

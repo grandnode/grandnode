@@ -37,6 +37,11 @@ namespace Grand.Domain.Orders
         public string OwnerId { get; set; }
 
         /// <summary>
+        /// Gets or sets the sales employee identifier 
+        /// </summary>
+        public string SeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the return request items
         /// </summary>
         public IList<ReturnRequestItem> ReturnRequestItems { get; set; }
