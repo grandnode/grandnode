@@ -1,13 +1,13 @@
 ﻿using Grand.Domain.Data;
 using Grand.Domain.Messages;
 using Grand.Services.Events;
+using MediatR;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using MediatR;
 
 namespace Grand.Services.Messages
 {
@@ -58,9 +58,9 @@ namespace Grand.Services.Messages
         }
 
         /// <summary>
-        /// Deleted a banner
+        /// Deleted a interactive form
         /// </summary>
-        /// <param name="banner">Banner</param>
+        /// <param name="form">Interactive form</param>
         public virtual async Task DeleteForm(InteractiveForm form)
         {
             if (form == null)
@@ -78,13 +78,29 @@ namespace Grand.Services.Messages
         /// <returns>Banner</returns>
         public virtual Task<InteractiveForm> GetFormById(string formId)
         {
+            if (string.IsNullOrEmpty(formId))
+                throw new ArgumentNullException("formId");
+
             return _formRepository.GetByIdAsync(formId);
         }
 
         /// <summary>
-        /// Gets all banners
+        /// Gets a form by system name
         /// </summary>
-        /// <returns>Banners</returns>
+        /// <param name="systemName">Form system name</param>
+        /// <returns>Interactive form</returns>
+        public virtual async Task<InteractiveForm> GetFormBySystemName(string systemName)
+        {
+            if (string.IsNullOrEmpty(systemName))
+                throw new ArgumentNullException("systemName");
+
+            return await _formRepository.Table.FirstOrDefaultAsync(x => x.SystemName == systemName);
+        }
+
+        /// <summary>
+        /// Gets all Interactive forms
+        /// </summary>
+        /// <returns>Interactive forms</returns>
         public virtual async Task<IList<InteractiveForm>> GetAllForms()
         {
 

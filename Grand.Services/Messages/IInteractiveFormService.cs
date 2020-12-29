@@ -28,13 +28,20 @@ namespace Grand.Services.Messages
         /// Gets a form by identifier
         /// </summary>
         /// <param name="formId">Form identifier</param>
-        /// <returns>Banner</returns>
+        /// <returns>Interactive form</returns>
         Task<InteractiveForm> GetFormById(string formId);
 
         /// <summary>
-        /// Gets all banner
+        /// Gets a form by system name
         /// </summary>
-        /// <returns>Banners</returns>
+        /// <param name="systemName">Form system name</param>
+        /// <returns>Interactive form</returns>
+        Task<InteractiveForm> GetFormBySystemName(string systemName);
+
+        /// <summary>
+        /// Gets all interactive forms
+        /// </summary>
+        /// <returns>Interactive forms</returns>
         Task<IList<InteractiveForm>> GetAllForms();
 
     }

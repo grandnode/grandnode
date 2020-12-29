@@ -1,0 +1,23 @@
+﻿@model Grand.Web.Models.Messages.InteractiveFormModel
+<form asp-route="PopupInteractiveForm" method="post" id="interactive-form-@Model.InteractiveForm.Id">
+    <div id="action-body-form">@Html.Raw(Model.Body)</div>
+</form>
+<script asp-location="Footer">
+    $("#interactive-form-@Model.InteractiveForm.Id").submit(function (event) {
+        event.preventDefault();
+        var $form = $(this),
+            url = $form.attr('action');
+        var posting = $.post(url, $('#interactive-form-@Model.InteractiveForm.Id').serialize());
+        posting.done(function (result) {
+            if (!result.success) {
+                $('#errorMessages').empty();
+                for (var error in result.errors) {
+                    $('#errorMessages').append(result.errors[error] + '<br/>');
+                }
+            }
+            else {
+                $("#interactive-form-@Model.InteractiveForm.Id").html('');
+            }
+        });
+    });
+</script>
