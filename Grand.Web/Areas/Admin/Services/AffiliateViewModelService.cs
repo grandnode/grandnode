@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Domain.Affiliates;
 using Grand.Domain.Directory;
+using Grand.Domain.Localization;
 using Grand.Domain.Orders;
 using Grand.Domain.Payments;
 using Grand.Domain.Seo;
@@ -175,19 +176,23 @@ namespace Grand.Web.Areas.Admin.Services
                 pageIndex: pageIndex - 1,
                 pageSize: pageSize);
 
-            return (orders.Select(order =>
-                {
-                    var orderModel = new AffiliateModel.AffiliatedOrderModel();
-                    orderModel.Id = order.Id;
-                    orderModel.OrderNumber = order.OrderNumber;
-                    orderModel.OrderCode = order.Code;
-                    orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-                    orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
-                    orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
-                    orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
-                    orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
-                    return orderModel;
-                }), orders.TotalCount);
+            var affiliateorders = new List<AffiliateModel.AffiliatedOrderModel>();
+            foreach (var order in orders)
+            {
+                var orderModel = new AffiliateModel.AffiliatedOrderModel {
+                    Id = order.Id,
+                    OrderNumber = order.OrderNumber,
+                    OrderCode = order.Code,
+                    OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    OrderTotal = await _priceFormatter.FormatPrice(order.OrderTotal, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc)
+                };
+                affiliateorders.Add(orderModel);
+            }
+
+            return (affiliateorders, orders.TotalCount);
         }
 
         public virtual async Task<(IEnumerable<AffiliateModel.AffiliatedCustomerModel> affiliateCustomerModels, int totalCount)> PrepareAffiliatedCustomerList(Affiliate affiliate, int pageIndex, int pageSize)
