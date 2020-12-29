@@ -24,7 +24,6 @@
                 <span class="sr-only">@T("Search.SearchBox.Tooltip")</span>
                 <b-icon icon="search"></b-icon>
             </button>
-            <b-button class="modal-close" block @@click="$bvModal.hide('search-box')"><b-icon icon="x"></b-icon></b-button>
         </div>
     </div>
     <div id="adv_search" class="advanced-search-results" v-if="searchitems" onclick="StopPropagation(event)">
