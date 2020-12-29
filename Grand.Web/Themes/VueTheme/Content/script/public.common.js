@@ -218,7 +218,7 @@ function newsletter_subscribe(subscribe) {
         subscribeProgress.style.display = "none";
     })
 }
-window.onload = function () {
+function newsletterBox() {
     var el = document.getElementById('newsletter-subscribe-button');
     el.onclick = function () {
         var allowToUnsubscribe = document.getElementById("newsletterbox").getAttribute('data-allowtounsubscribe').toLowerCase();
@@ -583,7 +583,7 @@ function backToTop() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-   // validation();
+    newsletterBox();
     CloseSearchBox();
     backToTop();
 }); 
