@@ -34,7 +34,7 @@
                                 <admin-label asp-for="AmountToRefund" />
                                 <div class="col-md-9 col-sm-9">
                                     <admin-input asp-for="AmountToRefund" />: &nbsp;&nbsp;&nbsp; <span style="white-space: nowrap">
-                                        @string.Format(T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.PrimaryStoreCurrencyCode)
+                                        @string.Format(T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.CurrencyCode)
                                     </span>
                                 </div>
                             </div>
