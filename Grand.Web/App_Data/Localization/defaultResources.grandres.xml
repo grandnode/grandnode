@@ -15391,6 +15391,15 @@
   <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.Name.Required">
     <Value>Name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.SystemName">
+    <Value>System Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.SystemName.hint">
+    <Value>Enter system name of the interactive form</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.SystemName.Required">
+    <Value>System name is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.InteractiveForms.Info">
     <Value>Info</Value>
   </LocaleResource>

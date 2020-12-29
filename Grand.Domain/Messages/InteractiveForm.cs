@@ -20,6 +20,11 @@ namespace Grand.Domain.Messages
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the system name
+        /// </summary>
+        public string SystemName { get; set; }
+
+        /// <summary>
         /// Gets or sets the body
         /// </summary>
         public string Body { get; set; }

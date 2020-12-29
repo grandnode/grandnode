@@ -16,8 +16,10 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Name")]
         public string Name { get; set; }
 
-        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Body")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.SystemName")]
+        public string SystemName { get; set; }
 
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Body")]
         public string Body { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.EmailAccount")]
