@@ -257,7 +257,7 @@ namespace Grand.Web.Controllers
                 if (model.ExistingAddresses.Any())
                 {
                     //choose the first one
-                    return await SelectBillingAddress(model.ExistingAddresses.First().Id);
+                    return await SelectBillingAddress(model.ExistingAddresses.First().Id, false);
                 }
 
                 TryValidateModel(model);
@@ -1259,6 +1259,10 @@ namespace Grand.Web.Controllers
 
                     var model = new CheckoutBillingAddressModel();
                     await TryUpdateModelAsync(model);
+
+                    if (_orderSettings.DisableBillingAddressCheckoutStep)
+                        _shippingSettings.ShipToSameAddress = false;
+
                     if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress)
                     {
                         _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
