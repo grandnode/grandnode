@@ -126,6 +126,9 @@ function displayPopupQuickView(html) {
                 var img = event.srcElement.getAttribute('data-src');
                 var mainImg = document.querySelector('#ModalQuickView .gallery .main-image');
                 mainImg.setAttribute('src', img);
+            },
+            isMobile() {
+                return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
             }
         },
         mounted() {

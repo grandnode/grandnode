@@ -602,16 +602,16 @@ input:checked ~ .color-container .color::before {
     position: relative;
     overflow: hidden;
 }
-.product-box .picture-container a {
+.product-box .picture-container .img-container {
     display: block;
     position: relative;
 }
-.product-box .picture-container a::before {
+.product-box .picture-container .img-container::before {
     content: "";
     display: block;
     padding-top: 100%;
 }
-.product-box .picture-container a img {
+.product-box .picture-container .img-container img {
     position: absolute;
     top: 0;
     right: 0;

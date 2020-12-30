@@ -35,19 +35,19 @@
 }
 
 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_before_content", additionalData = Model})
-<b-card no-body tag="article" class="product-box mb-2" @@mouseover="hover = true" @@mouseleave="hover = false">
+<b-card no-body tag="article" v-bind:class="{ mobile: isMobile()}" class="product-box mb-2">
     <div class="picture-container">
-        <b-link href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+        <b-link class="img-container" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
             <b-card-img-lazy alt="@Model.DefaultPictureModel.AlternateText" class="main-product-img" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title"></b-card-img-lazy>
             @if (!string.IsNullOrEmpty(Model.SecondPictureModel.ImageUrl))
             {
                 <b-card-img-lazy class="hover-img" alt="@Model.SecondPictureModel.AlternateText" src="@Model.SecondPictureModel.ImageUrl"></b-card-img-lazy>
             }
         </b-link>
-        <b-button title="@T("Products.QuickView")" variant="secondary" class="quick-view-button" data-target="ModalQuickView" onclick="AxiosCart.quickview_product('@quickviewurl');return false;">
+        <a title="@T("Products.QuickView")" class="btn btn-secondary quick-view-button" data-target="ModalQuickView" onclick="AxiosCart.quickview_product('@quickviewurl');return false;">
             <b-icon icon="search"></b-icon>
             <span>@T("Products.QuickView")</span>
-        </b-button>
+        </a>
     </div>
     <b-card-body>
         <h3 class="card-title mb-0">
