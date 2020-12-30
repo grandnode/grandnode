@@ -1199,7 +1199,22 @@ namespace Grand.Services.Installation
             await _serviceProvider.GetRequiredService<IRepository<CustomerRole>>().InsertAsync(crSalesManager);
 
             #endregion
-            
+
+            #region Upgrade Git cards - update CurrencyCode
+
+            var pc = await _serviceProvider.GetRequiredService<ICurrencyService>().GetPrimaryStoreCurrency();
+
+            var giftdBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
+            var giftCardsRepository = giftdBContext.Database().GetCollection<GiftCard>("GiftCard");
+            await giftCardsRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
+            {
+                o.CurrencyCode = pc.CurrencyCode;
+                await giftCardsRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
+            });
+
+            #endregion
+
+
         }
 
         private async Task InstallStringResources(string filenames)
