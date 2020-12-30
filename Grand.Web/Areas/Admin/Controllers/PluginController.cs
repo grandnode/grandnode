@@ -282,7 +282,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Installed"));
 
                 //restart application
-                _webHelper.RestartAppDomain();
+                _webHelper.StopApplication();
             }
             catch (Exception exc)
             {
@@ -318,7 +318,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uninstalled"));
 
                 //restart application
-                _webHelper.RestartAppDomain();
+                _webHelper.StopApplication();
             }
             catch (Exception exc)
             {
@@ -359,7 +359,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Removed"));
 
                 //restart application
-                _webHelper.RestartAppDomain();
+                _webHelper.StopApplication();
             }
             catch (Exception exc)
             {
@@ -372,7 +372,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult ReloadList()
         {
             //restart application
-            _webHelper.RestartAppDomain();
+            _webHelper.StopApplication();
             return RedirectToAction("List");
         }
 
@@ -420,7 +420,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //restart application
-            _webHelper.RestartAppDomain();
+            _webHelper.StopApplication();
 
             return RedirectToAction("List");
         }

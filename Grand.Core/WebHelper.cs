@@ -328,9 +328,9 @@ namespace Grand.Core
         }
 
         /// <summary>
-        /// Restart application domain
+        /// Stop application
         /// </summary>
-        public virtual void RestartAppDomain()
+        public virtual void StopApplication()
         {
             _applicationLifetime.StopApplication();
         }

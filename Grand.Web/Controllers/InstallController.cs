@@ -291,7 +291,7 @@ namespace Grand.Web.Controllers
 
             //restart application
             var webHelper = _serviceProvider.GetRequiredService<IWebHelper>();
-            webHelper.RestartAppDomain();
+            webHelper.StopApplication();
 
             //Redirect to home page
             return RedirectToRoute("HomePage");

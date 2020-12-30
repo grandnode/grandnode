@@ -56,7 +56,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             //restart application
-            webHelper.RestartAppDomain();
+            webHelper.StopApplication();
 
             //Redirect to home page
             return RedirectToRoute("HomePage");

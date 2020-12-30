@@ -483,7 +483,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult RestartApplication(string returnUrl = "")
         {
             //restart application
-            _webHelper.RestartAppDomain();
+            _webHelper.StopApplication();
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
