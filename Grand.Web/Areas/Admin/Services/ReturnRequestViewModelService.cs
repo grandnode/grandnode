@@ -271,7 +271,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
             return items;
         }
-        public virtual async Task<ReturnRequest> UpdateReturnRequestModel(ReturnRequest returnRequest, ReturnRequestModel model, string customAddressAttributes)
+        public virtual async Task<ReturnRequest> UpdateReturnRequestModel(ReturnRequest returnRequest, ReturnRequestModel model, List<CustomAttribute> customAddressAttributes)
         {
             returnRequest.CustomerComments = model.CustomerComments;
             returnRequest.StaffNotes = model.StaffNotes;
@@ -286,7 +286,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 returnRequest.PickupAddress = model.PickupAddress.ToEntity();
                 if (returnRequest.PickupAddress != null)
-                    returnRequest.PickupAddress.CustomAttributes = customAddressAttributes;
+                    returnRequest.PickupAddress.Attributes = customAddressAttributes;
             }
             returnRequest.NotifyCustomer = model.NotifyCustomer;
             await _returnRequestService.UpdateReturnRequest(returnRequest);

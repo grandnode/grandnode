@@ -32,11 +32,13 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Grand.Services.Installation
 {
@@ -1096,7 +1098,7 @@ namespace Grand.Services.Installation
                 });
             }
             #endregion
-            
+
             #region Upgrade orders
 
             var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
@@ -1182,7 +1184,7 @@ namespace Grand.Services.Installation
                             Amount = Math.Round(item.Value * o.CurrencyRate, 4)
                         });
                     }
-                    await orderTaxRepository.ReplaceOneAsync(x => x.Id == o.Id, o); 
+                    await orderTaxRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
                 }
             });
 
@@ -1214,7 +1216,93 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Upgrade Address attributes field
 
+            static List<CustomAttribute> ParseCustomAttributes(string attributesXml)
+            {
+                var customAttribute = new List<CustomAttribute>();
+
+                try
+                {
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(attributesXml);
+
+                    var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/AddressAttribute");
+                    foreach (XmlNode node1 in nodeList1)
+                    {
+                        if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                        {
+                            var key = node1.Attributes["ID"].InnerText.Trim();
+
+                            var nodeList2 = node1.SelectNodes(@"AddressAttributeValue/Value");
+                            foreach (XmlNode node2 in nodeList2)
+                            {
+                                var value = node2.InnerText.Trim();
+                                customAttribute.Add(new CustomAttribute() { Key = key, Value = value });
+                            }
+                        }
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Debug.Write(exc.ToString());
+                }
+                return customAttribute;
+            }
+
+            //upgrade customer data - billingaddress/shippingaddress - Addresses
+            var customerdBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
+            var customerRepository = giftdBContext.Database().GetCollection<Customer>("Customer");
+
+            var builder = Builders<Customer>.Filter;
+            var filterBillingAddress = builder.Exists(x => x.BillingAddress);
+            var filterShippingAddress = builder.Exists(x => x.ShippingAddress);
+            var filterAddresses = builder.SizeGt(x => x.Addresses, 0);
+
+            await customerRepository.Find(filterBillingAddress).ForEachAsync(async (c) =>
+            {
+                if (!string.IsNullOrEmpty(c.BillingAddress.CustomAttributes))
+                {
+                    c.BillingAddress.Attributes = ParseCustomAttributes(c.BillingAddress.CustomAttributes);
+                    await customerRepository.ReplaceOneAsync(x => x.Id == c.Id, c);
+                }
+            });
+            await customerRepository.Find(filterShippingAddress).ForEachAsync(async (c) =>
+            {
+                if (!string.IsNullOrEmpty(c.ShippingAddress.CustomAttributes))
+                {
+                    c.ShippingAddress.Attributes = ParseCustomAttributes(c.ShippingAddress.CustomAttributes);
+                    await customerRepository.ReplaceOneAsync(x => x.Id == c.Id, c);
+                }
+            });
+
+            await customerRepository.Find(filterAddresses).ForEachAsync(async (c) =>
+            {
+                if (c.Addresses.Where(x => string.IsNullOrEmpty(x.CustomAttributes)).Any())
+                {
+                    foreach (var address in c.Addresses.Where(x => string.IsNullOrEmpty(x.CustomAttributes)))
+                    {
+                        address.Attributes = ParseCustomAttributes(address.CustomAttributes);
+                    }
+                    await customerRepository.ReplaceOneAsync(x => x.Id == c.Id, c);
+                }
+            });
+
+            //upgrade order data - billingaddress/shippingaddress
+            await orderTaxRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
+            {
+                if (!string.IsNullOrEmpty(o.BillingAddress?.CustomAttributes) || !string.IsNullOrEmpty(o.ShippingAddress?.CustomAttributes))
+                {
+                    if (string.IsNullOrEmpty(o.BillingAddress?.CustomAttributes))
+                        o.BillingAddress.Attributes = ParseCustomAttributes(o.BillingAddress.CustomAttributes);
+                    if (string.IsNullOrEmpty(o.ShippingAddress?.CustomAttributes))
+                        o.ShippingAddress.Attributes = ParseCustomAttributes(o.ShippingAddress.CustomAttributes);
+
+                    await orderTaxRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
+                }
+            });
+
+            #endregion
         }
 
         private async Task InstallStringResources(string filenames)

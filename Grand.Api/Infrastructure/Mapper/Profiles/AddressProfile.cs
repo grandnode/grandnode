@@ -10,7 +10,7 @@ namespace Grand.Api.Infrastructure.Mapper
         public AddressProfile()
         {
             CreateMap<AddressDto, Address>()
-                .ForMember(dest => dest.CustomAttributes, mo => mo.Ignore())
+                .ForMember(dest => dest.Attributes, mo => mo.Ignore())
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
             CreateMap<Address, AddressDto>();

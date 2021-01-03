@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Grand.Domain.Common
 {
     public partial class Address : BaseEntity
     {
+        public Address()
+        {
+            Attributes = new List<CustomAttribute>();
+        }
+
         public string CustomerId { get; set; }
 
         /// <summary>
@@ -74,6 +80,9 @@ namespace Grand.Domain.Common
         /// <summary>
         /// Gets or sets the custom attributes (see "AddressAttribute" entity for more info)
         /// </summary>
+        public IList<CustomAttribute> Attributes { get; set; }
+
+        [Obsolete("Will be removed in version 5.0.0 - this field was replaced by Attributes object")] 
         public string CustomAttributes { get; set; }
 
         /// <summary>

@@ -1083,7 +1083,7 @@ namespace Grand.Services.Customers
                 .Set(x => x.Addresses.ElementAt(-1).Company, address.Company)
                 .Set(x => x.Addresses.ElementAt(-1).VatNumber, address.VatNumber)
                 .Set(x => x.Addresses.ElementAt(-1).CountryId, address.CountryId)
-                .Set(x => x.Addresses.ElementAt(-1).CustomAttributes, address.CustomAttributes)
+                .Set(x => x.Addresses.ElementAt(-1).Attributes, address.Attributes)
                 .Set(x => x.Addresses.ElementAt(-1).Email, address.Email)
                 .Set(x => x.Addresses.ElementAt(-1).FaxNumber, address.FaxNumber)
                 .Set(x => x.Addresses.ElementAt(-1).FirstName, address.FirstName)

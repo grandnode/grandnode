@@ -22,27 +22,25 @@ namespace Grand.Services.Common
         /// <param name="stateProvinceId">State/province identifier</param>
         /// <param name="zipPostalCode">Zip postal code</param>
         /// <param name="countryId">Country identifier</param>
-        /// <param name="customAttributes">Custom address attributes (XML format)</param>
         /// <returns>Address</returns>
         public static Address FindAddress(this List<Address> source,
             string firstName, string lastName, string phoneNumber,
             string email, string faxNumber, string company, string address1,
             string address2, string city, string stateProvinceId,
-            string zipPostalCode, string countryId, string customAttributes)
+            string zipPostalCode, string countryId)
         {
-            return source.Find(a => ((String.IsNullOrEmpty(a.FirstName) && String.IsNullOrEmpty(firstName)) || a.FirstName == firstName) &&
-                ((String.IsNullOrEmpty(a.LastName) && String.IsNullOrEmpty(lastName)) || a.LastName == lastName) &&
-                ((String.IsNullOrEmpty(a.PhoneNumber) && String.IsNullOrEmpty(phoneNumber)) || a.PhoneNumber == phoneNumber) &&
-                ((String.IsNullOrEmpty(a.Email) && String.IsNullOrEmpty(email)) || a.Email == email) &&
-                ((String.IsNullOrEmpty(a.FaxNumber) && String.IsNullOrEmpty(faxNumber)) || a.FaxNumber == faxNumber) &&
-                ((String.IsNullOrEmpty(a.Company) && String.IsNullOrEmpty(company)) || a.Company == company) &&
-                ((String.IsNullOrEmpty(a.Address1) && String.IsNullOrEmpty(address1)) || a.Address1 == address1) &&
-                ((String.IsNullOrEmpty(a.Address2) && String.IsNullOrEmpty(address2)) || a.Address2 == address2) &&
-                ((String.IsNullOrEmpty(a.City) && String.IsNullOrEmpty(city)) || a.City == city) &&
-                ((String.IsNullOrEmpty(a.StateProvinceId) && String.IsNullOrEmpty(stateProvinceId)) || a.StateProvinceId == stateProvinceId) &&
-                ((String.IsNullOrEmpty(a.ZipPostalCode) && String.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
-                ((String.IsNullOrEmpty(a.CountryId) && String.IsNullOrEmpty(countryId)) || a.CountryId == countryId) &&
-                ((String.IsNullOrEmpty(a.CustomAttributes) && String.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));
+            return source.Find(a => ((string.IsNullOrEmpty(a.FirstName) && string.IsNullOrEmpty(firstName)) || a.FirstName == firstName) &&
+                ((string.IsNullOrEmpty(a.LastName) && string.IsNullOrEmpty(lastName)) || a.LastName == lastName) &&
+                ((string.IsNullOrEmpty(a.PhoneNumber) && string.IsNullOrEmpty(phoneNumber)) || a.PhoneNumber == phoneNumber) &&
+                ((string.IsNullOrEmpty(a.Email) && string.IsNullOrEmpty(email)) || a.Email == email) &&
+                ((string.IsNullOrEmpty(a.FaxNumber) && string.IsNullOrEmpty(faxNumber)) || a.FaxNumber == faxNumber) &&
+                ((string.IsNullOrEmpty(a.Company) && string.IsNullOrEmpty(company)) || a.Company == company) &&
+                ((string.IsNullOrEmpty(a.Address1) && string.IsNullOrEmpty(address1)) || a.Address1 == address1) &&
+                ((string.IsNullOrEmpty(a.Address2) && string.IsNullOrEmpty(address2)) || a.Address2 == address2) &&
+                ((string.IsNullOrEmpty(a.City) && string.IsNullOrEmpty(city)) || a.City == city) &&
+                ((string.IsNullOrEmpty(a.StateProvinceId) && string.IsNullOrEmpty(stateProvinceId)) || a.StateProvinceId == stateProvinceId) &&
+                ((string.IsNullOrEmpty(a.ZipPostalCode) && string.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
+                ((string.IsNullOrEmpty(a.CountryId) && string.IsNullOrEmpty(countryId)) || a.CountryId == countryId));
         }
 
     }

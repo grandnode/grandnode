@@ -16,7 +16,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task NotifyCustomer(ReturnRequest returnRequest);
         ReturnReqestListModel PrepareReturnReqestListModel();
         Task<IList<ReturnRequestModel.ReturnRequestItemModel>> PrepareReturnRequestItemModel(string returnRequestId);
-        Task<ReturnRequest> UpdateReturnRequestModel(ReturnRequest returnRequest, ReturnRequestModel model, string customAddressAttributes);
+        Task<ReturnRequest> UpdateReturnRequestModel(ReturnRequest returnRequest, ReturnRequestModel model, List<CustomAttribute> customAddressAttributes);
         Task DeleteReturnRequest(ReturnRequest returnRequest);
         Task<IList<ReturnRequestModel.ReturnRequestNote>> PrepareReturnRequestNotes(ReturnRequest returnRequest);
         Task InsertReturnRequestNote(ReturnRequest returnRequest, Order order, string downloadId, bool displayToCustomer, string message);

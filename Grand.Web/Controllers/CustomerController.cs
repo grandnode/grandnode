@@ -808,7 +808,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
                 var address = model.Address.ToEntity();
-                address.CustomAttributes = customAttributes;
+                address.Attributes = customAttributes;
                 address.CreatedOnUtc = DateTime.UtcNow;
                 customer.Addresses.Add(address);
                 address.CustomerId = customer.Id;
@@ -883,7 +883,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
                 address = model.Address.ToEntity(address);
-                address.CustomAttributes = customAttributes;
+                address.Attributes = customAttributes;
                 address.CustomerId = customer.Id;
                 await _customerService.UpdateAddress(address);
 

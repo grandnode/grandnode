@@ -71,7 +71,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ISalesEmployeeService _salesEmployeeService;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAffiliateService _affiliateService;
         private readonly IPictureService _pictureService;
         private readonly ITaxService _taxService;
@@ -115,7 +114,6 @@ namespace Grand.Web.Areas.Admin.Services
             ISalesEmployeeService salesEmployeeService,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IAffiliateService affiliateService,
             IPictureService pictureService,
             ITaxService taxService,
@@ -156,7 +154,6 @@ namespace Grand.Web.Areas.Admin.Services
             _salesEmployeeService = salesEmployeeService;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
-            _addressAttributeFormatter = addressAttributeFormatter;
             _affiliateService = affiliateService;
             _pictureService = pictureService;
             _taxService = taxService;
@@ -680,7 +677,7 @@ namespace Grand.Web.Areas.Admin.Services
             #region Billing & shipping info
 
             model.BillingAddress = await order.BillingAddress.ToModel(_countryService, _stateProvinceService);
-            model.BillingAddress.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
+            model.BillingAddress.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(order.BillingAddress.Attributes);
             model.BillingAddress.FirstNameEnabled = true;
             model.BillingAddress.FirstNameRequired = true;
             model.BillingAddress.LastNameEnabled = true;
@@ -717,7 +714,7 @@ namespace Grand.Web.Areas.Admin.Services
                     if (order.ShippingAddress != null)
                     {
                         model.ShippingAddress = await order.ShippingAddress.ToModel(_countryService, _stateProvinceService);
-                        model.ShippingAddress.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
+                        model.ShippingAddress.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(order.ShippingAddress.Attributes);
                         model.ShippingAddress.FirstNameEnabled = true;
                         model.ShippingAddress.FirstNameRequired = true;
                         model.ShippingAddress.LastNameEnabled = true;
@@ -1076,10 +1073,10 @@ namespace Grand.Web.Areas.Admin.Services
         {
             await _customerActivityService.InsertActivity("EditOrder", orderId, _localizationService.GetResource("ActivityLog.EditOrder"), orderId);
         }
-        public virtual async Task<Address> UpdateOrderAddress(Order order, Address address, OrderAddressModel model, string customAttributes)
+        public virtual async Task<Address> UpdateOrderAddress(Order order, Address address, OrderAddressModel model, List<CustomAttribute> customAttributes)
         {
             address = model.Address.ToEntity(address);
-            address.CustomAttributes = customAttributes;
+            address.Attributes = customAttributes;
             await _orderService.UpdateOrder(order);
 
             //add a note

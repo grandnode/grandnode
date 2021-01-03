@@ -1,7 +1,9 @@
 ﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Services.Common;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,14 +14,14 @@ namespace Grand.Web.Areas.Admin.Extensions
     /// </summary>
     public static class AttributeParserHelper
     {
-        public static async Task<string> ParseCustomAddressAttributes(this IFormCollection form,
+        public static async Task<List<CustomAttribute>> ParseCustomAddressAttributes(this IFormCollection form,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService)
         {
             if (form == null)
                 throw new ArgumentNullException("form");
 
-            string attributesXml = "";
+            var customAttributes = new List<CustomAttribute>();
             var attributes = await addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {
@@ -30,23 +32,23 @@ namespace Grand.Web.Areas.Admin.Extensions
                     case AttributeControlType.RadioList:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
-                                    attribute, ctrlAttributes);
+                                customAttributes = addressAttributeParser.AddAddressAttribute(customAttributes,
+                                    attribute, ctrlAttributes).ToList();
                             }
                         }
                         break;
                     case AttributeControlType.Checkboxes:
                         {
                             var cblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            if (!string.IsNullOrEmpty(cblAttributes))
                             {
                                 foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    if (!String.IsNullOrEmpty(item))
-                                        attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
-                                            attribute, item);
+                                    if (!string.IsNullOrEmpty(item))
+                                        customAttributes = addressAttributeParser.AddAddressAttribute(customAttributes,
+                                            attribute, item).ToList();
                                 }
                             }
                         }
@@ -60,8 +62,8 @@ namespace Grand.Web.Areas.Admin.Extensions
                                 .Select(v => v.Id)
                                 .ToList())
                             {
-                                attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
-                                            attribute, selectedAttributeId);
+                                customAttributes = addressAttributeParser.AddAddressAttribute(customAttributes,
+                                            attribute, selectedAttributeId).ToList();
                             }
                         }
                         break;
@@ -69,11 +71,11 @@ namespace Grand.Web.Areas.Admin.Extensions
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.ToString().Trim();
-                                attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
-                                    attribute, enteredText);
+                                customAttributes = addressAttributeParser.AddAddressAttribute(customAttributes,
+                                    attribute, enteredText).ToList();
                             }
                         }
                         break;
@@ -87,7 +89,7 @@ namespace Grand.Web.Areas.Admin.Extensions
                 }
             }
 
-            return attributesXml;
+            return customAttributes;
         }
     }
 }

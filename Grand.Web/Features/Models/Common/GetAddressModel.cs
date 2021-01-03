@@ -19,6 +19,6 @@ namespace Grand.Web.Features.Models.Common
         public Customer Customer { get; set; } = null;
         public Language Language { get; set; }
         public Store Store { get; set; }
-        public string OverrideAttributesXml { get; set; } = "";
+        public IList<CustomAttribute> OverrideAttributes { get; set; }
     }
 }

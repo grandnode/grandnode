@@ -99,7 +99,7 @@ namespace Grand.Web.Controllers
                     await TryUpdateModelAsync(model.NewAddress, "ReturnRequestNewAddress");
                     address = model.NewAddress.ToEntity();
                     model.NewAddressPreselected = true;
-                    address.CustomAttributes = customAttributes;
+                    address.Attributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
                 }
             }

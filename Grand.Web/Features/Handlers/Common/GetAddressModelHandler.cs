@@ -21,7 +21,6 @@ namespace Grand.Web.Features.Handlers.Common
 {
     public class GetAddressModelHandler : IRequestHandler<GetAddressModel, AddressModel>
     {
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
@@ -31,15 +30,13 @@ namespace Grand.Web.Features.Handlers.Common
         private readonly AddressSettings _addressSettings;
 
         public GetAddressModelHandler(
-            IAddressAttributeFormatter addressAttributeFormatter, 
-            ICountryService countryService, 
-            IStateProvinceService stateProvinceService, 
-            ILocalizationService localizationService, 
-            IAddressAttributeService addressAttributeService, 
-            IAddressAttributeParser addressAttributeParser, 
+            ICountryService countryService,
+            IStateProvinceService stateProvinceService,
+            ILocalizationService localizationService,
+            IAddressAttributeService addressAttributeService,
+            IAddressAttributeParser addressAttributeParser,
             AddressSettings addressSettings)
         {
-            _addressAttributeFormatter = addressAttributeFormatter;
             _countryService = countryService;
             _stateProvinceService = stateProvinceService;
             _localizationService = localizationService;
@@ -53,16 +50,16 @@ namespace Grand.Web.Features.Handlers.Common
             var model = request.Model ?? new AddressModel();
 
             //prepare address model
-            await PrepareAddressModel(model, request.Address, request.ExcludeProperties, 
+            await PrepareAddressModel(model, request.Address, request.ExcludeProperties,
                 request.LoadCountries, request.PrePopulateWithCustomerFields, request.Customer, request.Language, request.Store);
 
             //customer attribute services
             await PrepareCustomAddressAttributes(model, request.Address, request.Language,
-                request.OverrideAttributesXml);
+                request.OverrideAttributes);
 
             if (request.Address != null)
             {
-                model.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributes(request.Address.CustomAttributes);
+                model.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(request.Address.Attributes);
             }
             return model;
         }
@@ -187,8 +184,7 @@ namespace Grand.Web.Features.Handlers.Common
         }
 
         private async Task PrepareCustomAddressAttributes(AddressModel model, Address address,
-            Language language,
-            string overrideAttributesXml = "")
+            Language language, IList<CustomAttribute> overrideAttributes)
         {
 
             var attributes = await _addressAttributeService.GetAllAddressAttributes();
@@ -217,9 +213,7 @@ namespace Grand.Web.Features.Handlers.Common
                 }
 
                 //set already selected attributes
-                var selectedAddressAttributes = !string.IsNullOrEmpty(overrideAttributesXml) ?
-                    overrideAttributesXml :
-                    (address != null ? address.CustomAttributes : null);
+                var selectedAddressAttributes = overrideAttributes ?? (address?.Attributes);
 
                 switch (attribute.AttributeControlType)
                 {
@@ -227,7 +221,7 @@ namespace Grand.Web.Features.Handlers.Common
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
                         {
-                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
+                            if (selectedAddressAttributes != null)
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
@@ -252,9 +246,9 @@ namespace Grand.Web.Features.Handlers.Common
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
+                            if (selectedAddressAttributes != null)
                             {
-                                var enteredText = _addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
+                                var enteredText = selectedAddressAttributes.Where(x => x.Key == attribute.Id).Select(x => x.Value).ToList();
                                 if (enteredText.Any())
                                     attributeModel.DefaultValue = enteredText[0];
                             }

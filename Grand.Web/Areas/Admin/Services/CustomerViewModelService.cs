@@ -63,7 +63,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAffiliateService _affiliateService;
         private readonly ICustomerTagService _customerTagService;
         private readonly IProductService _productService;
@@ -99,7 +98,6 @@ namespace Grand.Web.Areas.Admin.Services
             ICustomerAttributeService customerAttributeService,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IAffiliateService affiliateService,
             ICustomerTagService customerTagService,
             IProductService productService,
@@ -139,7 +137,6 @@ namespace Grand.Web.Areas.Admin.Services
             _customerAttributeService = customerAttributeService;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
-            _addressAttributeFormatter = addressAttributeFormatter;
             _affiliateService = affiliateService;
             _customerTagService = customerTagService;
             _productService = productService;
@@ -1212,8 +1209,8 @@ namespace Grand.Web.Areas.Admin.Services
                     addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.ZipPostalCode));
                 if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(model.CountryName))
                     addressHtmlSb.AppendFormat("{0}", WebUtility.HtmlEncode(model.CountryName));
-                var customAttributesFormatted = await _addressAttributeFormatter.FormatAttributes(x.CustomAttributes);
-                if (!String.IsNullOrEmpty(customAttributesFormatted))
+                var customAttributesFormatted = await _addressAttributeParser.FormatAttributes(x.Attributes);
+                if (!string.IsNullOrEmpty(customAttributesFormatted))
                 {
                     //already encoded
                     addressHtmlSb.AppendFormat("<br />{0}", customAttributesFormatted);
@@ -1230,10 +1227,10 @@ namespace Grand.Web.Areas.Admin.Services
             await _customerService.UpdateCustomerinAdminPanel(customer);
         }
 
-        public virtual async Task<Address> InsertAddressModel(Customer customer, CustomerAddressModel model, string customAttributes)
+        public virtual async Task<Address> InsertAddressModel(Customer customer, CustomerAddressModel model, List<CustomAttribute> customAttributes)
         {
             var address = model.Address.ToEntity();
-            address.CustomAttributes = customAttributes;
+            address.Attributes = customAttributes;
             address.CreatedOnUtc = DateTime.UtcNow;
             customer.Addresses.Add(address);
             await _customerService.UpdateCustomerinAdminPanel(customer);
@@ -1298,10 +1295,10 @@ namespace Grand.Web.Areas.Admin.Services
             await model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
         }
 
-        public virtual async Task<Address> UpdateAddressModel(Customer customer, Address address, CustomerAddressModel model, string customAttributes)
+        public virtual async Task<Address> UpdateAddressModel(Customer customer, Address address, CustomerAddressModel model, List<CustomAttribute> customAttributes)
         {
             address = model.Address.ToEntity(address);
-            address.CustomAttributes = customAttributes;
+            address.Attributes = customAttributes;
             await _customerService.UpdateCustomerinAdminPanel(customer);
             return address;
         }
