@@ -1209,7 +1209,7 @@ namespace Grand.Web.Areas.Admin.Services
                     addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.ZipPostalCode));
                 if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(model.CountryName))
                     addressHtmlSb.AppendFormat("{0}", WebUtility.HtmlEncode(model.CountryName));
-                var customAttributesFormatted = await _addressAttributeParser.FormatAttributes(x.Attributes);
+                var customAttributesFormatted = await _addressAttributeParser.FormatAttributes(_workContext.WorkingLanguage, x.Attributes);
                 if (!string.IsNullOrEmpty(customAttributesFormatted))
                 {
                     //already encoded

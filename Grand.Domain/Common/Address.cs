@@ -82,7 +82,7 @@ namespace Grand.Domain.Common
         /// </summary>
         public IList<CustomAttribute> Attributes { get; set; }
 
-        [Obsolete("Will be removed in version 5.0.0 - this field was replaced by Attributes object")] 
+        [Obsolete("Will be removed in version 5.0.0 - this field was replaced by Attributes")] 
         public string CustomAttributes { get; set; }
 
         /// <summary>

@@ -59,7 +59,7 @@ namespace Grand.Web.Features.Handlers.Common
 
             if (request.Address != null)
             {
-                model.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(request.Address.Attributes);
+                model.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(request.Language, request.Address.Attributes);
             }
             return model;
         }

@@ -677,7 +677,7 @@ namespace Grand.Web.Areas.Admin.Services
             #region Billing & shipping info
 
             model.BillingAddress = await order.BillingAddress.ToModel(_countryService, _stateProvinceService);
-            model.BillingAddress.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(order.BillingAddress.Attributes);
+            model.BillingAddress.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(_workContext.WorkingLanguage, order.BillingAddress.Attributes);
             model.BillingAddress.FirstNameEnabled = true;
             model.BillingAddress.FirstNameRequired = true;
             model.BillingAddress.LastNameEnabled = true;
@@ -714,7 +714,7 @@ namespace Grand.Web.Areas.Admin.Services
                     if (order.ShippingAddress != null)
                     {
                         model.ShippingAddress = await order.ShippingAddress.ToModel(_countryService, _stateProvinceService);
-                        model.ShippingAddress.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(order.ShippingAddress.Attributes);
+                        model.ShippingAddress.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(_workContext.WorkingLanguage, order.ShippingAddress.Attributes);
                         model.ShippingAddress.FirstNameEnabled = true;
                         model.ShippingAddress.FirstNameRequired = true;
                         model.ShippingAddress.LastNameEnabled = true;

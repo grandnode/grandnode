@@ -136,13 +136,13 @@ namespace Grand.Services.Commands.Handlers.Messages
                 liquidOrder.OrderItems.Add(liqitem);
             }
 
-            liquidOrder.BillingCustomAttributes = await _addressAttributeParser.FormatAttributes(request.Order.BillingAddress?.Attributes);
+            liquidOrder.BillingCustomAttributes = await _addressAttributeParser.FormatAttributes(language, request.Order.BillingAddress?.Attributes);
             liquidOrder.BillingCountry = request.Order.BillingAddress != null && !string.IsNullOrEmpty(request.Order.BillingAddress.CountryId) ? (await _countryService.GetCountryById(request.Order.BillingAddress.CountryId))?.GetLocalized(x => x.Name, request.Order.CustomerLanguageId) : "";
             liquidOrder.BillingStateProvince = !string.IsNullOrEmpty(request.Order.BillingAddress.StateProvinceId) ? (await _stateProvinceService.GetStateProvinceById(request.Order.BillingAddress.StateProvinceId))?.GetLocalized(x => x.Name, request.Order.CustomerLanguageId) : "";
 
             liquidOrder.ShippingCountry = request.Order.ShippingAddress != null && !string.IsNullOrEmpty(request.Order.ShippingAddress.CountryId) ? (await _countryService.GetCountryById(request.Order.ShippingAddress.CountryId))?.GetLocalized(x => x.Name, request.Order.CustomerLanguageId) : "";
             liquidOrder.ShippingStateProvince = request.Order.ShippingAddress != null && !string.IsNullOrEmpty(request.Order.ShippingAddress.StateProvinceId) ? (await _stateProvinceService.GetStateProvinceById(request.Order.ShippingAddress.StateProvinceId)).GetLocalized(x => x.Name, request.Order.CustomerLanguageId) : "";
-            liquidOrder.ShippingCustomAttributes = await _addressAttributeParser.FormatAttributes(request.Order.ShippingAddress != null ? request.Order.ShippingAddress.Attributes : null);
+            liquidOrder.ShippingCustomAttributes = await _addressAttributeParser.FormatAttributes(language, request.Order.ShippingAddress != null ? request.Order.ShippingAddress.Attributes : null);
 
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(request.Order.PaymentMethodSystemName);
             liquidOrder.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, language.Id) : request.Order.PaymentMethodSystemName;

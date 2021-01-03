@@ -1,7 +1,7 @@
-using Grand.Core;
 using Grand.Core.Html;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
+using Grand.Domain.Localization;
 using Grand.Services.Localization;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,22 +18,19 @@ namespace Grand.Services.Common
     {
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
 
         public AddressAttributeParser(
             IAddressAttributeService addressAttributeService,
-            ILocalizationService localizationService,
-            IWorkContext workContext)
+            ILocalizationService localizationService)
         {
             _addressAttributeService = addressAttributeService;
             _localizationService = localizationService;
-            _workContext = workContext;
         }
 
         /// <summary>
         /// Gets selected address attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <returns>Selected address attributes</returns>
         public virtual async Task<IList<AddressAttribute>> ParseAddressAttributes(IList<CustomAttribute> customAttributes)
         {
@@ -41,7 +38,7 @@ namespace Grand.Services.Common
             if (!customAttributes.Any())
                 return result;
 
-            foreach (var customAttribute in customAttributes.GroupBy(x=>x.Key))
+            foreach (var customAttribute in customAttributes.GroupBy(x => x.Key))
             {
                 var attribute = await _addressAttributeService.GetAddressAttributeById(customAttribute.Key);
                 if (attribute != null)
@@ -55,7 +52,7 @@ namespace Grand.Services.Common
         /// <summary>
         /// Get address attribute values
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <returns>Address attribute values</returns>
         public virtual async Task<IList<AddressAttributeValue>> ParseAddressAttributeValues(IList<CustomAttribute> customAttributes)
         {
@@ -86,7 +83,7 @@ namespace Grand.Services.Common
         /// <summary>
         /// Adds an attribute
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="attribute">Address attribute</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
@@ -97,19 +94,13 @@ namespace Grand.Services.Common
 
             customAttributes.Add(new CustomAttribute() { Key = attribute.Id, Value = value });
 
-            //TO DO ADDRESS - check if exists
-            if (customAttributes.FirstOrDefault(x => x.Key == attribute.Id) != null)
-            {
-
-            }
             return customAttributes;
-
         }
 
         /// <summary>
         /// Validates address attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <returns>Warnings</returns>
         public virtual async Task<IList<string>> GetAttributeWarnings(IList<CustomAttribute> customAttributes)
         {
@@ -157,11 +148,14 @@ namespace Grand.Services.Common
         /// <summary>
         /// Formats attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="language">Languages</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        public virtual async Task<string> FormatAttributes(IList<CustomAttribute> customAttributes,
+        public virtual async Task<string> FormatAttributes(
+            Language language,
+            IList<CustomAttribute> customAttributes,
             string serapator = "<br />",
             bool htmlEncode = true)
         {
@@ -184,7 +178,7 @@ namespace Grand.Services.Common
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                            var attributeName = attribute.GetLocalized(a => a.Name, language.Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
@@ -199,7 +193,7 @@ namespace Grand.Services.Common
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
+                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, language.Id), valueStr);
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -211,7 +205,7 @@ namespace Grand.Services.Common
                         var attributeValue = attribute.AddressAttributeValues.FirstOrDefault(x => x.Id == attributeValueId);
                         if (attributeValue != null)
                         {
-                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, language.Id), attributeValue.GetLocalized(a => a.Name, language.Id));
                         }
                         //encode (if required)
                         if (htmlEncode)

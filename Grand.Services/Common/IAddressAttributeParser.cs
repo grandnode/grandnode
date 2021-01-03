@@ -1,4 +1,5 @@
 using Grand.Domain.Common;
+using Grand.Domain.Localization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,21 +13,21 @@ namespace Grand.Services.Common
         /// <summary>
         /// Gets selected address attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <returns>Selected address attributes</returns>
         Task<IList<AddressAttribute>> ParseAddressAttributes(IList<CustomAttribute> customAttributes);
 
         /// <summary>
         /// Get address attribute values
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <returns>Address attribute values</returns>
         Task<IList<AddressAttributeValue>> ParseAddressAttributeValues(IList<CustomAttribute> customAttributes);
 
         /// <summary>
         /// Adds an attribute
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="attribute">Address attribute</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
@@ -35,18 +36,21 @@ namespace Grand.Services.Common
         /// <summary>
         /// Validates address attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <returns>Warnings</returns>
         Task<IList<string>> GetAttributeWarnings(IList<CustomAttribute> customAttributes);
 
         /// <summary>
         /// Formats attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="language">Language</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        Task<string> FormatAttributes(IList<CustomAttribute> customAttributes,
+        Task<string> FormatAttributes(
+            Language language,
+            IList<CustomAttribute> customAttributes,
             string serapator = "<br />",
             bool htmlEncode = true);
     }
