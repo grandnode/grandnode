@@ -1056,6 +1056,8 @@ namespace Grand.Services.Installation
 
         private async Task From480To490()
         {
+            var dBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
+
             #region Install String resources
 
             await InstallStringResources("EN_480_490.xml");
@@ -1170,7 +1172,6 @@ namespace Grand.Services.Installation
             }
 
             //upgrade Taxes on the order
-            var dBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
             var orderTaxRepository = dBContext.Database().GetCollection<OldOrders>("Order");
             await orderTaxRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
             {
@@ -1206,8 +1207,7 @@ namespace Grand.Services.Installation
 
             var pc = await _serviceProvider.GetRequiredService<ICurrencyService>().GetPrimaryStoreCurrency();
 
-            var giftdBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
-            var giftCardsRepository = giftdBContext.Database().GetCollection<GiftCard>("GiftCard");
+            var giftCardsRepository = dBContext.Database().GetCollection<GiftCard>("GiftCard");
             await giftCardsRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
             {
                 o.CurrencyCode = pc.CurrencyCode;
@@ -1215,7 +1215,7 @@ namespace Grand.Services.Installation
             });
 
             #endregion
-
+            
             #region Upgrade Address attributes field
 
             static List<CustomAttribute> ParseCustomAttributes(string attributesXml)
@@ -1251,54 +1251,51 @@ namespace Grand.Services.Installation
             }
 
             //upgrade customer data - billingaddress/shippingaddress - Addresses
-            var customerdBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
-            var customerRepository = giftdBContext.Database().GetCollection<Customer>("Customer");
+            var customerRepository = dBContext.Database().GetCollection<Customer>("Customer");
 
-            var builder = Builders<Customer>.Filter;
-            var filterBillingAddress = builder.Exists(x => x.BillingAddress);
-            var filterShippingAddress = builder.Exists(x => x.ShippingAddress);
-            var filterAddresses = builder.SizeGt(x => x.Addresses, 0);
-
-            await customerRepository.Find(filterBillingAddress).ForEachAsync(async (c) =>
+            await customerRepository.Find(new BsonDocument()).ForEachAsync(async (c) =>
             {
-                if (!string.IsNullOrEmpty(c.BillingAddress.CustomAttributes))
+                var update = false;
+
+                if (!string.IsNullOrEmpty(c.BillingAddress?.CustomAttributes))
                 {
                     c.BillingAddress.Attributes = ParseCustomAttributes(c.BillingAddress.CustomAttributes);
-                    await customerRepository.ReplaceOneAsync(x => x.Id == c.Id, c);
+                    update = true;
                 }
-            });
-            await customerRepository.Find(filterShippingAddress).ForEachAsync(async (c) =>
-            {
-                if (!string.IsNullOrEmpty(c.ShippingAddress.CustomAttributes))
+
+                if (!string.IsNullOrEmpty(c.ShippingAddress?.CustomAttributes))
                 {
                     c.ShippingAddress.Attributes = ParseCustomAttributes(c.ShippingAddress.CustomAttributes);
-                    await customerRepository.ReplaceOneAsync(x => x.Id == c.Id, c);
+                    update = true;
                 }
-            });
 
-            await customerRepository.Find(filterAddresses).ForEachAsync(async (c) =>
-            {
-                if (c.Addresses.Where(x => string.IsNullOrEmpty(x.CustomAttributes)).Any())
+                if (c.Addresses.Where(x => !string.IsNullOrEmpty(x.CustomAttributes)).Any())
                 {
-                    foreach (var address in c.Addresses.Where(x => string.IsNullOrEmpty(x.CustomAttributes)))
+                    foreach (var address in c.Addresses.Where(x => !string.IsNullOrEmpty(x.CustomAttributes)))
                     {
                         address.Attributes = ParseCustomAttributes(address.CustomAttributes);
+                        update = true;
                     }
-                    await customerRepository.ReplaceOneAsync(x => x.Id == c.Id, c);
                 }
+
+                if(update)
+                    await customerRepository.ReplaceOneAsync(x => x.Id == c.Id, c);
+
             });
 
             //upgrade order data - billingaddress/shippingaddress
-            await orderTaxRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
+            var orderAttributesRepository = dBContext.Database().GetCollection<Order>("Order");
+
+            await orderAttributesRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
             {
                 if (!string.IsNullOrEmpty(o.BillingAddress?.CustomAttributes) || !string.IsNullOrEmpty(o.ShippingAddress?.CustomAttributes))
                 {
-                    if (string.IsNullOrEmpty(o.BillingAddress?.CustomAttributes))
+                    if (!string.IsNullOrEmpty(o.BillingAddress?.CustomAttributes))
                         o.BillingAddress.Attributes = ParseCustomAttributes(o.BillingAddress.CustomAttributes);
-                    if (string.IsNullOrEmpty(o.ShippingAddress?.CustomAttributes))
+                    if (!string.IsNullOrEmpty(o.ShippingAddress?.CustomAttributes))
                         o.ShippingAddress.Attributes = ParseCustomAttributes(o.ShippingAddress.CustomAttributes);
 
-                    await orderTaxRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
+                    await orderAttributesRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
                 }
             });
 
