@@ -2,9 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Xml.Serialization;
+using System.Text.Json;
 
 namespace Grand.Core.TypeConverters
 {
@@ -26,19 +24,15 @@ namespace Grand.Core.TypeConverters
             {
                 ShippingOption shippingOption = null;
                 var valueStr = value as string;
-                if (!String.IsNullOrEmpty(valueStr))
+                if (!string.IsNullOrEmpty(valueStr))
                 {
                     try
                     {
-                        using (var tr = new StringReader(valueStr))
-                        {
-                            var xmlS = new XmlSerializer(typeof(ShippingOption));
-                            shippingOption = (ShippingOption)xmlS.Deserialize(tr);
-                        }
+                        shippingOption = JsonSerializer.Deserialize<ShippingOption>(valueStr);
                     }
                     catch
                     {
-                        //xml error
+                        //deserialize error
                     }
                 }
                 return shippingOption;
@@ -53,14 +47,7 @@ namespace Grand.Core.TypeConverters
                 var shippingOption = value as ShippingOption;
                 if (shippingOption != null)
                 {
-                    var sb = new StringBuilder();
-                    using (var tw = new StringWriter(sb))
-                    {
-                        var xmlS = new XmlSerializer(typeof(ShippingOption));
-                        xmlS.Serialize(tw, value);
-                        string serialized = sb.ToString();
-                        return serialized;
-                    }
+                    return JsonSerializer.Serialize(shippingOption);
                 }
 
                 return "";
