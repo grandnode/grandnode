@@ -1,4 +1,5 @@
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Orders;
 using System;
@@ -117,11 +118,11 @@ namespace Grand.Services.Orders
         /// Validates whether this shopping cart is valid
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
-        /// <param name="checkoutAttributesXml">Checkout attributes in XML format</param>
+        /// <param name="checkoutAttributes">Checkout attributes</param>
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
         Task<IList<string>> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart,
-            string checkoutAttributesXml, bool validateCheckoutAttributes);
+            List<CustomAttribute> checkoutAttributes, bool validateCheckoutAttributes);
 
 
         /// <summary>

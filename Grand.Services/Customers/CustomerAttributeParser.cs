@@ -38,7 +38,7 @@ namespace Grand.Services.Customers
         public virtual async Task<IList<CustomerAttribute>> ParseCustomerAttributes(IList<CustomAttribute> customAttributes)
         {
             var result = new List<CustomerAttribute>();
-            if (!customAttributes.Any())
+            if (customAttributes == null || !customAttributes.Any())
                 return result;
 
             foreach (var customAttribute in customAttributes.GroupBy(x => x.Key))
@@ -60,7 +60,7 @@ namespace Grand.Services.Customers
         public virtual async Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValues(IList<CustomAttribute> customAttributes)
         {
             var values = new List<CustomerAttributeValue>();
-            if (!customAttributes.Any())
+            if (customAttributes == null || !customAttributes.Any())
                 return values;
 
             var attributes = await ParseCustomerAttributes(customAttributes);
@@ -109,6 +109,9 @@ namespace Grand.Services.Customers
         public virtual async Task<IList<string>> GetAttributeWarnings(IList<CustomAttribute> customAttributes)
         {
             var warnings = new List<string>();
+
+            if (customAttributes == null || !customAttributes.Any())
+                return warnings;
 
             //ensure it's our attributes
             var attributes1 = await ParseCustomerAttributes(customAttributes);

@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Discounts;
 using Grand.Domain.Localization;
@@ -233,7 +234,7 @@ namespace Grand.Services.Orders
             processPaymentRequest.PaymentMethodSystemName = details.InitialOrder.PaymentMethodSystemName;
             details.Currency = currency;
             details.CustomerLanguage = await _languageService.GetLanguageById(details.InitialOrder.CustomerLanguageId);
-            details.CheckoutAttributesXml = details.InitialOrder.CheckoutAttributesXml;
+            details.CheckoutAttributes = details.InitialOrder.CheckoutAttributes;
             details.CheckoutAttributeDescription = details.InitialOrder.CheckoutAttributeDescription;
             details.CustomerTaxDisplayType = details.InitialOrder.CustomerTaxDisplayType;
             details.OrderSubTotalInclTax = details.InitialOrder.OrderSubtotalInclTax;
@@ -407,8 +408,8 @@ namespace Grand.Services.Orders
             }
 
             //checkout attributes
-            details.CheckoutAttributesXml = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, processPaymentRequest.StoreId);
-            details.CheckoutAttributeDescription = await _checkoutAttributeFormatter.FormatAttributes(details.CheckoutAttributesXml, details.Customer);
+            details.CheckoutAttributes = details.Customer.GetAttributeFromEntity<List<CustomAttribute>>(SystemCustomerAttributeNames.CheckoutAttributes, processPaymentRequest.StoreId);
+            details.CheckoutAttributeDescription = await _checkoutAttributeFormatter.FormatAttributes(details.CheckoutAttributes, details.Customer);
 
             //load and validate customer shopping cart
             details.Cart = details.Customer.ShoppingCartItems
@@ -420,9 +421,7 @@ namespace Grand.Services.Orders
                 throw new GrandException("Cart is empty");
 
             //validate the entire shopping cart
-            var warnings = await _shoppingCartService.GetShoppingCartWarnings(details.Cart,
-                details.CheckoutAttributesXml,
-                true);
+            var warnings = await _shoppingCartService.GetShoppingCartWarnings(details.Cart, details.CheckoutAttributes.ToList(), true);
             if (warnings.Any())
             {
                 var warningsSb = new StringBuilder();
@@ -1080,7 +1079,7 @@ namespace Grand.Services.Orders
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = Math.Round(details.OrderDiscountAmount, 6),
                 CheckoutAttributeDescription = details.CheckoutAttributeDescription,
-                CheckoutAttributesXml = details.CheckoutAttributesXml,
+                CheckoutAttributes = details.CheckoutAttributes,
                 CustomerCurrencyCode = details.Currency.CurrencyCode,
                 PrimaryCurrencyCode = details.PrimaryCurrencyCode,
                 CurrencyRate = details.CustomerCurrencyRate,

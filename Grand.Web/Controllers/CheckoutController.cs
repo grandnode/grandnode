@@ -163,9 +163,8 @@ namespace Grand.Web.Controllers
             await _customerService.ResetCheckoutData(customer, _storeContext.CurrentStore.Id);
 
             //validation (cart)
-
-            var checkoutAttributesXml = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
-            var scWarnings = await shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributesXml, true);
+            var checkoutAttributes = await customer.GetAttribute<List<CustomAttribute>>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+            var scWarnings = await shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributes, true);
             if (scWarnings.Any())
                 return RedirectToRoute("ShoppingCart", new { checkoutAttributes = true });
 

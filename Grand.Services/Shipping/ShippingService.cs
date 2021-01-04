@@ -198,10 +198,10 @@ namespace Grand.Services.Shipping
             //checkout attributes
             if (customer != null && includeCheckoutAttributes)
             {
-                var checkoutAttributesXml = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, request.StoreId);
-                if (!string.IsNullOrEmpty(checkoutAttributesXml))
+                var checkoutAttributes = customer.GetAttributeFromEntity<List<CustomAttribute>>(SystemCustomerAttributeNames.CheckoutAttributes, request.StoreId);
+                if (checkoutAttributes.Any())
                 {
-                    var attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
+                    var attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributes);
                     foreach (var attributeValue in attributeValues)
                         totalWeight += attributeValue.WeightAdjustment;
                 }

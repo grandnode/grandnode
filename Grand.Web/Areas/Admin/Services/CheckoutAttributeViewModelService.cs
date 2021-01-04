@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Directory;
 using Grand.Domain.Orders;
 using Grand.Services.Directory;
@@ -81,11 +82,11 @@ namespace Grand.Web.Areas.Admin.Services
             if (checkoutAttribute == null)
                 return;
 
-            var selectedAttribute = (await _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttributeXml)).FirstOrDefault();
-            var selectedValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml);
+            var selectedAttribute = (await _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttribute)).FirstOrDefault();
+            var selectedValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttribute);
 
             model.ConditionModel = new ConditionModel() {
-                EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml),
+                EnableCondition = checkoutAttribute.ConditionAttribute.Any(),
                 SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : "",
                 ConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributes(ignorAcl: false))
                     //ignore this attribute and non-combinable attributes
@@ -107,7 +108,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         protected virtual async Task SaveConditionAttributes(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
-            string attributesXml = null;
+            var conditionAttributes = new List<CustomAttribute>();
             if (model.ConditionModel.EnableCondition)
             {
                 var attribute = await _checkoutAttributeService.GetCheckoutAttributeById(model.ConditionModel.SelectedAttributeId);
@@ -123,10 +124,10 @@ namespace Grand.Web.Areas.Admin.Services
                                 var selectedAttribute = model.ConditionModel.ConditionAttributes
                                     .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
                                 var selectedValue = selectedAttribute != null ? selectedAttribute.SelectedValueId : null;
-                                if (!String.IsNullOrEmpty(selectedValue))
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, selectedValue);
+                                if (!string.IsNullOrEmpty(selectedValue))
+                                    conditionAttributes = _checkoutAttributeParser.AddCheckoutAttribute(conditionAttributes, attribute, selectedValue).ToList();
                                 else
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, string.Empty);
+                                    conditionAttributes = _checkoutAttributeParser.AddCheckoutAttribute(conditionAttributes, attribute, string.Empty).ToList();
                             }
                             break;
                         case AttributeControlType.Checkboxes:
@@ -136,9 +137,9 @@ namespace Grand.Web.Areas.Admin.Services
                                 var selectedValues = selectedAttribute != null ? selectedAttribute.Values.Where(x => x.Selected).Select(x => x.Value) : null;
                                 if (selectedValues.Any())
                                     foreach (var value in selectedValues)
-                                        attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, value);
+                                        conditionAttributes = _checkoutAttributeParser.AddCheckoutAttribute(conditionAttributes, attribute, value).ToList();
                                 else
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, string.Empty);
+                                    conditionAttributes = _checkoutAttributeParser.AddCheckoutAttribute(conditionAttributes, attribute, string.Empty).ToList();
                             }
                             break;
                         case AttributeControlType.ReadonlyCheckboxes:
@@ -152,7 +153,7 @@ namespace Grand.Web.Areas.Admin.Services
                     }
                 }
             }
-            checkoutAttribute.ConditionAttributeXml = attributesXml;
+            checkoutAttribute.ConditionAttribute = conditionAttributes;
         }
 
 

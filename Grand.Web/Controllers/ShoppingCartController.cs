@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Media;
 using Grand.Domain.Orders;
@@ -451,20 +452,20 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> StartCheckout(IFormCollection form = null)
         {
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
-            string checkoutAttributes;
+            var checkoutAttributes = new List<CustomAttribute>();
             //parse and save checkout attributes
             if (form != null && form.Count > 0)
             {
-                checkoutAttributes = await _mediator.Send(new SaveCheckoutAttributesCommand() {
+                checkoutAttributes = (await _mediator.Send(new SaveCheckoutAttributesCommand() {
                     Customer = _workContext.CurrentCustomer,
                     Store = _storeContext.CurrentStore,
                     Cart = cart,
                     Form = form
-                });
+                })).ToList();
             }
             else
             {
-                checkoutAttributes = _workContext.CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+                checkoutAttributes = _workContext.CurrentCustomer.GetAttributeFromEntity<List<CustomAttribute>>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
             }
 
             var checkoutAttributeWarnings = await _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributes, true);

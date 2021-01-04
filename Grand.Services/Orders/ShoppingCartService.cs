@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Orders;
 using Grand.Services.Catalog;
@@ -142,9 +143,9 @@ namespace Grand.Services.Orders
                     .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, storeId)
                     .ToList();
 
-                var checkoutAttributesXml = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, storeId);
-                checkoutAttributesXml = await _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
-                await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributesXml, storeId);
+                var checkoutAttributes = await customer.GetAttribute<List<CustomAttribute>>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, storeId);
+                var newcheckoutAttributes = await _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributes, cart);
+                await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CheckoutAttributes, newcheckoutAttributes, storeId);
             }
 
             //event notification
@@ -938,11 +939,11 @@ namespace Grand.Services.Orders
         /// Validates whether this shopping cart is valid
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
-        /// <param name="checkoutAttributesXml">Checkout attributes in XML format</param>
+        /// <param name="checkoutAttributes">Checkout attributes</param>
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
         public virtual async Task<IList<string>> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart,
-            string checkoutAttributesXml, bool validateCheckoutAttributes)
+             List<CustomAttribute> checkoutAttributes, bool validateCheckoutAttributes)
         {
             var warnings = new List<string>();
 
@@ -988,13 +989,13 @@ namespace Grand.Services.Orders
             if (validateCheckoutAttributes)
             {
                 //selected attributes
-                var attributes1 = await _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributesXml);
+                var attributes1 = await _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributes);
 
                 //existing checkout attributes
                 var attributes2 = await _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !shoppingCart.RequiresShipping());
                 foreach (var a2 in attributes2)
                 {
-                    var conditionMet = await _checkoutAttributeParser.IsConditionMet(a2, checkoutAttributesXml);
+                    var conditionMet = await _checkoutAttributeParser.IsConditionMet(a2, checkoutAttributes);
                     if (a2.IsRequired && ((conditionMet.HasValue && conditionMet.Value) || !conditionMet.HasValue))
                     {
                         bool found = false;
@@ -1003,9 +1004,9 @@ namespace Grand.Services.Orders
                         {
                             if (a1.Id == a2.Id)
                             {
-                                var attributeValuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, a1.Id);
-                                foreach (string str1 in attributeValuesStr)
-                                    if (!String.IsNullOrEmpty(str1.Trim()))
+                                var attributeValuesStr = checkoutAttributes.Where(x => x.Key == a1.Id).Select(x => x.Value);
+                                foreach (var str1 in attributeValuesStr)
+                                    if (!string.IsNullOrEmpty(str1.Trim()))
                                     {
                                         found = true;
                                         break;
@@ -1034,9 +1035,9 @@ namespace Grand.Services.Orders
                         if (ca.AttributeControlType == AttributeControlType.TextBox ||
                             ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
-                            var valuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id);
-                            var enteredText = valuesStr.FirstOrDefault();
-                            int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+                            var valuesStr = checkoutAttributes.Where(x => x.Key == ca.Id).Select(x => x.Value);
+                            var enteredText = valuesStr?.FirstOrDefault();
+                            int enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
                             if (ca.ValidationMinLength.Value > enteredTextLength)
                             {
@@ -1051,9 +1052,9 @@ namespace Grand.Services.Orders
                         if (ca.AttributeControlType == AttributeControlType.TextBox ||
                             ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
-                            var valuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id);
-                            var enteredText = valuesStr.FirstOrDefault();
-                            int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+                            var valuesStr = checkoutAttributes.Where(x => x.Key == ca.Id).Select(x => x.Value);
+                            var enteredText = valuesStr?.FirstOrDefault();
+                            int enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
                             if (ca.ValidationMaxLength.Value < enteredTextLength)
                             {
@@ -1065,7 +1066,7 @@ namespace Grand.Services.Orders
             }
 
             //event notification
-            await _mediator.ShoppingCartWarningsAdd(warnings, shoppingCart, checkoutAttributesXml, validateCheckoutAttributes);
+            await _mediator.ShoppingCartWarningsAdd(warnings, shoppingCart, checkoutAttributes, validateCheckoutAttributes);
 
             return warnings;
         }
@@ -1524,8 +1525,8 @@ namespace Grand.Services.Orders
             await _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.LastUrlReferrer, lastUrlReferrer);
 
             //move selected checkout attributes
-            var checkoutAttributesXml = await fromCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
-            await _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributesXml, _storeContext.CurrentStore.Id);
+            var checkoutAttributes = await fromCustomer.GetAttribute<List<CustomAttribute>>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+            await _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributes, _storeContext.CurrentStore.Id);
         }
 
         #endregion

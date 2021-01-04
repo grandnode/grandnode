@@ -12,6 +12,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Grand.Domain.Common;
 
 namespace Grand.Services.Orders
 {
@@ -48,25 +50,25 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Formats attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Attributes</returns>
-        public virtual async Task<string> FormatAttributes(string attributesXml)
+        public virtual async Task<string> FormatAttributes(IList<CustomAttribute> customAttributes)
         {
             var customer = _workContext.CurrentCustomer;
-            return await FormatAttributes(attributesXml, customer);
+            return await FormatAttributes(customAttributes, customer);
         }
 
         /// <summary>
         /// Formats attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <param name="customer">Customer</param>
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <param name="renderPrices">A value indicating whether to render prices</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        public virtual async Task<string> FormatAttributes(string attributesXml,
+        public virtual async Task<string> FormatAttributes(IList<CustomAttribute> customAttributes,
             Customer customer, 
             string serapator = "<br />", 
             bool htmlEncode = true, 
@@ -75,15 +77,18 @@ namespace Grand.Services.Orders
         {
             var result = new StringBuilder();
 
-            var attributes = await _checkoutAttributeParser.ParseCheckoutAttributes(attributesXml);
+            if (customAttributes == null || !customAttributes.Any())
+                return result.ToString();
+
+            var attributes = await _checkoutAttributeParser.ParseCheckoutAttributes(customAttributes);
             for (int i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
-                var valuesStr = _checkoutAttributeParser.ParseValues(attributesXml, attribute.Id);
-                for (int j = 0; j < valuesStr.Count; j++)
+                var valuesStr = customAttributes.Where(x => x.Key == attribute.Id).Select(x => x.Value).ToList();
+                for (var j = 0; j < valuesStr.Count; j++)
                 {
-                    string valueStr = valuesStr[j];
-                    string formattedAttribute = "";
+                    var valueStr = valuesStr[j];
+                    var formattedAttribute = "";
                     if (!attribute.ShouldHaveValues())
                     {
                         //no values
