@@ -2016,7 +2016,7 @@ namespace Grand.Services.Messages
         /// <param name="attrXml">Attr xml</param>
         /// <returns>Queued email identifier</returns>
         public virtual async Task<int> SendContactUsMessage(Customer customer, Store store, string languageId, string senderEmail,
-            string senderName, string subject, string body, string attrInfo, string attrXml)
+            string senderName, string subject, string body, string attrInfo, IList<CustomAttribute> customAttributes)
         {
             var language = await EnsureLanguageIsActive(languageId, store.Id);
             var messageTemplate = await GetMessageTemplate("Service.ContactUs", store.Id);
@@ -2065,7 +2065,7 @@ namespace Grand.Services.Messages
                     FullName = senderName,
                     Subject = string.IsNullOrEmpty(subject) ? "Contact Us (form)" : subject,
                     ContactAttributeDescription = attrInfo,
-                    ContactAttributesXml = attrXml,
+                    ContactAttributes = customAttributes,
                     EmailAccountId = emailAccount.Id
                 });
             }

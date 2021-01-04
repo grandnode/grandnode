@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Web.Commands.Models.Common;
@@ -27,14 +28,14 @@ namespace Grand.Web.Commands.Handler.Common
 
         public async Task<(IList<string> enabledAttributeIds, IList<string> disabledAttributeIds)> Handle(ContactAttributeChangeCommand request, CancellationToken cancellationToken)
         {
-            var attributeXml = await ParseContactAttributes(request);
+            var customAttributes = await ParseContactAttributes(request);
 
             var enabledAttributeIds = new List<string>();
             var disabledAttributeIds = new List<string>();
             var attributes = await _contactAttributeService.GetAllContactAttributes(request.Store.Id);
             foreach (var attribute in attributes)
             {
-                var conditionMet = await _contactAttributeParser.IsConditionMet(attribute, attributeXml);
+                var conditionMet = await _contactAttributeParser.IsConditionMet(attribute, customAttributes);
                 if (conditionMet.HasValue)
                 {
                     if (conditionMet.Value)
@@ -46,9 +47,9 @@ namespace Grand.Web.Commands.Handler.Common
             return (enabledAttributeIds, disabledAttributeIds);
         }
 
-        private async Task<string> ParseContactAttributes(ContactAttributeChangeCommand request)
+        private async Task<IList<CustomAttribute>> ParseContactAttributes(ContactAttributeChangeCommand request)
         {
-            string attributesXml = "";
+            var customAttributes = new List<CustomAttribute>();
             var contactAttributes = await _contactAttributeService.GetAllContactAttributes(request.Store.Id);
             foreach (var attribute in contactAttributes)
             {
@@ -61,10 +62,10 @@ namespace Grand.Web.Commands.Handler.Common
                     case AttributeControlType.ImageSquares:
                         {
                             var ctrlAttributes = request.Form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
-                                        attribute, ctrlAttributes);
+                                customAttributes = _contactAttributeParser.AddContactAttribute(customAttributes,
+                                        attribute, ctrlAttributes).ToList();
 
                             }
                         }
@@ -72,11 +73,11 @@ namespace Grand.Web.Commands.Handler.Common
                     case AttributeControlType.Checkboxes:
                         {
                             var cblAttributes = request.Form[controlId].ToString();
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            if (!string.IsNullOrEmpty(cblAttributes))
                             {
                                 foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml, attribute, item);
+                                    customAttributes = _contactAttributeParser.AddContactAttribute(customAttributes, attribute, item).ToList();
                                 }
                             }
                         }
@@ -90,8 +91,8 @@ namespace Grand.Web.Commands.Handler.Common
                                 .Select(v => v.Id)
                                 .ToList())
                             {
-                                attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                customAttributes = _contactAttributeParser.AddContactAttribute(customAttributes,
+                                            attribute, selectedAttributeId.ToString()).ToList();
                             }
                         }
                         break;
@@ -99,11 +100,11 @@ namespace Grand.Web.Commands.Handler.Common
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = request.Form[controlId].ToString();
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
-                                attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
-                                    attribute, enteredText);
+                                customAttributes = _contactAttributeParser.AddContactAttribute(customAttributes,
+                                    attribute, enteredText).ToList();
                             }
                         }
                         break;
@@ -120,8 +121,8 @@ namespace Grand.Web.Commands.Handler.Common
                             catch { }
                             if (selectedDate.HasValue)
                             {
-                                attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
-                                    attribute, selectedDate.Value.ToString("D"));
+                                customAttributes = _contactAttributeParser.AddContactAttribute(customAttributes,
+                                    attribute, selectedDate.Value.ToString("D")).ToList();
                             }
                         }
                         break;
@@ -132,8 +133,8 @@ namespace Grand.Web.Commands.Handler.Common
                             var download = await _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
-                                attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
-                                           attribute, download.DownloadGuid.ToString());
+                                customAttributes = _contactAttributeParser.AddContactAttribute(customAttributes,
+                                           attribute, download.DownloadGuid.ToString()).ToList();
                             }
                         }
                         break;
@@ -144,12 +145,12 @@ namespace Grand.Web.Commands.Handler.Common
             //validate conditional attributes (if specified)
             foreach (var attribute in contactAttributes)
             {
-                var conditionMet = await _contactAttributeParser.IsConditionMet(attribute, attributesXml);
+                var conditionMet = await _contactAttributeParser.IsConditionMet(attribute, customAttributes);
                 if (conditionMet.HasValue && !conditionMet.Value)
-                    attributesXml = _contactAttributeParser.RemoveContactAttribute(attributesXml, attribute);
+                    customAttributes = _contactAttributeParser.RemoveContactAttribute(customAttributes, attribute).ToList();
             }
 
-            return attributesXml;
+            return customAttributes;
         }
     }
 }

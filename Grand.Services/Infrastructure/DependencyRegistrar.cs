@@ -316,7 +316,6 @@ namespace Grand.Services.Infrastructure
             builder.RegisterType<Tokenizer>().As<ITokenizer>().InstancePerLifetimeScope();
             builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerLifetimeScope();
 
-            builder.RegisterType<ContactAttributeFormatter>().As<IContactAttributeFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<ContactAttributeParser>().As<IContactAttributeParser>().InstancePerLifetimeScope();
             builder.RegisterType<ContactAttributeService>().As<IContactAttributeService>().InstancePerLifetimeScope();
 

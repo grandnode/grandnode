@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Grand.Domain.Common;
+using MediatR;
+using System.Collections.Generic;
 
 namespace Grand.Services.Commands.Models.Common
 {
@@ -12,7 +14,7 @@ namespace Grand.Services.Commands.Models.Common
         public string Subject { get; set; }
         public string Enquiry { get; set; }
         public string ContactAttributeDescription { get; set; }
-        public string ContactAttributesXml { get; set; }
+        public IList<CustomAttribute> ContactAttributes { get; set; }
         public string EmailAccountId { get; set; }
     }
 

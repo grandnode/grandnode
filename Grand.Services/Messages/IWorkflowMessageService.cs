@@ -1,5 +1,6 @@
 ﻿using Grand.Domain.Blogs;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Forums;
 using Grand.Domain.Knowledgebase;
@@ -505,7 +506,7 @@ namespace Grand.Services.Messages
         /// <param name="attrInfo">Attr info</param>
         /// <param name="attrXml">Attr xml</param>
         /// <returns>Queued email identifier</returns>
-        Task<int> SendContactUsMessage(Customer customer, Store store, string languageId, string senderEmail, string senderName, string subject, string body, string attrInfo, string attrXml);
+        Task<int> SendContactUsMessage(Customer customer, Store store, string languageId, string senderEmail, string senderName, string subject, string body, string attrInfo, IList<CustomAttribute> customAttributes);
 
         /// <summary>
         /// Sends "contact vendor" message

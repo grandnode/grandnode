@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Messages;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -41,7 +42,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         protected virtual async Task SaveConditionAttributes(ContactAttribute contactAttribute, ContactAttributeModel model)
         {
-            string attributesXml = null;
+            var customattributes = new List<CustomAttribute>();
             if (model.ConditionModel.EnableCondition)
             {
                 var attribute = await _contactAttributeService.GetContactAttributeById(model.ConditionModel.SelectedAttributeId);
@@ -57,22 +58,22 @@ namespace Grand.Web.Areas.Admin.Services
                                 var selectedAttribute = model.ConditionModel.ConditionAttributes
                                     .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
                                 var selectedValue = selectedAttribute != null ? selectedAttribute.SelectedValueId : null;
-                                if (!String.IsNullOrEmpty(selectedValue))
-                                    attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml, attribute, selectedValue);
+                                if (!string.IsNullOrEmpty(selectedValue))
+                                    customattributes = _contactAttributeParser.AddContactAttribute(customattributes, attribute, selectedValue).ToList();
                                 else
-                                    attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml, attribute, string.Empty);
+                                    customattributes = _contactAttributeParser.AddContactAttribute(customattributes, attribute, string.Empty).ToList();
                             }
                             break;
                         case AttributeControlType.Checkboxes:
                             {
                                 var selectedAttribute = model.ConditionModel.ConditionAttributes
                                     .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
-                                var selectedValues = selectedAttribute != null ? selectedAttribute.Values.Where(x => x.Selected).Select(x => x.Value) : null;
+                                var selectedValues = selectedAttribute?.Values.Where(x => x.Selected).Select(x => x.Value);
                                 if (selectedValues.Any())
                                     foreach (var value in selectedValues)
-                                        attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml, attribute, value);
+                                        customattributes = _contactAttributeParser.AddContactAttribute(customattributes, attribute, value).ToList();
                                 else
-                                    attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml, attribute, string.Empty);
+                                    customattributes = _contactAttributeParser.AddContactAttribute(customattributes, attribute, string.Empty).ToList();
                             }
                             break;
                         case AttributeControlType.ReadonlyCheckboxes:
@@ -86,7 +87,7 @@ namespace Grand.Web.Areas.Admin.Services
                     }
                 }
             }
-            contactAttribute.ConditionAttributeXml = attributesXml;
+            contactAttribute.ConditionAttribute = customattributes;
         }
         #endregion
          
@@ -112,12 +113,12 @@ namespace Grand.Web.Areas.Admin.Services
             if (contactAttribute == null)
                 return;
 
-            var selectedAttribute = (await _contactAttributeParser.ParseContactAttributes(contactAttribute.ConditionAttributeXml)).FirstOrDefault();
-            var selectedValues = await _contactAttributeParser.ParseContactAttributeValues(contactAttribute.ConditionAttributeXml);
+            var selectedAttribute = (await _contactAttributeParser.ParseContactAttributes(contactAttribute.ConditionAttribute)).FirstOrDefault();
+            var selectedValues = await _contactAttributeParser.ParseContactAttributeValues(contactAttribute.ConditionAttribute);
 
             model.ConditionModel = new ConditionModel()
             {
-                EnableCondition = !string.IsNullOrEmpty(contactAttribute.ConditionAttributeXml),
+                EnableCondition = contactAttribute.ConditionAttribute.Any(),
                 SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : "",
                 ConditionAttributes = (await _contactAttributeService.GetAllContactAttributes(_workContext.CurrentCustomer.StaffStoreId, ignorAcl: true))
                     //ignore this attribute and non-combinable attributes

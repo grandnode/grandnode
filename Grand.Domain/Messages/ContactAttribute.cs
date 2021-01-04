@@ -1,4 +1,5 @@
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Localization;
 using Grand.Domain.Security;
 using Grand.Domain.Stores;
@@ -18,6 +19,7 @@ namespace Grand.Domain.Messages
             Stores = new List<string>();
             Locales = new List<LocalizedProperty>();
             CustomerRoles = new List<string>();
+            ConditionAttribute = new List<CustomAttribute>(); 
         }
         /// <summary>
         /// Gets or sets the name
@@ -84,10 +86,7 @@ namespace Grand.Domain.Messages
         /// </summary>
         public string DefaultValue { get; set; }
 
-        /// <summary>
-        /// Gets or sets a condition (depending on other attribute) when this attribute should be enabled (visible).
-        /// </summary>
-        public string ConditionAttributeXml { get; set; }
+        public IList<CustomAttribute> ConditionAttribute { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is subject to ACL
