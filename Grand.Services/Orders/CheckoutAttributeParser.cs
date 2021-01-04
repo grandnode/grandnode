@@ -2,10 +2,8 @@ using Grand.Domain.Common;
 using Grand.Domain.Orders;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Grand.Services.Orders
 {
@@ -65,7 +63,7 @@ namespace Grand.Services.Orders
                 {
                     if (!string.IsNullOrEmpty(valueStr))
                     {
-                        var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
+                        var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault();
                         if (value != null)
                             values.Add(value);
                     }
@@ -175,7 +173,7 @@ namespace Grand.Services.Orders
             if (dependOnAttribute == null)
                 return true;
 
-            var valuesThatShouldBeSelected = conditionAttribute.Where(x=>x.Key == dependOnAttribute.Id).Select(x=>x.Value)
+            var valuesThatShouldBeSelected = conditionAttribute.Where(x => x.Key == dependOnAttribute.Id).Select(x => x.Value)
                 //a workaround here:
                 //ConditionAttributeXml can contain "empty" values (nothing is selected)
                 //but in other cases (like below) we do not store empty values
@@ -183,7 +181,7 @@ namespace Grand.Services.Orders
                 .Where(x => !string.IsNullOrEmpty(x))
                 .ToList();
 
-            var selectedValues = customAttributes.Where(x=>x.Key == dependOnAttribute.Id).Select(x=>x.Value).ToList();
+            var selectedValues = customAttributes.Where(x => x.Key == dependOnAttribute.Id).Select(x => x.Value).ToList();
             if (valuesThatShouldBeSelected.Count != selectedValues.Count)
                 return false;
 

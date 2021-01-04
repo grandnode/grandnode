@@ -1046,7 +1046,6 @@ namespace Grand.Services.Orders
             }
         }
 
-
         /// <summary>
         /// Prepare order header
         /// </summary>
