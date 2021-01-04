@@ -160,7 +160,7 @@ namespace Grand.Web.Commands.Handler.Customers
             }
 
             //save customer attributes
-            await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.CustomCustomerAttributes, request.CustomerAttributesXml);
+            await _customerService.UpdateCustomerField(request.Customer, x => x.Attributes, request.CustomerAttributes);
 
             //insert default address (if possible)
             var defaultAddress = new Address {

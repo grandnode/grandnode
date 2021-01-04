@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Grand.Framework.Mvc.Models;
+using Grand.Domain.Common;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
@@ -26,6 +27,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             CustomerAttributes = new List<CustomerAttributeModel>();
             AvailableNewsletterSubscriptionStores = new List<StoreModel>();
             RewardPointsAvailableStores = new List<SelectListItem>();
+            Attributes = new List<CustomAttribute>();
         }
 
         public bool AllowUsersToChangeUsernames { get; set; }
@@ -145,7 +147,8 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
         public string AffiliateName { get; set; }
-        public string CustomAttributes { get; set; }
+        
+        public IList<CustomAttribute> Attributes { get; set; }
 
         //time zone
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.TimeZoneId")]

@@ -1,9 +1,15 @@
+using Grand.Core.Html;
+using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
+using Grand.Domain.Localization;
 using Grand.Services.Localization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -25,52 +31,19 @@ namespace Grand.Services.Customers
         }
 
         /// <summary>
-        /// Gets selected customer attribute identifiers
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected customer attribute identifiers</returns>
-        protected virtual IList<string> ParseCustomerAttributeIds(string attributesXml)
-        {
-            var ids = new List<string>();
-            if (String.IsNullOrEmpty(attributesXml))
-                return ids;
-
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributesXml);
-
-                foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/CustomerAttribute"))
-                {
-                    if (node.Attributes != null && node.Attributes["ID"] != null)
-                    {
-                        string str1 = node.Attributes["ID"].InnerText.Trim();
-                        ids.Add(str1);
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return ids;
-        }
-
-        /// <summary>
         /// Gets selected customer attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Selected customer attributes</returns>
-        public virtual async Task<IList<CustomerAttribute>> ParseCustomerAttributes(string attributesXml)
+        public virtual async Task<IList<CustomerAttribute>> ParseCustomerAttributes(IList<CustomAttribute> customAttributes)
         {
             var result = new List<CustomerAttribute>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (!customAttributes.Any())
                 return result;
 
-            var ids = ParseCustomerAttributeIds(attributesXml);
-            foreach (string id in ids)
+            foreach (var customAttribute in customAttributes.GroupBy(x => x.Key))
             {
-                var attribute = await _customerAttributeService.GetCustomerAttributeById(id);
+                var attribute = await _customerAttributeService.GetCustomerAttributeById(customAttribute.Key);
                 if (attribute != null)
                 {
                     result.Add(attribute);
@@ -82,26 +55,26 @@ namespace Grand.Services.Customers
         /// <summary>
         /// Get customer attribute values
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Customer attribute values</returns>
-        public virtual async Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValues(string attributesXml)
+        public virtual async Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValues(IList<CustomAttribute> customAttributes)
         {
             var values = new List<CustomerAttributeValue>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (!customAttributes.Any())
                 return values;
 
-            var attributes = await ParseCustomerAttributes(attributesXml);
+            var attributes = await ParseCustomerAttributes(customAttributes);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
                     continue;
 
-                var valuesStr = ParseValues(attributesXml, attribute.Id);
+                var valuesStr = customAttributes.Where(x => x.Key == attribute.Id).Select(x => x.Value);
                 foreach (string valueStr in valuesStr)
                 {
-                    if (!String.IsNullOrEmpty(valueStr))
+                    if (!string.IsNullOrEmpty(valueStr))
                     {
-                        var value = attribute.CustomerAttributeValues.FirstOrDefault(x => x.Id == valueStr); 
+                        var value = attribute.CustomerAttributeValues.FirstOrDefault(x => x.Id == valueStr);
                         if (value != null)
                             values.Add(value);
                     }
@@ -110,123 +83,35 @@ namespace Grand.Services.Customers
             return values;
         }
 
-        /// <summary>
-        /// Gets selected customer attribute value
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="customerAttributeId">Customer attribute identifier</param>
-        /// <returns>Customer attribute value</returns>
-        public virtual IList<string> ParseValues(string attributesXml, string customerAttributeId)
-        {
-            var selectedCustomerAttributeValues = new List<string>();
-            if (String.IsNullOrEmpty(attributesXml))
-                return selectedCustomerAttributeValues;
-
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributesXml);
-
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CustomerAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
-                            if (str1 == customerAttributeId)
-                            {
-                                var nodeList2 = node1.SelectNodes(@"CustomerAttributeValue/Value");
-                                foreach (XmlNode node2 in nodeList2)
-                                {
-                                    string value = node2.InnerText.Trim();
-                                    selectedCustomerAttributeValues.Add(value);
-                                }
-                            }
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return selectedCustomerAttributeValues;
-        }
 
         /// <summary>
         /// Adds an attribute
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <param name="ca">Customer attribute</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
-        public virtual string AddCustomerAttribute(string attributesXml, CustomerAttribute ca, string value)
+        public virtual IList<CustomAttribute> AddCustomerAttribute(IList<CustomAttribute> customAttributes, CustomerAttribute ca, string value)
         {
-            string result = string.Empty;
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributesXml))
-                {
-                    var element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(element1);
-                }
-                else
-                {
-                    xmlDoc.LoadXml(attributesXml);
-                }
-                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
+            if (customAttributes == null)
+                customAttributes = new List<CustomAttribute>();
 
-                XmlElement attributeElement = null;
-                //find existing
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CustomerAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
-                            if (str1 == ca.Id)
-                            {
-                                attributeElement = (XmlElement)node1;
-                                break;
-                            }
-                    }
-                }
+            customAttributes.Add(new CustomAttribute() { Key = ca.Id, Value = value });
 
-                //create new one if not found
-                if (attributeElement == null)
-                {
-                    attributeElement = xmlDoc.CreateElement("CustomerAttribute");
-                    attributeElement.SetAttribute("ID", ca.Id.ToString());
-                    rootElement.AppendChild(attributeElement);
-                }
-
-                var attributeValueElement = xmlDoc.CreateElement("CustomerAttributeValue");
-                attributeElement.AppendChild(attributeValueElement);
-
-                var attributeValueValueElement = xmlDoc.CreateElement("Value");
-                attributeValueValueElement.InnerText = value;
-                attributeValueElement.AppendChild(attributeValueValueElement);
-
-                result = xmlDoc.OuterXml;
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return result;
+            return customAttributes;
         }
 
         /// <summary>
         /// Validates customer attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Warnings</returns>
-        public virtual async Task<IList<string>> GetAttributeWarnings(string attributesXml)
+        public virtual async Task<IList<string>> GetAttributeWarnings(IList<CustomAttribute> customAttributes)
         {
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var attributes1 = await ParseCustomerAttributes(attributesXml);
+            var attributes1 = await ParseCustomerAttributes(customAttributes);
 
             //validate required customer attributes (whether they're chosen/selected/entered)
             var attributes2 = await _customerAttributeService.GetAllCustomerAttributes();
@@ -240,10 +125,10 @@ namespace Grand.Services.Customers
                     {
                         if (a1.Id == a2.Id)
                         {
-                            var valuesStr = ParseValues(attributesXml, a1.Id);
-                            foreach (string str1 in valuesStr)
+                            var valuesStr = customAttributes.Where(x => x.Key == a1.Id).Select(x => x.Value);
+                            foreach (var str1 in valuesStr)
                             {
-                                if (!String.IsNullOrEmpty(str1.Trim()))
+                                if (!string.IsNullOrEmpty(str1.Trim()))
                                 {
                                     found = true;
                                     break;
@@ -263,6 +148,82 @@ namespace Grand.Services.Customers
             }
 
             return warnings;
+        }
+
+        /// <summary>
+        /// Formats attributes
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <param name="customAttributes">Attributes</param>
+        /// <param name="serapator">Serapator</param>
+        /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
+        /// <returns>Attributes</returns>
+        public virtual async Task<string> FormatAttributes(Language language,
+            IList<CustomAttribute> customAttributes, string serapator = "<br />", bool htmlEncode = true)
+        {
+            var result = new StringBuilder();
+
+            var attributes = await ParseCustomerAttributes(customAttributes);
+            for (int i = 0; i < attributes.Count; i++)
+            {
+                var attribute = attributes[i];
+                var valuesStr = customAttributes.Where(x => x.Key == attribute.Id).Select(x => x.Value).ToList();
+                for (var j = 0; j < valuesStr.Count; j++)
+                {
+                    var valueStr = valuesStr[j];
+                    var formattedAttribute = "";
+                    if (!attribute.ShouldHaveValues())
+                    {
+                        //no values
+                        if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
+                        {
+                            //multiline textbox
+                            var attributeName = attribute.GetLocalized(a => a.Name, language.Id);
+                            //encode (if required)
+                            if (htmlEncode)
+                                attributeName = WebUtility.HtmlEncode(attributeName);
+                            formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr));
+                            //we never encode multiline textbox input
+                        }
+                        else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
+                        {
+                            //file upload
+                            //not supported for customer attributes
+                        }
+                        else
+                        {
+                            //other attributes (textbox, datepicker)
+                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, language.Id), valueStr);
+                            //encode (if required)
+                            if (htmlEncode)
+                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
+                        }
+                    }
+                    else
+                    {
+
+                        string attributeValueId = valueStr;
+                        var attributeValue = attribute.CustomerAttributeValues.FirstOrDefault(x => x.Id == attributeValueId);
+                        if (attributeValue != null)
+                        {
+                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, language.Id), attributeValue.GetLocalized(a => a.Name, language.Id));
+                        }
+                        //encode (if required)
+                        if (htmlEncode)
+                            formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
+
+                    }
+
+                    if (!string.IsNullOrEmpty(formattedAttribute))
+                    {
+                        if (i != 0 || j != 0)
+                            result.Append(serapator);
+                        result.Append(formattedAttribute);
+                    }
+                }
+            }
+
+            return result.ToString();
         }
 
     }

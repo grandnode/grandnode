@@ -1,7 +1,9 @@
-﻿using Grand.Domain.Customers;
+﻿using Grand.Domain.Common;
+using Grand.Domain.Customers;
 using Grand.Web.Models.Customer;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace Grand.Web.Events
 {
@@ -10,14 +12,14 @@ namespace Grand.Web.Events
         public Customer Customer { get; set; }
         public CustomerInfoModel Model { get; set; }
         public IFormCollection Form { get; set; }
-        public string CustomerAttributesXml { get; set; }
+        public IList<CustomAttribute> CustomerAttributes { get; set; }
 
-        public CustomerInfoEvent(Customer customer, CustomerInfoModel model, IFormCollection form, string customerAttributesXml)
+        public CustomerInfoEvent(Customer customer, CustomerInfoModel model, IFormCollection form, IList<CustomAttribute> customerAttributes)
         {
             Customer = customer;
             Model = model;
             Form = form;
-            CustomerAttributesXml = customerAttributesXml;
+            CustomerAttributes = customerAttributes;
         }
     }
 }

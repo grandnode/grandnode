@@ -1,15 +1,17 @@
 ﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Services.Customers;
 using Grand.Web.Features.Models.Customers;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.Customers
 {
-    public class GetParseCustomAttributesHandler : IRequestHandler<GetParseCustomAttributes, string>
+    public class GetParseCustomAttributesHandler : IRequestHandler<GetParseCustomAttributes, IList<CustomAttribute>>
     {
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
@@ -20,9 +22,9 @@ namespace Grand.Web.Features.Handlers.Customers
             _customerAttributeParser = customerAttributeParser;
         }
 
-        public async Task<string> Handle(GetParseCustomAttributes request, CancellationToken cancellationToken)
+        public async Task<IList<CustomAttribute>> Handle(GetParseCustomAttributes request, CancellationToken cancellationToken)
         {
-            string attributesXml = "";
+            var customAttributes = new List<CustomAttribute>();
             var attributes = await _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in attributes)
             {
@@ -33,23 +35,23 @@ namespace Grand.Web.Features.Handlers.Customers
                     case AttributeControlType.RadioList:
                         {
                             var ctrlAttributes = request.Form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                    attribute, ctrlAttributes);
+                                customAttributes = _customerAttributeParser.AddCustomerAttribute(customAttributes,
+                                    attribute, ctrlAttributes).ToList();
                             }
                         }
                         break;
                     case AttributeControlType.Checkboxes:
                         {
                             var cblAttributes = request.Form[controlId].ToString();
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            if (!string.IsNullOrEmpty(cblAttributes))
                             {
                                 foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     if (!String.IsNullOrEmpty(item))
-                                        attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                            attribute, item);
+                                        customAttributes = _customerAttributeParser.AddCustomerAttribute(customAttributes,
+                                            attribute, item).ToList();
                                 }
                             }
                         }
@@ -63,8 +65,8 @@ namespace Grand.Web.Features.Handlers.Customers
                                 .Select(v => v.Id)
                                 .ToList())
                             {
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                            attribute, selectedAttributeId);
+                                customAttributes = _customerAttributeParser.AddCustomerAttribute(customAttributes,
+                                            attribute, selectedAttributeId).ToList();
                             }
                         }
                         break;
@@ -75,12 +77,12 @@ namespace Grand.Web.Features.Handlers.Customers
                             if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
                                 var enteredText = ctrlAttributes.Trim();
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                    attribute, enteredText);
+                                customAttributes = _customerAttributeParser.AddCustomerAttribute(customAttributes,
+                                    attribute, enteredText).ToList();
                             }
                             else
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                    attribute, "");
+                                customAttributes = _customerAttributeParser.AddCustomerAttribute(customAttributes,
+                                    attribute, "").ToList();
 
                         }
                         break;
@@ -93,7 +95,7 @@ namespace Grand.Web.Features.Handlers.Customers
                         break;
                 }
             }
-            return attributesXml;
+            return customAttributes;
         }
     }
 }

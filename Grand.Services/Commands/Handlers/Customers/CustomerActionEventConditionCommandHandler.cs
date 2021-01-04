@@ -441,46 +441,37 @@ namespace Grand.Services.Commands.Handlers.Customers
             {
                 var customerAttributeParser = _serviceProvider.GetRequiredService<ICustomerAttributeParser>();
 
-                var _genericAttributes = customer.GenericAttributes;
                 if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
                 {
-                    var customCustomerAttributes = _genericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
-                    if (customCustomerAttributes != null)
+                    if (customer.Attributes.Any())
                     {
-                        if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
+                        var selectedValues = await customerAttributeParser.ParseCustomerAttributeValues(customer.Attributes);
+                        cond = true;
+                        foreach (var item in condition.CustomCustomerAttributes)
                         {
-                            var selectedValues = await customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
-                            cond = true;
-                            foreach (var item in condition.CustomCustomerAttributes)
+                            var _fields = item.RegisterField.Split(':');
+                            if (_fields.Count() > 1)
                             {
-                                var _fields = item.RegisterField.Split(':');
-                                if (_fields.Count() > 1)
-                                {
-                                    if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() == 0)
-                                        cond = false;
-                                }
-                                else
+                                if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() == 0)
                                     cond = false;
                             }
+                            else
+                                cond = false;
                         }
                     }
                 }
                 if (condition.Condition == CustomerActionConditionEnum.OneOfThem)
                 {
-                    var customCustomerAttributes = _genericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
-                    if (customCustomerAttributes != null)
+                    if (customer.Attributes.Any())
                     {
-                        if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
+                        var selectedValues = await customerAttributeParser.ParseCustomerAttributeValues(customer.Attributes);
+                        foreach (var item in condition.CustomCustomerAttributes)
                         {
-                            var selectedValues = await customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
-                            foreach (var item in condition.CustomCustomerAttributes)
+                            var _fields = item.RegisterField.Split(':');
+                            if (_fields.Count() > 1)
                             {
-                                var _fields = item.RegisterField.Split(':');
-                                if (_fields.Count() > 1)
-                                {
-                                    if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() > 0)
-                                        cond = true;
-                                }
+                                if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() > 0)
+                                    cond = true;
                             }
                         }
                     }

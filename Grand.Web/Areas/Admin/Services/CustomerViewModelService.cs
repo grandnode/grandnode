@@ -354,21 +354,20 @@ namespace Grand.Web.Areas.Admin.Services
                 //set already selected attributes
                 if (customer != null)
                 {
-                    var selectedCustomerAttributes = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CustomCustomerAttributes);
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
                             {
-                                if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                                if (customer.Attributes.Any())
                                 {
                                     //clear default selection
                                     foreach (var item in attributeModel.Values)
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                    var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customer.Attributes);
                                     foreach (var attributeValue in selectedValues)
                                         if (attributeModel.Id == attributeValue.CustomerAttributeId)
                                             foreach (var item in attributeModel.Values)
@@ -386,9 +385,9 @@ namespace Grand.Web.Areas.Admin.Services
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
                             {
-                                if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                                if (customer.Attributes.Any())
                                 {
-                                    var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                    var enteredText = customer.Attributes.Where(x => x.Key == attribute.Id).Select(x => x.Value).ToList();
                                     if (enteredText.Count > 0)
                                         attributeModel.DefaultValue = enteredText[0];
                                 }
@@ -725,6 +724,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Active = model.Active,
                 StoreId = _storeContext.CurrentStore.Id,
                 OwnerId = ownerId,
+                Attributes = model.Attributes,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
             };
@@ -758,11 +758,8 @@ namespace Grand.Web.Areas.Admin.Services
             if (_customerSettings.FaxEnabled)
                 await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
 
-            //custom customer attributes
-            await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, model.CustomAttributes);
-
             //newsletter subscriptions
-            if (!String.IsNullOrEmpty(customer.Email))
+            if (!string.IsNullOrEmpty(customer.Email))
             {
                 var allStores = await _storeService.GetAllStores();
                 foreach (var store in allStores)
@@ -870,8 +867,9 @@ namespace Grand.Web.Areas.Admin.Services
             customer.IsTaxExempt = model.IsTaxExempt;
             customer.FreeShipping = model.FreeShipping;
             customer.Active = model.Active;
+            customer.Attributes = model.Attributes;
             //email
-            if (!String.IsNullOrWhiteSpace(model.Email))
+            if (!string.IsNullOrWhiteSpace(model.Email))
             {
                 await _customerRegistrationService.SetEmail(customer, model.Email);
             }
@@ -883,7 +881,7 @@ namespace Grand.Web.Areas.Admin.Services
             //username
             if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
             {
-                if (!String.IsNullOrWhiteSpace(model.Username))
+                if (!string.IsNullOrWhiteSpace(model.Username))
                 {
                     await _customerRegistrationService.SetUsername(customer, model.Username);
                 }
@@ -966,11 +964,8 @@ namespace Grand.Web.Areas.Admin.Services
             if (_customerSettings.FaxEnabled)
                 await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
 
-            //custom customer attributes
-            await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, model.CustomAttributes);
-
             //newsletter subscriptions
-            if (!String.IsNullOrEmpty(customer.Email))
+            if (!string.IsNullOrEmpty(customer.Email))
             {
                 var allStores = await _storeService.GetAllStores();
                 foreach (var store in allStores)

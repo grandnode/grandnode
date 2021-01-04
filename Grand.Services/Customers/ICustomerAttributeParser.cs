@@ -1,4 +1,6 @@
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
+using Grand.Domain.Localization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,39 +14,42 @@ namespace Grand.Services.Customers
         /// <summary>
         /// Gets selected customer attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Selected customer attributes</returns>
-        Task<IList<CustomerAttribute>> ParseCustomerAttributes(string attributesXml);
+        Task<IList<CustomerAttribute>> ParseCustomerAttributes(IList<CustomAttribute> customAttributes);
 
         /// <summary>
         /// Get customer attribute values
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Customer attribute values</returns>
-        Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValues(string attributesXml);
-
-        /// <summary>
-        /// Gets selected customer attribute value
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="customerAttributeId">Customer attribute identifier</param>
-        /// <returns>Customer attribute value</returns>
-        IList<string> ParseValues(string attributesXml, string customerAttributeId);
+        Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValues(IList<CustomAttribute> customAttributes);
 
         /// <summary>
         /// Adds an attribute
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="ca">Customer attribute</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
-        string AddCustomerAttribute(string attributesXml, CustomerAttribute ca, string value);
+        IList<CustomAttribute> AddCustomerAttribute(IList<CustomAttribute> customAttributes, CustomerAttribute ca, string value);
 
         /// <summary>
         /// Validates customer attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> GetAttributeWarnings(string attributesXml);
+        Task<IList<string>> GetAttributeWarnings(IList<CustomAttribute> customAttributes);
+
+        /// <summary>
+        /// Formats attributes
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <param name="customAttributes">Attributes</param>
+        /// <param name="serapator">Serapator</param>
+        /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
+        /// <returns>Attributes</returns>
+        Task<string> FormatAttributes(Language language, IList<CustomAttribute> customAttributes, string serapator = "<br />", bool htmlEncode = true);
+
     }
 }

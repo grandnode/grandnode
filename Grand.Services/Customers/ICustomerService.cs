@@ -48,7 +48,7 @@ namespace Grand.Services.Customers
             string firstName = null, string lastName = null,
             string company = null, string phone = null, string zipPostalCode = null,
             bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = int.MaxValue, Expression<Func<Customer, object>> orderBySelector = null); 
+            int pageIndex = 0, int pageSize = int.MaxValue, Expression<Func<Customer, object>> orderBySelector = null);
 
         /// <summary>
         /// Gets all customers by customer format (including deleted ones)
@@ -145,6 +145,13 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         Task UpdateCustomer(Customer customer);
+
+        /// <summary>
+        /// Updates the customer field
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        Task UpdateCustomerField(Customer customer,
+            Expression<Func<Customer, object>> expression, object value);
 
         /// <summary>
         /// Updates the customer

@@ -1215,10 +1215,10 @@ namespace Grand.Services.Installation
             });
 
             #endregion
-            
-            #region Upgrade Address attributes field
 
-            static List<CustomAttribute> ParseCustomAttributes(string attributesXml)
+            #region Upgrade Address attributes field / customer attributes
+
+            static List<CustomAttribute> ParseAddressCustomAttributes(string attributesXml)
             {
                 var customAttribute = new List<CustomAttribute>();
 
@@ -1250,6 +1250,38 @@ namespace Grand.Services.Installation
                 return customAttribute;
             }
 
+            static List<CustomAttribute> ParseCustomerCustomAttributes(string attributesXml)
+            {
+                var customAttribute = new List<CustomAttribute>();
+
+                try
+                {
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(attributesXml);
+
+                    var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CustomerAttribute");
+                    foreach (XmlNode node1 in nodeList1)
+                    {
+                        if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                        {
+                            var key = node1.Attributes["ID"].InnerText.Trim();
+
+                            var nodeList2 = node1.SelectNodes(@"CustomerAttributeValue/Value");
+                            foreach (XmlNode node2 in nodeList2)
+                            {
+                                var value = node2.InnerText.Trim();
+                                customAttribute.Add(new CustomAttribute() { Key = key, Value = value });
+                            }
+                        }
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Debug.Write(exc.ToString());
+                }
+                return customAttribute;
+            }
+
             //upgrade customer data - billingaddress/shippingaddress - Addresses
             var customerRepository = dBContext.Database().GetCollection<Customer>("Customer");
 
@@ -1259,13 +1291,13 @@ namespace Grand.Services.Installation
 
                 if (!string.IsNullOrEmpty(c.BillingAddress?.CustomAttributes))
                 {
-                    c.BillingAddress.Attributes = ParseCustomAttributes(c.BillingAddress.CustomAttributes);
+                    c.BillingAddress.Attributes = ParseAddressCustomAttributes(c.BillingAddress.CustomAttributes);
                     update = true;
                 }
 
                 if (!string.IsNullOrEmpty(c.ShippingAddress?.CustomAttributes))
                 {
-                    c.ShippingAddress.Attributes = ParseCustomAttributes(c.ShippingAddress.CustomAttributes);
+                    c.ShippingAddress.Attributes = ParseAddressCustomAttributes(c.ShippingAddress.CustomAttributes);
                     update = true;
                 }
 
@@ -1273,12 +1305,20 @@ namespace Grand.Services.Installation
                 {
                     foreach (var address in c.Addresses.Where(x => !string.IsNullOrEmpty(x.CustomAttributes)))
                     {
-                        address.Attributes = ParseCustomAttributes(address.CustomAttributes);
+                        address.Attributes = ParseAddressCustomAttributes(address.CustomAttributes);
                         update = true;
                     }
                 }
-
-                if(update)
+                if (c.GenericAttributes.Where(x => x.Key == "CustomCustomerAttributes").Any())
+                {
+                    var value = c.GenericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes").Value;
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        c.Attributes = ParseCustomerCustomAttributes(value);
+                        update = true;
+                    }
+                }
+                if (update)
                     await customerRepository.ReplaceOneAsync(x => x.Id == c.Id, c);
 
             });
@@ -1291,9 +1331,9 @@ namespace Grand.Services.Installation
                 if (!string.IsNullOrEmpty(o.BillingAddress?.CustomAttributes) || !string.IsNullOrEmpty(o.ShippingAddress?.CustomAttributes))
                 {
                     if (!string.IsNullOrEmpty(o.BillingAddress?.CustomAttributes))
-                        o.BillingAddress.Attributes = ParseCustomAttributes(o.BillingAddress.CustomAttributes);
+                        o.BillingAddress.Attributes = ParseAddressCustomAttributes(o.BillingAddress.CustomAttributes);
                     if (!string.IsNullOrEmpty(o.ShippingAddress?.CustomAttributes))
-                        o.ShippingAddress.Attributes = ParseCustomAttributes(o.ShippingAddress.CustomAttributes);
+                        o.ShippingAddress.Attributes = ParseAddressCustomAttributes(o.ShippingAddress.CustomAttributes);
 
                     await orderAttributesRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
                 }

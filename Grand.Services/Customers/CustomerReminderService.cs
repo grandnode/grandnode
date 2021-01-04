@@ -454,44 +454,35 @@ namespace Grand.Services.Customers
             {
                 if (condition.Condition == CustomerReminderConditionEnum.AllOfThem)
                 {
-                    var customCustomerAttributes = customer.GenericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
-                    if (customCustomerAttributes != null)
+                    if (customer.Attributes.Any())
                     {
-                        if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
+                        var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customer.Attributes);
+                        cond = true;
+                        foreach (var item in condition.CustomCustomerAttributes)
                         {
-                            var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
-                            cond = true;
-                            foreach (var item in condition.CustomCustomerAttributes)
+                            var _fields = item.RegisterField.Split(':');
+                            if (_fields.Count() > 1)
                             {
-                                var _fields = item.RegisterField.Split(':');
-                                if (_fields.Count() > 1)
-                                {
-                                    if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() == 0)
-                                        cond = false;
-                                }
-                                else
+                                if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() == 0)
                                     cond = false;
                             }
+                            else
+                                cond = false;
                         }
                     }
                 }
                 if (condition.Condition == CustomerReminderConditionEnum.OneOfThem)
                 {
-
-                    var customCustomerAttributes = customer.GenericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
-                    if (customCustomerAttributes != null)
+                    if (customer.Attributes.Any())
                     {
-                        if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
+                        var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customer.Attributes);
+                        foreach (var item in condition.CustomCustomerAttributes)
                         {
-                            var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
-                            foreach (var item in condition.CustomCustomerAttributes)
+                            var _fields = item.RegisterField.Split(':');
+                            if (_fields.Count() > 1)
                             {
-                                var _fields = item.RegisterField.Split(':');
-                                if (_fields.Count() > 1)
-                                {
-                                    if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() > 0)
-                                        cond = true;
-                                }
+                                if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() > 0)
+                                    cond = true;
                             }
                         }
                     }
