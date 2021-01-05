@@ -6,6 +6,7 @@ using Grand.Domain.Orders;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
+using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Discounts;
@@ -42,6 +43,8 @@ namespace Grand.Web.Controllers
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly IPermissionService _permissionService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IAclService _aclService;
+        private readonly IProductService _productService;
         private readonly IMediator _mediator;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly OrderSettings _orderSettings;
@@ -61,6 +64,8 @@ namespace Grand.Web.Controllers
             IPermissionService permissionService,
             IGenericAttributeService genericAttributeService,
             IMediator mediator,
+            IAclService aclService,
+            IProductService productService,
             ShoppingCartSettings shoppingCartSettings,
             OrderSettings orderSettings)
         {
@@ -73,6 +78,8 @@ namespace Grand.Web.Controllers
             _checkoutAttributeService = checkoutAttributeService;
             _permissionService = permissionService;
             _genericAttributeService = genericAttributeService;
+            _aclService = aclService;
+            _productService = productService;
             _mediator = mediator;
             _shoppingCartSettings = shoppingCartSettings;
             _orderSettings = orderSettings;
@@ -391,7 +398,7 @@ namespace Grand.Web.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
-            if(!_shoppingCartSettings.AllowOnHoldCart)
+            if (!_shoppingCartSettings.AllowOnHoldCart)
                 return RedirectToRoute("HomePage");
 
             var shoppingCartTypes = new List<ShoppingCartType>();
@@ -749,13 +756,28 @@ namespace Grand.Web.Controllers
             Customer customer = customerGuid.HasValue ?
                 await _customerService.GetCustomerByGuid(customerGuid.Value)
                 : _workContext.CurrentCustomer;
+
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            var cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist);
+            List<ShoppingCartItem> cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
             if (!string.IsNullOrEmpty(_storeContext.CurrentStore.Id))
-                cart = cart.LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id);
+                cart = cart.LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id).ToList();
+
+            List<string> itemsToDelete = new List<string>();
+
+            foreach (var item in cart)
+            {
+                var product = await _productService.GetProductById(item.ProductId);
+
+                if (!_aclService.Authorize(product, _workContext.CurrentCustomer))
+                {
+                    itemsToDelete.Add(item.Id);
+                }
+            }
+
+            cart.RemoveAll(x => itemsToDelete.Contains(x.Id));
 
             var model = await _mediator.Send(new GetWishlist() {
                 Cart = cart.ToList(),
