@@ -1283,6 +1283,38 @@ namespace Grand.Services.Installation
                 return customAttribute;
             }
 
+            static List<CustomAttribute> ParseProductCustomAttributes(string attributesXml)
+            {
+                var customAttribute = new List<CustomAttribute>();
+
+                try
+                {
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(attributesXml);
+
+                    var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
+                    foreach (XmlNode node1 in nodeList1)
+                    {
+                        if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                        {
+                            var key = node1.Attributes["ID"].InnerText.Trim();
+
+                            var nodeList2 = node1.SelectNodes(@"ProductAttributeValue/Value");
+                            foreach (XmlNode node2 in nodeList2)
+                            {
+                                var value = node2.InnerText.Trim();
+                                customAttribute.Add(new CustomAttribute() { Key = key, Value = value });
+                            }
+                        }
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Debug.Write(exc.ToString());
+                }
+                return customAttribute;
+            }
+
             //upgrade customer data - billingaddress/shippingaddress - Addresses
             var customerRepository = dBContext.Database().GetCollection<Customer>("Customer");
 
@@ -1319,14 +1351,21 @@ namespace Grand.Services.Installation
                         update = true;
                     }
                 }
+                if (c.ShoppingCartItems.Where(x => !string.IsNullOrEmpty(x.AttributesXml)).Any())
+                {
+                    foreach (var sc in c.ShoppingCartItems.Where(x => !string.IsNullOrEmpty(x.AttributesXml)))
+                    {
+                        sc.Attributes = ParseProductCustomAttributes(sc.AttributesXml);
+                        update = true;
+                    }
+                }
                 if (update)
                     await customerRepository.ReplaceOneAsync(x => x.Id == c.Id, c);
 
             });
 
-            //upgrade order data - billingaddress/shippingaddress
+            //upgrade order data - billingaddress/shippingaddress - CustomAttributes / AttributeXML for items
             var orderAttributesRepository = dBContext.Database().GetCollection<Order>("Order");
-
             await orderAttributesRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
             {
                 if (!string.IsNullOrEmpty(o.BillingAddress?.CustomAttributes) || !string.IsNullOrEmpty(o.ShippingAddress?.CustomAttributes))
@@ -1338,7 +1377,56 @@ namespace Grand.Services.Installation
 
                     await orderAttributesRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
                 }
+                if (o.OrderItems.Where(x => !string.IsNullOrEmpty(x.AttributesXml)).Any())
+                {
+                    foreach (var item in o.OrderItems.Where(x => !string.IsNullOrEmpty(x.AttributesXml)))
+                    {
+                        item.Attributes = ParseProductCustomAttributes(item.AttributesXml);
+                    }
+                    await orderAttributesRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
+                }
             });
+
+            //update shipment items
+            var shipmentAttributesRepository = dBContext.Database().GetCollection<Shipment>("Shipment");
+            await shipmentAttributesRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
+            {
+                if (o.ShipmentItems.Where(x => !string.IsNullOrEmpty(x.AttributeXML)).Any())
+                {
+                    foreach (var item in o.ShipmentItems.Where(x => !string.IsNullOrEmpty(x.AttributeXML)))
+                    {
+                        item.Attributes = ParseProductCustomAttributes(item.AttributeXML);
+                    }
+                    await shipmentAttributesRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
+                }
+            });
+
+            //update products
+            var products = _serviceProvider.GetRequiredService<IRepository<Product>>();
+            //combination
+            var productAttributeCombinations = products.Table.Where(x => x.ProductAttributeCombinations.Any()).ToList();
+            foreach (var product in productAttributeCombinations)
+            {
+                foreach (var item in product.ProductAttributeCombinations)
+                {
+                    item.Attributes = ParseProductCustomAttributes(item.AttributesXml);
+                }
+                await products.UpdateAsync(product);
+            }
+            //attributes condition
+            var productAttributeConditions = products.Table.Where(x => x.ProductAttributeMappings.Any()).ToList();
+            foreach (var product in productAttributeConditions)
+            {
+                var update = false;
+                foreach (var item in product.ProductAttributeMappings)
+                {
+                    item.ConditionAttribute = ParseProductCustomAttributes(item.ConditionAttributeXml);
+                    update = true;
+                }
+
+                if(update)
+                    await products.UpdateAsync(product);
+            }
 
             #endregion
         }
