@@ -127,7 +127,7 @@ namespace Grand.Services.Commands.Handlers.Messages
 
                 string sku = "";
                 if (product != null)
-                    sku = product.FormatSku(item.AttributesXml, _productAttributeParser);
+                    sku = product.FormatSku(item.Attributes, _productAttributeParser);
 
                 liqitem.ProductSku = WebUtility.HtmlEncode(sku);
                 liqitem.ShowSkuOnProductDetailsPage = _catalogSettings.ShowSkuOnProductDetailsPage;

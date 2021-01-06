@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
 using Grand.Domain.Discounts;
@@ -313,7 +314,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             foreach (var currency in await _currencyService.GetAllCurrencies())
                 model.AvailableCurrencies.Add(new SelectListItem { Text = currency.Name, Value = currency.CurrencyCode });
-            
+
         }
         public virtual async Task PrepareProductAttributeValueModel(Product product, ProductModel.ProductAttributeValueModel model)
         {
@@ -384,7 +385,7 @@ namespace Grand.Web.Areas.Admin.Services
                 prevcombination.StockQuantity <= 0 && !product.UseMultipleWarehouses &&
                 product.Published)
             {
-                await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, combination.AttributesXml, "");
+                await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, combination.Attributes, "");
             }
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
@@ -400,7 +401,7 @@ namespace Grand.Web.Areas.Admin.Services
                         if (actualStock != null)
                         {
                             if (actualStock.StockQuantity - actualStock.ReservedQuantity > 0)
-                                await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, combination.AttributesXml, prevstock.WarehouseId);
+                                await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, combination.Attributes, prevstock.WarehouseId);
                         }
                     }
                 }
@@ -408,7 +409,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     if (prevcombination.WarehouseInventory.Sum(x => x.StockQuantity - x.ReservedQuantity) <= 0)
                     {
-                        await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, combination.AttributesXml, "");
+                        await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, combination.Attributes, "");
                     }
                 }
             }
@@ -647,7 +648,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SelectedStoreIds = new string[] { _workContext.CurrentVendor.StoreId };
             }
         }
-        
+
         public virtual async Task SaveProductWarehouseInventory(Product product, IList<ProductModel.ProductWarehouseInventoryModel> model)
         {
             if (product == null)
@@ -2162,8 +2163,8 @@ namespace Grand.Web.Areas.Admin.Services
 
                 //currenty any attribute can have condition. why not?
                 attributeModel.ConditionAllowed = true;
-                var conditionAttribute = _productAttributeParser.ParseProductAttributeMappings(product, x.ConditionAttributeXml).FirstOrDefault();
-                var conditionValue = _productAttributeParser.ParseProductAttributeValues(product, x.ConditionAttributeXml).FirstOrDefault();
+                var conditionAttribute = _productAttributeParser.ParseProductAttributeMappings(product, x.ConditionAttribute).FirstOrDefault();
+                var conditionValue = _productAttributeParser.ParseProductAttributeValues(product, x.ConditionAttribute).FirstOrDefault();
                 if (conditionAttribute != null && conditionValue != null)
                 {
                     var productAttribute = await _productAttributeService.GetProductAttributeById(conditionAttribute.ProductAttributeId);
@@ -2245,12 +2246,12 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new ProductAttributeConditionModel {
                 ProductAttributeMappingId = productAttributeMapping.Id,
-                EnableCondition = !string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml),
+                EnableCondition = productAttributeMapping.ConditionAttribute.Any(),
                 ProductId = product.Id
             };
             //pre-select attribute and values
             var selectedPva = _productAttributeParser
-                .ParseProductAttributeMappings(product, productAttributeMapping.ConditionAttributeXml)
+                .ParseProductAttributeMappings(product, productAttributeMapping.ConditionAttribute)
                 .FirstOrDefault();
 
             var attributes = product.ProductAttributeMappings
@@ -2300,14 +2301,14 @@ namespace Grand.Web.Areas.Admin.Services
                             case AttributeControlType.ColorSquares:
                             case AttributeControlType.ImageSquares:
                                 {
-                                    if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
+                                    if (productAttributeMapping.ConditionAttribute.Any())
                                     {
                                         //clear default selection
                                         foreach (var item in attributeModel.Values)
                                             item.IsPreSelected = false;
 
                                         //select new values
-                                        var selectedValues = _productAttributeParser.ParseProductAttributeValues(product, productAttributeMapping.ConditionAttributeXml);
+                                        var selectedValues = _productAttributeParser.ParseProductAttributeValues(product, productAttributeMapping.ConditionAttribute);
                                         foreach (var attributeValue in selectedValues)
                                             foreach (var item in attributeModel.Values)
                                                 if (attributeValue.Id == item.Id)
@@ -2333,7 +2334,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task UpdateProductAttributeConditionModel(Product product, ProductAttributeMapping productAttributeMapping, ProductAttributeConditionModel model, Dictionary<string, string> form)
         {
-            string attributesXml = null;
+            var customAttributes = new List<CustomAttribute>();
             if (model.EnableCondition)
             {
                 var attribute = product.ProductAttributeMappings.FirstOrDefault(x => x.Id == model.SelectedProductAttributeId);
@@ -2350,16 +2351,16 @@ namespace Grand.Web.Areas.Admin.Services
                                 var ctrlAttributes = form[controlId];
                                 if (!string.IsNullOrEmpty(ctrlAttributes))
                                 {
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, ctrlAttributes);
+                                    customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                        attribute, ctrlAttributes).ToList();
                                 }
                                 else
                                 {
                                     //for conditions we should empty values save even when nothing is selected
                                     //otherwise "attributesXml" will be empty
                                     //hence we won't be able to find a selected attribute
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, "");
+                                    customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                        attribute, "").ToList();
                                 }
                             }
                             break;
@@ -2373,8 +2374,8 @@ namespace Grand.Web.Areas.Admin.Services
                                     {
                                         if (!string.IsNullOrEmpty(item))
                                         {
-                                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                                attribute, item);
+                                            customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                                attribute, item).ToList();
                                             anyValueSelected = true;
                                         }
                                     }
@@ -2383,8 +2384,8 @@ namespace Grand.Web.Areas.Admin.Services
                                         //for conditions we should save empty values even when nothing is selected
                                         //otherwise "attributesXml" will be empty
                                         //hence we won't be able to find a selected attribute
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, "");
+                                        customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                            attribute, "").ToList();
                                     }
                                 }
                                 else
@@ -2392,8 +2393,8 @@ namespace Grand.Web.Areas.Admin.Services
                                     //for conditions we should save empty values even when nothing is selected
                                     //otherwise "attributesXml" will be empty
                                     //hence we won't be able to find a selected attribute
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, "");
+                                    customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                            attribute, "").ToList();
                                 }
                             }
                             break;
@@ -2409,7 +2410,7 @@ namespace Grand.Web.Areas.Admin.Services
                 }
             }
             productAttributeMapping.ProductId = model.ProductId;
-            productAttributeMapping.ConditionAttributeXml = attributesXml;
+            productAttributeMapping.ConditionAttribute = customAttributes;
             await _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
         }
         public virtual async Task<ProductModel.ProductAttributeValueModel> PrepareProductAttributeValueModel(Product product, ProductAttributeMapping productAttributeMapping)
@@ -2598,7 +2599,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             foreach (var x in product.ProductAttributeCombinations)
             {
-                var attributesXml = await _productAttributeFormatter.FormatAttributes((await _productService.GetProductById(product.Id)), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false, true, true);
+                var attributesXml = await _productAttributeFormatter.FormatAttributes((await _productService.GetProductById(product.Id)), x.Attributes, _workContext.CurrentCustomer, "<br />", true, true, true, false, true, true);
                 var pacModel = new ProductModel.ProductAttributeCombinationModel {
                     Id = x.Id,
                     ProductId = product.Id,
@@ -2613,7 +2614,7 @@ namespace Grand.Web.Areas.Admin.Services
                 };
                 //warnings
                 var warnings = await shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                    ShoppingCartType.ShoppingCart, await _productService.GetProductById(product.Id), 1, x.AttributesXml, true);
+                    ShoppingCartType.ShoppingCart, await _productService.GetProductById(product.Id), 1, x.Attributes, true);
                 for (var i = 0; i < warnings.Count; i++)
                 {
                     pacModel.Warnings += warnings[i];
@@ -2653,7 +2654,7 @@ namespace Grand.Web.Areas.Admin.Services
                     model.UseMultipleWarehouses = product.UseMultipleWarehouses;
                     model.WarehouseInventoryModels = wim;
                     model.ProductId = product.Id;
-                    model.AttributesXML = await _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false);
+                    model.AttributesXML = await _productAttributeFormatter.FormatAttributes(product, combination.Attributes, _workContext.CurrentCustomer, "<br />", true, true, true, false);
                     if (model.UseMultipleWarehouses)
                     {
                         foreach (var _winv in combination.WarehouseInventory)
@@ -2665,7 +2666,7 @@ namespace Grand.Web.Areas.Admin.Services
                                 warehouseInventoryModel.Id = _winv.Id;
                                 warehouseInventoryModel.StockQuantity = _winv.StockQuantity;
                                 warehouseInventoryModel.ReservedQuantity = _winv.ReservedQuantity;
-                                warehouseInventoryModel.PlannedQuantity = await _shipmentService.GetQuantityInShipments(product, combination.AttributesXml, _winv.WarehouseId, true, true);
+                                warehouseInventoryModel.PlannedQuantity = await _shipmentService.GetQuantityInShipments(product, combination.Attributes, _winv.WarehouseId, true, true);
                             }
                         }
                     }
@@ -2675,7 +2676,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<IList<string>> InsertOrUpdateProductAttributeCombinationPopup(Product product, ProductAttributeCombinationModel model, Dictionary<string, string> form)
         {
-            var attributesXml = "";
+            var customAttributes = new List<CustomAttribute>();
             var warnings = new List<string>();
             var shoppingCartService = _serviceProvider.GetRequiredService<IShoppingCartService>();
             async Task PrepareCombinationWarehouseInventory(ProductAttributeCombination combination)
@@ -2737,8 +2738,8 @@ namespace Grand.Web.Areas.Admin.Services
                                 var ctrlAttributes = form[controlId];
                                 if (!string.IsNullOrEmpty(ctrlAttributes))
                                 {
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, ctrlAttributes);
+                                    customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                        attribute, ctrlAttributes).ToList();
                                 }
                             }
                             break;
@@ -2750,8 +2751,8 @@ namespace Grand.Web.Areas.Admin.Services
                                     foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                     {
                                         if (!string.IsNullOrEmpty(item))
-                                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                                attribute, item);
+                                            customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                                attribute, item).ToList();
                                     }
                                 }
                             }
@@ -2765,8 +2766,8 @@ namespace Grand.Web.Areas.Admin.Services
                                     .Select(v => v.Id)
                                     .ToList())
                                 {
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId);
+                                    customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                        attribute, selectedAttributeId).ToList();
                                 }
                             }
                             break;
@@ -2777,8 +2778,8 @@ namespace Grand.Web.Areas.Admin.Services
                                 if (!string.IsNullOrEmpty(ctrlAttributes))
                                 {
                                     var enteredText = ctrlAttributes.ToString().Trim();
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, enteredText);
+                                    customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                        attribute, enteredText).ToList();
                                 }
                             }
                             break;
@@ -2795,8 +2796,8 @@ namespace Grand.Web.Areas.Admin.Services
                                 catch { }
                                 if (selectedDate.HasValue)
                                 {
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedDate.Value.ToString("D"));
+                                    customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                        attribute, selectedDate.Value.ToString("D")).ToList();
                                 }
                             }
                             break;
@@ -2806,8 +2807,8 @@ namespace Grand.Web.Areas.Admin.Services
                                 var download = await _downloadService.GetDownloadByGuid(downloadGuid);
                                 if (download != null)
                                 {
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, download.DownloadGuid.ToString());
+                                    customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                            attribute, download.DownloadGuid.ToString()).ToList();
                                 }
                             }
                             break;
@@ -2820,10 +2821,10 @@ namespace Grand.Web.Areas.Admin.Services
                 foreach (var attribute in attributes)
                 {
                     attribute.ProductId = product.Id;
-                    var conditionMet = _productAttributeParser.IsConditionMet(product, attribute, attributesXml);
+                    var conditionMet = _productAttributeParser.IsConditionMet(product, attribute, customAttributes);
                     if (conditionMet.HasValue && !conditionMet.Value)
                     {
-                        attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
+                        customAttributes = _productAttributeParser.RemoveProductAttribute(customAttributes, attribute).ToList();
                     }
                 }
 
@@ -2831,8 +2832,9 @@ namespace Grand.Web.Areas.Admin.Services
                 #endregion
 
                 warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
-                if (product.ProductAttributeCombinations.Where(x => x.AttributesXml == attributesXml).Count() > 0)
+                    ShoppingCartType.ShoppingCart, product, 1, customAttributes, true));
+
+                if (_productAttributeParser.FindProductAttributeCombination(product, customAttributes) != null)
                 {
                     warnings.Add("This combination attributes exists!");
                 }
@@ -2840,7 +2842,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     var combination = new ProductAttributeCombination {
                         ProductId = product.Id,
-                        AttributesXml = attributesXml,
+                        Attributes = customAttributes,
                         StockQuantity = model.StockQuantity,
                         AllowOutOfStockOrders = model.AllowOutOfStockOrders,
                         Sku = model.Sku,
@@ -2904,11 +2906,11 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task GenerateAllAttributeCombinations(Product product)
         {
             var shoppingCartService = _serviceProvider.GetRequiredService<IShoppingCartService>();
-            var allAttributesXml = _productAttributeParser.GenerateAllCombinations(product, true);
+            var allAttributesComb = _productAttributeParser.GenerateAllCombinations(product, true);
             var id = 1;
-            foreach (var attributesXml in allAttributesXml)
+            foreach (var attributes in allAttributesComb)
             {
-                var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributes.ToList());
 
                 //already exists?
                 if (existingCombination != null)
@@ -2917,14 +2919,14 @@ namespace Grand.Web.Areas.Admin.Services
                 //new one
                 var warnings = new List<string>();
                 warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
+                    ShoppingCartType.ShoppingCart, product, 1, attributes.ToList(), true));
                 if (warnings.Count != 0)
                     continue;
 
                 //save combination
                 var combination = new ProductAttributeCombination {
                     ProductId = product.Id,
-                    AttributesXml = attributesXml,
+                    Attributes = attributes.ToList(),
                     StockQuantity = 10000,
                     AllowOutOfStockOrders = false,
                     Sku = null,

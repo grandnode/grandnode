@@ -175,7 +175,7 @@ namespace Grand.Services.Orders
 
             var valuesThatShouldBeSelected = conditionAttribute.Where(x => x.Key == dependOnAttribute.Id).Select(x => x.Value)
                 //a workaround here:
-                //ConditionAttributeXml can contain "empty" values (nothing is selected)
+                //ConditionAttribute can contain "empty" values (nothing is selected)
                 //but in other cases (like below) we do not store empty values
                 //that's why we remove empty values here
                 .Where(x => !string.IsNullOrEmpty(x))

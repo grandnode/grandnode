@@ -1,5 +1,6 @@
 using Grand.Domain;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Shipping;
 using System;
 using System.Collections.Generic;
@@ -75,11 +76,12 @@ namespace Grand.Services.Shipping
         /// Get quantity in shipments. For example, get planned quantity to be shipped
         /// </summary>
         /// <param name="product">Product</param>
+        /// <param name="customAttribute">Custom Attribute</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="ignoreShipped">Ignore already shipped shipments</param>
         /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
         /// <returns>Quantity</returns>
-        Task<int> GetQuantityInShipments(Product product, string attributexml, string warehouseId,
+        Task<int> GetQuantityInShipments(Product product, IList<CustomAttribute> customAttribute, string warehouseId,
             bool ignoreShipped, bool ignoreDelivered);
 
         #region Shipment notes

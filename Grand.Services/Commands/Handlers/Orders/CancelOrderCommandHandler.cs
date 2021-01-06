@@ -94,7 +94,7 @@ namespace Grand.Services.Commands.Handlers.Orders
             foreach (var orderItem in request.Order.OrderItems)
             {
                 var product = await _productService.GetProductById(orderItem.ProductId);
-                await _inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                await _inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.Attributes, orderItem.WarehouseId);
             }
 
             //cancel reservations

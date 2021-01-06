@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Grand.Core;
+using Grand.Domain.Common;
 
 namespace Grand.Services.Commands.Handlers.Customers
 {
@@ -45,13 +46,13 @@ namespace Grand.Services.Commands.Handlers.Customers
                 request.CustomerActionTypes,
                 request.Action,
                 request.ProductId,
-                request.AttributesXml,
+                request.Attributes,
                 request.CustomerId,
                 request.CurrentUrl,
                 request.PreviousUrl);
         }
 
-        protected async Task<bool> Condition(IList<CustomerActionType> customerActionTypes, CustomerAction action, string productId, string attributesXml, string customerId, string currentUrl, string previousUrl)
+        protected async Task<bool> Condition(IList<CustomerActionType> customerActionTypes, CustomerAction action, string productId, IList<CustomAttribute> customAttributes, string customerId, string currentUrl, string previousUrl)
         {
             if (!action.Conditions.Any())
                 return true;
@@ -81,9 +82,9 @@ namespace Grand.Services.Commands.Handlers.Customers
 
                     if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.ProductAttribute)
                     {
-                        if (!String.IsNullOrEmpty(attributesXml))
+                        if (customAttributes !=null && customAttributes.Any())
                         {
-                            cond = ConditionProductAttribute(item, product, attributesXml);
+                            cond = ConditionProductAttribute(item, product, customAttributes);
                         }
                     }
 
@@ -285,16 +286,16 @@ namespace Grand.Services.Commands.Handlers.Customers
 
             return cond;
         }
-        protected bool ConditionProductAttribute(CustomerAction.ActionCondition condition, Product product, string AttributesXml)
+        protected bool ConditionProductAttribute(CustomerAction.ActionCondition condition, Product product, IList<CustomAttribute> customAttributes)
         {
             bool cond = false;
             var productAttributeParser = _serviceProvider.GetRequiredService<IProductAttributeParser>();
             if (condition.Condition == CustomerActionConditionEnum.OneOfThem)
             {
-                var attributes = productAttributeParser.ParseProductAttributeMappings(product, AttributesXml);
+                var attributes = productAttributeParser.ParseProductAttributeMappings(product, customAttributes);
                 foreach (var attr in attributes)
                 {
-                    var attributeValuesStr = productAttributeParser.ParseValues(AttributesXml, attr.Id);
+                    var attributeValuesStr = productAttributeParser.ParseValues(customAttributes, attr.Id);
                     foreach (var attrV in attributeValuesStr)
                     {
                         var attrsv = attr.ProductAttributeValues.Where(x => x.Id == attrV).FirstOrDefault();
@@ -311,13 +312,13 @@ namespace Grand.Services.Commands.Handlers.Customers
                 cond = true;
                 foreach (var itemPA in condition.ProductAttribute)
                 {
-                    var attributes = productAttributeParser.ParseProductAttributeMappings(product, AttributesXml);
+                    var attributes = productAttributeParser.ParseProductAttributeMappings(product, customAttributes);
                     if (attributes.Where(x => x.ProductAttributeId == itemPA.ProductAttributeId).Count() > 0)
                     {
                         cond = false;
                         foreach (var attr in attributes.Where(x => x.ProductAttributeId == itemPA.ProductAttributeId))
                         {
-                            var attributeValuesStr = productAttributeParser.ParseValues(AttributesXml, attr.Id);
+                            var attributeValuesStr = productAttributeParser.ParseValues(customAttributes, attr.Id);
                             foreach (var attrV in attributeValuesStr)
                             {
                                 var attrsv = attr.ProductAttributeValues.Where(x => x.Id == attrV).FirstOrDefault();

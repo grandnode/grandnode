@@ -49,7 +49,7 @@ namespace Grand.Services.Queries.Handlers.Catalog
                            select new ProductAttributeCombination() {
                                ProductId = p.Id,
                                StockQuantity = c.StockQuantity,
-                               AttributesXml = c.AttributesXml,
+                               Attributes = c.Attributes,
                                AllowOutOfStockOrders = c.AllowOutOfStockOrders,
                                Id = c.Id,
                                Gtin = c.Gtin,

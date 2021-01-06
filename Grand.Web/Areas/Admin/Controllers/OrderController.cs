@@ -1111,13 +1111,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 orderItem.PriceExclTax = priceExclTax;
                 await _orderService.UpdateOrder(order);
                 //adjust inventory
-                await inventoryManageService.AdjustInventory(product, qtyDifference, orderItem.AttributesXml, orderItem.WarehouseId);
+                await inventoryManageService.AdjustInventory(product, qtyDifference, orderItem.Attributes, orderItem.WarehouseId);
 
             }
             else
             {
                 //adjust inventory
-                await inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                await inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.Attributes, orderItem.WarehouseId);
                 await _orderService.DeleteOrderItem(orderItem);
             }
 
@@ -1215,7 +1215,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 //adjust inventory
                 if (product != null)
-                    await inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                    await inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.Attributes, orderItem.WarehouseId);
 
                 await _orderService.DeleteOrderItem(orderItem);
                 order = await _orderService.GetOrderById(id);

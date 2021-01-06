@@ -1319,7 +1319,7 @@ namespace Grand.Web.Areas.Admin.Services
                         ProductId = sci.ProductId,
                         Quantity = sci.Quantity,
                         ProductName = product.Name,
-                        AttributeInfo = await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, sci.AttributesXml),
+                        AttributeInfo = await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, sci.Attributes),
                         UnitPrice = priceFormatter.FormatPrice(price),
                         UnitPriceValue = price,
                         Total = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetSubTotal(sci, product)).subTotal)).productprice),
@@ -1355,7 +1355,7 @@ namespace Grand.Web.Areas.Admin.Services
                     customer,
                     shoppingCartId,
                     cart.WarehouseId,
-                    cart.AttributesXml,
+                    cart.Attributes,
                     unitprice,
                     cart.RentalStartDateUtc,
                     cart.RentalEndDateUtc,
@@ -1533,6 +1533,7 @@ namespace Grand.Web.Areas.Admin.Services
             var backInStockSubscriptionService = _serviceProvider.GetRequiredService<IBackInStockSubscriptionService>();
             var subscriptions = await backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customerId, "", pageIndex - 1, pageSize);
             var items = new List<CustomerModel.BackInStockSubscriptionModel>();
+            var productAttributeFormatter = _serviceProvider.GetRequiredService<IProductAttributeFormatter>();
             foreach (var x in subscriptions)
             {
                 var store = await _storeService.GetStoreById(x.StoreId);
@@ -1542,8 +1543,7 @@ namespace Grand.Web.Areas.Admin.Services
                     StoreName = store != null ? store.Shortcut : "Unknown",
                     ProductId = x.ProductId,
                     ProductName = product != null ? product.Name : "Unknown",
-                    AttributeDescription = string.IsNullOrEmpty(x.AttributeXml) ? "" :
-                        await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, x.AttributeXml),
+                    AttributeDescription = x.Attributes != null || !x.Attributes.Any() ? "" : await productAttributeFormatter.FormatAttributes(product, x.Attributes),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                 };
                 items.Add(m);

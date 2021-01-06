@@ -90,7 +90,7 @@ namespace Grand.Services.Customers
                             CustomerActionTypes = actiontypes,
                             Action = item,
                             ProductId = product.Id,
-                            AttributesXml = cart.AttributesXml,
+                            Attributes = cart.Attributes,
                             CustomerId = customer.Id
                         }))
                         {
@@ -129,7 +129,7 @@ namespace Grand.Services.Customers
                                 Action = item,
                                 ProductId = orderItem.ProductId,
                                 CustomerId = order.CustomerId,
-                                AttributesXml = orderItem.AttributesXml
+                                Attributes = orderItem.Attributes
                             }))
                             {
                                 await _mediator.Send(new CustomerActionEventReactionCommand() {

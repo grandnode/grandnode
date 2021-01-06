@@ -1,4 +1,5 @@
 ﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
 using Grand.Domain.Localization;
@@ -8,6 +9,7 @@ using Grand.Domain.Tax;
 using Grand.Web.Models.ShoppingCart;
 using MediatR;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Web.Features.Models.ShoppingCart
 {
@@ -21,7 +23,7 @@ namespace Grand.Web.Features.Models.ShoppingCart
         public TaxDisplayType TaxDisplayType { get; set; }
         public int Quantity { get; set; }
         public decimal? CustomerEnteredPrice { get; set; }
-        public string AttributesXml { get; set; }
+        public IList<CustomAttribute> Attributes { get; set; }
         public ShoppingCartType CartType { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }

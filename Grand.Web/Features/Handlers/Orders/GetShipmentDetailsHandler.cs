@@ -106,7 +106,7 @@ namespace Grand.Web.Features.Handlers.Orders
                 var product = await _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel {
                     Id = shipmentItem.Id,
-                    Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    Sku = product.FormatSku(orderItem.Attributes, _productAttributeParser),
                     ProductId = orderItem.ProductId,
                     ProductName = product.GetLocalized(x => x.Name, request.Language.Id),
                     ProductSeName = product.GetSeName(request.Language.Id),

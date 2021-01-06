@@ -180,7 +180,6 @@ namespace Grand.Api.Infrastructure
             ActionConfiguration createProductAttributeMapping = product.Action("CreateProductAttributeMapping");
             createProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.Id));
             createProductAttributeMapping.Parameter<int>(nameof(ProductAttributeMappingDto.DisplayOrder));
-            createProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.ConditionAttributeXml));
             createProductAttributeMapping.Parameter<AttributeControlType>(nameof(ProductAttributeMappingDto.AttributeControlType)).Required();
             createProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.DefaultValue));
             createProductAttributeMapping.Parameter<bool>(nameof(ProductAttributeMappingDto.IsRequired));
@@ -195,7 +194,6 @@ namespace Grand.Api.Infrastructure
             ActionConfiguration updateProductAttributeMapping = product.Action("UpdateProductAttributeMapping");
             updateProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.Id)).Required();
             updateProductAttributeMapping.Parameter<int>(nameof(ProductAttributeMappingDto.DisplayOrder));
-            updateProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.ConditionAttributeXml));
             updateProductAttributeMapping.Parameter<AttributeControlType>(nameof(ProductAttributeMappingDto.AttributeControlType)).Required();
             updateProductAttributeMapping.Parameter<string>(nameof(ProductAttributeMappingDto.DefaultValue));
             updateProductAttributeMapping.Parameter<bool>(nameof(ProductAttributeMappingDto.IsRequired));

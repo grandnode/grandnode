@@ -1221,7 +1221,7 @@ namespace Grand.Services.Customers
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).IsTaxExempt, shoppingCartItem.IsTaxExempt)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).RentalStartDateUtc, shoppingCartItem.RentalStartDateUtc)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).RentalEndDateUtc, shoppingCartItem.RentalEndDateUtc)
-                .Set(x => x.ShoppingCartItems.ElementAt(-1).AttributesXml, shoppingCartItem.AttributesXml)
+                .Set(x => x.ShoppingCartItems.ElementAt(-1).Attributes, shoppingCartItem.Attributes)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).EnteredPrice, shoppingCartItem.EnteredPrice)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).UpdatedOnUtc, shoppingCartItem.UpdatedOnUtc)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).ShoppingCartTypeId, shoppingCartItem.ShoppingCartTypeId);

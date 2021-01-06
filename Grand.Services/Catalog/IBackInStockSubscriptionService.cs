@@ -1,5 +1,7 @@
 using Grand.Domain;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
@@ -31,11 +33,11 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="customerId">Customer id</param>
         /// <param name="productId">Product identifier</param>
-        /// <param name="attrxml">Attribute xml</param>
+        /// <param name="attributes">Attribute</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <returns>Subscriptions</returns>
-        Task<BackInStockSubscription> FindSubscription(string customerId, string productId, string attributexml, string storeId, string warehouseId);
+        Task<BackInStockSubscription> FindSubscription(string customerId, string productId, IList<CustomAttribute> attributes, string storeId, string warehouseId);
 
         /// <summary>
         /// Gets a subscription
@@ -68,9 +70,9 @@ namespace Grand.Services.Catalog
         /// Send notification to subscribers
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributeXml">Attribute xml</param>
+        /// <param name="attributes">Attribute</param>
         /// <param name="warehouse">Warehouse ident</param>
         /// <returns>Number of sent email</returns>
-        Task SendNotificationsToSubscribers(Product product, string attributeXml, string warehouse);
+        Task SendNotificationsToSubscribers(Product product, IList<CustomAttribute> attributes, string warehouse);
     }
 }

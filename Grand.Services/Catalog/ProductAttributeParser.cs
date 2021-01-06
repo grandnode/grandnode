@@ -1,9 +1,9 @@
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Services.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Xml;
 
 namespace Grand.Services.Catalog
 {
@@ -24,53 +24,19 @@ namespace Grand.Services.Catalog
         #region Product attributes
 
         /// <summary>
-        /// Gets selected product attribute mapping identifiers
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected product attribute mapping identifiers</returns>
-        protected virtual IList<string> ParseProductAttributeMappingIds(string attributesXml)
-        {
-            var ids = new List<string>();
-            if (String.IsNullOrEmpty(attributesXml))
-                return ids;
-
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributesXml);
-
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        ids.Add(str1);
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return ids;
-        }
-
-        /// <summary>
         /// Gets selected product attribute mappings
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Selected product attribute mappings</returns>
-        public virtual IList<ProductAttributeMapping> ParseProductAttributeMappings(Product product, string attributesXml)
+        public virtual IList<ProductAttributeMapping> ParseProductAttributeMappings(Product product, IList<CustomAttribute> customAttributes)
         {
             var result = new List<ProductAttributeMapping>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (customAttributes == null || !customAttributes.Any())
                 return result;
 
-            var ids = ParseProductAttributeMappingIds(attributesXml);
-            foreach (string id in ids)
+            foreach (var customAttribute in customAttributes.GroupBy(x => x.Key))
             {
-                var attribute = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault();
+                var attribute = product.ProductAttributeMappings.Where(x => x.Id == customAttribute.Key).FirstOrDefault();
                 if (attribute != null)
                 {
                     attribute.ProductId = product.Id;
@@ -83,24 +49,24 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Get product attribute values
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Product attribute values</returns>
-        public virtual IList<ProductAttributeValue> ParseProductAttributeValues(Product product, string attributesXml)
+        public virtual IList<ProductAttributeValue> ParseProductAttributeValues(Product product, IList<CustomAttribute> customAttributes)
         {
             var values = new List<ProductAttributeValue>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (customAttributes == null || !customAttributes.Any())
                 return values;
 
-            var attributes = ParseProductAttributeMappings(product, attributesXml);
+            var attributes = ParseProductAttributeMappings(product, customAttributes);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
                     continue;
 
-                var valuesStr = ParseValues(attributesXml, attribute.Id);
-                foreach (string valueStr in valuesStr)
+                var valuesStr = ParseValues(customAttributes, attribute.Id);
+                foreach (var valueStr in valuesStr)
                 {
-                    if (!String.IsNullOrEmpty(valueStr))
+                    if (!string.IsNullOrEmpty(valueStr))
                     {
                         if (attribute.ProductAttributeValues.Where(x => x.Id == valueStr).Count() > 0)
                         {
@@ -120,176 +86,60 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Gets selected product attribute values
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes </param>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier</param>
         /// <returns>Product attribute values</returns>
-        public virtual IList<string> ParseValues(string attributesXml, string productAttributeMappingId)
+        public virtual IList<string> ParseValues(IList<CustomAttribute> customAttributes, string productAttributeMappingId)
         {
             var selectedValues = new List<string>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (customAttributes == null || !customAttributes.Any())
                 return selectedValues;
 
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributesXml);
+            return customAttributes.Where(x => x.Key == productAttributeMappingId).Select(x => x.Value).ToList();
 
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (str1 == productAttributeMappingId)
-                        {
-                            var nodeList2 = node1.SelectNodes(@"ProductAttributeValue/Value");
-                            foreach (XmlNode node2 in nodeList2)
-                            {
-                                string value = node2.InnerText.Trim();
-                                selectedValues.Add(value);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return selectedValues;
         }
 
         /// <summary>
         /// Adds an attribute
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
-        public virtual string AddProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping, string value)
+        public virtual IList<CustomAttribute> AddProductAttribute(IList<CustomAttribute> customAttributes, ProductAttributeMapping productAttributeMapping, string value)
         {
-            string result = string.Empty;
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributesXml))
-                {
-                    var element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(element1);
-                }
-                else
-                {
-                    xmlDoc.LoadXml(attributesXml);
-                }
-                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
+            if (customAttributes == null)
+                customAttributes = new List<CustomAttribute>();
 
-                XmlElement attributeElement = null;
-                //find existing
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (str1 == productAttributeMapping.Id)
-                        {
-                            attributeElement = (XmlElement)node1;
-                            break;
-                        }
-                    }
-                }
+            customAttributes.Add(new CustomAttribute() { Key = productAttributeMapping.Id, Value = value });
 
-                //create new one if not found
-                if (attributeElement == null)
-                {
-                    attributeElement = xmlDoc.CreateElement("ProductAttribute");
-                    attributeElement.SetAttribute("ID", productAttributeMapping.Id.ToString());
-                    rootElement.AppendChild(attributeElement);
-                }
-
-                var attributeValueElement = xmlDoc.CreateElement("ProductAttributeValue");
-                attributeElement.AppendChild(attributeValueElement);
-
-                var attributeValueValueElement = xmlDoc.CreateElement("Value");
-                attributeValueValueElement.InnerText = value;
-                attributeValueElement.AppendChild(attributeValueValueElement);
-
-                result = xmlDoc.OuterXml;
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return result;
+            return customAttributes;
         }
         /// <summary>
         /// Remove an attribute
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <returns>Updated result (XML format)</returns>
-        public virtual string RemoveProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping)
+        public virtual IList<CustomAttribute> RemoveProductAttribute(IList<CustomAttribute> customAttributes, ProductAttributeMapping productAttributeMapping)
         {
-            string result = string.Empty;
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributesXml))
-                {
-                    var element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(element1);
-                }
-                else
-                {
-                    xmlDoc.LoadXml(attributesXml);
-                }
-                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
-
-                XmlElement attributeElement = null;
-                //find existing
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (str1 == productAttributeMapping.Id)
-                        {
-                            attributeElement = (XmlElement)node1;
-                            break;
-                        }
-                    }
-                }
-
-                //found
-                if (attributeElement != null)
-                {
-                    rootElement.RemoveChild(attributeElement);
-                }
-
-                result = xmlDoc.OuterXml;
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return result;
+            return customAttributes.Where(x => x.Key != productAttributeMapping.Id).ToList();
         }
         /// <summary>
         /// Are attributes equal
         /// </summary>
-        /// <param name="attributesXml1">The attributes of the first product</param>
-        /// <param name="attributesXml2">The attributes of the second product</param>
+        /// <param name="customAttributes1">The attributes of the first product</param>
+        /// <param name="customAttributes2">The attributes of the second product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Result</returns>
-        public virtual bool AreProductAttributesEqual(Product product, string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes)
+        public virtual bool AreProductAttributesEqual(Product product, IList<CustomAttribute> customAttributes1, IList<CustomAttribute> customAttributes2, bool ignoreNonCombinableAttributes)
         {
-            var attributes1 = ParseProductAttributeMappings(product, attributesXml1);
+            var attributes1 = ParseProductAttributeMappings(product, customAttributes1);
             if (ignoreNonCombinableAttributes)
             {
                 attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
             }
-            var attributes2 = ParseProductAttributeMappings(product, attributesXml2);
+            var attributes2 = ParseProductAttributeMappings(product, customAttributes2);
             //TO DO - Where(x=>x.IsRequired).ToList()
 
             if (ignoreNonCombinableAttributes)
@@ -308,8 +158,8 @@ namespace Grand.Services.Catalog
                     if (a1.Id == a2.Id)
                     {
                         hasAttribute = true;
-                        var values1Str = ParseValues(attributesXml1, a1.Id);
-                        var values2Str = ParseValues(attributesXml2, a2.Id);
+                        var values1Str = ParseValues(customAttributes1, a1.Id);
+                        var values2Str = ParseValues(customAttributes2, a2.Id);
                         if (values1Str.Count == values2Str.Count)
                         {
                             foreach (string str1 in values1Str)
@@ -354,31 +204,34 @@ namespace Grand.Services.Catalog
         /// Check whether condition of some attribute is met (if specified). Return "null" if not condition is specified
         /// </summary>
         /// <param name="pam">Product attribute</param>
-        /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
+        /// <param name="selectedAttributes">Selected attributes</param>
         /// <returns>Result</returns>
-        public virtual bool? IsConditionMet(Product product, ProductAttributeMapping pam, string selectedAttributesXml)
+        public virtual bool? IsConditionMet(Product product, ProductAttributeMapping pam, IList<CustomAttribute> selectedAttributes)
         {
             if (pam == null)
                 throw new ArgumentNullException("pam");
 
-            var conditionAttributeXml = pam.ConditionAttributeXml;
-            if (String.IsNullOrEmpty(conditionAttributeXml))
+            if (selectedAttributes == null)
+                selectedAttributes = new List<CustomAttribute>();
+
+            var conditionAttribute = pam.ConditionAttribute;
+            if (!conditionAttribute.Any())
                 //no condition
                 return null;
 
             //load an attribute this one depends on
-            var dependOnAttribute = ParseProductAttributeMappings(product, conditionAttributeXml).FirstOrDefault();
+            var dependOnAttribute = ParseProductAttributeMappings(product, conditionAttribute).FirstOrDefault();
             if (dependOnAttribute == null)
                 return true;
 
-            var valuesThatShouldBeSelected = ParseValues(conditionAttributeXml, dependOnAttribute.Id)
+            var valuesThatShouldBeSelected = ParseValues(conditionAttribute, dependOnAttribute.Id)
                 //a workaround here:
-                //ConditionAttributeXml can contain "empty" values (nothing is selected)
+                //ConditionAttribute can contain "empty" values (nothing is selected)
                 //but in other cases (like below) we do not store empty values
                 //that's why we remove empty values here
-                .Where(x => !String.IsNullOrEmpty(x))
+                .Where(x => !string.IsNullOrEmpty(x))
                 .ToList();
-            var selectedValues = ParseValues(selectedAttributesXml, dependOnAttribute.Id);
+            var selectedValues = ParseValues(selectedAttributes, dependOnAttribute.Id);
             if (valuesThatShouldBeSelected.Count != selectedValues.Count)
                 return false;
 
@@ -405,14 +258,14 @@ namespace Grand.Services.Catalog
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Found product attribute combination</returns>
         public virtual ProductAttributeCombination FindProductAttributeCombination(Product product,
-            string attributesXml, bool ignoreNonCombinableAttributes = true)
+            IList<CustomAttribute> customAttributes, bool ignoreNonCombinableAttributes = true)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             var combinations = product.ProductAttributeCombinations;
             return combinations.FirstOrDefault(x =>
-                AreProductAttributesEqual(product, x.AttributesXml, attributesXml, ignoreNonCombinableAttributes));
+                AreProductAttributesEqual(product, x.Attributes, customAttributes, ignoreNonCombinableAttributes));
         }
 
         /// <summary>
@@ -420,8 +273,8 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
-        /// <returns>Attribute combinations in XML format</returns>
-        public virtual IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false)
+        /// <returns>Attribute combinations</returns>
+        public virtual IList<IEnumerable<CustomAttribute>> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -433,143 +286,18 @@ namespace Grand.Services.Catalog
             {
                 allProductAttributMappings = allProductAttributMappings.Where(x => !x.IsNonCombinable()).ToList();
             }
-            var allPossibleAttributeCombinations = new List<List<ProductAttributeMapping>>();
-            for (int counter = 0; counter < (1 << allProductAttributMappings.Count); ++counter)
-            {
-                var combination = new List<ProductAttributeMapping>();
-                for (int i = 0; i < allProductAttributMappings.Count; ++i)
+
+            var query = allProductAttributMappings.Select(o1 => o1.ProductAttributeValues.Select(o2 => 
+                new CustomAttribute 
                 {
-                    if ((counter & (1 << i)) == 0)
-                    {
-                        combination.Add(allProductAttributMappings.ToArray()[i]);
-                    }
+                        Key = o1.Id,
+                        Value = o2.Id
                 }
-                if (combination.Any())
-                    allPossibleAttributeCombinations.Add(combination);
-            }
+                )).SelectMany(x => x).ToList();
 
-            var allAttributesXml = new List<string>();
-            foreach (var combination in allPossibleAttributeCombinations)
-            {
-                var attributesXml = new List<string>();
-                foreach (var pam in combination)
-                {
-                    if (!pam.ShouldHaveValues())
-                        continue;
+            var result = query.GroupBy(t => t.Key).CartesianProduct().ToList();
 
-                    var attributeValues = product.ProductAttributeMappings.Where(x => x.Id == pam.Id).FirstOrDefault().ProductAttributeValues;
-                    if (!attributeValues.Any())
-                        continue;
-
-                    //checkboxes could have several values ticked
-                    var allPossibleCheckboxCombinations = new List<List<ProductAttributeValue>>();
-                    if (pam.AttributeControlType == AttributeControlType.Checkboxes ||
-                        pam.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
-                    {
-                        for (int counter = 0; counter < (1 << attributeValues.Count); ++counter)
-                        {
-                            var checkboxCombination = new List<ProductAttributeValue>();
-                            for (int i = 0; i < attributeValues.Count; ++i)
-                            {
-                                if ((counter & (1 << i)) == 0)
-                                {
-                                    checkboxCombination.Add(attributeValues.ToArray()[i]);
-                                }
-                            }
-                            if (checkboxCombination.Any())
-                                allPossibleCheckboxCombinations.Add(checkboxCombination);
-                        }
-                    }
-
-                    if (!attributesXml.Any())
-                    {
-                        //first set of values
-                        if (pam.AttributeControlType == AttributeControlType.Checkboxes ||
-                            pam.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
-                        {
-                            //checkboxes could have several values ticked
-                            foreach (var checkboxCombination in allPossibleCheckboxCombinations)
-                            {
-                                var tmp1 = "";
-                                foreach (var checkboxValue in checkboxCombination)
-                                {
-                                    tmp1 = AddProductAttribute(tmp1, pam, checkboxValue.Id.ToString());
-                                }
-                                if (!String.IsNullOrEmpty(tmp1))
-                                {
-                                    attributesXml.Add(tmp1);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            //other attribute types (dropdownlist, radiobutton, color squares)
-                            foreach (var attributeValue in attributeValues)
-                            {
-                                var tmp1 = AddProductAttribute("", pam, attributeValue.Id.ToString());
-                                attributesXml.Add(tmp1);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //next values. let's "append" them to already generated attribute combinations in XML format
-                        var attributesXmlTmp = new List<string>();
-                        if (pam.AttributeControlType == AttributeControlType.Checkboxes ||
-                            pam.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
-                        {
-                            //checkboxes could have several values ticked
-                            foreach (var str1 in attributesXml)
-                            {
-                                foreach (var checkboxCombination in allPossibleCheckboxCombinations)
-                                {
-                                    var tmp1 = str1;
-                                    foreach (var checkboxValue in checkboxCombination)
-                                    {
-                                        tmp1 = AddProductAttribute(tmp1, pam, checkboxValue.Id.ToString());
-                                    }
-                                    if (!String.IsNullOrEmpty(tmp1))
-                                    {
-                                        attributesXmlTmp.Add(tmp1);
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            //other attribute types (dropdownlist, radiobutton, color squares)
-                            foreach (var attributeValue in attributeValues)
-                            {
-                                foreach (var str1 in attributesXml)
-                                {
-                                    var tmp1 = AddProductAttribute(str1, pam, attributeValue.Id.ToString());
-                                    attributesXmlTmp.Add(tmp1);
-                                }
-                            }
-                        }
-                        attributesXml.Clear();
-                        attributesXml.AddRange(attributesXmlTmp);
-                    }
-                }
-                allAttributesXml.AddRange(attributesXml);
-            }
-            //validate conditional attributes (if specified)
-            //minor workaround:
-            //once it's done (validation), then we could have some duplicated combinations in result
-            //we don't remove them here (for performance optimization) because anyway it'll be done in the "GenerateAllAttributeCombinations" method of ProductController
-            for (int i = 0; i < allAttributesXml.Count; i++)
-            {
-                var attributesXml = allAttributesXml[i];
-                foreach (var attribute in allProductAttributMappings)
-                {
-                    var conditionMet = IsConditionMet(product, attribute, attributesXml);
-                    if (conditionMet.HasValue && !conditionMet.Value)
-                    {
-                        allAttributesXml[i] = RemoveProductAttribute(attributesXml, attribute);
-                    }
-                }
-            }
-            return allAttributesXml;
+            return result;
         }
 
         #endregion
@@ -579,121 +307,50 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Add gift card attrbibutes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="recipientName">Recipient name</param>
         /// <param name="recipientEmail">Recipient email</param>
         /// <param name="senderName">Sender name</param>
         /// <param name="senderEmail">Sender email</param>
         /// <param name="giftCardMessage">Message</param>
         /// <returns>Attributes</returns>
-        public string AddGiftCardAttribute(string attributesXml, string recipientName,
+        public IList<CustomAttribute> AddGiftCardAttribute(IList<CustomAttribute> customAttributes, string recipientName,
             string recipientEmail, string senderName, string senderEmail, string giftCardMessage)
         {
-            string result = string.Empty;
-            try
-            {
-                recipientName = recipientName.Trim();
-                recipientEmail = recipientEmail.Trim();
-                senderName = senderName.Trim();
-                senderEmail = senderEmail.Trim();
+            if (customAttributes == null)
+                customAttributes = new List<CustomAttribute>();
 
-                var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributesXml))
-                {
-                    var element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(element1);
-                }
-                else
-                {
-                    xmlDoc.LoadXml(attributesXml);
-                }
+            customAttributes.Add(new CustomAttribute() { Key = "RecipientName", Value = recipientName });
+            customAttributes.Add(new CustomAttribute() { Key = "RecipientEmail", Value = recipientEmail });
+            customAttributes.Add(new CustomAttribute() { Key = "SenderName", Value = senderName });
+            customAttributes.Add(new CustomAttribute() { Key = "SenderEmail", Value = senderEmail });
+            customAttributes.Add(new CustomAttribute() { Key = "Message", Value = giftCardMessage });
 
-                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
-
-                var giftCardElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo");
-                if (giftCardElement == null)
-                {
-                    giftCardElement = xmlDoc.CreateElement("GiftCardInfo");
-                    rootElement.AppendChild(giftCardElement);
-                }
-
-                var recipientNameElement = xmlDoc.CreateElement("RecipientName");
-                recipientNameElement.InnerText = recipientName;
-                giftCardElement.AppendChild(recipientNameElement);
-
-                var recipientEmailElement = xmlDoc.CreateElement("RecipientEmail");
-                recipientEmailElement.InnerText = recipientEmail;
-                giftCardElement.AppendChild(recipientEmailElement);
-
-                var senderNameElement = xmlDoc.CreateElement("SenderName");
-                senderNameElement.InnerText = senderName;
-                giftCardElement.AppendChild(senderNameElement);
-
-                var senderEmailElement = xmlDoc.CreateElement("SenderEmail");
-                senderEmailElement.InnerText = senderEmail;
-                giftCardElement.AppendChild(senderEmailElement);
-
-                var messageElement = xmlDoc.CreateElement("Message");
-                messageElement.InnerText = giftCardMessage;
-                giftCardElement.AppendChild(messageElement);
-
-                result = xmlDoc.OuterXml;
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return result;
+            return customAttributes;
         }
 
         /// <summary>
         /// Get gift card attrbibutes
         /// </summary>
-        /// <param name="attributesXml">Attributes</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="recipientName">Recipient name</param>
         /// <param name="recipientEmail">Recipient email</param>
         /// <param name="senderName">Sender name</param>
         /// <param name="senderEmail">Sender email</param>
         /// <param name="giftCardMessage">Message</param>
-        public void GetGiftCardAttribute(string attributesXml, out string recipientName,
+        public void GetGiftCardAttribute(IList<CustomAttribute> customAttributes, out string recipientName,
             out string recipientEmail, out string senderName,
             out string senderEmail, out string giftCardMessage)
         {
-            recipientName = string.Empty;
-            recipientEmail = string.Empty;
-            senderName = string.Empty;
-            senderEmail = string.Empty;
-            giftCardMessage = string.Empty;
+            if (customAttributes == null)
+                customAttributes = new List<CustomAttribute>();
 
-            try
-            {
-                if (!string.IsNullOrEmpty(attributesXml))
-                {
-                    var xmlDoc = new XmlDocument();
-                    xmlDoc.LoadXml(attributesXml);
+            recipientName = customAttributes.FirstOrDefault(x => x.Key == "RecipientName")?.Value;
+            recipientEmail = customAttributes.FirstOrDefault(x => x.Key == "RecipientEmail")?.Value; ;
+            senderName = customAttributes.FirstOrDefault(x => x.Key == "SenderName")?.Value; ;
+            senderEmail = customAttributes.FirstOrDefault(x => x.Key == "SenderEmail")?.Value; ;
+            giftCardMessage = customAttributes.FirstOrDefault(x => x.Key == "Message")?.Value; ;
 
-                    var recipientNameElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/RecipientName");
-                    var recipientEmailElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/RecipientEmail");
-                    var senderNameElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/SenderName");
-                    var senderEmailElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/SenderEmail");
-                    var messageElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/Message");
-
-                    if (recipientNameElement != null)
-                        recipientName = recipientNameElement.InnerText;
-                    if (recipientEmailElement != null)
-                        recipientEmail = recipientEmailElement.InnerText;
-                    if (senderNameElement != null)
-                        senderName = senderNameElement.InnerText;
-                    if (senderEmailElement != null)
-                        senderEmail = senderEmailElement.InnerText;
-                    if (messageElement != null)
-                        giftCardMessage = messageElement.InnerText;
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
         }
 
         #endregion

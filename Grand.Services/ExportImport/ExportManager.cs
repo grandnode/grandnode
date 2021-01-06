@@ -478,9 +478,6 @@ namespace Grand.Services.ExportImport
                         }
                         xmlWriter.WriteElementString("DefaultValue", null, productAttributeMapping.DefaultValue);
                     }
-                    //conditions
-                    xmlWriter.WriteElementString("ConditionAttributeXml", null, productAttributeMapping.ConditionAttributeXml);
-
 
                     xmlWriter.WriteStartElement("ProductAttributeValues");
                     var productAttributeValues = productAttributeMapping.ProductAttributeValues;
@@ -782,7 +779,8 @@ namespace Grand.Services.ExportImport
                             xmlWriter.WriteElementString("DiscountAmountExclTax", null, orderItem.DiscountAmountExclTax.ToString());
                             xmlWriter.WriteElementString("OriginalProductCost", null, orderItem.OriginalProductCost.ToString());
                             xmlWriter.WriteElementString("AttributeDescription", null, orderItem.AttributeDescription);
-                            xmlWriter.WriteElementString("AttributesXml", null, orderItem.AttributesXml);
+                            //TO DO
+                            //xmlWriter.WriteElementString("AttributesXml", null, orderItem.AttributesXml);
                             xmlWriter.WriteElementString("Quantity", null, orderItem.Quantity.ToString());
                             xmlWriter.WriteElementString("DownloadCount", null, orderItem.DownloadCount.ToString());
                             xmlWriter.WriteElementString("IsDownloadActivated", null, orderItem.IsDownloadActivated.ToString());

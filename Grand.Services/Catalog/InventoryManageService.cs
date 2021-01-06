@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Caching.Constants;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Data;
 using Grand.Domain.Shipping;
 using Grand.Services.Commands.Models.Catalog;
@@ -9,6 +10,7 @@ using Grand.Services.Notifications.Catalog;
 using MediatR;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -54,8 +56,8 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantityToChange">Quantity to increase or descrease</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        public virtual async Task AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string warehouseId = "")
+        /// <param name="attributes">Attributes</param>
+        public virtual async Task AdjustInventory(Product product, int quantityToChange, IList<CustomAttribute> attributes = null, string warehouseId = "")
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -178,9 +180,9 @@ namespace Grand.Services.Catalog
                 }
             }
 
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+            if (attributes != null && product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
-                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributes);
                 if (combination != null)
                 {
                     combination.ProductId = product.Id;
@@ -218,13 +220,13 @@ namespace Grand.Services.Catalog
                     var p1 = await _productRepository.GetByIdAsync(item.ProductId);
                     if (p1 != null && (p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock || p1.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes))
                     {
-                        await AdjustInventory(p1, quantityToChange * item.Quantity, attributesXml, warehouseId);
+                        await AdjustInventory(p1, quantityToChange * item.Quantity, attributes, warehouseId);
                     }
                 }
             }
 
             //bundled products
-            var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributesXml);
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributes);
             foreach (var attributeValue in attributeValues)
             {
                 if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
@@ -233,7 +235,7 @@ namespace Grand.Services.Catalog
                     var associatedProduct = await _productRepository.GetByIdAsync(attributeValue.AssociatedProductId);
                     if (associatedProduct != null)
                     {
-                        await AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity, warehouseId);
+                        await AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity, null, warehouseId);
                     }
                 }
             }
@@ -489,10 +491,10 @@ namespace Grand.Services.Catalog
         /// Book the reserved quantity
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributeXML">AttributeXML</param>
+        /// <param name="customAttribute">Attribute</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        public virtual async Task BookReservedInventory(Product product, string AttributeXML, string warehouseId, int quantity)
+        public virtual async Task BookReservedInventory(Product product, IList<CustomAttribute> customAttribute, string warehouseId, int quantity)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -518,7 +520,7 @@ namespace Grand.Services.Catalog
 
                 var builder = Builders<Product>.Filter;
                 var filter = builder.Eq(x => x.Id, product.Id);
-                filter = filter & builder.Where(x => x.ProductWarehouseInventory.Any(y => y.WarehouseId == pwi.WarehouseId));
+                filter &= builder.Where(x => x.ProductWarehouseInventory.Any(y => y.WarehouseId == pwi.WarehouseId));
 
                 var update = Builders<Product>.Update
                         .Set(x => x.ProductWarehouseInventory.ElementAt(-1), pwi)
@@ -530,9 +532,9 @@ namespace Grand.Services.Catalog
 
             }
             //manage stock by attributes
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+            if (customAttribute != null && product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
-                var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.AttributesXml == AttributeXML);
+                var combination = _productAttributeParser.FindProductAttributeCombination(product, customAttribute);
                 if (combination == null)
                     return;
                 combination.ProductId = product.Id;
@@ -568,7 +570,7 @@ namespace Grand.Services.Catalog
                     var p1 = await _productRepository.GetByIdAsync(item.ProductId);
                     if (p1 != null && p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                     {
-                        await BookReservedInventory(p1, string.Empty, warehouseId, quantity * item.Quantity);
+                        await BookReservedInventory(p1, null, warehouseId, quantity * item.Quantity);
                     }
                 }
             }
@@ -630,8 +632,7 @@ namespace Grand.Services.Catalog
             //manage stock by attributes
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
-
-                var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.AttributesXml == shipmentItem.AttributeXML);
+                var combination = _productAttributeParser.FindProductAttributeCombination(product, shipmentItem.Attributes);
                 if (combination == null)
                     return 0;
 

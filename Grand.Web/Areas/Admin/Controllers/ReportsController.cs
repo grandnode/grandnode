@@ -593,7 +593,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var lowStockModel = new LowStockProductModel {
                     Id = product.Id,
                     Name = product.Name,
-                    Attributes = await _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                    Attributes = await _productAttributeFormatter.FormatAttributes(product, combination.Attributes, _workContext.CurrentCustomer, "<br />", true, true, true, false),
                     ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
                     StockQuantity = combination.StockQuantity,
                     Published = product.Published

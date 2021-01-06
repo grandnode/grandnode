@@ -1,4 +1,6 @@
+using Grand.Domain.Common;
 using Grand.Domain.Localization;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Domain.Catalog
@@ -13,6 +15,7 @@ namespace Grand.Domain.Catalog
         public ProductAttributeMapping()
         {
             Locales = new List<LocalizedProperty>();
+            ConditionAttribute = new List<CustomAttribute>();
         }
         /// <summary>
         /// Gets or sets the product identifier
@@ -82,7 +85,14 @@ namespace Grand.Domain.Catalog
         /// Conditional attributes that only appear if a previous attribute is selected, such as having an option 
         /// for personalizing clothing with a name and only providing the text input box if the "Personalize" radio button is checked.
         /// </summary>
+        [Obsolete("Will be removed in version 5.0.0 - this field was replaced by ConditionAttribute")] 
         public string ConditionAttributeXml { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom attributes (see "ProductAttribute" entity for more info)
+        /// </summary>
+        public IList<CustomAttribute> ConditionAttribute { get; set; }
+
         /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>

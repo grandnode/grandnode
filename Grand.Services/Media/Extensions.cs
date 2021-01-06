@@ -1,8 +1,10 @@
 ﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Media;
 using Grand.Services.Catalog;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +50,7 @@ namespace Grand.Services.Media
         /// <param name="pictureService">Picture service</param>
         /// <param name="productAttributeParser">Product attribute service</param>
         /// <returns>Picture</returns>
-        public static async Task<Picture> GetProductPicture(this Product product, string attributesXml,
+        public static async Task<Picture> GetProductPicture(this Product product, IList<CustomAttribute> attributes,
             IProductService productService, IPictureService pictureService,
             IProductAttributeParser productAttributeParser)
         {
@@ -62,10 +64,10 @@ namespace Grand.Services.Media
             Picture picture = null;
 
             //first, let's see whether we have some attribute values with custom pictures
-            if (!String.IsNullOrEmpty(attributesXml))
+            if (attributes != null && attributes.Any())
             {
 
-                var comb = product.ProductAttributeCombinations.Where(x => x.AttributesXml == attributesXml).FirstOrDefault();
+                var comb = productAttributeParser.FindProductAttributeCombination(product, attributes);
                 if (comb != null)
                 {
                     if (!string.IsNullOrEmpty(comb.PictureId))
@@ -79,7 +81,7 @@ namespace Grand.Services.Media
                 }
                 if (picture == null)
                 {
-                    var attributeValues = productAttributeParser.ParseProductAttributeValues(product, attributesXml);
+                    var attributeValues = productAttributeParser.ParseProductAttributeValues(product, attributes);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributePicture = await pictureService.GetPictureById(attributeValue.PictureId);

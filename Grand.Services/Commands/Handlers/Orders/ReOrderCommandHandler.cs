@@ -49,7 +49,7 @@ namespace Grand.Services.Commands.Handlers.Orders
                     {
                         warnings.AddRange(await _shoppingCartService.AddToCart(customer, orderItem.ProductId,
                             ShoppingCartType.ShoppingCart, request.Order.StoreId, orderItem.WarehouseId,
-                            orderItem.AttributesXml, 
+                            orderItem.Attributes, 
                             product.CustomerEntersPrice ?
                             _taxSettings.PricesIncludeTax ? orderItem.UnitPriceInclTax : orderItem.UnitPriceExclTax
                             : (decimal?)default,

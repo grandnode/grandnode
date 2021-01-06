@@ -61,7 +61,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="attributes">Attributes</param>
         /// <param name="attribute">Checkout attribute</param>
-        /// <returns>Updated result (XML format)</returns>
+        /// <returns>Updated result</returns>
         IList<CustomAttribute> RemoveCheckoutAttribute(IList<CustomAttribute> customAttributes, CheckoutAttribute attribute);
     }
 }

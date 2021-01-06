@@ -24,7 +24,6 @@ using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.ShoppingCart;
-using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.ShoppingCart;
@@ -362,14 +361,14 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
                 var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel {
                     Id = sci.Id,
-                    Sku = product.FormatSku(sci.AttributesXml, _productAttributeParser),
+                    Sku = product.FormatSku(sci.Attributes, _productAttributeParser),
                     IsCart = sci.ShoppingCartType == ShoppingCartType.ShoppingCart,
                     ProductId = product.Id,
                     WarehouseId = sci.WarehouseId,
                     ProductName = product.GetLocalized(x => x.Name, request.Language.Id),
                     ProductSeName = product.GetSeName(request.Language.Id),
                     Quantity = sci.Quantity,
-                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml),
+                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.Attributes),
                 };
 
                 //allow editing?
@@ -498,7 +497,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 //picture
                 if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
                 {
-                    cartItemModel.Picture = await PrepareCartItemPicture(product, sci.AttributesXml, request.Language.Id, request.Store.Id);
+                    cartItemModel.Picture = await PrepareCartItemPicture(product, sci.Attributes);
                 }
 
                 //item warnings
@@ -610,21 +609,15 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
         }
 
-        private async Task<PictureModel> PrepareCartItemPicture(Product product, string attributesXml, string langId, string storeId)
+        private async Task<PictureModel> PrepareCartItemPicture(Product product, IList<CustomAttribute> attributes)
         {
-            var pictureCacheKey = string.Format(ModelCacheEventConst.CART_PICTURE_MODEL_KEY, product.Id, _mediaSettings.CartThumbPictureSize, true, langId, storeId);
-            var model = await _cacheManager.GetAsync(pictureCacheKey, async () =>
-            {
-                var sciPicture = await product.GetProductPicture(attributesXml, _productService, _pictureService, _productAttributeParser);
-                return new PictureModel {
-                    Id = sciPicture?.Id,
-                    ImageUrl = await _pictureService.GetPictureUrl(sciPicture, _mediaSettings.CartThumbPictureSize, true),
-                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
-                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
-                };
-            });
-
-            return model;
+            var sciPicture = await product.GetProductPicture(attributes, _productService, _pictureService, _productAttributeParser);
+            return new PictureModel {
+                Id = sciPicture?.Id,
+                ImageUrl = await _pictureService.GetPictureUrl(sciPicture, _mediaSettings.CartThumbPictureSize, true),
+                Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
+                AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
+            };
         }
 
     }

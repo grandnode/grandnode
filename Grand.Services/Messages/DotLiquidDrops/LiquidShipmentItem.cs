@@ -83,14 +83,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
-        public string AttributeXML
-        {
-            get
-            {
-                return _shipmentItem.AttributeXML;
-            }
-        }
-
         public int Quantity
         {
             get

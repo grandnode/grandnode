@@ -77,10 +77,10 @@ namespace Grand.Services.Commands.Handlers.Messages
                     }
                     sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
                     //attributes
-                    if (!string.IsNullOrEmpty(item.AttributesXml))
+                    if (item.Attributes.Any())
                     {
                         sb.AppendLine("<br />");
-                        string attributeDescription = await _productAttributeFormatter.FormatAttributes(product, item.AttributesXml, request.Customer);
+                        string attributeDescription = await _productAttributeFormatter.FormatAttributes(product, item.Attributes, request.Customer);
                         sb.AppendLine(attributeDescription);
                     }
                     sb.AppendLine("</td>");

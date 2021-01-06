@@ -392,7 +392,7 @@ namespace Grand.Services.Orders
                                         }
                                         if (p1.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                                         {
-                                            var combination = _productAttributeParser.FindProductAttributeCombination(p1, shoppingCartItem.AttributesXml);
+                                            var combination = _productAttributeParser.FindProductAttributeCombination(p1, shoppingCartItem.Attributes);
                                             if (combination != null)
                                             {
                                                 //combination exists
@@ -427,7 +427,7 @@ namespace Grand.Services.Orders
                         break;
                     case ManageInventoryMethod.ManageStockByAttributes:
                         {
-                            var combination = _productAttributeParser.FindProductAttributeCombination(product, shoppingCartItem.AttributesXml);
+                            var combination = _productAttributeParser.FindProductAttributeCombination(product, shoppingCartItem.Attributes);
                             if (combination != null)
                             {
                                 //combination exists
@@ -511,14 +511,14 @@ namespace Grand.Services.Orders
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Warnings</returns>
         public virtual async Task<IList<string>> GetShoppingCartItemAttributeWarnings(Customer customer,
             ShoppingCartType shoppingCartType,
             Product product,
             int quantity = 1,
-            string attributesXml = "",
+            IList<CustomAttribute> attributes = null,
             bool ignoreNonCombinableAttributes = false)
         {
             if (product == null)
@@ -527,7 +527,7 @@ namespace Grand.Services.Orders
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var attributes1 = _productAttributeParser.ParseProductAttributeMappings(product, attributesXml).ToList();
+            var attributes1 = _productAttributeParser.ParseProductAttributeMappings(product, attributes).ToList();
             if (product.ProductType == ProductType.BundledProduct)
             {
                 foreach (var bundle in product.BundleProducts)
@@ -535,7 +535,7 @@ namespace Grand.Services.Orders
                     var p1 = await _productService.GetProductById(bundle.ProductId);
                     if (p1 != null)
                     {
-                        var a1 = _productAttributeParser.ParseProductAttributeMappings(p1, attributesXml).ToList();
+                        var a1 = _productAttributeParser.ParseProductAttributeMappings(p1, attributes).ToList();
                         attributes1.AddRange(a1);
                     }
                 }
@@ -575,7 +575,7 @@ namespace Grand.Services.Orders
             //validate conditional attributes only (if specified)
             attributes2 = attributes2.Where(x =>
             {
-                var conditionMet = _productAttributeParser.IsConditionMet(product, x, attributesXml);
+                var conditionMet = _productAttributeParser.IsConditionMet(product, x, attributes);
                 return !conditionMet.HasValue || conditionMet.Value;
             }).ToList();
             foreach (var a2 in attributes2)
@@ -588,7 +588,7 @@ namespace Grand.Services.Orders
                     {
                         if (a1.Id == a2.Id)
                         {
-                            var attributeValuesStr = _productAttributeParser.ParseValues(attributesXml, a1.Id);
+                            var attributeValuesStr = _productAttributeParser.ParseValues(attributes, a1.Id);
                             foreach (string str1 in attributeValuesStr)
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))
@@ -620,7 +620,7 @@ namespace Grand.Services.Orders
                         .Select(x => x.Id)
                         .ToArray();
 
-                    var selectedReadOnlyValueIds = _productAttributeParser.ParseProductAttributeValues(product, attributesXml)
+                    var selectedReadOnlyValueIds = _productAttributeParser.ParseProductAttributeValues(product, attributes)
                         .Where(x => x.ProductAttributeMappingId == a2.Id)
                         .Select(x => x.Id)
                         .ToArray();
@@ -644,7 +644,7 @@ namespace Grand.Services.Orders
                     if (pam.AttributeControlType == AttributeControlType.TextBox ||
                         pam.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _productAttributeParser.ParseValues(attributesXml, pam.Id);
+                        var valuesStr = _productAttributeParser.ParseValues(attributes, pam.Id);
                         var enteredText = valuesStr.FirstOrDefault();
                         int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
@@ -662,7 +662,7 @@ namespace Grand.Services.Orders
                     if (pam.AttributeControlType == AttributeControlType.TextBox ||
                         pam.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _productAttributeParser.ParseValues(attributesXml, pam.Id);
+                        var valuesStr = _productAttributeParser.ParseValues(attributes, pam.Id);
                         var enteredText = valuesStr.FirstOrDefault();
                         int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
@@ -679,7 +679,7 @@ namespace Grand.Services.Orders
                 return warnings;
 
             //validate bundled products
-            var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributesXml);
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributes);
             foreach (var attributeValue in attributeValues)
             {
                 var _productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == attributeValue.ProductAttributeMappingId).FirstOrDefault();
@@ -719,10 +719,10 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemGiftCardWarnings(ShoppingCartType shoppingCartType,
-            Product product, string attributesXml)
+            Product product, IList<CustomAttribute> attributes)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -732,27 +732,27 @@ namespace Grand.Services.Orders
             //gift cards
             if (product.IsGiftCard)
             {
-                _productAttributeParser.GetGiftCardAttribute(attributesXml,
+                _productAttributeParser.GetGiftCardAttribute(attributes,
                     out string giftCardRecipientName, out string giftCardRecipientEmail,
                     out string giftCardSenderName, out string giftCardSenderEmail, out string giftCardMessage);
 
-                if (String.IsNullOrEmpty(giftCardRecipientName))
+                if (string.IsNullOrEmpty(giftCardRecipientName))
                     warnings.Add(_localizationService.GetResource("ShoppingCart.RecipientNameError"));
 
                 if (product.GiftCardType == GiftCardType.Virtual)
                 {
                     //validate for virtual gift cards only
-                    if (String.IsNullOrEmpty(giftCardRecipientEmail) || !CommonHelper.IsValidEmail(giftCardRecipientEmail))
+                    if (string.IsNullOrEmpty(giftCardRecipientEmail) || !CommonHelper.IsValidEmail(giftCardRecipientEmail))
                         warnings.Add(_localizationService.GetResource("ShoppingCart.RecipientEmailError"));
                 }
 
-                if (String.IsNullOrEmpty(giftCardSenderName))
+                if (string.IsNullOrEmpty(giftCardSenderName))
                     warnings.Add(_localizationService.GetResource("ShoppingCart.SenderNameError"));
 
                 if (product.GiftCardType == GiftCardType.Virtual)
                 {
                     //validate for virtual gift cards only
-                    if (String.IsNullOrEmpty(giftCardSenderEmail) || !CommonHelper.IsValidEmail(giftCardSenderEmail))
+                    if (string.IsNullOrEmpty(giftCardSenderEmail) || !CommonHelper.IsValidEmail(giftCardSenderEmail))
                         warnings.Add(_localizationService.GetResource("ShoppingCart.SenderEmailError"));
                 }
             }
@@ -886,7 +886,7 @@ namespace Grand.Services.Orders
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
@@ -915,11 +915,11 @@ namespace Grand.Services.Orders
 
             //selected attributes
             if (getAttributesWarnings)
-                warnings.AddRange(await GetShoppingCartItemAttributeWarnings(customer, shoppingCartItem.ShoppingCartType, product, shoppingCartItem.Quantity, shoppingCartItem.AttributesXml));
+                warnings.AddRange(await GetShoppingCartItemAttributeWarnings(customer, shoppingCartItem.ShoppingCartType, product, shoppingCartItem.Quantity, shoppingCartItem.Attributes));
 
             //gift cards
             if (getGiftCardWarnings)
-                warnings.AddRange(GetShoppingCartItemGiftCardWarnings(shoppingCartItem.ShoppingCartType, product, shoppingCartItem.AttributesXml));
+                warnings.AddRange(GetShoppingCartItemGiftCardWarnings(shoppingCartItem.ShoppingCartType, product, shoppingCartItem.Attributes));
 
             //required products
             if (getRequiredProductWarnings)
@@ -1077,7 +1077,7 @@ namespace Grand.Services.Orders
         /// <param name="shoppingCart">Shopping cart</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="customerEnteredPrice">Price entered by a customer</param>
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
@@ -1086,7 +1086,7 @@ namespace Grand.Services.Orders
             ShoppingCartType shoppingCartType,
             string productId,
             string warehouseId = null,
-            string attributesXml = "",
+            IList<CustomAttribute> attributes = null,
             decimal? customerEnteredPrice = null,
             DateTime? rentalStartDate = null,
             DateTime? rentalEndDate = null)
@@ -1100,7 +1100,7 @@ namespace Grand.Services.Orders
                 {
                     //attributes
                     var _product = await _productService.GetProductById(sci.ProductId);
-                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(_product, sci.AttributesXml, attributesXml, false);
+                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(_product, sci.Attributes, attributes, false);
                     if (_product.ProductType == ProductType.BundledProduct)
                     {
                         foreach (var bundle in _product.BundleProducts)
@@ -1108,7 +1108,7 @@ namespace Grand.Services.Orders
                             var p1 = await _productService.GetProductById(bundle.ProductId);
                             if (p1 != null)
                             {
-                                if (!_productAttributeParser.AreProductAttributesEqual(p1, sci.AttributesXml, attributesXml, false))
+                                if (!_productAttributeParser.AreProductAttributesEqual(p1, sci.Attributes, attributes, false))
                                     attributesEqual = false;
                             }
                         }
@@ -1117,11 +1117,11 @@ namespace Grand.Services.Orders
                     bool giftCardInfoSame = true;
                     if (_product.IsGiftCard)
                     {
-                        _productAttributeParser.GetGiftCardAttribute(attributesXml,
+                        _productAttributeParser.GetGiftCardAttribute(attributes,
                             out var giftCardRecipientName1, out var giftCardRecipientEmail1,
                             out var giftCardSenderName1, out var giftCardSenderEmail1, out var giftCardMessage1);
 
-                        _productAttributeParser.GetGiftCardAttribute(sci.AttributesXml,
+                        _productAttributeParser.GetGiftCardAttribute(sci.Attributes,
                             out var giftCardRecipientName2, out var giftCardRecipientEmail2,
                             out var giftCardSenderName2, out var giftCardSenderEmail2, out var giftCardMessage2);
 
@@ -1247,7 +1247,7 @@ namespace Grand.Services.Orders
         /// <param name="product">Product</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="customerEnteredPrice">The price enter by a customer</param>
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
@@ -1255,7 +1255,7 @@ namespace Grand.Services.Orders
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
         public virtual async Task<IList<string>> AddToCart(Customer customer, string productId,
-            ShoppingCartType shoppingCartType, string storeId, string warehouseId = null, string attributesXml = null,
+            ShoppingCartType shoppingCartType, string storeId, string warehouseId = null, IList<CustomAttribute> attributes = null,
             decimal? customerEnteredPrice = null,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
@@ -1288,7 +1288,7 @@ namespace Grand.Services.Orders
                 .ToList();
 
             var shoppingCartItem = await FindShoppingCartItemInTheCart(cart,
-                shoppingCartType, productId, warehouseId, attributesXml, customerEnteredPrice,
+                shoppingCartType, productId, warehouseId, attributes, customerEnteredPrice,
                 rentalStartDate, rentalEndDate);
 
             if (shoppingCartItem != null && product.ProductType != ProductType.Reservation)
@@ -1300,7 +1300,7 @@ namespace Grand.Services.Orders
 
                 if (!warnings.Any())
                 {
-                    shoppingCartItem.AttributesXml = attributesXml;
+                    shoppingCartItem.Attributes = attributes;
                     shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
                     await _customerService.UpdateShoppingCartItem(customer.Id, shoppingCartItem);
 
@@ -1317,7 +1317,7 @@ namespace Grand.Services.Orders
                     StoreId = storeId,
                     WarehouseId = warehouseId,
                     ProductId = productId,
-                    AttributesXml = attributesXml,
+                    Attributes = attributes,
                     EnteredPrice = customerEnteredPrice,
                     Quantity = quantity,
                     RentalStartDateUtc = rentalStartDate,
@@ -1412,7 +1412,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartItemId">Shopping cart item identifier</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="customerEnteredPrice">New customer entered price</param>
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
@@ -1420,7 +1420,7 @@ namespace Grand.Services.Orders
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
         public virtual async Task<IList<string>> UpdateShoppingCartItem(Customer customer,
-            string shoppingCartItemId, string warehouseId, string attributesXml,
+            string shoppingCartItemId, string warehouseId, IList<CustomAttribute> attributes,
             decimal? customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool resetCheckoutData = true, string reservationId = "", string sciId = "")
@@ -1443,7 +1443,7 @@ namespace Grand.Services.Orders
                     var product = await _productService.GetProductById(shoppingCartItem.ProductId);
                     shoppingCartItem.Quantity = quantity;
                     shoppingCartItem.WarehouseId = warehouseId;
-                    shoppingCartItem.AttributesXml = attributesXml;
+                    shoppingCartItem.Attributes = attributes;
                     shoppingCartItem.EnteredPrice = customerEnteredPrice;
                     shoppingCartItem.RentalStartDateUtc = rentalStartDate;
                     shoppingCartItem.RentalEndDateUtc = rentalEndDate;
@@ -1497,7 +1497,7 @@ namespace Grand.Services.Orders
             {
                 var sci = fromCart[i];
                 await AddToCart(toCustomer, sci.ProductId, sci.ShoppingCartType, sci.StoreId, sci.WarehouseId,
-                    sci.AttributesXml, sci.EnteredPrice,
+                    sci.Attributes, sci.EnteredPrice,
                     sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.ReservationId, sci.Parameter, sci.Duration);
             }
             for (int i = 0; i < fromCart.Count; i++)

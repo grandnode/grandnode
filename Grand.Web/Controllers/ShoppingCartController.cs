@@ -106,7 +106,7 @@ namespace Grand.Web.Controllers
         {
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
-            var attributeXml = await _mediator.Send(new SaveCheckoutAttributesCommand() {
+            var checkoutAttributes = await _mediator.Send(new SaveCheckoutAttributesCommand() {
                 Customer = _workContext.CurrentCustomer,
                 Store = _storeContext.CurrentStore,
                 Cart = cart,
@@ -118,7 +118,7 @@ namespace Grand.Web.Controllers
             var attributes = await _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
             foreach (var attribute in attributes)
             {
-                var conditionMet = await checkoutAttributeParser.IsConditionMet(attribute, attributeXml);
+                var conditionMet = await checkoutAttributeParser.IsConditionMet(attribute, checkoutAttributes);
                 if (conditionMet.HasValue)
                 {
                     if (conditionMet.Value)
@@ -143,7 +143,7 @@ namespace Grand.Web.Controllers
                 disabledattributeids = disabledAttributeIds.ToArray(),
                 htmlordertotal = await RenderPartialViewToString("Components/OrderTotals/Default", model),
                 model = model,
-                checkoutattributeinfo = await checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
+                checkoutattributeinfo = await checkoutAttributeFormatter.FormatAttributes(checkoutAttributes, _workContext.CurrentCustomer),
             });
         }
 
@@ -271,7 +271,7 @@ namespace Grand.Web.Controllers
                         if (int.TryParse(form[formKey], out int newQuantity))
                         {
                             var currSciWarnings = await _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                sci.Id, sci.WarehouseId, sci.AttributesXml, sci.EnteredPrice,
+                                sci.Id, sci.WarehouseId, sci.Attributes, sci.EnteredPrice,
                                 sci.RentalStartDateUtc, sci.RentalEndDateUtc,
                                 newQuantity, true, sci.ReservationId, sci.Id);
                             innerWarnings.Add(sci.Id, currSciWarnings);
@@ -803,7 +803,7 @@ namespace Grand.Web.Controllers
                             if (int.TryParse(form[formKey], out int newQuantity))
                             {
                                 var currSciWarnings = await _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                    sci.Id, sci.WarehouseId, sci.AttributesXml, sci.EnteredPrice,
+                                    sci.Id, sci.WarehouseId, sci.Attributes, sci.EnteredPrice,
                                     sci.RentalStartDateUtc, sci.RentalEndDateUtc,
                                     newQuantity, true);
                                 innerWarnings.Add(sci.Id, currSciWarnings);
@@ -872,7 +872,7 @@ namespace Grand.Web.Controllers
                     var warnings = await _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                         sci.ProductId, ShoppingCartType.ShoppingCart,
                         _storeContext.CurrentStore.Id, sci.WarehouseId,
-                        sci.AttributesXml, sci.EnteredPrice,
+                        sci.Attributes, sci.EnteredPrice,
                         sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, true);
                     if (!warnings.Any())
                         numberOfAddedItems++;
