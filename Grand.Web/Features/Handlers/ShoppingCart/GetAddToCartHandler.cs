@@ -80,13 +80,14 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
         public async Task<AddToCartModel> Handle(GetAddToCart request, CancellationToken cancellationToken)
         {
-            var model = new AddToCartModel();
-            model.AttributeDescription = await _productAttributeFormatter.FormatAttributes(request.Product, request.Attributes);
-            model.ProductSeName = request.Product.GetSeName(request.Language.Id);
-            model.CartType = request.CartType;
-            model.ProductId = request.Product.Id;
-            model.ProductName = request.Product.GetLocalized(x => x.Name, request.Language.Id);
-            model.Quantity = request.Quantity;
+            var model = new AddToCartModel {
+                AttributeDescription = await _productAttributeFormatter.FormatAttributes(request.Product, request.Attributes),
+                ProductSeName = request.Product.GetSeName(request.Language.Id),
+                CartType = request.CartType,
+                ProductId = request.Product.Id,
+                ProductName = request.Product.GetLocalized(x => x.Name, request.Language.Id),
+                Quantity = request.Quantity
+            };
 
             //reservation info
             if (request.Product.ProductType == ProductType.Reservation)
@@ -112,9 +113,12 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
             if (request.CartType != ShoppingCartType.Auctions)
             {
-                var cartItems = request.Customer.ShoppingCartItems.Where(x => x.ProductId == request.Product.Id && x.EnteredPrice == request.CustomerEnteredPrice);
+                var cartItems = request.Customer.ShoppingCartItems
+                    .Where(x => x.ShoppingCartType == request.CartType &&
+                    x.ProductId == request.Product.Id &&
+                    x.EnteredPrice == request.CustomerEnteredPrice);
 
-                if (request.Attributes != null || request.Attributes.Any() && cartItems.Count() > 1)
+                if (request.Attributes != null && request.Attributes.Any() && cartItems.Count() > 1)
                 {
                     cartItems = cartItems.Where(x => x.Attributes.All(y => request.Attributes.Any(z => z.Key == y.Key && z.Value == y.Value)));
                 }

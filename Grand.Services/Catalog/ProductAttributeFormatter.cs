@@ -94,7 +94,12 @@ namespace Grand.Services.Catalog
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
             bool allowHyperlinks = true, bool showInAdmin = false)
         {
+
             var result = new StringBuilder();
+
+            if (customAttributes == null || !customAttributes.Any())
+                return result.ToString();
+
             var langId = string.Empty;
 
             if (_workContext.WorkingLanguage != null)

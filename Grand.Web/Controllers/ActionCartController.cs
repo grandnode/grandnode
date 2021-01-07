@@ -185,7 +185,6 @@ namespace Grand.Web.Controllers
                 Customer = customer,
                 Quantity = quantity,
                 CartType = cartType,
-                Attributes = null,
                 Currency = _workContext.WorkingCurrency,
                 Store = _storeContext.CurrentStore,
                 Language = _workContext.WorkingLanguage,
