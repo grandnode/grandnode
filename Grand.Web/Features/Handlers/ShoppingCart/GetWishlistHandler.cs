@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Grand.Core.Caching;
+﻿using Grand.Core.Caching;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Media;
 using Grand.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
-using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -24,6 +18,11 @@ using Grand.Web.Models.Media;
 using Grand.Web.Models.ShoppingCart;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.ShoppingCart
 {
@@ -37,7 +36,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly ILocalizationService _localizationService;
         private readonly ITaxService _taxService;
         private readonly IPriceCalculationService _priceCalculationService;
-        private readonly ICurrencyService _currencyService;
+        private readonly IAclService _aclService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICacheManager _cacheManager;
         private readonly IPictureService _pictureService;
@@ -47,20 +46,20 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly MediaSettings _mediaSettings;
 
         public GetWishlistHandler(
-            IPermissionService permissionService, 
-            IShoppingCartService shoppingCartService, 
-            IProductService productService, 
-            IProductAttributeParser productAttributeParser, 
-            IProductAttributeFormatter productAttributeFormatter, 
-            ILocalizationService localizationService, 
-            ITaxService taxService, 
-            IPriceCalculationService priceCalculationService, 
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter, 
-            ICacheManager cacheManager, 
-            IPictureService pictureService, 
-            ShoppingCartSettings shoppingCartSettings, 
-            CatalogSettings catalogSettings, 
+            IPermissionService permissionService,
+            IShoppingCartService shoppingCartService,
+            IProductService productService,
+            IProductAttributeParser productAttributeParser,
+            IProductAttributeFormatter productAttributeFormatter,
+            ILocalizationService localizationService,
+            ITaxService taxService,
+            IPriceCalculationService priceCalculationService,
+            IAclService aclService,
+            IPriceFormatter priceFormatter,
+            ICacheManager cacheManager,
+            IPictureService pictureService,
+            ShoppingCartSettings shoppingCartSettings,
+            CatalogSettings catalogSettings,
             MediaSettings mediaSettings)
         {
             _permissionService = permissionService;
@@ -71,7 +70,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _localizationService = localizationService;
             _taxService = taxService;
             _priceCalculationService = priceCalculationService;
-            _currencyService = currencyService;
+            _aclService = aclService;
             _priceFormatter = priceFormatter;
             _cacheManager = cacheManager;
             _pictureService = pictureService;
@@ -82,11 +81,12 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
         public async Task<WishlistModel> Handle(GetWishlist request, CancellationToken cancellationToken)
         {
-            var model = new WishlistModel();
-            model.EmailWishlistEnabled = _shoppingCartSettings.EmailWishlistEnabled;
-            model.IsEditable = request.IsEditable;
-            model.DisplayAddToCart = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
-            model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoWishlist;
+            var model = new WishlistModel {
+                EmailWishlistEnabled = _shoppingCartSettings.EmailWishlistEnabled,
+                IsEditable = request.IsEditable,
+                DisplayAddToCart = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
+                DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoWishlist
+            };
 
             if (!request.Cart.Any())
                 return model;
@@ -110,6 +110,9 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             foreach (var sci in request.Cart)
             {
                 var product = await _productService.GetProductById(sci.ProductId);
+                if (!_aclService.Authorize(product))
+                    continue;
+
                 var cartItemModel = new WishlistModel.ShoppingCartItemModel {
                     Id = sci.Id,
                     Sku = product.FormatSku(sci.Attributes, _productAttributeParser),
@@ -193,16 +196,16 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
                 model.Items.Add(cartItemModel);
             }
-            
+
             #endregion
-            
+
             return model;
         }
 
-        private async Task<PictureModel> PrepareCartItemPicture(GetWishlist request, 
+        private async Task<PictureModel> PrepareCartItemPicture(GetWishlist request,
             Product product, IList<CustomAttribute> attributes)
         {
-            var pictureCacheKey = string.Format(ModelCacheEventConst.CART_PICTURE_MODEL_KEY, product.Id, _mediaSettings.CartThumbPictureSize, 
+            var pictureCacheKey = string.Format(ModelCacheEventConst.CART_PICTURE_MODEL_KEY, product.Id, _mediaSettings.CartThumbPictureSize,
                 true, request.Language.Id, request.Store.Id);
 
             var model = await _cacheManager.GetAsync(pictureCacheKey, async () =>
