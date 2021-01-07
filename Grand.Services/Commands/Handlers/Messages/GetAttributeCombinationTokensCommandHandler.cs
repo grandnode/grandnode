@@ -23,8 +23,8 @@ namespace Grand.Services.Commands.Handlers.Messages
         public async Task<LiquidAttributeCombination> Handle(GetAttributeCombinationTokensCommand request, CancellationToken cancellationToken)
         {
             var liquidAttributeCombination = new LiquidAttributeCombination(request.Combination);
-            liquidAttributeCombination.Formatted = await _productAttributeFormatter.FormatAttributes(request.Product, request.Combination.AttributesXml, null, renderPrices: false);
-            liquidAttributeCombination.SKU = request.Product.FormatSku(request.Combination.AttributesXml, _productAttributeParser);
+            liquidAttributeCombination.Formatted = await _productAttributeFormatter.FormatAttributes(request.Product, request.Combination.Attributes, null, renderPrices: false);
+            liquidAttributeCombination.SKU = request.Product.FormatSku(request.Combination.Attributes, _productAttributeParser);
             return liquidAttributeCombination;
         }
     }

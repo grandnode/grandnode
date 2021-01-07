@@ -1967,6 +1967,8 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Sends a 'Back in stock' notification message to a customer
         /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="product">Product</param>
         /// <param name="subscription">Subscription</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
@@ -2013,10 +2015,10 @@ namespace Grand.Services.Messages
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
         /// <param name="attrInfo">Attr info</param>
-        /// <param name="attrXml">Attr xml</param>
+        /// <param name="customAttributes">CustomAttributes</param>
         /// <returns>Queued email identifier</returns>
         public virtual async Task<int> SendContactUsMessage(Customer customer, Store store, string languageId, string senderEmail,
-            string senderName, string subject, string body, string attrInfo, string attrXml)
+            string senderName, string subject, string body, string attrInfo, IList<CustomAttribute> customAttributes)
         {
             var language = await EnsureLanguageIsActive(languageId, store.Id);
             var messageTemplate = await GetMessageTemplate("Service.ContactUs", store.Id);
@@ -2065,7 +2067,7 @@ namespace Grand.Services.Messages
                     FullName = senderName,
                     Subject = string.IsNullOrEmpty(subject) ? "Contact Us (form)" : subject,
                     ContactAttributeDescription = attrInfo,
-                    ContactAttributesXml = attrXml,
+                    ContactAttributes = customAttributes,
                     EmailAccountId = emailAccount.Id
                 });
             }

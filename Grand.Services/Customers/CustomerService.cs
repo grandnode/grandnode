@@ -29,7 +29,7 @@ namespace Grand.Services.Customers
     {
         #region Constants
 
-       
+
 
         #endregion
 
@@ -175,7 +175,7 @@ namespace Grand.Services.Customers
                     query.Where(c => c.ShoppingCartItems.Count() > 0);
             }
 
-            if(orderBySelector == null)
+            if (orderBySelector == null)
                 query = query.OrderByDescending(c => c.CreatedOnUtc);
             else
                 query = query.OrderByDescending(orderBySelector);
@@ -241,7 +241,7 @@ namespace Grand.Services.Customers
             var query = _customerRepository.Table;
             query = query.Where(c => c.Active);
             query = query.Where(c => lastActivityFromUtc <= c.LastUpdateCartDateUtc);
-            query = query.Where(c => c.ShoppingCartItems.Any(y=>y.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart));
+            query = query.Where(c => c.ShoppingCartItems.Any(y => y.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart));
 
             if (!string.IsNullOrEmpty(storeId))
                 query = query.Where(c => c.StoreId == storeId);
@@ -401,9 +401,9 @@ namespace Grand.Services.Customers
                 LastActivityDateUtc = DateTime.UtcNow,
             };
 
-            if(!string.IsNullOrEmpty(urlreferrer))
+            if (!string.IsNullOrEmpty(urlreferrer))
             {
-                customer.GenericAttributes.Add(new GenericAttribute { 
+                customer.GenericAttributes.Add(new GenericAttribute {
                     Key = SystemCustomerAttributeNames.UrlReferrer,
                     Value = urlreferrer,
                     StoreId = "",
@@ -476,6 +476,25 @@ namespace Grand.Services.Customers
                     .SortByDescending(password => password.CreatedOnUtc)
                     .Limit(passwordsToReturn)
                     .ToListAsync();
+        }
+
+        /// <summary>
+        /// Updates the customer field
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        public virtual async Task UpdateCustomerField(Customer customer,
+            Expression<Func<Customer, object>> expression, object value)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, customer.Id);
+            var update = Builders<Customer>.Update
+                .Set(expression, value);
+
+            await _customerRepository.Collection.UpdateOneAsync(filter, update);
+
         }
 
         /// <summary>
@@ -614,7 +633,8 @@ namespace Grand.Services.Customers
                 .Set(x => x.VendorId, customer.VendorId)
                 .Set(x => x.SeId, customer.SeId)
                 .Set(x => x.OwnerId, customer.OwnerId)
-                .Set(x => x.StaffStoreId, customer.StaffStoreId);
+                .Set(x => x.StaffStoreId, customer.StaffStoreId)
+                .Set(x => x.Attributes, customer.Attributes);
 
             await _customerRepository.Collection.UpdateOneAsync(filter, update);
             //event notification
@@ -1083,7 +1103,7 @@ namespace Grand.Services.Customers
                 .Set(x => x.Addresses.ElementAt(-1).Company, address.Company)
                 .Set(x => x.Addresses.ElementAt(-1).VatNumber, address.VatNumber)
                 .Set(x => x.Addresses.ElementAt(-1).CountryId, address.CountryId)
-                .Set(x => x.Addresses.ElementAt(-1).CustomAttributes, address.CustomAttributes)
+                .Set(x => x.Addresses.ElementAt(-1).Attributes, address.Attributes)
                 .Set(x => x.Addresses.ElementAt(-1).Email, address.Email)
                 .Set(x => x.Addresses.ElementAt(-1).FaxNumber, address.FaxNumber)
                 .Set(x => x.Addresses.ElementAt(-1).FirstName, address.FirstName)
@@ -1201,7 +1221,7 @@ namespace Grand.Services.Customers
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).IsTaxExempt, shoppingCartItem.IsTaxExempt)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).RentalStartDateUtc, shoppingCartItem.RentalStartDateUtc)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).RentalEndDateUtc, shoppingCartItem.RentalEndDateUtc)
-                .Set(x => x.ShoppingCartItems.ElementAt(-1).AttributesXml, shoppingCartItem.AttributesXml)
+                .Set(x => x.ShoppingCartItems.ElementAt(-1).Attributes, shoppingCartItem.Attributes)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).EnteredPrice, shoppingCartItem.EnteredPrice)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).UpdatedOnUtc, shoppingCartItem.UpdatedOnUtc)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).ShoppingCartTypeId, shoppingCartItem.ShoppingCartTypeId);

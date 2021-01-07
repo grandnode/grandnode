@@ -147,7 +147,7 @@ namespace Grand.Web.Features.Handlers.Customers
             var customAttributes = await _mediator.Send(new GetCustomAttributes() {
                 Customer = request.Customer,
                 Language = request.Language,
-                OverrideAttributesXml = request.OverrideCustomCustomerAttributesXml
+                OverrideAttributes = request.OverrideCustomCustomerAttributes
             });
             foreach (var item in customAttributes)
             {

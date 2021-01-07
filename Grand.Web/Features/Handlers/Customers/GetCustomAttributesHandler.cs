@@ -55,22 +55,22 @@ namespace Grand.Web.Features.Handlers.Customers
                 }
 
                 //set already selected attributes
-                var selectedAttributesXml = !string.IsNullOrEmpty(request.OverrideAttributesXml) ?
-                    request.OverrideAttributesXml : request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CustomCustomerAttributes);
+                var selectedAttributes = request.OverrideAttributes ?? request.Customer.Attributes;
+
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
                         {
-                            if (!String.IsNullOrEmpty(selectedAttributesXml))
+                            if (selectedAttributes.Any())
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(selectedAttributesXml);
+                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(selectedAttributes);
                                 foreach (var attributeValue in selectedValues)
                                     if (attributeModel.Id == attributeValue.CustomerAttributeId)
                                         foreach (var item in attributeModel.Values)
@@ -88,9 +88,9 @@ namespace Grand.Web.Features.Handlers.Customers
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!string.IsNullOrEmpty(selectedAttributesXml))
+                            if (selectedAttributes.Any())
                             {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
+                                var enteredText = selectedAttributes.Where(x => x.Key == attribute.Id).Select(x => x.Value).ToList();
                                 if (enteredText.Any())
                                     attributeModel.DefaultValue = enteredText[0];
                             }

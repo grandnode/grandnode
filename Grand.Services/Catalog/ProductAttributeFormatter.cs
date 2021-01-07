@@ -14,6 +14,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Grand.Domain.Common;
 
 namespace Grand.Services.Catalog
 {
@@ -66,19 +68,19 @@ namespace Grand.Services.Catalog
         /// Formats attributes
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Attributes</returns>
-        public virtual Task<string> FormatAttributes(Product product, string attributesXml)
+        public virtual Task<string> FormatAttributes(Product product, IList<CustomAttribute> customAttributes)
         {
             var customer = _workContext.CurrentCustomer;
-            return FormatAttributes(product, attributesXml, customer);
+            return FormatAttributes(product, customAttributes, customer);
         }
 
         /// <summary>
         /// Formats attributes
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <param name="customer">Customer</param>
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
@@ -87,7 +89,7 @@ namespace Grand.Services.Catalog
         /// <param name="renderGiftCardAttributes">A value indicating whether to render gift card attributes</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        public virtual async Task<string> FormatAttributes(Product product, string attributesXml,
+        public virtual async Task<string> FormatAttributes(Product product, IList<CustomAttribute> customAttributes,
             Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
             bool allowHyperlinks = true, bool showInAdmin = false)
@@ -106,7 +108,7 @@ namespace Grand.Services.Catalog
             //attributes
             if (renderProductAttributes)
             {
-                result = await PrepareFormattedAttribute(product, attributesXml, langId, serapator, htmlEncode,
+                result = await PrepareFormattedAttribute(product, customAttributes, langId, serapator, htmlEncode,
                     renderPrices, allowHyperlinks, showInAdmin);
 
                 if (product.ProductType == ProductType.BundledProduct)
@@ -121,7 +123,7 @@ namespace Grand.Services.Catalog
                                 result.Append(serapator);
 
                             result.Append($"<a href=\"{p1.GetSeName(langId)}\"> {p1.GetLocalized(x => x.Name, langId)} </a>");
-                            var formattedAttribute = await PrepareFormattedAttribute(p1, attributesXml, langId, serapator, htmlEncode,
+                            var formattedAttribute = await PrepareFormattedAttribute(p1, customAttributes, langId, serapator, htmlEncode,
                             renderPrices, allowHyperlinks, showInAdmin);
                             if (formattedAttribute.Length > 0)
                             {
@@ -145,7 +147,7 @@ namespace Grand.Services.Catalog
                     string giftCardSenderName;
                     string giftCardSenderEmail;
                     string giftCardMessage;
-                    _productAttributeParser.GetGiftCardAttribute(attributesXml, out giftCardRecipientName, out giftCardRecipientEmail,
+                    _productAttributeParser.GetGiftCardAttribute(customAttributes, out giftCardRecipientName, out giftCardRecipientEmail,
                         out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
                     //sender
@@ -176,17 +178,17 @@ namespace Grand.Services.Catalog
             return result.ToString();
         }
 
-        private async Task<StringBuilder> PrepareFormattedAttribute(Product product, string attributesXml, string langId,
+        private async Task<StringBuilder> PrepareFormattedAttribute(Product product, IList<CustomAttribute> customAttributes, string langId,
             string serapator, bool htmlEncode, bool renderPrices,
             bool allowHyperlinks, bool showInAdmin)
         {
             var result = new StringBuilder();
-            var attributes = _productAttributeParser.ParseProductAttributeMappings(product, attributesXml);
+            var attributes = _productAttributeParser.ParseProductAttributeMappings(product, customAttributes);
             for (int i = 0; i < attributes.Count; i++)
             {
                 var productAttribute = await _productAttributeService.GetProductAttributeById(attributes[i].ProductAttributeId);
                 var attribute = attributes[i];
-                var valuesStr = _productAttributeParser.ParseValues(attributesXml, attribute.Id);
+                var valuesStr = _productAttributeParser.ParseValues(customAttributes, attribute.Id);
                 for (int j = 0; j < valuesStr.Count; j++)
                 {
                     string valueStr = valuesStr[j];
@@ -301,7 +303,7 @@ namespace Grand.Services.Catalog
                         }
                     }
 
-                    if (!String.IsNullOrEmpty(formattedAttribute))
+                    if (!string.IsNullOrEmpty(formattedAttribute))
                     {
                         if (i != 0 || j != 0)
                             result.Append(serapator);

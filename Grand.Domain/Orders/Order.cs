@@ -223,9 +223,12 @@ namespace Grand.Domain.Orders
         /// </summary>
         public string CheckoutAttributeDescription { get; set; }
 
+        public IList<CustomAttribute> CheckoutAttributes { get; set; } = new List<CustomAttribute>();
+
         /// <summary>
         /// Gets or sets the checkout attributes in XML format
         /// </summary>
+        [Obsolete("Will be removed in version 5.0.0 - this field was replaced by CheckoutAttributes")]
         public string CheckoutAttributesXml { get; set; }
 
         /// <summary>

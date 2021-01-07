@@ -220,7 +220,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).ValidationFileAllowedExtensions, productAttributeMapping.ValidationFileAllowedExtensions)
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).ValidationFileMaximumSize, productAttributeMapping.ValidationFileMaximumSize)
                 .Set(x => x.ProductAttributeMappings.ElementAt(-1).DefaultValue, productAttributeMapping.DefaultValue)
-                .Set(x => x.ProductAttributeMappings.ElementAt(-1).ConditionAttributeXml, productAttributeMapping.ConditionAttributeXml);
+                .Set(x => x.ProductAttributeMappings.ElementAt(-1).ConditionAttribute, productAttributeMapping.ConditionAttribute);
 
             if (values)
             {

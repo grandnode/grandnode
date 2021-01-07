@@ -28,8 +28,8 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task<IEnumerable<AddressModel>> PrepareAddressModel(Customer customer);
         Task DeleteAddress(Customer customer, Address address);
         Task PrepareAddressModel(CustomerAddressModel model, Address address, Customer customer, bool excludeProperties);
-        Task<Address> InsertAddressModel(Customer customer, CustomerAddressModel model, string customAttributes);
-        Task<Address> UpdateAddressModel(Customer customer, Address address, CustomerAddressModel model, string customAttributes);
+        Task<Address> InsertAddressModel(Customer customer, CustomerAddressModel model, List<CustomAttribute> customAttributes);
+        Task<Address> UpdateAddressModel(Customer customer, Address address, CustomerAddressModel model, List<CustomAttribute> customAttributes);
         Task<IList<ShoppingCartItemModel>> PrepareShoppingCartItemModel(string customerId, int cartTypeId);
         Task DeleteCart(Customer customer, string id);
         Task<IList<string>> UpdateCart(Customer customer, string shoppingCartId, decimal? unitprice);

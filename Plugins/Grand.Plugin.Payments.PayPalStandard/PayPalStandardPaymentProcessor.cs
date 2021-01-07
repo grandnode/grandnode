@@ -286,7 +286,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
             }
 
             //add checkout attributes as order items
-            var checkoutAttributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValue(postProcessPaymentRequest.Order.CheckoutAttributesXml);
+            var checkoutAttributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValue(postProcessPaymentRequest.Order.CheckoutAttributes);
             var currencyService = _serviceProvider.GetRequiredService<ICurrencyService>();
             var workContext = _serviceProvider.GetRequiredService<IWorkContext>();
             var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(postProcessPaymentRequest.Order.CustomerId);

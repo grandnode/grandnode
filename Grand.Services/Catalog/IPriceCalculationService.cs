@@ -1,4 +1,5 @@
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
 using Grand.Domain.Orders;
@@ -74,7 +75,7 @@ namespace Grand.Services.Catalog
         /// <param name="currency">The currency</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="quantity">Quantity</param>
-        /// <param name="attributesXml">Product atrributes (XML format)</param>
+        /// <param name="attributes">Product atrributes</param>
         /// <param name="customerEnteredPrice">Customer entered price (if specified)</param>
         /// <param name="rentalStartDate">Rental start date (null for not rental products)</param>
         /// <param name="rentalEndDate">Rental end date (null for not rental products)</param>
@@ -85,7 +86,7 @@ namespace Grand.Services.Catalog
             Currency currency,
             ShoppingCartType shoppingCartType,
             int quantity,
-            string attributesXml,
+            IList<CustomAttribute> attributes,
             decimal? customerEnteredPrice,
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts);
@@ -104,9 +105,9 @@ namespace Grand.Services.Catalog
         /// Gets the product cost (one item)
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Shopping cart item attributes in XML</param>
+        /// <param name="attributes">Shopping cart item attributes</param>
         /// <returns>Product cost (one item)</returns>
-        Task<decimal> GetProductCost(Product product, string attributesXml);
+        Task<decimal> GetProductCost(Product product, IList<CustomAttribute> attributes);
 
         
         /// <summary>

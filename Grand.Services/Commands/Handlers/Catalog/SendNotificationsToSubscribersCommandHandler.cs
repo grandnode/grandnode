@@ -1,7 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Domain.Data;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
+using Grand.Domain.Data;
 using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -11,6 +12,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,7 +41,7 @@ namespace Grand.Services.Commands.Handlers.Catalog
 
             int result = 0;
 
-            var subscriptions = await GetAllSubscriptionsByProductId(request.Product.Id, request.AttributeXml, request.Warehouse);
+            var subscriptions = await GetAllSubscriptionsByProductId(request.Product.Id, request.Attributes, request.Warehouse);
             foreach (var subscription in subscriptions)
             {
                 var customer = await _customerService.GetCustomerById(subscription.CustomerId);
@@ -60,26 +62,26 @@ namespace Grand.Services.Commands.Handlers.Catalog
         /// Gets all subscriptions
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier; pass "" to load all records</param>
+        /// <param name="attributes">Attributes</param>
+        /// <param name="warehouseId">Store identifier; pass "" to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        private async Task<IList<BackInStockSubscription>> GetAllSubscriptionsByProductId(string productId, string attributeXml, string warehouseId)
+        private async Task<IList<BackInStockSubscription>> GetAllSubscriptionsByProductId(string productId, IList<CustomAttribute> attributes, string warehouseId)
         {
-            var query = _backInStockSubscriptionRepository.Table;
-            //product
-            query = query.Where(biss => biss.ProductId == productId);
+            var query = await _backInStockSubscriptionRepository.Table
+                .Where(biss => biss.ProductId == productId)
+                .OrderByDescending(biss => biss.CreatedOnUtc).ToListAsync();
 
             //warehouse
             if (!string.IsNullOrEmpty(warehouseId))
-                query = query.Where(biss => biss.WarehouseId == warehouseId);
+                query = query.Where(biss => biss.WarehouseId == warehouseId).ToList();
 
-            //warehouse
-            if (!string.IsNullOrEmpty(attributeXml))
-                query = query.Where(biss => biss.AttributeXml == attributeXml);
+            //attributes
+            if (attributes != null && attributes.Any())
+                query = query.Where(x => x.Attributes.All(y => attributes.Any(z => z.Key == y.Key && z.Value == y.Value))).ToList();
 
-            query = query.OrderByDescending(biss => biss.CreatedOnUtc);
-            return await query.ToListAsync();
+            return query.ToList();
         }
     }
 }

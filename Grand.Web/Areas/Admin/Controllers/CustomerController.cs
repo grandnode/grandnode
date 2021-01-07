@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Forums;
 using Grand.Domain.Tax;
@@ -106,12 +107,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        protected virtual async Task<string> ParseCustomCustomerAttributes(IFormCollection form)
+        protected virtual async Task<IList<CustomAttribute>> ParseCustomCustomerAttributes(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException("form");
 
-            string attributesXml = "";
+            var customAttributes = new List<CustomAttribute>();
             var customerAttributes = await _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
@@ -122,23 +123,23 @@ namespace Grand.Web.Areas.Admin.Controllers
                     case AttributeControlType.RadioList:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                    attribute, ctrlAttributes);
+                                customAttributes = _customerAttributeParser.AddCustomerAttribute(customAttributes,
+                                    attribute, ctrlAttributes).ToList();
                             }
                         }
                         break;
                     case AttributeControlType.Checkboxes:
                         {
                             var cblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            if (!string.IsNullOrEmpty(cblAttributes))
                             {
                                 foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    if (!String.IsNullOrEmpty(item))
-                                        attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                            attribute, item);
+                                    if (!string.IsNullOrEmpty(item))
+                                        customAttributes = _customerAttributeParser.AddCustomerAttribute(customAttributes,
+                                            attribute, item).ToList();
                                 }
                             }
                         }
@@ -152,8 +153,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                                 .Select(v => v.Id)
                                 .ToList())
                             {
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                            attribute, selectedAttributeId);
+                                customAttributes = _customerAttributeParser.AddCustomerAttribute(customAttributes,
+                                            attribute, selectedAttributeId).ToList();
                             }
                         }
                         break;
@@ -161,11 +162,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.ToString().Trim();
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                    attribute, enteredText);
+                                customAttributes = _customerAttributeParser.AddCustomerAttribute(customAttributes,
+                                    attribute, enteredText).ToList();
                             }
                         }
                         break;
@@ -179,7 +180,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
 
-            return attributesXml;
+            return customAttributes;
         }
 
         protected virtual bool CheckSalesManager(Customer customer)
@@ -264,7 +265,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                model.CustomAttributes = await ParseCustomCustomerAttributes(form);
+                model.Attributes = await ParseCustomCustomerAttributes(form);
                 var customer = await _customerViewModelService.InsertCustomerModel(model);
 
                 //password
@@ -361,7 +362,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    model.CustomAttributes = await ParseCustomCustomerAttributes(form);
+                    model.Attributes = await ParseCustomCustomerAttributes(form);
                     customer = await _customerViewModelService.UpdateCustomerModel(customer, model);
                     if (customer.IsAdmin() && !string.IsNullOrEmpty(model.VendorId))
                     {

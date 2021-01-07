@@ -102,7 +102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ProductId = sci.ProductId,
                     Quantity = sci.Quantity,
                     ProductName = product.Name,
-                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml, customer),
+                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.Attributes, customer),
                     UnitPrice = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci, product)).unitprice)).productprice),
                     Total = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetSubTotal(sci, product)).subTotal)).productprice),
                     UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
@@ -155,7 +155,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ProductId = sci.ProductId,
                     Quantity = sci.Quantity,
                     ProductName = product.Name,
-                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml, customer),
+                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.Attributes, customer),
                     UnitPrice = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetUnitPrice(sci, product)).unitprice)).productprice),
                     Total = _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, (await _priceCalculationService.GetSubTotal(sci, product)).subTotal)).productprice),
                     UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)

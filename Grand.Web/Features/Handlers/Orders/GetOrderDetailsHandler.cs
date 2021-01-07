@@ -18,6 +18,7 @@ using Grand.Web.Models.Media;
 using Grand.Web.Models.Orders;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -354,7 +355,7 @@ namespace Grand.Web.Features.Handlers.Orders
                 var orderItemModel = new OrderDetailsModel.OrderItemModel {
                     Id = orderItem.Id,
                     OrderItemGuid = orderItem.OrderItemGuid,
-                    Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    Sku = product.FormatSku(orderItem.Attributes, _productAttributeParser),
                     ProductId = product.Id,
                     ProductName = product.GetLocalized(x => x.Name, request.Language.Id),
                     ProductSeName = product.SeName,
@@ -362,7 +363,7 @@ namespace Grand.Web.Features.Handlers.Orders
                     AttributeInfo = orderItem.AttributeDescription,
                 };
                 //prepare picture
-                orderItemModel.Picture = await PrepareOrderItemPicture(product, orderItem.AttributesXml, orderItemModel.ProductName);
+                orderItemModel.Picture = await PrepareOrderItemPicture(product, orderItem.Attributes, orderItemModel.ProductName);
 
                 model.Items.Add(orderItemModel);
 
@@ -407,9 +408,9 @@ namespace Grand.Web.Features.Handlers.Orders
 
         }
 
-        private async Task<PictureModel> PrepareOrderItemPicture(Product product, string attributesXml, string productName)
+        private async Task<PictureModel> PrepareOrderItemPicture(Product product, IList<CustomAttribute> attributes, string productName)
         {
-            var sciPicture = await product.GetProductPicture(attributesXml, _productService, _pictureService, _productAttributeParser);
+            var sciPicture = await product.GetProductPicture(attributes, _productService, _pictureService, _productAttributeParser);
             return new PictureModel {
                 Id = sciPicture?.Id,
                 ImageUrl = await _pictureService.GetPictureUrl(sciPicture, 80),

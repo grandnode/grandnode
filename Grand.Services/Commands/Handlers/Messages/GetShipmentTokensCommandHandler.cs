@@ -32,7 +32,7 @@ namespace Grand.Services.Commands.Handlers.Messages
                 var liquidshipmentItems = new LiquidShipmentItem(shipmentItem, request.Shipment, request.Order, orderitem, product, request.Language);
                 string sku = "";
                 if (product != null)
-                    sku = product.FormatSku(orderitem.AttributesXml, _productAttributeParser);
+                    sku = product.FormatSku(orderitem.Attributes, _productAttributeParser);
 
                 liquidshipmentItems.ProductSku = WebUtility.HtmlEncode(sku);
 

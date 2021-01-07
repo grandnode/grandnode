@@ -163,9 +163,8 @@ namespace Grand.Web.Controllers
             await _customerService.ResetCheckoutData(customer, _storeContext.CurrentStore.Id);
 
             //validation (cart)
-
-            var checkoutAttributesXml = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
-            var scWarnings = await shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributesXml, true);
+            var checkoutAttributes = await customer.GetAttribute<List<CustomAttribute>>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+            var scWarnings = await shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributes, true);
             if (scWarnings.Any())
                 return RedirectToRoute("ShoppingCart", new { checkoutAttributes = true });
 
@@ -330,12 +329,12 @@ namespace Grand.Web.Controllers
                     model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
                     model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
                     model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
-                    model.NewAddress.CountryId, customAttributes);
+                    model.NewAddress.CountryId);
                 if (address == null)
                 {
                     //address is not found. let's create a new one
                     address = model.NewAddress.ToEntity();
-                    address.CustomAttributes = customAttributes;
+                    address.Attributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
                     _workContext.CurrentCustomer.Addresses.Add(address);
                     address.CustomerId = _workContext.CurrentCustomer.Id;
@@ -373,7 +372,7 @@ namespace Grand.Web.Controllers
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore,
                 SelectedCountryId = model.NewAddress.CountryId,
-                OverrideAttributesXml = customAttributes
+                OverrideAttributes = customAttributes
             });
 
             return View(model);
@@ -516,11 +515,11 @@ namespace Grand.Web.Controllers
                     model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
                     model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
                     model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
-                    model.NewAddress.CountryId, customAttributes);
+                    model.NewAddress.CountryId);
                 if (address == null)
                 {
                     address = model.NewAddress.ToEntity();
-                    address.CustomAttributes = customAttributes;
+                    address.Attributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
                     _workContext.CurrentCustomer.Addresses.Add(address);
                     address.CustomerId = _workContext.CurrentCustomer.Id;
@@ -540,7 +539,7 @@ namespace Grand.Web.Controllers
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore,
                 SelectedCountryId = model.NewAddress.CountryId,
-                OverrideAttributesXml = customAttributes
+                OverrideAttributes = customAttributes
             });
 
 
@@ -1215,7 +1214,7 @@ namespace Grand.Web.Controllers
                             Language = _workContext.WorkingLanguage,
                             Store = _storeContext.CurrentStore,
                             SelectedCountryId = model.NewAddress.CountryId,
-                            OverrideAttributesXml = customAttributes
+                            OverrideAttributes = customAttributes
                         });
 
                         billingAddressModel.NewAddressPreselected = true;
@@ -1237,12 +1236,12 @@ namespace Grand.Web.Controllers
                         model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
                         model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
                         model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
-                        model.NewAddress.CountryId, customAttributes);
+                        model.NewAddress.CountryId);
                     if (address == null)
                     {
                         //address is not found. let's create a new one
                         address = model.NewAddress.ToEntity();
-                        address.CustomAttributes = customAttributes;
+                        address.Attributes = customAttributes;
                         address.CreatedOnUtc = DateTime.UtcNow;
                         _workContext.CurrentCustomer.Addresses.Add(address);
                         address.CustomerId = _workContext.CurrentCustomer.Id;
@@ -1416,7 +1415,7 @@ namespace Grand.Web.Controllers
                             Language = _workContext.WorkingLanguage,
                             Store = _storeContext.CurrentStore,
                             SelectedCountryId = model.NewAddress.CountryId,
-                            OverrideAttributesXml = customAttributes,
+                            OverrideAttributes = customAttributes,
                         });
 
                         shippingAddressModel.NewAddressPreselected = true;
@@ -1438,11 +1437,11 @@ namespace Grand.Web.Controllers
                         model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
                         model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
                         model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
-                        model.NewAddress.CountryId, customAttributes);
+                        model.NewAddress.CountryId);
                     if (address == null)
                     {
                         address = model.NewAddress.ToEntity();
-                        address.CustomAttributes = customAttributes;
+                        address.Attributes = customAttributes;
                         address.CreatedOnUtc = DateTime.UtcNow;
 
                         //other null validations

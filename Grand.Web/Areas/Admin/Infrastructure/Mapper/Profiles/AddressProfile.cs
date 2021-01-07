@@ -42,7 +42,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
             CreateMap<AddressModel, Address>()
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Attributes, mo => mo.Ignore());
 
         }
 

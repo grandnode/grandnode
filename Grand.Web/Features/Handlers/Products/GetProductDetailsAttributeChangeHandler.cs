@@ -1,4 +1,5 @@
 ﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Media;
 using Grand.Domain.Orders;
 using Grand.Services.Catalog;
@@ -69,7 +70,7 @@ namespace Grand.Web.Features.Handlers.Products
         {
             var model = new ProductDetailsAttributeChangeModel();
 
-            string attributeXml = await _mediator.Send(new GetParseProductAttributes() { Product = request.Product, Form = request.Form });
+            var customAttributes = await _mediator.Send(new GetParseProductAttributes() { Product = request.Product, Form = request.Form });
 
             string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
                request.Form["WarehouseId"].ToString() :
@@ -84,9 +85,9 @@ namespace Grand.Web.Features.Handlers.Products
                 request.Product.ParseReservationDates(request.Form, out rentalStartDate, out rentalEndDate);
             }
 
-            model.Sku = request.Product.FormatSku(attributeXml, _productAttributeParser);
-            model.Mpn = request.Product.FormatMpn(attributeXml, _productAttributeParser);
-            model.Gtin = request.Product.FormatGtin(attributeXml, _productAttributeParser);
+            model.Sku = request.Product.FormatSku(customAttributes, _productAttributeParser);
+            model.Mpn = request.Product.FormatMpn(customAttributes, _productAttributeParser);
+            model.Gtin = request.Product.FormatGtin(customAttributes, _productAttributeParser);
 
             if (await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !request.Product.CustomerEntersPrice && request.Product.ProductType != ProductType.Auction)
             {
@@ -95,7 +96,7 @@ namespace Grand.Web.Features.Handlers.Products
                     request.Customer,
                     request.Currency,
                     ShoppingCartType.ShoppingCart,
-                    1, attributeXml, (decimal?)default,
+                    1, customAttributes, (decimal?)default,
                     rentalStartDate, rentalEndDate,
                     true);
 
@@ -108,7 +109,7 @@ namespace Grand.Web.Features.Handlers.Products
                 model.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }
             //stock
-            model.StockAvailability = request.Product.FormatStockMessage(warehouseId, attributeXml, _localizationService, _productAttributeParser);
+            model.StockAvailability = request.Product.FormatStockMessage(warehouseId, customAttributes, _localizationService, _productAttributeParser);
 
             //back in stock subscription
             if ((request.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes
@@ -116,7 +117,7 @@ namespace Grand.Web.Features.Handlers.Products
                 request.Product.BackorderMode == BackorderMode.NoBackorders &&
                 request.Product.AllowBackInStockSubscriptions)
             {
-                var combination = _productAttributeParser.FindProductAttributeCombination(request.Product, attributeXml);
+                var combination = _productAttributeParser.FindProductAttributeCombination(request.Product, customAttributes);
 
                 if (combination != null)
                     if (request.Product.GetTotalStockQuantityForCombination(combination, warehouseId: request.Store.DefaultWarehouseId) <= 0)
@@ -125,12 +126,12 @@ namespace Grand.Web.Features.Handlers.Products
                 if (request.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                 {
                     model.DisplayBackInStockSubscription = request.Product.AllowBackInStockSubscriptions;
-                    attributeXml = "";
+                    customAttributes = new List<CustomAttribute>();
                 }
 
                 var subscription = await _backInStockSubscriptionService
                    .FindSubscription(request.Customer.Id,
-                    request.Product.Id, attributeXml, request.Store.Id, warehouseId);
+                    request.Product.Id, customAttributes, request.Store.Id, warehouseId);
 
                 if (subscription != null)
                     model.ButtonTextBackInStockSubscription = _localizationService.GetResource("BackInStockSubscriptions.DeleteNotifyWhenAvailable");
@@ -146,7 +147,7 @@ namespace Grand.Web.Features.Handlers.Products
                 var attributes = request.Product.ProductAttributeMappings;
                 foreach (var attribute in attributes)
                 {
-                    var conditionMet = _productAttributeParser.IsConditionMet(request.Product, attribute, attributeXml);
+                    var conditionMet = _productAttributeParser.IsConditionMet(request.Product, attribute, customAttributes);
                     if (conditionMet.HasValue)
                     {
                         if (conditionMet.Value)
@@ -161,11 +162,11 @@ namespace Grand.Web.Features.Handlers.Products
             {
 
                 //first, try to get product attribute combination picture
-                var pictureId = request.Product.ProductAttributeCombinations.Where(x => x.AttributesXml == attributeXml).FirstOrDefault()?.PictureId ?? "";
+                var pictureId = _productAttributeParser.FindProductAttributeCombination(request.Product, customAttributes)?.PictureId;
                 //then, let's see whether we have attribute values with pictures
                 if (string.IsNullOrEmpty(pictureId))
                 {
-                    pictureId = _productAttributeParser.ParseProductAttributeValues(request.Product, attributeXml)
+                    pictureId = _productAttributeParser.ParseProductAttributeValues(request.Product, customAttributes)
                         .FirstOrDefault(attributeValue => !string.IsNullOrEmpty(attributeValue.PictureId))?.PictureId ?? "";
                 }
 

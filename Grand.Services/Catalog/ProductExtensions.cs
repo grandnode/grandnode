@@ -1,4 +1,5 @@
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Services.Localization;
 using System;
@@ -43,11 +44,11 @@ namespace Grand.Services.Catalog
         /// Formats the stock availability/quantity message
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Selected product attributes in XML format (if specified)</param>
+        /// <param name="attributes">Selected product attributes (if specified)</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <returns>The stock message</returns>
-        public static string FormatStockMessage(this Product product, string warehouseId, string attributesXml,
+        public static string FormatStockMessage(this Product product, string warehouseId, IList<CustomAttribute> attributes,
             ILocalizationService localizationService, IProductAttributeParser productAttributeParser)
         {
             if (product == null)
@@ -108,7 +109,7 @@ namespace Grand.Services.Catalog
                         if (!product.DisplayStockAvailability)
                             return stockMessage;
 
-                        var combination = productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                        var combination = productAttributeParser.FindProductAttributeCombination(product, attributes);
                         if (combination != null)
                         {
                             //combination exists
@@ -324,12 +325,12 @@ namespace Grand.Services.Catalog
         /// Gets SKU, Manufacturer part number and GTIN
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
         /// <param name="sku">SKU</param>
         /// <param name="manufacturerPartNumber">Manufacturer part number</param>
         /// <param name="gtin">GTIN</param>
-        private static void GetSkuMpnGtin(this Product product, string attributesXml, IProductAttributeParser productAttributeParser,
+        private static void GetSkuMpnGtin(this Product product, IList<CustomAttribute> attributes, IProductAttributeParser productAttributeParser,
             out string sku, out string manufacturerPartNumber, out string gtin)
         {
             if (product == null)
@@ -339,7 +340,7 @@ namespace Grand.Services.Catalog
             manufacturerPartNumber = null;
             gtin = null;
 
-            if (!String.IsNullOrEmpty(attributesXml) &&
+            if (attributes != null &&
                 product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
                 //manage stock by attribute combinations
@@ -347,7 +348,7 @@ namespace Grand.Services.Catalog
                     throw new ArgumentNullException("productAttributeParser");
 
                 //let's find appropriate record
-                var combination = productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                var combination = productAttributeParser.FindProductAttributeCombination(product, attributes);
                 if (combination != null)
                 {
                     sku = combination.Sku;
@@ -356,11 +357,11 @@ namespace Grand.Services.Catalog
                 }
             }
 
-            if (String.IsNullOrEmpty(sku))
+            if (string.IsNullOrEmpty(sku))
                 sku = product.Sku;
-            if (String.IsNullOrEmpty(manufacturerPartNumber))
+            if (string.IsNullOrEmpty(manufacturerPartNumber))
                 manufacturerPartNumber = product.ManufacturerPartNumber;
-            if (String.IsNullOrEmpty(gtin))
+            if (string.IsNullOrEmpty(gtin))
                 gtin = product.Gtin;
         }
 
@@ -368,20 +369,18 @@ namespace Grand.Services.Catalog
         /// Formats SKU
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
         /// <returns>SKU</returns>
-        public static string FormatSku(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
+        public static string FormatSku(this Product product, IList<CustomAttribute> attributes = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             string sku;
-            string manufacturerPartNumber;
-            string gtin;
 
-            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
-                out sku, out manufacturerPartNumber, out gtin);
+            product.GetSkuMpnGtin(attributes, productAttributeParser,
+                out sku, out _, out _);
 
             return sku;
         }
@@ -390,20 +389,18 @@ namespace Grand.Services.Catalog
         /// Formats manufacturer part number
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
         /// <returns>Manufacturer part number</returns>
-        public static string FormatMpn(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
+        public static string FormatMpn(this Product product, IList<CustomAttribute> attributes = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            string sku;
             string manufacturerPartNumber;
-            string gtin;
 
-            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
-                out sku, out manufacturerPartNumber, out gtin);
+            product.GetSkuMpnGtin(attributes, productAttributeParser,
+                out _, out manufacturerPartNumber, out _);
 
             return manufacturerPartNumber;
         }
@@ -412,20 +409,18 @@ namespace Grand.Services.Catalog
         /// Formats GTIN
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
         /// <returns>GTIN</returns>
-        public static string FormatGtin(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
+        public static string FormatGtin(this Product product, IList<CustomAttribute> attributes = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            string sku;
-            string manufacturerPartNumber;
             string gtin;
 
-            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
-                out sku, out manufacturerPartNumber, out gtin);
+            product.GetSkuMpnGtin(attributes, productAttributeParser,
+                out _, out _, out gtin);
 
             return gtin;
         }

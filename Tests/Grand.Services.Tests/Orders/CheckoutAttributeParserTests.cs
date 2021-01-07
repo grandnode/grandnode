@@ -16,6 +16,8 @@ using MongoDB.Driver;
 using Moq;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Domain.Common;
+using System.Collections.Generic;
 
 namespace Grand.Services.Orders.Tests
 {
@@ -132,14 +134,14 @@ namespace Grand.Services.Orders.Tests
 
         [TestMethod()]
         public async Task Can_add_and_parse_checkoutAttributes() {
-            string attributes = "";
+            var attributes = new List<CustomAttribute>();
             //color: green
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString()).ToList();
             //custom option: option 1, option 2
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_1.Id.ToString());
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_2.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_1.Id.ToString()).ToList();
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_2.Id.ToString()).ToList();
             //custom text
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "absolutely any value");
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "absolutely any value").ToList();
 
             var parsed_attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
             Assert.IsTrue(parsed_attributeValues.Contains(cav1_1));
@@ -148,7 +150,7 @@ namespace Grand.Services.Orders.Tests
             Assert.IsTrue(parsed_attributeValues.Contains(cav2_2));
             Assert.IsTrue(parsed_attributeValues.Contains(cav2_2));
 
-            var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
+            var parsedValues = attributes.Where(x=>x.Key == ca3.Id).Select(x=>x.Value).ToList();
             Assert.AreEqual(1, parsedValues.Count);
             Assert.IsTrue(parsedValues.Contains("absolutely any value"));
             Assert.IsFalse(parsedValues.Contains("it shouldn't be valid in any case"));

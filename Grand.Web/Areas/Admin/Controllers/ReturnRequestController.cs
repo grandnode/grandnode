@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Orders;
 using Grand.Framework.Controllers;
@@ -16,6 +17,7 @@ using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
@@ -170,7 +172,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && returnRequest.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "ReturnRequest");
 
-            var customAddressAttributes = string.Empty;
+            var customAddressAttributes = new List<CustomAttribute>();
             if (orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
             {
                 customAddressAttributes = await form.ParseCustomAddressAttributes(addressAttributeParser, addressAttributeService);

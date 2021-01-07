@@ -75,36 +75,36 @@ namespace Grand.Web.Features.Handlers.Products
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public GetProductDetailsPageHandler(
-            IPermissionService permissionService, 
-            IWorkContext workContext, 
-            IStoreContext storeContext, 
-            ILocalizationService localizationService, 
-            IProductService productService, 
-            IPriceCalculationService priceCalculationService, 
-            ITaxService taxService, 
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter, 
-            IMeasureService measureService, 
-            ICacheManager cacheManager, 
-            IPictureService pictureService, 
+            IPermissionService permissionService,
+            IWorkContext workContext,
+            IStoreContext storeContext,
+            ILocalizationService localizationService,
+            IProductService productService,
+            IPriceCalculationService priceCalculationService,
+            ITaxService taxService,
+            ICurrencyService currencyService,
+            IPriceFormatter priceFormatter,
+            IMeasureService measureService,
+            ICacheManager cacheManager,
+            IPictureService pictureService,
             IProductAttributeParser productAttributeParser,
             IWarehouseService warehouseService,
             IDeliveryDateService deliveryDateService,
-            IVendorService vendorService, 
-            ICategoryService categoryService, 
-            IProductTagService productTagService, 
-            IProductAttributeService productAttributeService, 
-            IManufacturerService manufacturerService, 
-            IDateTimeHelper dateTimeHelper, 
-            IDownloadService downloadService, 
+            IVendorService vendorService,
+            ICategoryService categoryService,
+            IProductTagService productTagService,
+            IProductAttributeService productAttributeService,
+            IManufacturerService manufacturerService,
+            IDateTimeHelper dateTimeHelper,
+            IDownloadService downloadService,
             IProductReservationService productReservationService,
             IHttpContextAccessor httpContextAccessor,
-            IMediator mediator, 
-            MediaSettings mediaSettings, 
-            CatalogSettings catalogSettings, 
-            SeoSettings seoSettings, 
-            VendorSettings vendorSettings, 
-            CaptchaSettings captchaSettings, 
+            IMediator mediator,
+            MediaSettings mediaSettings,
+            CatalogSettings catalogSettings,
+            SeoSettings seoSettings,
+            VendorSettings vendorSettings,
+            CaptchaSettings captchaSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
             _permissionService = permissionService;
@@ -252,7 +252,7 @@ namespace Grand.Web.Features.Handlers.Products
 
             #region Product specifications
 
-            model.ProductSpecifications = await _mediator.Send(new GetProductSpecification() { 
+            model.ProductSpecifications = await _mediator.Send(new GetProductSpecification() {
                 Language = _workContext.WorkingLanguage,
                 Product = product
             });
@@ -261,7 +261,7 @@ namespace Grand.Web.Features.Handlers.Products
 
             #region Product review overview
 
-            model.ProductReviewOverview = await _mediator.Send(new GetProductReviewOverview() { 
+            model.ProductReviewOverview = await _mediator.Send(new GetProductReviewOverview() {
                 Product = product,
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore
@@ -366,7 +366,7 @@ namespace Grand.Web.Features.Handlers.Products
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
-                StockAvailability = product.FormatStockMessage(warehouseId, "", _localizationService, _productAttributeParser),
+                StockAvailability = product.FormatStockMessage(warehouseId, null, _localizationService, _productAttributeParser),
                 GenericAttributes = product.GenericAttributes,
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage =
@@ -643,8 +643,7 @@ namespace Grand.Web.Features.Handlers.Products
 
                         //PAngV baseprice (used in Germany)
                         if (product.BasepriceEnabled)
-                            model.BasePricePAngV = await _mediator.Send(new GetFormatBasePrice() 
-                            { Currency = _workContext.WorkingCurrency, Product = product, ProductPrice = finalPriceWithDiscount });
+                            model.BasePricePAngV = await _mediator.Send(new GetFormatBasePrice() { Currency = _workContext.WorkingCurrency, Product = product, ProductPrice = finalPriceWithDiscount });
 
                         //currency code
                         model.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
@@ -757,7 +756,7 @@ namespace Grand.Web.Features.Handlers.Products
                 else
                 {
                     string giftCardRecipientName, giftCardRecipientEmail, giftCardSenderName, giftCardSenderEmail, giftCardMessage;
-                    _productAttributeParser.GetGiftCardAttribute(updatecartitem.AttributesXml,
+                    _productAttributeParser.GetGiftCardAttribute(updatecartitem.Attributes,
                         out giftCardRecipientName, out giftCardRecipientEmail,
                         out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
@@ -792,7 +791,7 @@ namespace Grand.Web.Features.Handlers.Products
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                     DefaultValue = updatecartitem != null ? null : attribute.DefaultValue,
-                    HasCondition = !String.IsNullOrEmpty(attribute.ConditionAttributeXml)
+                    HasCondition = attribute.ConditionAttribute.Any()
                 };
                 if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
@@ -802,12 +801,12 @@ namespace Grand.Web.Features.Handlers.Products
                 }
 
                 var urlselectedValues = !string.IsNullOrEmpty(productAttribute.SeName) ? _httpContextAccessor.HttpContext.Request.Query[productAttribute.SeName].ToList() : new List<string>();
-                
+
                 if (attribute.ShouldHaveValues())
                 {
                     //values
                     var attributeValues = attribute.ProductAttributeValues;
-                    foreach (var attributeValue in attributeValues.OrderBy(x=>x.DisplayOrder))
+                    foreach (var attributeValue in attributeValues.OrderBy(x => x.DisplayOrder))
                     {
                         var preselected = attributeValue.IsPreSelected;
                         if (urlselectedValues.Any())
@@ -815,12 +814,12 @@ namespace Grand.Web.Features.Handlers.Products
 
                         //Product Attribute Value - stock availability - support only for some conditions to show 
                         var stockAvailability = string.Empty;
-                        if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes 
-                            && product.ProductAttributeCombinations.Any() 
+                        if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes
+                            && product.ProductAttributeCombinations.Any()
                             && product.ProductAttributeMappings.Count == 1)
                         {
-                            var attributesXml = _productAttributeParser.AddProductAttribute(string.Empty, attribute, attributeValue.Id);
-                            stockAvailability = product.FormatStockMessage(string.Empty, attributesXml, _localizationService, _productAttributeParser);
+                            var customattributes = _productAttributeParser.AddProductAttribute(null, attribute, attributeValue.Id);
+                            stockAvailability = product.FormatStockMessage(string.Empty, customattributes, _localizationService, _productAttributeParser);
                         }
                         var valueModel = new ProductDetailsModel.ProductAttributeValueModel {
                             Id = attributeValue.Id,
@@ -891,14 +890,14 @@ namespace Grand.Web.Features.Handlers.Products
                         case AttributeControlType.ColorSquares:
                         case AttributeControlType.ImageSquares:
                             {
-                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                if (updatecartitem.Attributes != null && updatecartitem.Attributes.Any())
                                 {
                                     //clear default selection
                                     foreach (var item in attributeModel.Values)
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = _productAttributeParser.ParseProductAttributeValues(product, updatecartitem.AttributesXml);
+                                    var selectedValues = _productAttributeParser.ParseProductAttributeValues(product, updatecartitem.Attributes);
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
                                             if (attributeValue.Id == item.Id)
@@ -916,9 +915,9 @@ namespace Grand.Web.Features.Handlers.Products
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
                             {
-                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                if (updatecartitem.Attributes != null && updatecartitem.Attributes.Any())
                                 {
-                                    var enteredText = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
+                                    var enteredText = _productAttributeParser.ParseValues(updatecartitem.Attributes, attribute.Id);
                                     if (enteredText.Any())
                                         attributeModel.DefaultValue = enteredText[0];
                                 }
@@ -927,7 +926,7 @@ namespace Grand.Web.Features.Handlers.Products
                         case AttributeControlType.Datepicker:
                             {
                                 //keep in mind my that the code below works only in the current culture
-                                var selectedDateStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
+                                var selectedDateStr = _productAttributeParser.ParseValues(updatecartitem.Attributes, attribute.Id);
                                 if (selectedDateStr.Any())
                                 {
                                     DateTime selectedDate;
@@ -945,9 +944,9 @@ namespace Grand.Web.Features.Handlers.Products
                             break;
                         case AttributeControlType.FileUpload:
                             {
-                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                if (updatecartitem.Attributes != null && updatecartitem.Attributes.Any())
                                 {
-                                    var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
+                                    var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.Attributes, attribute.Id).FirstOrDefault();
                                     Guid downloadGuid;
                                     Guid.TryParse(downloadGuidStr, out downloadGuid);
                                     var download = await _downloadService.GetDownloadByGuid(downloadGuid);
@@ -965,7 +964,7 @@ namespace Grand.Web.Features.Handlers.Products
             }
             return model;
         }
-        
+
         private async Task<IList<ProductDetailsModel.TierPriceModel>> PrepareProductTierPriceModel(Product product)
         {
             var model = new List<ProductDetailsModel.TierPriceModel>();
@@ -986,7 +985,7 @@ namespace Grand.Web.Features.Handlers.Products
             }
             return model;
         }
-        
+
         private async Task PrepareProductReservation(ProductDetailsModel model, Product product)
         {
             if (product.ProductType == ProductType.Reservation)
@@ -1035,7 +1034,7 @@ namespace Grand.Web.Features.Handlers.Products
                 }
             }
         }
-        
+
         private async Task<IList<ProductDetailsModel.ProductBundleModel>> PrepareProductBundleModel(Product product)
         {
             var model = new List<ProductDetailsModel.ProductBundleModel>();

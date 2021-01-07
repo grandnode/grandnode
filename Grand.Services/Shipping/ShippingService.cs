@@ -147,9 +147,9 @@ namespace Grand.Services.Shipping
 
             //attribute weight
             decimal attributesTotalWeight = decimal.Zero;
-            if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+            if (shoppingCartItem.Attributes != null && shoppingCartItem.Attributes.Any())
             {
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, shoppingCartItem.AttributesXml);
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, shoppingCartItem.Attributes);
                 foreach (var attributeValue in attributeValues)
                 {
                     switch (attributeValue.AttributeValueType)
@@ -198,10 +198,10 @@ namespace Grand.Services.Shipping
             //checkout attributes
             if (customer != null && includeCheckoutAttributes)
             {
-                var checkoutAttributesXml = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, request.StoreId);
-                if (!string.IsNullOrEmpty(checkoutAttributesXml))
+                var checkoutAttributes = customer.GetAttributeFromEntity<List<CustomAttribute>>(SystemCustomerAttributeNames.CheckoutAttributes, request.StoreId);
+                if (checkoutAttributes.Any())
                 {
-                    var attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
+                    var attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributes);
                     foreach (var attributeValue in attributeValues)
                         totalWeight += attributeValue.WeightAdjustment;
                 }
@@ -226,12 +226,12 @@ namespace Grand.Services.Shipping
             var height = decimal.Zero;
 
             //attributes
-            if (String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+            if (shoppingCartItem.Attributes == null || !shoppingCartItem.Attributes.Any())
                 return (0, 0, 0);
 
             var product = await _productService.GetProductById(shoppingCartItem.ProductId);
             //bundled products (associated attributes)
-            var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, shoppingCartItem.AttributesXml)
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, shoppingCartItem.Attributes)
                 .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
                 .ToList();
             foreach (var attributeValue in attributeValues)

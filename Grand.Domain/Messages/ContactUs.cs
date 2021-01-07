@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Grand.Domain.Common;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Domain.Messages
 {
@@ -66,7 +68,14 @@ namespace Grand.Domain.Messages
         /// <summary>
         /// Gets or sets the contact attributes in XML format
         /// </summary>
+        [Obsolete("Will be removed in version 5.0.0 - this field was replaced by Attributes")]
         public string ContactAttributesXml { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom attributes (see "AddressAttribute" entity for more info)
+        /// </summary>
+        public IList<CustomAttribute> Attributes { get; set; } = new List<CustomAttribute>();
+
 
     }
 }

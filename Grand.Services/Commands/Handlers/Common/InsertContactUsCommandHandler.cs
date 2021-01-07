@@ -34,7 +34,7 @@ namespace Grand.Services.Commands.Handlers.Common
                 Subject = request.Subject,
                 Enquiry = request.Enquiry,
                 EmailAccountId = request.EmailAccountId,
-                ContactAttributesXml = request.ContactAttributesXml,
+                Attributes = request.ContactAttributes,
                 ContactAttributeDescription = request.ContactAttributeDescription,
                 IpAddress = _webHelper.GetCurrentIpAddress()
             };

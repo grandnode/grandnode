@@ -1,3 +1,7 @@
+using Grand.Domain.Common;
+using System;
+using System.Collections.Generic;
+
 namespace Grand.Domain.Shipping
 {
     /// <summary>
@@ -23,7 +27,9 @@ namespace Grand.Domain.Shipping
         /// <summary>
         /// Gets or sets the product attribute xml
         /// </summary>
+        [Obsolete("Will be removed in version 5.0.0 - this field was replaced by Attributes")] 
         public string AttributeXML { get; set; }
+        public IList<CustomAttribute> Attributes { get; set; } = new List<CustomAttribute>();
 
         /// <summary>
         /// Gets or sets the quantity

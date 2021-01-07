@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Grand.Core.Caching;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Media;
 using Grand.Domain.Orders;
 using Grand.Services.Catalog;
@@ -98,7 +99,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
 
             //cart warnings
-            var cartWarnings = await _shoppingCartService.GetShoppingCartWarnings(request.Cart, "", false);
+            var cartWarnings = await _shoppingCartService.GetShoppingCartWarnings(request.Cart, new List<Domain.Common.CustomAttribute>(), false);
             foreach (var warning in cartWarnings)
                 model.Warnings.Add(warning);
 
@@ -111,12 +112,12 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 var product = await _productService.GetProductById(sci.ProductId);
                 var cartItemModel = new WishlistModel.ShoppingCartItemModel {
                     Id = sci.Id,
-                    Sku = product.FormatSku(sci.AttributesXml, _productAttributeParser),
+                    Sku = product.FormatSku(sci.Attributes, _productAttributeParser),
                     ProductId = product.Id,
                     ProductName = product.GetLocalized(x => x.Name, request.Language.Id),
                     ProductSeName = product.GetSeName(request.Language.Id),
                     Quantity = sci.Quantity,
-                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml),
+                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.Attributes),
                 };
 
                 //allow editing?
@@ -182,7 +183,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 //picture
                 if (_shoppingCartSettings.ShowProductImagesOnWishList)
                 {
-                    cartItemModel.Picture = await PrepareCartItemPicture(request, product, sci.AttributesXml);
+                    cartItemModel.Picture = await PrepareCartItemPicture(request, product, sci.Attributes);
                 }
 
                 //item warnings
@@ -199,14 +200,14 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         }
 
         private async Task<PictureModel> PrepareCartItemPicture(GetWishlist request, 
-            Product product, string attributesXml)
+            Product product, IList<CustomAttribute> attributes)
         {
             var pictureCacheKey = string.Format(ModelCacheEventConst.CART_PICTURE_MODEL_KEY, product.Id, _mediaSettings.CartThumbPictureSize, 
                 true, request.Language.Id, request.Store.Id);
 
             var model = await _cacheManager.GetAsync(pictureCacheKey, async () =>
             {
-                var sciPicture = await product.GetProductPicture(attributesXml, _productService, _pictureService, _productAttributeParser);
+                var sciPicture = await product.GetProductPicture(attributes, _productService, _pictureService, _productAttributeParser);
                 return new PictureModel {
                     Id = sciPicture?.Id,
                     ImageUrl = await _pictureService.GetPictureUrl(sciPicture, _mediaSettings.CartThumbPictureSize, true),

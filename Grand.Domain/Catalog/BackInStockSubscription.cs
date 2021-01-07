@@ -1,4 +1,6 @@
+using Grand.Domain.Common;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Domain.Catalog
 {
@@ -20,7 +22,9 @@ namespace Grand.Domain.Catalog
         /// <summary>
         /// Gets or sets the attribute xml
         /// </summary>
+        [Obsolete("Will be removed in version 5.0.0 - this field was replaced by Attributes")] 
         public string AttributeXml { get; set; }
+        public IList<CustomAttribute> Attributes { get; set; } = new List<CustomAttribute>();
 
         /// <summary>
         /// Gets or sets the warehouse identifier

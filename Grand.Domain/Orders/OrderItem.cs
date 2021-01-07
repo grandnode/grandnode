@@ -1,6 +1,8 @@
+using Grand.Domain.Common;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Domain.Orders
 {
@@ -101,7 +103,10 @@ namespace Grand.Domain.Orders
         /// <summary>
         /// Gets or sets the product attributes in XML format
         /// </summary>
+        [Obsolete("Will be removed in version 5.0.0 - this field was replaced by Attributes")]
         public string AttributesXml { get; set; }
+
+        public IList<CustomAttribute> Attributes { get; set; } = new List<CustomAttribute>();
 
         /// <summary>
         /// Gets or sets the download count

@@ -75,7 +75,7 @@ namespace Grand.Services.ExportImport.Tests
                 OrderTotal = 12.1M,
                 RefundedAmount  = 13.1M,
                 CheckoutAttributeDescription = "CheckoutAttributeDescription1",
-                CheckoutAttributesXml = "CheckoutAttributesXml1",
+                CheckoutAttributes = new List<CustomAttribute>(),
                 CustomerLanguageId = "14",
                 AffiliateId= "15",
                 CustomerIp="CustomerIp1",

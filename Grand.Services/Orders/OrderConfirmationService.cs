@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Discounts;
 using Grand.Domain.Localization;
@@ -29,7 +30,6 @@ using Grand.Services.Vendors;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -203,7 +203,7 @@ namespace Grand.Services.Orders
             }
 
         }
-        
+
         protected virtual async Task<PlaceOrderContainter> PreparePlaceOrderDetailsForRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
             var details = new PlaceOrderContainter();
@@ -233,7 +233,7 @@ namespace Grand.Services.Orders
             processPaymentRequest.PaymentMethodSystemName = details.InitialOrder.PaymentMethodSystemName;
             details.Currency = currency;
             details.CustomerLanguage = await _languageService.GetLanguageById(details.InitialOrder.CustomerLanguageId);
-            details.CheckoutAttributesXml = details.InitialOrder.CheckoutAttributesXml;
+            details.CheckoutAttributes = details.InitialOrder.CheckoutAttributes;
             details.CheckoutAttributeDescription = details.InitialOrder.CheckoutAttributeDescription;
             details.CustomerTaxDisplayType = details.InitialOrder.CustomerTaxDisplayType;
             details.OrderSubTotalInclTax = details.InitialOrder.OrderSubtotalInclTax;
@@ -407,8 +407,8 @@ namespace Grand.Services.Orders
             }
 
             //checkout attributes
-            details.CheckoutAttributesXml = details.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, processPaymentRequest.StoreId);
-            details.CheckoutAttributeDescription = await _checkoutAttributeFormatter.FormatAttributes(details.CheckoutAttributesXml, details.Customer);
+            details.CheckoutAttributes = details.Customer.GetAttributeFromEntity<List<CustomAttribute>>(SystemCustomerAttributeNames.CheckoutAttributes, processPaymentRequest.StoreId);
+            details.CheckoutAttributeDescription = await _checkoutAttributeFormatter.FormatAttributes(details.CheckoutAttributes, details.Customer);
 
             //load and validate customer shopping cart
             details.Cart = details.Customer.ShoppingCartItems
@@ -420,9 +420,7 @@ namespace Grand.Services.Orders
                 throw new GrandException("Cart is empty");
 
             //validate the entire shopping cart
-            var warnings = await _shoppingCartService.GetShoppingCartWarnings(details.Cart,
-                details.CheckoutAttributesXml,
-                true);
+            var warnings = await _shoppingCartService.GetShoppingCartWarnings(details.Cart, details.CheckoutAttributes.ToList(), true);
             if (warnings.Any())
             {
                 var warningsSb = new StringBuilder();
@@ -643,7 +641,7 @@ namespace Grand.Services.Orders
                     PriceExclTax = orderItem.PriceExclTax,
                     OriginalProductCost = orderItem.OriginalProductCost,
                     AttributeDescription = orderItem.AttributeDescription,
-                    AttributesXml = orderItem.AttributesXml,
+                    Attributes = orderItem.Attributes,
                     Quantity = orderItem.Quantity,
                     DiscountAmountInclTax = orderItem.DiscountAmountInclTax,
                     DiscountAmountExclTax = orderItem.DiscountAmountExclTax,
@@ -662,7 +660,7 @@ namespace Grand.Services.Orders
                 var product = await _productService.GetProductById(orderItem.ProductId);
                 if (product.IsGiftCard)
                 {
-                    _productAttributeParser.GetGiftCardAttribute(orderItem.AttributesXml,
+                    _productAttributeParser.GetGiftCardAttribute(orderItem.Attributes,
                         out string giftCardRecipientName, out string giftCardRecipientEmail,
                         out string giftCardSenderName, out string giftCardSenderEmail, out string giftCardMessage);
 
@@ -688,7 +686,7 @@ namespace Grand.Services.Orders
                 }
 
                 //inventory
-                await _inventoryManageService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                await _inventoryManageService.AdjustInventory(product, -orderItem.Quantity, orderItem.Attributes, orderItem.WarehouseId);
             }
 
             //insert order
@@ -776,7 +774,7 @@ namespace Grand.Services.Orders
             }
 
             //attributes
-            string attributeDescription = await _productAttributeFormatter.FormatAttributes(product, sc.AttributesXml, details.Customer);
+            string attributeDescription = await _productAttributeFormatter.FormatAttributes(product, sc.Attributes, details.Customer);
 
             if (string.IsNullOrEmpty(attributeDescription) && sc.ShoppingCartType == ShoppingCartType.Auctions)
                 attributeDescription = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
@@ -809,9 +807,9 @@ namespace Grand.Services.Orders
                 UnitPriceExclTax = Math.Round(scUnitPriceExclTax, 6),
                 PriceInclTax = Math.Round(scSubTotalInclTax, 6),
                 PriceExclTax = Math.Round(scSubTotalExclTax, 6),
-                OriginalProductCost = await _priceCalculationService.GetProductCost(product, sc.AttributesXml),
+                OriginalProductCost = await _priceCalculationService.GetProductCost(product, sc.Attributes),
                 AttributeDescription = attributeDescription,
-                AttributesXml = sc.AttributesXml,
+                Attributes = sc.Attributes,
                 Quantity = sc.Quantity,
                 DiscountAmountInclTax = Math.Round(discountAmountInclTax, 6),
                 DiscountAmountExclTax = Math.Round(discountAmountExclTax, 6),
@@ -861,7 +859,7 @@ namespace Grand.Services.Orders
 
         protected virtual async Task GenerateGiftCard(PlaceOrderContainter details, ShoppingCartItem sc, Order order, OrderItem orderItem, Product product)
         {
-            _productAttributeParser.GetGiftCardAttribute(sc.AttributesXml,
+            _productAttributeParser.GetGiftCardAttribute(sc.Attributes,
                         out string giftCardRecipientName, out string giftCardRecipientEmail,
                         out string giftCardSenderName, out string giftCardSenderEmail, out string giftCardMessage);
 
@@ -1047,7 +1045,6 @@ namespace Grand.Services.Orders
             }
         }
 
-
         /// <summary>
         /// Prepare order header
         /// </summary>
@@ -1080,7 +1077,7 @@ namespace Grand.Services.Orders
                 RefundedAmount = decimal.Zero,
                 OrderDiscount = Math.Round(details.OrderDiscountAmount, 6),
                 CheckoutAttributeDescription = details.CheckoutAttributeDescription,
-                CheckoutAttributesXml = details.CheckoutAttributesXml,
+                CheckoutAttributes = details.CheckoutAttributes,
                 CustomerCurrencyCode = details.Currency.CurrencyCode,
                 PrimaryCurrencyCode = details.PrimaryCurrencyCode,
                 CurrencyRate = details.CustomerCurrencyRate,
@@ -1159,7 +1156,7 @@ namespace Grand.Services.Orders
                 await UpdateAuctionEnded(sc, product, order);
 
                 //inventory
-                await _inventoryManageService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml, orderItem.WarehouseId);
+                await _inventoryManageService.AdjustInventory(product, -sc.Quantity, sc.Attributes, orderItem.WarehouseId);
 
                 //update sold
                 await _productService.UpdateSold(sc.ProductId, sc.Quantity);

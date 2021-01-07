@@ -18,8 +18,7 @@ namespace Grand.Domain.Customers
         public static string Fax { get { return "Fax"; } }
         public static string VatNumber { get { return "VatNumber"; } }
         public static string VatNumberStatusId { get { return "VatNumberStatusId"; } }
-        public static string TimeZoneId { get { return "TimeZoneId"; } }
-        public static string CustomCustomerAttributes { get { return "CustomCustomerAttributes"; } }
+        public static string TimeZoneId { get { return "TimeZoneId"; } }        
         public static string PasswordToken { get { return "PasswordToken"; } }
         //Other attributes
         public static string DiscountCoupons { get { return "DiscountCoupons"; } }

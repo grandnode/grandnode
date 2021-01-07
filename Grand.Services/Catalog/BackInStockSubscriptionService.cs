@@ -1,11 +1,14 @@
 using Grand.Domain;
-using Grand.Domain.Data;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
+using Grand.Domain.Data;
 using Grand.Services.Commands.Models.Catalog;
 using Grand.Services.Events;
 using MediatR;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -88,11 +91,11 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="customerId">Customer id</param>
         /// <param name="productId">Product identifier</param>
-        /// <param name="attributeXml">Attribute xml</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <returns>Subscriptions</returns>
-        public virtual async Task<BackInStockSubscription> FindSubscription(string customerId, string productId, string attributeXml, string storeId, string warehouseId)
+        public virtual async Task<BackInStockSubscription> FindSubscription(string customerId, string productId, IList<CustomAttribute> attributes, string storeId, string warehouseId)
         {
             var query = from biss in _backInStockSubscriptionRepository.Table
                         orderby biss.CreatedOnUtc descending
@@ -102,11 +105,11 @@ namespace Grand.Services.Catalog
                               biss.WarehouseId == warehouseId
                         select biss;
 
-            if (!string.IsNullOrEmpty(attributeXml))
-            {
-                query = query.Where(x => x.AttributeXml == attributeXml);
-            }
-            return await query.FirstOrDefaultAsync();
+            var backInStockSubscriptionlist = await query.ToListAsync();
+            if (attributes != null && attributes.Any())
+                backInStockSubscriptionlist = backInStockSubscriptionlist.Where(x => x.Attributes.All(y => attributes.Any(z => z.Key == y.Key && z.Value == y.Value))).ToList();
+
+            return backInStockSubscriptionlist.FirstOrDefault();
         }
 
         /// <summary>
@@ -174,10 +177,10 @@ namespace Grand.Services.Catalog
         /// Send notification to subscribers
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributeXml">Attribute xml</param>
+        /// <param name="attributes">Attribute</param>
         /// <param name="warehouse">Warehouse ident</param>
         /// <returns>Number of sent email</returns>
-        public virtual async Task SendNotificationsToSubscribers(Product product, string attributeXml, string warehouse)
+        public virtual async Task SendNotificationsToSubscribers(Product product, IList<CustomAttribute> attributes, string warehouse)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -185,7 +188,7 @@ namespace Grand.Services.Catalog
             var subscriptions = await _mediator.Send(new SendNotificationsToSubscribersCommand() {
                 Product = product,
                 Warehouse = warehouse,
-                AttributeXml = attributeXml
+                Attributes = attributes
             });
 
             for (var i = 0; i <= subscriptions.Count - 1; i++)

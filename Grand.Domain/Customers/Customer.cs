@@ -23,6 +23,7 @@ namespace Grand.Domain.Customers
         {
             CustomerGuid = Guid.NewGuid();
             PasswordFormat = PasswordFormat.Clear;
+            Attributes = new List<CustomAttribute>();
         }
 
         /// <summary>
@@ -104,6 +105,11 @@ namespace Grand.Domain.Customers
         /// Gets or sets the sales employee identifier 
         /// </summary>
         public string SeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom attributes (see "CustomerAttribute" entity for more info)
+        /// </summary>
+        public IList<CustomAttribute> Attributes { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active

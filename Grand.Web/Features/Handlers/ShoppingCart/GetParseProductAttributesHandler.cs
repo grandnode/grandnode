@@ -1,16 +1,18 @@
 ﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Services.Catalog;
 using Grand.Services.Media;
 using Grand.Web.Features.Models.ShoppingCart;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.ShoppingCart
 {
-    public class GetParseProductAttributesHandler : IRequestHandler<GetParseProductAttributes, string>
+    public class GetParseProductAttributesHandler : IRequestHandler<GetParseProductAttributes, IList<CustomAttribute>>
     {
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IDownloadService _downloadService;
@@ -26,9 +28,9 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _productService = productService;
         }
 
-        public async Task<string> Handle(GetParseProductAttributes request, CancellationToken cancellationToken)
+        public async Task<IList<CustomAttribute>> Handle(GetParseProductAttributes request, CancellationToken cancellationToken)
         {
-            string attributesXml = "";
+            var customAttributes = new List<CustomAttribute>();
 
             #region Product attributes
 
@@ -54,23 +56,23 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     case AttributeControlType.ImageSquares:
                         {
                             var ctrlAttributes = request.Form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, ctrlAttributes);
+                                customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                    attribute, ctrlAttributes).ToList();
                             }
                         }
                         break;
                     case AttributeControlType.Checkboxes:
                         {
                             var ctrlAttributes = request.Form[controlId].ToString();
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
                                 foreach (var item in ctrlAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     if (!String.IsNullOrEmpty(item))
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, item);
+                                        customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                            attribute, item).ToList();
                                 }
                             }
                         }
@@ -84,8 +86,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                                 .Select(v => v.Id)
                                 .ToList())
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId);
+                                customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                    attribute, selectedAttributeId).ToList();
                             }
                         }
                         break;
@@ -93,11 +95,11 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = request.Form[controlId].ToString();
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, enteredText);
+                                customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                    attribute, enteredText).ToList();
                             }
                         }
                         break;
@@ -109,13 +111,13 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                             DateTime? selectedDate = null;
                             try
                             {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+                                selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
                             }
                             catch { }
                             if (selectedDate.HasValue)
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedDate.Value.ToString("D"));
+                                customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                    attribute, selectedDate.Value.ToString("D")).ToList();
                             }
                         }
                         break;
@@ -125,8 +127,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                             var download = await _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, download.DownloadGuid.ToString());
+                                customAttributes = _productAttributeParser.AddProductAttribute(customAttributes,
+                                        attribute, download.DownloadGuid.ToString()).ToList();
                             }
                         }
                         break;
@@ -137,10 +139,10 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             //validate conditional attributes (if specified)
             foreach (var attribute in productAttributes)
             {
-                var conditionMet = _productAttributeParser.IsConditionMet(request.Product, attribute, attributesXml);
+                var conditionMet = _productAttributeParser.IsConditionMet(request.Product, attribute, customAttributes);
                 if (conditionMet.HasValue && !conditionMet.Value)
                 {
-                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
+                    customAttributes = _productAttributeParser.RemoveProductAttribute(customAttributes, attribute).ToList();
                 }
             }
 
@@ -184,13 +186,13 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     }
                 }
 
-                attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
-                    recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
+                customAttributes = _productAttributeParser.AddGiftCardAttribute(customAttributes,
+                    recipientName, recipientEmail, senderName, senderEmail, giftCardMessage).ToList();
             }
 
             #endregion
 
-            return attributesXml;
+            return customAttributes;
         }
     }
 }

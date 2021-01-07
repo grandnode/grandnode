@@ -12,6 +12,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
@@ -81,7 +82,7 @@ namespace Grand.Web.Controllers
                (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             var subscription = await _backInStockSubscriptionService
-                   .FindSubscription(customer.Id, product.Id, string.Empty, _storeContext.CurrentStore.Id,
+                   .FindSubscription(customer.Id, product.Id, null, _storeContext.CurrentStore.Id,
                    warehouseId);
 
             if (subscription != null)
@@ -119,7 +120,7 @@ namespace Grand.Web.Controllers
                 product.GetTotalStockQuantity(warehouseId: warehouseId) <= 0)
             {
                 var subscription = await _backInStockSubscriptionService
-                    .FindSubscription(customer.Id, product.Id, string.Empty, _storeContext.CurrentStore.Id, warehouseId);
+                    .FindSubscription(customer.Id, product.Id, null, _storeContext.CurrentStore.Id, warehouseId);
                 if (subscription != null)
                 {
                     //subscription already exists
@@ -167,9 +168,9 @@ namespace Grand.Web.Controllers
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions)
             {
-                string attributeXml = await _mediator.Send(new GetParseProductAttributes() { Product = product, Form = form });
+                var attributes = await _mediator.Send(new GetParseProductAttributes() { Product = product, Form = form });
                 var subscription = await _backInStockSubscriptionService
-                    .FindSubscription(customer.Id, product.Id, attributeXml, _storeContext.CurrentStore.Id, warehouseId);
+                    .FindSubscription(customer.Id, product.Id, attributes, _storeContext.CurrentStore.Id, warehouseId);
 
                 if (subscription != null)
                 {
@@ -201,7 +202,7 @@ namespace Grand.Web.Controllers
                 subscription = new BackInStockSubscription {
                     CustomerId = customer.Id,
                     ProductId = product.Id,
-                    AttributeXml = attributeXml,
+                    Attributes = attributes,
                     StoreId = _storeContext.CurrentStore.Id,
                     WarehouseId = warehouseId,
                     CreatedOnUtc = DateTime.UtcNow
@@ -255,7 +256,7 @@ namespace Grand.Web.Controllers
                         Id = subscription.Id,
                         ProductId = product.Id,
                         ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
-                        AttributeDescription = string.IsNullOrEmpty(subscription.AttributeXml) ? "" : await _productAttributeFormatter.FormatAttributes(product, subscription.AttributeXml),
+                        AttributeDescription = !subscription.Attributes.Any() ? "" : await _productAttributeFormatter.FormatAttributes(product, subscription.Attributes),
                         SeName = product.GetSeName(_workContext.WorkingLanguage.Id),
                     };
                     model.Subscriptions.Add(subscriptionModel);

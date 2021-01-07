@@ -32,11 +32,14 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
+
+#pragma warning disable CS0618
 
 namespace Grand.Services.Installation
 {
@@ -1054,6 +1057,8 @@ namespace Grand.Services.Installation
 
         private async Task From480To490()
         {
+            var dBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
+
             #region Install String resources
 
             await InstallStringResources("EN_480_490.xml");
@@ -1096,7 +1101,7 @@ namespace Grand.Services.Installation
                 });
             }
             #endregion
-            
+
             #region Upgrade orders
 
             var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
@@ -1168,7 +1173,6 @@ namespace Grand.Services.Installation
             }
 
             //upgrade Taxes on the order
-            var dBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
             var orderTaxRepository = dBContext.Database().GetCollection<OldOrders>("Order");
             await orderTaxRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
             {
@@ -1182,7 +1186,7 @@ namespace Grand.Services.Installation
                             Amount = Math.Round(item.Value * o.CurrencyRate, 4)
                         });
                     }
-                    await orderTaxRepository.ReplaceOneAsync(x => x.Id == o.Id, o); 
+                    await orderTaxRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
                 }
             });
 
@@ -1204,8 +1208,7 @@ namespace Grand.Services.Installation
 
             var pc = await _serviceProvider.GetRequiredService<ICurrencyService>().GetPrimaryStoreCurrency();
 
-            var giftdBContext = _serviceProvider.GetRequiredService<IMongoDBContext>();
-            var giftCardsRepository = giftdBContext.Database().GetCollection<GiftCard>("GiftCard");
+            var giftCardsRepository = dBContext.Database().GetCollection<GiftCard>("GiftCard");
             await giftCardsRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
             {
                 o.CurrencyCode = pc.CurrencyCode;
@@ -1214,7 +1217,218 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Upgrade Address attributes field / customer attributes
 
+            static List<CustomAttribute> ParseAddressCustomAttributes(string attributesXml)
+            {
+                var customAttribute = new List<CustomAttribute>();
+
+                try
+                {
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(attributesXml);
+
+                    var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/AddressAttribute");
+                    foreach (XmlNode node1 in nodeList1)
+                    {
+                        if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                        {
+                            var key = node1.Attributes["ID"].InnerText.Trim();
+
+                            var nodeList2 = node1.SelectNodes(@"AddressAttributeValue/Value");
+                            foreach (XmlNode node2 in nodeList2)
+                            {
+                                var value = node2.InnerText.Trim();
+                                customAttribute.Add(new CustomAttribute() { Key = key, Value = value });
+                            }
+                        }
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Debug.Write(exc.ToString());
+                }
+                return customAttribute;
+            }
+
+            static List<CustomAttribute> ParseCustomerCustomAttributes(string attributesXml)
+            {
+                var customAttribute = new List<CustomAttribute>();
+
+                try
+                {
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(attributesXml);
+
+                    var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CustomerAttribute");
+                    foreach (XmlNode node1 in nodeList1)
+                    {
+                        if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                        {
+                            var key = node1.Attributes["ID"].InnerText.Trim();
+
+                            var nodeList2 = node1.SelectNodes(@"CustomerAttributeValue/Value");
+                            foreach (XmlNode node2 in nodeList2)
+                            {
+                                var value = node2.InnerText.Trim();
+                                customAttribute.Add(new CustomAttribute() { Key = key, Value = value });
+                            }
+                        }
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Debug.Write(exc.ToString());
+                }
+                return customAttribute;
+            }
+
+            static List<CustomAttribute> ParseProductCustomAttributes(string attributesXml)
+            {
+                var customAttribute = new List<CustomAttribute>();
+
+                try
+                {
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(attributesXml);
+
+                    var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
+                    foreach (XmlNode node1 in nodeList1)
+                    {
+                        if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                        {
+                            var key = node1.Attributes["ID"].InnerText.Trim();
+
+                            var nodeList2 = node1.SelectNodes(@"ProductAttributeValue/Value");
+                            foreach (XmlNode node2 in nodeList2)
+                            {
+                                var value = node2.InnerText.Trim();
+                                customAttribute.Add(new CustomAttribute() { Key = key, Value = value });
+                            }
+                        }
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Debug.Write(exc.ToString());
+                }
+                return customAttribute;
+            }
+
+            //upgrade customer data - billingaddress/shippingaddress - Addresses
+            var customerRepository = dBContext.Database().GetCollection<Customer>("Customer");
+
+            await customerRepository.Find(new BsonDocument()).ForEachAsync(async (c) =>
+            {
+                var update = false;
+
+                if (!string.IsNullOrEmpty(c.BillingAddress?.CustomAttributes))
+                {
+                    c.BillingAddress.Attributes = ParseAddressCustomAttributes(c.BillingAddress.CustomAttributes);
+                    update = true;
+                }
+
+                if (!string.IsNullOrEmpty(c.ShippingAddress?.CustomAttributes))
+                {
+                    c.ShippingAddress.Attributes = ParseAddressCustomAttributes(c.ShippingAddress.CustomAttributes);
+                    update = true;
+                }
+
+                if (c.Addresses.Where(x => !string.IsNullOrEmpty(x.CustomAttributes)).Any())
+                {
+                    foreach (var address in c.Addresses.Where(x => !string.IsNullOrEmpty(x.CustomAttributes)))
+                    {
+                        address.Attributes = ParseAddressCustomAttributes(address.CustomAttributes);
+                        update = true;
+                    }
+                }
+                if (c.GenericAttributes.Where(x => x.Key == "CustomCustomerAttributes").Any())
+                {
+                    var value = c.GenericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes").Value;
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        c.Attributes = ParseCustomerCustomAttributes(value);
+                        update = true;
+                    }
+                }
+                if (c.ShoppingCartItems.Where(x => !string.IsNullOrEmpty(x.AttributesXml)).Any())
+                {
+                    foreach (var sc in c.ShoppingCartItems.Where(x => !string.IsNullOrEmpty(x.AttributesXml)))
+                    {
+                        sc.Attributes = ParseProductCustomAttributes(sc.AttributesXml);
+                        update = true;
+                    }
+                }
+                if (update)
+                    await customerRepository.ReplaceOneAsync(x => x.Id == c.Id, c);
+
+            });
+
+            //upgrade order data - billingaddress/shippingaddress - CustomAttributes / AttributeXML for items
+            var orderAttributesRepository = dBContext.Database().GetCollection<Order>("Order");
+            await orderAttributesRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
+            {
+                if (!string.IsNullOrEmpty(o.BillingAddress?.CustomAttributes) || !string.IsNullOrEmpty(o.ShippingAddress?.CustomAttributes))
+                {
+                    if (!string.IsNullOrEmpty(o.BillingAddress?.CustomAttributes))
+                        o.BillingAddress.Attributes = ParseAddressCustomAttributes(o.BillingAddress.CustomAttributes);
+                    if (!string.IsNullOrEmpty(o.ShippingAddress?.CustomAttributes))
+                        o.ShippingAddress.Attributes = ParseAddressCustomAttributes(o.ShippingAddress.CustomAttributes);
+
+                    await orderAttributesRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
+                }
+                if (o.OrderItems.Where(x => !string.IsNullOrEmpty(x.AttributesXml)).Any())
+                {
+                    foreach (var item in o.OrderItems.Where(x => !string.IsNullOrEmpty(x.AttributesXml)))
+                    {
+                        item.Attributes = ParseProductCustomAttributes(item.AttributesXml);
+                    }
+                    await orderAttributesRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
+                }
+            });
+
+            //update shipment items
+            var shipmentAttributesRepository = dBContext.Database().GetCollection<Shipment>("Shipment");
+            await shipmentAttributesRepository.Find(new BsonDocument()).ForEachAsync(async (o) =>
+            {
+                if (o.ShipmentItems.Where(x => !string.IsNullOrEmpty(x.AttributeXML)).Any())
+                {
+                    foreach (var item in o.ShipmentItems.Where(x => !string.IsNullOrEmpty(x.AttributeXML)))
+                    {
+                        item.Attributes = ParseProductCustomAttributes(item.AttributeXML);
+                    }
+                    await shipmentAttributesRepository.ReplaceOneAsync(x => x.Id == o.Id, o);
+                }
+            });
+
+            //update products
+            var products = _serviceProvider.GetRequiredService<IRepository<Product>>();
+            //combination
+            var productAttributeCombinations = products.Table.Where(x => x.ProductAttributeCombinations.Any()).ToList();
+            foreach (var product in productAttributeCombinations)
+            {
+                foreach (var item in product.ProductAttributeCombinations)
+                {
+                    item.Attributes = ParseProductCustomAttributes(item.AttributesXml);
+                }
+                await products.UpdateAsync(product);
+            }
+            //attributes condition
+            var productAttributeConditions = products.Table.Where(x => x.ProductAttributeMappings.Any()).ToList();
+            foreach (var product in productAttributeConditions)
+            {
+                var update = false;
+                foreach (var item in product.ProductAttributeMappings)
+                {
+                    item.ConditionAttribute = ParseProductCustomAttributes(item.ConditionAttributeXml);
+                    update = true;
+                }
+
+                if(update)
+                    await products.UpdateAsync(product);
+            }
+
+            #endregion
         }
 
         private async Task InstallStringResources(string filenames)

@@ -6,6 +6,7 @@ using Grand.Domain.Orders;
 using Grand.Domain.Shipping;
 using Grand.Domain.Tax;
 using Grand.Services.Discounts;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Services.Orders
@@ -18,6 +19,7 @@ namespace Grand.Services.Orders
             Taxes = new List<OrderTax>();
             AppliedDiscounts = new List<AppliedDiscount>();
             AppliedGiftCards = new List<AppliedGiftCard>();
+            CheckoutAttributes = new List<CustomAttribute>();
         }
 
         public Customer Customer { get; set; }
@@ -40,7 +42,8 @@ namespace Grand.Services.Orders
         public Order InitialOrder { get; set; }
 
         public string CheckoutAttributeDescription { get; set; }
-        public string CheckoutAttributesXml { get; set; }
+
+        public IList<CustomAttribute> CheckoutAttributes { get; set; }
 
         public IList<ShoppingCartItem> Cart { get; set; }
         public IList<OrderTax> Taxes { get; set; }

@@ -60,7 +60,7 @@ namespace Grand.Services.Commands.Handlers.Shipping
             {
                 var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
                 var product = await _productService.GetProductByIdIncludeArch(orderItem.ProductId);
-                await _inventoryManageService.BookReservedInventory(product, item.AttributeXML, item.WarehouseId, -item.Quantity);
+                await _inventoryManageService.BookReservedInventory(product, item.Attributes, item.WarehouseId, -item.Quantity);
             }
 
             //check whether we have more items to ship

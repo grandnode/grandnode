@@ -235,7 +235,7 @@ namespace Grand.Web.Controllers
             if (product == null)
                 return new NullJsonResult();
 
-            var stock = product.FormatStockMessage(warehouseId, "", _localizationService, productAttributeParser);
+            var stock = product.FormatStockMessage(warehouseId, null, _localizationService, productAttributeParser);
             return Json(new
             {
                 stockAvailability = stock

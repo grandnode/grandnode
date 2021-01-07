@@ -87,7 +87,7 @@ namespace Grand.Services.Commands.Handlers.Orders
                 {
                     var product = await _productService.GetProductById(orderItem.ProductId);
                     if (product != null)
-                        await _inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                        await _inventoryManageService.AdjustInventory(product, orderItem.Quantity, orderItem.Attributes, orderItem.WarehouseId);
                 }
 
                 //cancel reservations

@@ -63,7 +63,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAffiliateService _affiliateService;
         private readonly ICustomerTagService _customerTagService;
         private readonly IProductService _productService;
@@ -99,7 +98,6 @@ namespace Grand.Web.Areas.Admin.Services
             ICustomerAttributeService customerAttributeService,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IAffiliateService affiliateService,
             ICustomerTagService customerTagService,
             IProductService productService,
@@ -139,7 +137,6 @@ namespace Grand.Web.Areas.Admin.Services
             _customerAttributeService = customerAttributeService;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
-            _addressAttributeFormatter = addressAttributeFormatter;
             _affiliateService = affiliateService;
             _customerTagService = customerTagService;
             _productService = productService;
@@ -357,21 +354,20 @@ namespace Grand.Web.Areas.Admin.Services
                 //set already selected attributes
                 if (customer != null)
                 {
-                    var selectedCustomerAttributes = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CustomCustomerAttributes);
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
                             {
-                                if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                                if (customer.Attributes.Any())
                                 {
                                     //clear default selection
                                     foreach (var item in attributeModel.Values)
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                    var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customer.Attributes);
                                     foreach (var attributeValue in selectedValues)
                                         if (attributeModel.Id == attributeValue.CustomerAttributeId)
                                             foreach (var item in attributeModel.Values)
@@ -389,9 +385,9 @@ namespace Grand.Web.Areas.Admin.Services
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
                             {
-                                if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                                if (customer.Attributes.Any())
                                 {
-                                    var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                    var enteredText = customer.Attributes.Where(x => x.Key == attribute.Id).Select(x => x.Value).ToList();
                                     if (enteredText.Count > 0)
                                         attributeModel.DefaultValue = enteredText[0];
                                 }
@@ -728,6 +724,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Active = model.Active,
                 StoreId = _storeContext.CurrentStore.Id,
                 OwnerId = ownerId,
+                Attributes = model.Attributes,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
             };
@@ -761,11 +758,8 @@ namespace Grand.Web.Areas.Admin.Services
             if (_customerSettings.FaxEnabled)
                 await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
 
-            //custom customer attributes
-            await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, model.CustomAttributes);
-
             //newsletter subscriptions
-            if (!String.IsNullOrEmpty(customer.Email))
+            if (!string.IsNullOrEmpty(customer.Email))
             {
                 var allStores = await _storeService.GetAllStores();
                 foreach (var store in allStores)
@@ -873,8 +867,9 @@ namespace Grand.Web.Areas.Admin.Services
             customer.IsTaxExempt = model.IsTaxExempt;
             customer.FreeShipping = model.FreeShipping;
             customer.Active = model.Active;
+            customer.Attributes = model.Attributes;
             //email
-            if (!String.IsNullOrWhiteSpace(model.Email))
+            if (!string.IsNullOrWhiteSpace(model.Email))
             {
                 await _customerRegistrationService.SetEmail(customer, model.Email);
             }
@@ -886,7 +881,7 @@ namespace Grand.Web.Areas.Admin.Services
             //username
             if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
             {
-                if (!String.IsNullOrWhiteSpace(model.Username))
+                if (!string.IsNullOrWhiteSpace(model.Username))
                 {
                     await _customerRegistrationService.SetUsername(customer, model.Username);
                 }
@@ -969,11 +964,8 @@ namespace Grand.Web.Areas.Admin.Services
             if (_customerSettings.FaxEnabled)
                 await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
 
-            //custom customer attributes
-            await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, model.CustomAttributes);
-
             //newsletter subscriptions
-            if (!String.IsNullOrEmpty(customer.Email))
+            if (!string.IsNullOrEmpty(customer.Email))
             {
                 var allStores = await _storeService.GetAllStores();
                 foreach (var store in allStores)
@@ -1212,8 +1204,8 @@ namespace Grand.Web.Areas.Admin.Services
                     addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.ZipPostalCode));
                 if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(model.CountryName))
                     addressHtmlSb.AppendFormat("{0}", WebUtility.HtmlEncode(model.CountryName));
-                var customAttributesFormatted = await _addressAttributeFormatter.FormatAttributes(x.CustomAttributes);
-                if (!String.IsNullOrEmpty(customAttributesFormatted))
+                var customAttributesFormatted = await _addressAttributeParser.FormatAttributes(_workContext.WorkingLanguage, x.Attributes);
+                if (!string.IsNullOrEmpty(customAttributesFormatted))
                 {
                     //already encoded
                     addressHtmlSb.AppendFormat("<br />{0}", customAttributesFormatted);
@@ -1230,10 +1222,10 @@ namespace Grand.Web.Areas.Admin.Services
             await _customerService.UpdateCustomerinAdminPanel(customer);
         }
 
-        public virtual async Task<Address> InsertAddressModel(Customer customer, CustomerAddressModel model, string customAttributes)
+        public virtual async Task<Address> InsertAddressModel(Customer customer, CustomerAddressModel model, List<CustomAttribute> customAttributes)
         {
             var address = model.Address.ToEntity();
-            address.CustomAttributes = customAttributes;
+            address.Attributes = customAttributes;
             address.CreatedOnUtc = DateTime.UtcNow;
             customer.Addresses.Add(address);
             await _customerService.UpdateCustomerinAdminPanel(customer);
@@ -1298,10 +1290,10 @@ namespace Grand.Web.Areas.Admin.Services
             await model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
         }
 
-        public virtual async Task<Address> UpdateAddressModel(Customer customer, Address address, CustomerAddressModel model, string customAttributes)
+        public virtual async Task<Address> UpdateAddressModel(Customer customer, Address address, CustomerAddressModel model, List<CustomAttribute> customAttributes)
         {
             address = model.Address.ToEntity(address);
-            address.CustomAttributes = customAttributes;
+            address.Attributes = customAttributes;
             await _customerService.UpdateCustomerinAdminPanel(customer);
             return address;
         }
@@ -1327,7 +1319,7 @@ namespace Grand.Web.Areas.Admin.Services
                         ProductId = sci.ProductId,
                         Quantity = sci.Quantity,
                         ProductName = product.Name,
-                        AttributeInfo = await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, sci.AttributesXml),
+                        AttributeInfo = await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, sci.Attributes),
                         UnitPrice = priceFormatter.FormatPrice(price),
                         UnitPriceValue = price,
                         Total = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetSubTotal(sci, product)).subTotal)).productprice),
@@ -1363,7 +1355,7 @@ namespace Grand.Web.Areas.Admin.Services
                     customer,
                     shoppingCartId,
                     cart.WarehouseId,
-                    cart.AttributesXml,
+                    cart.Attributes,
                     unitprice,
                     cart.RentalStartDateUtc,
                     cart.RentalEndDateUtc,
@@ -1541,6 +1533,7 @@ namespace Grand.Web.Areas.Admin.Services
             var backInStockSubscriptionService = _serviceProvider.GetRequiredService<IBackInStockSubscriptionService>();
             var subscriptions = await backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customerId, "", pageIndex - 1, pageSize);
             var items = new List<CustomerModel.BackInStockSubscriptionModel>();
+            var productAttributeFormatter = _serviceProvider.GetRequiredService<IProductAttributeFormatter>();
             foreach (var x in subscriptions)
             {
                 var store = await _storeService.GetStoreById(x.StoreId);
@@ -1550,8 +1543,7 @@ namespace Grand.Web.Areas.Admin.Services
                     StoreName = store != null ? store.Shortcut : "Unknown",
                     ProductId = x.ProductId,
                     ProductName = product != null ? product.Name : "Unknown",
-                    AttributeDescription = string.IsNullOrEmpty(x.AttributeXml) ? "" :
-                        await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, x.AttributeXml),
+                    AttributeDescription = x.Attributes != null || !x.Attributes.Any() ? "" : await productAttributeFormatter.FormatAttributes(product, x.Attributes),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                 };
                 items.Add(m);

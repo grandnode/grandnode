@@ -1,12 +1,13 @@
-﻿using Grand.Domain.Shipping;
+﻿using Grand.Domain.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Text.Json;
 
 namespace Grand.Core.TypeConverters
 {
-    public class ShippingOptionTypeConverter : TypeConverter
+    public class CustomAttributeListTypeConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
@@ -22,20 +23,20 @@ namespace Grand.Core.TypeConverters
         {
             if (value is string)
             {
-                ShippingOption shippingOption = null;
+                List<CustomAttribute> customAttributes = null;
                 var valueStr = value as string;
                 if (!string.IsNullOrEmpty(valueStr))
                 {
                     try
                     {
-                        shippingOption = JsonSerializer.Deserialize<ShippingOption>(valueStr);
+                        customAttributes = JsonSerializer.Deserialize<List<CustomAttribute>>(valueStr);
                     }
                     catch
                     {
-                        //deserialize error
+                        //xml error
                     }
                 }
-                return shippingOption;
+                return customAttributes;
             }
             return base.ConvertFrom(context, culture, value);
         }
@@ -44,10 +45,10 @@ namespace Grand.Core.TypeConverters
         {
             if (destinationType == typeof(string))
             {
-                var shippingOption = value as ShippingOption;
-                if (shippingOption != null)
+                var customAttributes = value as List<CustomAttribute>;
+                if (customAttributes != null)
                 {
-                    return JsonSerializer.Serialize(shippingOption);
+                    return JsonSerializer.Serialize(customAttributes);
                 }
 
                 return "";

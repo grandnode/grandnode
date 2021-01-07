@@ -1,10 +1,9 @@
+using Grand.Domain.Common;
 using Grand.Domain.Orders;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Grand.Services.Orders
 {
@@ -21,52 +20,19 @@ namespace Grand.Services.Orders
         }
 
         /// <summary>
-        /// Gets selected checkout attribute identifiers
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected checkout attribute identifiers</returns>
-        protected virtual IList<string> ParseCheckoutAttributeIds(string attributesXml)
-        {
-            var ids = new List<string>();
-            if (String.IsNullOrEmpty(attributesXml))
-                return ids;
-
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributesXml);
-
-                foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute"))
-                {
-                    if (node.Attributes != null && node.Attributes["ID"] != null)
-                    {
-                        string str1 = node.Attributes["ID"].InnerText.Trim();
-                        ids.Add(str1);
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return ids;
-        }
-
-        /// <summary>
         /// Gets selected checkout attributes
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <returns>Selected checkout attributes</returns>
-        public virtual async Task<IList<CheckoutAttribute>> ParseCheckoutAttributes(string attributesXml)
+        public virtual async Task<IList<CheckoutAttribute>> ParseCheckoutAttributes(IList<CustomAttribute> customAttributes)
         {
             var result = new List<CheckoutAttribute>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (customAttributes == null || !customAttributes.Any())
                 return result;
 
-            var ids = ParseCheckoutAttributeIds(attributesXml);
-            foreach (string id in ids)
+            foreach (var customAttribute in customAttributes.GroupBy(x => x.Key))
             {
-                var attribute = await _checkoutAttributeService.GetCheckoutAttributeById(id);
+                var attribute = await _checkoutAttributeService.GetCheckoutAttributeById(customAttribute.Key);
                 if (attribute != null)
                 {
                     result.Add(attribute);
@@ -78,26 +44,26 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Get checkout attribute values
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Checkout attribute values</returns>
-        public virtual async Task<IList<CheckoutAttributeValue>> ParseCheckoutAttributeValues(string attributesXml)
+        public virtual async Task<IList<CheckoutAttributeValue>> ParseCheckoutAttributeValues(IList<CustomAttribute> customAttributes)
         {
             var values = new List<CheckoutAttributeValue>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (customAttributes == null || !customAttributes.Any())
                 return values;
 
-            var attributes = await ParseCheckoutAttributes(attributesXml);
+            var attributes = await ParseCheckoutAttributes(customAttributes);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
                     continue;
 
-                var valuesStr = ParseValues(attributesXml, attribute.Id);
-                foreach (string valueStr in valuesStr)
+                var valuesStr = customAttributes.Where(x => x.Key == attribute.Id).Select(x => x.Value);
+                foreach (var valueStr in valuesStr)
                 {
-                    if (!String.IsNullOrEmpty(valueStr))
+                    if (!string.IsNullOrEmpty(valueStr))
                     {
-                        var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
+                        var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault();
                         if (value != null)
                             values.Add(value);
                     }
@@ -109,24 +75,24 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Get checkout attribute values with checkout attribute 
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <returns>Checkout attribute values with checkout attribute </returns>
-        public virtual async Task<IList<(CheckoutAttribute ca, CheckoutAttributeValue cav)>> ParseCheckoutAttributeValue(string attributesXml)
+        public virtual async Task<IList<(CheckoutAttribute ca, CheckoutAttributeValue cav)>> ParseCheckoutAttributeValue(IList<CustomAttribute> customAttributes)
         {
             var values = new List<(CheckoutAttribute ca, CheckoutAttributeValue cav)>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (customAttributes == null || !customAttributes.Any())
                 return values;
 
-            var attributes = await ParseCheckoutAttributes(attributesXml);
+            var attributes = await ParseCheckoutAttributes(customAttributes);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
                     continue;
 
-                var valuesStr = ParseValues(attributesXml, attribute.Id);
-                foreach (string valueStr in valuesStr)
+                var valuesStr = customAttributes.Where(x => x.Key == attribute.Id).Select(x => x.Value);
+                foreach (var valueStr in valuesStr)
                 {
-                    if (!String.IsNullOrEmpty(valueStr))
+                    if (!string.IsNullOrEmpty(valueStr))
                     {
                         var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault();
                         if (value != null)
@@ -138,194 +104,84 @@ namespace Grand.Services.Orders
         }
 
         /// <summary>
-        /// Gets selected checkout attribute value
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
-        /// <returns>Checkout attribute value</returns>
-        public virtual IList<string> ParseValues(string attributesXml, string checkoutAttributeId)
-        {
-            var selectedCheckoutAttributeValues = new List<string>();
-            if (String.IsNullOrEmpty(attributesXml))
-                return selectedCheckoutAttributeValues;
-
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributesXml);
-
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (str1 == checkoutAttributeId)
-                        {
-                            var nodeList2 = node1.SelectNodes(@"CheckoutAttributeValue/Value");
-                            foreach (XmlNode node2 in nodeList2)
-                            {
-                                string value = node2.InnerText.Trim();
-                                selectedCheckoutAttributeValues.Add(value);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return selectedCheckoutAttributeValues;
-        }
-
-        /// <summary>
         /// Adds an attribute
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="ca">Checkout attribute</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
-        public virtual string AddCheckoutAttribute(string attributesXml, CheckoutAttribute ca, string value)
+        public virtual IList<CustomAttribute> AddCheckoutAttribute(IList<CustomAttribute> customAttributes, CheckoutAttribute ca, string value)
         {
-            string result = string.Empty;
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributesXml))
-                {
-                    var element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(element1);
-                }
-                else
-                {
-                    xmlDoc.LoadXml(attributesXml);
-                }
-                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
+            if (customAttributes == null)
+                customAttributes = new List<CustomAttribute>();
 
-                XmlElement attributeElement = null;
-                //find existing
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (str1 == ca.Id)
-                        {
-                            attributeElement = (XmlElement)node1;
-                            break;
-                        }
-                    }
-                }
-
-                //create new one if not found
-                if (attributeElement == null)
-                {
-                    attributeElement = xmlDoc.CreateElement("CheckoutAttribute");
-                    attributeElement.SetAttribute("ID", ca.Id.ToString());
-                    rootElement.AppendChild(attributeElement);
-                }
-
-                var attributeValueElement = xmlDoc.CreateElement("CheckoutAttributeValue");
-                attributeElement.AppendChild(attributeValueElement);
-
-                var attributeValueValueElement = xmlDoc.CreateElement("Value");
-                attributeValueValueElement.InnerText = value;
-                attributeValueElement.AppendChild(attributeValueValueElement);
-
-                result = xmlDoc.OuterXml;
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return result;
+            customAttributes.Add(new CustomAttribute() { Key = ca.Id, Value = value });
+            return customAttributes;
         }
 
         /// <summary>
-        /// Removes checkout attributes which cannot be applied to the current cart and returns an update attributes in XML format
+        /// Removes checkout attributes which cannot be applied to the current cart and returns an update attributes 
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="customAttributes">Attributes</param>
         /// <param name="cart">Shopping cart items</param>
-        /// <returns>Updated attributes in XML format</returns>
-        public virtual async Task<string> EnsureOnlyActiveAttributes(string attributesXml, IList<ShoppingCartItem> cart)
+        /// <returns>Updated attributes</returns>
+        public virtual async Task<IList<CustomAttribute>> EnsureOnlyActiveAttributes(IList<CustomAttribute> customAttributes, IList<ShoppingCartItem> cart)
         {
-            if (String.IsNullOrEmpty(attributesXml))
-                return attributesXml;
+            if (customAttributes == null)
+                customAttributes = new List<CustomAttribute>();
 
-            var result = attributesXml;
-
-            //removing "shippable" checkout attributes if there's no any shippable products in the cart
             if (!cart.RequiresShipping())
             {
                 //find attribute IDs to remove
                 var checkoutAttributeIdsToRemove = new List<string>();
-                var attributes = await ParseCheckoutAttributes(attributesXml);
+                var attributes = await ParseCheckoutAttributes(customAttributes);
                 foreach (var ca in attributes)
                     if (ca.ShippableProductRequired)
                         checkoutAttributeIdsToRemove.Add(ca.Id);
-                //remove them from XML
-                try
-                {
-                    var xmlDoc = new XmlDocument();
-                    xmlDoc.LoadXml(attributesXml);
 
-                    var nodesToRemove = new List<XmlNode>();
-                    foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute"))
-                    {
-                        if (node.Attributes != null && node.Attributes["ID"] != null)
-                        {
-                            string str1 = node.Attributes["ID"].InnerText.Trim();
-                            if (checkoutAttributeIdsToRemove.Contains(str1))
-                            {
-                                nodesToRemove.Add(node);
-                            }
-                        }
-                    }
-                    foreach(var node in nodesToRemove)
-                    {
-                        node.ParentNode.RemoveChild(node);
-                    }
-                    result = xmlDoc.OuterXml;
-                }
-                catch (Exception exc)
+                foreach (var id in checkoutAttributeIdsToRemove)
                 {
-                    Debug.Write(exc.ToString());
+                    var attr = customAttributes.FirstOrDefault(x => x.Key == id);
+                    if (attr != null)
+                        customAttributes.Remove(attr);
                 }
             }
-            return result;
-        }
 
+            return customAttributes;
+        }
         /// <summary>
         /// Check whether condition of some attribute is met (if specified). Return "null" if not condition is specified
         /// </summary>
         /// <param name="attribute">Checkout attribute</param>
-        /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
+        /// <param name="selectedAttributes">Selected attributes</param>
         /// <returns>Result</returns>
-        public virtual async Task<bool?> IsConditionMet(CheckoutAttribute attribute, string selectedAttributesXml)
+        public virtual async Task<bool?> IsConditionMet(CheckoutAttribute attribute, IList<CustomAttribute> customAttributes)
         {
             if (attribute == null)
                 throw new ArgumentNullException("attribute");
 
-            var conditionAttributeXml = attribute.ConditionAttributeXml;
-            if (String.IsNullOrEmpty(conditionAttributeXml))
+            if (customAttributes == null)
+                customAttributes = new List<CustomAttribute>();
+
+            var conditionAttribute = attribute.ConditionAttribute;
+            if (!conditionAttribute.Any())
                 //no condition
                 return null;
 
             //load an attribute this one depends on
-            var dependOnAttribute = (await ParseCheckoutAttributes(conditionAttributeXml)).FirstOrDefault();
+            var dependOnAttribute = (await ParseCheckoutAttributes(conditionAttribute)).FirstOrDefault();
             if (dependOnAttribute == null)
                 return true;
 
-            var valuesThatShouldBeSelected = ParseValues(conditionAttributeXml, dependOnAttribute.Id)
+            var valuesThatShouldBeSelected = conditionAttribute.Where(x => x.Key == dependOnAttribute.Id).Select(x => x.Value)
                 //a workaround here:
-                //ConditionAttributeXml can contain "empty" values (nothing is selected)
+                //ConditionAttribute can contain "empty" values (nothing is selected)
                 //but in other cases (like below) we do not store empty values
                 //that's why we remove empty values here
-                .Where(x => !String.IsNullOrEmpty(x))
+                .Where(x => !string.IsNullOrEmpty(x))
                 .ToList();
-            var selectedValues = ParseValues(selectedAttributesXml, dependOnAttribute.Id);
+
+            var selectedValues = customAttributes.Where(x => x.Key == dependOnAttribute.Id).Select(x => x.Value).ToList();
             if (valuesThatShouldBeSelected.Count != selectedValues.Count)
                 return false;
 
@@ -347,55 +203,12 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Remove an attribute
         /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="attributes">Attributes</param>
         /// <param name="attribute">Checkout attribute</param>
-        /// <returns>Updated result (XML format)</returns>
-        public virtual string RemoveCheckoutAttribute(string attributesXml, CheckoutAttribute attribute)
+        /// <returns>Updated</returns>
+        public virtual IList<CustomAttribute> RemoveCheckoutAttribute(IList<CustomAttribute> customAttributes, CheckoutAttribute attribute)
         {
-            string result = string.Empty;
-            try
-            {
-                var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributesXml))
-                {
-                    var element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(element1);
-                }
-                else
-                {
-                    xmlDoc.LoadXml(attributesXml);
-                }
-                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
-
-                XmlElement attributeElement = null;
-                //find existing
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute");
-                foreach (XmlNode node1 in nodeList1)
-                {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
-                    {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (str1 == attribute.Id)
-                        {
-                            attributeElement = (XmlElement)node1;
-                            break;
-                        }
-                    }
-                }
-
-                //found
-                if (attributeElement != null)
-                {
-                    rootElement.RemoveChild(attributeElement);
-                }
-
-                result = xmlDoc.OuterXml;
-            }
-            catch (Exception exc)
-            {
-                Debug.Write(exc.ToString());
-            }
-            return result;
+            return customAttributes.Where(x => x.Key != attribute.Id).ToList();
         }
 
     }

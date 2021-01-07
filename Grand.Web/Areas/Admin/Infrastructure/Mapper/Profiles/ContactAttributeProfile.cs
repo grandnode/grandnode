@@ -25,7 +25,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
-                .ForMember(dest => dest.ConditionAttributeXml, mo => mo.Ignore())
+                .ForMember(dest => dest.ConditionAttribute, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.ContactAttributeValues, mo => mo.Ignore());

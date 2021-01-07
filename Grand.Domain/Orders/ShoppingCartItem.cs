@@ -1,4 +1,6 @@
+using Grand.Domain.Common;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Domain.Orders
 {
@@ -30,7 +32,13 @@ namespace Grand.Domain.Orders
         /// <summary>
         /// Gets or sets the product attributes in XML format
         /// </summary>
+        [Obsolete("Will be removed in version 5.0.0 - this field was replaced by Attributes")]
         public string AttributesXml { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom attributes (see "ProductAttribute" entity for more info)
+        /// </summary>
+        public IList<CustomAttribute> Attributes { get; set; } = new List<CustomAttribute>();
 
         /// <summary>
         /// Gets or sets the price enter by a customer

@@ -1,5 +1,7 @@
 ﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Shipping;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
@@ -20,8 +22,8 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantityToChange">Quantity to increase or descrease</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        Task AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string warehouseId = "");
+        /// <param name="attributes">Attributes</param>
+        Task AdjustInventory(Product product, int quantityToChange, IList<CustomAttribute> attributes = null, string warehouseId = "");
 
         /// <summary>
         /// Reserve the given quantity in the warehouses.
@@ -41,10 +43,10 @@ namespace Grand.Services.Catalog
         /// Book the reserved quantity
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributeXML">AttributeXML</param>
+        /// <param name="customAttribute">Attribute</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        Task BookReservedInventory(Product product, string AttributeXML, string warehouseId, int quantity);
+        Task BookReservedInventory(Product product, IList<CustomAttribute> customAttribute, string warehouseId, int quantity);
 
         /// <summary>
         /// Reverse booked inventory (if acceptable)

@@ -1,4 +1,5 @@
 ﻿using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Services.Common;
 using Grand.Services.Media;
@@ -6,13 +7,14 @@ using Grand.Services.Orders;
 using Grand.Web.Commands.Models.ShoppingCart;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Commands.Handler.ShoppingCart
 {
-    public class SaveCheckoutAttributesCommandHandler : IRequestHandler<SaveCheckoutAttributesCommand, string>
+    public class SaveCheckoutAttributesCommandHandler : IRequestHandler<SaveCheckoutAttributesCommand, IList<CustomAttribute>>
     {
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
@@ -31,7 +33,7 @@ namespace Grand.Web.Commands.Handler.ShoppingCart
             _genericAttributeService = genericAttributeService;
         }
 
-        public async Task<string> Handle(SaveCheckoutAttributesCommand request, CancellationToken cancellationToken)
+        public async Task<IList<CustomAttribute>> Handle(SaveCheckoutAttributesCommand request, CancellationToken cancellationToken)
         {
             if (request.Cart == null)
                 throw new ArgumentNullException("cart");
@@ -39,7 +41,7 @@ namespace Grand.Web.Commands.Handler.ShoppingCart
             if (request.Form == null)
                 throw new ArgumentNullException("form");
 
-            string attributesXml = "";
+            var customAttributes = new List<CustomAttribute>();
             var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes(request.Store.Id, !request.Cart.RequiresShipping());
             foreach (var attribute in checkoutAttributes)
             {
@@ -52,10 +54,10 @@ namespace Grand.Web.Commands.Handler.ShoppingCart
                     case AttributeControlType.ImageSquares:
                         {
                             var ctrlAttributes = request.Form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
-                                        attribute, ctrlAttributes);
+                                customAttributes = _checkoutAttributeParser.AddCheckoutAttribute(customAttributes,
+                                        attribute, ctrlAttributes).ToList();
 
                             }
                         }
@@ -63,11 +65,11 @@ namespace Grand.Web.Commands.Handler.ShoppingCart
                     case AttributeControlType.Checkboxes:
                         {
                             var cblAttributes = request.Form[controlId].ToString();
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            if (!string.IsNullOrEmpty(cblAttributes))
                             {
                                 foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, item);
+                                    customAttributes = _checkoutAttributeParser.AddCheckoutAttribute(customAttributes, attribute, item).ToList();
                                 }
                             }
                         }
@@ -81,8 +83,8 @@ namespace Grand.Web.Commands.Handler.ShoppingCart
                                 .Select(v => v.Id)
                                 .ToList())
                             {
-                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                customAttributes = _checkoutAttributeParser.AddCheckoutAttribute(customAttributes,
+                                            attribute, selectedAttributeId.ToString()).ToList();
                             }
                         }
                         break;
@@ -90,11 +92,11 @@ namespace Grand.Web.Commands.Handler.ShoppingCart
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = request.Form[controlId].ToString();
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
-                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
-                                    attribute, enteredText);
+                                customAttributes = _checkoutAttributeParser.AddCheckoutAttribute(customAttributes,
+                                    attribute, enteredText).ToList();
                             }
                         }
                         break;
@@ -111,8 +113,8 @@ namespace Grand.Web.Commands.Handler.ShoppingCart
                             catch { }
                             if (selectedDate.HasValue)
                             {
-                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
-                                    attribute, selectedDate.Value.ToString("D"));
+                                customAttributes = _checkoutAttributeParser.AddCheckoutAttribute(customAttributes,
+                                    attribute, selectedDate.Value.ToString("D")).ToList();
                             }
                         }
                         break;
@@ -123,8 +125,8 @@ namespace Grand.Web.Commands.Handler.ShoppingCart
                             var download = await _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
-                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
-                                           attribute, download.DownloadGuid.ToString());
+                                customAttributes = _checkoutAttributeParser.AddCheckoutAttribute(customAttributes,
+                                           attribute, download.DownloadGuid.ToString()).ToList();
                             }
                         }
                         break;
@@ -137,13 +139,13 @@ namespace Grand.Web.Commands.Handler.ShoppingCart
             //validate conditional attributes (if specified)
             foreach (var attribute in checkoutAttributes)
             {
-                var conditionMet = await _checkoutAttributeParser.IsConditionMet(attribute, attributesXml);
+                var conditionMet = await _checkoutAttributeParser.IsConditionMet(attribute, customAttributes);
                 if (conditionMet.HasValue && !conditionMet.Value)
-                    attributesXml = _checkoutAttributeParser.RemoveCheckoutAttribute(attributesXml, attribute);
+                    customAttributes = _checkoutAttributeParser.RemoveCheckoutAttribute(customAttributes, attribute).ToList();
             }
-            await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.CheckoutAttributes, attributesXml, request.Store.Id);
+            await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.CheckoutAttributes, customAttributes, request.Store.Id);
 
-            return attributesXml;
+            return customAttributes;
         }
     }
 }

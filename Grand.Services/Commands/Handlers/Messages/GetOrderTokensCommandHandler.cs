@@ -32,7 +32,7 @@ namespace Grand.Services.Commands.Handlers.Messages
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IPaymentService _paymentService;
         private readonly ILocalizationService _localizationService;
         private readonly IGiftCardService _giftCardService;
@@ -49,8 +49,8 @@ namespace Grand.Services.Commands.Handlers.Messages
             IPriceFormatter priceFormatter, 
             IProductAttributeParser productAttributeParser, 
             ICountryService countryService, 
-            IStateProvinceService stateProvinceService, 
-            IAddressAttributeFormatter addressAttributeFormatter, 
+            IStateProvinceService stateProvinceService,
+            IAddressAttributeParser addressAttributeParser, 
             IPaymentService paymentService, 
             ILocalizationService localizationService, 
             IGiftCardService giftCardService, 
@@ -66,7 +66,7 @@ namespace Grand.Services.Commands.Handlers.Messages
             _productAttributeParser = productAttributeParser;
             _countryService = countryService;
             _stateProvinceService = stateProvinceService;
-            _addressAttributeFormatter = addressAttributeFormatter;
+            _addressAttributeParser = addressAttributeParser;
             _paymentService = paymentService;
             _localizationService = localizationService;
             _giftCardService = giftCardService;
@@ -127,7 +127,7 @@ namespace Grand.Services.Commands.Handlers.Messages
 
                 string sku = "";
                 if (product != null)
-                    sku = product.FormatSku(item.AttributesXml, _productAttributeParser);
+                    sku = product.FormatSku(item.Attributes, _productAttributeParser);
 
                 liqitem.ProductSku = WebUtility.HtmlEncode(sku);
                 liqitem.ShowSkuOnProductDetailsPage = _catalogSettings.ShowSkuOnProductDetailsPage;
@@ -136,13 +136,13 @@ namespace Grand.Services.Commands.Handlers.Messages
                 liquidOrder.OrderItems.Add(liqitem);
             }
 
-            liquidOrder.BillingCustomAttributes = await _addressAttributeFormatter.FormatAttributes(request.Order.BillingAddress?.CustomAttributes);
+            liquidOrder.BillingCustomAttributes = await _addressAttributeParser.FormatAttributes(language, request.Order.BillingAddress?.Attributes);
             liquidOrder.BillingCountry = request.Order.BillingAddress != null && !string.IsNullOrEmpty(request.Order.BillingAddress.CountryId) ? (await _countryService.GetCountryById(request.Order.BillingAddress.CountryId))?.GetLocalized(x => x.Name, request.Order.CustomerLanguageId) : "";
             liquidOrder.BillingStateProvince = !string.IsNullOrEmpty(request.Order.BillingAddress.StateProvinceId) ? (await _stateProvinceService.GetStateProvinceById(request.Order.BillingAddress.StateProvinceId))?.GetLocalized(x => x.Name, request.Order.CustomerLanguageId) : "";
 
             liquidOrder.ShippingCountry = request.Order.ShippingAddress != null && !string.IsNullOrEmpty(request.Order.ShippingAddress.CountryId) ? (await _countryService.GetCountryById(request.Order.ShippingAddress.CountryId))?.GetLocalized(x => x.Name, request.Order.CustomerLanguageId) : "";
             liquidOrder.ShippingStateProvince = request.Order.ShippingAddress != null && !string.IsNullOrEmpty(request.Order.ShippingAddress.StateProvinceId) ? (await _stateProvinceService.GetStateProvinceById(request.Order.ShippingAddress.StateProvinceId)).GetLocalized(x => x.Name, request.Order.CustomerLanguageId) : "";
-            liquidOrder.ShippingCustomAttributes = await _addressAttributeFormatter.FormatAttributes(request.Order.ShippingAddress != null ? request.Order.ShippingAddress.CustomAttributes : "");
+            liquidOrder.ShippingCustomAttributes = await _addressAttributeParser.FormatAttributes(language, request.Order.ShippingAddress != null ? request.Order.ShippingAddress.Attributes : null);
 
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(request.Order.PaymentMethodSystemName);
             liquidOrder.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, language.Id) : request.Order.PaymentMethodSystemName;

@@ -24,7 +24,6 @@ using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Web.Features.Models.Common;
 using Grand.Web.Features.Models.ShoppingCart;
-using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.ShoppingCart;
@@ -136,9 +135,9 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
         public async Task<ShoppingCartModel> Handle(GetShoppingCart request, CancellationToken cancellationToken)
         {
-            var model = new ShoppingCartModel();
-
-            model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
+            var model = new ShoppingCartModel {
+                OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled
+            };
 
             if (!request.Cart.Any())
                 return model;
@@ -167,8 +166,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             model.IsGuest = request.Customer.IsGuest();
             model.ShowCheckoutAsGuestButton = model.IsGuest && _orderSettings.AnonymousCheckoutAllowed;
-            var checkoutAttributesXml = request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, request.Store.Id);
-            model.CheckoutAttributeInfo = await _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, request.Customer);
+            var checkoutAttributes = request.Customer.GetAttributeFromEntity<List<CustomAttribute>>(SystemCustomerAttributeNames.CheckoutAttributes, request.Store.Id);
+            model.CheckoutAttributeInfo = await _checkoutAttributeFormatter.FormatAttributes(checkoutAttributes, request.Customer);
             if (!request.Cart.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList().Any())
             {
                 model.MinOrderSubtotalWarning = _localizationService.GetResource("Checkout.MinOrderOneProduct");
@@ -177,7 +176,8 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             {
                 var minOrderSubtotalAmountOk = await _mediator.Send(new ValidateMinShoppingCartSubtotalAmountCommand() {
                     Customer = request.Customer,
-                    Cart = request.Cart.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList() });
+                    Cart = request.Cart.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart || x.ShoppingCartType == ShoppingCartType.Auctions).ToList()
+                });
                 if (!minOrderSubtotalAmountOk)
                 {
                     decimal minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, request.Currency);
@@ -208,7 +208,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             model.GiftCardBox.Display = _shoppingCartSettings.ShowGiftCardBox;
 
             //cart warnings
-            var cartWarnings = await _shoppingCartService.GetShoppingCartWarnings(request.Cart, checkoutAttributesXml, request.ValidateCheckoutAttributes);
+            var cartWarnings = await _shoppingCartService.GetShoppingCartWarnings(request.Cart, checkoutAttributes, request.ValidateCheckoutAttributes);
             foreach (var warning in cartWarnings)
                 model.Warnings.Add(warning);
 
@@ -264,7 +264,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     }
                 }
                 //set already selected attributes
-                var selectedCheckoutAttributes = request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, request.Store.Id);
+                var selectedCheckoutAttributes = request.Customer.GetAttributeFromEntity<List<CustomAttribute>>(SystemCustomerAttributeNames.CheckoutAttributes, request.Store.Id);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -273,7 +273,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.ImageSquares:
                         {
-                            if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
+                            if (selectedCheckoutAttributes != null && selectedCheckoutAttributes.Any())
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
@@ -298,9 +298,9 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
+                            if (selectedCheckoutAttributes != null && selectedCheckoutAttributes.Any())
                             {
-                                var enteredText = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
+                                var enteredText = selectedCheckoutAttributes.Where(x => x.Key == attribute.Id).Select(x => x.Value).ToList();
                                 if (enteredText.Any())
                                     attributeModel.DefaultValue = enteredText[0];
                             }
@@ -308,28 +308,30 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                         break;
                     case AttributeControlType.Datepicker:
                         {
-                            //keep in mind my that the code below works only in the current culture
-                            var selectedDateStr = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
-                            if (selectedDateStr.Any())
+                            if (selectedCheckoutAttributes != null && selectedCheckoutAttributes.Any())
                             {
-                                DateTime selectedDate;
-                                if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
-                                                       DateTimeStyles.None, out selectedDate))
+                                //keep in mind my that the code below works only in the current culture
+                                var selectedDateStr = selectedCheckoutAttributes.Where(x => x.Key == attribute.Id).Select(x => x.Value).ToList();
+                                if (selectedDateStr.Any())
                                 {
-                                    //successfully parsed
-                                    attributeModel.SelectedDay = selectedDate.Day;
-                                    attributeModel.SelectedMonth = selectedDate.Month;
-                                    attributeModel.SelectedYear = selectedDate.Year;
+                                    DateTime selectedDate;
+                                    if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
+                                                           DateTimeStyles.None, out selectedDate))
+                                    {
+                                        //successfully parsed
+                                        attributeModel.SelectedDay = selectedDate.Day;
+                                        attributeModel.SelectedMonth = selectedDate.Month;
+                                        attributeModel.SelectedYear = selectedDate.Year;
+                                    }
                                 }
                             }
-
                         }
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
+                            if (selectedCheckoutAttributes != null && selectedCheckoutAttributes.Any())
                             {
-                                var downloadGuidStr = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id).FirstOrDefault();
+                                var downloadGuidStr = selectedCheckoutAttributes.Where(x => x.Key == attribute.Id).Select(x => x.Value).FirstOrDefault();
                                 Guid downloadGuid;
                                 Guid.TryParse(downloadGuidStr, out downloadGuid);
                                 var download = await _downloadService.GetDownloadByGuid(downloadGuid);
@@ -359,14 +361,14 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
                 var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel {
                     Id = sci.Id,
-                    Sku = product.FormatSku(sci.AttributesXml, _productAttributeParser),
+                    Sku = product.FormatSku(sci.Attributes, _productAttributeParser),
                     IsCart = sci.ShoppingCartType == ShoppingCartType.ShoppingCart,
                     ProductId = product.Id,
                     WarehouseId = sci.WarehouseId,
                     ProductName = product.GetLocalized(x => x.Name, request.Language.Id),
                     ProductSeName = product.GetSeName(request.Language.Id),
                     Quantity = sci.Quantity,
-                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml),
+                    AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, sci.Attributes),
                 };
 
                 //allow editing?
@@ -495,7 +497,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
                 //picture
                 if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
                 {
-                    cartItemModel.Picture = await PrepareCartItemPicture(product, sci.AttributesXml, request.Language.Id, request.Store.Id);
+                    cartItemModel.Picture = await PrepareCartItemPicture(product, sci.Attributes);
                 }
 
                 //item warnings
@@ -607,21 +609,15 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 
         }
 
-        private async Task<PictureModel> PrepareCartItemPicture(Product product, string attributesXml, string langId, string storeId)
+        private async Task<PictureModel> PrepareCartItemPicture(Product product, IList<CustomAttribute> attributes)
         {
-            var pictureCacheKey = string.Format(ModelCacheEventConst.CART_PICTURE_MODEL_KEY, product.Id, _mediaSettings.CartThumbPictureSize, true, langId, storeId);
-            var model = await _cacheManager.GetAsync(pictureCacheKey, async () =>
-            {
-                var sciPicture = await product.GetProductPicture(attributesXml, _productService, _pictureService, _productAttributeParser);
-                return new PictureModel {
-                    Id = sciPicture?.Id,
-                    ImageUrl = await _pictureService.GetPictureUrl(sciPicture, _mediaSettings.CartThumbPictureSize, true),
-                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
-                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
-                };
-            });
-
-            return model;
+            var sciPicture = await product.GetProductPicture(attributes, _productService, _pictureService, _productAttributeParser);
+            return new PictureModel {
+                Id = sciPicture?.Id,
+                ImageUrl = await _pictureService.GetPictureUrl(sciPicture, _mediaSettings.CartThumbPictureSize, true),
+                Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
+                AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
+            };
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Customers;
+﻿using Grand.Domain.Common;
+using Grand.Domain.Customers;
 using Grand.Domain.Orders;
 using Grand.Domain.Stores;
 using MediatR;
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Commands.Models.ShoppingCart
 {
-    public class SaveCheckoutAttributesCommand : IRequest<string>
+    public class SaveCheckoutAttributesCommand : IRequest<IList<CustomAttribute>>
     {
         public Customer Customer { get; set; }
         public Store Store { get; set; }

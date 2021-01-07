@@ -436,8 +436,8 @@ namespace Grand.Web.Controllers
             }
 
             //custom customer attributes
-            var customerAttributesXml = await _mediator.Send(new GetParseCustomAttributes() { Form = form });
-            var customerAttributeWarnings = await customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
+            var customerAttributes = await _mediator.Send(new GetParseCustomAttributes() { Form = form });
+            var customerAttributeWarnings = await customerAttributeParser.GetAttributeWarnings(customerAttributes);
             foreach (var error in customerAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -465,7 +465,7 @@ namespace Grand.Web.Controllers
                 {
                     await _mediator.Send(new CustomerRegisteredCommand() {
                         Customer = _workContext.CurrentCustomer,
-                        CustomerAttributesXml = customerAttributesXml,
+                        CustomerAttributes = customerAttributes,
                         Form = form,
                         Model = model,
                         Store = _storeContext.CurrentStore
@@ -524,7 +524,7 @@ namespace Grand.Web.Controllers
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore,
                 Model = model,
-                OverrideCustomCustomerAttributesXml = customerAttributesXml
+                OverrideCustomCustomerAttributes = customerAttributes
             });
 
             return View(model);
@@ -644,8 +644,8 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //custom customer attributes
-            var customerAttributesXml = await _mediator.Send(new GetParseCustomAttributes() { Form = form });
-            var customerAttributeWarnings = await customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
+            var customerAttributes = await _mediator.Send(new GetParseCustomAttributes() { Form = form });
+            var customerAttributeWarnings = await customerAttributeParser.GetAttributeWarnings(customerAttributes);
 
             foreach (var error in customerAttributeWarnings)
             {
@@ -658,7 +658,7 @@ namespace Grand.Web.Controllers
                 {
                     await _mediator.Send(new UpdateCustomerInfoCommand() {
                         Customer = _workContext.CurrentCustomer,
-                        CustomerAttributesXml = customerAttributesXml,
+                        CustomerAttributes = customerAttributes,
                         Form = form,
                         Model = model,
                         OriginalCustomerIfImpersonated = _workContext.OriginalCustomerIfImpersonated,
@@ -679,7 +679,7 @@ namespace Grand.Web.Controllers
                 ExcludeProperties = true,
                 Language = _workContext.WorkingLanguage,
                 Store = _storeContext.CurrentStore,
-                OverrideCustomCustomerAttributesXml = customerAttributesXml
+                OverrideCustomCustomerAttributes = customerAttributes
             });
 
             return View(model);
@@ -808,7 +808,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
                 var address = model.Address.ToEntity();
-                address.CustomAttributes = customAttributes;
+                address.Attributes = customAttributes;
                 address.CreatedOnUtc = DateTime.UtcNow;
                 customer.Addresses.Add(address);
                 address.CustomerId = customer.Id;
@@ -883,7 +883,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
                 address = model.Address.ToEntity(address);
-                address.CustomAttributes = customAttributes;
+                address.Attributes = customAttributes;
                 address.CustomerId = customer.Id;
                 await _customerService.UpdateAddress(address);
 

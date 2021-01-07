@@ -27,6 +27,7 @@ namespace Grand.Web.Commands.Handler.Customers
         private readonly IVatService _checkVatService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly ICustomerService _customerService;
         private readonly IMediator _mediator;
 
         private readonly DateTimeSettings _dateTimeSettings;
@@ -42,6 +43,7 @@ namespace Grand.Web.Commands.Handler.Customers
             IVatService checkVatService,
             IWorkflowMessageService workflowMessageService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
+            ICustomerService customerService,
             IMediator mediator,
             DateTimeSettings dateTimeSettings,
             CustomerSettings customerSettings,
@@ -55,6 +57,7 @@ namespace Grand.Web.Commands.Handler.Customers
             _checkVatService = checkVatService;
             _workflowMessageService = workflowMessageService;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _customerService = customerService;
             _mediator = mediator;
             _dateTimeSettings = dateTimeSettings;
             _customerSettings = customerSettings;
@@ -97,8 +100,9 @@ namespace Grand.Web.Commands.Handler.Customers
             {
                 await UpdateTax(request);
             }
+
             //form fields
-            await UpdateFormFields(request);
+            await UpdateGenericAttributeFields(request);
 
             //newsletter
             if (_customerSettings.NewsletterEnabled)
@@ -110,10 +114,10 @@ namespace Grand.Web.Commands.Handler.Customers
                 await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.Signature, request.Model.Signature);
 
             //save customer attributes
-            await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.CustomCustomerAttributes, request.CustomerAttributesXml);
+            await _customerService.UpdateCustomerField(request.Customer, x => x.Attributes, request.CustomerAttributes);
 
             //notification
-            await _mediator.Publish(new CustomerInfoEvent(request.Customer, request.Model, request.Form, request.CustomerAttributesXml));
+            await _mediator.Publish(new CustomerInfoEvent(request.Customer, request.Model, request.Form, request.CustomerAttributes));
 
             return true;
 
@@ -139,7 +143,7 @@ namespace Grand.Web.Commands.Handler.Customers
             }
         }
 
-        private async Task UpdateFormFields(UpdateCustomerInfoCommand request)
+        private async Task UpdateGenericAttributeFields(UpdateCustomerInfoCommand request)
         {
             //properties
             if (_dateTimeSettings.AllowCustomersToSetTimeZone)

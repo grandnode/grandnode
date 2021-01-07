@@ -71,7 +71,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ISalesEmployeeService _salesEmployeeService;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAffiliateService _affiliateService;
         private readonly IPictureService _pictureService;
         private readonly ITaxService _taxService;
@@ -115,7 +114,6 @@ namespace Grand.Web.Areas.Admin.Services
             ISalesEmployeeService salesEmployeeService,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
             IAffiliateService affiliateService,
             IPictureService pictureService,
             ITaxService taxService,
@@ -156,7 +154,6 @@ namespace Grand.Web.Areas.Admin.Services
             _salesEmployeeService = salesEmployeeService;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
-            _addressAttributeFormatter = addressAttributeFormatter;
             _affiliateService = affiliateService;
             _pictureService = pictureService;
             _taxService = taxService;
@@ -680,7 +677,7 @@ namespace Grand.Web.Areas.Admin.Services
             #region Billing & shipping info
 
             model.BillingAddress = await order.BillingAddress.ToModel(_countryService, _stateProvinceService);
-            model.BillingAddress.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
+            model.BillingAddress.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(_workContext.WorkingLanguage, order.BillingAddress.Attributes);
             model.BillingAddress.FirstNameEnabled = true;
             model.BillingAddress.FirstNameRequired = true;
             model.BillingAddress.LastNameEnabled = true;
@@ -717,7 +714,7 @@ namespace Grand.Web.Areas.Admin.Services
                     if (order.ShippingAddress != null)
                     {
                         model.ShippingAddress = await order.ShippingAddress.ToModel(_countryService, _stateProvinceService);
-                        model.ShippingAddress.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
+                        model.ShippingAddress.FormattedCustomAddressAttributes = await _addressAttributeParser.FormatAttributes(_workContext.WorkingLanguage, order.ShippingAddress.Attributes);
                         model.ShippingAddress.FirstNameEnabled = true;
                         model.ShippingAddress.FirstNameRequired = true;
                         model.ShippingAddress.LastNameEnabled = true;
@@ -809,7 +806,7 @@ namespace Grand.Web.Areas.Admin.Services
                         Id = orderItem.Id,
                         ProductId = orderItem.ProductId,
                         ProductName = product.Name,
-                        Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                        Sku = product.FormatSku(orderItem.Attributes, _productAttributeParser),
                         Quantity = orderItem.Quantity,
                         IsDownload = product.IsDownload,
                         DownloadCount = orderItem.DownloadCount,
@@ -817,11 +814,11 @@ namespace Grand.Web.Areas.Admin.Services
                         IsDownloadActivated = orderItem.IsDownloadActivated,
                     };
                     //picture
-                    var orderItemPicture = await product.GetProductPicture(orderItem.AttributesXml, _productService, _pictureService, _productAttributeParser);
+                    var orderItemPicture = await product.GetProductPicture(orderItem.Attributes, _productService, _pictureService, _productAttributeParser);
                     orderItemModel.PictureThumbnailUrl = await _pictureService.GetPictureUrl(orderItemPicture, 75, true);
 
                     //license file
-                    if (!String.IsNullOrEmpty(orderItem.LicenseDownloadId))
+                    if (!string.IsNullOrEmpty(orderItem.LicenseDownloadId))
                     {
                         var licenseDownload = await _downloadService.GetDownloadById(orderItem.LicenseDownloadId);
                         if (licenseDownload != null)
@@ -1076,10 +1073,10 @@ namespace Grand.Web.Areas.Admin.Services
         {
             await _customerActivityService.InsertActivity("EditOrder", orderId, _localizationService.GetResource("ActivityLog.EditOrder"), orderId);
         }
-        public virtual async Task<Address> UpdateOrderAddress(Order order, Address address, OrderAddressModel model, string customAttributes)
+        public virtual async Task<Address> UpdateOrderAddress(Order order, Address address, OrderAddressModel model, List<CustomAttribute> customAttributes)
         {
             address = model.Address.ToEntity(address);
-            address.CustomAttributes = customAttributes;
+            address.Attributes = customAttributes;
             await _orderService.UpdateOrder(order);
 
             //add a note
@@ -1109,7 +1106,7 @@ namespace Grand.Web.Areas.Admin.Services
             //attributes
             //warnings
             var warnings = new List<string>();
-            string attributesXml = "";
+            var customattributes = new List<CustomAttribute>();
 
             #region Product attributes
 
@@ -1125,22 +1122,22 @@ namespace Grand.Web.Areas.Admin.Services
                     case AttributeControlType.ImageSquares:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, ctrlAttributes);
+                                customattributes = _productAttributeParser.AddProductAttribute(customattributes,
+                                    attribute, ctrlAttributes).ToList();
                             }
                         }
                         break;
                     case AttributeControlType.Checkboxes:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
                                 foreach (var item in ctrlAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, item);
+                                    customattributes = _productAttributeParser.AddProductAttribute(customattributes,
+                                        attribute, item).ToList();
                                 }
                             }
                         }
@@ -1154,8 +1151,8 @@ namespace Grand.Web.Areas.Admin.Services
                                 .Select(v => v.Id)
                                 .ToList())
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString());
+                                customattributes = _productAttributeParser.AddProductAttribute(customattributes,
+                                    attribute, selectedAttributeId.ToString()).ToList();
                             }
                         }
                         break;
@@ -1166,8 +1163,8 @@ namespace Grand.Web.Areas.Admin.Services
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.ToString().Trim();
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, enteredText);
+                                customattributes = _productAttributeParser.AddProductAttribute(customattributes,
+                                    attribute, enteredText).ToList();
                             }
                         }
                         break;
@@ -1184,8 +1181,8 @@ namespace Grand.Web.Areas.Admin.Services
                             catch { }
                             if (selectedDate.HasValue)
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedDate.Value.ToString("D"));
+                                customattributes = _productAttributeParser.AddProductAttribute(customattributes,
+                                    attribute, selectedDate.Value.ToString("D")).ToList();
                             }
                         }
                         break;
@@ -1195,8 +1192,8 @@ namespace Grand.Web.Areas.Admin.Services
                             var download = await _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, download.DownloadGuid.ToString());
+                                customattributes = _productAttributeParser.AddProductAttribute(customattributes,
+                                        attribute, download.DownloadGuid.ToString()).ToList();
                             }
                         }
                         break;
@@ -1207,10 +1204,10 @@ namespace Grand.Web.Areas.Admin.Services
             //validate conditional attributes (if specified)
             foreach (var attribute in attributes)
             {
-                var conditionMet = _productAttributeParser.IsConditionMet(product, attribute, attributesXml);
+                var conditionMet = _productAttributeParser.IsConditionMet(product, attribute, customattributes);
                 if (conditionMet.HasValue && !conditionMet.Value)
                 {
-                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
+                    customattributes = _productAttributeParser.RemoveProductAttribute(customattributes, attribute).ToList();
                 }
             }
 
@@ -1254,8 +1251,8 @@ namespace Grand.Web.Areas.Admin.Services
                     }
                 }
 
-                attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
-                    recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
+                customattributes = _productAttributeParser.AddGiftCardAttribute(customattributes,
+                    recipientName, recipientEmail, senderName, senderEmail, giftCardMessage).ToList();
             }
 
             #endregion
@@ -1264,14 +1261,14 @@ namespace Grand.Web.Areas.Admin.Services
             var shoppingCartService = _serviceProvider.GetRequiredService<IShoppingCartService>();
             var inventoryManageService = _serviceProvider.GetRequiredService<IInventoryManageService>();
 
-            warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
-            warnings.AddRange(shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributesXml));
+            warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(customer, ShoppingCartType.ShoppingCart, product, quantity, customattributes));
+            warnings.AddRange(shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, customattributes));
             if (warnings.Count == 0)
             {
                 //no errors
                 var productAttributeFormatter = _serviceProvider.GetRequiredService<IProductAttributeFormatter>();
                 //attributes
-                string attributeDescription = await productAttributeFormatter.FormatAttributes(product, attributesXml, customer);
+                string attributeDescription = await productAttributeFormatter.FormatAttributes(product, customattributes, customer);
 
                 //save item
                 var orderItem = new OrderItem {
@@ -1282,9 +1279,9 @@ namespace Grand.Web.Areas.Admin.Services
                     UnitPriceExclTax = unitPriceExclTax,
                     PriceInclTax = priceInclTax,
                     PriceExclTax = priceExclTax,
-                    OriginalProductCost = await _priceCalculationService.GetProductCost(product, attributesXml),
+                    OriginalProductCost = await _priceCalculationService.GetProductCost(product, customattributes),
                     AttributeDescription = attributeDescription,
-                    AttributesXml = attributesXml,
+                    Attributes = customattributes,
                     Quantity = quantity,
                     DiscountAmountInclTax = decimal.Zero,
                     DiscountAmountExclTax = decimal.Zero,
@@ -1298,7 +1295,7 @@ namespace Grand.Web.Areas.Admin.Services
                 await _orderService.UpdateOrder(order);
                 await LogEditOrder(order.Id);
                 //adjust inventory
-                await inventoryManageService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
+                await inventoryManageService.AdjustInventory(product, -orderItem.Quantity, orderItem.Attributes, orderItem.WarehouseId);
 
                 //add a note
                 await _orderService.InsertOrderNote(new OrderNote {

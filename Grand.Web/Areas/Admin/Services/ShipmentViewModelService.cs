@@ -131,7 +131,7 @@ namespace Grand.Web.Areas.Admin.Services
                             OrderItemId = orderItem.Id,
                             ProductId = orderItem.ProductId,
                             ProductName = product.Name,
-                            Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                            Sku = product.FormatSku(orderItem.Attributes, _productAttributeParser),
                             AttributeInfo = orderItem.AttributeDescription,
                             ShippedFromWarehouse = warehouse != null ? warehouse.Name : null,
                             ShipSeparately = product.ShipSeparately,
@@ -381,7 +381,7 @@ namespace Grand.Web.Areas.Admin.Services
                     ProductId = orderItem.ProductId,
                     ProductName = product.Name,
                     WarehouseId = orderItem.WarehouseId,
-                    Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    Sku = product.FormatSku(orderItem.Attributes, _productAttributeParser),
                     AttributeInfo = orderItem.AttributeDescription,
                     ShipSeparately = product.ShipSeparately,
                     ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
@@ -410,7 +410,7 @@ namespace Grand.Web.Areas.Admin.Services
                                     WarehouseName = warehouse.Name,
                                     StockQuantity = pwi.StockQuantity,
                                     ReservedQuantity = pwi.ReservedQuantity,
-                                    PlannedQuantity = await _shipmentService.GetQuantityInShipments(product, orderItem.AttributesXml, warehouse.Id, true, true)
+                                    PlannedQuantity = await _shipmentService.GetQuantityInShipments(product, orderItem.Attributes, warehouse.Id, true, true)
                                 });
                             }
                         }
@@ -436,7 +436,7 @@ namespace Grand.Web.Areas.Admin.Services
                     {
                         //multiple warehouses supported
                         shipmentItemModel.AllowToChooseWarehouse = true;
-                        var comb = product.ProductAttributeCombinations.FirstOrDefault(x => x.AttributesXml == orderItem.AttributesXml);
+                        var comb = _productAttributeParser.FindProductAttributeCombination(product, orderItem.Attributes);
                         if (comb != null)
                         {
                             foreach (var pwi in comb.WarehouseInventory
@@ -451,7 +451,7 @@ namespace Grand.Web.Areas.Admin.Services
                                         WarehouseName = warehouse.Name,
                                         StockQuantity = pwi.StockQuantity,
                                         ReservedQuantity = pwi.ReservedQuantity,
-                                        PlannedQuantity = await _shipmentService.GetQuantityInShipments(product, orderItem.AttributesXml, warehouse.Id, true, true)
+                                        PlannedQuantity = await _shipmentService.GetQuantityInShipments(product, orderItem.Attributes, warehouse.Id, true, true)
                                     });
                                 }
                             }
@@ -601,7 +601,7 @@ namespace Grand.Web.Areas.Admin.Services
                     OrderItemId = orderItem.Id,
                     Quantity = qtyToAdd,
                     WarehouseId = warehouseId,
-                    AttributeXML = orderItem.AttributesXml
+                    Attributes = orderItem.Attributes
                 };
                 shipment.ShipmentItems.Add(shipmentItem);
             }

@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
 using Grand.Domain.Discounts;
@@ -494,7 +495,7 @@ namespace Grand.Services.Catalog
                 _workContext.WorkingCurrency,
                 shoppingCartItem.ShoppingCartType,
                 shoppingCartItem.Quantity,
-                shoppingCartItem.AttributesXml,
+                shoppingCartItem.Attributes,
                 shoppingCartItem.EnteredPrice,
                 shoppingCartItem.RentalStartDateUtc,
                 shoppingCartItem.RentalEndDateUtc,
@@ -520,7 +521,7 @@ namespace Grand.Services.Catalog
             Currency currency,
             ShoppingCartType shoppingCartType,
             int quantity,
-            string attributesXml,
+            IList<CustomAttribute> attributes,
             decimal? customerEnteredPrice,
             DateTime? rentalStartDate, 
             DateTime? rentalEndDate,
@@ -542,7 +543,7 @@ namespace Grand.Services.Catalog
 
             if (!finalPrice.HasValue)
             {
-                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributes);
                 if (combination != null)
                 {
                     if (combination.OverriddenPrice.HasValue)
@@ -563,7 +564,7 @@ namespace Grand.Services.Catalog
             {
                 //summarize price of all attributes
                 decimal attributesTotalPrice = decimal.Zero;
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributesXml);
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributes);
                 if (attributeValues != null)
                 {
                     foreach (var attributeValue in attributeValues)
@@ -692,15 +693,15 @@ namespace Grand.Services.Catalog
         /// Gets the product cost (one item)
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Shopping cart item attributes in XML</param>
+        /// <param name="attributes">Shopping cart item attributes</param>
         /// <returns>Product cost (one item)</returns>
-        public virtual async Task<decimal> GetProductCost(Product product, string attributesXml)
+        public virtual async Task<decimal> GetProductCost(Product product, IList<CustomAttribute> attributes)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             decimal cost = product.ProductCost;
-            var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributesXml);
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributes);
             foreach (var attributeValue in attributeValues)
             {
                 switch (attributeValue.AttributeValueType)

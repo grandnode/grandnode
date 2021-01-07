@@ -244,14 +244,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
-        public string AttributesXml
-        {
-            get
-            {
-                return _orderItem.AttributesXml;
-            }
-        }
-
         public int DownloadCount
         {
             get

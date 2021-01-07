@@ -78,7 +78,7 @@ namespace Grand.Web.Features.Handlers.Checkout
                 LoadCountries = () => countries,
                 PrePopulateWithCustomerFields = request.PrePopulateNewAddressWithCustomerFields,
                 Customer = request.Customer,
-                OverrideAttributesXml = request.OverrideAttributesXml,
+                OverrideAttributes = request.OverrideAttributes,
             });
             return model;
         }

@@ -345,8 +345,8 @@ namespace Grand.Services.Orders
             //checkout attributes
             if (customer != null)
             {
-                var checkoutAttributesXml = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
-                var attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValue(checkoutAttributesXml);
+                var checkoutAttributes = customer.GetAttributeFromEntity<List<CustomAttribute>>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+                var attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValue(checkoutAttributes);
                     foreach (var attributeValue in attributeValues)
                     {
                         decimal taxRate;

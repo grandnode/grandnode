@@ -19,6 +19,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Grand.Domain.Common;
 
 namespace Grand.Web.Controllers
 {
@@ -184,7 +185,7 @@ namespace Grand.Web.Controllers
                 Customer = customer,
                 Quantity = quantity,
                 CartType = cartType,
-                AttributesXml = "",
+                Attributes = null,
                 Currency = _workContext.WorkingCurrency,
                 Store = _storeContext.CurrentStore,
                 Language = _workContext.WorkingLanguage,
@@ -382,7 +383,7 @@ namespace Grand.Web.Controllers
             #endregion
 
             //product and gift card attributes
-            string attributes = await _mediator.Send(new GetParseProductAttributes() { Product = product, Form = form });
+            var attributes = await _mediator.Send(new GetParseProductAttributes() { Product = product, Form = form });
 
             //rental attributes
             DateTime? rentalStartDate = null;
@@ -524,7 +525,7 @@ namespace Grand.Web.Controllers
                 Quantity = quantity,
                 CartType = cartType,
                 CustomerEnteredPrice = customerEnteredPriceConverted,
-                AttributesXml = attributes,
+                Attributes = attributes,
                 Currency = _workContext.WorkingCurrency,
                 Store = _storeContext.CurrentStore,
                 Language = _workContext.WorkingLanguage,
@@ -672,7 +673,7 @@ namespace Grand.Web.Controllers
             var warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? form["WarehouseId"].ToString() : _storeContext.CurrentStore.DefaultWarehouseId;
 
             var shoppingCartItem = new ShoppingCartItem {
-                AttributesXml = "",
+                Attributes = new List<CustomAttribute>(),
                 CreatedOnUtc = DateTime.UtcNow,
                 ProductId = product.Id,
                 WarehouseId = warehouseId,
