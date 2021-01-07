@@ -53,6 +53,10 @@ namespace Grand.Framework.StartupConfigure
             //add WebEncoderOptions
             services.AddWebEncoder();
 
+            //adddetection device
+            services.AddDetectionDevice();
+
+            //add routing
             services.AddRouting(options =>
             {
                 options.ConstraintMap["lang"] = typeof(LanguageParameterTransformer);
@@ -140,6 +144,9 @@ namespace Grand.Framework.StartupConfigure
             // level in appsettings.json to "Information".
             if (grandConfig.UseSerilogRequestLogging)
                 application.UseSerilogRequestLogging();
+
+            //add responsive middleware (for detection)
+            application.UseGrandDetection();
 
             //use routing
             application.UseRouting();

@@ -432,7 +432,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDetectionDevice(this IServiceCollection services)
         {
-            services.AddDetectionCore().AddDevice().AddCrawler();
+            services.AddDetection();
         }
 
 

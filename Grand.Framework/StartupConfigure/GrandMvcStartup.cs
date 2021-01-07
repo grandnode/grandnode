@@ -31,9 +31,6 @@ namespace Grand.Framework.StartupConfigure
             //add mediatR
             services.AddMediator();
 
-            //adddetection device
-            services.AddDetectionDevice();
-
             //add and configure MVC feature
             services.AddGrandMvc(configuration);
 

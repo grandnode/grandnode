@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Wangkanai.Detection.Services;
 
 namespace Grand.Framework
 {
@@ -40,6 +41,7 @@ namespace Grand.Framework
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IVendorService _vendorService;
+        private readonly IDetectionService _detectionService;
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
@@ -66,6 +68,7 @@ namespace Grand.Framework
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             IVendorService vendorService,
+            IDetectionService detectionService,
             LocalizationSettings localizationSettings,
             TaxSettings taxSettings,
             GrandConfig config)
@@ -80,6 +83,7 @@ namespace Grand.Framework
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
             _vendorService = vendorService;
+            _detectionService = detectionService;
             _localizationSettings = localizationSettings;
             _taxSettings = taxSettings;
             _config = config;
@@ -237,9 +241,9 @@ namespace Grand.Framework
 
             if (customer == null || customer.Deleted || !customer.Active)
             {
-                var crawler = _httpContextAccessor.HttpContext.Request?.Crawler();
+                var isCrawler = _detectionService.Crawler?.IsCrawler;
                 //check whether request is made by a search engine, in this case return built-in customer record for search engines
-                if (crawler != null)
+                if (isCrawler.HasValue && isCrawler.Value)
                     customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
             }
 
