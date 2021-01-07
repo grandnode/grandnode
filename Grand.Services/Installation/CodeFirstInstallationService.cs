@@ -5968,20 +5968,20 @@ namespace Grand.Services.Installation
             allManufacturers.Add(manufacturerHp);
 
 
-            var manufacturerNike = new Manufacturer {
-                Name = "Nike",
+            var manufacturerAdidas = new Manufacturer {
+                Name = "Adidas",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Nike"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Adidas"))).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _manufacturerRepository.InsertAsync(manufacturerNike);
-            allManufacturers.Add(manufacturerNike);
+            await _manufacturerRepository.InsertAsync(manufacturerAdidas);
+            allManufacturers.Add(manufacturerAdidas);
 
             //search engine names
             foreach (var manufacturer in allManufacturers)
@@ -6231,8 +6231,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Playstation 5 Gamepad",
-                ShortDescription = "Digital Storm Vanquish 3 Desktop PC",
-                FullDescription = "<p>Blow the doors off today?s most demanding games with maximum detail, speed, and power for an immersive gaming experience without breaking the bank.</p><p>Stay ahead of the competition, VANQUISH 3 is fully equipped to easily handle future upgrades, keeping your system on the cutting edge for years to come.</p><p>Each system is put through an extensive stress test, ensuring you experience zero bottlenecks and get the maximum performance from your hardware.</p>",
+                ShortDescription = "The DualSense wireless controller for PS5 offers realistic touch effects2, adaptive 'Trigger' effects and a built-in microphone - all integrated into an iconic design.",
+                FullDescription = "<p>The DualSense wireless controller for PS5 offers realistic touch effects2, adaptive 'Trigger' effects and a built-in microphone - all integrated into an iconic design.</p><p>Feel a physical reaction to your in-game actions thanks to dual actuators that replace traditional vibration motors. Such dynamic vibrations in your hands can simulate the tactile sensations of many things, from the world around you to the recoil of various weapons.</p><p>Enjoy intuitive motion controls for selected games thanks to the built-in accelerometer and gyroscope.</p><p>Chat with friends online using the built-in microphone or by plugging a headset into the 3.5mm jack. With the dedicated MUTE button you can disable voice recording.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1259M,
@@ -6278,8 +6278,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lenovo IdeaPad Dual 3i",
-                ShortDescription = "",
-                FullDescription = "<p>The A600 features a 21.5in screen, DVD or optional Blu-Ray drive, support for the full beans 1920 x 1080 HD, Dolby Home Cinema certification and an optional hybrid analogue/digital TV tuner.</p><p>Connectivity is handled by 802.11a/b/g - 802.11n is optional - and an ethernet port. You also get four USB ports, a Firewire slot, a six-in-one card reader and a 1.3- or two-megapixel webcam.</p>",
+                ShortDescription = "Get dependable performance for work and play from the Dual 3i’s Intel® Pentium® processor, which gives you the ability to effortlessly multitask with multi-screen capabilities.",
+                FullDescription = "<p>Get dependable performance for work and play from the Duet 3i’s Intel® Pentium® processor, which gives you the ability to effortlessly multitask with multi-screen capabilities, communicate easily with friends and family, and take all your favorite entertainment to go.</p><p>Work more freely on the elegant IdeaPad Duet 3i than on a regular laptop. The detachable Bluetooth keyboard allows you to easily switch between laptop and tablet modes, and the stand makes it easy to position your computer on any surface. The laptop runs on the power of an Intel® Pentium® processor, and the HD touchscreen, Dolby Audio ™ sound and optional LTE connectivity will keep you entertained anywhere.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 500M,
@@ -6329,8 +6329,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Mi Notebook 14",
-                ShortDescription = "A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors. Together, these features take the notebook to a new level of performance. And they will do the same for you in everything you create.",
-                FullDescription = "<p>With fifth-generation Intel Core processors, the latest graphics, and faster flash storage, the incredibly advanced MacBook Pro with Retina display moves even further ahead in performance and battery life.* *Compared with the previous generation.</p><p>Retina display with 2560-by-1600 resolution</p><p>Fifth-generation dual-core Intel Core i5 processor</p><p>Intel Iris Graphics</p><p>Up to 9 hours of battery life1</p><p>Faster flash storage2</p><p>802.11ac Wi-Fi</p><p>Two Thunderbolt 2 ports for connecting high-performance devices and transferring data at lightning speed</p><p>Two USB 3 ports (compatible with USB 2 devices) and HDMI</p><p>FaceTime HD camera</p><p>Pages, Numbers, Keynote, iPhoto, iMovie, GarageBand included</p><p>OS X, the world's most advanced desktop operating system</p>",
+                ShortDescription = "Designed with utmost patience and craftsmanship, the Mi NoteBook 14 is so beautiful that you can't help but notice it. Weighing just 1.5kg, the sleek unibody metal chassis and an anodized sandblasted coating makes your device sturdy and gives it a svelte look.",
+                FullDescription = "<p>Designed with utmost patience and craftsmanship, the Mi NoteBook 14 is so beautiful that you can't help but notice it. Weighing just 1.5kg, the sleek unibody metal chassis and an anodized sandblasted coating makes your device sturdy and gives it a slim look.</p><p>With the power-efficient NVIDIA® GeForce® MX250 graphics, now enjoy incredible HD photo and video editing, faster and smoother gaming. The powerful graphics engine and next-gen technologies gives you performance you desire.</p><p>The Mi Notebook 14 offers great clock speeds at 2666MHz, and thus makes you say goodbye to slow and insufficient memory. This helps you multi-task with your favorite editing/productivity tools and casual games.</p><p>Comes with a wider air intake area of 2530mm² and a large diameter fan which brings excellent cooling to the whole machine. This keeps your machine cool so that you can hold onto yours. The maximum sound of the fan is a mere 37 dB even when the system is loaded to its max.</p><p>Based on the scissor mechanism, the keys have ABS texture and a travel distance of 1.3mm which makes typing a lot more comfortable and low-profile on this device. The in-built dust protection layer is also an excellent addition.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1800M,
@@ -6415,8 +6415,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lenovo Legion Y740",
-                ShortDescription = "Laptop Asus N551JK Intel Core i7-4710HQ 2.5 GHz, RAM 16GB, HDD 1TB, Video NVidia GTX 850M 4GB, BluRay, 15.6, Full HD, Win 8.1",
-                FullDescription = "<p>The ASUS N550JX combines cutting-edge audio and visual technology to deliver an unsurpassed multimedia experience. A full HD wide-view IPS panel is tailor-made for watching movies and the intuitive touchscreen makes for easy, seamless navigation. ASUS has paired the N550JX?s impressive display with SonicMaster Premium, co-developed with Bang & Olufsen ICEpower® audio experts, for true surround sound. A quad-speaker array and external subwoofer combine for distinct vocals and a low bass that you can feel.</p>",
+                ShortDescription = "The 17.3 ”Y740 Legion is a gaming masterpiece. You will be immersed in the action thanks to best-in-class Corsair iCUE lighting and Dolby realistic image and surround sound technologies.",
+                FullDescription = "<p>The 17.3 ”Y740 Legion is a gaming masterpiece. You will be immersed in the action thanks to best-in-class Corsair iCUE lighting and Dolby realistic image and surround sound technologies. Check out what the Lenovo Legion Y740 looks like in reality.Grab the photo below and drag it left or right to rotate the product, or use the navigation buttons.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1500M,
@@ -6498,8 +6498,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Playstation 5 Camera",
-                ShortDescription = "Samsung Series 9 NP900X4C-A06US 15-Inch Ultrabook (1.70 GHz Intel Core i5-3317U Processor, 8GB DDR3, 128GB SSD, Windows 8) Ash Black",
-                FullDescription = "<p>Designed with mobility in mind, Samsung's durable, ultra premium, lightweight Series 9 laptop (model NP900X4C-A01US) offers mobile professionals and power users a sophisticated laptop equally suited for work and entertainment. Featuring a minimalist look that is both simple and sophisticated, its polished aluminum uni-body design offers an iconic look and feel that pushes the envelope with an edge just 0.58 inches thin. This Series 9 laptop also includes a brilliant 15-inch SuperBright Plus display with HD+ technology, 128 GB Solid State Drive (SSD), 8 GB of system memory, and up to 10 hours of battery life.</p>",
+                ShortDescription = "Use the new Sony HD Camera for PlayStation 5 to show other players your reactions during the game.",
+                FullDescription = "<p>Use the new Sony HD Camera for PlayStation 5 to show other players your reactions during the game. Equipped with two lenses, the camera can record images in 1080p quality and works seamlessly with the PS5 background removal tools. They put you in the spotlight of viewers. In addition, the camera has been equipped with a stand that makes it easy to mount it above or below the TV.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1590M,
@@ -6580,8 +6580,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Acer Nitro 5",
-                ShortDescription = "HP Spectre XT Pro UltraBook / Intel Core i5-2467M / 13.3 / 4GB / 128GB / Windows 7 Professional / Laptop",
-                FullDescription = "<p>Introducing HP ENVY Spectre XT, the Ultrabook designed for those who want style without sacrificing substance. It's sleek. It's thin. And with Intel. Corer i5 processor and premium materials, it's designed to go anywhere from the bistro to the boardroom, it's unlike anything you've ever seen from HP.</p>",
+                ShortDescription = "Experience a new dimension of gameplay with the Acer Nitro 5 laptop. Equipped with a powerful Intel Core i5 processor and GTX1050 graphics card, it is able to cope with even the most demanding tasks.",
+                FullDescription = "<p>Experience a new dimension of gameplay with the Acer Nitro 5 laptop. Equipped with a powerful Intel Core i5 processor and GTX1050 graphics card, it is able to cope with even the most demanding tasks. Additionally, the matrix in IPS technology will ensure high quality of the displayed image, good color reproduction and wide viewing angles. The Acer Nitro 5 laptop is the perfect choice for both gaming and work. Dominate the virtual battlefield with the GeForce GTX 1050 graphics card, featuring the groundbreaking NVIDIA Pascal architecture. Excellent performance, innovative gaming technologies and support for DirectX 12 libraries will allow you to immerse yourself in phenomenal 4K resolution, enriched with HDR mode, or play in an amazingly realistic VR scenery. Every time without cuts or delays, every time on high details. Play the latest, most challenging games the way they deserve.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1350M,
@@ -6667,12 +6667,12 @@ namespace Grand.Services.Installation
             await _productRepository.InsertAsync(productAcerNitro);
 
 
-            var productHpEnvy = new Product {
+            var productDellG5 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HP Envy 6-1180ca 15.6-Inch Sleekbook",
-                ShortDescription = "HP ENVY 6-1202ea Ultrabook Beats Audio, 3rd generation Intel® CoreTM i7-3517U processor, 8GB RAM, 500GB HDD, Microsoft Windows 8, AMD Radeon HD 8750M (2 GB DDR3 dedicated)",
-                FullDescription = "The UltrabookTM that's up for anything. Thin and light, the HP ENVY is the large screen UltrabookTM with Beats AudioTM. With a soft-touch base that makes it easy to grab and go, it's a laptop that's up for anything.<br><br><b>Features</b><br><br>- Windows 8 or other operating systems available<br><br><b>Top performance. Stylish design. Take notice.</b><br><br>- At just 19.8 mm (0.78 in) thin, the HP ENVY UltrabookTM is slim and light enough to take anywhere. It's the laptop that gets you noticed with the power to get it done.<br>- With an eye-catching metal design, it's a laptop that you want to carry with you. The soft-touch, slip-resistant base gives you the confidence to carry it with ease.<br><br><b>More entertaining. More gaming. More fun.</b><br><br>- Own the UltrabookTM with Beats AudioTM, dual speakers, a subwoofer, and an awesome display. Your music, movies and photo slideshows will always look and sound their best.<br>- Tons of video memory let you experience incredible gaming and multimedia without slowing down. Create and edit videos in a flash. And enjoy more of what you love to the fullest.<br>- The HP ENVY UltrabookTM is loaded with the ports you'd expect on a world-class laptop, but on a Sleekbook instead. Like HDMI, USB, RJ-45, and a headphone jack. You get all the right connections without compromising size.<br><br><b>Only from HP.</b><br><br>- Life heats up. That's why there's HP CoolSense technology, which automatically adjusts your notebook's temperature based on usage and conditions. It stays cool. You stay comfortable.<br>- With HP ProtectSmart, your notebook's data stays safe from accidental bumps and bruises. It senses motion and plans ahead, stopping your hard drive and protecting your entire digital life.<br>- Keep playing even in dimly lit rooms or on red eye flights. The optional backlit keyboard[1] is full-size so you don't compromise comfort. Backlit keyboard. Another bright idea.<br><br>",
+                Name = "Dell Inspiron G5",
+                ShortDescription = "The Dell Inspiron G5 is a 15-inch gaming notebook with fantastic graphics capabilities, thanks to the NVIDIA® GeForce® GTX 1060 Max-Q graphics card, the latest 8th generation Intel® Core ™ i7 hexa-core processor and efficient DDR4 2666MHz RAM memory. The Inspiron G5 is designed specifically with the specific, demanding needs of gaming enthusiasts in mind.",
+                FullDescription = "The Dell Inspiron G5 is a 15-inch gaming notebook with fantastic graphics capabilities, thanks to the NVIDIA® GeForce® GTX 1060 Max-Q graphics card, the latest 8th generation Intel® Core ™ i7 hexa-core processor and efficient DDR4 2666MHz RAM memory. The Inspiron G5 is designed specifically with the specific, demanding needs of gaming enthusiasts in mind.</p><p>The enormous performance, speed and dynamics of the eighth generation Intel Core i7 Coffee Lake processor is a guarantee of the highest performance in gaming and smooth operation with advanced applications. When more power is needed, Turbo Boost 2.0 technology intelligently speeds up the clock speed, unleashing the maximum potential of each CPU core. In addition, the unit flawlessly supports the highest definition video as well as spherical videos, while ensuring the security of transactions concluded on the network.</p><p>Play the latest, most demanding games with GeForce GTX 1060 Max-Q. Pull the sliders to the maximum and admire virtual worlds in 4K quality, enriched with HDR mode and DirectX 12 functions. All this with excellent smoothness of the image, without lag and clipping, thanks to the breakthrough architecture of Pascal GPU, packed with technologies for players.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1460M,
@@ -6746,20 +6746,24 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productHpEnvy);
-            productHpEnvy.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpEnvy.Name))).Id,
+            allProducts.Add(productDellG5);
+            productDellG5.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_g5_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDellG5.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productHpEnvy);
+            productDellG5.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_g5_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDellG5.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDellG5);
 
 
-            var productLenovoThinkpad = new Product {
+            var productDellXPS = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Lenovo Thinkpad X1 Carbon Laptop",
-                ShortDescription = "Lenovo Thinkpad X1 Carbon Touch Intel Core i7 14 Ultrabook",
-                FullDescription = "<p>The X1 Carbon brings a new level of quality to the ThinkPad legacy of high standards and innovation. It starts with the durable, carbon fiber-reinforced roll cage, making for the best Ultrabook construction available, and adds a host of other new features on top of the old favorites. Because for 20 years, we haven't stopped innovating. And you shouldn't stop benefiting from that.</p>",
+                Name = "Dell XPS",
+                ShortDescription = "Dell laptop with a screen size of 13.4 inches and a resolution of 1920 x 1200 pixels. It is equipped with an Intel Core i7-1065G7 processor with a clock frequency of 1.3 - 3.9 GHz, DDR4 RAM memory with a size of 16 GB. 1000 GB SSD hard drive. Intel HD Graphics.",
+                FullDescription = "<p>Dell laptop with a screen size of 13.4 inches and a resolution of 1920 x 1200 pixels. It is equipped with an Intel Core i7-1065G7 processor with a clock frequency of 1.3 - 3.9 GHz, DDR4 RAM memory with a size of 16 GB. 1000 GB SSD hard drive. Intel HD Graphics. Graphics card size shared with RAM, integrated. The installed operating system is Windows 10 Home.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1360M,
@@ -6809,12 +6813,16 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productLenovoThinkpad);
-            productLenovoThinkpad.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoThinkpad.Name))).Id,
+            allProducts.Add(productDellXPS);
+            productDellXPS.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_xps_1.jpg"), "image/jpeg", pictureService.GetPictureSeName(productDellXPS.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productLenovoThinkpad);
+            productDellXPS.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_xps_2.jpg"), "image/jpeg", pictureService.GetPictureSeName(productDellXPS.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productDellXPS);
 
             #endregion
 
@@ -6825,8 +6833,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lenovo Yoga Duet",
-                ShortDescription = "Easily find and view all your photos",
-                FullDescription = "<p>Adobe Photoshop CS4 software combines power and simplicity so you can make ordinary photos extraordinary; tell engaging stories in beautiful, personalized creations for print and web; and easily find and view all your photos. New Photoshop.com membership* works with Photoshop CS4 so you can protect your photos with automatic online backup and 2 GB of storage; view your photos anywhere you are; and share your photos in fun, interactive ways with invitation-only Online Albums.</p>",
+                ShortDescription = "The adjustable stand allows for more convenient and effective work, sketching or taking notes in laptop mode or at a lower angle. The detachable Bluetooth® keyboard allows you to write and look at the screen with even more freedom.",
+                FullDescription = "<p>Weighing just 1.16 kg, the Yoga Duet 7i is light and versatile enough to be used anywhere. The adjustable stand allows for more convenient and effective work, sketching or taking notes in laptop mode or at a lower angle. The detachable Bluetooth® keyboard allows you to write and look at the screen with even more freedom.</p><p>The Yoga Duet 7i is an advanced mobile device that is not only intuitive to use and easily personalized, but also uncompromisingly efficient. How is this possible? Powered by the 10th Gen Intel® Core ™ processor and artificial intelligence features that dynamically adjust power to optimize battery life. So it works for up to 10.8 hours on a single charge. It also has USB-C ports for faster charging.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 75M,
@@ -6865,8 +6873,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lenovo Smart Tab",
-                ShortDescription = "Windows 8 is a Microsoft operating system that was released in 2012 as part of the company's Windows NT OS family. ",
-                FullDescription = "<p>Windows 8 Pro is comparable to Windows 7 Professional and Ultimate and is targeted towards enthusiasts and business users; it includes all the features of Windows 8. Additional features include the ability to receive Remote Desktop connections, the ability to participate in a Windows Server domain, Encrypting File System, Hyper-V, and Virtual Hard Disk Booting, Group Policy as well as BitLocker and BitLocker To Go. Windows Media Center functionality is available only for Windows 8 Pro as a separate software package.</p>",
+                ShortDescription = "The most versatile entertainment tablet now can do even more.",
+                FullDescription = "<p>The most versatile entertainment tablet now can do even more. Lenovo Yoga Smart Tab with Google Assistant is a development of the groundbreaking Yoga Tab 3 with a stand for working in various modes. This tablet offers high-end entertainment features such as an IPS display with FHD resolution and two JBL® stereo speakers. Additionally, it also acts as a digital home control center. The built-in LTE modem ensures permanent access to the Internet.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 65M,
@@ -6905,8 +6913,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Asus Mixed Reality",
-                ShortDescription = "Advanced audio waveform editor.",
-                FullDescription = "<p>Sound Forge? Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
+                ShortDescription = "Explore exciting new virtual worlds with the ASUS Windows Mixed Reality Headset!",
+                FullDescription = "<p>Explore exciting new virtual worlds with the ASUS Windows Mixed Reality Headset! It features a unique and beautiful 3D-pattern aesthetic and a comfy weight-balanced design with premium antibacterial cushioned materials, so it’s not only stylish but also supremely cool and comfortable for extended periods of exploring. Unlike other headsets, the ASUS Windows Mixed Reality Headset doesn’t need any external sensors, making initial set up super easy — you’ll be ready to play in 10 minutes or less*! It’s the revolutionary, easy-to-use and affordable way to explore your imagination.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 54.99M,
@@ -6947,12 +6955,12 @@ namespace Grand.Services.Installation
 
 
             //this one is a grouped product with two associated ones
-            var productNikonD5500DSLR = new Product {
+            var productDerbyKit = new Product {
                 ProductType = ProductType.GroupedProduct,
                 VisibleIndividually = true,
-                Name = "Nikon D5500 DSLR",
-                ShortDescription = "Slim, lightweight Nikon D5500 packs a vari-angle touchscreen",
-                FullDescription = "Nikon has announced its latest DSLR, the D5500. A lightweight, compact DX-format camera with a 24.2MP sensor, it?s the first of its type to offer a vari-angle touchscreen. The D5500 replaces the D5300 in Nikon?s range, and while it offers much the same features the company says it?s a much slimmer and lighter prospect. There?s a deep grip for easier handling and built-in Wi-Fi that lets you transfer and share shots via your phone or tablet.",
+                Name = "Derby County Kit",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Costumes.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
                 ProductTemplateId = productTemplateGrouped.Id,
                 AllowCustomerReviews = true,
                 Published = true,
@@ -6983,21 +6991,21 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productNikonD5500DSLR);
-            productNikonD5500DSLR.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name))).Id,
+            allProducts.Add(productDerbyKit);
+            productDerbyKit.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
                 DisplayOrder = 1,
             });
-            productNikonD5500DSLR.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name))).Id,
+            productDerbyKit.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productNikonD5500DSLR);
-            var productNikonD5500DSLR_associated_1 = new Product {
+            await _productRepository.InsertAsync(productDerbyKit);
+            var productDerbyKit_associated_1 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = false, //hide this products
-                ParentGroupedProductId = productNikonD5500DSLR.Id,
-                Name = "Nikon D5500 DSLR - Black",
+                ParentGroupedProductId = productDerbyKit.Id,
+                Name = "Derby County Shirt - Away",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Published = true,
@@ -7020,17 +7028,17 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allProducts.Add(productNikonD5500DSLR_associated_1);
-            productNikonD5500DSLR_associated_1.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black"))).Id,
+            allProducts.Add(productDerbyKit_associated_1);
+            productDerbyKit_associated_1.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Derby County Away Shirt"))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productNikonD5500DSLR_associated_1);
-            var productNikonD5500DSLR_associated_2 = new Product {
+            await _productRepository.InsertAsync(productDerbyKit_associated_1);
+            var productDerbyKit_associated_2 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = false,
-                ParentGroupedProductId = productNikonD5500DSLR.Id,
-                Name = "Nikon D5500 DSLR - Red",
+                ParentGroupedProductId = productDerbyKit.Id,
+                Name = "Derby County Shirt - Home",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Published = true,
@@ -7053,19 +7061,19 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allProducts.Add(productNikonD5500DSLR_associated_2);
-            productNikonD5500DSLR_associated_2.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver"))).Id,
+            allProducts.Add(productDerbyKit_associated_2);
+            productDerbyKit_associated_2.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Derby County Shirt - Home"))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productNikonD5500DSLR_associated_2);
+            await _productRepository.InsertAsync(productDerbyKit_associated_2);
 
             var productAcerProjector = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Acer Projector C250",
-                ShortDescription = "Leica T (Typ 701) Silver",
-                FullDescription = "<p>The new Leica T offers a minimalist design that's crafted from a single block of aluminum.  Made in Germany and assembled by hand, this 16.3 effective mega pixel camera is easy to use.  With a massive 3.7 TFT LCD intuitive touch screen control, the user is able to configure and save their own menu system.  The Leica T has outstanding image quality and also has 16GB of built in memory.  This is Leica's first system camera to use Wi-Fi.  Add the T-App to your portable iOS device and be able to transfer and share your images (free download from the Apple App Store)</p>",
+                ShortDescription = "Auto-Portrait Technology Now the projector image can rotate automatically, just like on your phone!",
+                FullDescription = "<p>Auto-Portrait Technology Now the projector image can rotate automatically, just like on your phone! Equipped with Auto-Portrait technology, the C250i is the first model to be able to rotate the projected image in real time. There is no need to customize settings or content. Simply place the image vertically and the Acer C250i projector will remove intrusive black stripes by itself when you activate this mode. No stand, projecting from any angle The projector can be easily taken anywhere. The exclusive design does not take up much space and allows a 360-degree projection from any angle without using the stand. FHD Resolutions A beautiful 100-inch 1080p Full HD picture looks almost as realistic as the view from the window.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 530M,
@@ -7112,8 +7120,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Acer Nitro XZ2",
-                ShortDescription = "Photography becomes smart",
-                FullDescription = "<p>A few months ago we featured the amazing WVIL camera, by many considered the future of digital photography. This is another very good looking concept, iCam is the vision of Italian designer Antonio DeRosa, the idea is to have a device that attaches to the iPhone 5, which then allows the user to have a camera with interchangeable lenses. The device would also feature a front-touch screen and a projector. Would be great if apple picked up on this and made it reality.</p>",
+                ShortDescription = "Eliminate choppy gameplay and distracting visual tear with AMD Radeon FreeSync™1. Savor the smooth, responsive visuals as the monitor’s refresh rate is synched to your computer’s framerate.",
+                FullDescription = "<p>Eliminate choppy gameplay and distracting visual tear with AMD Radeon FreeSync™1. Savor the smooth, responsive visuals as the monitor’s refresh rate is synched to your computer’s framerate.</p><p>Enjoy seamless, lag-free gaming with a blazingly fast 165Hz2 refresh rate. To keep pace with the action, the rapid 4ms response time provides clearer, more immersive images.</p><p>Take your gameplay to the next level with improved color accuracy and contrast guaranteed by this VESA Certified DisplayHDR™ 400 monitor. This industry standard specifies HDR quality, including luminance, color gamut, bit depth, and rise time.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1300M,
@@ -7163,8 +7171,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Redmi K30 Ultra",
-                ShortDescription = "HTC - One (M8) 4G LTE Cell Phone with 32GB Memory - Gunmetal (Sprint)",
-                FullDescription = "<p><b>HTC One (M8) Cell Phone for Sprint:</b> With its brushed-metal design and wrap-around unibody frame, the HTC One (M8) is designed to fit beautifully in your hand. It's fun to use with amped up sound and a large Full HD touch screen, and intuitive gesture controls make it seem like your phone almost knows what you need before you do. <br><br>Sprint Easy Pay option available in store.</p>",
+                ShortDescription = "Redmi K30 Ultra will be equipped with top-class components. The smartphone is to debut on the market with a screen made in IPS LCD technology with a maximum refresh rate of 144 Hz, which guarantees smooth scrolling and perfect sharpness in movies and video games. It is worth noting that until now, displays of this type have been reserved exclusively for high-end gaming smartphones. The heart of the latest Redmi will be the MediaTek Dimensity 1000+ processor.",
+                FullDescription = "<p>Redmi K30 Ultra equipped with top-class components. The smartphone debut on the market with a screen made in IPS LCD technology with a maximum refresh rate of 144 Hz, which guarantees smooth scrolling and perfect sharpness in movies and video games. It is worth noting that until now, displays of this type have been reserved exclusively for high-end gaming smartphones. The heart of the latest Redmi will be the MediaTek Dimensity 1000+ processor. It is the manufacturer's flagship chip offering eight cores, support for 5G connectivity and support for up to 16 GB RAM.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 Flag = "New",
                 AllowCustomerReviews = true,
@@ -7210,8 +7218,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Redmi Note 9",
-                ShortDescription = "HTC One and HTC One Mini now available in bright blue hue",
-                FullDescription = "<p>HTC One mini smartphone with 4.30-inch 720x1280 display powered by 1.4GHz processor alongside 1GB RAM and 4-Ultrapixel rear camera.</p>",
+                ShortDescription = "Redmi Note 9 is equipped with a high-performance octa-core processor with a maximum clock frequency of 2.0 GHz. The maximum GPU frequency of 1.0GHz ensures better performance and thus offers a smooth gaming experience.",
+                FullDescription = "<p>Redmi Note 9 is equipped with a high-performance octa-core processor with a maximum clock frequency of 2.0 GHz. The maximum GPU frequency of 1.0GHz ensures better performance and thus offers a smooth gaming experience.</p><p>Thanks to the improved 5020mAh battery, you can enjoy long work on a single charge. In combination with the 18W fast charge, you will get excellent results and charge the battery in no time.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 100M,
@@ -7258,8 +7266,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "POCO F2 Pro",
-                ShortDescription = "Nokia Lumia 1020 4G Cell Phone (Unlocked)",
-                FullDescription = "<p>Capture special moments for friends and family with this Nokia Lumia 1020 32GB WHITE cell phone that features an easy-to-use 41.0MP rear-facing camera and a 1.2MP front-facing camera. The AMOLED touch screen offers 768 x 1280 resolution for crisp visuals.</p>",
+                ShortDescription = "The speed demon is now even better. Powered by an octa-core trifecta processor with a liquid cooling system, it provides a perfect working experience. Quad Camera with Pro Mode support.",
+                FullDescription = "<p>The speed demon is now even better. Powered by an octa-core trifecta processor with a liquid cooling system, it provides a perfect working experience. Quad Camera with Pro Mode support.</p><p>The technology of execution in 7nm provides a 25% increase in performance, improving the smoothness of graphics rendering, while significantly reducing energy consumption. Kryo 585 ™ processor | Adreno 650 ™ graphics processor</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 349M,
@@ -7378,8 +7386,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Playstation 4 Slim",
-                ShortDescription = "Universal protection for 7-inch & 8-inch tablets",
-                FullDescription = "<p>Made of durable polyurethane, our Universal Cover is slim, lightweight, and strong, with protective corners that stretch to hold most 7 and 8-inch tablets securely. This tough case helps protects your tablet from bumps, scuffs, and dings.</p>",
+                ShortDescription = "Meet the sleeker, smaller PS4 ™ that offers gamers an amazing gaming experience. The volume of the new PS4 is more than 30% smaller compared to previous console models, and its weight has been reduced by 25% and 16% respectively compared to the first (CUH-1000 series) and current (CUH-1200) versions of the PS4™.",
+                FullDescription = "<p>Meet the sleeker, smaller PS4 ™ that offers gamers an amazing gaming experience. The volume of the new PS4 is more than 30% smaller compared to previous console models, and its weight has been reduced by 25% and 16% respectively compared to the first (CUH-1000 series) and current (CUH-1200) versions of the PS4 ™.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 39M,
@@ -7426,8 +7434,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Xiaomi Mi Beard",
-                ShortDescription = "Universall portable sound speakers",
-                FullDescription = "<p>Your phone cut the cord, now it's time for you to set your music free and buy a Bluetooth speaker. Thankfully, there's one suited for everyone out there.</p><p>Some Bluetooth speakers excel at packing in as much functionality as the unit can handle while keeping the price down. Other speakers shuck excess functionality in favor of premium build materials instead. Whatever path you choose to go down, you'll be greeted with many options to suit your personal tastes.</p>",
+                ShortDescription = "Rounded blades for skin - friendly performance. Advanced self - sharpening. When in a rush, simply plug in the cord and get trimming. IPX7 fully-washable body The whole body is hydro - resistant and fully washable for your convenience.Comes with detachable head.",
+                FullDescription = "<p>Rounded blades for skin - friendly performance. Advanced self - sharpening. With 2 combs that can go between 0.5mm and 20mm, this trimmer will perfectly sculpt your beard.Precision is at its finest with 6000 oscillations per min delivering accurate cuts and even shape.</p><p>IPX7 fully-washable body The whole body is hydro - resistant and fully washable for your convenience.Comes with detachable head.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 37M,
@@ -7475,12 +7483,12 @@ namespace Grand.Services.Installation
             #region Shoes
 
 
-            var productNikeFloral = new Product {
+            var productAdidasPredator = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Nike Floral Roshe Customized Running Shoes",
-                ShortDescription = "When you ran across these shoes, you will immediately fell in love and needed a pair of these customized beauties.",
-                FullDescription = "<p>Each Rosh Run is personalized and exclusive, handmade in our workshop Custom. Run Your Rosh creations born from the hand of an artist specialized in sneakers, more than 10 years of experience.</p>",
+                Name = "adidas Predator Instinct",
+                ShortDescription = "Adidas Predator is the highest quality model of football boots. The special construction of the sole guarantees high flexibility and great adhesion, and the ingredients used to make the upper (synthetic material) ensure optimal weight of the shoe and adequate protection throughout the year.",
+                FullDescription = "<p>Adidas Predator is the highest quality model of football boots. The special construction of the sole guarantees high flexibility and great adhesion, and the ingredients used to make the upper (synthetic material) ensure optimal weight of the shoe and adequate protection throughout the year. A feature of this model is also excellent vapor permeability - the moisture generated during the game is effectively expelled to the outside. The unique comfort and excellent foot support are due to the modern construction elements used by Adidas, which improve the player's features on the pitch. In Adidas footwear, the footballer turns into a ruthless predator. Thanks to the combination of modern technologies and great design, it is an excellent choice and fun to play.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 40M,
@@ -7571,28 +7579,24 @@ namespace Grand.Services.Installation
                 {
                     new ProductManufacturer
                     {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Adidas").Id,
                         DisplayOrder = 2,
                     }
                 }
             };
-            allProducts.Add(productNikeFloral);
-            productNikeFloral.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name))).Id,
+            allProducts.Add(productAdidasPredator);
+            productAdidasPredator.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_predator_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasPredator.Name))).Id,
                 DisplayOrder = 1,
             });
-            productNikeFloral.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name))).Id,
-                DisplayOrder = 2,
-            });
-            await _productRepository.InsertAsync(productNikeFloral);
+            await _productRepository.InsertAsync(productAdidasPredator);
 
 
-            var productAdidas = new Product {
+            var productAdidasNitrocharge = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "adidas Consortium Campus 80s Running Shoes",
-                ShortDescription = "adidas Consortium Campus 80s Primeknit Light Maroon/Running Shoes",
+                Name = "Adidas Nitrocharge",
+                ShortDescription = "The shoes are made of synthetic materials, they fit well to the foot thanks to their anatomical design and the insole made of Eva material. They are designed for playing and running on natural surfaces.",
                 FullDescription = "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
@@ -7660,9 +7664,9 @@ namespace Grand.Services.Installation
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
-                                Name = "Red",
+                                Name = "Yellow",
                                 IsPreSelected = true,
-                                ColorSquaresRgb = "#663030",
+                                ColorSquaresRgb = "#FFFF00",
                                 DisplayOrder = 1,
                             },
                             new ProductAttributeValue
@@ -7675,8 +7679,8 @@ namespace Grand.Services.Installation
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
-                                Name = "Silver",
-                                ColorSquaresRgb = "#c5c5d5",
+                                Name = "Orange",
+                                ColorSquaresRgb = "#FF8000",
                                 DisplayOrder = 3,
                            }
                         }
@@ -7689,39 +7693,51 @@ namespace Grand.Services.Installation
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
                         DisplayOrder = 1,
                     }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Adidas").Id,
+                        DisplayOrder = 2,
+                    }
                 }
             };
-            allProducts.Add(productAdidas);
-            productAdidas.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name))).Id,
+            allProducts.Add(productAdidasNitrocharge);
+            productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
                 DisplayOrder = 1,
             });
-            productAdidas.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name))).Id,
+            productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
                 DisplayOrder = 2,
             });
-            productAdidas.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name))).Id,
+            productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
                 DisplayOrder = 3,
+            });
+            productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_4.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
+                DisplayOrder = 4,
             });
 
 
-            await _productRepository.InsertAsync(productAdidas);
+            await _productRepository.InsertAsync(productAdidasNitrocharge);
 
             var productAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Color").FirstOrDefault();
 
-            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Red").First().PictureId = productAdidas.ProductPictures.ElementAt(0).PictureId;
-            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Blue").First().PictureId = productAdidas.ProductPictures.ElementAt(1).PictureId;
-            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Silver").First().PictureId = productAdidas.ProductPictures.ElementAt(2).PictureId;
-            await _productRepository.UpdateAsync(productAdidas);
+            productAdidasNitrocharge.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Blue").First().PictureId = productAdidasNitrocharge.ProductPictures.ElementAt(1).PictureId;
+            productAdidasNitrocharge.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Yellow").First().PictureId = productAdidasNitrocharge.ProductPictures.ElementAt(2).PictureId;
+            productAdidasNitrocharge.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Orange").First().PictureId = productAdidasNitrocharge.ProductPictures.ElementAt(3).PictureId;
+            await _productRepository.UpdateAsync(productAdidasNitrocharge);
 
 
-            var productNikeZoom = new Product {
+            var productAdidasTurfs = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Nike SB Zoom Stefan Janoski \"Medium Mint\"",
-                ShortDescription = "Nike SB Zoom Stefan Janoski Dark Grey Medium Mint Teal ...",
-                FullDescription = "The newly Nike SB Zoom Stefan Janoski gets hit with a \"Medium Mint\" accents that sits atop a Dark Grey suede. Expected to drop in October.",
+                Name = "Adidas Turfs",
+                ShortDescription = "Be unpredictable. Shoes designed for the youngest players starting their adventure with football. The sole is designed to provide perfect grip on artificial turf and hard or frozen surfaces.",
+                FullDescription = "Be unpredictable. Shoes designed for the youngest players starting their adventure with football. The sole is designed to provide perfect grip on artificial turf and hard or frozen surfaces. The X-SKIN INSPIRATION upper made of synthetic material will give a feeling of lightness and support while guiding the ball thanks to the convex texture. The heel stiffening will provide stability, and the textile inner lining will provide comfort and adequate cushioning. A profiled insole reflecting the anatomical shape of the foot and symmetrical lacing will keep the foot in the right position. The sole will allow for dynamic feints and changes in the direction of the run on artificial turf as well as hard or frozen surfaces.",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 30M,
@@ -7755,17 +7771,17 @@ namespace Grand.Services.Installation
                 {
                     new ProductManufacturer
                     {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Adidas").Id,
                         DisplayOrder = 2,
                     }
                 }
             };
-            allProducts.Add(productNikeZoom);
-            productNikeZoom.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeZoom.Name))).Id,
+            allProducts.Add(productAdidasTurfs);
+            productAdidasTurfs.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidasturfs.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasTurfs.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productNikeZoom);
+            await _productRepository.InsertAsync(productAdidasTurfs);
 
 
             #endregion
@@ -7860,7 +7876,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductManufacturer
                     {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Adidas").Id,
                         DisplayOrder = 2,
                     }
                 }
@@ -7938,8 +7954,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Derby County Home Shirt",
-                ShortDescription = "T-Shirt - Add Your Content",
-                FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Kits.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 15M,
@@ -7991,8 +8007,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Derby County Home Shorts",
-                ShortDescription = "T-Shirt - Add Your Content",
-                FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Kits.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 15M,
@@ -8044,8 +8060,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Derby County Home Socks",
-                ShortDescription = "T-Shirt - Add Your Content",
-                FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Kits.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 15M,
@@ -8092,6 +8108,41 @@ namespace Grand.Services.Installation
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productDerbySocks);
+
+            var productDerbyKitHome = new Product {
+                ProductType = ProductType.BundledProduct,
+                VisibleIndividually = true,
+                Name = "Derby County Home Shirt",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Kits.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Price = 15M,
+                IsShipEnabled = true,
+                Weight = 4,
+                Length = 3,
+                Width = 3,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productDerbyKitHome);
+            productDerbyKitHome.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKitHome.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDerbyKitHome);
 
             var productLeviJeans = new Product {
                 ProductType = ProductType.SimpleProduct,
@@ -8338,8 +8389,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Cyberpunk 2077",
-                ShortDescription = "Night Visions is the debut studio album by American rock band Imagine Dragons.",
-                FullDescription = "<p>Original Release Date: September 4, 2012</p><p>Release Date: September 4, 2012</p><p>Genre - Alternative rock, indie rock, electronic rock</p><p>Label - Interscope/KIDinaKORNER</p><p>Copyright: (C) 2011 Interscope Records</p>",
+                ShortDescription = "Cyberpunk 2077 is an open-world adventure set in Night City, a megalopolis ruled by an obsessive quest for power, fame and body remake. Your name is V and you must acquire a one-of-a-kind implant - the key to immortality. Create your own playstyle and set out to conquer the mighty city of the future, whose history is shaped by your decisions.",
+                FullDescription = "<p>Cyberpunk 2077 is an open-world adventure set in Night City, a megalopolis ruled by an obsessive quest for power, fame and body remake. Your name is V and you must acquire a one-of-a-kind implant - the key to immortality. Create your own playstyle and set out to conquer the mighty city of the future, whose history is shaped by your decisions.</p><p>Become a cyberpunk, a freelance armed to the teeth, and become the legend of the most dangerous city of the future. Create your character from scratch. Take on the role of the outlaw Punk, freedom-loving Nomad or ruthless Corp.</p><p>Get the most powerful implant in Night City and take on those who shake the whole city. Follow Rockerboy Johnny Silverhand (played by Keanu Reeves) and change a world ruled by large corporations forever. And all this is accompanied by music from bands and creators such as Run the Jewels, Refused, Grimes, A $ AP Rocky, Gazelle Twin, Ilan Rubin, Richard Devine, Nina Kraviz, Deadly Hunta, Rat Boy and Tina Guo.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 2.8M,
@@ -8403,8 +8454,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Grand Theft Auto 5",
-                ShortDescription = "If You Wait is the debut studio album by English indie pop band London Grammar",
-                FullDescription = "<p>Original Release Date: September 6, 2013</p><p>Genre - Electronica, dream pop downtempo, pop</p><p>Label - Metal & Dust/Ministry of Sound</p><p>Producer - Tim Bran, Roy Kerr London, Grammar</p><p>Length - 43:22</p>",
+                ShortDescription = "When a young street hustler, a retired bank robber and a terrifying psychopath land themselves in trouble, they must pull off a series of dangerous heists to survive in a city in which they can trust nobody, least of all each other.",
+                FullDescription = "<p>When a young street hustler, a retired bank robber and a terrifying psychopath land themselves in trouble, they must pull off a series of dangerous heists to survive in a city in which they can trust nobody, least of all each other.</p><p>Launch business ventures from your Maze Bank West Executive Office, research powerful weapons technology from your underground Gunrunning Bunker and use your Counterfeit Cash Factory to start a lucrative counterfeiting operation.</p><p>Tear through the streets with a range of 10 high performance vehicles including a Supercar, Motorcycles, the weaponized Dune FAV, a Helicopter, a Rally Car and more. You’ll also get properties including a 10 car garage to store your growing fleet.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 3M,
@@ -8459,8 +8510,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Call of Duty: ColdWar",
-                ShortDescription = "Science & Faith is the second studio album by Irish pop rock band The Script.",
-                FullDescription = "<p># Original Release Date: September 10, 2010<br /># Label: RCA, Epic/Phonogenic(America)<br /># Copyright: 2010 RCA Records.</p>",
+                ShortDescription = "The iconic Black Ops series is back with Call of Duty®: Black Ops Cold War - the direct sequel to the original and fan-favorite Call of Duty®: Black Ops. Black Ops Cold War will drop fans into the depths of the Cold War’s volatile geopolitical battle of the early 1980s.",
+                FullDescription = "<p>The iconic Black Ops series is back with Call of Duty®: Black Ops Cold War - the direct sequel to the original and fan-favorite Call of Duty®: Black Ops. Black Ops Cold War will drop fans into the depths of the Cold War’s volatile geopolitical battle of the early 1980s. Nothing is ever as it seems in a gripping single-player Campaign, where players will come face-to-face with historical figures and hard truths, as they battle around the globe through iconic locales like East Berlin, Vietnam, Turkey, Soviet KGB headquarters and more. As elite operatives, you will follow the trail of a shadowy figure named Perseus who is on a mission to destabilize the global balance of power and change the course of history. Descend into the dark center of this global conspiracy alongside iconic characters Woods, Mason and Hudson and a new cast of operatives attempting to stop a plot decades in the making. Beyond the Campaign, players will bring a Cold War arsenal of weapons and equipment into the next generation of Multiplayer and Zombies experiences.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 3M,
@@ -8508,8 +8559,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "LEGO Millennium Falcon",
-                ShortDescription = "Fahrenheit 451 is a dystopian novel by Ray Bradbury published in 1953. It is regarded as one of his best works.",
-                FullDescription = "<p>The novel presents a future American society where books are outlawed and firemen burn any that are found. The title refers to the temperature that Bradbury understood to be the autoignition point of paper.</p>",
+                ShortDescription = "Inspire kids and adults with the LEGO® Star Wars ™ 75257 Millennium Falcon model. The brick-built version of the iconic Corellian freighter features a variety of details. This iconic set from the LEGO Star Wars series is a great addition to any fan's collection.",
+                FullDescription = "<p>Inspire kids and adults with the LEGO® Star Wars ™ 75257 Millennium Falcon model. The brick-built version of the iconic Corellian freighter features a variety of details, including a rotating lower and upper gun turret, 2 spring-loaded shooters, a lowering ramp and an opening cockpit with space for 2 minifigures. The top panels fold out to reveal a detailed interior where children will love to reenact scenes from Star Wars: Skywalker. Rebirth ”featuring characters from the“ Star Wars ”universe - Finn, Chewbakka, Lando Calrissian, Boolio, C-3PO, R2-D2 and D-O. This iconic set from the LEGO Star Wars series is a great addition to any fan's collection.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 27M,
@@ -8558,9 +8609,9 @@ namespace Grand.Services.Installation
             var productLegoHogwarts = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "First Prize Pies",
-                ShortDescription = "Allison Kave made pies as a hobby, until one day her boyfriend convinced her to enter a Brooklyn pie-making contest. She won. In fact, her pies were such a hit that she turned pro.",
-                FullDescription = "<p>First Prize Pies, a boutique, made-to-order pie business that originated on New York's Lower East Side, has become synonymous with tempting and unusual confections. For the home baker who is passionate about seasonal ingredients and loves a creative approach to recipes, First Prize Pies serves up 52 weeks of seasonal and eclectic pastries in an interesting pie-a-week format. Clear instructions, technical tips and creative encouragement guide novice bakers as well as pie mavens. With its nostalgia-evoking photos of homemade pies fresh out of the oven, First Prize Pies will be as giftable as it is practical.</p>",
+                Name = "Lego Hogwarts",
+                ShortDescription = "Taste real magic at the LEGO® Harry Potter™ Hogwarts™ Castle! Unforgettable building satisfaction with this highly detailed LEGO Harry Potter collectible set with over 6,000 pieces.",
+                FullDescription = "<p>Taste real magic at the LEGO® Harry Potter™ Hogwarts™ Castle! Unforgettable building satisfaction with this highly detailed LEGO Harry Potter collectible set with over 6,000 pieces. It is packed with elements from the Harry Potter series - you will find towers, turrets, chambers, classrooms, creatures, Whomping Willow ™, Hagrid's hut and many other signature details. Plus, with 4 minifigures and 27 microfigures of students, teachers, statues and 5 Dementors, this advanced construction toy set is the perfect gift for any Harry Potter fan.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 51M,
@@ -8607,8 +8658,8 @@ namespace Grand.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lego City Police Base",
-                ShortDescription = "Pride and Prejudice is a novel of manners by Jane Austen, first published in 1813.",
-                FullDescription = "<p>Set in England in the early 19th century, Pride and Prejudice tells the story of Mr and Mrs Bennet's five unmarried daughters after the rich and eligible Mr Bingley and his status-conscious friend, Mr Darcy, have moved into their neighbourhood. While Bingley takes an immediate liking to the eldest Bennet daughter, Jane, Darcy has difficulty adapting to local society and repeatedly clashes with the second-eldest Bennet daughter, Elizabeth.</p>",
+                ShortDescription = "Everything is awesome about the LEGO® City Police Station (60246) playset. Little law enforcers and fans of the LEGO City TV series will love creating stories with a host of fun characters, including Duke DeTain, Chief Wheeler and Daisy Kaboom. ",
+                FullDescription = "<p>Everything is awesome about the LEGO® City Police Station (60246) playset. Little law enforcers and fans of the LEGO City TV series will love creating stories with a host of fun characters, including Duke DeTain, Chief Wheeler and Daisy Kaboom. </p><p>This fantastic set includes a police station with a light-brick searchlight and a police car with sound-brick siren, plus a cool truck, motorcycle and surveillance drone. A building toy with a little extra With this toy playset you get a simple building guide and Instructions.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 24M,
@@ -9043,7 +9094,7 @@ namespace Grand.Services.Installation
             productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLenovoLegionY740.Id,
-                    ProductId2 = productLenovoThinkpad.Id,
+                    ProductId2 = productDellXPS.Id,
                 });
 
             productLenovoLegionY740.RelatedProducts.Add(
@@ -9064,34 +9115,34 @@ namespace Grand.Services.Installation
                     ProductId2 = productAcerNitro.Id,
                 });
 
-            productLenovoThinkpad.RelatedProducts.Add(
+            productDellXPS.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoThinkpad.Id,
+                    ProductId1 = productDellXPS.Id,
                     ProductId2 = productLenovoLegionY740.Id,
                 });
 
-            productLenovoThinkpad.RelatedProducts.Add(
+            productDellXPS.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoThinkpad.Id,
+                    ProductId1 = productDellXPS.Id,
                     ProductId2 = productMiNotebook.Id,
                 });
 
-            productLenovoThinkpad.RelatedProducts.Add(
+            productDellXPS.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoThinkpad.Id,
+                    ProductId1 = productDellXPS.Id,
                     ProductId2 = productPs5Camera.Id,
                 });
 
-            productLenovoThinkpad.RelatedProducts.Add(
+            productDellXPS.RelatedProducts.Add(
                  new RelatedProduct {
-                     ProductId1 = productLenovoThinkpad.Id,
-                     ProductId2 = productHpEnvy.Id,
+                     ProductId1 = productDellXPS.Id,
+                     ProductId2 = productDellG5.Id,
                  });
 
             productMiNotebook.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productMiNotebook.Id,
-                    ProductId2 = productLenovoThinkpad.Id,
+                    ProductId2 = productDellXPS.Id,
                 });
 
             productMiNotebook.RelatedProducts.Add(
@@ -9115,7 +9166,7 @@ namespace Grand.Services.Installation
             productAcerNitro.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productAcerNitro.Id,
-                    ProductId2 = productLenovoThinkpad.Id,
+                    ProductId2 = productDellXPS.Id,
                 });
 
             productAcerNitro.RelatedProducts.Add(
@@ -9133,30 +9184,30 @@ namespace Grand.Services.Installation
             productAcerNitro.RelatedProducts.Add(
                  new RelatedProduct {
                      ProductId1 = productAcerNitro.Id,
-                     ProductId2 = productHpEnvy.Id,
+                     ProductId2 = productDellG5.Id,
                  });
 
-            productHpEnvy.RelatedProducts.Add(
+            productDellG5.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpEnvy.Id,
+                    ProductId1 = productDellG5.Id,
                     ProductId2 = productLenovoLegionY740.Id,
                 });
 
-            productHpEnvy.RelatedProducts.Add(
+            productDellG5.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpEnvy.Id,
+                    ProductId1 = productDellG5.Id,
                     ProductId2 = productMiNotebook.Id,
                 });
 
-            productHpEnvy.RelatedProducts.Add(
+            productDellG5.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpEnvy.Id,
+                    ProductId1 = productDellG5.Id,
                     ProductId2 = productAcerNitro.Id,
                 });
 
-            productHpEnvy.RelatedProducts.Add(
+            productDellG5.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpEnvy.Id,
+                    ProductId1 = productDellG5.Id,
                     ProductId2 = productPs5Camera.Id,
                 });
             productPs5Camera.RelatedProducts.Add(
@@ -9173,7 +9224,7 @@ namespace Grand.Services.Installation
             productPs5Camera.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productPs5Camera.Id,
-                    ProductId2 = productHpEnvy.Id,
+                    ProductId2 = productDellG5.Id,
                 });
             productPs5Camera.RelatedProducts.Add(
                  new RelatedProduct {
@@ -9189,7 +9240,7 @@ namespace Grand.Services.Installation
             productAcerProjector.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productAcerProjector.Id,
-                    ProductId2 = productNikonD5500DSLR.Id,
+                    ProductId2 = productDerbyKit.Id,
                 });
 
             productAcerProjector.RelatedProducts.Add(
@@ -9269,43 +9320,43 @@ namespace Grand.Services.Installation
                     ProductId2 = productMiBeard.Id,
                 });
 
-            productAdidas.RelatedProducts.Add(
+            productAdidasNitrocharge.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAdidas.Id,
+                    ProductId1 = productAdidasNitrocharge.Id,
                     ProductId2 = productLeviJeans.Id,
                 });
 
-            productAdidas.RelatedProducts.Add(
+            productAdidasNitrocharge.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAdidas.Id,
-                    ProductId2 = productNikeFloral.Id,
+                    ProductId1 = productAdidasNitrocharge.Id,
+                    ProductId2 = productAdidasPredator.Id,
                 });
 
-            productAdidas.RelatedProducts.Add(
+            productAdidasNitrocharge.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAdidas.Id,
-                    ProductId2 = productNikeZoom.Id,
+                    ProductId1 = productAdidasNitrocharge.Id,
+                    ProductId2 = productAdidasTurfs.Id,
                 });
-            productAdidas.RelatedProducts.Add(
+            productAdidasNitrocharge.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAdidas.Id,
+                    ProductId1 = productAdidasNitrocharge.Id,
                     ProductId2 = productNikeTailwind.Id,
                 });
             productLeviJeans.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLeviJeans.Id,
-                    ProductId2 = productAdidas.Id,
+                    ProductId2 = productAdidasNitrocharge.Id,
                 });
             productLeviJeans.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLeviJeans.Id,
-                    ProductId2 = productNikeFloral.Id,
+                    ProductId2 = productAdidasPredator.Id,
                 });
 
             productLeviJeans.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLeviJeans.Id,
-                    ProductId2 = productNikeZoom.Id,
+                    ProductId2 = productAdidasTurfs.Id,
                 });
             productLeviJeans.RelatedProducts.Add(
                 new RelatedProduct {
@@ -9347,7 +9398,7 @@ namespace Grand.Services.Installation
             productSonyPS5Pad.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productSonyPS5Pad.Id,
-                    ProductId2 = productLenovoThinkpad.Id,
+                    ProductId2 = productDellXPS.Id,
                 });
             productSonyPS5Pad.RelatedProducts.Add(
                 new RelatedProduct {
@@ -9370,7 +9421,7 @@ namespace Grand.Services.Installation
             productLenovoIdeaPadDual.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLenovoIdeaPadDual.Id,
-                    ProductId2 = productLenovoThinkpad.Id,
+                    ProductId2 = productDellXPS.Id,
                 });
 
             productLenovoIdeaPadDual.RelatedProducts.Add(
@@ -9392,9 +9443,9 @@ namespace Grand.Services.Installation
             await AddProductTag(productNikeTailwind, "shirt");
             await AddProductTag(productMiSmartBand, "computer");
             await AddProductTag(productMiSmartBand, "cool");
-            await AddProductTag(productNikeFloral, "cool");
-            await AddProductTag(productNikeFloral, "shoes");
-            await AddProductTag(productNikeFloral, "apparel");
+            await AddProductTag(productAdidasPredator, "cool");
+            await AddProductTag(productAdidasPredator, "shoes");
+            await AddProductTag(productAdidasPredator, "apparel");
             await AddProductTag(productLenovoYogaDuet, "tablet");
             await AddProductTag(productLenovoYogaDuet, "awesome");
             await AddProductTag(productPs4, "computer");
@@ -9416,8 +9467,8 @@ namespace Grand.Services.Installation
             await AddProductTag(productRedmiK30, "awesome");
             await AddProductTag(productBuildComputer, "awesome");
             await AddProductTag(productBuildComputer, "computer");
-            await AddProductTag(productNikonD5500DSLR, "cool");
-            await AddProductTag(productNikonD5500DSLR, "camera");
+            await AddProductTag(productDerbyKit, "cool");
+            await AddProductTag(productDerbyKit, "football kit");
             await AddProductTag(productAcerProjector, "projector");
             await AddProductTag(productAcerProjector, "cool");
             await AddProductTag(productSonyPS5Pad, "cool");
@@ -9432,9 +9483,9 @@ namespace Grand.Services.Installation
             await AddProductTag(productFlowerGirlBracelet, "awesome");
             await AddProductTag(productFlowerGirlBracelet, "jewelry");
             await AddProductTag(productLegoHogwarts, "lego");
-            await AddProductTag(productAdidas, "cool");
-            await AddProductTag(productAdidas, "shoes");
-            await AddProductTag(productAdidas, "apparel");
+            await AddProductTag(productAdidasNitrocharge, "cool");
+            await AddProductTag(productAdidasNitrocharge, "shoes");
+            await AddProductTag(productAdidasNitrocharge, "apparel");
             await AddProductTag(productLenovoIdeaPadDual, "awesome");
             await AddProductTag(productLenovoIdeaPadDual, "tablet");
             await AddProductTag(productPs5Camera, "nice");
@@ -9442,9 +9493,9 @@ namespace Grand.Services.Installation
             await AddProductTag(productPs5Camera, "compact");
             await AddProductTag(productAcerNitro, "nice");
             await AddProductTag(productAcerNitro, "computer");
-            await AddProductTag(productHpEnvy, "computer");
-            await AddProductTag(productHpEnvy, "cool");
-            await AddProductTag(productHpEnvy, "compact");
+            await AddProductTag(productDellG5, "computer");
+            await AddProductTag(productDellG5, "cool");
+            await AddProductTag(productDellG5, "compact");
             await AddProductTag(productObeyHat, "apparel");
             await AddProductTag(productObeyHat, "cool");
             await AddProductTag(productLeviJeans, "cool");
@@ -9468,12 +9519,12 @@ namespace Grand.Services.Installation
             await AddProductTag(productCod, "digital");
             await AddProductTag(productCod, "awesome");
             await AddProductTag(productLegoCity, "lego");
-            await AddProductTag(productLenovoThinkpad, "awesome");
-            await AddProductTag(productLenovoThinkpad, "computer");
-            await AddProductTag(productLenovoThinkpad, "compact");
-            await AddProductTag(productNikeZoom, "jeans");
-            await AddProductTag(productNikeZoom, "cool");
-            await AddProductTag(productNikeZoom, "apparel");
+            await AddProductTag(productDellXPS, "awesome");
+            await AddProductTag(productDellXPS, "computer");
+            await AddProductTag(productDellXPS, "compact");
+            await AddProductTag(productAdidasTurfs, "jeans");
+            await AddProductTag(productAdidasTurfs, "cool");
+            await AddProductTag(productAdidasTurfs, "apparel");
             await AddProductTag(productEngagementRing, "jewelry");
             await AddProductTag(productEngagementRing, "awesome");
 
