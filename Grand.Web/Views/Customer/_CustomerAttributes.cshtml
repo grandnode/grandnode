@@ -34,7 +34,7 @@
                                     <fieldset>
                                         <legend class="sr-only">@(controlId)</legend>
                                         <label class="custom-control custom-radio">
-                                            <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" />
+                                            <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@(attributeValue.IsPreSelected)" />
                                             <span class="custom-control-label"></span>
                                             <span class="custom-control-description">@attributeValue.Name</span>
                                         </label>
