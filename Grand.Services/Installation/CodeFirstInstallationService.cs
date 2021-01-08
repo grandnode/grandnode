@@ -392,7 +392,7 @@ namespace Grand.Services.Installation
                                        },
                                    new TaxCategory
                                        {
-                                           Name = "Jewelry",
+                                           Name = "Balls",
                                            DisplayOrder = 15,
                                        },
                                    new TaxCategory
@@ -5848,14 +5848,14 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryLego);
 
-            var categoryJewelry = new Category {
-                Name = "Jewelry",
+            var categoryBalls = new Category {
+                Name = "Balls",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Jewelry"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_balls.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Balls"))).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5863,7 +5863,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryJewelry);
+            allCategories.Add(categoryBalls);
 
             var categoryGiftCards = new Category {
                 Name = "Gift Cards",
@@ -6042,7 +6042,7 @@ namespace Grand.Services.Installation
                 VisibleIndividually = true,
                 Name = "Build your own computer",
                 ShortDescription = "Build it",
-                FullDescription = "<p>Fight back against cluttered workspaces with the stylish IBM zBC12 All-in-One desktop PC, featuring powerful computing resources and a stunning 20.1-inch widescreen display with stunning XBRITE-HiColor LCD technology. The black IBM zBC12 has a built-in microphone and MOTION EYE camera with face-tracking technology that allows for easy communication with friends and family. And it has a built-in DVD burner and Sony's Movie Store software so you can create a digital entertainment library for personal viewing at your convenience. Easy to setup and even easier to use, this JS-series All-in-One includes an elegantly designed keyboard and a USB mouse.</p>",
+                FullDescription = "<p>Fight back against cluttered workspaces with the stylish DELL Inspiron desktop PC, featuring powerful computing resources and a stunning 20.1-inch widescreen display with stunning XBRITE-HiColor LCD technology. The black IBM zBC12 has a built-in microphone and MOTION EYE camera with face-tracking technology that allows for easy communication with friends and family. And it has a built-in DVD burner and Sony's Movie Store software so you can create a digital entertainment library for personal viewing at your convenience. Easy to setup and even easier to use, this JS-series All-in-One includes an elegantly designed keyboard and a USB mouse.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1200M,
@@ -6208,8 +6208,8 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productBuildComputer);
 
-            var Picture1 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
-            var Picture2 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
+            var Picture1 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_desktop_1.jpg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
+            var Picture2 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_desktop_2.jpg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
 
             await _productRepository.InsertAsync(productBuildComputer);
 
@@ -7788,12 +7788,12 @@ namespace Grand.Services.Installation
 
             #region Clothing
 
-            var productNikeTailwind = new Product {
+            var productNikeKids = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Nike Tailwind Loose Short-Sleeve Running Shirt",
-                ShortDescription = "",
-                FullDescription = "<p>Boost your adrenaline with the Nike® Women's Tailwind Running Shirt. The lightweight, slouchy fit is great for layering, and moisture-wicking fabrics keep you feeling at your best. This tee has a notched hem for an enhanced range of motion, while flat seams with reinforcement tape lessen discomfort and irritation over longer distances. Put your keys and card in the side zip pocket and take off in your Nike® running t-shirt.</p>",
+                Name = "Nike Kids Kit",
+                ShortDescription = "Nike Dry-FIT football kit for kids. The set includes a T-shirt, shorts and football socks. Clothes made of high-quality synthetic materials that perfectly transport moisture and dry quickly.",
+                FullDescription = "<p>Nike Dry-FIT football kit for kids. The set includes a T-shirt, shorts and football socks. Clothes made of high-quality synthetic materials that perfectly transport moisture and dry quickly. The set is perfect for training, matches, PE lessons, and the T-shirt and shorts are also perfect for everyday use. The shirt has ventilation panels under the arms and the back is made of airy mesh that removes excess heat. Children's shorts with an elastic, rubber belt will adapt to any figure. The set also includes football socks made of a pleasant-to-touch material that ensures high comfort of use.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Published = true,
@@ -7871,27 +7871,19 @@ namespace Grand.Services.Installation
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
                         DisplayOrder = 1,
                     }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Adidas").Id,
-                        DisplayOrder = 2,
-                    }
                 }
             };
-            allProducts.Add(productNikeTailwind);
-            productNikeTailwind.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeTailwind.Name))).Id,
+            allProducts.Add(productNikeKids);
+            productNikeKids.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_kidskit.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeKids.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productNikeTailwind);
+            await _productRepository.InsertAsync(productNikeKids);
 
-            var productOversizedWomenTShirt = new Product {
+            var productPsgKit = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Oversized Women T-Shirt",
+                Name = "Paris Saint Germain Home Kit",
                 ShortDescription = "",
                 FullDescription = "<p>This oversized women t-Shirt needs minimum ironing. It is a great product at a great value!</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7942,12 +7934,16 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productOversizedWomenTShirt);
-            productOversizedWomenTShirt.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productOversizedWomenTShirt.Name))).Id,
+            allProducts.Add(productPsgKit);
+            productPsgKit.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_psg_1.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productPsgKit.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productOversizedWomenTShirt);
+            productPsgKit.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_psg_2.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productPsgKit.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productPsgKit);
 
 
             var productDerbyShirt = new Product {
@@ -8147,9 +8143,9 @@ namespace Grand.Services.Installation
             var productLeviJeans = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Levi's 511 Jeans",
-                ShortDescription = "Levi's Faded Black 511 Jeans ",
-                FullDescription = "<p>Between a skinny and straight fit, our 511&trade; slim fit jeans are cut close without being too restricting. Slim throughout the thigh and leg opening for a long and lean look.</p><ul><li>Slouch1y at top; sits below the waist</li><li>Slim through the leg, close at the thigh and straight to the ankle</li><li>Stretch for added comfort</li><li>Classic five-pocket styling</li><li>99% Cotton, 1% Spandex, 11.2 oz. - Imported</li></ul>",
+                Name = "Chicago Bulls Jersey",
+                ShortDescription = "Capture your team's distinct identity when you grab this custom Chicago Bulls jersey, It features classic trims and Chicago Bulls graphics along with Nike Dry and Dri-FIT technologies for added comfort.",
+                FullDescription = "<p>Capture your team's distinct identity when you grab this custom Chicago Bulls jersey, It features classic trims and Chicago Bulls graphics along with Nike Dry and Dri-FIT technologies for added comfort. Before you watch the next game, grab this incredible jersey so everyone knows your fandom is on the cutting edge.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 43.5M,
@@ -8202,11 +8198,11 @@ namespace Grand.Services.Installation
             allProducts.Add(productLeviJeans);
 
             productLeviJeans.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_1.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
                 DisplayOrder = 1,
             });
             productLeviJeans.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_2.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productLeviJeans);
@@ -8708,12 +8704,12 @@ namespace Grand.Services.Installation
 
             #region Jewelry
 
-            var productElegantGemstoneNecklace = new Product {
+            var productAdidasBall = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Elegant Gemstone Necklace",
-                ShortDescription = "Classic and elegant gemstone necklace now available in our store",
-                FullDescription = "<p>For those who like jewelry, creating their ownelegant jewelry from gemstone beads provides an economical way to incorporate genuine gemstones into your jewelry wardrobe. Manufacturers create beads from all kinds of precious gemstones and semi-precious gemstones, which are available in bead shops, craft stores, and online marketplaces.</p>",
+                Name = "Adidas Ball",
+                ShortDescription = "The Adidas Finale Top Capitano is a durable training ball with strong references to the UEFA Champions League. The ball is a replica of the model used in this year's Champions League group stage and is perfect for training and spontaneous games.",
+                FullDescription = "<p>The Adidas Finale Top Capitano is a durable training ball with strong references to the UEFA Champions League. The ball is a replica of the model used in this year's Champions League group stage and is perfect for training and spontaneous games. The strong TPU coating has been machine-stitched to increase the durability of the ball. The ball's electrifying multicolored design shows the emotions of fans around the world as Europe's top teams compete for the highest honor.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 569M,
@@ -8722,7 +8718,7 @@ namespace Grand.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Balls").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8740,25 +8736,25 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Balls").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productElegantGemstoneNecklace);
-            productElegantGemstoneNecklace.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name))).Id,
+            allProducts.Add(productAdidasBall);
+            productAdidasBall.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidasball.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasBall.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productElegantGemstoneNecklace);
+            await _productRepository.InsertAsync(productAdidasBall);
 
 
-            var productFlowerGirlBracelet = new Product {
+            var productMikasa = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Flower Girl Bracelet",
-                ShortDescription = "Personalised Flower Braceled",
-                FullDescription = "<p>This is a great gift for your flower girl to wear on your wedding day. A delicate bracelet that is made with silver plated soldered cable chain, gives this bracelet a dainty look for young wrist. A Swarovski heart, shown in Rose, hangs off a silver plated flower. Hanging alongside the heart is a silver plated heart charm with Flower Girl engraved on both sides. This is a great style for the younger flower girl.</p>",
+                Name = "Volleyball Ball",
+                ShortDescription = "Made of high-quality synthetic leather (PU) A high-class ball based on the V200W match model. Solid and strong machine sewing.The 18 - panel, colorful design increases the visibility of the ball during the game.",
+                FullDescription = "<p>Made of high-quality synthetic leather (PU) A high-class ball based on the V200W match model. Solid and strong machine sewing.The 18 - panel, colorful design increases the visibility of the ball during the game.</p><p> Weight: 260 - 280g </p><p> Circumference: 65 - 67cm </p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 360M,
@@ -8768,7 +8764,7 @@ namespace Grand.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Balls").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8785,25 +8781,25 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Balls").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productFlowerGirlBracelet);
-            productFlowerGirlBracelet.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productFlowerGirlBracelet.Name))).Id,
+            allProducts.Add(productMikasa);
+            productMikasa.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mikasa.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productMikasa.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productFlowerGirlBracelet);
+            await _productRepository.InsertAsync(productMikasa);
 
 
-            var productEngagementRing = new Product {
+            var productSpalding = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Vintage Style Engagement Ring",
-                ShortDescription = "1.24 Carat (ctw) in 14K White Gold (Certified)",
-                FullDescription = "<p>Dazzle her with this gleaming 14 karat white gold vintage proposal. A ravishing collection of 11 decadent diamonds come together to invigorate a superbly ornate gold shank. Total diamond weight on this antique style engagement ring equals 1 1/4 carat (ctw). Item includes diamond certificate.</p>",
+                Name = "Spalding Basketball Ball",
+                ShortDescription = "The panels of leather, composite leather are attached to the rubber body by hand. This technique is used for indoor and indoor / outdoor balls. Balloon - the highest quality inner tube that maintains the pressure of the ball.",
+                FullDescription = "<p>The panels of leather, composite leather are attached to the rubber body by hand. This technique is used for indoor and indoor / outdoor balls. Balloon - the highest quality inner tube that maintains the pressure of the ball. A specialized nylon braid - nylon lines give the ball integrity and durability. Smooth body and channels for a softer feel and strength - optimized deep channel design for better grip and control. Composite leather cover - provides a good grip, feel and aesthetic appearance of the ball, as well as the necessary strength and resistance to abrasion. Composite leather has an advanced moisture management system to improve dry and wet grip.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 2100M,
@@ -8812,7 +8808,7 @@ namespace Grand.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Balls").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8829,17 +8825,17 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Balls").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productEngagementRing);
-            productEngagementRing.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name))).Id,
+            allProducts.Add(productSpalding);
+            productSpalding.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_spalding.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productSpalding.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productEngagementRing);
+            await _productRepository.InsertAsync(productSpalding);
 
 
 
@@ -8995,40 +8991,40 @@ namespace Grand.Services.Installation
 
             //related products
 
-            productFlowerGirlBracelet.RelatedProducts.Add(
+            productMikasa.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFlowerGirlBracelet.Id,
-                    ProductId2 = productEngagementRing.Id,
+                    ProductId1 = productMikasa.Id,
+                    ProductId2 = productSpalding.Id,
                 });
 
-            productFlowerGirlBracelet.RelatedProducts.Add(
+            productMikasa.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFlowerGirlBracelet.Id,
-                    ProductId2 = productElegantGemstoneNecklace.Id,
+                    ProductId1 = productMikasa.Id,
+                    ProductId2 = productAdidasBall.Id,
                 });
 
-            productEngagementRing.RelatedProducts.Add(
+            productSpalding.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productEngagementRing.Id,
-                    ProductId2 = productFlowerGirlBracelet.Id,
+                    ProductId1 = productSpalding.Id,
+                    ProductId2 = productMikasa.Id,
                 });
 
-            productEngagementRing.RelatedProducts.Add(
+            productSpalding.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productEngagementRing.Id,
-                    ProductId2 = productElegantGemstoneNecklace.Id,
+                    ProductId1 = productSpalding.Id,
+                    ProductId2 = productAdidasBall.Id,
                 });
 
-            productElegantGemstoneNecklace.RelatedProducts.Add(
+            productAdidasBall.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productElegantGemstoneNecklace.Id,
-                    ProductId2 = productFlowerGirlBracelet.Id,
+                    ProductId1 = productAdidasBall.Id,
+                    ProductId2 = productMikasa.Id,
                 });
 
-            productElegantGemstoneNecklace.RelatedProducts.Add(
+            productAdidasBall.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productElegantGemstoneNecklace.Id,
-                    ProductId2 = productEngagementRing.Id,
+                    ProductId1 = productAdidasBall.Id,
+                    ProductId2 = productSpalding.Id,
                 });
 
             productGTA.RelatedProducts.Add(
@@ -9340,7 +9336,7 @@ namespace Grand.Services.Installation
             productAdidasNitrocharge.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productAdidasNitrocharge.Id,
-                    ProductId2 = productNikeTailwind.Id,
+                    ProductId2 = productNikeKids.Id,
                 });
             productLeviJeans.RelatedProducts.Add(
                 new RelatedProduct {
@@ -9361,7 +9357,7 @@ namespace Grand.Services.Installation
             productLeviJeans.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLeviJeans.Id,
-                    ProductId2 = productNikeTailwind.Id,
+                    ProductId2 = productNikeKids.Id,
                 });
 
             productDerbyShirt.RelatedProducts.Add(
@@ -9373,12 +9369,12 @@ namespace Grand.Services.Installation
             productDerbyShirt.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productDerbyShirt.Id,
-                    ProductId2 = productNikeTailwind.Id,
+                    ProductId2 = productNikeKids.Id,
                 });
             productDerbyShirt.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productDerbyShirt.Id,
-                    ProductId2 = productOversizedWomenTShirt.Id,
+                    ProductId2 = productPsgKit.Id,
                 });
             productDerbyShirt.RelatedProducts.Add(
                 new RelatedProduct {
@@ -9438,9 +9434,9 @@ namespace Grand.Services.Installation
             //product tags
             await AddProductTag(product25GiftCard, "nice");
             await AddProductTag(product25GiftCard, "gift");
-            await AddProductTag(productNikeTailwind, "cool");
-            await AddProductTag(productNikeTailwind, "apparel");
-            await AddProductTag(productNikeTailwind, "shirt");
+            await AddProductTag(productNikeKids, "cool");
+            await AddProductTag(productNikeKids, "apparel");
+            await AddProductTag(productNikeKids, "shirt");
             await AddProductTag(productMiSmartBand, "computer");
             await AddProductTag(productMiSmartBand, "cool");
             await AddProductTag(productAdidasPredator, "cool");
@@ -9450,9 +9446,9 @@ namespace Grand.Services.Installation
             await AddProductTag(productLenovoYogaDuet, "awesome");
             await AddProductTag(productPs4, "computer");
             await AddProductTag(productPs4, "cool");
-            await AddProductTag(productOversizedWomenTShirt, "cool");
-            await AddProductTag(productOversizedWomenTShirt, "apparel");
-            await AddProductTag(productOversizedWomenTShirt, "shirt");
+            await AddProductTag(productPsgKit, "cool");
+            await AddProductTag(productPsgKit, "apparel");
+            await AddProductTag(productPsgKit, "shirt");
             await AddProductTag(productMiNotebook, "compact");
             await AddProductTag(productMiNotebook, "awesome");
             await AddProductTag(productMiNotebook, "computer");
@@ -9478,10 +9474,10 @@ namespace Grand.Services.Installation
             await AddProductTag(productDerbyShirt, "cool");
             await AddProductTag(productDerbyShirt, "shirt");
             await AddProductTag(productDerbyShirt, "apparel");
-            await AddProductTag(productElegantGemstoneNecklace, "jewelry");
-            await AddProductTag(productElegantGemstoneNecklace, "awesome");
-            await AddProductTag(productFlowerGirlBracelet, "awesome");
-            await AddProductTag(productFlowerGirlBracelet, "jewelry");
+            await AddProductTag(productAdidasBall, "Balls");
+            await AddProductTag(productAdidasBall, "awesome");
+            await AddProductTag(productMikasa, "awesome");
+            await AddProductTag(productMikasa, "Balls");
             await AddProductTag(productLegoHogwarts, "lego");
             await AddProductTag(productAdidasNitrocharge, "cool");
             await AddProductTag(productAdidasNitrocharge, "shoes");
@@ -9525,8 +9521,8 @@ namespace Grand.Services.Installation
             await AddProductTag(productAdidasTurfs, "jeans");
             await AddProductTag(productAdidasTurfs, "cool");
             await AddProductTag(productAdidasTurfs, "apparel");
-            await AddProductTag(productEngagementRing, "jewelry");
-            await AddProductTag(productEngagementRing, "awesome");
+            await AddProductTag(productSpalding, "Balls");
+            await AddProductTag(productSpalding, "awesome");
 
 
             #endregion
