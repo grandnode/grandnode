@@ -4853,8 +4853,8 @@ namespace Grand.Services.Installation
             await _settingService.SaveSetting(new MediaSettings {
                 AvatarPictureSize = 120,
                 BlogThumbPictureSize = 450,
-                ProductThumbPictureSize = 415,
-                ProductDetailsPictureSize = 550,
+                ProductThumbPictureSize = 800,
+                ProductDetailsPictureSize = 800,
                 ProductThumbPictureSizeOnProductDetailsPage = 100,
                 AssociatedProductPictureSize = 220,
                 CategoryThumbPictureSize = 450,
@@ -5776,21 +5776,21 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryShoes);
 
-            var categoryClothing = new Category {
-                Name = "Clothing",
+            var categorySport = new Category {
+                Name = "Sport",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Clothing"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_sport.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Sport"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryClothing);
+            allCategories.Add(categorySport);
 
             var categoryAccessories1 = new Category {
                 Name = "Accessories",
@@ -6855,7 +6855,15 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productLenovoYogaDuet);
             productLenovoYogaDuet.ProductPictures.Add(new ProductPicture {
@@ -6895,7 +6903,15 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productLenovoSmartTab);
             productLenovoSmartTab.ProductPictures.Add(new ProductPicture {
@@ -6935,7 +6951,15 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productAsusMixedReality);
             productAsusMixedReality.ProductPictures.Add(new ProductPicture {
@@ -6970,7 +6994,7 @@ namespace Grand.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6986,7 +7010,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -7015,7 +7039,7 @@ namespace Grand.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7048,7 +7072,7 @@ namespace Grand.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7868,7 +7892,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -7929,7 +7953,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -7987,7 +8011,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -8026,21 +8050,11 @@ namespace Grand.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
-                ProductAttributeMappings =
-                {
-                    new ProductAttributeMapping
-                    {
-                        ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text").Id,
-                        TextPrompt = "Enter your text:",
-                        AttributeControlType = AttributeControlType.TextBox,
-                        IsRequired = true,
-                    }
-                },
                 ProductCategories =
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -8079,27 +8093,17 @@ namespace Grand.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
-                ProductAttributeMappings =
-                {
-                    new ProductAttributeMapping
-                    {
-                        ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text").Id,
-                        TextPrompt = "Enter your text:",
-                        AttributeControlType = AttributeControlType.TextBox,
-                        IsRequired = true,
-                    }
-                },
                 ProductCategories =
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
             allProducts.Add(productDerbySocks);
-            productDerbyShorts.ProductPictures.Add(new ProductPicture {
+            productDerbySocks.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_socks_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbySocks.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -8190,7 +8194,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -8275,6 +8279,14 @@ namespace Grand.Services.Installation
                             }
                         }
                     }
+                },
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        DisplayOrder = 1,
+                    }
                 }
             };
             allProducts.Add(productVivoactive);
@@ -8312,7 +8324,15 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productGarminFenix);
             productGarminFenix.ProductPictures.Add(new ProductPicture {
@@ -8353,7 +8373,15 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productForerunner);
             productForerunner.ProductPictures.Add(new ProductPicture {
