@@ -8213,12 +8213,12 @@ namespace Grand.Services.Installation
             #region Accessories
 
 
-            var productObeyHat = new Product {
+            var productVivoactive = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Obey Propaganda Hat",
-                ShortDescription = "",
-                FullDescription = "<p>Printed poplin 5 panel camp hat with debossed leather patch and web closure</p>",
+                Name = "Garmin VivoActive",
+                ShortDescription = "The Vívoactive watch offers easy-to-repeat animated cardio, strength, yoga and Pilates exercises that you can view on your watch screen. Choose from preloaded animated workouts or download more from the Garmin Connect ™ community site.",
+                FullDescription = "<p>You no longer need to search for videos and advice on the web to know what to do while training. The Vívoactive watch offers easy-to-repeat animated cardio, strength, yoga and Pilates exercises that you can view on your watch screen. Choose from preloaded animated workouts or download more from the Garmin Connect ™ community site.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 30M,
@@ -8277,21 +8277,21 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productObeyHat);
-            productObeyHat.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productObeyHat.Name))).Id,
+            allProducts.Add(productVivoactive);
+            productVivoactive.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_vivoactive.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productVivoactive.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productObeyHat);
+            await _productRepository.InsertAsync(productVivoactive);
 
 
 
-            var productBelt = new Product {
+            var productGarminFenix = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Reversible Horseferry Check Belt",
-                ShortDescription = "Reversible belt in Horseferry check with smooth leather trim",
-                FullDescription = "<p>Reversible belt in Horseferry check with smooth leather trim</p><p>Leather lining, polished metal buckle</p>",
+                Name = "Garmin Fenix 2",
+                ShortDescription = "Fēnix 2 combines the best features of our fitness watches with outdoor training watches. It is both a great navigation system and an ideal training partner in many different sports.",
+                FullDescription = "<p>Fēnix 2 combines the best features of our fitness watches with outdoor training watches. It is both a great navigation system and an ideal training partner in many different sports. Whether you're running, swimming, skiing, cycling or hiking in the mountains, fēnix 2 lets you easily switch between groups of settings optimized for each activity.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 45M,
@@ -8314,21 +8314,25 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allProducts.Add(productBelt);
-            productBelt.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBelt.Name))).Id,
+            allProducts.Add(productGarminFenix);
+            productGarminFenix.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_garmin_fenix_1.jpg"), "image/jpeg", pictureService.GetPictureSeName(productGarminFenix.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productBelt);
+            productGarminFenix.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_garmin_fenix_2.jpg"), "image/jpeg", pictureService.GetPictureSeName(productGarminFenix.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productGarminFenix);
 
 
 
-            var productSunglasses = new Product {
+            var productForerunner = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Ray Ban Aviator Sunglasses",
-                ShortDescription = "Aviator sunglasses are one of the first widely popularized styles of modern day sunwear.",
-                FullDescription = "<p>Since 1937, Ray-Ban can genuinely claim the title as the world's leading sunglasses and optical eyewear brand. Combining the best of fashion and sports performance, the Ray-Ban line of Sunglasses delivers a truly classic style that will have you looking great today and for years to come.</p>",
+                Name = "Garmin Forerunner",
+                ShortDescription = "This easy-to-use running watch is great for everyday runs, workouts and even pre-race training in a 10k run. Built-in GPS tracks your running route and provides accurate distance, pace and interval statistics.",
+                FullDescription = "<p>This easy-to-use running watch is great for everyday runs, workouts and even pre-race training in a 10k run. Built-in GPS tracks your running route and provides accurate distance, pace and interval statistics. Its intuitive interface makes it easy to mark laps or pause the timer, even with sweaty hands. Forerunner 45 also monitors heart rate on the wrist during the day and while you sleep.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 25M,
@@ -8351,12 +8355,12 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allProducts.Add(productSunglasses);
-            productSunglasses.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name))).Id,
+            allProducts.Add(productForerunner);
+            productForerunner.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_forerunner.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productForerunner.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productSunglasses);
+            await _productRepository.InsertAsync(productForerunner);
 
             #endregion
 
@@ -9379,7 +9383,7 @@ namespace Grand.Services.Installation
             productDerbyShirt.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productDerbyShirt.Id,
-                    ProductId2 = productObeyHat.Id,
+                    ProductId2 = productVivoactive.Id,
                 });
             productSonyPS5Pad.RelatedProducts.Add(
                 new RelatedProduct {
@@ -9492,8 +9496,8 @@ namespace Grand.Services.Installation
             await AddProductTag(productDellG5, "computer");
             await AddProductTag(productDellG5, "cool");
             await AddProductTag(productDellG5, "compact");
-            await AddProductTag(productObeyHat, "apparel");
-            await AddProductTag(productObeyHat, "cool");
+            await AddProductTag(productVivoactive, "apparel");
+            await AddProductTag(productVivoactive, "cool");
             await AddProductTag(productLeviJeans, "cool");
             await AddProductTag(productLeviJeans, "jeans");
             await AddProductTag(productLeviJeans, "apparel");
@@ -9502,8 +9506,8 @@ namespace Grand.Services.Installation
             await AddProductTag(productAsusMixedReality, "cool");
             await AddProductTag(productCyberpunk, "awesome");
             await AddProductTag(productCyberpunk, "digital");
-            await AddProductTag(productSunglasses, "apparel");
-            await AddProductTag(productSunglasses, "cool");
+            await AddProductTag(productForerunner, "apparel");
+            await AddProductTag(productForerunner, "cool");
             await AddProductTag(productRedmiNote9, "awesome");
             await AddProductTag(productRedmiNote9, "compact");
             await AddProductTag(productRedmiNote9, "cell");
