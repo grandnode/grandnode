@@ -4853,7 +4853,7 @@ namespace Grand.Services.Installation
             await _settingService.SaveSetting(new MediaSettings {
                 AvatarPictureSize = 120,
                 BlogThumbPictureSize = 450,
-                ProductThumbPictureSize = 800,
+                ProductThumbPictureSize = 415,
                 ProductDetailsPictureSize = 800,
                 ProductThumbPictureSizeOnProductDetailsPage = 100,
                 AssociatedProductPictureSize = 220,
@@ -5626,14 +5626,14 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryComputers);
 
-            var categoryDesktops = new Category {
-                Name = "Desktops",
+            var categoryTablets = new Category {
+                Name = "Tablets",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Desktops"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_tablets.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Tablets"))).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5641,7 +5641,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryDesktops);
+            allCategories.Add(categoryTablets);
 
             var categoryNotebooks = new Category {
                 Name = "Notebooks",
@@ -5659,21 +5659,21 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryNotebooks);
 
-            var categoryAccessories = new Category {
-                Name = "Accessories",
+            var categorySmartwatches = new Category {
+                Name = "Smartwatches",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Software"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Smartwatches"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 3,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryAccessories);
+            allCategories.Add(categorySmartwatches);
 
             var categoryElectronics = new Category {
                 Name = "Electronics",
@@ -5692,14 +5692,14 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryElectronics);
 
-            var categoryCameraPhoto = new Category {
-                Name = "Camera & photo",
+            var categoryDisplay = new Category {
+                Name = "Display",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Camera, photo"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_display.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Display"))).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5707,7 +5707,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryCameraPhoto);
+            allCategories.Add(categoryDisplay);
 
             var categorySmartphones = new Category {
                 Name = "Smartphones",
@@ -5716,7 +5716,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Smartphones"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_smartphones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Smartphones"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5742,14 +5742,14 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryOthers);
 
-            var categoryApparel = new Category {
-                Name = "Apparel",
+            var categorySport = new Category {
+                Name = "Sport",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 6,
+                PageSize = 9,
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "6, 3, 9",
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel"))).Id,
+                PageSizeOptions = "6, 3, 9, 12",
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_sport.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Sport"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5757,7 +5757,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryApparel);
+            allCategories.Add(categorySport);
 
             var categoryShoes = new Category {
                 Name = "Shoes",
@@ -5765,7 +5765,7 @@ namespace Grand.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                ParentCategoryId = categoryApparel.Id,
+                ParentCategoryId = categorySport.Id,
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Shoes"))).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
@@ -5776,38 +5776,38 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryShoes);
 
-            var categorySport = new Category {
-                Name = "Sport",
+            var categoryApparel = new Category {
+                Name = "Apparel",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                ParentCategoryId = categoryApparel.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_sport.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Sport"))).Id,
+                ParentCategoryId = categorySport.Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_sport.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categorySport);
+            allCategories.Add(categoryApparel);
 
-            var categoryAccessories1 = new Category {
-                Name = "Accessories",
+            var categoryBalls = new Category {
+                Name = "Balls",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
+                ParentCategoryId = categorySport.Id,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                ParentCategoryId = categoryApparel.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apparel Accessories"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_balls.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Balls"))).Id,
+                PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
-                PriceRanges = "-100;100-;",
                 Published = true,
-                DisplayOrder = 3,
+                DisplayOrder = 6,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryAccessories1);
+            allCategories.Add(categoryBalls);
 
             var categoryDigitalDownloads = new Category {
                 Name = "Digital downloads",
@@ -5847,23 +5847,6 @@ namespace Grand.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryLego);
-
-            var categoryBalls = new Category {
-                Name = "Balls",
-                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 6,
-                ParentCategoryId = "",
-                AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "6, 3, 9",
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_balls.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Balls"))).Id,
-                PriceRanges = "0-500;500-700;700-3000;",
-                IncludeInTopMenu = true,
-                Published = true,
-                DisplayOrder = 6,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allCategories.Add(categoryBalls);
 
             var categoryGiftCards = new Category {
                 Name = "Gift Cards",
@@ -5952,20 +5935,20 @@ namespace Grand.Services.Installation
             allManufacturers.Add(manufacturerXiaomi);
 
 
-            var manufacturerHp = new Manufacturer {
-                Name = "HP",
+            var manufacturerDell = new Manufacturer {
+                Name = "Dell",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Hp"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_dell.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Dell"))).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _manufacturerRepository.InsertAsync(manufacturerHp);
-            allManufacturers.Add(manufacturerHp);
+            await _manufacturerRepository.InsertAsync(manufacturerDell);
+            allManufacturers.Add(manufacturerDell);
 
 
             var manufacturerAdidas = new Manufacturer {
@@ -6034,7 +6017,7 @@ namespace Grand.Services.Installation
             //products
             var allProducts = new List<Product>();
 
-            #region Desktops
+            #region Computers
 
 
             var productBuildComputer = new Product {
@@ -6201,7 +6184,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -6235,7 +6218,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>The DualSense wireless controller for PS5 offers realistic touch effects2, adaptive 'Trigger' effects and a built-in microphone - all integrated into an iconic design.</p><p>Feel a physical reaction to your in-game actions thanks to dual actuators that replace traditional vibration motors. Such dynamic vibrations in your hands can simulate the tactile sensations of many things, from the world around you to the recoil of various weapons.</p><p>Enjoy intuitive motion controls for selected games thanks to the built-in accelerometer and gyroscope.</p><p>Chat with friends online using the built-in microphone or by plugging a headset into the 3.5mm jack. With the dedicated MUTE button you can disable voice recording.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 1259M,
+                Price = 59M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -6258,11 +6241,13 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                         DisplayOrder = 1,
                     }
                 }
+
             };
+
             allProducts.Add(productSonyPS5Pad);
             productSonyPS5Pad.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_pad_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyPS5Pad.Name))).Id,
@@ -6282,7 +6267,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Get dependable performance for work and play from the Duet 3i’s Intel® Pentium® processor, which gives you the ability to effortlessly multitask with multi-screen capabilities, communicate easily with friends and family, and take all your favorite entertainment to go.</p><p>Work more freely on the elegant IdeaPad Duet 3i than on a regular laptop. The detachable Bluetooth keyboard allows you to easily switch between laptop and tablet modes, and the stand makes it easy to position your computer on any surface. The laptop runs on the power of an Intel® Pentium® processor, and the HD touchscreen, Dolby Audio ™ sound and optional LTE connectivity will keep you entertained anywhere.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 500M,
+                Price = 99M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -6305,7 +6290,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Tablets").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -6502,7 +6487,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Use the new Sony HD Camera for PlayStation 5 to show other players your reactions during the game. Equipped with two lenses, the camera can record images in 1080p quality and works seamlessly with the PS5 background removal tools. They put you in the spotlight of viewers. In addition, the camera has been equipped with a stand that makes it easy to mount it above or below the TV.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 1590M,
+                Price = 150M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -6525,7 +6510,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                         DisplayOrder = 1,
                     }
                 },
@@ -6609,14 +6594,6 @@ namespace Grand.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                         DisplayOrder = 1,
-                    }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "HP").Id,
-                        DisplayOrder = 3,
                     }
                 },
                 ProductSpecificationAttributes =
@@ -6706,7 +6683,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductManufacturer
                     {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "HP").Id,
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Dell").Id,
                         DisplayOrder = 4,
                     }
                 },
@@ -6860,7 +6837,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Tablets").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -6908,7 +6885,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Tablets").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -6933,7 +6910,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Explore exciting new virtual worlds with the ASUS Windows Mixed Reality Headset! It features a unique and beautiful 3D-pattern aesthetic and a comfy weight-balanced design with premium antibacterial cushioned materials, so it’s not only stylish but also supremely cool and comfortable for extended periods of exploring. Unlike other headsets, the ASUS Windows Mixed Reality Headset doesn’t need any external sensors, making initial set up super easy — you’ll be ready to play in 10 minutes or less*! It’s the revolutionary, easy-to-use and affordable way to explore your imagination.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 54.99M,
+                Price = 399M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -6956,7 +6933,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Display").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -6975,123 +6952,8 @@ namespace Grand.Services.Installation
 
             #endregion
 
-            #region Camera, Photo
-
-
-            //this one is a grouped product with two associated ones
-            var productDerbyKit = new Product {
-                ProductType = ProductType.GroupedProduct,
-                VisibleIndividually = true,
-                Name = "Derby County Kit",
-                ShortDescription = "Show your pride and support and show off in The Rams Homemade Costumes.",
-                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
-                ProductTemplateId = productTemplateGrouped.Id,
-                AllowCustomerReviews = true,
-                Published = true,
-                Price = 670M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productDerbyKit);
-            productDerbyKit.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
-                DisplayOrder = 1,
-            });
-            productDerbyKit.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
-                DisplayOrder = 2,
-            });
-            await _productRepository.InsertAsync(productDerbyKit);
-            var productDerbyKit_associated_1 = new Product {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = false, //hide this products
-                ParentGroupedProductId = productDerbyKit.Id,
-                Name = "Derby County Shirt - Away",
-                ProductTemplateId = productTemplateSimple.Id,
-                AllowCustomerReviews = true,
-                Published = true,
-                Price = 670M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productDerbyKit_associated_1);
-            productDerbyKit_associated_1.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Derby County Away Shirt"))).Id,
-                DisplayOrder = 1,
-            });
-            await _productRepository.InsertAsync(productDerbyKit_associated_1);
-            var productDerbyKit_associated_2 = new Product {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = false,
-                ParentGroupedProductId = productDerbyKit.Id,
-                Name = "Derby County Shirt - Home",
-                ProductTemplateId = productTemplateSimple.Id,
-                AllowCustomerReviews = true,
-                Published = true,
-                Price = 630M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productDerbyKit_associated_2);
-            productDerbyKit_associated_2.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Derby County Shirt - Home"))).Id,
-                DisplayOrder = 1,
-            });
-            await _productRepository.InsertAsync(productDerbyKit_associated_2);
-
+            #region Display
+            
             var productAcerProjector = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7123,7 +6985,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Display").Id,
                         DisplayOrder = 3,
                     }
                 }
@@ -7171,7 +7033,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Display").Id,
                         DisplayOrder = 2,
                     }
                 }
@@ -7200,7 +7062,7 @@ namespace Grand.Services.Installation
                 ProductTemplateId = productTemplateSimple.Id,
                 Flag = "New",
                 AllowCustomerReviews = true,
-                Price = 245M,
+                Price = 199M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -7246,7 +7108,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Redmi Note 9 is equipped with a high-performance octa-core processor with a maximum clock frequency of 2.0 GHz. The maximum GPU frequency of 1.0GHz ensures better performance and thus offers a smooth gaming experience.</p><p>Thanks to the improved 5020mAh battery, you can enjoy long work on a single charge. In combination with the 18W fast charge, you will get excellent results and charge the battery in no time.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 100M,
+                Price = 249M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -7294,7 +7156,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>The speed demon is now even better. Powered by an octa-core trifecta processor with a liquid cooling system, it provides a perfect working experience. Quad Camera with Pro Mode support.</p><p>The technology of execution in 7nm provides a 25% increase in performance, improving the smoothness of graphics rendering, while significantly reducing energy consumption. Kryo 585 ™ processor | Adreno 650 ™ graphics processor</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 349M,
+                Price = 299M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -7389,7 +7251,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartwatches").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -7515,7 +7377,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Adidas Predator is the highest quality model of football boots. The special construction of the sole guarantees high flexibility and great adhesion, and the ingredients used to make the upper (synthetic material) ensure optimal weight of the shoe and adequate protection throughout the year. A feature of this model is also excellent vapor permeability - the moisture generated during the game is effectively expelled to the outside. The unique comfort and excellent foot support are due to the modern construction elements used by Adidas, which improve the player's features on the pitch. In Adidas footwear, the footballer turns into a ruthless predator. Thanks to the combination of modern technologies and great design, it is an excellent choice and fun to play.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 40M,
+                Price = 149M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -7624,7 +7486,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 27.56M,
+                Price = 99M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -7764,7 +7626,7 @@ namespace Grand.Services.Installation
                 FullDescription = "Be unpredictable. Shoes designed for the youngest players starting their adventure with football. The sole is designed to provide perfect grip on artificial turf and hard or frozen surfaces. The X-SKIN INSPIRATION upper made of synthetic material will give a feeling of lightness and support while guiding the ball thanks to the convex texture. The heel stiffening will provide stability, and the textile inner lining will provide comfort and adequate cushioning. A profiled insole reflecting the anatomical shape of the foot and symmetrical lacing will keep the foot in the right position. The sole will allow for dynamic feints and changes in the direction of the run on artificial turf as well as hard or frozen surfaces.",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 30M,
+                Price = 89M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -7812,6 +7674,120 @@ namespace Grand.Services.Installation
 
             #region Clothing
 
+            //this one is a grouped product with two associated ones
+            var productDerbyKit = new Product {
+                ProductType = ProductType.GroupedProduct,
+                VisibleIndividually = true,
+                Name = "Derby County Kit",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Costumes.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
+                ProductTemplateId = productTemplateGrouped.Id,
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 129.99M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productDerbyKit);
+            productDerbyKit.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
+                DisplayOrder = 1,
+            });
+            productDerbyKit.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productDerbyKit);
+            var productDerbyKit_associated_1 = new Product {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = false, //hide this products
+                ParentGroupedProductId = productDerbyKit.Id,
+                Name = "Derby County Shirt - Away",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 129.99M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productDerbyKit_associated_1);
+            productDerbyKit_associated_1.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Derby County Away Shirt"))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDerbyKit_associated_1);
+            var productDerbyKit_associated_2 = new Product {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = false,
+                ParentGroupedProductId = productDerbyKit.Id,
+                Name = "Derby County Shirt - Home",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 149.99M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productDerbyKit_associated_2);
+            productDerbyKit_associated_2.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Derby County Shirt - Home"))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDerbyKit_associated_2);
+
             var productNikeKids = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7821,7 +7797,7 @@ namespace Grand.Services.Installation
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Published = true,
-                Price = 15M,
+                Price = 39M,
                 IsShipEnabled = true,
                 Weight = 1,
                 Length = 2,
@@ -7912,7 +7888,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>This oversized women t-Shirt needs minimum ironing. It is a great product at a great value!</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 24M,
+                Price = 99.99M,
                 IsShipEnabled = true,
                 Weight = 4,
                 Length = 3,
@@ -7978,7 +7954,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 15M,
+                Price = 59M,
                 IsShipEnabled = true,
                 Weight = 4,
                 Length = 3,
@@ -8031,7 +8007,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 15M,
+                Price = 29M,
                 IsShipEnabled = true,
                 Weight = 4,
                 Length = 3,
@@ -8214,7 +8190,7 @@ namespace Grand.Services.Installation
 
             #endregion
 
-            #region Accessories
+            #region Smartwatches
 
 
             var productVivoactive = new Product {
@@ -8284,7 +8260,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartwatches").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -8329,7 +8305,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartwatches").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -8378,7 +8354,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartwatches").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -8421,7 +8397,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Cyberpunk 2077 is an open-world adventure set in Night City, a megalopolis ruled by an obsessive quest for power, fame and body remake. Your name is V and you must acquire a one-of-a-kind implant - the key to immortality. Create your own playstyle and set out to conquer the mighty city of the future, whose history is shaped by your decisions.</p><p>Become a cyberpunk, a freelance armed to the teeth, and become the legend of the most dangerous city of the future. Create your character from scratch. Take on the role of the outlaw Punk, freedom-loving Nomad or ruthless Corp.</p><p>Get the most powerful implant in Night City and take on those who shake the whole city. Follow Rockerboy Johnny Silverhand (played by Keanu Reeves) and change a world ruled by large corporations forever. And all this is accompanied by music from bands and creators such as Run the Jewels, Refused, Grimes, A $ AP Rocky, Gazelle Twin, Ilan Rubin, Richard Devine, Nina Kraviz, Deadly Hunta, Rat Boy and Tina Guo.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 2.8M,
+                Price = 69M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -8486,7 +8462,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>When a young street hustler, a retired bank robber and a terrifying psychopath land themselves in trouble, they must pull off a series of dangerous heists to survive in a city in which they can trust nobody, least of all each other.</p><p>Launch business ventures from your Maze Bank West Executive Office, research powerful weapons technology from your underground Gunrunning Bunker and use your Counterfeit Cash Factory to start a lucrative counterfeiting operation.</p><p>Tear through the streets with a range of 10 high performance vehicles including a Supercar, Motorcycles, the weaponized Dune FAV, a Helicopter, a Rally Car and more. You’ll also get properties including a 10 car garage to store your growing fleet.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 3M,
+                Price = 49M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -8542,7 +8518,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>The iconic Black Ops series is back with Call of Duty®: Black Ops Cold War - the direct sequel to the original and fan-favorite Call of Duty®: Black Ops. Black Ops Cold War will drop fans into the depths of the Cold War’s volatile geopolitical battle of the early 1980s. Nothing is ever as it seems in a gripping single-player Campaign, where players will come face-to-face with historical figures and hard truths, as they battle around the globe through iconic locales like East Berlin, Vietnam, Turkey, Soviet KGB headquarters and more. As elite operatives, you will follow the trail of a shadowy figure named Perseus who is on a mission to destabilize the global balance of power and change the course of history. Descend into the dark center of this global conspiracy alongside iconic characters Woods, Mason and Hudson and a new cast of operatives attempting to stop a plot decades in the making. Beyond the Campaign, players will bring a Cold War arsenal of weapons and equipment into the next generation of Multiplayer and Zombies experiences.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 3M,
+                Price = 69M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -8591,8 +8567,8 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Inspire kids and adults with the LEGO® Star Wars ™ 75257 Millennium Falcon model. The brick-built version of the iconic Corellian freighter features a variety of details, including a rotating lower and upper gun turret, 2 spring-loaded shooters, a lowering ramp and an opening cockpit with space for 2 minifigures. The top panels fold out to reveal a detailed interior where children will love to reenact scenes from Star Wars: Skywalker. Rebirth ”featuring characters from the“ Star Wars ”universe - Finn, Chewbakka, Lando Calrissian, Boolio, C-3PO, R2-D2 and D-O. This iconic set from the LEGO Star Wars series is a great addition to any fan's collection.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 27M,
-                OldPrice = 30M,
+                Price = 109M,
+                OldPrice = 199M,
                 IsShipEnabled = true,
                 IsFreeShipping = true,
                 Weight = 2,
@@ -8642,8 +8618,8 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Taste real magic at the LEGO® Harry Potter™ Hogwarts™ Castle! Unforgettable building satisfaction with this highly detailed LEGO Harry Potter collectible set with over 6,000 pieces. It is packed with elements from the Harry Potter series - you will find towers, turrets, chambers, classrooms, creatures, Whomping Willow ™, Hagrid's hut and many other signature details. Plus, with 4 minifigures and 27 microfigures of students, teachers, statues and 5 Dementors, this advanced construction toy set is the perfect gift for any Harry Potter fan.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 51M,
-                OldPrice = 67M,
+                Price = 99M,
+                OldPrice = 149M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -8690,8 +8666,8 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Everything is awesome about the LEGO® City Police Station (60246) playset. Little law enforcers and fans of the LEGO City TV series will love creating stories with a host of fun characters, including Duke DeTain, Chief Wheeler and Daisy Kaboom. </p><p>This fantastic set includes a police station with a light-brick searchlight and a police car with sound-brick siren, plus a cool truck, motorcycle and surveillance drone. A building toy with a little extra With this toy playset you get a simple building guide and Instructions.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 24M,
-                OldPrice = 35M,
+                Price = 59M,
+                OldPrice = 99M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -8734,7 +8710,7 @@ namespace Grand.Services.Installation
 
             #endregion
 
-            #region Jewelry
+            #region Balls
 
             var productAdidasBall = new Product {
                 ProductType = ProductType.SimpleProduct,
@@ -8744,7 +8720,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>The Adidas Finale Top Capitano is a durable training ball with strong references to the UEFA Champions League. The ball is a replica of the model used in this year's Champions League group stage and is perfect for training and spontaneous games. The strong TPU coating has been machine-stitched to increase the durability of the ball. The ball's electrifying multicolored design shows the emotions of fans around the world as Europe's top teams compete for the highest honor.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 569M,
+                Price = 69M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -8789,7 +8765,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>Made of high-quality synthetic leather (PU) A high-class ball based on the V200W match model. Solid and strong machine sewing.The 18 - panel, colorful design increases the visibility of the ball during the game.</p><p> Weight: 260 - 280g </p><p> Circumference: 65 - 67cm </p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 360M,
+                Price = 29.99M,
                 IsShipEnabled = true,
                 IsFreeShipping = true,
                 Weight = 2,
@@ -8834,7 +8810,7 @@ namespace Grand.Services.Installation
                 FullDescription = "<p>The panels of leather, composite leather are attached to the rubber body by hand. This technique is used for indoor and indoor / outdoor balls. Balloon - the highest quality inner tube that maintains the pressure of the ball. A specialized nylon braid - nylon lines give the ball integrity and durability. Smooth body and channels for a softer feel and strength - optimized deep channel design for better grip and control. Composite leather cover - provides a good grip, feel and aesthetic appearance of the ball, as well as the necessary strength and resistance to abrasion. Composite leather has an advanced moisture management system to improve dry and wet grip.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 2100M,
+                Price = 49M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -9000,6 +8976,83 @@ namespace Grand.Services.Installation
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(product100GiftCard);
+
+            var productPlaystationBundlePack = new Product {
+                ProductType = ProductType.BundledProduct,
+                VisibleIndividually = true,
+                Name = "Playstation 4 Slim Kit",
+                ShortDescription = "Meet the sleeker, smaller PS4 ™ that offers gamers an amazing gaming experience. The volume of the new PS4 is more than 30% smaller compared to previous console models, and its weight has been reduced by 25% and 16% respectively compared to the first (CUH-1000 series) and current (CUH-1200) versions of the PS4™.",
+                FullDescription = "<p>Meet the sleeker, smaller PS4 ™ that offers gamers an amazing gaming experience. The volume of the new PS4 is more than 30% smaller compared to previous console models, and its weight has been reduced by 25% and 16% respectively compared to the first (CUH-1000 series) and current (CUH-1200) versions of the PS4 ™.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Price = 259M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+               {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productPlaystationBundlePack);
+            productPlaystationBundlePack.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPlaystationBundlePack.Name))).Id,
+                DisplayOrder = 1,
+            });
+            productPlaystationBundlePack.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPlaystationBundlePack.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productPlaystationBundlePack);
+
+            var productbundle1 = new BundleProduct {
+                ProductBundleId = productPlaystationBundlePack.Id,
+                ProductId = productPs4.Id,
+                DisplayOrder = 1,
+                Quantity = 1
+            };
+            var productbundle2 = new BundleProduct {
+                ProductBundleId = productPlaystationBundlePack.Id,
+                ProductId = productSonyPS5Pad.Id,
+                DisplayOrder = 2,
+                Quantity = 2
+            };
+            var productbundle3 = new BundleProduct {
+                ProductBundleId = productPlaystationBundlePack.Id,
+                ProductId = productPs5Camera.Id,
+                DisplayOrder = 3,
+                Quantity = 1
+            };
+            var productbundle4 = new BundleProduct {
+                ProductBundleId = productPlaystationBundlePack.Id,
+                ProductId = productCod.Id,
+                DisplayOrder = 4,
+                Quantity = 1
+            };
+            productPlaystationBundlePack.BundleProducts.Add(productbundle1);
+            productPlaystationBundlePack.BundleProducts.Add(productbundle2);
+            productPlaystationBundlePack.BundleProducts.Add(productbundle3);
+            productPlaystationBundlePack.BundleProducts.Add(productbundle4);
+            await _productRepository.UpdateAsync(productPlaystationBundlePack);
 
             #endregion
 
