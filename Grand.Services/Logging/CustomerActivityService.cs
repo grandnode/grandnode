@@ -162,9 +162,13 @@ namespace Grand.Services.Logging
         /// </summary>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <returns>Activity log type item</returns>
-        public virtual Task<ActivityLogType> GetActivityTypeById(string activityLogTypeId)
+        public virtual async Task<ActivityLogType> GetActivityTypeById(string activityLogTypeId)
         {
-            return _activityLogTypeRepository.GetByIdAsync(activityLogTypeId);
+            if (string.IsNullOrEmpty(activityLogTypeId))
+                return null;
+
+            var key = string.Format(CacheKey.ACTIVITYTYPE_BY_KEY, activityLogTypeId);
+            return await _cacheManager.GetAsync(key, () => _activityLogTypeRepository.GetByIdAsync(activityLogTypeId));
         }
 
         /// <summary>

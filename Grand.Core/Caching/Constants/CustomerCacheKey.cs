@@ -53,6 +53,14 @@
         /// <summary>
         /// Key for caching
         /// </summary>
+        /// <remarks>
+        /// {0} : ident
+        /// </remarks>
+        public static string ACTIVITYTYPE_BY_KEY => "Grand.activitytype.id-{0}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         public static string ACTIVITYTYPE_ALL_KEY => "Grand.activitytype.all";
 
         /// <summary>
