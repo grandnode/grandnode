@@ -205,21 +205,13 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private async Task<PictureModel> PrepareCartItemPicture(GetWishlist request,
             Product product, IList<CustomAttribute> attributes)
         {
-            var pictureCacheKey = string.Format(ModelCacheEventConst.CART_PICTURE_MODEL_KEY, product.Id, _mediaSettings.CartThumbPictureSize,
-                true, request.Language.Id, request.Store.Id);
-
-            var model = await _cacheManager.GetAsync(pictureCacheKey, async () =>
-            {
-                var sciPicture = await product.GetProductPicture(attributes, _productService, _pictureService, _productAttributeParser);
-                return new PictureModel {
-                    Id = sciPicture?.Id,
-                    ImageUrl = await _pictureService.GetPictureUrl(sciPicture, _mediaSettings.CartThumbPictureSize, true),
-                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
-                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
-                };
-            });
-
-            return model;
+            var sciPicture = await product.GetProductPicture(attributes, _productService, _pictureService, _productAttributeParser);
+            return new PictureModel {
+                Id = sciPicture?.Id,
+                ImageUrl = await _pictureService.GetPictureUrl(sciPicture, _mediaSettings.CartThumbPictureSize, true),
+                Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), product.Name),
+                AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), product.Name),
+            };
         }
 
     }

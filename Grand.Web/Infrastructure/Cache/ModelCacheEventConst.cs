@@ -294,20 +294,6 @@ namespace Grand.Web.Infrastructure.Cache
         public const string PRODUCTS_SIMILAR_IDS_PATTERN = "Grand.pres.similar";
 
 
-        /// <summary>
-        /// Key for product picture caching on the product details page
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : picture size
-        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
-        /// {3} : language ID ("alt" and "title" can depend on localized product name)
-        /// {4} : current store ID
-        /// </remarks>
-        public const string PRODUCT_DETAILS_PICTURES_MODEL_KEY = "Grand.pres.product.picture-{0}-{1}-{2}-{3}-{4}";
-        public const string PRODUCT_DETAILS_PICTURES_PATTERN_KEY = "Grand.pres.product.picture-{0}";
-
-
         /// Key for product reviews caching
         /// </summary>
         /// <remarks>
@@ -315,21 +301,6 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// </remarks>
         public const string PRODUCT_REVIEWS_MODEL_KEY = "Grand.pres.product.reviews-{0}-{1}";
-
-
-        /// <summary>
-        /// Key for cart picture caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product Id
-        /// {1} : picture size
-        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
-        /// {3} : language ID ("alt" and "title" can depend on localized product name)
-        /// {4} : current store ID
-        /// </remarks>
-        public const string CART_PICTURE_MODEL_KEY = "Grand.pres.cart.picture-{0}-{1}-{2}-{3}-{4}";
-        public const string CART_PICTURE_PATTERN_KEY = "Grand.pres.cart.picture-{0}";
-
 
         /// <summary>
         /// Key for picture caching

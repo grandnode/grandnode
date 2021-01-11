@@ -537,53 +537,49 @@ namespace Grand.Web.Features.Handlers.Products
 
         private async Task<(PictureModel defaultPictureModel, List<PictureModel> pictureModels)> PrepareProductPictureModel(Product product, int defaultPictureSize, bool isAssociatedProduct, string name)
         {
-            var productPicturesCacheKey = string.Format(ModelCacheEventConst.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize,
-                isAssociatedProduct, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            return await _cacheManager.GetAsync(productPicturesCacheKey, async () =>
-            {
-                var defaultPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
-                if (defaultPicture == null)
-                    defaultPicture = new ProductPicture();
+            var defaultPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
+            if (defaultPicture == null)
+                defaultPicture = new ProductPicture();
 
-                var defaultPictureModel = new PictureModel {
-                    Id = defaultPicture.PictureId,
-                    ImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, defaultPictureSize, !isAssociatedProduct),
-                    FullSizeImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, 0, !isAssociatedProduct),
+            var defaultPictureModel = new PictureModel {
+                Id = defaultPicture.PictureId,
+                ImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, defaultPictureSize, !isAssociatedProduct),
+                FullSizeImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, 0, !isAssociatedProduct),
+            };
+            //"title" attribute
+            defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
+                defaultPicture.TitleAttribute :
+                string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), name);
+            //"alt" attribute
+            defaultPictureModel.AlternateText = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.AltAttribute)) ?
+                defaultPicture.AltAttribute :
+                string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), name);
+
+            //all pictures
+            var pictureModels = new List<PictureModel>();
+            foreach (var picture in product.ProductPictures.OrderBy(x => x.DisplayOrder))
+            {
+                var pictureModel = new PictureModel {
+                    Id = picture.PictureId,
+                    ThumbImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                    ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductDetailsPictureSize),
+                    FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId),
+                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), name),
+                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), name),
                 };
                 //"title" attribute
-                defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
-                    defaultPicture.TitleAttribute :
+                pictureModel.Title = !string.IsNullOrEmpty(picture.TitleAttribute) ?
+                    picture.TitleAttribute :
                     string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), name);
                 //"alt" attribute
-                defaultPictureModel.AlternateText = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.AltAttribute)) ?
-                    defaultPicture.AltAttribute :
-                    string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), name);
+                pictureModel.AlternateText = !string.IsNullOrEmpty(picture.AltAttribute) ?
+                   picture.AltAttribute :
+                   string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), name);
 
-                //all pictures
-                var pictureModels = new List<PictureModel>();
-                foreach (var picture in product.ProductPictures.OrderBy(x => x.DisplayOrder))
-                {
-                    var pictureModel = new PictureModel {
-                        Id = picture.PictureId,
-                        ThumbImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
-                        ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductDetailsPictureSize),
-                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId),
-                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), name),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), name),
-                    };
-                    //"title" attribute
-                    pictureModel.Title = !string.IsNullOrEmpty(picture.TitleAttribute) ?
-                        picture.TitleAttribute :
-                        string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), name);
-                    //"alt" attribute
-                    pictureModel.AlternateText = !string.IsNullOrEmpty(picture.AltAttribute) ?
-                       picture.AltAttribute :
-                       string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), name);
+                pictureModels.Add(pictureModel);
+            }
+            return (defaultPictureModel, pictureModels);
 
-                    pictureModels.Add(pictureModel);
-                }
-                return (defaultPictureModel, pictureModels);
-            });
         }
 
         private async Task<ProductDetailsModel.ProductPriceModel> PrepareProductPriceModel(Product product)
@@ -1065,33 +1061,27 @@ namespace Grand.Web.Features.Handlers.Products
                         bundleProduct.PriceValue = productprice.productprice;
                     }
 
-                    //prepare picture model
-                    var productbundlePicturesCacheKey = string.Format(ModelCacheEventConst.PRODUCT_DETAILS_PICTURES_MODEL_KEY,
-                        p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id,
-                        _storeContext.CurrentStore.Id);
 
-                    bundleProduct.DefaultPictureModel = await _cacheManager.GetAsync(productbundlePicturesCacheKey, async () =>
-                    {
-                        var picture = p1.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
-                        if (picture == null)
-                            picture = new ProductPicture();
+                    var picture = p1.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
+                    if (picture == null)
+                        picture = new ProductPicture();
 
-                        var pictureModel = new PictureModel {
-                            Id = picture.PictureId,
-                            ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductBundlePictureSize),
-                            FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
-                        };
-                        //"title" attribute
-                        pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
-                            picture.TitleAttribute :
-                            string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), p1.Name);
-                        //"alt" attribute
-                        pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
-                            picture.AltAttribute :
-                            string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), p1.Name);
+                    var pictureModel = new PictureModel {
+                        Id = picture.PictureId,
+                        ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductBundlePictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
+                    };
+                    //"title" attribute
+                    pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                        picture.TitleAttribute :
+                        string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), p1.Name);
+                    //"alt" attribute
+                    pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                        picture.AltAttribute :
+                        string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), p1.Name);
 
-                        return pictureModel;
-                    });
+                    bundleProduct.DefaultPictureModel = pictureModel;
+
                     bundleProduct.ProductAttributes = await PrepareProductAttributeModel(p1, _mediaSettings.ProductBundlePictureSize);
 
                     model.Add(bundleProduct);
