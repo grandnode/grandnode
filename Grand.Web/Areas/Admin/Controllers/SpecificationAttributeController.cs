@@ -1,4 +1,6 @@
-﻿using Grand.Domain.Seo;
+﻿using Grand.Core;
+using Grand.Domain.Customers;
+using Grand.Domain.Seo;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
@@ -8,6 +10,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
 using Grand.Services.Seo;
+using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +29,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IStoreService _storeService;
+        private readonly IWorkContext _workContext;
         private readonly SeoSettings _seoSettings;
 
         #endregion Fields
@@ -36,12 +41,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
+            IStoreService storeService,
+            IWorkContext workContext,
             SeoSettings seoSettings)
         {
             _specificationAttributeService = specificationAttributeService;
             _languageService = languageService;
             _localizationService = localizationService;
             _customerActivityService = customerActivityService;
+            _storeService = storeService;
+            _workContext = workContext;
             _seoSettings = seoSettings;
         }
 
@@ -75,6 +84,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new SpecificationAttributeModel();
             //locales
             await AddLocales(_languageService, model.Locales);
+            //Stores
+            await model.PrepareStoresMappingModel(null, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
+
             return View(model);
         }
 
@@ -86,6 +98,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var specificationAttribute = model.ToEntity();
                 specificationAttribute.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(specificationAttribute.SeName) ? specificationAttribute.Name : specificationAttribute.SeName, _seoSettings);
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    model.LimitedToStores = true;
+                    model.SelectedStoreIds = new string[] { _workContext.CurrentCustomer.StaffStoreId };
+                }
                 await _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
                 //activity log
                 await _customerActivityService.InsertActivity("AddNewSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name);
@@ -112,6 +129,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 locale.Name = specificationAttribute.GetLocalized(x => x.Name, languageId, false, false);
             });
+            //Stores
+            await model.PrepareStoresMappingModel(specificationAttribute, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -129,6 +148,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 specificationAttribute = model.ToEntity(specificationAttribute);
                 specificationAttribute.SeName = SeoExtensions.GetSeName(string.IsNullOrEmpty(specificationAttribute.SeName) ? specificationAttribute.Name : specificationAttribute.SeName, _seoSettings);
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    model.LimitedToStores = true;
+                    model.SelectedStoreIds = new string[] { _workContext.CurrentCustomer.StaffStoreId };
+                }
                 await _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
                 //activity log
                 await _customerActivityService.InsertActivity("EditSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name);
@@ -146,6 +170,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            //Stores
+            await model.PrepareStoresMappingModel(specificationAttribute, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
+            //locales
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = specificationAttribute.GetLocalized(x => x.Name, languageId, false, false);
+            });
             return View(model);
         }
 

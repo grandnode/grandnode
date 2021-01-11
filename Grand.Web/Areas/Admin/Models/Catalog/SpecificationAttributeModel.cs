@@ -2,10 +2,12 @@
 using Grand.Core.ModelBinding;
 using Grand.Core.Models;
 using System.Collections.Generic;
+using Grand.Framework.Mvc.Models;
+using Grand.Framework.Mapping;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class SpecificationAttributeModel : BaseEntityModel, ILocalizedModel<SpecificationAttributeLocalizedModel>
+    public partial class SpecificationAttributeModel : BaseEntityModel, ILocalizedModel<SpecificationAttributeLocalizedModel>, IStoreMappingModel
     {
         public SpecificationAttributeModel()
         {
@@ -21,6 +23,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
+        //Store mapping
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public string[] SelectedStoreIds { get; set; }
 
         public IList<SpecificationAttributeLocalizedModel> Locales { get; set; }
 
