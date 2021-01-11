@@ -120,7 +120,7 @@ namespace Grand.Web.Features.Handlers.Products
                 var combination = _productAttributeParser.FindProductAttributeCombination(request.Product, customAttributes);
 
                 if (combination != null)
-                    if (request.Product.GetTotalStockQuantityForCombination(combination, warehouseId: request.Store.DefaultWarehouseId) <= 0)
+                    if (request.Product.GetTotalStockQuantityForCombination(combination, warehouseId: warehouseId) <= 0)
                         model.DisplayBackInStockSubscription = true;
 
                 if (request.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
