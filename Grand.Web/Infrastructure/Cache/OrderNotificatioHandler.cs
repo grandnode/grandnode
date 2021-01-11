@@ -9,7 +9,6 @@ namespace Grand.Web.Infrastructure.Cache
 {
     public class OrderNotificatioHandler :
         INotificationHandler<EntityInserted<Order>>,
-        INotificationHandler<EntityUpdated<Order>>,
         INotificationHandler<EntityDeleted<Order>>
     {
 
@@ -29,10 +28,6 @@ namespace Grand.Web.Infrastructure.Cache
         {
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
-        }
-        public Task Handle(EntityUpdated<Order> eventMessage, CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
         }
     }
 }
