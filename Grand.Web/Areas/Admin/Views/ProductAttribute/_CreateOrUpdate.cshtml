@@ -28,12 +28,19 @@
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="3">
+        <tabstrip-item text="@T("Admin.Catalog.Categories.Stores")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="4">
             <content>
                 <div>
                     @{
                         ViewData["ObjectType"] = "ProductAttribute";
-                        ViewData["TabIndex"] = 3;
+                        ViewData["TabIndex"] = 4;
                     }
                     <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
                 </div>
