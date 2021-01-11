@@ -36,10 +36,11 @@ namespace Grand.Domain
             PageIndex = pageIndex;
         }
 
-        private async Task InitializeAsync(IMongoCollection<T> source, FilterDefinition<T> filterdefinition, SortDefinition<T> sortdefinition, int pageIndex, int pageSize)
+        private async Task InitializeAsync(IMongoCollection<T> source, FilterDefinition<T> filterdefinition,SortDefinition<T> sortdefinition, int pageIndex, int pageSize, FindOptions findOptions = null)
         {
             TotalCount = (int) await source.CountDocumentsAsync(filterdefinition);
-            AddRange(await source.Find(filterdefinition).Sort(sortdefinition).Skip(pageIndex * pageSize).Limit(pageSize).ToListAsync());
+
+            AddRange(await source.Find(filterdefinition, findOptions).Sort(sortdefinition).Skip(pageIndex * pageSize).Limit(pageSize).ToListAsync());
             if (pageSize > 0)
             {
                 TotalPages = TotalCount / pageSize;
@@ -88,10 +89,10 @@ namespace Grand.Domain
             AddRange(source);
         }
 
-        public static async Task<PagedList<T>> Create(IMongoCollection<T> source, FilterDefinition<T> filterdefinition, SortDefinition<T> sortdefinition, int pageIndex, int pageSize)
+        public static async Task<PagedList<T>> Create(IMongoCollection<T> source, FilterDefinition<T> filterdefinition, SortDefinition<T> sortdefinition, int pageIndex, int pageSize, FindOptions findOptions = null)
         {
             var pagelist = new PagedList<T>();
-            await pagelist.InitializeAsync(source, filterdefinition, sortdefinition, pageIndex, pageSize);
+            await pagelist.InitializeAsync(source, filterdefinition, sortdefinition, pageIndex, pageSize, findOptions);
             return pagelist;
         }
 

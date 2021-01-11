@@ -297,7 +297,7 @@ namespace Grand.Services.Queries.Handlers.Catalog
                 //best seller
                 builderSort = Builders<Product>.Sort.Descending(x => x.Sold);
             }
-
+            
             var products = await PagedList<Product>.Create(_productRepository.Collection, filter, builderSort, request.PageIndex, request.PageSize);
 
             if (request.LoadFilterableSpecificationAttributeOptionIds && !_catalogSettings.IgnoreFilterableSpecAttributeOption)
