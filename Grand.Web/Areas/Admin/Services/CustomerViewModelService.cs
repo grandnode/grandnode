@@ -248,16 +248,16 @@ namespace Grand.Web.Areas.Admin.Services
             return result;
         }
 
-        protected virtual async Task<CustomerModel> PrepareCustomerModelForList(Customer customer)
+        protected virtual CustomerModel PrepareCustomerModelForList(Customer customer)
         {
             return new CustomerModel {
                 Id = customer.Id,
                 Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest"),
                 Username = customer.Username,
                 FullName = customer.GetFullName(),
-                Company = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Company),
-                Phone = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Phone),
-                ZipPostalCode = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ZipPostalCode),
+                Company = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company),
+                Phone = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone),
+                ZipPostalCode = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ZipPostalCode),
                 CustomerRoleNames = GetCustomerRolesNames(customer.CustomerRoles.ToList()),
                 Active = customer.Active,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc),
@@ -412,14 +412,15 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<CustomerListModel> PrepareCustomerListModel()
         {
             var registered = await _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            var customerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             var model = new CustomerListModel {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
                 CompanyEnabled = _customerSettings.CompanyEnabled,
                 PhoneEnabled = _customerSettings.PhoneEnabled,
                 ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled,
-                AvailableCustomerRoles = (await _customerService.GetAllCustomerRoles(showHidden: true)).Select(cr => new SelectListItem() { Text = cr.Name, Value = cr.Id.ToString(), Selected = (cr.Id == registered.Id) }).ToList(),
+                AvailableCustomerRoles = customerRoles.Select(cr => new SelectListItem() { Text = cr.Name, Value = cr.Id.ToString(), Selected = (cr.Id == registered.Id) }).ToList(),
                 AvailableCustomerTags = (await _customerTagService.GetAllCustomerTags()).Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id.ToString() }).ToList(),
-                SearchCustomerRoleIds = new List<string> { (await _customerService.GetAllCustomerRoles(showHidden: true)).FirstOrDefault(x => x.Id == registered.Id).Id },
+                SearchCustomerRoleIds = new List<string> { customerRoles.FirstOrDefault(x => x.Id == registered.Id).Id },
             };
             return model;
         }
@@ -448,7 +449,7 @@ namespace Grand.Web.Areas.Admin.Services
             var customermodellist = new List<CustomerModel>();
             foreach (var item in customers)
             {
-                customermodellist.Add(await PrepareCustomerModelForList(item));
+                customermodellist.Add(PrepareCustomerModelForList(item));
             }
             return (customermodellist, customers.TotalCount);
         }
@@ -487,9 +488,9 @@ namespace Grand.Web.Areas.Admin.Services
                         model.AffiliateName = affiliate.GetFullName();
                     }
 
-                    model.TimeZoneId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.TimeZoneId);
-                    model.VatNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.VatNumber);
-                    model.VatNumberStatusNote = ((VatNumberStatus)await customer.GetAttribute<int>(_genericAttributeService, SystemCustomerAttributeNames.VatNumberStatusId))
+                    model.TimeZoneId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.TimeZoneId);
+                    model.VatNumber = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber);
+                    model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.VatNumberStatusId))
                         .GetLocalizedEnum(_localizationService, _workContext);
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
                     model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
@@ -497,8 +498,8 @@ namespace Grand.Web.Areas.Admin.Services
                         model.LastPurchaseDate = _dateTimeHelper.ConvertToUserTime(customer.LastPurchaseDateUtc.Value, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
                     model.UrlReferrer = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.UrlReferrer);
-                    model.LastVisitedPage = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastVisitedPage);
-                    model.LastUrlReferrer = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastUrlReferrer);
+                    model.LastVisitedPage = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastVisitedPage);
+                    model.LastUrlReferrer = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastUrlReferrer);
 
                     model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
                     //newsletter subscriptions
@@ -517,19 +518,19 @@ namespace Grand.Web.Areas.Admin.Services
 
 
                     //form fields
-                    model.FirstName = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.FirstName);
-                    model.LastName = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastName);
-                    model.Gender = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Gender);
-                    model.DateOfBirth = await customer.GetAttribute<DateTime?>(_genericAttributeService, SystemCustomerAttributeNames.DateOfBirth);
-                    model.Company = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Company);
-                    model.StreetAddress = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StreetAddress);
-                    model.StreetAddress2 = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StreetAddress2);
-                    model.ZipPostalCode = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ZipPostalCode);
-                    model.City = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.City);
-                    model.CountryId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CountryId);
-                    model.StateProvinceId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StateProvinceId);
-                    model.Phone = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Phone);
-                    model.Fax = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Fax);
+                    model.FirstName = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName);
+                    model.LastName = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName);
+                    model.Gender = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Gender);
+                    model.DateOfBirth = customer.GetAttributeFromEntity<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                    model.Company = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company);
+                    model.StreetAddress = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress);
+                    model.StreetAddress2 = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress2);
+                    model.ZipPostalCode = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ZipPostalCode);
+                    model.City = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.City);
+                    model.CountryId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CountryId);
+                    model.StateProvinceId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId);
+                    model.Phone = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone);
+                    model.Fax = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Fax);
                 }
             }
             else
@@ -691,7 +692,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (!isInGuestsRole && !isInRegisteredRole)
                 return "Add the customer to 'Guests' or 'Registered' customer role";
 
-            if(_workContext.CurrentCustomer.IsSalesManager() && ((isInGuestsRole && !isInRegisteredRole) || customerRoles.Count != 1))
+            if (_workContext.CurrentCustomer.IsSalesManager() && ((isInGuestsRole && !isInRegisteredRole) || customerRoles.Count != 1))
                 return "Sales manager can assign role 'Registered' only";
 
             if (!_workContext.CurrentCustomer.IsAdmin() && isAdminRole)
@@ -1302,30 +1303,34 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var customer = await _customerService.GetCustomerById(customerId);
             var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == cartTypeId).ToList();
-            var taxService = _serviceProvider.GetRequiredService<ITaxService>();
-            var priceCalculationService = _serviceProvider.GetRequiredService<IPriceCalculationService>();
-            var priceFormatter = _serviceProvider.GetRequiredService<IPriceFormatter>();
             var items = new List<ShoppingCartItemModel>();
-            foreach (var sci in cart)
+            if (cart.Any())
             {
-                var store = await _storeService.GetStoreById(sci.StoreId);
-                var product = await _productService.GetProductById(sci.ProductId);
-                if (product != null)
+                var taxService = _serviceProvider.GetRequiredService<ITaxService>();
+                var priceCalculationService = _serviceProvider.GetRequiredService<IPriceCalculationService>();
+                var priceFormatter = _serviceProvider.GetRequiredService<IPriceFormatter>();
+
+                foreach (var sci in cart)
                 {
-                    var price = (await taxService.GetProductPrice(product, (await priceCalculationService.GetUnitPrice(sci, product)).unitprice)).productprice;
-                    var sciModel = new ShoppingCartItemModel {
-                        Id = sci.Id,
-                        Store = store != null ? store.Shortcut : "Unknown",
-                        ProductId = sci.ProductId,
-                        Quantity = sci.Quantity,
-                        ProductName = product.Name,
-                        AttributeInfo = await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, sci.Attributes),
-                        UnitPrice = priceFormatter.FormatPrice(price),
-                        UnitPriceValue = price,
-                        Total = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetSubTotal(sci, product)).subTotal)).productprice),
-                        UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
-                    };
-                    items.Add(sciModel);
+                    var store = await _storeService.GetStoreById(sci.StoreId);
+                    var product = await _productService.GetProductById(sci.ProductId);
+                    if (product != null)
+                    {
+                        var price = (await taxService.GetProductPrice(product, (await priceCalculationService.GetUnitPrice(sci, product)).unitprice)).productprice;
+                        var sciModel = new ShoppingCartItemModel {
+                            Id = sci.Id,
+                            Store = store != null ? store.Shortcut : "Unknown",
+                            ProductId = sci.ProductId,
+                            Quantity = sci.Quantity,
+                            ProductName = product.Name,
+                            AttributeInfo = await _serviceProvider.GetRequiredService<IProductAttributeFormatter>().FormatAttributes(product, sci.Attributes),
+                            UnitPrice = priceFormatter.FormatPrice(price),
+                            UnitPriceValue = price,
+                            Total = priceFormatter.FormatPrice((await taxService.GetProductPrice(product, (await priceCalculationService.GetSubTotal(sci, product)).subTotal)).productprice),
+                            UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
+                        };
+                        items.Add(sciModel);
+                    }
                 }
             }
             return items;
@@ -1533,20 +1538,23 @@ namespace Grand.Web.Areas.Admin.Services
             var backInStockSubscriptionService = _serviceProvider.GetRequiredService<IBackInStockSubscriptionService>();
             var subscriptions = await backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customerId, "", pageIndex - 1, pageSize);
             var items = new List<CustomerModel.BackInStockSubscriptionModel>();
-            var productAttributeFormatter = _serviceProvider.GetRequiredService<IProductAttributeFormatter>();
-            foreach (var x in subscriptions)
+            if (subscriptions.Any())
             {
-                var store = await _storeService.GetStoreById(x.StoreId);
-                var product = await _productService.GetProductById(x.ProductId);
-                var m = new CustomerModel.BackInStockSubscriptionModel {
-                    Id = x.Id,
-                    StoreName = store != null ? store.Shortcut : "Unknown",
-                    ProductId = x.ProductId,
-                    ProductName = product != null ? product.Name : "Unknown",
-                    AttributeDescription = x.Attributes != null || !x.Attributes.Any() ? "" : await productAttributeFormatter.FormatAttributes(product, x.Attributes),
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
-                };
-                items.Add(m);
+                var productAttributeFormatter = _serviceProvider.GetRequiredService<IProductAttributeFormatter>();
+                foreach (var x in subscriptions)
+                {
+                    var store = await _storeService.GetStoreById(x.StoreId);
+                    var product = await _productService.GetProductById(x.ProductId);
+                    var m = new CustomerModel.BackInStockSubscriptionModel {
+                        Id = x.Id,
+                        StoreName = store != null ? store.Shortcut : "Unknown",
+                        ProductId = x.ProductId,
+                        ProductName = product != null ? product.Name : "Unknown",
+                        AttributeDescription = x.Attributes != null || !x.Attributes.Any() ? "" : await productAttributeFormatter.FormatAttributes(product, x.Attributes),
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                    };
+                    items.Add(m);
+                }
             }
             return (items, subscriptions.TotalCount);
         }
@@ -1557,11 +1565,11 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var customerNote in (await _customerService.GetCustomerNotes(customerId))
                 .OrderByDescending(on => on.CreatedOnUtc))
             {
-                var download = await downloadService.GetDownloadById(customerNote.DownloadId);
+                var download = !string.IsNullOrEmpty(customerNote.DownloadId) ? await downloadService.GetDownloadById(customerNote.DownloadId) : null;
                 customerNoteModels.Add(new CustomerModel.CustomerNote {
                     Id = customerNote.Id,
                     CustomerId = customerId,
-                    DownloadId = String.IsNullOrEmpty(customerNote.DownloadId) ? "" : customerNote.DownloadId,
+                    DownloadId = string.IsNullOrEmpty(customerNote.DownloadId) ? "" : customerNote.DownloadId,
                     DownloadGuid = download != null ? download.DownloadGuid : Guid.Empty,
                     DisplayToCustomer = customerNote.DisplayToCustomer,
                     Title = customerNote.Title,
