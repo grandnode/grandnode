@@ -59,6 +59,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                 .ForMember(dest => dest.ProductTags, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.Coordinates, mo => mo.Ignore())
                 .ForMember(dest => dest.ParentGroupedProductId, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductType, mo => mo.Ignore())
                 .ForMember(dest => dest.ApprovedRatingSum, mo => mo.Ignore())

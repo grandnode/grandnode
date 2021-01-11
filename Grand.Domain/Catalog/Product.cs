@@ -2,6 +2,7 @@ using Grand.Domain.Localization;
 using Grand.Domain.Security;
 using Grand.Domain.Seo;
 using Grand.Domain.Stores;
+using MongoDB.Driver.GeoJsonObjectModel;
 using System;
 using System.Collections.Generic;
 
@@ -556,6 +557,11 @@ namespace Grand.Domain.Catalog
         /// Gets or sets the flag
         /// </summary>
         public string Flag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the coordinates
+        /// </summary>
+        public GeoJson2DCoordinates Coordinates { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of locales
