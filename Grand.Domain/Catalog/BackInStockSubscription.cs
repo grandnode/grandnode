@@ -27,6 +27,11 @@ namespace Grand.Domain.Catalog
         public IList<CustomAttribute> Attributes { get; set; } = new List<CustomAttribute>();
 
         /// <summary>
+        /// Gets or sets the attribute info (format)
+        /// </summary>
+        public string AttributeInfo { get; set; }
+
+        /// <summary>
         /// Gets or sets the warehouse identifier
         /// </summary>
         public string WarehouseId { get; set; }

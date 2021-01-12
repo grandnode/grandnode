@@ -203,6 +203,7 @@ namespace Grand.Web.Controllers
                     CustomerId = customer.Id,
                     ProductId = product.Id,
                     Attributes = attributes,
+                    AttributeInfo = !attributes.Any() ? "" : await _productAttributeFormatter.FormatAttributes(product, attributes),
                     StoreId = _storeContext.CurrentStore.Id,
                     WarehouseId = warehouseId,
                     CreatedOnUtc = DateTime.UtcNow

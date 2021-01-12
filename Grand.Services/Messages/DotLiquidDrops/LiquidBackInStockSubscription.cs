@@ -3,7 +3,6 @@ using Grand.Domain.Catalog;
 using Grand.Domain.Localization;
 using Grand.Domain.Stores;
 using Grand.Services.Seo;
-using Grand.Services.Stores;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -25,13 +24,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
             AdditionalTokens = new Dictionary<string, string>();
         }
 
-        public string ProductName
-        {
+        public string ProductName {
             get { return _product.Name; }
         }
 
-        public string ProductUrl
-        {
+        public string AttributeInfo {
+            get { return _backInStockSubscription.AttributeInfo; }
+        }
+
+        public string ProductUrl {
             get { return string.Format("{0}{1}", _store.SslEnabled ? _store.SecureUrl : _store.Url, _product.GetSeName(_language.Id)); }
         }
 
