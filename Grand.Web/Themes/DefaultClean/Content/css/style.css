@@ -2841,10 +2841,6 @@ list settings .list__item,
     border-bottom: 1px solid #dfdfdf;
 }
 
-    .product-box.list-box img {
-        bottom: unset;
-    }
-
     .product-box.list-box .additional-info {
         position: absolute;
         top: 0;
