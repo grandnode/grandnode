@@ -9,9 +9,11 @@ namespace Grand.Web.Models.Customer
         public DocumentsModel()
         {
             DocumentList = new List<Document>();
+            PagingContext = new DocumentPagingModel();
         }
 
         public List<Document> DocumentList { get; set; }
+        public DocumentPagingModel PagingContext { get; set; }
         public string CustomerId { get; set; }
     }
 

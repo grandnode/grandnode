@@ -14,21 +14,31 @@ namespace Grand.Web.Features.Handlers.Customers
         private readonly IDocumentService _documentService;
         private readonly IDocumentTypeService _documentTypeService;
         private readonly ILocalizationService _localizationService;
+        private readonly Domain.Documents.DocumentSettings _documentSettings;
 
         public GetDocumentsHandler(IDocumentService documentService,
             IDocumentTypeService documentTypeService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            Domain.Documents.DocumentSettings documentSettings)
         {
             _documentService = documentService;
             _documentTypeService = documentTypeService;
             _localizationService = localizationService;
+            _documentSettings = documentSettings;
         }
 
         public async Task<DocumentsModel> Handle(GetDocuments request, CancellationToken cancellationToken)
         {
-            var model = new DocumentsModel();
-            model.CustomerId = request.Customer.Id;
-            var documents = await _documentService.GetAll(request.Customer.Id);
+            if (request.Command.PageSize <= 0) request.Command.PageSize = _documentSettings.PageSize;
+            if (request.Command.PageNumber <= 0) request.Command.PageNumber = 1;
+
+            var model = new DocumentsModel {
+                CustomerId = request.Customer.Id
+            };
+            var documents = await _documentService.GetAll(request.Customer.Id, 
+                pageIndex: request.Command.PageNumber - 1, 
+                pageSize: request.Command.PageSize);
+            model.PagingContext.LoadPagedList(documents);
             foreach (var item in documents.Where(x => x.Published).OrderBy(x => x.DisplayOrder))
             {
                 var doc = new Document();

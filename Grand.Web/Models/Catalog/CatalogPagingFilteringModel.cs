@@ -1,11 +1,12 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Domain.Catalog;
 using Grand.Core.Models;
+using Grand.Domain.Catalog;
+using Grand.Domain.Directory;
 using Grand.Framework.UI.Paging;
 using Grand.Services.Catalog;
+using Grand.Services.Directory;
 using Grand.Services.Localization;
-using Grand.Web.Infrastructure.Cache;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -13,8 +14,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Grand.Services.Directory;
-using Grand.Domain.Directory;
 
 namespace Grand.Web.Models.Catalog
 {

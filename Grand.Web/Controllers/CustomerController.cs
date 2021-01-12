@@ -1163,7 +1163,7 @@ namespace Grand.Web.Controllers
 
         #region My account / Documents
 
-        public virtual async Task<IActionResult> Documents()
+        public virtual async Task<IActionResult> Documents(DocumentPagingModel command)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -1171,7 +1171,10 @@ namespace Grand.Web.Controllers
             if (_customerSettings.HideDocumentsTab)
                 return RedirectToRoute("CustomerInfo");
 
-            var model = await _mediator.Send(new GetDocuments() { Customer = _workContext.CurrentCustomer, Language = _workContext.WorkingLanguage });
+            var model = await _mediator.Send(new GetDocuments() { 
+                Customer = _workContext.CurrentCustomer, 
+                Language = _workContext.WorkingLanguage, 
+                Command = command });
 
             return View(model);
         }
