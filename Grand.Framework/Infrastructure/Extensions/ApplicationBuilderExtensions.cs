@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Domain.Common;
@@ -45,7 +44,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="container">ContainerBuilder from autofac</param>
         /// <param name="configuration">configuration</param>
-        public static void ConfigureContainer(this ContainerBuilder container, Microsoft.Extensions.Configuration.IConfiguration configuration)
+        public static void ConfigureContainer(this IServiceCollection container, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             Engine.ConfigureContainer(container, configuration);
         }

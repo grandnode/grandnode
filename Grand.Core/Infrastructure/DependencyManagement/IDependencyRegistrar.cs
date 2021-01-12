@@ -1,5 +1,6 @@
-﻿using Autofac;
+﻿
 using Grand.Core.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Core.Infrastructure.DependencyManagement
 {
@@ -14,7 +15,7 @@ namespace Grand.Core.Infrastructure.DependencyManagement
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config);
+        void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config);
 
         /// <summary>
         /// Order of this dependency registrar implementation

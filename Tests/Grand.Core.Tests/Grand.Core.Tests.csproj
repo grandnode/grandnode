@@ -21,4 +21,8 @@
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\DependencyManagement\" />
+  </ItemGroup>
+
 </Project>
