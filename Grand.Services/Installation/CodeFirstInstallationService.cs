@@ -6771,6 +6771,14 @@ namespace Grand.Services.Installation
                         DisplayOrder = 1,
                     }
                 },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Dell").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 ProductSpecificationAttributes =
                 {
                    new ProductSpecificationAttribute
@@ -7084,6 +7092,14 @@ namespace Grand.Services.Installation
                 MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 ProductCategories =
                 {
                     new ProductCategory
@@ -7128,6 +7144,14 @@ namespace Grand.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 ProductCategories =
                 {
                     new ProductCategory
@@ -7176,6 +7200,14 @@ namespace Grand.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 ProductCategories =
                 {
                     new ProductCategory
@@ -7228,6 +7260,14 @@ namespace Grand.Services.Installation
                 MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 TierPrices =
                 {
                     new TierPrice
@@ -7344,6 +7384,14 @@ namespace Grand.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 ProductCategories =
                 {
                     new ProductCategory
