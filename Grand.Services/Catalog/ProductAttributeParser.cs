@@ -74,6 +74,7 @@ namespace Grand.Services.Catalog
                             if (value != null)
                             {
                                 value.ProductId = product.Id;
+                                value.ProductAttributeMappingId = attribute.Id;
                                 values.Add(value);
                             }
                         }

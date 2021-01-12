@@ -683,7 +683,7 @@ namespace Grand.Services.Orders
             foreach (var attributeValue in attributeValues)
             {
                 var _productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == attributeValue.ProductAttributeMappingId).FirstOrDefault();
-                if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct && _productAttributeMapping != null)
                 {
                     if (ignoreNonCombinableAttributes && _productAttributeMapping.IsNonCombinable())
                         continue;
