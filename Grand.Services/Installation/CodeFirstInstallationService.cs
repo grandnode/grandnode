@@ -2023,7 +2023,7 @@ namespace Grand.Services.Installation
                                         TwoLetterIsoCode = "GB",
                                         ThreeLetterIsoCode = "GBR",
                                         NumericIsoCode = 826,
-                                        SubjectToVat = true,
+                                        SubjectToVat = false,
                                         DisplayOrder = 100,
                                         Published = true
                                     },
