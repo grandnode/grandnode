@@ -450,7 +450,8 @@ namespace Grand.Framework.Infrastructure.Extensions
             if (config.EnableProgressiveWebApp)
             {
                 var options = new WebEssentials.AspNetCore.Pwa.PwaOptions {
-                    Strategy = (WebEssentials.AspNetCore.Pwa.ServiceWorkerStrategy)config.ServiceWorkerStrategy
+                    Strategy = (WebEssentials.AspNetCore.Pwa.ServiceWorkerStrategy)config.ServiceWorkerStrategy,
+                    RoutesToIgnore = "/admin/*"
                 };
                 services.AddProgressiveWebApp(options);
             }
