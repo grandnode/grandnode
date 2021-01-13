@@ -4811,12 +4811,12 @@ namespace Grand.Services.Installation
 
             await _settingService.SaveSetting(new MenuItemSettings {
                 DisplayHomePageMenu = !installSampleData,
-                DisplayNewProductsMenu = !installSampleData,
+                DisplayNewProductsMenu = true,
                 DisplaySearchMenu = !installSampleData,
                 DisplayCustomerMenu = !installSampleData,
-                DisplayBlogMenu = !installSampleData,
+                DisplayBlogMenu = true,
                 DisplayForumsMenu = !installSampleData,
-                DisplayContactUsMenu = !installSampleData
+                DisplayContactUsMenu = true
             });
 
             await _settingService.SaveSetting(new PdfSettings {
@@ -7780,6 +7780,7 @@ namespace Grand.Services.Installation
                 Published = true,
                 Price = 129.99M,
                 IsShipEnabled = true,
+                Flag = "Grouped",
                 Weight = 2,
                 Length = 2,
                 Width = 2,
@@ -9036,6 +9037,7 @@ namespace Grand.Services.Installation
                 AllowCustomerReviews = true,
                 Price = 259M,
                 IsShipEnabled = true,
+                Flag = "Bundle Product",
                 Weight = 2,
                 Length = 2,
                 Width = 2,
