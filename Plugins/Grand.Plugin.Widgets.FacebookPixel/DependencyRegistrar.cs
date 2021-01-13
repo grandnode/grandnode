@@ -9,12 +9,12 @@ namespace Grand.Plugin.Widgets.FacebookPixel
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.AddScoped<FacebookPixelPlugin>();
+            serviceCollection.AddScoped<FacebookPixelPlugin>();
             if (PluginManager.FindPlugin(GetType()).Installed)
             {
-                builder.AddScoped<IConsentCookie,FacebookPixelConsentCookie>();
+                serviceCollection.AddScoped<IConsentCookie,FacebookPixelConsentCookie>();
             }
         }
 

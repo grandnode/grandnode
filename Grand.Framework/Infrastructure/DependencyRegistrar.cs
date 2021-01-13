@@ -33,22 +33,22 @@ namespace Grand.Framework.Infrastructure
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="builder">Container builder</param>
+        /// <param name="ServiceCollection">Service Collection</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            RegisterDataLayer(builder);
+            RegisterDataLayer(serviceCollection);
 
-            RegisterCache(builder, config);
+            RegisterCache(serviceCollection, config);
 
-            RegisterCore(builder);
+            RegisterCore(serviceCollection);
 
-            RegisterContextService(builder);
+            RegisterContextService(serviceCollection);
 
-            RegisterValidators(builder, typeFinder);
+            RegisterValidators(serviceCollection, typeFinder);
 
-            RegisterFramework(builder);
+            RegisterFramework(serviceCollection);
         }
 
         /// <summary>
@@ -58,67 +58,67 @@ namespace Grand.Framework.Infrastructure
             get { return 0; }
         }
 
-        private void RegisterCore(IServiceCollection builder)
+        private void RegisterCore(IServiceCollection serviceCollection)
         {
             //web helper
-            builder.AddScoped<IWebHelper, WebHelper>();
+            serviceCollection.AddScoped<IWebHelper, WebHelper>();
             //plugins
-            builder.AddScoped<IPluginFinder, PluginFinder>();
+            serviceCollection.AddScoped<IPluginFinder, PluginFinder>();
         }
 
-        private void RegisterDataLayer(IServiceCollection builder)
+        private void RegisterDataLayer(IServiceCollection serviceCollection)
         {
             var dataSettingsManager = new DataSettingsManager();
             var dataProviderSettings = dataSettingsManager.LoadSettings();
             if (string.IsNullOrEmpty(dataProviderSettings.DataConnectionString))
             {
-                builder.AddTransient(c => dataSettingsManager.LoadSettings());
-                builder.AddTransient<BaseDataProviderManager>(c=> new MongoDBDataProviderManager(c.GetRequiredService<DataSettings>()));
-                builder.AddTransient<IDataProvider>(x => x.GetRequiredService<BaseDataProviderManager>().LoadDataProvider());
+                serviceCollection.AddTransient(c => dataSettingsManager.LoadSettings());
+                serviceCollection.AddTransient<BaseDataProviderManager>(c=> new MongoDBDataProviderManager(c.GetRequiredService<DataSettings>()));
+                serviceCollection.AddTransient<IDataProvider>(x => x.GetRequiredService<BaseDataProviderManager>().LoadDataProvider());
             }
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
                 var connectionString = dataProviderSettings.DataConnectionString;
                 var mongourl = new MongoUrl(connectionString);
                 var databaseName = mongourl.DatabaseName;
-                builder.AddScoped(c => new MongoClient(mongourl).GetDatabase(databaseName));
+                serviceCollection.AddScoped(c => new MongoClient(mongourl).GetDatabase(databaseName));
         
             }
             
-            builder.AddScoped<IMongoDBContext, MongoDBContext>();
+            serviceCollection.AddScoped<IMongoDBContext, MongoDBContext>();
             //MongoDbRepository
             
-            builder.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            serviceCollection.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         }
 
-        private void RegisterCache(IServiceCollection builder, GrandConfig config)
+        private void RegisterCache(IServiceCollection serviceCollection, GrandConfig config)
         {
-            builder.AddSingleton<ICacheManager,MemoryCacheManager>();
+            serviceCollection.AddSingleton<ICacheManager,MemoryCacheManager>();
             if (config.RedisPubSubEnabled)
             {
                 var redis = ConnectionMultiplexer.Connect(config.RedisPubSubConnectionString);
-                builder.AddSingleton<ISubscriber>(c => redis.GetSubscriber());
-                builder.AddSingleton<IMessageBus, RedisMessageBus>();
-                builder.AddSingleton<ICacheManager,RedisMessageCacheManager>();
+                serviceCollection.AddSingleton<ISubscriber>(c => redis.GetSubscriber());
+                serviceCollection.AddSingleton<IMessageBus, RedisMessageBus>();
+                serviceCollection.AddSingleton<ICacheManager,RedisMessageCacheManager>();
             }
         }
 
-        private void RegisterContextService(IServiceCollection builder)
+        private void RegisterContextService(IServiceCollection serviceCollection)
         {
             //work context
-            builder.AddScoped<IWorkContext, WebWorkContext>();
+            serviceCollection.AddScoped<IWorkContext, WebWorkContext>();
             //store context
-            builder.AddScoped<IStoreContext, WebStoreContext>();
+            serviceCollection.AddScoped<IStoreContext, WebStoreContext>();
         }
 
 
-        private void RegisterValidators(IServiceCollection builder, ITypeFinder typeFinder)
+        private void RegisterValidators(IServiceCollection serviceCollection, ITypeFinder typeFinder)
         {
             var validators = typeFinder.FindClassesOfType(typeof(IValidator)).ToList();
             foreach (var validator in validators)
             {
-                builder.AddTransient(validator);
+                serviceCollection.AddTransient(validator);
             }
 
             //validator consumers
@@ -130,34 +130,25 @@ namespace Grand.Framework.Infrastructure
                      var isMatch = type.GetTypeInfo().IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
                      return isMatch;
                  }, typeof(IValidatorConsumer<>));
-                types.Select(c => builder.AddScoped(c, consumer));
-                /*
-                builder.RegisterType(consumer)
-                    .As(consumer.GetTypeInfo().FindInterfaces((type, criteria) =>
-                    {
-                        var isMatch = type.GetTypeInfo().IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
-                        return isMatch;
-                    }, typeof(IValidatorConsumer<>)))
-                    .InstancePerLifetimeScope();
-                */
+                types.Select(c => serviceCollection.AddScoped(c, consumer));
             }
         }
         
-        private void RegisterFramework(IServiceCollection builder)
+        private void RegisterFramework(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IPageHeadBuilder, PageHeadBuilder>();
+            serviceCollection.AddScoped<IPageHeadBuilder, PageHeadBuilder>();
 
-            builder.AddScoped<IThemeProvider, ThemeProvider>();
-            builder.AddScoped<IThemeContext, ThemeContext>();
+            serviceCollection.AddScoped<IThemeProvider, ThemeProvider>();
+            serviceCollection.AddScoped<IThemeContext, ThemeContext>();
 
-            builder.AddSingleton<IRoutePublisher, RoutePublisher>();
+            serviceCollection.AddSingleton<IRoutePublisher, RoutePublisher>();
 
-            builder.AddScoped<SlugRouteTransformer>();
+            serviceCollection.AddScoped<SlugRouteTransformer>();
 
-            builder.AddScoped<IResourceManager,ResourceManager>();
+            serviceCollection.AddScoped<IResourceManager,ResourceManager>();
 
             //powered by
-            builder.AddSingleton<IPoweredByMiddlewareOptions,PoweredByMiddlewareOptions>();
+            serviceCollection.AddSingleton<IPoweredByMiddlewareOptions,PoweredByMiddlewareOptions>();
         }
 
     }

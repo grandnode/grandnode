@@ -65,10 +65,10 @@ namespace Grand.Web
         /// with Autofac. This runs after ConfigureServices so the things
         /// here will override registrations made in ConfigureServices.
         /// </summary>
-        /// <param name="builder"></param>
-        public void ConfigureContainer(IServiceCollection builder)
+        /// <param name="serviceCollection">Service Collection</param>
+        public void ConfigureContainer(IServiceCollection serviceCollection)
         {
-            builder.ConfigureContainer(Configuration);
+            serviceCollection.ConfigureContainer(Configuration);
         }
     }
 }

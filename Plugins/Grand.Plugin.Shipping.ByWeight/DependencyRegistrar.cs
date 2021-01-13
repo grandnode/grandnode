@@ -9,12 +9,12 @@ namespace Grand.Plugin.Shipping.ByWeight
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.AddScoped<IShippingByWeightService,ShippingByWeightService>();
+            serviceCollection.AddScoped<IShippingByWeightService,ShippingByWeightService>();
             //base shipping controller
-            builder.AddScoped<ShippingByWeightController>();
-            builder.AddScoped<ByWeightShippingComputationMethod>();
+            serviceCollection.AddScoped<ShippingByWeightController>();
+            serviceCollection.AddScoped<ByWeightShippingComputationMethod>();
         }
 
         public int Order

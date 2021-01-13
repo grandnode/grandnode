@@ -8,10 +8,10 @@ namespace Grand.Plugin.Shipping.ShippingPoint
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.AddScoped<ShippingPointComputationMethod>();
-            builder.AddScoped<IShippingPointService,ShippingPointService>();
+            serviceCollection.AddScoped<ShippingPointComputationMethod>();
+            serviceCollection.AddScoped<IShippingPointService,ShippingPointService>();
         }
 
         public int Order

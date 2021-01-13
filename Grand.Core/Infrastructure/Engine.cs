@@ -186,15 +186,14 @@ namespace Grand.Core.Infrastructure
         /// with Autofac. This runs after ConfigureServices so the things
         /// here will override registrations made in ConfigureServices.
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="configuration"></param>
-        public static void ConfigureContainer(IServiceCollection builder, IConfiguration configuration)
+        /// <param name="serviceCollection">Service Collection</param>
+        /// <param name="configuration">Configuration</param>
+        public static void ConfigureContainer(IServiceCollection serviceCollection, IConfiguration configuration)
         {
             var typeFinder = new WebAppTypeFinder();
 
             //register type finder
-            builder.AddSingleton<ITypeFinder>(typeFinder);
-
+            serviceCollection.AddSingleton<ITypeFinder>(typeFinder);
 
             //find dependency registrars provided by other assemblies
             var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
@@ -210,7 +209,7 @@ namespace Grand.Core.Infrastructure
 
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
-                dependencyRegistrar.Register(builder, typeFinder, config);
+                dependencyRegistrar.Register(serviceCollection, typeFinder, config);
 
         }
         #endregion

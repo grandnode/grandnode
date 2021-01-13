@@ -7,9 +7,9 @@ namespace Grand.Plugin.Payments.CashOnDelivery
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.AddScoped<CashOnDeliveryPaymentProcessor>();
+            serviceCollection.AddScoped<CashOnDeliveryPaymentProcessor>();
         }
 
         public int Order

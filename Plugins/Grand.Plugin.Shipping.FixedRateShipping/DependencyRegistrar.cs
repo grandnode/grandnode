@@ -7,9 +7,9 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.AddScoped<FixedRateShippingComputationMethod>();
+            serviceCollection.AddScoped<FixedRateShippingComputationMethod>();
         }
 
         public int Order

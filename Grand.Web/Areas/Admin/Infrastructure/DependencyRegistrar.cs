@@ -9,44 +9,44 @@ namespace Grand.Web.Areas.Admin.Infrastructure
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.AddScoped<IActivityLogViewModelService, ActivityLogViewModelService>();
-            builder.AddScoped<IAddressAttributeViewModelService, AddressAttributeViewModelService>();
-            builder.AddScoped<IAffiliateViewModelService, AffiliateViewModelService>();
-            builder.AddScoped<IBlogViewModelService, BlogViewModelService>();
-            builder.AddScoped<ICampaignViewModelService, CampaignViewModelService>();
-            builder.AddScoped<ICategoryViewModelService, CategoryViewModelService>();
-            builder.AddScoped<ICheckoutAttributeViewModelService, CheckoutAttributeViewModelService>();
-            builder.AddScoped<IContactAttributeViewModelService, ContactAttributeViewModelService>();
-            builder.AddScoped<IContactFormViewModelService, ContactFormViewModelService>();
-            builder.AddScoped<ICountryViewModelService, CountryViewModelService>();
-            builder.AddScoped<ICourseViewModelService, CourseViewModelService>();
-            builder.AddScoped<ICurrencyViewModelService, CurrencyViewModelService>();
-            builder.AddScoped<ICustomerActionViewModelService, CustomerActionViewModelService>();
-            builder.AddScoped<ICustomerAttributeViewModelService, CustomerAttributeViewModelService>();
-            builder.AddScoped<ICustomerViewModelService, CustomerViewModelService>();
-            builder.AddScoped<ICustomerReportViewModelService, CustomerReportViewModelService>();
-            builder.AddScoped<ICustomerReminderViewModelService, CustomerReminderViewModelService>();
-            builder.AddScoped<ICustomerRoleViewModelService, CustomerRoleViewModelService>();
-            builder.AddScoped<ICustomerTagViewModelService, CustomerTagViewModelService>();
-            builder.AddScoped<IDiscountViewModelService, DiscountViewModelService>();
-            builder.AddScoped<IDocumentViewModelService, DocumentViewModelService>();
-            builder.AddScoped<IEmailAccountViewModelService, EmailAccountViewModelService>();
-            builder.AddScoped<IGiftCardViewModelService, GiftCardViewModelService>();
-            builder.AddScoped<IKnowledgebaseViewModelService, KnowledgebaseViewModelService>();
-            builder.AddScoped<ILanguageViewModelService, LanguageViewModelService>();
-            builder.AddScoped<ILogViewModelService, LogViewModelService>();
-            builder.AddScoped<IManufacturerViewModelService, ManufacturerViewModelService>();
-            builder.AddScoped<INewsViewModelService, NewsViewModelService>();
-            builder.AddScoped<IOrderViewModelService, OrderViewModelService>();
-            builder.AddScoped<IShipmentViewModelService, ShipmentViewModelService>();
-            builder.AddScoped<IProductReviewViewModelService, ProductReviewViewModelService>();
-            builder.AddScoped<IReturnRequestViewModelService, ReturnRequestViewModelService>();
-            builder.AddScoped<IVendorViewModelService, VendorViewModelService>();
-            builder.AddScoped<ITopicViewModelService, TopicViewModelService>();
-            builder.AddScoped<IStoreViewModelService, StoreViewModelService>();
-            builder.AddScoped<IProductViewModelService, ProductViewModelService>();
+            serviceCollection.AddScoped<IActivityLogViewModelService, ActivityLogViewModelService>();
+            serviceCollection.AddScoped<IAddressAttributeViewModelService, AddressAttributeViewModelService>();
+            serviceCollection.AddScoped<IAffiliateViewModelService, AffiliateViewModelService>();
+            serviceCollection.AddScoped<IBlogViewModelService, BlogViewModelService>();
+            serviceCollection.AddScoped<ICampaignViewModelService, CampaignViewModelService>();
+            serviceCollection.AddScoped<ICategoryViewModelService, CategoryViewModelService>();
+            serviceCollection.AddScoped<ICheckoutAttributeViewModelService, CheckoutAttributeViewModelService>();
+            serviceCollection.AddScoped<IContactAttributeViewModelService, ContactAttributeViewModelService>();
+            serviceCollection.AddScoped<IContactFormViewModelService, ContactFormViewModelService>();
+            serviceCollection.AddScoped<ICountryViewModelService, CountryViewModelService>();
+            serviceCollection.AddScoped<ICourseViewModelService, CourseViewModelService>();
+            serviceCollection.AddScoped<ICurrencyViewModelService, CurrencyViewModelService>();
+            serviceCollection.AddScoped<ICustomerActionViewModelService, CustomerActionViewModelService>();
+            serviceCollection.AddScoped<ICustomerAttributeViewModelService, CustomerAttributeViewModelService>();
+            serviceCollection.AddScoped<ICustomerViewModelService, CustomerViewModelService>();
+            serviceCollection.AddScoped<ICustomerReportViewModelService, CustomerReportViewModelService>();
+            serviceCollection.AddScoped<ICustomerReminderViewModelService, CustomerReminderViewModelService>();
+            serviceCollection.AddScoped<ICustomerRoleViewModelService, CustomerRoleViewModelService>();
+            serviceCollection.AddScoped<ICustomerTagViewModelService, CustomerTagViewModelService>();
+            serviceCollection.AddScoped<IDiscountViewModelService, DiscountViewModelService>();
+            serviceCollection.AddScoped<IDocumentViewModelService, DocumentViewModelService>();
+            serviceCollection.AddScoped<IEmailAccountViewModelService, EmailAccountViewModelService>();
+            serviceCollection.AddScoped<IGiftCardViewModelService, GiftCardViewModelService>();
+            serviceCollection.AddScoped<IKnowledgebaseViewModelService, KnowledgebaseViewModelService>();
+            serviceCollection.AddScoped<ILanguageViewModelService, LanguageViewModelService>();
+            serviceCollection.AddScoped<ILogViewModelService, LogViewModelService>();
+            serviceCollection.AddScoped<IManufacturerViewModelService, ManufacturerViewModelService>();
+            serviceCollection.AddScoped<INewsViewModelService, NewsViewModelService>();
+            serviceCollection.AddScoped<IOrderViewModelService, OrderViewModelService>();
+            serviceCollection.AddScoped<IShipmentViewModelService, ShipmentViewModelService>();
+            serviceCollection.AddScoped<IProductReviewViewModelService, ProductReviewViewModelService>();
+            serviceCollection.AddScoped<IReturnRequestViewModelService, ReturnRequestViewModelService>();
+            serviceCollection.AddScoped<IVendorViewModelService, VendorViewModelService>();
+            serviceCollection.AddScoped<ITopicViewModelService, TopicViewModelService>();
+            serviceCollection.AddScoped<IStoreViewModelService, StoreViewModelService>();
+            serviceCollection.AddScoped<IProductViewModelService, ProductViewModelService>();
         }
         public int Order
         {

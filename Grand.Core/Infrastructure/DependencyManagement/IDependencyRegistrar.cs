@@ -1,5 +1,4 @@
-﻿
-using Grand.Core.Configuration;
+﻿using Grand.Core.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Core.Infrastructure.DependencyManagement
@@ -12,10 +11,10 @@ namespace Grand.Core.Infrastructure.DependencyManagement
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="builder">Container builder</param>
+        /// <param name="serviceCollection">Service Collection</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config);
+        void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config);
 
         /// <summary>
         /// Order of this dependency registrar implementation

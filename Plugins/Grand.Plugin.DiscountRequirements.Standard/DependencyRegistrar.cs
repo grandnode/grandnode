@@ -6,25 +6,23 @@ using Grand.Plugin.DiscountRequirements.HasAllProducts;
 using Grand.Plugin.DiscountRequirements.HasOneProduct;
 using Grand.Plugin.DiscountRequirements.ShoppingCart;
 using Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount;
-using Grand.Services.Discounts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Plugin.DiscountRequirements.Standard
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.AddScoped<DiscountRequirementsPlugin>();
-            builder.AddScoped<CustomerRoleDiscountRequirementRule>();
-            builder.AddScoped<HadSpentAmountDiscountRequirementRule>();
-            builder.AddScoped<HasAllProductsDiscountRequirementRule>();
-            builder.AddScoped<HasOneProductDiscountRequirementRule>();
-            builder.AddScoped<ShoppingCartDiscountRequirementRule>();
+            serviceCollection.AddScoped<DiscountRequirementsPlugin>();
+            serviceCollection.AddScoped<CustomerRoleDiscountRequirementRule>();
+            serviceCollection.AddScoped<HadSpentAmountDiscountRequirementRule>();
+            serviceCollection.AddScoped<HasAllProductsDiscountRequirementRule>();
+            serviceCollection.AddScoped<HasOneProductDiscountRequirementRule>();
+            serviceCollection.AddScoped<ShoppingCartDiscountRequirementRule>();
         }
 
-        public int Order
-        {
+        public int Order {
             get { return 10; }
         }
     }

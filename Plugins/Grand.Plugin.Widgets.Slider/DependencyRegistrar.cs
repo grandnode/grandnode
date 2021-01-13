@@ -10,15 +10,15 @@ namespace Grand.Plugin.Widgets.Slider
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.AddScoped<SliderPlugin>();
+            serviceCollection.AddScoped<SliderPlugin>();
             BsonClassMap.RegisterClassMap<PictureSlider>(cm =>
             {
                 cm.AutoMap();
                 cm.UnmapMember(c => c.SliderType);
             });
-            builder.AddScoped<ISliderService,SliderService>();
+            serviceCollection.AddScoped<ISliderService,SliderService>();
         }
 
         public int Order

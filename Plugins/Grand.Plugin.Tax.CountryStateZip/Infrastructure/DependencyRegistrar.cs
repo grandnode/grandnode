@@ -8,10 +8,10 @@ namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.AddScoped<ITaxRateService,TaxRateService>();
-            builder.AddScoped<CountryStateZipTaxProvider>();
+            serviceCollection.AddScoped<ITaxRateService,TaxRateService>();
+            serviceCollection.AddScoped<CountryStateZipTaxProvider>();
         }
 
         public int Order

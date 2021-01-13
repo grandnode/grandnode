@@ -7,9 +7,9 @@ namespace Grand.Plugin.Payments.PayPalStandard
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.AddScoped<PayPalStandardPaymentProcessor>();
+            serviceCollection.AddScoped<PayPalStandardPaymentProcessor>();
         }
 
         public int Order

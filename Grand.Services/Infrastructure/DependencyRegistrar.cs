@@ -52,76 +52,76 @@ namespace Grand.Services.Infrastructure
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="builder">Container builder</param>
+        /// <param name="serviceCollection">Service Collection</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
-            RegisterMachineNameProvider(builder, config);
+            RegisterMachineNameProvider(serviceCollection, config);
 
-            RegisterConfigurationService(builder);
+            RegisterConfigurationService(serviceCollection);
 
-            RegisterAffiliateService(builder);
+            RegisterAffiliateService(serviceCollection);
 
-            RegisterAuthenticationService(builder);
+            RegisterAuthenticationService(serviceCollection);
 
-            RegisterBlogService(builder);
+            RegisterBlogService(serviceCollection);
 
-            RegisterCatalogService(builder);
+            RegisterCatalogService(serviceCollection);
 
-            RegisterCmsService(builder);
+            RegisterCmsService(serviceCollection);
 
-            RegisterCommonService(builder);
+            RegisterCommonService(serviceCollection);
 
-            RegisterCoursesService(builder);
+            RegisterCoursesService(serviceCollection);
 
-            RegisterCustomerService(builder);
+            RegisterCustomerService(serviceCollection);
 
-            RegisterDirectoryService(builder);
+            RegisterDirectoryService(serviceCollection);
 
-            RegisterDiscountsService(builder);
+            RegisterDiscountsService(serviceCollection);
 
-            RegisterDocumentsService(builder);
+            RegisterDocumentsService(serviceCollection);
 
-            RegisterExportImportService(builder);
+            RegisterExportImportService(serviceCollection);
 
-            RegisterForumService(builder);
+            RegisterForumService(serviceCollection);
 
-            RegisterInstallService(builder);
+            RegisterInstallService(serviceCollection);
 
-            RegisterKnowledgebaseService(builder);
+            RegisterKnowledgebaseService(serviceCollection);
 
-            RegisterLocalizationService(builder);
+            RegisterLocalizationService(serviceCollection);
 
-            RegisterLoggingService(builder);
+            RegisterLoggingService(serviceCollection);
 
-            RegisterMediaService(builder, config);
+            RegisterMediaService(serviceCollection, config);
 
-            RegisterMessageService(builder);
+            RegisterMessageService(serviceCollection);
 
-            RegisterNewsService(builder);
+            RegisterNewsService(serviceCollection);
 
-            RegisterOrdersService(builder);
+            RegisterOrdersService(serviceCollection);
 
-            RegisterPaymentsService(builder);
+            RegisterPaymentsService(serviceCollection);
 
-            RegisterPollsService(builder);
+            RegisterPollsService(serviceCollection);
 
-            RegisterPushService(builder);
+            RegisterPushService(serviceCollection);
 
-            RegisterSecurityService(builder);
+            RegisterSecurityService(serviceCollection);
 
-            RegisterSeoService(builder);
+            RegisterSeoService(serviceCollection);
 
-            RegisterShippingService(builder);
+            RegisterShippingService(serviceCollection);
 
-            RegisterStoresService(builder);
+            RegisterStoresService(serviceCollection);
 
-            RegisterTaxService(builder);
+            RegisterTaxService(serviceCollection);
 
-            RegisterTopicsService(builder);
+            RegisterTopicsService(serviceCollection);
 
-            RegisterTask(builder);
+            RegisterTask(serviceCollection);
 
         }
 
@@ -132,291 +132,291 @@ namespace Grand.Services.Infrastructure
             get { return 1; }
         }
 
-        private void RegisterMachineNameProvider(IServiceCollection builder, GrandConfig config)
+        private void RegisterMachineNameProvider(IServiceCollection serviceCollection, GrandConfig config)
         {
             if (config.RunOnAzureWebApps)
             {
-                builder.AddSingleton<IMachineNameProvider, AzureWebAppsMachineNameProvider>();
+                serviceCollection.AddSingleton<IMachineNameProvider, AzureWebAppsMachineNameProvider>();
             }
             else
             {
-                builder.AddSingleton<IMachineNameProvider, DefaultMachineNameProvider>();
+                serviceCollection.AddSingleton<IMachineNameProvider, DefaultMachineNameProvider>();
             }
         }
 
-        private void RegisterAffiliateService(IServiceCollection builder)
+        private void RegisterAffiliateService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IAffiliateService, AffiliateService>();
+            serviceCollection.AddScoped<IAffiliateService, AffiliateService>();
         }
 
-        private void RegisterAuthenticationService(IServiceCollection builder)
+        private void RegisterAuthenticationService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IGrandAuthenticationService, CookieAuthenticationService>();
-            builder.AddScoped<IApiAuthenticationService, ApiAuthenticationService>();
-            builder.AddScoped<ITwoFactorAuthenticationService, TwoFactorAuthenticationService>();
-            builder.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
+            serviceCollection.AddScoped<IGrandAuthenticationService, CookieAuthenticationService>();
+            serviceCollection.AddScoped<IApiAuthenticationService, ApiAuthenticationService>();
+            serviceCollection.AddScoped<ITwoFactorAuthenticationService, TwoFactorAuthenticationService>();
+            serviceCollection.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
         }
-        private void RegisterCommonService(IServiceCollection builder)
+        private void RegisterCommonService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IAddressAttributeParser, AddressAttributeParser>();
-            builder.AddScoped<IAddressAttributeService, AddressAttributeService>();
-            builder.AddScoped<IAddressService, AddressService>();
-            builder.AddScoped<IGenericAttributeService, GenericAttributeService>();
-            builder.AddScoped<IHistoryService, HistoryService>();
-            builder.AddScoped<IPdfService, WkPdfService>();
-            builder.AddScoped<IViewRenderService, ViewRenderService>();
-            builder.AddScoped<ISearchTermService, SearchTermService>();
-            builder.AddScoped<IDateTimeHelper, DateTimeHelper>();
-            builder.AddScoped<ICookiePreference, CookiePreference>();
+            serviceCollection.AddScoped<IAddressAttributeParser, AddressAttributeParser>();
+            serviceCollection.AddScoped<IAddressAttributeService, AddressAttributeService>();
+            serviceCollection.AddScoped<IAddressService, AddressService>();
+            serviceCollection.AddScoped<IGenericAttributeService, GenericAttributeService>();
+            serviceCollection.AddScoped<IHistoryService, HistoryService>();
+            serviceCollection.AddScoped<IPdfService, WkPdfService>();
+            serviceCollection.AddScoped<IViewRenderService, ViewRenderService>();
+            serviceCollection.AddScoped<ISearchTermService, SearchTermService>();
+            serviceCollection.AddScoped<IDateTimeHelper, DateTimeHelper>();
+            serviceCollection.AddScoped<ICookiePreference, CookiePreference>();
         }
-        private void RegisterCatalogService(IServiceCollection builder)
+        private void RegisterCatalogService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
-            builder.AddScoped<ICategoryService, CategoryService>();
-            builder.AddScoped<ICompareProductsService, CompareProductsService>();
-            builder.AddScoped<IRecentlyViewedProductsService, RecentlyViewedProductsService>();
-            builder.AddScoped<IManufacturerService, ManufacturerService>();
-            builder.AddScoped<IPriceFormatter, PriceFormatter>();
-            builder.AddScoped<IProductAttributeFormatter, ProductAttributeFormatter>();
-            builder.AddScoped<IProductAttributeParser, ProductAttributeParser>();
-            builder.AddScoped<IProductAttributeService, ProductAttributeService>();
-            builder.AddScoped<IProductService, ProductService>();
-            builder.AddScoped<IProductReviewService, ProductReviewService>();
-            builder.AddScoped<ICopyProductService, CopyProductService>();
-            builder.AddScoped<IProductReservationService, ProductReservationService>();
-            builder.AddScoped<IAuctionService, AuctionService>();
-            builder.AddScoped<IProductCourseService, ProductCourseService>();
-            builder.AddScoped<ISpecificationAttributeService, SpecificationAttributeService>();
-            builder.AddScoped<IProductTemplateService, ProductTemplateService>();
-            builder.AddScoped<ICategoryTemplateService, CategoryTemplateService>();
-            builder.AddScoped<IManufacturerTemplateService, ManufacturerTemplateService>();
-            builder.AddScoped<IProductTagService, ProductTagService>();
-            builder.AddScoped<IInventoryManageService, InventoryManageService>();
-            builder.AddScoped<IPriceCalculationService, PriceCalculationService>();
-            builder.AddScoped<IOrderTagService, OrderTagService>();
-
-        }
-
-        private void RegisterCoursesService(IServiceCollection builder)
-        {
-            builder.AddScoped<ICourseActionService, CourseActionService>();
-            builder.AddScoped<ICourseLessonService, CourseLessonService>();
-            builder.AddScoped<ICourseLevelService, CourseLevelService>();
-            builder.AddScoped<ICourseService, CourseService>();
-            builder.AddScoped<ICourseSubjectService, CourseSubjectService>();
+            serviceCollection.AddScoped<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
+            serviceCollection.AddScoped<ICategoryService, CategoryService>();
+            serviceCollection.AddScoped<ICompareProductsService, CompareProductsService>();
+            serviceCollection.AddScoped<IRecentlyViewedProductsService, RecentlyViewedProductsService>();
+            serviceCollection.AddScoped<IManufacturerService, ManufacturerService>();
+            serviceCollection.AddScoped<IPriceFormatter, PriceFormatter>();
+            serviceCollection.AddScoped<IProductAttributeFormatter, ProductAttributeFormatter>();
+            serviceCollection.AddScoped<IProductAttributeParser, ProductAttributeParser>();
+            serviceCollection.AddScoped<IProductAttributeService, ProductAttributeService>();
+            serviceCollection.AddScoped<IProductService, ProductService>();
+            serviceCollection.AddScoped<IProductReviewService, ProductReviewService>();
+            serviceCollection.AddScoped<ICopyProductService, CopyProductService>();
+            serviceCollection.AddScoped<IProductReservationService, ProductReservationService>();
+            serviceCollection.AddScoped<IAuctionService, AuctionService>();
+            serviceCollection.AddScoped<IProductCourseService, ProductCourseService>();
+            serviceCollection.AddScoped<ISpecificationAttributeService, SpecificationAttributeService>();
+            serviceCollection.AddScoped<IProductTemplateService, ProductTemplateService>();
+            serviceCollection.AddScoped<ICategoryTemplateService, CategoryTemplateService>();
+            serviceCollection.AddScoped<IManufacturerTemplateService, ManufacturerTemplateService>();
+            serviceCollection.AddScoped<IProductTagService, ProductTagService>();
+            serviceCollection.AddScoped<IInventoryManageService, InventoryManageService>();
+            serviceCollection.AddScoped<IPriceCalculationService, PriceCalculationService>();
+            serviceCollection.AddScoped<IOrderTagService, OrderTagService>();
 
         }
 
-        private void RegisterCustomerService(IServiceCollection builder)
+        private void RegisterCoursesService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IVendorService, VendorService>();
-            builder.AddScoped<ICustomerAttributeParser, CustomerAttributeParser>();
-            builder.AddScoped<ICustomerAttributeService, CustomerAttributeService>();
-            builder.AddScoped<ICustomerService, CustomerService>();
-            builder.AddScoped<ICustomerRegistrationService, CustomerRegistrationService>();
-            builder.AddScoped<ICustomerReportService, CustomerReportService>();
-            builder.AddScoped<ICustomerTagService, CustomerTagService>();
-            builder.AddScoped<ICustomerActionService, CustomerActionService>();
-            builder.AddScoped<ICustomerActionEventService, CustomerActionEventService>();
-            builder.AddScoped<ICustomerReminderService, CustomerReminderService>();
-            builder.AddScoped<ICustomerProductService, CustomerProductService>();
-            builder.AddScoped<ICustomerCoordinatesService, CustomerCoordinatesService>();
-            builder.AddScoped<ISalesEmployeeService, SalesEmployeeService>();
-            builder.AddScoped<IUserApiService, UserApiService>();
+            serviceCollection.AddScoped<ICourseActionService, CourseActionService>();
+            serviceCollection.AddScoped<ICourseLessonService, CourseLessonService>();
+            serviceCollection.AddScoped<ICourseLevelService, CourseLevelService>();
+            serviceCollection.AddScoped<ICourseService, CourseService>();
+            serviceCollection.AddScoped<ICourseSubjectService, CourseSubjectService>();
 
         }
 
-        private void RegisterDirectoryService(IServiceCollection builder)
+        private void RegisterCustomerService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IGeoLookupService, GeoLookupService>();
-            builder.AddScoped<ICountryService, CountryService>();
-
-            builder.AddScoped<ICurrencyService, CurrencyService>();
-            builder.AddScoped<IMeasureService, MeasureService>();
-            builder.AddScoped<IStateProvinceService, StateProvinceService>();
+            serviceCollection.AddScoped<IVendorService, VendorService>();
+            serviceCollection.AddScoped<ICustomerAttributeParser, CustomerAttributeParser>();
+            serviceCollection.AddScoped<ICustomerAttributeService, CustomerAttributeService>();
+            serviceCollection.AddScoped<ICustomerService, CustomerService>();
+            serviceCollection.AddScoped<ICustomerRegistrationService, CustomerRegistrationService>();
+            serviceCollection.AddScoped<ICustomerReportService, CustomerReportService>();
+            serviceCollection.AddScoped<ICustomerTagService, CustomerTagService>();
+            serviceCollection.AddScoped<ICustomerActionService, CustomerActionService>();
+            serviceCollection.AddScoped<ICustomerActionEventService, CustomerActionEventService>();
+            serviceCollection.AddScoped<ICustomerReminderService, CustomerReminderService>();
+            serviceCollection.AddScoped<ICustomerProductService, CustomerProductService>();
+            serviceCollection.AddScoped<ICustomerCoordinatesService, CustomerCoordinatesService>();
+            serviceCollection.AddScoped<ISalesEmployeeService, SalesEmployeeService>();
+            serviceCollection.AddScoped<IUserApiService, UserApiService>();
 
         }
 
-        private void RegisterDocumentsService(IServiceCollection builder)
+        private void RegisterDirectoryService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IDocumentTypeService, DocumentTypeService>();
-            builder.AddScoped<IDocumentService, DocumentService>();
+            serviceCollection.AddScoped<IGeoLookupService, GeoLookupService>();
+            serviceCollection.AddScoped<ICountryService, CountryService>();
+
+            serviceCollection.AddScoped<ICurrencyService, CurrencyService>();
+            serviceCollection.AddScoped<IMeasureService, MeasureService>();
+            serviceCollection.AddScoped<IStateProvinceService, StateProvinceService>();
 
         }
 
-        private void RegisterDiscountsService(IServiceCollection builder)
+        private void RegisterDocumentsService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IDiscountService, DiscountService>();
-        }
-
-        private void RegisterBlogService(IServiceCollection builder)
-        {
-            builder.AddScoped<IBlogService, BlogService>();
-        }
-
-        private void RegisterCmsService(IServiceCollection builder)
-        {
-            builder.AddScoped<IWidgetService, WidgetService>();
+            serviceCollection.AddScoped<IDocumentTypeService, DocumentTypeService>();
+            serviceCollection.AddScoped<IDocumentService, DocumentService>();
 
         }
 
-        private void RegisterConfigurationService(IServiceCollection builder)
+        private void RegisterDiscountsService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<ISettingService, SettingService>();
-            builder.AddScoped<IGoogleAnalyticsService, GoogleAnalyticsService>();
+            serviceCollection.AddScoped<IDiscountService, DiscountService>();
         }
 
-        private void RegisterExportImportService(IServiceCollection builder)
+        private void RegisterBlogService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IExportManager, ExportManager>();
-            builder.AddScoped<IImportManager, ImportManager>();
+            serviceCollection.AddScoped<IBlogService, BlogService>();
         }
 
-        private void RegisterForumService(IServiceCollection builder)
+        private void RegisterCmsService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IForumService, ForumService>();
+            serviceCollection.AddScoped<IWidgetService, WidgetService>();
+
         }
 
-        private void RegisterInstallService(IServiceCollection builder)
+        private void RegisterConfigurationService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<ISettingService, SettingService>();
+            serviceCollection.AddScoped<IGoogleAnalyticsService, GoogleAnalyticsService>();
+        }
+
+        private void RegisterExportImportService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IExportManager, ExportManager>();
+            serviceCollection.AddScoped<IImportManager, ImportManager>();
+        }
+
+        private void RegisterForumService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IForumService, ForumService>();
+        }
+
+        private void RegisterInstallService(IServiceCollection serviceCollection)
         {
             var databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
             if (!databaseInstalled)
             {
                 //installation service
-                builder.AddScoped<IInstallationLocalizationService, InstallationLocalizationService>();
-                builder.AddScoped<IInstallationService, CodeFirstInstallationService>();
+                serviceCollection.AddScoped<IInstallationLocalizationService, InstallationLocalizationService>();
+                serviceCollection.AddScoped<IInstallationService, CodeFirstInstallationService>();
             }
             else
             {
-                builder.AddScoped<IUpgradeService, UpgradeService>();
+                serviceCollection.AddScoped<IUpgradeService, UpgradeService>();
             }
         }
 
-        private void RegisterKnowledgebaseService(IServiceCollection builder)
+        private void RegisterKnowledgebaseService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IKnowledgebaseService, KnowledgebaseService>();
+            serviceCollection.AddScoped<IKnowledgebaseService, KnowledgebaseService>();
         }
 
-        private void RegisterLocalizationService(IServiceCollection builder)
+        private void RegisterLocalizationService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<ILocalizationService, LocalizationService>();
-            builder.AddScoped<ILanguageService, LanguageService>();
-
-        }
-
-        private void RegisterLoggingService(IServiceCollection builder)
-        {
-            builder.AddScoped<ICustomerActivityService, CustomerActivityService>();
-            builder.AddScoped<IActivityKeywordsProvider, ActivityKeywordsProvider>();
-            builder.AddScoped<ILogger, DefaultLogger>();
+            serviceCollection.AddScoped<ILocalizationService, LocalizationService>();
+            serviceCollection.AddScoped<ILanguageService, LanguageService>();
 
         }
 
-        private void RegisterMessageService(IServiceCollection builder)
+        private void RegisterLoggingService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IBannerService, BannerService>();
-            builder.AddScoped<IPopupService, PopupService>();
-            builder.AddScoped<IInteractiveFormService, InteractiveFormService>();
-            builder.AddScoped<INewsLetterSubscriptionService, NewsLetterSubscriptionService>();
-            builder.AddScoped<INewsletterCategoryService, NewsletterCategoryService>();
-            builder.AddScoped<ICampaignService, CampaignService>();
-            builder.AddScoped<IMessageTemplateService, MessageTemplateService>();
-            builder.AddScoped<IQueuedEmailService, QueuedEmailService>();
-            builder.AddScoped<IEmailAccountService, EmailAccountService>();
-            builder.AddScoped<IWorkflowMessageService, WorkflowMessageService>();
-            builder.AddScoped<IMessageTokenProvider, MessageTokenProvider>();
-            builder.AddScoped<ITokenizer, Tokenizer>();
-            builder.AddScoped<IEmailSender, EmailSender>();
-
-            builder.AddScoped<IContactAttributeParser, ContactAttributeParser>();
-            builder.AddScoped<IContactAttributeService, ContactAttributeService>();
-
-            builder.AddScoped<IContactUsService, ContactUsService>();
-        }
-        private void RegisterNewsService(IServiceCollection builder)
-        {
-            builder.AddScoped<INewsService, NewsService>();
-        }
-
-        private void RegisterOrdersService(IServiceCollection builder)
-        {
-            builder.AddScoped<IRewardPointsService, RewardPointsService>();
-            builder.AddScoped<IGiftCardService, GiftCardService>();
-            builder.AddScoped<IOrderService, OrderService>();
-            builder.AddScoped<IOrderReportService, OrderReportService>();
-            builder.AddScoped<IOrderProcessingService, OrderProcessingService>();
-            builder.AddScoped<IOrderConfirmationService, OrderConfirmationService>();
-            builder.AddScoped<IOrderRecurringPayment, OrderRecurringPayment>();
-            builder.AddScoped<IOrderTotalCalculationService, OrderTotalCalculationService>();
-            builder.AddScoped<IReturnRequestService, ReturnRequestService>();
-            builder.AddScoped<IRewardPointsService, RewardPointsService>();
-            builder.AddScoped<IShoppingCartService, ShoppingCartService>();
-            builder.AddScoped<ICheckoutAttributeFormatter, CheckoutAttributeFormatter>();
-            builder.AddScoped<ICheckoutAttributeParser, CheckoutAttributeParser>();
-            builder.AddScoped<ICheckoutAttributeService, CheckoutAttributeService>();
-
-        }
-        private void RegisterPaymentsService(IServiceCollection builder)
-        {
-            builder.AddScoped<IPaymentService, PaymentService>();
-        }
-        private void RegisterPollsService(IServiceCollection builder)
-        {
-            builder.AddScoped<IPollService, PollService>();
-        }
-
-        private void RegisterPushService(IServiceCollection builder)
-        {
-            builder.AddScoped<IPushNotificationsService, PushNotificationsService>();
-        }
-
-        private void RegisterSecurityService(IServiceCollection builder)
-        {
-            builder.AddScoped<IPermissionService, PermissionService>();
-            builder.AddScoped<IAclService, AclService>();
-            builder.AddScoped<IEncryptionService, EncryptionService>();
-        }
-
-        private void RegisterSeoService(IServiceCollection builder)
-        {
-            builder.AddScoped<ISitemapGenerator, SitemapGenerator>();
-            builder.AddScoped<IUrlRecordService, UrlRecordService>();
+            serviceCollection.AddScoped<ICustomerActivityService, CustomerActivityService>();
+            serviceCollection.AddScoped<IActivityKeywordsProvider, ActivityKeywordsProvider>();
+            serviceCollection.AddScoped<ILogger, DefaultLogger>();
 
         }
 
-        private void RegisterShippingService(IServiceCollection builder)
+        private void RegisterMessageService(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IShipmentService, ShipmentService>();
-            builder.AddScoped<IShippingService, ShippingService>();
-            builder.AddScoped<IPickupPointService, PickupPointService>();
-            builder.AddScoped<IDeliveryDateService, DeliveryDateService>();
-            builder.AddScoped<IWarehouseService, WarehouseService>();
-            builder.AddScoped<IShippingMethodService, ShippingMethodService>();
-        }
-        private void RegisterStoresService(IServiceCollection builder)
-        {
-            builder.AddScoped<IStoreService, StoreService>();
-            builder.AddScoped<IStoreMappingService, StoreMappingService>();
-        }
-        private void RegisterTaxService(IServiceCollection builder)
-        {
-            builder.AddScoped<ITaxService, TaxService>();
-            builder.AddScoped<IVatService, VatService>();
-            builder.AddScoped<ITaxCategoryService, TaxCategoryService>();
-        }
+            serviceCollection.AddScoped<IBannerService, BannerService>();
+            serviceCollection.AddScoped<IPopupService, PopupService>();
+            serviceCollection.AddScoped<IInteractiveFormService, InteractiveFormService>();
+            serviceCollection.AddScoped<INewsLetterSubscriptionService, NewsLetterSubscriptionService>();
+            serviceCollection.AddScoped<INewsletterCategoryService, NewsletterCategoryService>();
+            serviceCollection.AddScoped<ICampaignService, CampaignService>();
+            serviceCollection.AddScoped<IMessageTemplateService, MessageTemplateService>();
+            serviceCollection.AddScoped<IQueuedEmailService, QueuedEmailService>();
+            serviceCollection.AddScoped<IEmailAccountService, EmailAccountService>();
+            serviceCollection.AddScoped<IWorkflowMessageService, WorkflowMessageService>();
+            serviceCollection.AddScoped<IMessageTokenProvider, MessageTokenProvider>();
+            serviceCollection.AddScoped<ITokenizer, Tokenizer>();
+            serviceCollection.AddScoped<IEmailSender, EmailSender>();
 
-        private void RegisterTopicsService(IServiceCollection builder)
-        {
-            builder.AddScoped<ITopicTemplateService, TopicTemplateService>();
-            builder.AddScoped<ITopicService, TopicService>();
+            serviceCollection.AddScoped<IContactAttributeParser, ContactAttributeParser>();
+            serviceCollection.AddScoped<IContactAttributeService, ContactAttributeService>();
 
+            serviceCollection.AddScoped<IContactUsService, ContactUsService>();
+        }
+        private void RegisterNewsService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<INewsService, NewsService>();
         }
 
-        private void RegisterMediaService(IServiceCollection builder, GrandConfig config)
+        private void RegisterOrdersService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IRewardPointsService, RewardPointsService>();
+            serviceCollection.AddScoped<IGiftCardService, GiftCardService>();
+            serviceCollection.AddScoped<IOrderService, OrderService>();
+            serviceCollection.AddScoped<IOrderReportService, OrderReportService>();
+            serviceCollection.AddScoped<IOrderProcessingService, OrderProcessingService>();
+            serviceCollection.AddScoped<IOrderConfirmationService, OrderConfirmationService>();
+            serviceCollection.AddScoped<IOrderRecurringPayment, OrderRecurringPayment>();
+            serviceCollection.AddScoped<IOrderTotalCalculationService, OrderTotalCalculationService>();
+            serviceCollection.AddScoped<IReturnRequestService, ReturnRequestService>();
+            serviceCollection.AddScoped<IRewardPointsService, RewardPointsService>();
+            serviceCollection.AddScoped<IShoppingCartService, ShoppingCartService>();
+            serviceCollection.AddScoped<ICheckoutAttributeFormatter, CheckoutAttributeFormatter>();
+            serviceCollection.AddScoped<ICheckoutAttributeParser, CheckoutAttributeParser>();
+            serviceCollection.AddScoped<ICheckoutAttributeService, CheckoutAttributeService>();
+
+        }
+        private void RegisterPaymentsService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IPaymentService, PaymentService>();
+        }
+        private void RegisterPollsService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IPollService, PollService>();
+        }
+
+        private void RegisterPushService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IPushNotificationsService, PushNotificationsService>();
+        }
+
+        private void RegisterSecurityService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IPermissionService, PermissionService>();
+            serviceCollection.AddScoped<IAclService, AclService>();
+            serviceCollection.AddScoped<IEncryptionService, EncryptionService>();
+        }
+
+        private void RegisterSeoService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<ISitemapGenerator, SitemapGenerator>();
+            serviceCollection.AddScoped<IUrlRecordService, UrlRecordService>();
+
+        }
+
+        private void RegisterShippingService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IShipmentService, ShipmentService>();
+            serviceCollection.AddScoped<IShippingService, ShippingService>();
+            serviceCollection.AddScoped<IPickupPointService, PickupPointService>();
+            serviceCollection.AddScoped<IDeliveryDateService, DeliveryDateService>();
+            serviceCollection.AddScoped<IWarehouseService, WarehouseService>();
+            serviceCollection.AddScoped<IShippingMethodService, ShippingMethodService>();
+        }
+        private void RegisterStoresService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IStoreService, StoreService>();
+            serviceCollection.AddScoped<IStoreMappingService, StoreMappingService>();
+        }
+        private void RegisterTaxService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<ITaxService, TaxService>();
+            serviceCollection.AddScoped<IVatService, VatService>();
+            serviceCollection.AddScoped<ITaxCategoryService, TaxCategoryService>();
+        }
+
+        private void RegisterTopicsService(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<ITopicTemplateService, TopicTemplateService>();
+            serviceCollection.AddScoped<ITopicService, TopicService>();
+
+        }
+
+        private void RegisterMediaService(IServiceCollection serviceCollection, GrandConfig config)
         {
 
 
-            builder.AddScoped<IMimeMappingService, MimeMappingService>(x =>
+            serviceCollection.AddScoped<IMimeMappingService, MimeMappingService>(x =>
             {
                 var provider = new FileExtensionContentTypeProvider();
                 return new MimeMappingService(provider);
@@ -430,40 +430,40 @@ namespace Grand.Services.Infrastructure
             if (useAzureBlobStorage)
             {
                 //Windows Azure BLOB
-                builder.AddScoped<IPictureService, AzurePictureService>();
+                serviceCollection.AddScoped<IPictureService, AzurePictureService>();
             }
             else if (useAmazonBlobStorage)
             {
                 //Amazon S3 Simple Storage Service
-                builder.AddScoped<IPictureService, AmazonPictureService>();
+                serviceCollection.AddScoped<IPictureService, AmazonPictureService>();
             }
             else
             {
                 //standard file system
-                builder.AddScoped<IPictureService, PictureService>();
+                serviceCollection.AddScoped<IPictureService, PictureService>();
             }
 
-            builder.AddScoped<IDownloadService, DownloadService>();
+            serviceCollection.AddScoped<IDownloadService, DownloadService>();
         }
 
-        private void RegisterTask(IServiceCollection builder)
+        private void RegisterTask(IServiceCollection serviceCollection)
         {
-            builder.AddScoped<IScheduleTaskService, ScheduleTaskService>();
+            serviceCollection.AddScoped<IScheduleTaskService, ScheduleTaskService>();
 
-            builder.AddScoped<IScheduleTask, QueuedMessagesSendScheduleTask>();
-            builder.AddScoped<IScheduleTask, ClearCacheScheduleTask>();
-            builder.AddScoped<IScheduleTask, ClearLogScheduleTask>();
-            builder.AddScoped<IScheduleTask, CustomerReminderAbandonedCartScheduleTask>();
-            builder.AddScoped<IScheduleTask, CustomerReminderBirthdayScheduleTask>();
-            builder.AddScoped<IScheduleTask, CustomerReminderCompletedOrderScheduleTask>();
-            builder.AddScoped<IScheduleTask, CustomerReminderLastActivityScheduleTask>();
-            builder.AddScoped<IScheduleTask, CustomerReminderLastPurchaseScheduleTask>();
-            builder.AddScoped<IScheduleTask, CustomerReminderRegisteredCustomerScheduleTask>();
-            builder.AddScoped<IScheduleTask, CustomerReminderUnpaidOrderScheduleTask>();
-            builder.AddScoped<IScheduleTask, DeleteGuestsScheduleTask>();
-            builder.AddScoped<IScheduleTask, UpdateExchangeRateScheduleTask>();
-            builder.AddScoped<IScheduleTask, EndAuctionsTask>();
-            builder.AddScoped<IScheduleTask, CancelOrderScheduledTask>();
+            serviceCollection.AddScoped<IScheduleTask, QueuedMessagesSendScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, ClearCacheScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, ClearLogScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, CustomerReminderAbandonedCartScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, CustomerReminderBirthdayScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, CustomerReminderCompletedOrderScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, CustomerReminderLastActivityScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, CustomerReminderLastPurchaseScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, CustomerReminderRegisteredCustomerScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, CustomerReminderUnpaidOrderScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, DeleteGuestsScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, UpdateExchangeRateScheduleTask>();
+            serviceCollection.AddScoped<IScheduleTask, EndAuctionsTask>();
+            serviceCollection.AddScoped<IScheduleTask, CancelOrderScheduledTask>();
 
         }
     }
