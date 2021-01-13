@@ -1,4 +1,3 @@
-using Autofac;
 using FluentValidation;
 using Grand.Core;
 using Grand.Core.Caching;
@@ -17,6 +16,7 @@ using Grand.Framework.Mvc.Routing;
 using Grand.Framework.TagHelpers;
 using Grand.Framework.Themes;
 using Grand.Framework.UI;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using StackExchange.Redis;
 using System;
@@ -36,7 +36,7 @@ namespace Grand.Framework.Infrastructure
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
         {
             RegisterDataLayer(builder);
 
@@ -58,71 +58,80 @@ namespace Grand.Framework.Infrastructure
             get { return 0; }
         }
 
-        private void RegisterCore(ContainerBuilder builder)
+        private void RegisterCore(IServiceCollection builder)
         {
             //web helper
-            builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
+            builder.AddScoped<IWebHelper, WebHelper>();
             //plugins
-            builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerLifetimeScope();
+            builder.AddScoped<IPluginFinder, PluginFinder>();
         }
 
-        private void RegisterDataLayer(ContainerBuilder builder)
+        private void RegisterDataLayer(IServiceCollection builder)
         {
             var dataSettingsManager = new DataSettingsManager();
             var dataProviderSettings = dataSettingsManager.LoadSettings();
             if (string.IsNullOrEmpty(dataProviderSettings.DataConnectionString))
             {
-                builder.Register(c => dataSettingsManager.LoadSettings()).As<DataSettings>();
-                builder.Register(x => new MongoDBDataProviderManager(x.Resolve<DataSettings>())).As<BaseDataProviderManager>().InstancePerDependency();
-                builder.Register(x => x.Resolve<BaseDataProviderManager>().LoadDataProvider()).As<IDataProvider>().InstancePerDependency();
+                builder.AddTransient(c => dataSettingsManager.LoadSettings());
+                builder.AddTransient<BaseDataProviderManager>(c=> new MongoDBDataProviderManager(c.GetRequiredService<DataSettings>()));
+                builder.AddTransient<IDataProvider>(x => x.GetRequiredService<BaseDataProviderManager>().LoadDataProvider());
             }
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
                 var connectionString = dataProviderSettings.DataConnectionString;
                 var mongourl = new MongoUrl(connectionString);
                 var databaseName = mongourl.DatabaseName;
-                builder.Register(c => new MongoClient(mongourl).GetDatabase(databaseName)).InstancePerLifetimeScope();
+                builder.AddScoped(c => new MongoClient(mongourl).GetDatabase(databaseName));
+        
             }
-            builder.RegisterType<MongoDBContext>().As<IMongoDBContext>().InstancePerLifetimeScope();
-
+            
+            builder.AddScoped<IMongoDBContext, MongoDBContext>();
             //MongoDbRepository
-            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            
+            builder.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         }
 
-        private void RegisterCache(ContainerBuilder builder, GrandConfig config)
+        private void RegisterCache(IServiceCollection builder, GrandConfig config)
         {
-            builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
+            builder.AddSingleton<ICacheManager,MemoryCacheManager>();
             if (config.RedisPubSubEnabled)
             {
                 var redis = ConnectionMultiplexer.Connect(config.RedisPubSubConnectionString);
-                builder.Register(c => redis.GetSubscriber()).As<ISubscriber>().SingleInstance();
-                builder.RegisterType<RedisMessageBus>().As<IMessageBus>().SingleInstance();
-                builder.RegisterType<RedisMessageCacheManager>().As<ICacheManager>().SingleInstance();
+                builder.AddSingleton<ISubscriber>(c => redis.GetSubscriber());
+                builder.AddSingleton<IMessageBus, RedisMessageBus>();
+                builder.AddSingleton<ICacheManager,RedisMessageCacheManager>();
             }
         }
 
-        private void RegisterContextService(ContainerBuilder builder)
+        private void RegisterContextService(IServiceCollection builder)
         {
             //work context
-            builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();
+            builder.AddScoped<IWorkContext, WebWorkContext>();
             //store context
-            builder.RegisterType<WebStoreContext>().As<IStoreContext>().InstancePerLifetimeScope();
+            builder.AddScoped<IStoreContext, WebStoreContext>();
         }
 
 
-        private void RegisterValidators(ContainerBuilder builder, ITypeFinder typeFinder)
+        private void RegisterValidators(IServiceCollection builder, ITypeFinder typeFinder)
         {
             var validators = typeFinder.FindClassesOfType(typeof(IValidator)).ToList();
             foreach (var validator in validators)
             {
-                builder.RegisterType(validator);
+                builder.AddTransient(validator);
             }
 
             //validator consumers
             var validatorconsumers = typeFinder.FindClassesOfType(typeof(IValidatorConsumer<>)).ToList();
             foreach (var consumer in validatorconsumers)
             {
+                var types = consumer.GetTypeInfo().FindInterfaces((type, criteria) =>
+                 {
+                     var isMatch = type.GetTypeInfo().IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                     return isMatch;
+                 }, typeof(IValidatorConsumer<>));
+                types.Select(c => builder.AddScoped(c, consumer));
+                /*
                 builder.RegisterType(consumer)
                     .As(consumer.GetTypeInfo().FindInterfaces((type, criteria) =>
                     {
@@ -130,24 +139,25 @@ namespace Grand.Framework.Infrastructure
                         return isMatch;
                     }, typeof(IValidatorConsumer<>)))
                     .InstancePerLifetimeScope();
+                */
             }
         }
         
-        private void RegisterFramework(ContainerBuilder builder)
+        private void RegisterFramework(IServiceCollection builder)
         {
-            builder.RegisterType<PageHeadBuilder>().As<IPageHeadBuilder>().InstancePerLifetimeScope();
+            builder.AddScoped<IPageHeadBuilder, PageHeadBuilder>();
 
-            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerLifetimeScope();
-            builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
+            builder.AddScoped<IThemeProvider, ThemeProvider>();
+            builder.AddScoped<IThemeContext, ThemeContext>();
 
-            builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
+            builder.AddSingleton<IRoutePublisher, RoutePublisher>();
 
-            builder.RegisterType<SlugRouteTransformer>().InstancePerLifetimeScope();
+            builder.AddScoped<SlugRouteTransformer>();
 
-            builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
+            builder.AddScoped<IResourceManager,ResourceManager>();
 
             //powered by
-            builder.RegisterType<PoweredByMiddlewareOptions>().As<IPoweredByMiddlewareOptions>().SingleInstance();
+            builder.AddSingleton<IPoweredByMiddlewareOptions,PoweredByMiddlewareOptions>();
         }
 
     }

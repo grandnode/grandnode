@@ -1,15 +1,15 @@
-﻿using Autofac;
-using Grand.Core.Configuration;
+﻿using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Plugin.ExternalAuth.Facebook
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
+        public virtual void Register(IServiceCollection builder, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.RegisterType<FacebookAuthenticationMethod>().InstancePerLifetimeScope();
+            builder.AddScoped<FacebookAuthenticationMethod>();
         }
 
         public int Order

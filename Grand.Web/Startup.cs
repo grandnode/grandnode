@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Grand.Framework.Infrastructure.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
-using Autofac;
 using Serilog;
 
 namespace Grand.Web
@@ -67,7 +66,7 @@ namespace Grand.Web
         /// here will override registrations made in ConfigureServices.
         /// </summary>
         /// <param name="builder"></param>
-        public void ConfigureContainer(ContainerBuilder builder)
+        public void ConfigureContainer(IServiceCollection builder)
         {
             builder.ConfigureContainer(Configuration);
         }

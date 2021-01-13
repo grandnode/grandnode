@@ -1,5 +1,4 @@
-﻿using Autofac;
-using AutoMapper;
+﻿using AutoMapper;
 using Grand.Core.Configuration;
 using Grand.Core.Extensions;
 using Grand.Core.Infrastructure.DependencyManagement;
@@ -189,12 +188,13 @@ namespace Grand.Core.Infrastructure
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="configuration"></param>
-        public static void ConfigureContainer(ContainerBuilder builder, IConfiguration configuration)
+        public static void ConfigureContainer(IServiceCollection builder, IConfiguration configuration)
         {
             var typeFinder = new WebAppTypeFinder();
 
             //register type finder
-            builder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
+            builder.AddSingleton<ITypeFinder>(typeFinder);
+
 
             //find dependency registrars provided by other assemblies
             var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
