@@ -1,0 +1,75 @@
+﻿using Grand.Core.ModelBinding;
+using Grand.Core.Models;
+using System;
+
+namespace Grand.Admin.Models.Orders
+{
+    public partial class RecurringPaymentModel : BaseEntityModel
+    {
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.ID")]
+        public override string Id { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.CycleLength")]
+        public int CycleLength { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.CyclePeriod")]
+        public int CyclePeriodId { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.CyclePeriod")]
+        public string CyclePeriodStr { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.TotalCycles")]
+        public int TotalCycles { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.StartDate")]
+        public string StartDate { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.IsActive")]
+        public bool IsActive { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.NextPaymentDate")]
+        public string NextPaymentDate { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.CyclesRemaining")]
+        public int CyclesRemaining { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.InitialOrder")]
+        public string InitialOrderId { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.Customer")]
+        public string CustomerId { get; set; }
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.Customer")]
+        public string CustomerEmail { get; set; }
+
+        [GrandResourceDisplayName("Admin.RecurringPayments.Fields.PaymentType")]
+        public string PaymentType { get; set; }
+        
+        public bool CanCancelRecurringPayment { get; set; }
+
+        #region Nested classes
+
+
+        public partial class RecurringPaymentHistoryModel : BaseEntityModel
+        {
+            [GrandResourceDisplayName("Admin.RecurringPayments.History.Order")]
+            public string OrderId { get; set; }
+            public int OrderNumber { get; set; }
+
+            public string RecurringPaymentId { get; set; }
+
+            [GrandResourceDisplayName("Admin.RecurringPayments.History.OrderStatus")]
+            public string OrderStatus { get; set; }
+
+            [GrandResourceDisplayName("Admin.RecurringPayments.History.PaymentStatus")]
+            public string PaymentStatus { get; set; }
+
+            [GrandResourceDisplayName("Admin.RecurringPayments.History.ShippingStatus")]
+            public string ShippingStatus { get; set; }
+
+            [GrandResourceDisplayName("Admin.RecurringPayments.History.CreatedOn")]
+            public DateTime CreatedOn { get; set; }
+        }
+
+        #endregion
+    }
+}

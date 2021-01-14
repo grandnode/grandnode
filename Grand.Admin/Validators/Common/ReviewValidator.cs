@@ -1,0 +1,24 @@
+﻿using FluentValidation;
+using Grand.Core.Validators;
+using Grand.Services.Localization;
+using Grand.Admin.Models.Common;
+using System.Collections.Generic;
+
+namespace Grand.Admin.Validators.Common
+{
+    public class ReviewValidator : BaseGrandValidator<ReviewModel>
+    {
+        public ReviewValidator(
+            IEnumerable<IValidatorConsumer<ReviewModel>> validators,
+            ILocalizationService localizationService)
+            : base(validators)
+        {
+            RuleFor(x => x.Title)
+                .NotEmpty()
+                .WithMessage(localizationService.GetResource("Admin.Review.Fields.Title.Required"));
+            RuleFor(x => x.ReviewText)
+                .NotEmpty()
+                .WithMessage(localizationService.GetResource("Admin.Review.Fields.ReviewText.Required"));
+        }
+    }
+}

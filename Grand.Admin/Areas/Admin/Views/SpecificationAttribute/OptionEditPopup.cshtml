@@ -1,0 +1,33 @@
+﻿@{
+    Layout = Grand.Admin.Extensions.Constants.Layout_AdminPopup;
+}
+@model SpecificationAttributeOptionModel
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails").Text;
+}
+<form asp-area="@Constants.AreaAdmin" asp-controller="SpecificationAttribute" asp-action="OptionEditPopup" method="post" id="specificationattribute-form"
+      asp-route-SpecificationAttributeId="@Context.Request.Query["SpecificationAttributeId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-list-alt"></i>
+                        @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails")
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        <vc:admin-widget widget-zone="specification_attribute_option_details_buttons" additional-data="Model" />
+                    </div>
+                </div>
+                <div class="x_content form">
+                   <partial name="_CreateOrUpdateOption" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

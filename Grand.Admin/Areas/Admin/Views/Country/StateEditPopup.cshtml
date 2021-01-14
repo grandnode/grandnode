@@ -1,0 +1,30 @@
+﻿@model StateProvinceModel
+@{
+    Layout = Grand.Admin.Extensions.Constants.Layout_AdminPopup;
+    ViewBag.Title = T("Admin.Configuration.Countries.States.EditStateDetails").Text;
+}
+<form asp-area="@Constants.AreaAdmin" asp-controller="Country" asp-action="StateEditPopup"
+      asp-route-countryId="@Context.Request.Query["countryId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-globe"></i>
+                        @T("Admin.Configuration.Countries.States.EditStateDetails")
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        <vc:admin-widget widget-zone="country_state_details_buttons" additional-data="Model" />
+                    </div>
+                </div>
+                <div class="x_content form">
+                   <partial name="_CreateOrUpdateState" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

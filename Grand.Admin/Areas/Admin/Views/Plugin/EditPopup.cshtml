@@ -1,0 +1,32 @@
+﻿@model PluginModel
+@{
+    Layout = Grand.Admin.Extensions.Constants.Layout_AdminPopup;
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Plugins.EditDetails").Text;
+}
+
+<form asp-area="@Constants.AreaAdmin" asp-controller="Plugin" asp-action="EditPopup" method="post" asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>
+                        @T("Admin.Configuration.Plugins.EditDetails")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <vc:admin-widget widget-zone="plugin_details_buttons" additional-data="Model" />
+                        </div>
+                    </div>
+                </div>
+                <div class="x_content form">
+                   <partial name="_CreateOrUpdatePlugin" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

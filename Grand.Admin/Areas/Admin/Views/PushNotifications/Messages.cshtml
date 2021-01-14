@@ -1,0 +1,144 @@
+﻿@model Grand.Admin.Models.PushNotifications.MessagesModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = "_AdminLayout";
+    //page title
+    ViewBag.Title = T("Admin.PushNotifications.Messages").Text;
+}
+@using Grand.Domain.Common
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="x_panel light form-fit">
+            <div class="x_title">
+                <div class="caption level-caption">
+                    <i class="fa fa-cubes"></i>
+                    @T("Admin.PushNotifications.Messages")
+                </div>
+            </div>
+
+            <div class="x_content form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="x_content">
+                            @if (!(Model.Allowed == 0 && Model.Denied == 0))
+                            {
+                                <div style="width:50%;margin-bottom:40px">
+                                    <canvas id="piechart"></canvas>
+                                </div>
+                            }
+
+                            <div id="messages-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+    $("#messages-grid").kendoGrid({
+        dataSource: {
+            type: "json",
+            transport: {
+                read: {
+                    url: "@Html.Raw(Url.Action("PushMessagesList", "PushNotifications"))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                }
+            },
+            schema: {
+                data: "Data",
+                total: "Total",
+                errors: "Errors"
+            },
+            error: function(e) {
+                display_kendoui_grid_error(e);
+                // Cancel the changes
+                this.cancelChanges();
+            },
+            pageSize: @(adminAreaSettings.DefaultGridPageSize),
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
+        },
+        pageable: {
+            refresh: true,
+            pageSizes: [@adminAreaSettings.GridPageSizes]
+        },
+        editable: {
+            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+            mode: "inline"
+        },
+        scrollable: false,
+        columns: [
+        {
+            field: "Id",
+            title: "@T("Admin.PushNotifications.Message.Fields.Id")",
+            width: 100
+        }, {
+            field: "Title",
+            title: "@T("Admin.PushNotifications.Message.Fields.Title")",
+            width: 200
+        }, {
+            field: "Text",
+            title: "@T("PushNotifications.Message.Fields.Text")",
+            width: 400
+        }, {
+            field: "NumberOfReceivers",
+            title: "@T("Admin.PushNotifications.Message.Fields.NumberOfReceivers")",
+            width: 100
+        }, {
+            field: "SentOn",
+            title: "@T("Admin.PushNotifications.Message.Fields.SentOn")",
+            width: 200,
+            type: "date",
+            format: "{0:G}"
+        }
+        ]
+    });
+});
+</script>
+
+@if (!(Model.Allowed == 0 && Model.Denied == 0))
+{
+    
+    <script asp-location="Footer">
+    $(document).ready(function () {
+        var config = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        @Model.Allowed,
+                        @Model.Denied
+                    ],
+                    backgroundColor: [
+                        'rgba(0, 200, 0, 0.6)',
+                        "rgba(200, 0, 0, 0.6)"
+                    ],
+                    borderColor: [
+                        'rgb(0, 128, 0)',
+                        'rgb(128, 0, 0)'
+                    ],
+                    label: 'Allow notifications popup statistics'
+                }],
+                labels: [
+                    'Allowed',
+                    'Denied'
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+
+        var ctx = document.getElementById('piechart').getContext('2d');
+        window.myPie = new Chart(ctx, config);
+    });
+    </script>
+}

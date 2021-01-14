@@ -1,0 +1,32 @@
+﻿@model PredefinedProductAttributeValueModel
+@{    
+    // layout
+    Layout = Grand.Admin.Extensions.Constants.Layout_AdminPopup;
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew").Text;
+}
+<form asp-area="@Constants.AreaAdmin" asp-controller="ProductAttribute" asp-action="PredefinedProductAttributeValueCreatePopup" method="post"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]"> 
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-list-alt"></i>
+                        @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        <vc:admin-widget widget-zone="product_attribute_predefined_value_details_buttons" additional-data="null" />
+                    </div>
+                </div>
+                <div class="x_content form">
+                   <partial name="_CreateOrUpdatePredefinedProductAttributeValue" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

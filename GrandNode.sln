@@ -66,6 +66,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Widgets.Facebo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Domain", "Grand.Domain\Grand.Domain.csproj", "{2E42CE7C-1183-45AB-A995-1E23C4DCB5F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Admin", "Grand.Admin\Grand.Admin.csproj", "{3F7F0243-5CF4-4896-AFC3-D1C977101ECD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,6 +176,10 @@ Global
 		{2E42CE7C-1183-45AB-A995-1E23C4DCB5F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E42CE7C-1183-45AB-A995-1E23C4DCB5F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E42CE7C-1183-45AB-A995-1E23C4DCB5F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F7F0243-5CF4-4896-AFC3-D1C977101ECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F7F0243-5CF4-4896-AFC3-D1C977101ECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F7F0243-5CF4-4896-AFC3-D1C977101ECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F7F0243-5CF4-4896-AFC3-D1C977101ECD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

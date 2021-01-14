@@ -1,0 +1,159 @@
+﻿@model Grand.Admin.Models.PushNotifications.ReceiversModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = "_AdminLayout";
+    var popGridPageSize = adminAreaSettings.GridPageSizes;
+    //page title
+    ViewBag.Title = T("Admin.PushNotifications.Receivers").Text;
+}
+@using Grand.Domain.Common
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="x_panel light form-fit">
+            <div class="x_title">
+                <div class="caption level-caption">
+                    <i class="fa fa-cubes"></i>
+                    @T("Admin.PushNotifications.Receivers")
+                </div>
+            </div>
+
+            <div class="x_content form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="x_content">
+                            @if (!(Model.Allowed == 0 && Model.Denied == 0))
+                            {
+                                <div class="piechart">
+                                    <canvas id="piechart"></canvas>
+                                </div>
+                            }
+
+                            <div id="receivers-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $("#receivers-grid").kendoGrid({
+        dataSource: {
+            type: "json",
+            transport: {
+                read: {
+                    url: "@Html.Raw(Url.Action("PushReceiversList", "PushNotifications"))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                },
+                destroy: {
+                    url: "@Html.Raw(Url.Action("DeleteReceiver", "PushNotifications"))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                }
+            },
+            schema: {
+                data: "Data",
+                total: "Total",
+                errors: "Errors",
+                model: {
+                    id: "Id",
+                    fields: {
+                        RegisteredOn: { type: "date" }
+                    }
+                }
+            },
+            error: function(e) {
+                display_kendoui_grid_error(e);
+                // Cancel the changes
+                this.cancelChanges();
+            },
+            pageSize: @(adminAreaSettings.DefaultGridPageSize),
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
+        },
+        pageable: {
+            refresh: true,
+            pageSizes: [@adminAreaSettings.GridPageSizes]
+        },
+        editable: {
+            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+            mode: "inline"
+        },
+        scrollable: false,
+        columns: [
+        {
+            field: "CustomerId",
+            title: "@T("Admin.PushNotifications.Message.Fields.CustomerEmail")",
+            template: '<a href="@Url.Action("Edit", "Customer")/#=CustomerId#">#:CustomerEmail#</a>',
+            width: 100
+        }, {
+            field: "Allowed",
+            title: "@T("Admin.PushNotifications.Message.Fields.Allowed")",
+            headerAttributes: { style: "text-align:center" },
+            attributes: { style: "text-align:center" },
+                template: '# if(Allowed) {# <i class="fa fa-check true-icon" style="color:green"></i> #} else {# <i class="fa fa-close false-icon" style="color:red"></i> #} #',
+            width: 100
+        }, {
+            field: "RegisteredOn",
+            title: "@T("Admin.PushNotifications.Message.Fields.RegisteredOn")",
+            width: 200,
+            type: "date",
+            format: "{0:G}"
+        }, {
+            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+            title: "@T("Admin.Common.Delete")",
+            headerAttributes: { style: "text-align:center" },
+            attributes: { style: "text-align:center" },
+            width: 50
+        }
+        ]
+    });
+});
+</script>
+
+@if (!(Model.Allowed == 0 && Model.Denied == 0))
+{
+    <script src="~/administration/chart.min.js" type="text/javascript"></script>
+    <script>
+    $(document).ready(function () {
+        var config = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        @Model.Allowed,
+                        @Model.Denied
+                    ],
+                    backgroundColor: [
+                        'rgba(0, 200, 0, 0.6)',
+                        "rgba(200, 0, 0, 0.6)"
+                    ],
+                    borderColor: [
+                        'rgb(0, 128, 0)',
+                        'rgb(128, 0, 0)'
+                    ],
+                    label: 'Allow notifications popup statistics'
+                }],
+                labels: [
+                    'Allowed',
+                    'Denied'
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+
+        var ctx = document.getElementById('piechart').getContext('2d');
+        window.myPie = new Chart(ctx, config);
+    });
+    </script>
+}
