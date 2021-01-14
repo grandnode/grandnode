@@ -7,6 +7,7 @@ COPY Grand.Domain/Grand.Domain.csproj Grand.Domain/Grand.Domain.csproj
 COPY Grand.Core/Grand.Core.csproj Grand.Core/Grand.Core.csproj
 COPY Grand.Framework/Grand.Framework.csproj Grand.Framework/Grand.Framework.csproj
 COPY Grand.Services/Grand.Services.csproj Grand.Services/Grand.Services.csproj
+COPY Grand.Admin/Grand.Admin.csproj Grand.Admin/Grand.Admin.csproj
 COPY Grand.Web/Grand.Web.csproj Grand.Web/Grand.Web.csproj
 COPY Plugins/Grand.Plugin.DiscountRequirements.Standard/Grand.Plugin.DiscountRequirements.Standard.csproj Plugins/Grand.Plugin.DiscountRequirements.Standard/Grand.Plugin.DiscountRequirements.Standard.csproj
 COPY Plugins/Grand.Plugin.ExchangeRate.McExchange/Grand.Plugin.ExchangeRate.McExchange.csproj Plugins/Grand.Plugin.ExchangeRate.McExchange/Grand.Plugin.ExchangeRate.McExchange.csproj

@@ -7,6 +7,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Grand.Web/Grand.Web.csproj", "Grand.Web/"]
+COPY ["Grand.Admin/Grand.Admin.csproj", "Grand.Admin/"]
 COPY ["Grand.Framework/Grand.Framework.csproj", "Grand.Framework/"]
 COPY ["Grand.Domain/Grand.Domain.csproj", "Grand.Domain/"]
 COPY ["Grand.Core/Grand.Core.csproj", "Grand.Core/"]
