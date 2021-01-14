@@ -7,7 +7,7 @@
 @if (Model.Any())
 {
     var attributeChangeScriptsBuilder = new StringBuilder();
-    <div class="contact-attributes">
+    <div class="form-group contact-attributes">
         @foreach (var attribute in Model)
         {
             string controlId = string.Format("contact_attribute_{0}", attribute.Id);

@@ -49,14 +49,17 @@
                         <textarea asp-for="Enquiry" placeholder="@T("ContactUs.Enquiry.Hint")" class="form-control enquiry"></textarea>
                         <span asp-validation-for="Enquiry"></span>
                     </div>
+                    <partial name="_ContactAttributes" model="Model.ContactAttributes" />
                     @if (Model.DisplayCaptcha)
                     {
-                        <div class="captcha-box">
-                            <captcha />
+                        <div class="form-group">
+                            <div class="captcha-box">
+                                <captcha />
+                            </div>
                         </div>
                     }
+
                 </div>
-                <partial name="_ContactAttributes" model="Model.ContactAttributes" />
                 <div class="buttons mt-1 mb-1">
                     <input type="submit" name="send-email" class="btn btn-info contact-us-button" value="@T("ContactUs.Button")" />
                 </div>
