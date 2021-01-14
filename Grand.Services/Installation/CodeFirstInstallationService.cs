@@ -9715,6 +9715,12 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "AddRewardPoints",
+                                                  Enabled = true,
+                                                  Name = "Assign new reward points"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "DeleteBid",
                                                   Enabled = true,
                                                   Name = "Delete bid"

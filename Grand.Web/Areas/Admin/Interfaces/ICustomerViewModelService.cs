@@ -24,7 +24,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task SendEmail(Customer customer, CustomerModel.SendEmailModel model);
         Task SendPM(Customer customer, CustomerModel.SendPmModel model);
         Task<IEnumerable<CustomerModel.RewardPointsHistoryModel>> PrepareRewardPointsHistoryModel(string customerId);
-        Task<RewardPointsHistory> InsertRewardPointsHistory(string customerId, string storeId, int addRewardPointsValue, string addRewardPointsMessage);
+        Task<RewardPointsHistory> InsertRewardPointsHistory(Customer customer, string storeId, int addRewardPointsValue, string addRewardPointsMessage);
         Task<IEnumerable<AddressModel>> PrepareAddressModel(Customer customer);
         Task DeleteAddress(Customer customer, Address address);
         Task PrepareAddressModel(CustomerAddressModel model, Address address, Customer customer, bool excludeProperties);

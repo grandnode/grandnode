@@ -672,7 +672,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (customer == null || customer.Deleted || CheckSalesManager(customer))
                 return Json(new { Result = false });
 
-            await _customerViewModelService.InsertRewardPointsHistory(customerId, storeId, addRewardPointsValue, addRewardPointsMessage);
+            await _customerViewModelService.InsertRewardPointsHistory(customer, storeId, addRewardPointsValue, addRewardPointsMessage);
 
             return Json(new { Result = true });
         }

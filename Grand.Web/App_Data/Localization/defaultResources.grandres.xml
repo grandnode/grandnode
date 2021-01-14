@@ -969,6 +969,9 @@
   <LocaleResource Name="ActivityLog.AddNewProductAttribute">
     <Value>Added a new product attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewRewardPoints">
+    <Value>Added a reward points {1} to customer {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewSalesEmployee">
     <Value>Added a new sales employee ('{0}')</Value>
   </LocaleResource>

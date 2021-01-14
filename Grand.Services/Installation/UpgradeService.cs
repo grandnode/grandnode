@@ -1100,6 +1100,14 @@ namespace Grand.Services.Installation
                     Name = "Delete a sales employee"
                 });
             }
+            if (!_activityLogTypeRepository.Table.Where(x => x.SystemKeyword == "AddRewardPoints").Any())
+            {
+                await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
+                    SystemKeyword = "AddRewardPoints",
+                    Enabled = true,
+                    Name = "Assign new reward points"
+                });
+            }
             #endregion
 
             #region Upgrade orders

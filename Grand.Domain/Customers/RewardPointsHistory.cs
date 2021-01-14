@@ -41,7 +41,7 @@ namespace Grand.Domain.Customers
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
-        public virtual string UsedWithOrderId { get; set; }
+        public string UsedWithOrderId { get; set; }
        
     }
 }

@@ -1178,9 +1178,12 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual async Task<RewardPointsHistory> InsertRewardPointsHistory(string customerId, string storeId, int addRewardPointsValue, string addRewardPointsMessage)
+        public virtual async Task<RewardPointsHistory> InsertRewardPointsHistory(Customer customer, string storeId, int addRewardPointsValue, string addRewardPointsMessage)
         {
-            return await _rewardPointsService.AddRewardPointsHistory(customerId, addRewardPointsValue, storeId, addRewardPointsMessage);
+            //activity log
+            await _customerActivityService.InsertActivity("AddRewardPoints", customer.Id, _localizationService.GetResource("ActivityLog.AddNewRewardPoints"), customer.Email, addRewardPointsValue);
+
+            return await _rewardPointsService.AddRewardPointsHistory(customer.Id, addRewardPointsValue, storeId, addRewardPointsMessage);
         }
 
         public virtual async Task<IEnumerable<AddressModel>> PrepareAddressModel(Customer customer)

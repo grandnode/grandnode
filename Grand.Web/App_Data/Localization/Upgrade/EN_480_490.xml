@@ -179,4 +179,7 @@
   <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.SystemName.Required">
     <Value>System name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewRewardPoints">
+    <Value>Added a reward points {1} to customer {0}</Value>
+  </LocaleResource>
 </Language>
