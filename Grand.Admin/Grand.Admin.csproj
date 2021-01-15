@@ -3,6 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Library</OutputType>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
+    <Company>UNIT-SOFT Sp. z o.o.</Company>
+    <Authors>UNIT-SOFT Sp. z o.o.</Authors>
+    <Product>grandnode</Product>
+    <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,5 +25,8 @@
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
-
+  <ItemGroup>
+    <Content Include="wwwroot\**" CopyToPublishDirectory="Never" />
+    <Content Include="Areas\**" CopyToPublishDirectory="PreserveNewest"/>
+  </ItemGroup>
 </Project>
