@@ -303,6 +303,10 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task DeleteCategory(Category category)
         {
             await _categoryService.DeleteCategory(category);
+
+            //delete related uri records
+            await _urlRecordService.DeleteByOwnerEntity<Category>(category);
+
             //activity log
             await _customerActivityService.InsertActivity("DeleteCategory", category.Id, _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
         }

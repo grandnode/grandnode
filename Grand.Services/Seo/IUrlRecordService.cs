@@ -7,13 +7,21 @@ namespace Grand.Services.Seo
     /// <summary>
     /// Provides information about URL records
     /// </summary>
-    public partial interface  IUrlRecordService
+    public partial interface IUrlRecordService
     {
         /// <summary>
         /// Deletes an URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
         Task DeleteUrlRecord(UrlRecord urlRecord);
+
+        /// <summary>
+        /// Deletes URL records of related entity
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task DeleteByOwnerEntity<T>(T entity) where T : BaseEntity, ISlugSupported;
 
         /// <summary>
         /// Gets an URL record
