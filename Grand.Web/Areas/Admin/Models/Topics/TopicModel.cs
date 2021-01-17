@@ -101,10 +101,12 @@ namespace Grand.Web.Areas.Admin.Models.Topics
         public string[] SelectedCustomerRoleIds { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.StartDate")]
-        public DateTime StartDateUtc { get; set; }
+        [UIHint("DateTimeNullable")]
+        public DateTime? StartDateUtc { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.EndDate")]
-        public DateTime EndDateUtc { get; set; }
+        [UIHint("DateTimeNullable")]
+        public DateTime? EndDateUtc { get; set; }
     }
 
     public partial class TopicLocalizedModel : ILocalizedModelLocal, ISlugModelLocal

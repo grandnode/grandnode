@@ -165,7 +165,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(TopicModel model, bool continueEditing)
         {
-            if (model.StartDateUtc >= model.EndDateUtc)
+            if (model.StartDateUtc.HasValue && model.EndDateUtc.HasValue && model.StartDateUtc >= model.EndDateUtc)
             {
                 ModelState.AddModelError(nameof(model.StartDateUtc), "Start Date cannot be later than End Date");
             }
