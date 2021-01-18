@@ -1,0 +1,63 @@
+﻿#GrandCarousel .carousel-item .carousel-caption {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0;
+}
+
+    #GrandCarousel .carousel-item .carousel-caption .slideRow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+#GrandCarousel .carousel-item .slide-title h2 {
+    font-size: 38px;
+    font-weight: 300;
+    color: #1D1F20;
+}
+
+#GrandCarousel .carousel-item .slide-content {
+    font-size: 20px;
+    font-weight: 300;
+    color: #dfdfdf;
+    text-align: left;
+}
+
+#GrandCarousel .carousel-item .slide-price .actual {
+    font-size: 32px;
+    font-weight: 500;
+    color: #1d1f20;
+    margin-right: 15px;
+    margin-bottom: 0;
+}
+
+#GrandCarousel .carousel-item .slide-price .old-price {
+    font-size: 24px;
+    font-weight: 300;
+    color: #888;
+    text-decoration: line-through;
+    margin-bottom: 0;
+}
+
+@media (max-width: 1199px) {
+    #GrandCarousel .carousel-item .slide-content {
+        display: none;
+    }
+}
+
+@media (max-width: 991px) {
+    #GrandCarousel .carousel-item .slide-title h2 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 767px) {
+    #GrandCarousel {
+        display: none;
+    }
+}

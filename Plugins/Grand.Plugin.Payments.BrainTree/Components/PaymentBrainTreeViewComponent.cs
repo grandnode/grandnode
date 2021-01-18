@@ -3,6 +3,8 @@ using Grand.Core;
 using Grand.Domain.Orders;
 using Grand.Framework.Components;
 using Grand.Plugin.Payments.BrainTree.Models;
+using Grand.Plugin.Payments.BrainTree.Validators;
+using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,18 +23,21 @@ namespace Grand.Plugin.Payments.BrainTree.Components
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
+        private readonly ILocalizationService _localizationService;
 
         public PaymentBrainTreeViewComponent(BrainTreePaymentSettings brainTreePaymentSettings,
             IOrderTotalCalculationService orderTotalCalculationService,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            ILocalizationService localizationService)
         {
             _brainTreePaymentSettings = brainTreePaymentSettings;
             _orderTotalCalculationService = orderTotalCalculationService;
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
             _workContext = workContext;
+            _localizationService = localizationService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
@@ -103,6 +108,15 @@ namespace Grand.Plugin.Payments.BrainTree.Components
                 .FirstOrDefault(x => x.Value.Equals(form["ExpireYear"], StringComparison.InvariantCultureIgnoreCase));
             if (selectedYear != null)
                 selectedYear.Selected = true;
+
+            var validator = new PaymentInfoValidator(_brainTreePaymentSettings, _localizationService);
+            var results = validator.Validate(model);
+            if (!results.IsValid)
+            {
+                var query = from error in results.Errors
+                            select error.ErrorMessage;
+                model.Errors = string.Join(", ", query);
+            }
 
             return View("~/Plugins/Payments.BrainTree/Views/PaymentInfo.cshtml", model);
         }

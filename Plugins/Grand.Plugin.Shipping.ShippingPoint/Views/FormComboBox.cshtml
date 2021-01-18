@@ -1,20 +1,24 @@
 ﻿@model List<SelectListItem>
-<script>
-    function renderShippingOptionInfo(param) {
-        if (param != "") {
-            var _url = '/SelectedShippingPoint/Get?shippingOptionId=' + param;
-            $.ajax({
-                url: _url,
-                success: function (data) {
-                    $("#shippingOptionInfo").html(data);
-                }
-            });
+<div class="script-tag">
+    <script>
+        function renderShippingOptionInfo(param) {
+            if (param != "") {
+                var _url = '/SelectedShippingPoint/Get?shippingOptionId=' + param;
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", _url, true);
+                xhttp.send();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("shippingOptionInfo").innerHTML = this.responseText;
+                    }
+                };
+            }
+            else {
+                document.getElementById("shippingOptionInfo").innerHTML = "";
+            }
         }
-        else {
-            $("#shippingOptionInfo").html("");
-        }
-    }
-</script>
+    </script>
+</div>
 
 <h6>@T("Plugins.Shipping.ShippingPoint.ChooseShippingPoint")</h6>
 <select class="form-control" name="selectedShippingOption" onchange="renderShippingOptionInfo(value)">
