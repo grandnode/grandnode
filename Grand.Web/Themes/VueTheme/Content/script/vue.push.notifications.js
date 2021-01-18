@@ -76,15 +76,11 @@
                     });
             })
             .catch(function (err) {
-                console.log('Unable to get permission to notify. ', err);
-
                 var postData = {
                     success: false,
                     value: "Permission denied",
                 };
-
                 addAntiForgeryToken(postData);
-
                 axios({
                     url: url,
                     data: postData,
