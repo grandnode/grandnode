@@ -6,7 +6,6 @@ using Grand.Domain.Customers;
 using Grand.Domain.Media;
 using Grand.Domain.Stores;
 using Grand.Domain.Tax;
-using Grand.Framework.Components;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
@@ -26,13 +25,11 @@ using Grand.Web.Models.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewComponents;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
