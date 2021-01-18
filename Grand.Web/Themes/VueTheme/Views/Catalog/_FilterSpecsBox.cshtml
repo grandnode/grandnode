@@ -1,0 +1,86 @@
+﻿@model CatalogPagingFilteringModel.SpecificationFilterModel
+@{
+    var notFilteredItemsGroups = Model.NotFilteredItems.GroupBy(x => x.SpecificationAttributeName);
+}
+@if (Model.Enabled)
+{
+    <div id="block-product-spec-filter" class="block product-filter product-spec-filter">
+        <h2 class="h5">
+            <strong>@T("Filtering.SpecificationFilter")</strong>
+        </h2>
+        <div class="filter-content viewBox">
+            @if (Model.NotFilteredItems.Any())
+            {
+                <div class="available-items">
+                    @foreach (var group in notFilteredItemsGroups)
+                    {
+                        var groupList = group.ToList();
+                        <b-col cols="12" class="px-0">
+                            <ul class="group product-spec-group">
+                                <li class="title">
+                                    <h6>@groupList[0].SpecificationAttributeName:</h6>
+                                </li>
+                                <li>
+                                    <b-button-group size="sm" class="d-inline-flex flex-wrap">
+                                        @foreach (var spec in groupList)
+                                        {
+
+                                            @if (String.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb))
+                                            {
+                                                <b-button size="sm" variant="light" class="mb-1 mr-1" href="@spec.FilterUrl">
+                                                    @spec.SpecificationAttributeOptionName
+                                                </b-button>
+                                            }
+                                            else
+                                            {
+                                                <b-button size="sm" variant="light" class="color-container mb-1 mr-1" href="@spec.FilterUrl">
+                                                    <span class="color" title="@spec.SpecificationAttributeOptionName" style="background-color: @(spec.SpecificationAttributeOptionColorRgb);">&nbsp;</span>
+                                                </b-button>
+                                            }
+
+                                        }
+                                    </b-button-group>
+                                </li>
+                            </ul>
+                        </b-col>
+                    }
+                </div>
+            }
+        </div>
+        @if (Model.AlreadyFilteredItems.Any())
+        {
+            <b-card header="@T("Filtering.SpecificationFilter.CurrentlyFilteredBy")" header-tag="h6" class="filtered-items mb-3">
+                <ul class="p-0 mb-0">
+                    @{
+                        var group = Model.AlreadyFilteredItems.GroupBy(x => x.SpecificationAttributeName);
+                    }
+                    @foreach (var item in group)
+                    {
+                        
+                         var groupList = item.ToList();
+                        
+                        <li class="item">
+                            <div class="mb-2">
+                                <strong>@groupList[0].SpecificationAttributeName:</strong>
+                            </div>
+                            @{
+                                var groupList2 = item.ToList();
+                            }
+                            <div class="d-inline-flex flex-wrap w-100">
+                                @foreach (var spec in groupList)
+                                {
+                                    <b-link class="d-flex align-items-center mr-2 mb-2 pb-0" href="@spec.FilterUrl"> @spec.SpecificationAttributeOptionName<b-icon class="ml-2 text-danger" icon="x-circle-fill"></b-icon></b-link>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <div class="remove-filter">
+                    <b-button size="sm" variant="danger" href="@Model.RemoveFilterUrl">
+                        @T("Filtering.SpecificationFilter.Remove")
+                    </b-button>
+                </div>
+            </b-card>
+        }
+    </div>
+}

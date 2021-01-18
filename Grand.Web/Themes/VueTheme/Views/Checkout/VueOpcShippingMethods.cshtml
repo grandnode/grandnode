@@ -1,0 +1,53 @@
+﻿<div v-if="vmorder.ShippingMethod" class="checkout-data">
+    <script asp-location="Footer">
+        function loadPartialView(arg_value) {
+            var url = window.location.origin + '/checkout/GetShippingFormPartialView?shippingOption=' + arg_value;
+            axios({
+                url: url,
+                method: 'post',
+            }).then(function (response) {
+                document.getElementById('shipping_form').innerHTML = response.data;
+            }).then(function () {
+                if (document.querySelector('.script-tag')) {
+                    runScripts(document.querySelector('.script-tag'))
+                }
+            });
+        }
+    </script>
+    <div class="shipping-method">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_method_top" })
+        <template v-if="vmorder.ShippingMethodWarnings">
+            <ul class="method-list px-0">
+                <li v-for="(shippingMethod, index) in vmorder.ShippingMethods">
+                    <label class="custom-control custom-checkbox">
+                        <input :id="'shippingoption_' + index" type="radio"
+                               onclick="loadPartialView(value)"
+                               name="shippingoption"
+                               :value="shippingMethod.Name + '___' + shippingMethod.ShippingRateComputationMethodSystemName"
+                               :checked="shippingMethod.Selected"
+                               class="custom-control-input">
+                        <span class="custom-control-label"></span>
+                        <span :for="'shippingoption_' + index" class="custom-control-description">
+                            {{shippingMethod.Name}} ({{shippingMethod.Fee}})
+                            <template v-if="shippingMethod.Description !== null">
+                                <span v-html="shippingMethod.Description"></span>
+                            </template>
+                        </span>
+                    </label>
+                </li>
+            </ul>
+            <div v-if="vmorder.NotifyCustomerAboutShippingFromMultipleLocations" class="multiple-locations">
+                @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
+            </div>
+            <div id="shipping_form"></div>
+        </template>
+        <template v-else>
+            <div class="message-error">
+                <ul class="px-0 my-3">
+                    <li class="text-danger" v-for="warning in vmorder.ShippingMethodWarnings">{{warning}}</li>
+                </ul>
+            </div>
+        </template>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_method_bottom" })
+    </div>
+</div>

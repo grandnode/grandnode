@@ -1,0 +1,31 @@
+﻿@model ProductDetailsModel
+<b-col xl="5" lg="4" md="12" cols="12" class="mt-md-0 mt-3 px-0">
+    <div class="gallery">
+        @if (Model.PictureModels.Count > 1)
+        {
+            <b-img-lazy id="main-product-img-@Model.Id" class="image main-image"
+                 src="@Model.DefaultPictureModel.ImageUrl"
+                 alt="@Model.DefaultPictureModel.AlternateText"
+                 title="@Model.DefaultPictureModel.Title" />
+            @foreach (var picture in Model.PictureModels)
+            {
+                <img class="image thumb-image"
+                     src="@picture.ThumbImageUrl"
+                     alt="@picture.AlternateText"
+                     title="@picture.Title"
+                     data-src="@picture.ImageUrl"
+                     @@click="changeImg($event)" />
+            }
+        }
+        else
+        {
+            <b-img-lazy class="img-fluid"
+                        alt="@Model.DefaultPictureModel.AlternateText"
+                        src="@Model.DefaultPictureModel.ImageUrl"
+                        data-fullsize="@Model.DefaultPictureModel.FullSizeImageUrl"
+                        title="@Model.DefaultPictureModel.Title"
+                        itemprop="image"
+                        id="main-product-img-@Model.Id" />
+        }
+    </div>
+</b-col>

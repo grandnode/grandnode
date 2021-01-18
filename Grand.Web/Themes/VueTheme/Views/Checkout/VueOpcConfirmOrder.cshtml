@@ -1,0 +1,30 @@
+﻿<div v-if="vmorder.Confirm" class="checkout-data order-summary-content col-12 px-0">
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_confirm_top" })
+    <div class="order-summary">
+        <partial name="OrderSummary" model="null" />
+    </div>
+    <div class="confirm-order">
+        <div v-if="vmorder.MinOrderTotalWarning !== null">
+            <div class="alert alert-danger my-3">
+                {{vmorder.MinOrderTotalWarning}}
+            </div>
+        </div>
+        <div v-if="vmorder.ConfirmWarnings !== 'undefined' && vmorder.ConfirmWarnings.length > 0" class="alert alert-danger my-3">
+            <template v-for="warning in vmorder.ConfirmWarnings">
+                <span>{{warning}}</span>
+            </template>
+        </div>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_confirm_bottom" })
+        <template v-if="vmorder.MinOrderTotalWarning == null && vmorder.cart.TermsOfServiceOnOrderConfirmPage">
+            <div id="confirm-data-modal" data-title="@T("Checkout.TermsOfService")" data-body="@T("Checkout.TermsOfService.PleaseAccept")" data-terms="@T("Checkout.TermsOfService.PleaseAccept")" data-link="@Url.RouteUrl("Topic", new { SeName = TopicSeNameConstants.Conditionsofuse })" data-linkname="@T("Checkout.TermsOfService.Read")"></div>
+            <b-button id="new-back-confirm_order">@T("Common.Back")</b-button>
+            <b-button variant="info" @@click="vmorder.showMsgBoxOne">
+                @T("Common.Confirm")
+            </b-button>
+        </template>
+        <template v-else>
+            <b-button id="new-back-confirm_order">@T("Common.Back")</b-button>
+            <input type="button" class="btn btn-info confirm-order-next-step-button" onclick="ConfirmOrder.save()" value="@T("Common.Confirm")" />
+        </template>
+</div>

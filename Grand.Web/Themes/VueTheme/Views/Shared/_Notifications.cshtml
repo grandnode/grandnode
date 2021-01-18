@@ -1,0 +1,41 @@
+﻿@using System.Text.Encodings.Web;
+@{
+
+    //success messages
+    var successMessages = new List<string>();
+    if (TempData[string.Format("Grand.notifications.{0}", NotifyType.Success)] != null)
+    {
+        successMessages.AddRange(TempData[string.Format("Grand.notifications.{0}", NotifyType.Success)] as IList<string>);
+    }
+    if (ViewData[string.Format("Grand.notifications.{0}", NotifyType.Success)] != null)
+    {
+        successMessages.AddRange(ViewData[string.Format("Grand.notifications.{0}", NotifyType.Success)] as IList<string>);
+    }
+
+    //error messages
+    var errorMessages = new List<string>();
+    if (TempData[string.Format("Grand.notifications.{0}", NotifyType.Error)] != null)
+    {
+        errorMessages.AddRange(TempData[string.Format("Grand.notifications.{0}", NotifyType.Error)] as IList<string>);
+    }
+    if (ViewData[string.Format("Grand.notifications.{0}", NotifyType.Error)] != null)
+    {
+        errorMessages.AddRange(ViewData[string.Format("Grand.notifications.{0}", NotifyType.Error)] as IList<string>);
+    }
+}
+@foreach (var message in successMessages)
+{
+    <script asp-location="Footer">
+            displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(message))', 'success', false);
+    </script>
+}
+@foreach (var message in errorMessages)
+{
+    <script asp-location="Footer">
+            displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(message))', 'error', false);
+    </script>
+}
+
+<div id="bar-notification" class="generalNote"></div>
+<div class="modal-place"></div>
+@await Component.InvokeAsync("PopupAction")

@@ -1,0 +1,59 @@
+﻿@model CatalogPagingFilteringModel.PriceRangeFilterModel
+@{
+    var selectedItem = Model.Items.FirstOrDefault(x => x.Selected);
+}
+
+@functions {
+    public string FormatPriceRangeText(CatalogPagingFilteringModel.PriceRangeFilterItem filterItem)
+    {
+        string rangeText = "";
+        if (String.IsNullOrWhiteSpace(filterItem.From))
+        {
+            rangeText = string.Format(T("Filtering.PriceRangeFilter.Under").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.To));
+        }
+        else if (String.IsNullOrWhiteSpace(filterItem.To))
+        {
+            rangeText = string.Format(T("Filtering.PriceRangeFilter.Over").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.From));
+        }
+        else
+        {
+            rangeText = string.Format("<span class=\"PriceRange\">{0}</span> - <span class=\"PriceRange\">{1}</span>", filterItem.From, filterItem.To);
+        }
+        return rangeText;
+    }
+}
+    @if (Model.Enabled)
+    {
+        if (selectedItem == null)
+        {
+        <div id="block-product-price-filter" class="block product-filter product-price-filter">   
+            <h2 class="h5">
+                <strong>@T("Filtering.PriceRangeFilter")</strong>
+            </h2>
+            <div class="d-inline-flex flex-wrap viewBox">
+                @foreach (var item in Model.Items)
+                {
+                    <b-button size="sm" variant="light" class="mb-2 mr-2" href="@item.FilterUrl"><h6 class="mb-0">@Html.Raw(FormatPriceRangeText(item))</h6></b-button>
+                }
+            </div>
+        </div>
+
+    }
+    else
+    {
+
+        <div id="block-product-price-filter" class="block product-filter product-price-filter">
+            <h2 class="h5">
+                <strong>@T("Filtering.PriceRangeFilter")</strong>
+            </h2>
+            <b-card class="mb-3 viewBox">
+                <div class="item w-100 mb-3">
+                    <strong>@Html.Raw(FormatPriceRangeText(selectedItem))</strong>
+                </div>
+                <div class="remove-filter">
+                    <b-button size="sm" variant="danger" href="@Model.RemoveFilterUrl">@T("Filtering.PriceRangeFilter.Remove")</b-button>
+                </div>
+            </b-card>
+        </div>
+    }
+}

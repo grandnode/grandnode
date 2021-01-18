@@ -1,0 +1,118 @@
+﻿@model NewsItemModel
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+    pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
+}
+<div class="page news-item-page">
+    <b-card class="mt-3" @if (!string.IsNullOrEmpty(Model.PictureModel.ImageUrl)) { <text> img-src="@Model.PictureModel.ImageUrl" img-alt="@Model.PictureModel.AlternateText" </text> }>
+        <template v-slot:header>
+            <h1 class="h5 mb-0">
+                @Model.Title
+            </h1>
+            <span class="small text-muted">
+                @Model.CreatedOn.ToString("D")
+            </span>
+        </template>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_body", additionalData = Model.Id })
+        @Html.Raw(Model.Full)
+    </b-card>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_comments", additionalData = Model.Id })
+    @if (Model.AllowComments)
+    {
+        <fieldset class="new-comment py-3 px-0" id="comments">
+            <h5><strong>@T("News.Comments.LeaveYourComment")</strong></h5>
+            <div class="notifications">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                @{
+                    var result = TempData["Grand.news.addcomment.result"] as string;
+                }
+                @if (!String.IsNullOrEmpty(result))
+                {
+                    <div class="result card bg-info p-3 text-white">@result</div>
+                }
+            </div>
+            <form asp-route="NewsItem" asp-route-sename="@Model.SeName" method="post">
+                <fieldset class="form-group">
+                    <label asp-for="AddNewComment.CommentTitle" class="col-form-label">@T("News.Comments.CommentTitle"):</label>
+                    <input asp-for="AddNewComment.CommentTitle" class="form-control enter-comment-title" />
+                    <span asp-validation-for="AddNewComment.CommentTitle"></span>
+                </fieldset>
+                <fieldset class="form-group">
+                    <label asp-for="AddNewComment.CommentText" class="col-form-label">@T("News.Comments.CommentText"):</label>
+                    <textarea asp-for="AddNewComment.CommentText" class="form-control enter-comment-text"></textarea>
+                    <span asp-validation-for="AddNewComment.CommentText"></span>
+                </fieldset>
+                @if (Model.AddNewComment.DisplayCaptcha)
+                {
+                    <div class="captcha-box">
+                        <captcha />
+                    </div>
+                }
+                <div class="buttons text-xs-center text-md-left generalMarginSupporter">
+                    <input type="submit" name="add-comment" class="btn btn-info news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
+                </div>
+            </form>
+        </fieldset>
+        if (Model.Comments.Any())
+        {
+            <div class="comment-list">
+                <h4 class="generalTitle generalMarginSupporter"><strong>@T("News.Comments")</strong></h4>
+                <div class="comments">
+                    @foreach (var comment in Model.Comments)
+                    {
+                    <b-card class="mb-3">
+                        <template v-slot:header>
+                            <div class="d-inline-flex w-100">
+                                @if (comment.AllowViewingProfiles)
+                                {
+                                    <b-link href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })"><h6 class="mb-0">@(comment.CustomerName)</h6></b-link>
+                                }
+                                else
+                                {
+                                    <h6 class="mb-0">@comment.CustomerName</h6>
+                                }
+                                <b-icon icon="calendar2-check" variant="info" class="mx-2"></b-icon>
+                                <small class="date text-muted">
+                                    <span>@T("News.Comments.CreatedOn"):</span>
+                                    <span>@comment.CreatedOn.ToString("g")</span>
+                                </small>
+                            </div>
+                        </template>
+                        <b-col cols="12" class="px-0">
+                            <b-row>
+                                @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                {
+                                    <b-col xl="2" lg="2" md="3" sm="3" cols="12" class="user-info">
+                                        <div class="avatar">
+                                            @if (comment.AllowViewingProfiles)
+                                            {
+                                                <b-link href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="avatar-img-link">
+                                                    <b-img rounded src="@(comment.CustomerAvatarUrl)" class="avatar-img border img-fluid" alt="avatar" />
+                                                </b-link>
+                                            }
+                                            else
+                                            {
+                                                <b-img rounded src="@(comment.CustomerAvatarUrl)" class="avatar-img border img-fluid" alt="avatar" />
+                                            }
+                                        </div>
+                                    </b-col>
+                                }
+                                <b-col>
+                                    <h5>@comment.CommentTitle</h5>
+                                    @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(comment.CommentText))
+                                </b-col>
+                            </b-row>
+                        </b-col>
+                    </b-card>
+                    }
+                </div>
+            </div>
+        }
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_after_comments", additionalData = Model.Id })
+</div>

@@ -1,0 +1,62 @@
+﻿
+    <li>
+        <ul class="flyout-cart px-0">
+            <b-nav-item>
+                <b-icon icon="cart" variant="dark" v-b-toggle.sidebar-cart></b-icon>
+                <div class="qty-indicator cart-qty">{{flycartindicator}}</div>
+            </b-nav-item>
+            <template>
+                <b-sidebar id="sidebar-cart" backdrop right>
+                    <template v-slot:title v-if="flycartindicator > 0">
+                        @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\">{1}</a>", "/cart", string.Format(T("ShoppingCart.Mini.Items").Text, "{{flycartindicator}}"))))
+                    </template>
+                    <template v-slot:title v-else>
+                        @T("ShoppingCart.Mini.NoItems")
+                    </template>
+                    <div v-for="item in flycartitems" class="item d-inline-flex no-wrap">
+                        <b-link :href="'/' + item.ProductSeName" :title="item.Picture.Title" v-if="item.Picture.ImageUrl">
+                            <b-img :alt="item.Picture.AlternateText" :src="item.Picture.ImageUrl" :title="item.Picture.Title" fluid></b-img>
+                        </b-link>
+                        <b-col>
+                            <b-link :href="'/' + item.ProductSeName">{{item.ProductName}}</b-link>
+                            <div class="attributes p-2" v-if="item.AttributeInfo">
+                                <div v-html="item.AttributeInfo"></div>
+                            </div>
+                            <div class="price"><span>@T("ShoppingCart.Mini.UnitPrice"):</span> <strong>{{item.UnitPrice}}</strong></div>
+                            <div class="quantity"><span>@T("ShoppingCart.Mini.Quantity"):</span> <strong>{{item.Quantity}}</strong></div>
+                        </b-col>
+                        <div>
+                            <b-link class="deletecartitem" :data-href="item.Id" onclick="deletecartitem(this.getAttribute('data-href'))">
+                                <b-icon icon="trash" class="deletecartitem" variant="danger"></b-icon>
+                            </b-link>
+                        </div>
+                    </div>
+                    <template v-slot:footer v-if="flycartindicator > 0">
+                        <b-col cols="12" class="p-3 bg-dark">
+                            <b-row>
+                                <b-col lg="6" cols="5" class="text-center text-white d-flex flex-column">
+                                    <span class="h5 mb-0">@T("ShoppingCart.Totals.SubTotal"):</span>
+                                    <span class="h4 mb-0">{{flycart.SubTotal}}</span>
+                                </b-col>
+                                <b-col lg="6" cols="7" class="text-center d-flex justify-content-center align-items-center">
+                                    <b-button v-if="flycart.DisplayShoppingCartButton" variant="light" class="cart-button w-100 h-100 text-uppercase" @@click="location='/cart'">@T("ShoppingCart.Mini.ViewCart")</b-button>
+                                    <div v-if="flycart.DisplayCheckoutButton" class="w-100 h-100">
+                                        <div v-if="flycart.CurrentCustomerIsGuest && flycart.CurrentCustomerIsGuest">
+                                            <b-button variant="light" class="checkout-button w-100 h-100 text-uppercase" onclick="location='@Url.RouteUrl("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") })'">@T("Checkout.Button")</b-button>
+                                        </div>
+                                        <div v-else>
+                                            <b-button variant="light" class="checkout-button w-100 h-100 text-uppercase" onclick="location='@Url.RouteUrl("Checkout")'">@T("Checkout.Button")</b-button>
+                                        </div>
+                                    </div>
+                                </b-col>
+                            </b-row>
+                        </b-col>
+                    </template>
+                    <div v-else class="d-flex flex-column justify-content-center align-items-center">
+                        <b-icon icon="cart-x" font-scale="7.5" variant="secondary"></b-icon>
+                        <div class="text-center text-muted mt-3">@T("ShoppingCart.Mini.NoDataText")</div>
+                    </div>
+                </b-sidebar>
+            </template>
+        </ul>
+    </li>

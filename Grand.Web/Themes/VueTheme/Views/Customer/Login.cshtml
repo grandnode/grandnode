@@ -1,0 +1,139 @@
+﻿@model LoginModel
+@inject IWebHelper webHelper
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Login").Text);
+
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] });
+}
+<div class="page login-page">
+    <h2 class="generalTitle text-center mt-3">@T("Account.Login.Welcome")</h2>
+    <partial name="_ExternalAuthentication.Errors" />
+    <b-col cols="12">
+        <b-form-row class="my-3">
+            @* login main block *@
+            <b-col cols="12" class="mx-lg-0 mx-auto mt-3">
+                <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" v-on:submit.prevent="validateBeforeSubmit($event)">
+                    <b-card>
+                        <template v-slot:header>
+                            <h3 class="h5 mb-0">
+                                @T("Account.Login.ReturningCustomer")
+                            </h3>
+                        </template>
+                        <b-card-text>
+                            <div asp-validation-summary="ModelOnly" class="message-error w-100 alert alert-danger pb-0 text-center">@T("Account.Login.Unsuccessful")</div>
+                            <div class="col-12 form-group mb-0">
+                                @if (Model.UsernamesEnabled)
+                                {
+                                    <b-form-row class="form-group">
+                                        <b-col lg="3" cols="12" class="d-flex align-items-start justify-content-sm-start">
+                                            <label asp-for="Username" class="col-form-label">@T("Account.Login.Fields.UserName"):</label>
+                                        </b-col>
+                                        <b-col lg="9" cols="12">
+                                            <input asp-for="Username" class="form-control username" autofocus="autofocus" v-validate="'required'" />
+                                            <span class="field-validation-error">{{veeErrors.first('Username')}}</span>
+                                            <span asp-validation-for="Username"></span>
+                                        </b-col>
+                                    </b-form-row>
+                                }
+                                else
+                                {
+                                    <b-form-row class="form-group">
+                                        <b-col lg="3" cols="12" class="d-flex align-items-start justify-content-start">
+                                            <label asp-for="Email" class="col-form-label">@T("Account.Login.Fields.Email"):</label>
+                                        </b-col>
+                                        <b-col lg="9" cols="12">
+                                            <input asp-for="Email" class="form-control email" autofocus="autofocus"
+                                                   v-validate="'required|email'" />
+                                            <span class="field-validation-error">{{veeErrors.first('Email')}}</span>
+                                            <span asp-validation-for="Email"></span>
+                                        </b-col>
+                                    </b-form-row>
+                                }
+                                <b-form-row class="form-group">
+                                    <b-col lg="3" cols="12" class="d-flex align-items-center justify-content-start">
+                                        <label asp-for="Password" class="col-form-label">@T("Account.Login.Fields.Password"):</label>
+                                    </b-col>
+                                    <b-col lg="9" cols="12">
+                                        <input asp-for="Password" class="form-control password"
+                                               v-validate="'required'" />
+                                        <span class="field-validation-error">{{veeErrors.first('Password')}}</span>
+                                        <span asp-validation-for="Password"></span>
+                                    </b-col>
+                                </b-form-row>
+                                <div class="inputs d-flex flex-sm-row flex-column justify-content-center">
+                                    <label class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" asp-for="RememberMe" />
+                                        <input class="custom-control-label" name="RememberMe" type="hidden" value="false">
+                                        <span class="custom-control-label"></span>
+                                        <span class="custom-control-description">@T("Account.Login.Fields.RememberMe")</span>
+                                    </label>
+                                    <span class="ml-3 forgot-password">
+                                        <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
+                                    </span>
+                                </div>
+                                @if (Model.DisplayCaptcha)
+                                {
+                                    <div class="captcha-box">
+                                        <captcha />
+                                    </div>
+                                }
+                            </div>
+                        </b-card-text>
+                        <template v-slot:footer>
+                            <div class="buttons text-center">
+                                <input class="btn btn-info login-button px-4" type="submit" value="@T("Account.Login.LoginButton")" />
+                            </div>
+                        </template>
+                    </b-card>
+                </form>
+                <div class="external-authentication">
+                    @await Component.InvokeAsync("ExternalMethods")
+                </div>
+            </b-col>
+            @* want some register? *@
+            @if (Model.CheckoutAsGuest)
+            {
+                <b-col cols="12" class="new-wrapper checkout-as-guest-or-register-block mt-3 mx-lg-0 mx-auto">
+                    <h5>
+                        <strong>@T("Account.Login.CheckoutAsGuestOrRegister")</strong>
+                    </h5>
+                    <b-row class="text">
+                        <b-col cols="12">
+                            @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
+                        </b-col>
+                    </b-row>
+                    <btn-group class="buttons text-center mt-1 areYouGuest">
+                        <b-button variant="secondary" class="checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'">
+                            @T("Account.Login.CheckoutAsGuest")
+                        </b-button>
+                        <b-button variant="secondary" class="register-button" onclick="location.href='@registerUrl'">
+                            @T("Account.Register")
+                        </b-button>
+                    </btn-group>
+                </b-col>
+            }
+            else
+            {
+                <b-col cols="12" class="mx-lg-0 mx-auto mt-3">
+                    <b-card no-header no-footer>
+                        <b-card-text>
+                            <div class="text-center generalMarginSupporter">
+                                @T("Account.Login.NewCustomer")
+                            </div>
+                            <div class="d-inline-flex align-items-center justify-content-center w-100">
+                                <a class="btn btn-info ml-3 register-button px-5" href="@registerUrl">
+                                    @T("Account.Register")
+                                </a>
+                            </div>
+                        </b-card-text>
+                    </b-card>
+                </b-col>
+            }
+        </b-form-row>
+    </b-col>
+</div>

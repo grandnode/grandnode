@@ -1,0 +1,89 @@
+﻿@model IList<SubAccountSimpleModel>
+@using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.SubAccounts").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.SubAccounts })
+}
+<vc:widget widget-zone="customer-subaccounts" additional-data="@Model"></vc:widget>
+<div class="page account-page subaccounts-list-page pl-lg-3 pt-lg-0 pt-3">
+    @Html.AntiForgeryToken()
+    <b-button variant="info" class="add-address-button float-sm-right mt-2" onclick="location = '@Url.RouteUrl("CustomerSubAccountAdd")'">
+        <b-icon icon="clipboard-plus"></b-icon> @T("Common.AddNew")
+    </b-button>
+    <h1 class="h2 generalTitle">@T("Account.SubAccounts")</h1>
+    @if (Model.Any())
+    {
+        <b-col cols="12" class="px-0">
+            <b-row class="account-list">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var account = Model[i];
+                    <b-col md="6" cols="12" class="mb-3">
+                        <b-card class="card">
+                            <template v-slot:header>
+                                <h5 class="mb-0"><strong>@account.FirstName @account.LastName</strong></h5>
+                            </template>
+                            <b-card-text>
+                                <div class="account-item">
+                                    @account.Email
+                                </div>
+                            </b-card-text>
+                            <template v-slot:footer>
+                                <b-btn-group>
+                                    <b-button variant="secondary" class="edit-subaccount-button" onclick="location = '@(Url.RouteUrl("CustomerSubAccountEdit", new { id = account.Id }))'">
+                                        @T("Common.Edit")
+                                    </b-button>
+                                    <b-button variant="danger" class="delete-subaccount-button" onclick="deletecustomersubaccount('@(account.Id)')">
+                                        @T("Common.Delete")
+                                    </b-button>
+                                </b-btn-group>
+                            </template>
+                        </b-card>
+                    </b-col>
+                }
+            </b-row>
+        </b-col>
+        <script asp-location="Footer">
+                function deletecustomersubaccount(accountId) {
+                    if (confirm('@T("Admin.Common.AreYouSure")')) {
+                        var postData = {
+                            Id: accountId
+                        };
+                        addAntiForgeryToken(postData);
+
+                        var bodyFormData = new FormData();
+                        bodyFormData.append('Id', accountId)
+                        bodyFormData.append('__RequestVerificationToken', document.querySelector('input[name=__RequestVerificationToken]').value);
+                        axios({
+                            method: 'post',
+                            url: '@(Url.RouteUrl("CustomerSubAccountDelete"))',
+                            data: bodyFormData,
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                        }).then(function (response) {
+                            if (response.data.success) {
+                                location = response.data.redirect;
+                            }
+                            else {
+                                alert(response.error);
+                            }
+                        }).catch(function (error) {
+                            alert(error);
+                        })
+                    }
+                }
+        </script>
+    }
+    else
+    {
+        <div class="no-data alert alert-info my-3">
+            @T("Account.SubAccounts.NotExists")
+        </div>
+    }
+</div>

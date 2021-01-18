@@ -1,0 +1,202 @@
+﻿   <div v-if="vmorder.cart.CheckoutAttributes[0]" class="checkout-attributes p-0">
+        <div v-for="attribute in vmorder.cart.CheckoutAttributes" :id="'checkout_attribute_label_' + attribute.Id" class="col-12 px-0 mb-2">
+            <span class="col-form-label text-prompt">
+                <template v-if="attribute.TextPrompt !== null">
+                    {{attribute.TextPrompt}}
+                </template>
+                <template v-else>
+                    {{attribute.Name}}
+                </template>
+            </span>
+            <span v-if="attribute.IsRequired" class="required">*</span>
+            <template v-if="attribute.AttributeControlType == 4">
+                <label :for="'checkout_attribute_' + attribute.Id" class="sr-only">checkout_attribute_{{attribute.Id}}</label>
+                    <input :name="'checkout_attribute_' + attribute.Id" type="text" class="form-control textbox" :id="'checkout_attribute_' + attribute.Id" v-model="attribute.DefaultValue" :value="attribute.DefaultValue" onchange="checkoutAttributeChange();" />
+            </template>
+            <template v-if="attribute.AttributeControlType == 1">
+                <label :for="'checkout_attribute_' + attribute.Id" class="sr-only">checkout_attribute_{{attribute.Id}}</label>
+                <select :id="'checkout_attribute_' + attribute.Id" class="form-control custom-select" onchange="checkoutAttributeChange()" :name="'checkout_attribute_' + attribute.Id">
+                    <template v-if="attribute.IsRequired == false">
+                        <option value="0">---</option>
+                    </template>
+                    <option v-for="attributeValue in attribute.Values" :selected="attributeValue.IsPreSelected" :value="attributeValue.Id">
+                        <template v-if="attributeValue.PriceAdjustment == null">
+                            {{attributeValue.Name}}
+                        </template>
+                        <template v-else>
+                            {{attributeValue.Name}} [{{attributeValue.PriceAdjustment}}]
+                        </template>
+                    </option>
+                </select>
+            </template>
+            <template v-if="attribute.AttributeControlType == 2">
+                <ul class="option-list px-0 mb-0">
+                    <li v-for="attributeValue in attribute.Values">
+                        <fieldset>
+                            <legend class="sr-only">
+                                checkout_attribute_{{attribute.Id}}
+                            </legend>
+                            <label class="custom-control custom-radio">
+                                <input class="custom-control-input" :id="'checkout_attribute_' + attribute.Id + '_' + attributeValue.Id" type="radio" :name="'checkout_attribute_' + attribute.Id" :value="attributeValue.Id" :checked="attributeValue.IsPreSelected" onclick="checkoutAttributeChange()" />
+                                <span class="custom-control-label"></span>
+                                <span class="custom-control-description" :for="'checkout_attribute_' + attribute.Id + '_' + attributeValue.Id">
+                                    <template v-if="attributeValue.PriceAdjustment == null">
+                                        {{attributeValue.Name}}
+                                    </template>
+                                    <template v-else>
+                                        {{attributeValue.Name}} [{{attributeValue.PriceAdjustment}}]
+                                    </template>
+                                </span>
+                            </label>
+
+                        </fieldset>
+                    </li>
+                </ul>
+            </template>
+            <template v-if="attribute.AttributeControlType == 3 || attribute.AttributeControlType == 50">
+                <fieldset>
+                    <legend></legend>
+                    <ul class="option-list px-0 mb-0">
+                        <li v-for="attributeValue in attribute.Values">
+                            <label class="custom-control custom-checkbox">
+                                <input v-if="attribute.AttributeControlType == 50" class="custom-control-input" :id="'checkout_attribute_' + attribute.Id + '_' + attributeValue.Id" type="checkbox" :name="'checkout_attribute_' + attribute.Id" :value="attributeValue.Id" onclick="checkoutAttributeChange()" :checked="attributeValue.IsPreSelected" disabled="disabled" />
+                                <input v-else class="custom-control-input" :id="'checkout_attribute_' + attribute.Id + '_' + attributeValue.Id" type="checkbox" :name="'checkout_attribute_' + attribute.Id" :value="attributeValue.Id" onclick="checkoutAttributeChange()" :checked="attributeValue.IsPreSelected" />
+                                <span class="custom-control-label"></span>
+                                <span class="custom-control-description" :for="'checkout_attribute_' + attribute.Id + '_' + attributeValue.Id">
+                                    <template v-if="attributeValue.PriceAdjustment == null">
+                                        {{attributeValue.Name}}
+                                    </template>
+                                    <template v-else>
+                                        {{attributeValue.Name}} [{{attributeValue.PriceAdjustment}}]
+                                    </template>
+                                </span>
+                            </label>
+                        </li>
+                    </ul>
+                </fieldset>
+            </template>
+            <template v-if="attribute.AttributeControlType == 10">
+                <textarea class="form-control" :id="'checkout_attribute_' + attribute.Id" :name="'checkout_attribute_' + attribute.Id" v-model="attribute.DefaultValue" :value="attribute.DefaultValue" onchange="checkoutAttributeChange()">{{attribute.DefaultValue}}</textarea>
+            </template>
+            <template v-if="attribute.AttributeControlType == 30">
+                <template>
+                    <div :id="'checkout_attribute_' + attribute.Id + 'uploader'">
+                        <b-form-file :accept="attribute.AllowedFileExtensions" type="file" id="qqfile" name="qqfile" :data-url="'/uploadfilecheckoutattribute/' + attribute.Id" onchange="uploadFile(this)" />
+                    </div>
+                </template>
+                <input class="hidden-upload-input" type="hidden" onchange="checkoutAttributeChange()" :id="'checkout_attribute_' + attribute.Id" :name="'checkout_attribute_' + attribute.Id" v-model="attribute.DefaultValue" :value="attribute.DefaultValue" />
+                <div id="download-message" class="alert my-2" style="display:none;"></div>
+                <div id="'checkout_attribute_' + attribute.Id + 'downloadurl'" class="download-file" style="display:none;">
+                    <a class="btn btn-outline-info">
+                        Download
+                    </a>
+                </div>
+                <script asp-location="Footer">
+
+                    function uploadFile(e) {
+                        var formData = new FormData();
+                        var imagefile = e;
+                        var url = imagefile.getAttribute('data-url');
+                        formData.append("image", qqfile.files[0]);
+                        axios.post(url, formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }).then(function (response) {
+                            if (response.data.success) {
+                                var message = response.data.message;
+                                var downloadGuid = response.data.downloadGuid;
+                                var downloadUrl = response.data.downloadUrl;
+                                var downloadBtn = document.querySelector('.download-file');
+                                var messageContainer = document.getElementById('download-message');
+
+                                e.setAttribute('qq-button-id', downloadGuid);
+                                document.querySelector('.hidden-upload-input').value = downloadGuid;
+
+                                messageContainer.style.display = "block";
+                                messageContainer.classList.remove('alert-danger');
+                                messageContainer.classList.add('alert-info');
+                                messageContainer.innerText = message;
+
+                                downloadBtn.style.display = "block";
+                                downloadBtn.setAttribute('href', downloadUrl);
+
+                            } else {
+                                var message = response.data.message;
+                                var messageContainer = document.getElementById('download-message');
+                                messageContainer.style.display = "block";
+                                messageContainer.classList.remove('alert-info');
+                                messageContainer.classList.add('alert-danger');
+                                messageContainer.innerText = message;
+                            }
+                        }).then(function () {
+                            checkoutAttributeChange()
+                        });
+                    }
+                </script>
+            </template>
+            <template v-if="attribute.AttributeControlType == 40">
+                <ul class="option-list color-squares w-100 d-inline-flex flex-wrap px-0 mb-0" :id="'color-squares-' + attribute.Id">
+                    <li v-for="attributeValue in attribute.Values" class="mr-1 p-0">
+                        <label :for="'checkout_attribute_' + attribute.Id + '_' + attributeValue.Id" class="mb-0">
+                            <input :id="'checkout_attribute_' + attribute.Id + '_' + attributeValue.Id" type="radio" :name="'checkout_attribute_' + attribute.Id" :value="attributeValue.Id" onchange="checkoutAttributeChange()" :checked="attributeValue.IsPreSelected" />
+                            <template v-if="attributeValue.PriceAdjustment == null">
+                                <span class="color-container" :title="attributeValue.Name">
+                                    <span class="color" :style="'background-color:' + attributeValue.ColorSquaresRgb"></span>
+                                </span>
+                            </template>
+                            <template v-else>
+                                <span class="color-container" :title="attributeValue.Name + ' [' + attributeValue.PriceAdjustment + ']'">
+                                    <span class="color" :style="'background-color:' + attributeValue.ColorSquaresRgb"></span>
+                                </span>
+                            </template>
+                        </label>
+                    </li>
+                </ul>
+            </template>
+
+        </div>
+    </div>
+
+   <script asp-location="Footer">
+       window.onload = checkoutAttributeChange();
+        function checkoutAttributeChange() {
+            if (document.querySelector('#shopping-cart-form')) {
+                var form = document.querySelector('#shopping-cart-form');
+                var data = new FormData(form);
+                axios({
+                    method: 'post',
+                    data: data,
+                    url: '@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart"))',
+                }).then(function (response) {
+                    vmorder.totals = response.data.model;
+                    if (response.data.enabledattributeids) {
+                        for (var i = 0; i < response.data.enabledattributeids.length; i++) {
+                            if (document.querySelector('#checkout_attribute_label_' + response.data.enabledattributeids[i])) {
+                                document.querySelector('#checkout_attribute_label_' + response.data.enabledattributeids[i]).style.display = 'block';
+                            }
+                            if (document.querySelector('#checkout_attribute_input_' + response.data.enabledattributeids[i])) {
+                                document.querySelector('#checkout_attribute_input_' + response.data.enabledattributeids[i]).style.display = 'block';
+                            }
+                        }
+                    }
+                    if (response.data.disabledattributeids) {
+                        for (var i = 0; i < response.data.disabledattributeids.length; i++) {
+                            if (document.querySelector('#checkout_attribute_label_' + response.data.disabledattributeids[i])) {
+                                document.querySelector('#checkout_attribute_label_' + response.data.disabledattributeids[i]).style.display = 'none';
+                            }
+                            if (document.querySelector('#checkout_attribute_input_' + response.data.disabledattributeids[i])) {
+                                document.querySelector('#checkout_attribute_input_' + response.data.disabledattributeids[i]).style.display = 'none';
+                            }
+                        }
+                    }
+                    if (response.data.checkoutattributeinfo) {
+                        vmorder.cart.CheckoutAttributeInfo = response.data.checkoutattributeinfo
+                    }
+                    else {
+                        vmorder.cart.CheckoutAttributeInfo = '';
+                    }
+                })
+            }
+        }
+   </script>

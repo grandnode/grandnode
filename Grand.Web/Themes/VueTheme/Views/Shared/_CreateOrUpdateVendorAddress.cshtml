@@ -1,0 +1,202 @@
+﻿@model VendorAddressModel
+@{
+    var prefix = ViewData.TemplateInfo.HtmlFieldPrefix;
+}
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script asp-location="Footer">
+            var select_element = document.getElementById('@Html.IdFor(model => model.CountryId)');
+                if (document.getElementById("@Html.IdFor(model => model.StateProvinceId)")) {
+                    var state_element = document.getElementById("@Html.IdFor(model => model.StateProvinceId)");
+                    var ddlStates2 = document.getElementById("@Html.IdFor(model => model.StateProvinceId)");
+                    state_element.onchange = function () {
+                        if (ddlStates2.options[0].selected) {
+                            ddlStates2.nextSibling.nextElementSibling.style.display = "block";
+                        } else {
+                            ddlStates2.nextSibling.nextElementSibling.style.display = "none";
+                        }
+                    }
+                }
+
+                select_element.onchange = function () {
+                    var selectedItem = this.value;
+                    var ddlStates = document.getElementById("@Html.IdFor(model => model.StateProvinceId)");
+                    var statesProgress = document.getElementById("states-loading-progress");
+                    statesProgress.style.display = "block";
+                    axios({
+                        method: 'get',
+                        url: "@(Url.RouteUrl("GetStatesByCountryId"))",
+                        params: { "countryId": selectedItem, "addSelectStateItem": "true" },
+                    }).then(function (response) {
+                        ddlStates.innerHTML = '';
+                        response.data.forEach(function (id, option) {
+                            elChild = document.createElement('option');
+                            elChild.setAttribute('value', id.id);
+                            elChild.innerHTML = id.name;
+                            ddlStates.appendChild(elChild);
+                        });
+                        if (ddlStates.length > 1) {
+                            if (ddlStates.options[0].selected = true) {
+                                ddlStates.nextSibling.nextElementSibling.style.display = "block";
+                                if (ddlStates.nextSibling.nextSibling.nextElementSibling) {
+                                    ddlStates.nextSibling.nextSibling.nextElementSibling.style.display = "none";
+                                }
+                            } else {
+                                ddlStates.nextSibling.nextElementSibling.style.display = "none";
+                                if (ddlStates.nextSibling.nextSibling.nextElementSibling) {
+                                    ddlStates.nextSibling.nextSibling.nextElementSibling.style.display = "none";
+                                }
+                            }
+                        } else {
+                            ddlStates.nextSibling.nextElementSibling.style.display = "none";
+                        }
+                        statesProgress.style.display = "none";
+                    }).catch(function (error) {
+                        alert(error);
+                        statesProgress.style.display = "none";
+                    });
+                }
+    </script>
+}
+<input asp-for="Id" type="hidden" />
+<b-row class="edit-address">
+    @if (Model.CompanyEnabled)
+    {
+        <div class="form-group col-sm-12">
+            <label asp-for="Company" class="col-form-label">@T("Address.Fields.Company"):</label>
+            @if (Model.CompanyRequired)
+            {
+                <span class="required">*</span>
+                <input asp-for="Company" class="form-control" v-validate="'required'" />
+                <span class="field-validation-error">{{veeErrors.first('@(prefix).Company')}}</span>
+            }
+            else
+            {
+                <input asp-for="Company" class="form-control" />
+            }
+            <span asp-validation-for="Company"></span>
+        </div>
+    }
+    @if (Model.CountryEnabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="CountryId" class="col-form-label">@T("Address.Fields.Country"):</label>
+            <span class="required">*</span>
+            <select asp-for="CountryId" asp-items="Model.AvailableCountries" class="custom-select form-control" v-validate="'required'"></select>
+            <span class="field-validation-error">{{veeErrors.first('@(prefix).CountryId')}}</span>
+            <span asp-validation-for="CountryId"></span>
+        </div>
+    }
+
+    @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="StateProvinceId" class="col-form-label">@T("Address.Fields.StateProvince"):</label>
+            <select asp-for="StateProvinceId" class="custom-select form-control" asp-items="Model.AvailableStates"></select>
+            <span class="field-validation-error">{{veeErrors.first('@(prefix).StateProvinceId')}}</span>
+            <span asp-validation-for="StateProvinceId"></span>
+            <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+        </div>
+    }
+    @if (Model.CityEnabled)
+    {
+        <div class="form-group col-sm-12">
+            <label asp-for="City" class="col-form-label">@T("Address.Fields.City"):</label>
+            @if (Model.CityRequired)
+            {
+                <span class="required">*</span>
+                <input asp-for="City" class="form-control" v-validate="'required'" />
+                <span class="field-validation-error">{{veeErrors.first('@(prefix).City')}}</span>
+            }
+            else
+            {
+                <input asp-for="City" class="form-control" />
+            }
+            <span asp-validation-for="City"></span>
+        </div>
+    }
+    @if (Model.StreetAddressEnabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="Address1" class="col-form-label">@T("Address.Fields.Address1"):</label>
+            @if (Model.StreetAddressRequired)
+            {
+                <span class="required">*</span>
+                <input asp-for="Address1" class="form-control" v-validate="'required'" />
+                <span class="field-validation-error">{{veeErrors.first('@(prefix).Address1')}}</span>
+            }
+            else
+            {
+                <input asp-for="Address1" class="form-control" />
+            }
+            <span asp-validation-for="Address1"></span>
+        </div>
+    }
+    @if (Model.StreetAddress2Enabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="Address2" class="col-form-label">@T("Address.Fields.Address2"):</label>
+            @if (Model.StreetAddress2Required)
+            {
+                <span class="required">*</span>
+                <input asp-for="Address2" class="form-control" v-validate="'required'" />
+                <span class="field-validation-error">{{veeErrors.first('@(prefix).Address2')}}</span>
+            }
+            else
+            {
+                <input asp-for="Address2" class="form-control" />
+            }
+            <span asp-validation-for="Address2"></span>
+        </div>
+    }
+    @if (Model.ZipPostalCodeEnabled)
+    {
+        <div class="form-group col-sm-12">
+            <label asp-for="ZipPostalCode" class="col-form-label">@T("Address.Fields.ZipPostalCode"):</label>
+            @if (Model.ZipPostalCodeRequired)
+            {
+                <span class="required">*</span>
+                <input asp-for="ZipPostalCode" class="form-control" v-validate="'required'" />
+                <span class="field-validation-error">{{veeErrors.first('@(prefix).ZipPostalCode')}}</span>
+            }
+            else
+            {
+                <input asp-for="ZipPostalCode" class="form-control" />
+            }
+            <span asp-validation-for="ZipPostalCode"></span>
+        </div>
+    }
+    @if (Model.PhoneEnabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="PhoneNumber" class="col-form-label">@T("Address.Fields.PhoneNumber"):</label>
+            @if (Model.PhoneRequired)
+            {
+                <span class="required">*</span>
+                <input asp-for="PhoneNumber" class="form-control" v-validate="'required'" />
+                <span class="field-validation-error">{{veeErrors.first('@(prefix).PhoneNumber')}}</span>
+            }
+            else
+            {
+                <input asp-for="PhoneNumber" class="form-control" />
+            }
+            <span asp-validation-for="PhoneNumber"></span>
+        </div>
+    }
+    @if (Model.FaxEnabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="FaxNumber" class="col-form-label">@T("Address.Fields.FaxNumber"):</label>
+            @if (Model.FaxRequired)
+            {
+                <span class="required">*</span>
+                <input asp-for="FaxNumber" class="form-control" v-validate="'required'" />
+                <span class="field-validation-error">{{veeErrors.first('@(prefix).FaxNumber')}}</span>
+            } else
+            {
+                <input asp-for="FaxNumber" class="form-control" />
+            }
+            <span asp-validation-for="FaxNumber"></span>
+        </div>
+    }
+</b-row>

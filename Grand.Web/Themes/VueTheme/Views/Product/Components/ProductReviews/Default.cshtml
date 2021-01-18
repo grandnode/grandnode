@@ -1,0 +1,65 @@
+﻿@model ProductReviewsModel
+
+<div class="mb-3">
+    <b-button variant="info" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.AddNew")</b-button>
+</div>
+
+@if (Model.Items.Any())
+{
+    <div class="product-review-list">
+        <h5 class="mb-3"><strong>@T("Reviews.ExistingReviews")</strong></h5>
+        @foreach (var review in Model.Items)
+        {
+            int ratingStars = review.Rating;
+            <b-card header-tag="header" footer-tag="footer" class="product-review-item mb-3">
+                <template v-slot:header>
+                    <div class="review-info d-inline-flex w-100">
+                        <div class="user d-inline-flex align-items-center">
+                            <small class="text-muted mr-2">@T("Reviews.From"):</small>
+                            @if (review.AllowViewingProfiles)
+                            {
+                                <b-link href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })"><h6 class="mb-0">@(review.CustomerName)</h6></b-link>
+                            }
+                            else
+                            {
+                                <h6 class="mb-0">@review.CustomerName</h6>
+                            }
+                        </div>
+                        <b-icon icon="calendar2-check" variant="info" class="mx-2"></b-icon>
+                        <small class="date text-muted">
+                            <span>@T("Reviews.Date"):</span>
+                            <span>@review.WrittenOnStr</span>
+                        </small>
+                    </div>
+                </template>
+                <div class="review-title mb-3">
+                    <h5 class="mb-0">@review.Title</h5>
+                    <b-form-rating id='rating-@review.Id' class='p-0' variant='warning' no-border size='sm' show-value precision='2' readonly inline value='@(ratingStars)'></b-form-rating>
+                </div>
+                <div class="review-content">
+                    <div class="review-text">
+                        @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReviewText))
+                    </div>
+                </div>
+                @if (!string.IsNullOrEmpty(review.ReplyText))
+                {
+                    <hr/>
+                    <div class="reply-content mt-2">
+                        <blockquote class="administration-response">
+                            <h5 class="administration-response-header">@T("Reviews.AdministrationResponse")</h5>
+                            @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReplyText))
+                            <p>@review.Signature</p>
+                        </blockquote>
+                    </div>
+                }
+                <template v-slot:footer>
+                    <partial name="_ProductReviewHelpfulness" model="review.Helpfulness" />
+                </template>
+            </b-card>
+        }
+    </div>
+}
+else
+{
+    <p class="text-muted">@T("Products.Reviews.Empty")</p>
+}

@@ -1,0 +1,37 @@
+﻿@model HomePageBlogItemsModel
+@inject DisplayOrderHomePage order
+@if (Model.Items.Any())
+{
+    <div class="blog-list-homepage my-3 order-@order.HomePageBlog">
+        <h2 class="generalTitle h5 text-center mb-3">
+            @T("Blog.Latest")
+        </h2>
+        <b-col cols="12" class="px-0">
+            <b-form-row>
+                @foreach (var item in Model.Items)
+                {
+                    <b-col xl="@order.Pb_Xl" lg="@order.Pb_Lg" md="@order.Pb_Md" sm="@order.Pb_Sm" cols="@order.Pb_Col" class="mb-3">
+                        <b-card @if (item.PictureModel != null && !string.IsNullOrEmpty(item.PictureModel.ImageUrl)) { <text>img-src="@item.PictureModel.ImageUrl" img-alt="@item.PictureModel.AlternateText"</text> }>
+                            <template v-slot:header>
+                                <h3 class="h5 mb-0">
+                                    <b-link href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
+                                        @item.Title
+                                    </b-link>
+                                </h3>
+                            </template> 
+                            <div>
+                                @Html.Raw(item.Short)
+                            </div>
+                            <template v-slot:footer>
+                                <small class="date-text">@item.CreatedOn.ToString("D")</small>
+                            </template>
+                        </b-card>
+                    </b-col>
+                }
+            </b-form-row>
+        </b-col>
+        <div class="view-all text-center mt-3">
+            <a class="btn btn-outline-secondary" href="@Url.RouteUrl("Blog")">@T("Blog.ViewAll")</a>
+        </div>
+    </div>
+}

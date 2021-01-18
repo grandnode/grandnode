@@ -1,0 +1,198 @@
+﻿@model ForumPostModel
+@using Grand.Core
+@inject IWebHelper webHelper;
+@{
+    var thisPageUrl = webHelper.GetThisPageUrl(true);
+}
+@Html.Raw(String.Format("<a name=\"{0}\"></a>", Model.Id))
+
+<div class="topic-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">
+    <b-card class="mb-3">
+        <template v-slot:header>
+            <div class="flex-column flex-md-row d-flex user-info">
+                <b-col lg="2" md="3" sm="3" class="text-center text-md-left forum-media-header">
+                    @if (Model.AllowViewingProfiles && !string.IsNullOrEmpty(Model.CustomerName))
+                    {
+                        <strong>
+                            @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { id = Model.CustomerId }, new { @class = "username h5 mb-0" })
+                        </strong>
+                    }
+                    else
+                    {
+                        <h5 class="username mb-0">
+                            <strong>
+                                @Model.CustomerName
+                            </strong>
+                        </h5>
+                    }
+                </b-col>
+                <b-col lg="10" md="9" cols="12" class="forum-media-header">
+                    <b-row>
+                        <b-col lg="5" md="6" class="post-time d-none d-md-block">
+                            <b-icon variant="info" icon="calendar2-check"></b-icon>
+                            <small class="text-muted">@T("Forum.Posted"):</small>
+                            <small class="stat-value text-muted">@Model.PostCreatedOnStr</small>
+                        </b-col>
+                        <div class="d-flex align-items-center float-right btn-group btn-group-sm text-sm-right manage-post ml-auto">
+                            @if (Model.IsCurrentCustomerAllowedToEditPost)
+                            {
+                                @Html.RouteLink(T("Forum.EditPost").Text, "PostEdit", new { id = Model.Id }, new { @class = "btn btn-secondary edit-post-button" })
+                            }
+                            @if (Model.IsCurrentCustomerAllowedToDeletePost)
+                            {
+                                <a href="#" class="btn btn-secondary delete-post-button" onclick="deletepost('@(Model.Id)')">
+                                    <b-icon icon="trash" class="mx-1 d-lg-none"></b-icon>
+                                    <span class="d-none d-lg-block">@T("Forum.DeletePost").Text</span>
+                                </a>
+                            }
+                            @Html.RouteLink(T("Forum.QuotePost").Text, "PostCreateQuote", new { id = Model.ForumTopicId, quote = Model.Id }, new { @class = "btn btn-secondary quote-post-button" })
+
+                            <a id="link-@Model.Id" title="@T("Forum.PostLinkTitle")" href="@(thisPageUrl)#@(Model.Id)" class="btn btn-secondary btn-sm post-link-button"><span class="d-none d-lg-block">@T("Forum.PostLink")</span></a>
+                            <input type="text" class="sr-only" id="LinkHref-@Model.Id" value="@(thisPageUrl)#@(Model.Id)" />
+                        </div>
+                    </b-row>
+                </b-col>
+            </div>
+        </template>
+        <b-form-row class="mb-3">
+            <b-col lg="2" md="3" cols="12" class="text-center text-md-left forum-post">
+                @if (!String.IsNullOrEmpty(Model.CustomerAvatarUrl))
+                {
+                <div class="avatar mb-1">
+                    @if (Model.AllowViewingProfiles)
+                    {
+                        <b-link href="@Url.RouteUrl("CustomerProfile", new {id = Model.CustomerId})" class="avatar-img-link">
+                            <b-img rounded src="@(Model.CustomerAvatarUrl)" class="avatar-img border" alt="avatar" />
+                        </b-link>
+                    }
+                    else
+                    {
+                        <b-img rounded src="@(Model.CustomerAvatarUrl)" class="avatar-img img-fluid border" alt="avatar" />
+                    }
+                </div>
+                }
+                <ul class="user-stats pl-0 mb-0">
+                    <li class="post-time d-md-none small">
+                        <span>@T("Forum.Posted"):</span>
+                        <span class="stat-value">@Model.PostCreatedOnStr</span>
+                    </li>
+                    @if (Model.IsCustomerForumModerator)
+                    {
+                        <li class="status">
+                            <label class="col-form-label py-0">@T("Forum.Status"):</label>
+                            <span>@T("Forum.Moderator")</span>
+                        </li>
+                    }
+                    @if (Model.ShowCustomersPostCount)
+                    {
+                        <li class="total-posts">
+                            <label class="col-form-label py-0">@T("Forum.TotalPosts"):</label>
+                            <span>@Model.ForumPostCount</span>
+                        </li>
+                    }
+                    @if (Model.ShowCustomersJoinDate)
+                    {
+                        <li class="joined">
+                            <label class="col-form-label py-0">@T("Forum.Joined"):</label>
+                            <span>@Model.CustomerJoinDate.ToString("d")</span>
+                        </li>
+                    }
+                    @if (Model.ShowCustomersLocation && !String.IsNullOrEmpty(Model.CustomerLocation))
+                    {
+                        <li class="location">
+                            <label class="col-form-label py-0">@T("Forum.Location"):</label>
+                            <span>@Model.CustomerLocation</span>
+                        </li>
+                    }
+                </ul>
+                @if (Model.AllowPrivateMessages)
+                {
+                    <div class="send-pm pt-3">
+                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerId }, new { @class = "btn btn-sm btn-primary pm-button" })
+                    </div>
+                }
+            </b-col>
+            <b-col lg="9" md="7" cols="9" class="col-lg-9 col-md-7 col-9">
+                <div class="post-text pt-2">
+                    @Html.Raw(Model.FormattedText)
+                    @Html.Hidden("Id", Model.Id)
+                </div>
+
+            </b-col>
+            @if (Model.AllowPostVoting)
+            {
+                <b-col lg="1" sm="2" cols="3"  class="ml-auto text-center px-0" id="@String.Format("post-vote-{0}", Model.Id)">
+                    <span class="col vote up @if (Model.VoteIsUp.HasValue && (bool)Model.VoteIsUp)
+                    {<text>selected</text>}"
+                          title="This post/answer is useful">
+                        <b-icon variant="success" icon="hand-thumbs-up"></b-icon>
+                    </span>
+                    <div class="col vote-count-post btn btn-sm btn-block btn-outline-info"> @Model.VoteCount </div>
+                    <span class="col vote down @if (Model.VoteIsUp.HasValue && (bool)!Model.VoteIsUp)
+                    { <text>selected</text> }"
+                          title="This post/answer is not useful">
+                        <b-icon variant="danger" icon="hand-thumbs-down"></b-icon>
+                    </span>
+                </b-col>
+            }
+        </b-form-row>
+        @if (Model.SignaturesEnabled & !String.IsNullOrEmpty(Model.FormattedSignature))
+        {
+            <template v-slot:footer>
+                <div class="signature">@Html.Raw(Model.FormattedSignature)</div>
+            </template>
+        }
+    </b-card>
+
+
+</div>
+
+@if (Model.AllowPostVoting)
+{
+<script asp-location="Footer">
+        function CopyLink(e) {
+            var copyText = e.nextElementSibling;
+            copyText.select();
+            copyText.setSelectionRange(0, 99999)
+            document.execCommand("copy");
+        }
+
+        var post = '#post-vote-' + '@Model.Id';
+        var votebutton = document.querySelector('#post-vote-@Model.Id').querySelectorAll('span.vote');
+        for (var i = 0; i < votebutton.length; i++) {
+                    votebutton[i].addEventListener('click', function () {
+                    var postData = {
+                        postId: '@Model.Id',
+                        IsUp: this.classList.contains('up')
+                    };
+                    addAntiForgeryToken(postData);
+                    var bodyFormData = new FormData();
+                    bodyFormData.append('postId', '@Model.Id');
+                    bodyFormData.append('IsUp', this.classList.contains('up'));
+                    axios({
+                        method: 'post',
+                        url: '@Url.Action("PostVote", "Boards")',
+                        data: bodyFormData,
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    }).then(function (response) {
+                        if (response.data.Error) {
+                            alert(response.data.Error);
+                        }
+                        else {
+                            document.querySelector('#post-vote-@Model.Id div.vote-count-post').innerHTML = response.data.VoteCount;
+                            document.querySelector('#post-vote-@Model.Id span.up').classList.remove('selected');
+                            document.querySelector('#post-vote-@Model.Id span.down').classList.remove('selected');
+                            if (response.data.IsUp) {
+                                document.querySelector('#post-vote-@Model.Id span.up').classList.add('selected');
+                            }
+                            if (response.data.IsUp == false) {
+                                document.querySelector('#post-vote-@Model.Id span.down').classList.add('selected');
+                            }
+                        }
+                    }).catch(function (error) {
+                        alert(error);
+                    })
+                });
+        }
+</script>
+}

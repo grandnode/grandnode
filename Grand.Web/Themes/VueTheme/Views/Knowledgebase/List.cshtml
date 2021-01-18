@@ -1,0 +1,145 @@
+﻿@model KnowledgebaseHomePageModel
+@inject CommonSettings commonSettings
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+}
+
+@*breadcrumb*@
+@section Breadcrumb
+    {
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="@Url.RouteUrl("Knowledgebase")" title="@T("Knowledgebase")">@T("Knowledgebase")</a>
+        </li>
+
+        @foreach (var cat in Model.CategoryBreadcrumb)
+        {
+            <li class="breadcrumb-item">
+                <a href="@Url.RouteUrl("KnowledgebaseCategory", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
+            </li>
+        }
+    </ol>
+}
+
+@section left {
+    @await Component.InvokeAsync("KnowledgebaseCategories", @Model)
+}
+
+<div class="page">
+    <h1 class="h2 generalTitle">
+        @if (string.IsNullOrEmpty(Model.CurrentCategoryName))
+        {
+            if (string.IsNullOrEmpty(Model.SearchKeyword))
+            {
+                @T("Knowledgebase")
+            }
+            else
+            {
+                <label class="mb-0 error-label red">@T("Knowledgebase.ResultsFor") <i>@Model.SearchKeyword</i></label>
+            }
+        }
+        else
+        {
+            @Model.CurrentCategoryName
+        }
+    </h1>
+
+    @if (string.IsNullOrEmpty(Model.CurrentCategoryId))
+    {
+        pagebuilder.AddTitleParts(T("PageTitle.Knowledgebase").Text);
+        <form method="get" id="small-search-box-form" asp-action="ItemsByKeyword" asp-controller="knowledgebase" novalidate="novalidate">
+            <div class="input-group">
+                <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+                <input type="text" class="form-control search-box-text ui-autocomplete-input" id="small-searchterms" autocomplete="off" name="keyword" placeholder="@T("Knowledgebase.SearchPlaceholder")">
+
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-info search-box-button d-flex float-sm-right">
+                        <span class="sr-only">Search store</span>
+                        <span class="mdi mdi-magnify align-self-center"></span>
+                        <span class="pl-2 d-none d-lg-block">@T("Knowledgebase.Search")</span>
+                    </button>
+                </span>
+            </div>
+        </form>
+
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "KnowledgebaseHomePage" })
+        @await Component.InvokeAsync("KnowledgebaseHomepageArticles", @Model)
+    }
+    else
+    {
+        @inject SeoSettings seoSettings
+        {
+            Layout = "_ColumnsTwo";
+            pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.CurrentCategoryMetaTitle) ? Model.CurrentCategoryMetaTitle : Model.CurrentCategoryName);
+            pagebuilder.AddMetaDescriptionParts(Model.CurrentCategoryMetaDescription);
+            pagebuilder.AddMetaKeywordParts(Model.CurrentCategoryMetaKeywords);
+
+            var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+            if (canonicalUrlsEnabled)
+            {
+                var categoryUrl = Url.RouteUrl("ArticlesByCategory", new { SeName = Model.CurrentCategorySeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+                pagebuilder.AddCanonicalUrlParts(categoryUrl);
+            }
+        }
+
+        @Html.Raw(@Model.CurrentCategoryDescription)
+
+        @if (Model.Items.Any())
+        {
+            <div class="list-group">
+                @foreach (var item in Model.Items)
+                {
+                    if (item.IsArticle)
+                    {
+                        <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = item.SeName })">
+                            @if (!string.IsNullOrEmpty(Model.SearchKeyword) && !string.IsNullOrEmpty(@item.FormattedBreadcrumbs))
+                            {
+                                @item.FormattedBreadcrumbs
+                            }
+                            else
+                            {
+                                @item.Name
+                            }
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseCategory", new { SeName = item.SeName })">
+                            @if (!string.IsNullOrEmpty(Model.SearchKeyword) && !string.IsNullOrEmpty(@item.FormattedBreadcrumbs))
+                            {
+                                @item.FormattedBreadcrumbs
+                            }
+                            else
+                            {
+                                @item.Name
+                            }
+                        </a>
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(Model.SearchKeyword))
+            {
+                <div class="error-label red margin marign">@T("Knowledgebase.Notfound")</div>
+                <form method="get" id="small-search-box-form" asp-action="ItemsByKeyword" asp-controller="knowledgebase" novalidate="novalidate">
+                    <div class="input-group mt-3">
+                        <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+                        <input type="text" class="form-control search-box-text ui-autocomplete-input" id="small-searchterms" autocomplete="off" name="keyword" placeholder="@T("Knowledgebase.SearchPlaceholder")">
+
+                        <span class="input-group-append">
+                            <button type="submit" class="btn btn-primary search-box-button d-flex float-sm-right">
+                                <span class="sr-only">Search store</span>
+                                <span class="mdi mdi-magnify align-self-center"></span>
+                                <span class="pl-2 d-none d-lg-block">@T("Knowledgebase.Search")</span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            }
+        }
+    }
+</div>

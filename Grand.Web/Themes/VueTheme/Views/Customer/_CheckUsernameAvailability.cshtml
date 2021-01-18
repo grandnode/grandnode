@@ -1,0 +1,41 @@
+﻿<script asp-location="Footer">
+        var h = document.getElementById("check-availability-button");
+        h.insertAdjacentHTML("beforebegin", "<span id='username-availabilty'></span>");
+
+        document.getElementById('check-availability-button').addEventListener("click",function(){
+            document.getElementById('username-availabilty').innerText = "";
+            if (document.getElementById("Username").value) {
+                document.getElementById('availability-check-progress').style.display = "block";
+                document.getElementById('check-availability-button').setAttribute('disabled', 'disabled');
+
+                var postData = {
+                    Username: document.getElementById('Username').value
+                };
+                addAntiForgeryToken(postData);
+
+                var bodyFormData = new FormData();
+                bodyFormData.append('Username', document.getElementById('Username').value);
+                bodyFormData.append('__RequestVerificationToken', document.querySelector('input[name=__RequestVerificationToken]').value);
+                axios({
+                    url: '@Url.RouteUrl("CheckUsernameAvailability")',
+                    data: bodyFormData,
+                    method: 'post',
+                }).then(function (response) {
+                    document.getElementById('check-availability-button').removeAttribute('disabled');
+                    document.getElementById('availability-check-progress').style.display = "none";
+                    document.getElementById('username-availabilty').setAttribute('class', ((response.data.Available) ? 'username-available-status alert alert-success d-flex justify-content-center mt-3 mb-0' : 'username-not-available-status alert alert-danger d-flex justify-content-center mt-3 mb-0'));
+                    document.getElementById('username-availabilty').innerText = response.data.Text
+                }).catch(function (error) {
+                    alert(error)
+                    document.getElementById('check-availability-button').removeAttribute('disabled');
+                    document.getElementById('availability-check-progress').style.display = "none";
+                })
+            } else {
+                document.getElementById('username-availabilty').setAttribute('class', 'username-not-available-status username-not-available-status text-danger d-flex order-2 mt-3');
+                document.getElementById('username-availabilty').innerText = '@T("Account.CheckUsernameAvailability.EnterUsername")';
+            }
+            return false;
+        });
+</script>
+<input type="button" id="check-availability-button" class="btn btn-outline-info check-username-availability-button mt-3" value="@T("Account.CheckUsernameAvailability.Button")" />
+<span id="availability-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>

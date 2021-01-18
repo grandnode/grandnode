@@ -1,0 +1,24 @@
+﻿@model CurrencySelectorModel
+@inject IWebHelper webHelper
+@if (Model.AvailableCurrencies.Count > 1)
+{
+    var returnUrl = webHelper.GetRawUrl(Context.Request);
+    <div>
+         @{   
+             var currencies = Model.AvailableCurrencies.Select(x => new
+             {
+                 Name = x.Name,
+                 Text = x.CurrencyCode,
+                 Value = Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id, returnUrl }),
+                 Selected = x.Id.Equals(Model.CurrentCurrencyId)
+             });
+            <b-dropdown class="mr-2" text="@currencies.FirstOrDefault(x => x.Selected).Text">
+                @foreach (var item in currencies)
+                {
+                    var className = item.Selected ? "active" : "";
+                    <b-dropdown-item class="@className" href="@item.Value">@item.Text</b-dropdown-item>
+                }
+            </b-dropdown>
+        }
+    </div>
+}

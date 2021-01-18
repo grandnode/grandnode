@@ -1,0 +1,26 @@
+﻿@model IList<ProductOverviewModel>
+@if (Model.Any())
+{
+<div id="block-recently-viewed-products" class="block block-recently-viewed-products">
+    <h2 class="h5 d-block"><strong>@T("Products.RecentlyViewedProducts")</strong></h2>
+    <div>
+        <ul class="list viewBox list-unstyled">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var product = Model[i];
+                <b-media @(i == Model.Count - 1 ? @Html.Raw(" class=\"last\"") : @Html.Raw(" class=\"mb-1\"")) tag="li">
+                    @if (!String.IsNullOrEmpty(product.DefaultPictureModel.ImageUrl))
+                    {
+                        <template v-slot:aside>
+                            <b-link href="@Url.RouteUrl("Product", new { SeName = product.SeName })">
+                                <b-img-lazy alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title"></b-img-lazy>
+                            </b-link>
+                        </template>
+                    }
+                    <b-link href="@Url.RouteUrl("Product", new { SeName = product.SeName })">@product.Name</b-link>
+                </b-media>   
+            }
+        </ul>
+    </div>
+</div>
+}

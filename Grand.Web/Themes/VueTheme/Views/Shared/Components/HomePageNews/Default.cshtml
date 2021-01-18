@@ -1,0 +1,34 @@
+﻿@model HomePageNewsItemsModel
+@inject DisplayOrderHomePage order
+<div class="news-list-homepage my-3 order-@order.HomePageNews">
+    <h2 class="generalTitle text-center mb-3">
+        @T("News")
+    </h2>
+    <b-col cols="12" class="px-0">
+        <b-form-row>
+            @foreach (var item in Model.NewsItems)
+            {
+                <b-col xl="@order.Pn_Xl" lg="@order.Pn_Lg" md="@order.Pn_Md" sm="@order.Pn_Sm" cols="@order.Pn_Col" class="mb-3">
+                    <b-card @if (item.PictureModel != null && !string.IsNullOrEmpty(item.PictureModel.ImageUrl)) { <text>img-src="@item.PictureModel.ImageUrl" img-alt="@item.PictureModel.AlternateText"</text> }>
+                        <template v-slot:header>
+                            <h3 class="h5 mb-0">
+                                <b-link href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                                    @item.Title
+                                </b-link>
+                            </h3>
+                        </template> 
+                        <b-card-text>
+                            @Html.Raw(item.Short)
+                        </b-card-text>
+                        <template v-slot:footer>
+                            <small class="date-text">@item.CreatedOn.ToString("D")</small>
+                        </template>
+                    </b-card>
+                </b-col>
+            }
+        </b-form-row>
+    </b-col>
+    <div class="view-all text-center">
+        <b-button variant="outline-secondary" href="@Url.RouteUrl("NewsArchive")">@T("News.ViewAll")</b-button>
+    </div>
+</div>

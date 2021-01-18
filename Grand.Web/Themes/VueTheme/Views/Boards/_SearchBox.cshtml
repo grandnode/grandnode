@@ -1,0 +1,15 @@
+﻿    <div class="forum-search-box">
+        <form asp-route="Search" method="get">
+            <div class="input-group">
+                <input type="text" class="form-control search-box-text" id="forums-small-searchterms" name="searchterms" placeholder="@T("Forum.SearchForumsTooltip")" />
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-info search-box-button">
+                        @T("Forum.SearchButton")
+                    </button>
+                </span>
+            </div>
+            <div class="advanced pl-1">
+                @Html.RouteLink(T("Forum.AdvancedSearch").Text, "Search", new { adv = true }, new { title = T("Forum.AdvancedSearch").Text })
+            </div>
+        </form>
+</div>

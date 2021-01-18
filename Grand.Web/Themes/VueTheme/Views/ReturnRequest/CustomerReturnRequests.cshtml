@@ -1,0 +1,55 @@
+﻿@model CustomerReturnRequestsModel
+@using Grand.Web.Models.Customer
+@using Grand.Web.Models.Orders
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+    {
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
+}
+<div class="page account-page return-request-list-page pl-lg-3 pt-3 pt-lg-0">
+    <h1 class="h2 generalTitle">@T("Account.CustomerReturnRequests")</h1>
+    @if (Model.Items.Any())
+    {
+        <b-row>
+            @foreach (var item in Model.Items)
+            {
+                <b-col class="col-lg-6 col-md-6 col-12">
+                    <b-card>
+                        <template v-slot:header>
+                            <h5 class="mb-0">
+                                @string.Format(T("Account.CustomerReturnRequests.Title").Text, item.ReturnNumber, item.ReturnRequestStatus)
+                            </h5>
+                        </template>
+                        <div class="d-inline-flex align-items-center flex-wrap mb-3">
+                            <b-icon icon="calendar2-check" variant="info" class="mx-2"></b-icon>
+                            <small class="date text-muted">
+                                <label class="mb-0">@T("Account.CustomerReturnRequests.Date")</label>
+                                <span>@item.CreatedOn.ToString()</span>
+                            </small>
+                        </div>
+                        <div class="alert alert-info mb-0">
+                            @string.Format(@T("Account.CustomerReturnRequests.Totals").Text, item.ProductsCount, item.ReturnTotal)
+                        </div>
+                        <template v-slot:footer>
+                            <b-button variant="info" size="sm" onclick="location = ('@Url.RouteUrl("ReturnRequestDetails", new { returnRequestId = item.Id })')">
+                                @T("Account.CustomerReturnRequests.Details")
+                            </b-button>
+                        </template>
+                    </b-card>
+                </b-col>
+            }
+        </b-row>
+    }
+    else
+    {
+        <div class="no-data alert alert-info my-3">
+            @T("Account.CustomerReturnRequests.NoReturnRequests")
+        </div>
+    }
+</div>

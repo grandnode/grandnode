@@ -1,0 +1,20 @@
+﻿@model VendorNavigationModel
+
+<div id="block-vendor-navigation" class="block block-vendor-navigation">
+    <h5 class="h5 d-block"><strong>@T("Vendors")</strong></h5>
+    <div class="viewBox">
+        <ul class="list">
+            @foreach (var vendor in Model.Vendors)
+            {
+                <li><b-link href="@Url.RouteUrl("Vendor", new { SeName = vendor.SeName })">@vendor.Name</b-link>
+                </li>
+            }
+        </ul>            
+        @if (Model.TotalVendors > Model.Vendors.Count)
+        {
+            <div class="view-all w-100 mt-2">
+                <b-button size="sm" variant="outline-info" href="@Url.RouteUrl("VendorList")">@T("Vendors.ViewAll")</b-button>
+            </div>
+        }
+    </div>
+</div>

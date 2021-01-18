@@ -1,0 +1,41 @@
+﻿@model ProductDetailsModel
+<div class="row">
+    <div class="form-group col-12">
+        @if (Model.EndTime.HasValue)
+        {
+        <div class="countdown-box alert alert-info">
+            @if (Model.EndTime > DateTime.UtcNow)
+            {
+                <countdown :end-time="@Model.EndTime.Value.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds">
+                    <template v-slot:process="{ timeObj }">
+                        <span class="col-form-label">@T("AddToCart.Timeleft"):</span>
+                        <span>{{ `${timeObj.d}` }} : </span>
+                        <span>{{ `${timeObj.h}` }} : </span>
+                        <span>{{ `${timeObj.m}` }} : </span>
+                        <span>{{ `${timeObj.s}` }}</span>
+                    </template>
+                    <template v-slot:finish>
+                        <span>@T("ShoppingCart.Auctionends")</span>
+                    </template>
+                </countdown>
+            }
+            else
+            {
+                <div class="d-inline-flex flex-wrap justify-content-center">
+                    <label class="ended-label mb-0">@T("ShoppingCart.Auctionends"):</label>
+                    <div class="count-date">@Model.EndTimeLocalTime.Value.ToString()</div>
+                </div>
+            }
+        </div>
+        }
+        @if (Model.EndTime > DateTime.UtcNow)
+        {
+            <div class="btn-group w-100 mt-3">
+                <input asp-for="HighestBidValue" type="number" class="form-control" value="@(Model.HighestBidValue > 0 ? (Model.HighestBidValue + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) : (Model.StartPrice + 1).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+                <b-button variant="info" id="bid-button-@Model.Id" class="add-to-cart-button d-inline-flex align-items-center" data-productid="@Model.Id" onclick="AxiosCart.addbid('@Url.RouteUrl("AddBid", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Auctions })', '#product-details-form'); return false;">
+                    <b-icon icon="hammer" class="mx-1"></b-icon><span>@T("ShoppingCart.Bid")</span>
+                </b-button>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,59 @@
+﻿@model ProductsByTagModel
+@inject SeoSettings seoSettings
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
+
+    //canonical URL
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var productsByTagUrl = Url.RouteUrl("ProductsByTag", new { productTagId = Model.Id, SeName = Model.TagSeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        pagebuilder.AddCanonicalUrlParts(productsByTagUrl);
+    }
+}
+<div class="page product-tag-page">
+    <h1 class="generalTitle h2">@String.Format(T("Products.Tags.ProductsTaggedWith").Text, Model.TagName)</h1>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_top", additionalData = Model.Id })
+
+    @if (Model.Products.Any())
+    {
+        <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_before_product_list", additionalData = Model.Id })
+        if (Model.PagingFilteringContext.ViewMode == "grid")
+        {
+            <b-col cols="12" class="product-grid px-0">
+                <b-form-row>
+                    @foreach (var product in Model.Products)
+                    {
+                        <b-col lg="4" sm="6" cols="6" class="product-container mb-2">
+                            <partial name="_ProductBox" model="product" />
+                        </b-col>
+                    }
+                </b-form-row>
+                 <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
+            </b-col>
+        }
+        else
+        {
+            <div class="product-grid">
+                <b-col cols="12">
+                    <b-row class="row">
+                        @foreach (var product in Model.Products)
+                        {
+                            <partial name="_ProductBoxList" model="product" />
+                        }
+                        <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
+                    </b-row>
+                </b-col>
+            </div>
+        }
+    }
+</div>
+@await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_bottom", additionalData = Model.Id })
+
+

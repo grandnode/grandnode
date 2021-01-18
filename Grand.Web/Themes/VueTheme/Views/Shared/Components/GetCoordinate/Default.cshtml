@@ -1,0 +1,16 @@
+﻿@model LocationModel
+<script asp-location="Footer">
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(useLocation);
+        }
+    };
+    function useLocation(position) {
+        if (position.coords.latitude != @Model.Latitude || position.coords.longitude != @Model.Longitude) {
+            SaveCurrentPossition('@Url.RouteUrl("CurrentPosition")', position.coords.latitude, position.coords.longitude);
+        }
+    };
+    document.addEventListener("DOMContentLoaded", function (event) {
+        getLocation();
+    });
+</script>

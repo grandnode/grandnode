@@ -1,0 +1,23 @@
+﻿@model PopularProductTagsModel
+@using Grand.Web.Models.Catalog
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.AllProductTags").Text);
+}
+<div class="page product-tags-all-page">
+    <h1 class="generalTitle h2">@T("Products.Tags.All")</h1>
+    @if (Model.Tags.Any())
+    {
+        <b-button-toolbar size="sm">
+            @foreach (var item in Model.Tags)
+            {
+                <b-button variant="light" class="d-flex align-items-center mr-2 mb-2" href="@Url.RouteUrl("ProductsByTagName", new { SeName = item.SeName })" style="font-size:@(Model.GetFontSize(item))%;">
+                    @item.Name
+                </b-button>
+            }
+        </b-button-toolbar>
+    }
+</div>

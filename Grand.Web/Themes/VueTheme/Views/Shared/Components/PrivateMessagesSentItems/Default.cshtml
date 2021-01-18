@@ -1,0 +1,116 @@
+﻿@model PrivateMessageListModel
+@inject Grand.Services.Localization.ILocalizationService localizationService
+<div class="private-messages-box">
+    <script asp-location="Footer">
+        if (document.getElementById('selectall-sent')) {
+            document.getElementById('selectall-sent').addEventListener('click', function () {
+                if (document.querySelector('#pm-sent-table .rowcheckbox').checked) {
+                    var items = document.getElementsByClassName('rowcheckbox');
+                    for (var i = 0, len = items.length; i < len; i++) {
+                        var item = items[i];
+                        item.checked = false;
+                    }
+                } else {
+                    var items = document.getElementsByClassName('rowcheckbox');
+                    for (var i = 0, len = items.length; i < len; i++) {
+                        var item = items[i];
+                        item.checked = true;
+                    }
+                }
+            });
+        }
+        if (document.querySelector('#pm-sent-table .rowcheckbox')) {
+            document.querySelector('#pm-sent-table .rowcheckbox').addEventListener('change', function (e) {
+                var numChkBoxes = document.querySelector('#pm-sent-table .rowcheckbox').length;
+                var numChkBoxesChecked = document.querySelector('#pm-sent-table .rowcheckbox:checked').length;
+                document.querySelector('#pm-sent-table .rowcheckbox').setAttribute('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0)
+            });
+        }
+    </script>
+    @if (Model.Messages.Any())
+    {
+        <form asp-route="PrivateMessagesSent" method="post">
+            <div class="table-responsive">
+                <table class="table table-hover data-table" id="pm-sent-table">
+                    <colgroup>
+                        <col />
+                    </colgroup>
+                    <thead class="table-inverse">
+                        <tr>
+                            <th>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="select col-1">
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" id="selectall-sent" class="custom-control-input">
+                                                <span class="custom-control-label"></span>
+                                                <span class="custom-control-description">&nbsp;</span>
+                                            </label>
+                                        </div>
+                                        <div class="to col-2 d-none d-md-block">
+                                            @T("PrivateMessages.Inbox.ToColumn")
+                                        </div>
+                                        <div class="subject col-5 d-none d-md-block">
+                                            @T("PrivateMessages.Inbox.SubjectColumn")
+                                        </div>
+                                        <div class="date col-4 d-none d-md-block">
+                                            @T("PrivateMessages.Inbox.DateColumn")
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Messages.Count; i++)
+                        {
+                            var item = Model.Messages[i];
+                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                            <td>
+                                <div class="col-12">
+                                    <div class="row text-center text-sm-left">
+                                        <div class="select col-sm-1 col-12 text-left">
+                                            <label class="custom-control custom-checkbox">
+                                                <input name="si@(item.Id)" id="pm@(item.Id)" type="checkbox" class="custom-control-input rowcheckbox">
+                                                <span class="custom-control-label"></span>
+                                                <span class="custom-control-description">&nbsp;</span>
+                                            </label>
+                                        </div>
+                                        <div class="from col-sm-2 col-12 pb-1">
+                                            @if (item.AllowViewingFromProfile && !string.IsNullOrEmpty(item.CustomerFromName))
+                                            {
+                                                @Html.RouteLink(item.CustomerFromName, "CustomerProfile", new { Id = item.FromCustomerId })
+                                            }
+                                            else
+                                            {
+                                                @item.CustomerFromName
+                                            }
+                                        </div>
+                                        <div class="subject col-sm-5 col-12">
+                                            @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = (item.IsRead) ? "pm-read" : "pm-unread col-form-label" })
+                                        </div>
+                                        <div class="date col-sm-4 col-12">
+                                            @item.CreatedOn
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @{ var pager = Html.Pager(localizationService, Model.PagerModel);}
+            @if (pager!=null)
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
+            <div class="buttons mb-2">
+                <input class="btn btn-secondary delete-selected-pm-button" name="delete-sent" type="submit" value="@T("PrivateMessages.Inbox.DeleteSelected")" />
+            </div>
+        </form>
+    }
+</div>

@@ -1,0 +1,40 @@
+﻿@model NewsItemListModel
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.NewsArchive").Text);
+}
+<div class="page news-list-page">
+    <h1 class="generalTitle h2"><a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-info link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a> @T("News")</h1>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_before_items" })
+
+    <b-row class="news-items row">
+        @foreach (var item in Model.NewsItems)
+        {
+            <b-col xl="6" cols="12" class="col-xl-6 col-12">
+                <b-card @if (!string.IsNullOrEmpty(item.PictureModel.ImageUrl)) { <text> img-src="@item.PictureModel.ImageUrl" img-alt="@item.PictureModel.AlternateText" </text> } class="mb-3">
+                    <template v-slot:header>
+                        <h3 class="h5 mb-0">
+                            <b-link href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                                @item.Title
+                            </b-link>
+                        </h3>
+                    </template>
+                    @Html.Raw(item.Short)
+                    <div class="buttons pt-3 text-center">
+                        <a class="btn btn-sm btn-outline-info read-more" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo")</a>
+                    </div>
+                    <template v-slot:footer>
+                        <small class="text-muted">@item.CreatedOn.ToString("D")</small>
+                    </template>
+                </b-card>
+            </b-col>
+        }
+        <page-navigation asp-query-param="pagenumber" asp-pagination="Model.PagingFilteringContext" />
+        
+        @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_after_items" })
+    </b-row>
+
+</div>

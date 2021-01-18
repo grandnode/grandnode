@@ -1,0 +1,5 @@
+﻿@model Grand.Framework.Mvc.Models.DatePickerDropDownsModel
+
+<select name="@Model.Day" asp-items="@Model.SelectListDay" class="form-control custom-select dateHelper" ></select>
+<select name="@Model.Month" asp-items="@Model.SelectListMonth" class="form-control custom-select dateHelper"></select>
+<select name="@Model.Year" asp-items="@Model.SelectListYear" class="form-control custom-select dateHelper"></select>

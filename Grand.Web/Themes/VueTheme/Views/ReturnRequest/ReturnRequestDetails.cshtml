@@ -1,0 +1,242 @@
+﻿@model ReturnRequestDetailsModel
+@using Grand.Web.Models.Orders
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.ReturnRequestDetails").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
+}
+<div class="page account-page px-3">
+    <h1 class="h2 generalTitle">@string.Format(T("Account.CustomerReturnRequests.Title").Text, Model.ReturnNumber, Model.ReturnRequestStatus)</h1>
+    <b-row class="flex-column">
+        <div class="return-product-container">
+            <div class="details alert alert-info date">
+                <label>@T("Account.CustomerReturnRequests.Date")</label>
+                <span>@Model.CreatedOnUtc.ToString()</span>
+            </div>
+            <div class="products">
+                <h5 class="generalTitle">@T("Order.Product(s)")</h5>
+                <div class="mt-1">
+                    <div class="return-request-table">
+                        <table class="table">
+                            <colgroup>
+                                <col width="1">
+                                <col width="1">
+                                <col width="1">
+                                <col width="1">
+                                <col width="1">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="product text-center">
+                                        @T("Account.CustomerReturnRequests.Item")
+                                    </th>
+                                    <th class="quantity text-center">
+                                        @T("Account.CustomerReturnRequests.Quantity")
+                                    </th>
+                                    <th class="text-center">
+                                        @T("Account.CustomerReturnRequests.UnitPrice")
+                                    </th>
+                                    <th class="reason text-center">
+                                        @T("Account.CustomerReturnRequests.Reason")
+                                    </th>
+                                    <th class="text-center">
+                                        @T("Account.CustomerReturnRequests.Action")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ReturnRequestItems)
+                                {
+                                    <tr class="item-container">
+                                        <td class="product">
+                                            <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
+                                        </td>
+
+                                        <td class="quantity text-center">
+                                            @item.Quantity
+                                        </td>
+
+                                        <td class="quantity text-center">
+                                            @item.ProductPrice
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span>@item.ReasonForReturn</span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span>@item.RequestedAction</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            @if (!String.IsNullOrEmpty(Model.Comments))
+            {
+                <div class="comments">
+                    <label class="col-form-label">@T("Account.CustomerReturnRequests.Comments") </label>
+                    <b-card>@Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(Model.Comments))</b-card>
+                </div>
+            }
+
+            @if (Model.ShowPickupDate)
+            {
+                @if (Model.PickupDate != default(DateTime))
+                {
+                    <div class="d-inline-flex align-items-center w-100 my-3">
+                        <b-icon class="mx-2" icon="calendar2-check" variant="info"></b-icon>
+                        <small class="text-muted">
+                            <label class="mb-0">@T("Account.CustomerReturnRequests.PickupDate"): </label>
+                            <span>@Model.PickupDate.ToShortDateString()</span>
+                        </small>
+                    </div>
+                }
+            }
+
+            @if (Model.ShowPickupAddress)
+            {
+                <b-card class="mt-3">
+                    <b-card-text>
+                        <ul class="billing-info px-0">
+                            <li class="title">
+                                <h5 class="generalTitle">@T("Account.CustomerReturnRequests.PickupAddress")</h5>
+                            </li>
+                            <li class="name">
+                                @Model.PickupAddress.FirstName @Model.PickupAddress.LastName
+                            </li>
+                            <li class="email">
+                                @T("Order.Email"): @Model.PickupAddress.Email
+                            </li>
+                            @if (Model.PickupAddress.PhoneEnabled)
+                            {
+                                <li class="phone">
+                                    @T("Order.Phone"): @Model.PickupAddress.PhoneNumber
+                                </li>
+                            }
+                            @if (Model.PickupAddress.FaxEnabled)
+                            {
+                                <li class="fax">
+                                    @T("Order.Fax"): @Model.PickupAddress.FaxNumber
+                                </li>
+                            }
+                            @if (Model.PickupAddress.CompanyEnabled && !String.IsNullOrEmpty(Model.PickupAddress.Company))
+                            {
+                                <li class="company">
+                                    @Model.PickupAddress.Company
+                                </li>
+                            }
+                            @if (Model.PickupAddress.VatNumberEnabled && !String.IsNullOrEmpty(Model.PickupAddress.VatNumber))
+                            {
+                                <li class="company">
+                                    @Model.PickupAddress.VatNumber
+                                </li>
+                            }
+                            @if (Model.PickupAddress.StreetAddressEnabled)
+                            {
+                                <li class="address1">
+                                    @Model.PickupAddress.Address1
+                                </li>
+                            }
+                            @if (Model.PickupAddress.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.PickupAddress.Address2))
+                            {
+                                <li class="address2">
+                                    @Model.PickupAddress.Address2
+                                </li>
+                            }
+                            @if (Model.PickupAddress.CityEnabled || Model.PickupAddress.StateProvinceEnabled || Model.PickupAddress.ZipPostalCodeEnabled)
+                            {
+                                <li class="city-state-zip">
+                                    @if (Model.PickupAddress.CityEnabled)
+                                    {
+                                        @Model.PickupAddress.City
+                                    }
+                                    @if (Model.PickupAddress.CityEnabled && (Model.PickupAddress.StateProvinceEnabled || Model.PickupAddress.ZipPostalCodeEnabled))
+                                    {
+                                        <text>,</text>
+                                    }
+                                    @if (Model.PickupAddress.StateProvinceEnabled)
+                                    {
+                                        @Model.PickupAddress.StateProvinceName
+                                    }
+                                    @if (Model.PickupAddress.ZipPostalCodeEnabled)
+                                    {
+                                        @Model.PickupAddress.ZipPostalCode
+                                    }
+                                </li>
+                            }
+                            @if (Model.PickupAddress.CountryEnabled && !String.IsNullOrEmpty(Model.PickupAddress.CountryName))
+                            {
+                                <li class="country">
+                                    @Model.PickupAddress.CountryName
+                                </li>
+                            }
+
+                            @if (!String.IsNullOrEmpty(Model.PickupAddress.FormattedCustomAddressAttributes))
+                            {
+                                <li class="custom-attributes-view">
+                                    @Html.Raw(Model.PickupAddress.FormattedCustomAddressAttributes)
+                                </li>
+                            }
+                        </ul>
+                    </b-card-text>
+                </b-card>
+            }
+
+            @if (Model.ReturnRequestNotes.Any())
+            {
+                <div class="returnrequest-notes">
+                    <h5>
+                        @T("ReturnRequests.Notes")
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover data-table">
+                            <colgroup>
+                                <col />
+                                <col />
+                            </colgroup>
+                            <thead class="table-inverse">
+                                <tr class="row mx-0">
+                                    <th class="created-on col-4">
+                                        @T("ReturnRequests.Notes.CreatedOn")
+                                    </th>
+                                    <th class="note col-8">
+                                        @T("ReturnRequests.Notes.Note")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ReturnRequestNotes)
+                                {
+                                    <tr class="row mx-0">
+                                        <td class="created-on col-4">
+                                            @item.CreatedOn.ToString()
+                                        </td>
+                                        <td class="note col-8">
+                                            @Html.Raw(item.Note)
+                                            @if (item.HasDownload)
+                                            {
+                                                <p class="download">
+                                                    <a href="@Url.RouteUrl("GetReturnRequestNoteFile", new { returnrequestnoteid = item.Id })">@T("ReturnRequests.Notes.Download")</a>
+                                                </p>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+    </b-row>
+</div>

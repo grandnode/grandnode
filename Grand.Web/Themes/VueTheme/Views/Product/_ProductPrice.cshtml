@@ -1,0 +1,123 @@
+﻿@model ProductDetailsModel.ProductPriceModel
+@inject IWorkContext workContext
+<div class="prices d-flex justify-content-center align-items-start row px-3 flex-column" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+    @if (Model.CustomerEntersPrice)
+    {
+        @*display nothing*@
+    }
+    else if (Model.CallForPrice)
+    {
+        @*call for price*@
+        <div class="product-price call-for-price col-12 px-0">
+            <span>@T("Products.CallForPrice")</span>
+        </div>
+    }
+    else
+    {
+        if (Model.IsReservation)
+        {
+            <div class="rental-price mb-2">
+                <label class="mb-0">@T("Products.Price.ReservationPrice"):</label>
+                <span>@Model.ReservationPrice</span>
+            </div>
+        }
+        if (Model.IsAuction)
+        {
+            <div class="actual-price">
+                @if (Model.HighestBidValue > 0)
+                {
+                    <label class="mb-0">@T("Products.Price.CurrentPrice"):</label>
+                    <span>@Model.HighestBid</span>
+                }
+                else
+                {
+                    <label class="mb-0">@T("Products.Price.StartPrice"):</label>
+                    <span>@Model.StartPrice</span>
+                }
+            </div>
+        }
+        if (!string.IsNullOrWhiteSpace(Model.CatalogPrice))
+        {
+            @*catalog price*@
+            <div class="catalog-product-price col-12 px-0 mb-2">
+                <label class="col-form-label mb-0">@T("Products.Price.CatalogPrice"):</label>
+                <span class="h6 mb-0">@Model.CatalogPrice</span>
+            </div>
+        }
+        if (!(Model.IsAuction && Model.DisableBuyButton))
+        {
+            <div class="@if (string.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+        {<text>product-price col-12 px-0 d-inline-flex align-items-center</text>}
+        else
+        {<text>non-discounted-price col-12 px-0 d-flex align-items-center</text>}">
+                @*render price*@
+                <span class="price-value-@(Model.ProductId) @if (string.IsNullOrEmpty(Model.PriceWithDiscount)) {<text>actual-price</text>}">
+                    @if (Model.IsAuction)
+                    {
+                        <strong class="actual-price">@T("Products.BuyNowPrice"):</strong>
+                    }
+
+                    @if (string.IsNullOrEmpty(Model.PriceWithDiscount)) {
+                        <span class="actual-price">@Html.Raw(Model.Price)</span>
+                    } else
+                    {
+                        <strong>@Html.Raw(Model.Price)</strong>
+                    }
+
+                </span>
+                @if (!string.IsNullOrWhiteSpace(Model.OldPrice))
+                {
+                    @*old price*@
+                    <div class="old-product-price">
+                        <span class="old-price mx-2">@Model.OldPrice</span>
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            @if (!string.IsNullOrWhiteSpace(Model.OldPrice))
+            {
+                @*old price*@
+                <div class="old-product-price">
+                    <span class="old-price mx-2">@Model.OldPrice</span>
+                </div>
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+        {
+            @*discounted price*@
+            <div class="d-inline-flex align-items-center product-price discounted-price col-12 px-0">
+                <label class="mb-0 mx-2">@T("Products.Price.WithDiscount"):</label>
+                <span class="your-price price-value-@(Model.ProductId)">
+                    <strong class="actual-price">@Html.Raw(Model.PriceWithDiscount)</strong>
+                </span>
+                 <meta itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="your-price price-value-@(Model.ProductId)" />
+            </div>
+        }
+        if (!string.IsNullOrEmpty(Model.BasePricePAngV))
+        {
+            <div class="base-price-pangv ml-2">
+                @Model.BasePricePAngV
+            </div>
+        }
+        if (Model.DisplayTaxShippingInfo)
+        {
+            var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+            //of course, you can modify appropriate locales to include VAT info there
+            <div class="tax-shipping-info generalMarginSupporter">
+                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = TopicSeNameConstants.Shippinginfo }))
+            </div>
+        }
+        if (!string.IsNullOrEmpty(Model.CurrencyCode))
+        {
+            <meta itemprop="priceCurrency" content="@Model.CurrencyCode" />
+        }
+        @if (string.IsNullOrWhiteSpace(Model.PriceWithDiscount)) {
+            <meta itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"/> 
+        }
+    }
+</div>

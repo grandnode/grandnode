@@ -1,0 +1,150 @@
+﻿@model Grand.Web.Models.Knowledgebase.KnowledgebaseArticleModel
+@inject SeoSettings seoSettings
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+    pagebuilder.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    pagebuilder.AddMetaDescriptionParts(Model.MetaDescription);
+    pagebuilder.AddMetaKeywordParts(Model.MetaKeywords);
+
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var articleUrl = Url.RouteUrl("KnowledgebaseArticle", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        pagebuilder.AddCanonicalUrlParts(articleUrl);
+    }
+}
+
+@*breadcrumb*@
+@section Breadcrumb
+    {
+    @if (Model.CategoryBreadcrumb.Any())
+    {
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="@Url.RouteUrl("Knowledgebase")" title="@T("Knowledgebase")">@T("Knowledgebase")</a>
+            </li>
+
+            @foreach (var cat in Model.CategoryBreadcrumb)
+            {
+                <li class="breadcrumb-item">
+                    <a href="@Url.RouteUrl("KnowledgebaseCategory", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
+                </li>
+            }
+        </ol>
+    }
+}
+
+@section left {
+    @await Component.InvokeAsync("KnowledgebaseCategories", new Grand.Web.Models.Knowledgebase.KnowledgebaseHomePageModel { CurrentCategoryId = Model.ParentCategoryId })
+}
+
+<div class="page">
+    <h1 class="h2 generalTitle">
+        @Model.Name
+    </h1>
+
+    @Html.Raw(@Model.Content)
+
+    @if (Model.RelatedArticles.Any())
+    {
+        <h4>@T("Knowledgebase.Article.RelatedArticles")</h4>
+        <div class="list-group">
+            @foreach (var article in Model.RelatedArticles)
+            {
+                <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = article.SeName })">
+                    @article.Name
+                </a>
+            }
+        </div>
+    }
+
+    @if (Model.AllowComments)
+    {
+        <div class="fieldset new-comment generalMarginSupporter" id="comments">
+            <h4 class="generalTitle generalMarginSupporter">@T("Knowledgebase.Article.Comments.LeaveYourComment")</h4>
+            <div class="notifications">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                @{
+                    var result = TempData["Grand.knowledgebase.addarticlecomment.result"] as string;
+                }
+                @if (!String.IsNullOrEmpty(result))
+                {
+                    <div class="result card bg-info p-3 text-white">@result</div>
+                }
+            </div>
+            <form asp-route="KnowledgebaseArticle" asp-route-sename="@Model.SeName" method="post">
+                <div class="form-fields">
+                    <div class="form-group">
+                        <label asp-for="AddNewComment.CommentText" class="col-form-label">@T("Knowledgebase.Article.CommentText"):</label>
+                        <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text form-control"></textarea>
+                        <span asp-validation-for="AddNewComment.CommentText"></span>
+                    </div>
+                    @if (Model.AddNewComment.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            <captcha />
+                        </div>
+                    }
+                </div>
+                <div class="buttons text-xs-center text-md-left generalMarginSupporter">
+                    <input type="submit" name="add-comment" class="btn btn-info blog-post-add-comment-button" value="@T("Knowledgebase.Article.Comments.SubmitButton")" />
+                </div>
+            </form>
+        </div>
+        if (Model.Comments.Any())
+        {
+            <div class="comment-list">
+                <h4 class="generalTitle generalMarginSupporter"><strong>@T("Knowledgebase.Article.Comments")</strong></h4>
+                <div class="comments">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <b-card class="mb-3">
+                            <template v-slot:header>
+                                <div class="d-inline-flex w-100">
+                                    @if (comment.AllowViewingProfiles)
+                                    {
+                                        <b-link href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })"><h6 class="mb-0">@(comment.CustomerName)</h6></b-link>
+                                    }
+                                    else
+                                    {
+                                        <h6 class="mb-0">@comment.CustomerName</h6>
+                                    }
+                                    <b-icon icon="calendar2-check" variant="info" class="mx-2"></b-icon>
+                                    <small class="date text-muted">
+                                        <span>@T("Knowledgebase.Article.Comments.CreatedOn"):</span>
+                                        <span>@comment.CreatedOn.ToString("g")</span>
+                                    </small>
+                                </div>
+                            </template>
+                            <b-col cols="12" class="px-0">
+                                <b-row>
+                                    @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                    {
+                                        <b-col xl="2" lg="2" md="3" sm="3" cols="12" class="user-info">
+                                            <div class="avatar">
+                                                @if (comment.AllowViewingProfiles)
+                                                {
+                                                    <b-link href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="avatar-img-link">
+                                                        <b-img rounded src="@(comment.CustomerAvatarUrl)" class="avatar-img border img-fluid" alt="avatar" />
+                                                    </b-link>
+                                                }
+                                                else
+                                                {
+                                                    <b-img rounded src="@(comment.CustomerAvatarUrl)" class="avatar-img border img-fluid" alt="avatar" />
+                                                }
+                                            </div>
+                                        </b-col>
+                                    }
+                                    <b-col>
+                                        @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(comment.CommentText))
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                        </b-card>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

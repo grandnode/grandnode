@@ -1,0 +1,146 @@
+﻿@model ProductDetailsModel
+@using Grand.Framework.Themes
+@using Grand.Framework.UI
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@inject IPageHeadBuilder pagebuilder
+
+@{
+    var themeName = themeContext.WorkingThemeName;
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/vue-gallery-slideshow.min.js", themeName));
+}
+<b-col xl="6" lg="6" md="5" cols="12" class="mt-md-0 mt-3 px-0">
+    <div class="gallery">
+        @if (Model.PictureModels.Count == 1)
+        {
+            @if (Model.DefaultPictureZoomEnabled)
+            {
+                <gallery-images></gallery-images>
+                <script>
+                    Vue.component('gallery-images', {
+                      template: '<div> <template> <img class="image main-image zoom" id="main-product-img-@Model.Id" v-for="(image, i) in images" :src="image.url" :alt="image.alt" :title="image.title" :key="i" @@click="index=i"> <vue-gallery-slideshow :images="images" :index="index" @@close="index=null"></vue-gallery-slideshow> </template> </div>',
+                      data() {
+                          return {
+                              images: [
+                                @foreach (var picture in Model.PictureModels)
+                                {
+                                    if (Model.PictureModels.First() == picture)
+                                    {
+                                        <text>
+                                            { url: '@picture.FullSizeImageUrl', fullimg: '@picture.FullSizeImageUrl', alt:'@picture.AlternateText', title: '@picture.Title' },
+                                        </text>
+                                    }
+                                    else
+                                    {
+                                        <text>
+                                    { url: '@picture.ImageUrl', fullimg: '@picture.FullSizeImageUrl', alt:'@picture.AlternateText', title: '@picture.Title' },
+                                        </text>
+                                    }
+
+                                }
+                                ],
+                                index: null
+                          }
+                      },
+                      components: {
+                            VueGallerySlideshow
+                      },
+                    });
+                </script>
+
+            }
+            else
+            {
+                <img id="main-product-img-@Model.Id" class="image main-image"
+                     src="@Model.DefaultPictureModel.ImageUrl"
+                     alt="@Model.DefaultPictureModel.AlternateText"
+                     title="@Model.DefaultPictureModel.Title" />
+            }
+        }
+        @if (Model.PictureModels.Count == 0)
+        {
+            <img id="main-product-img-@Model.Id" class="image main-image"
+                 src="@Model.DefaultPictureModel.ImageUrl"
+                 alt="@Model.DefaultPictureModel.AlternateText"
+                 title="@Model.DefaultPictureModel.Title" />
+        }
+        @if (Model.DefaultPictureZoomEnabled)
+        {
+            @if (Model.PictureModels.Count > 1)
+            {
+
+                <img id="main-product-img-@Model.Id" class="image main-image zoom"
+                     src="@Model.DefaultPictureModel.ImageUrl"
+                     alt="@Model.DefaultPictureModel.AlternateText"
+                     title="@Model.DefaultPictureModel.Title"
+                     onclick="document.querySelector('.thumb-image').click()" />
+
+                <gallery-images></gallery-images>
+                <script>
+                    Vue.component('gallery-images', {
+                          template: '<div><template> <img class="image thumb-image zoom" v-for="(image, i) in images" :src="image.url" :datasrc="image.fullimg" :alt="image.alt" :title="image.title" :key="i" @@click="index=i"><div><vue-gallery-slideshow :images="images" :index="index" @@close="index=null"></vue-gallery-slideshow></div></template></div>',
+                          data() {
+                              return {
+                                    images: [
+                                        @foreach (var picture in Model.PictureModels)
+                                        {
+                                            if (Model.PictureModels.First() == picture)
+                                            {
+                                                <text>
+                                                    { url: '@picture.FullSizeImageUrl', fullimg: '@picture.FullSizeImageUrl', alt:'@picture.AlternateText', title: '@picture.Title' },
+                                                </text>
+                                            }
+                                            else
+                                            {
+                                                <text>
+                                            { url: '@picture.ImageUrl', fullimg: '@picture.FullSizeImageUrl', alt:'@picture.AlternateText', title: '@picture.Title' },
+                                                </text>
+                                            }
+
+                                        }
+                                    ],
+                                    index: null
+                                }
+                          },
+                          components: {
+                                VueGallerySlideshow
+                          },
+                    });
+                </script>
+            }
+        }
+        else
+        {
+            @if (Model.PictureModels.Count > 1)
+            {
+                <img id="main-product-img-@Model.Id" class="image main-image"
+                     src="@Model.DefaultPictureModel.ImageUrl"
+                     alt="@Model.DefaultPictureModel.AlternateText"
+                     title="@Model.DefaultPictureModel.Title" />
+                <div>
+                    @foreach (var picture in Model.PictureModels)
+                    {
+                        <img class="image thumb-image"
+                             src="@picture.ThumbImageUrl"
+                             alt="@picture.AlternateText"
+                             title="@picture.Title"
+                             data-src="@picture.ImageUrl"
+                             @@click="Gallery.extendOptions.methods.changeImg($event)" />
+                    }
+                </div>
+                <script>
+                    var Gallery = Vue.extend({
+                        methods: {
+                            changeImg(event) {
+                                var img = event.srcElement.getAttribute('data-src');
+                                var mainImg = document.getElementById('main-product-img-@Model.Id');
+                                mainImg.setAttribute('src', img);
+                            }
+                        }
+                    })
+                    var gallery = new Gallery();
+                </script>
+            }
+        }
+    </div>
+</b-col>

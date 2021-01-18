@@ -1,0 +1,20 @@
+﻿@model Grand.Web.Models.Knowledgebase.KnowledgebaseCategoryModel
+
+<ul class="sublist">
+    @if (Model.IsCurrent)
+    {
+        <li class="active last">
+            <a href="@Url.RouteUrl("KnowledgebaseCategory", new { SeName = Model.SeName })"><strong>@Model.Name</strong></a>
+            @foreach (var category in Model.Children)
+            {
+                <partial name="_KnowledgebaseCategoryLine.Navigation" model="category" />
+            }
+        </li>
+    }
+    else
+    {
+        <li class="inactive">
+            <a href="@Url.RouteUrl("KnowledgebaseCategory", new { SeName = Model.SeName })">@Model.Name</a>
+        </li>
+    }
+</ul>

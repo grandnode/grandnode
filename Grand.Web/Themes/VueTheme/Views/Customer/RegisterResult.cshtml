@@ -1,0 +1,31 @@
+﻿@model RegisterResultModel
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Register").Text);
+
+    //continue URL
+    var qs = this.Context.Request.Query["ReturnUrl"];
+    var continueUrl = "";
+    if (!String.IsNullOrEmpty(qs) && Url.IsLocalUrl(qs))
+    {
+        continueUrl = qs;
+    }
+    else
+    {
+        continueUrl = Url.RouteUrl("HomePage");
+    }
+}
+<div class="page registration-result-page text-center">
+    <h1 class="generalTitle h2 text-center">@T("Account.Register")</h1>
+    <section class="result alert alert-info my-3">
+        @Model.Result
+    </section>
+    <div class="buttons generalMarginSupporter">
+        <b-button variant="secondary" class="register-continue-button" onclick="location.href='@continueUrl'">
+            @T("Account.Register.Result.Continue")
+        </b-button>
+    </div>
+</div>

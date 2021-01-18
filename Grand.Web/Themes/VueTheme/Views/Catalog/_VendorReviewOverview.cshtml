@@ -1,0 +1,44 @@
+﻿@model VendorReviewOverviewModel
+@using System.Globalization
+@{
+    int ratingPercent = 0;
+    if (Model.TotalReviews != 0)
+    {
+        ratingPercent = ((Model.RatingSum * 100) / Model.TotalReviews) / 5;
+    }
+}
+@if (Model.AllowCustomerReviews)
+{
+    <div class="vendor-reviews-overview d-inline-flex align-items-center flex-wrap" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text>  }>
+        @{ 
+            decimal ratingValue = 0;
+            if (Model.TotalReviews != 0)
+            {
+                ratingValue = Convert.ToDecimal(((Model.RatingSum * (double)100) / Model.TotalReviews) / (double)100);
+            }
+        }
+                    <div class="rating">
+                        <b-form-rating id="rating-inline" class="p-0" variant="warning" no-border size="sm" show-value precision="2" readonly inline value="@(ratingValue)"></b-form-rating>
+                        <span class="h6 mb-0 text-info">@Model.TotalReviews @T("Reviews.Overview.Reviews")</span>
+                        @if (Model.TotalReviews > 0)
+                        {
+                            <div class="product-review-links order-3">
+                                <b-button variant="outline-info" size="sm" class="review-scroll-button" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">
+                                    @T("VendorReviews.Overview.AddNew")
+                                </b-button>
+                            </div>
+                            @* microdata info*@
+                            decimal ratingValuee = ratingPercent / (decimal)20;
+                            <span itemprop="reviewCount" style="display: none;">(@ratingValuee.ToString("0.0", new CultureInfo("en-US")))</span>
+                        }
+                        else
+                        {
+                            <div class="vendor-no-reviews order-3">
+                                <b-button variant="outline-info" size="sm" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">
+                                    @T("VendorReviews.Overview.First")
+                                </b-button>
+                            </div>
+                        }
+                    </div>
+    </div>
+}

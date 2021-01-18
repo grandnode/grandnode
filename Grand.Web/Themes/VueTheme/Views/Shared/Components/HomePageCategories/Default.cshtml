@@ -1,0 +1,23 @@
+﻿@model IList<CategoryModel>
+@inject DisplayOrderHomePage order
+<div class="categoryGrid order-@order.HomePageCategories">
+    <b-col cols="12" class="px-0">
+        <b-form-row>
+            @foreach (var item in Model)
+            {
+                <b-col xl="@order.Pc_Xl" lg="@order.Pc_Lg" md="@order.Pc_Md" sm="@order.Pc_Sm" cols="@order.Pc_Col">
+                    <b-link href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                        <b-card no-body
+                                tag="article"
+                                class="mb-2">
+                            <b-card-img-lazy src="@item.PictureModel.ImageUrl" alt="@item.PictureModel.AlternateText"></b-card-img-lazy>
+                            <b-card-body>
+                                <h2 class="h5">@item.Name</h2>
+                            </b-card-body>
+                        </b-card>
+                    </b-link>
+                </b-col>
+            }
+        </b-form-row>
+    </b-col>
+</div>

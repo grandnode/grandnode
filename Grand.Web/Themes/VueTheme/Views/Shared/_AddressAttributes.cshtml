@@ -1,0 +1,89 @@
+﻿@model IList<AddressAttributeModel>
+@foreach (var attribute in Model)
+{
+    string controlId = string.Format("address_attribute_{0}", attribute.Id);
+    string textPrompt = attribute.Name;
+
+    <div class="inputs custom-attributes col-sm-12 mb-3">
+        <label class="col-form-label" for="@(controlId)">@textPrompt:</label>
+        @if (attribute.IsRequired)
+        {
+            <span class="required">*</span>
+        }
+
+        @switch (attribute.AttributeControlType)
+        {
+            case AttributeControlType.DropdownList:
+                {
+                    <select class="custom-selec form-control" name="@(controlId)" id="@(controlId)">
+                        @if (!attribute.IsRequired)
+                        {
+                            <option value="0">---</option>
+                        }
+                        @foreach (var attributeValue in attribute.Values)
+                        {
+                            <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
+                        }
+                    </select>
+                }
+                break;
+            case AttributeControlType.RadioList:
+                {
+                    <ul class="option-list pl-0">
+                        @foreach (var attributeValue in attribute.Values)
+                        {
+                            <li>
+
+                                <label for="@(controlId)_@(attributeValue.Id)" class="custom-control custom-radio">
+                                    <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                    <span class="custom-control-label"></span>
+                                    <span class="custom-control-description">@attributeValue.Name</span>
+                                </label>
+
+                            </li>
+                        }
+                    </ul>
+                }
+                break;
+            case AttributeControlType.Checkboxes:
+            case AttributeControlType.ReadonlyCheckboxes:
+                {
+                    <ul class="option-list pl-0">
+                        @foreach (var attributeValue in attribute.Values)
+                        {
+                            <li>
+                                <label class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@(attributeValue.Id)" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                    <span class="custom-control-label"></span>
+                                    <span class="custom-control-description">@attributeValue.Name</span>
+                                </label>
+                            </li>
+                        }
+                    </ul>
+                }
+                break;
+            case AttributeControlType.TextBox:
+                {
+                    <input name="@(controlId)" type="text" class="form-control textbox"
+                           v-validate="'@(attribute.IsRequired ? "required":"")'"
+                           id="@(controlId)" value="@(attribute.DefaultValue)" />
+                }
+                break;
+            case AttributeControlType.MultilineTextbox:
+                {
+                    <textarea class="form-control" id="@(controlId)" 
+                              v-validate="'@(attribute.IsRequired ? "required":"")'"
+                              name="@(controlId)">@(attribute.DefaultValue)</textarea>
+                }
+                break;
+            case AttributeControlType.Datepicker:
+            case AttributeControlType.FileUpload:
+            case AttributeControlType.ColorSquares:
+            case AttributeControlType.ImageSquares:
+                {
+                    //not support attribute type
+                }
+                break;
+        }
+    </div>
+}

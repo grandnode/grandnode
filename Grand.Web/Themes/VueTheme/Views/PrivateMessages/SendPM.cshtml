@@ -1,0 +1,47 @@
+﻿@model SendPrivateMessageModel
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    pagebuilder.AddTitleParts(T("PageTitle.SendPM").Text);
+}
+<form asp-route="SendPM" method="post">
+    <div class="page private-messages private-message-send-page">
+        <h1 class="text-center h2 generalTitle">@T("PrivateMessages.Send.PostMessage")</h1>
+        <div asp-validation-summary="ModelOnly" class="message-error alert alert-danger my-3"></div>
+        <input asp-for="ToCustomerId" type="hidden" />
+        <input asp-for="ReplyToMessageId" type="hidden" />
+        <b-card no-footer>
+            <template v-slot:header>
+                <h5>
+                    @T("PrivateMessages.Send.To")
+                    @if (Model.AllowViewingToProfile)
+                    {
+                        <a href="@Url.RouteUrl("CustomerProfile", new { id = Model.ToCustomerId })">@(Model.CustomerToName)</a>
+                    }
+                    else
+                    {
+                        <span>@Model.CustomerToName</span>
+                    }
+                </h5>
+            </template>
+                <div class="form-group">
+                    <label class="">@T("PrivateMessages.Send.Subject")</label>
+                    <input asp-for="Subject" class="form-control pm-title-text" />
+                    <span asp-validation-for="Subject"></span>
+                </div>
+                <div class="form-group message">
+                    <label>@T("PrivateMessages.Send.Message")</label>
+                    <bbc-code asp-name="Message" />
+                    <textarea asp-for="Message" class="form-control bb-editor-text" rows="6"></textarea>
+                    <span asp-validation-for="Message"></span>
+                </div>
+        </b-card>
+        <b-btn-group class="mt-3">
+            <input type="submit" class="btn btn-info send-pm-button" value="@T("PrivateMessages.Send.SendButton")" />
+            <b-button variant="secondary" class="cancel-pm-button" onclick="location = ('@Url.RouteUrl("PrivateMessages")')">
+                @T("PrivateMessages.Send.CancelButton")
+            </b-button>
+        </b-btn-group>
+    </div>
+</form>

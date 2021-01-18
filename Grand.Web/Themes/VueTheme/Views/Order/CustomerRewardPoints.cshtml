@@ -1,0 +1,74 @@
+﻿@inject IPageHeadBuilder pagebuilder
+@model CustomerRewardPointsModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
+}
+<section class="page account-page reward-points-page pl-lg-3 pt-3 pt-lg-0">
+    <h1 class="h2 generalTitle">@T("Account.MyAccount") - @T("Account.RewardPoints")</h1>
+    <div class="reward-points-overview">
+        <div class="current-balance alert alert-success">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
+        @if (Model.MinimumRewardPointsBalance > 0)
+        {
+            <div class="min-balance alert alert-danger">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
+        }
+    </div>
+    <div class="reward-points-history">
+        <h5><strong>@T("RewardPoints.History")</strong></h5>
+        @if (Model.RewardPoints.Any())
+        {
+                        <div id="customer-reward-points"></div>
+                        <script>
+                            var CustomerRewardPoints = Vue.extend({
+                                template: '<b-table :fields="fields" :items="items"> <template v-slot:cell(date)="data"> <div v-html="data.value.date"></div></template> <template v-slot:cell(points)="data"> <div v-html="data.value.points"></div></template> <template v-slot:cell(pointsbalance)="data"> <div v-html="data.value.pointsbalance"></div></template> <template v-slot:cell(message)="data"> <div v-html="data.value.message"></div></template> </b-table>',
+                                data: function () {
+                                    return {
+                                         fields: [
+                                            { key: 'date', label: '@T("RewardPoints.Fields.Date")'},
+                                            { key: 'points', label: '@T("RewardPoints.Fields.Points")'},
+                                            { key: 'pointsbalance', label: '@T("RewardPoints.Fields.PointsBalance")'},
+                                            { key: 'message', label: '@T("RewardPoints.Fields.Message")'},
+                                        ],
+                                        items: [
+                                             @for (int i = 0; i < Model.RewardPoints.Count; i++)
+                                             {
+                                             <text>
+                                                @{ var item = Model.RewardPoints[i];}
+                                            {
+                                                date: {
+                                                    date: '@item.CreatedOn'
+                                                },
+                                                points: {
+                                                    points: '@item.Points'
+                                                },
+                                                pointsbalance: {
+                                                    pointsbalance: '@item.PointsBalance'
+                                                },
+                                                message: {
+                                                    message: '@item.Message',
+                                                }
+
+                                            },
+                                            </text>
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                            new CustomerRewardPoints().$mount('#customer-reward-points')
+                        </script>
+        }
+        else
+        {
+            <section class="no-data alert alert-info my-3">
+                @T("RewardPoints.NoHistory")
+            </section>
+        }
+    </div>
+</section>

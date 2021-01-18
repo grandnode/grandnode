@@ -1,0 +1,59 @@
+﻿@model CoursesModel
+@using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Courses").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Courses })
+}
+
+<div class="page account-page auction-list-page pl-lg-3 pt-3 pt-lg-0">
+    <h1 class="h2 generalTitle">@T("Account.Courses")</h1>
+    @if (Model.CourseList.Any())
+    {
+        foreach (var item in Model.CourseList)
+        {
+            <b-card class="card mb-3">
+                <template v-slot:header>
+                    <h3 class="h5 mb-0 d-inline-flex">
+                        <b-link href="@Url.RouteUrl("Course", new { SeName = item.SeName })">
+                            @item.Name
+                        </b-link>
+                    </h3>
+                    <div class="d-inline-flex flex-column align-items-end">
+                        @if (item.Approved)
+                        {
+                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                                <input type="checkbox" class="custom-control-input" id="customControlInline" checked disabled>
+                                <label class="custom-control-label" for="customControlInline"></label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="custom-control disabled custom-checkbox my-1 mr-sm-2">
+                                <input type="checkbox" class="custom-control-input" id="customControlInline" disabled>
+                                <label class="custom-control-label" for="customControlInline"></label>
+                            </div>
+                        }
+                    </div>
+                </template> 
+                @if (!string.IsNullOrEmpty(item.ShortDescription))
+                {
+                    <b-card-text>
+                        @Html.Raw(item.ShortDescription)
+                    </b-card-text>
+                }
+            </b-card>
+        }
+    }
+    else
+    {
+        <div class="no-data alert alert-info my-3">
+            @T("Account.Courses.NoExists")
+        </div>
+    }
+</div>

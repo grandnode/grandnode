@@ -1,0 +1,56 @@
+﻿@model ProfileInfoModel
+<div class="profile-info-box">
+    <b-card class="profile-stats" no-footer>
+        <template v-slot:header>
+            <h5><strong>@T("Profile.Statistics")</strong></h5>
+        </template>
+        <b-row>
+            @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+            {
+                <b-col md="3" sm="12" class="avatar">
+                    <b-avatar size="6rem" src="@(Model.AvatarUrl)" />
+                </b-col>
+            }
+            @await Component.InvokeAsync("Widget", new { widgetZone = "profile_page_info_userdetails", additionalData = Model.CustomerProfileId })
+            <b-col md="9" sm="12">
+                <ul class="stats px-0">
+                    @if (Model.LocationEnabled)
+                    {
+                        <li class="location">
+                            <label>@T("Profile.Country"):</label>
+                            <span>@Model.Location</span>
+                        </li>
+                    }
+                    @if (Model.TotalPostsEnabled)
+                    {
+                        <li>
+                            <label>@T("Profile.TotalPosts"):</label>
+                            <span>@Model.TotalPosts</span>
+                        </li>
+                    }
+                    @if (Model.JoinDateEnabled)
+                    {
+                        <li>
+                            <label>@T("Profile.JoinDate"):</label>
+                            <span>@Model.JoinDate</span>
+                        </li>
+                    }
+                    @if (Model.DateOfBirthEnabled)
+                    {
+                        <li>
+                            <label>@T("Profile.DateOfBirth"):</label>
+                            <span>@Model.DateOfBirth</span>
+                        </li>
+                    }
+                </ul>
+                @await Component.InvokeAsync("Widget", new { widgetZone = "profile_page_info_userstats", additionalData = Model.CustomerProfileId })
+            </b-col>
+        </b-row>
+    </b-card>
+    @if (Model.PMEnabled)
+    {
+        <div class="send-pm my-3 w-100">
+            @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerProfileId }, new { @class = "btn btn-secondary pm-button" })
+        </div>
+    }
+</div>

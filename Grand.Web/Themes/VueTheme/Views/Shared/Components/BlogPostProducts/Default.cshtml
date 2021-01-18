@@ -1,0 +1,15 @@
+﻿@model IList<ProductOverviewModel>
+
+<b-col cols="12" class="product-grid blogpost-product-grid px-0">
+    <h2 class="h3 generalTitle text-center">
+        @T("Blog.Products")
+    </h2>
+        <b-form-row class="flex-grid">
+            @foreach (var product in Model)
+            {
+                <b-col lg="4" sm="6" cols="6" class="mb-2">
+                    <partial name="_ProductBox" model="product" />
+                </b-col>
+            }
+        </b-form-row>
+</b-col>

@@ -1,0 +1,96 @@
+﻿@model SearchBoxModel
+@inject Grand.Domain.Blogs.BlogSettings BlogSettings
+@using System.Text.Encodings.Web
+@inject IThemeContext themeContext
+@inject IPageHeadBuilder pagebuilder
+@if (Model.AutoCompleteEnabled)
+{
+    var themeName = themeContext.WorkingThemeName;
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/VueAutocomplete.js", themeName));
+}
+<form asp-route="ProductSearch" method="get" id="small-search-box-form" class="searchBox w-100">
+    <input type="hidden" asp-for="Box" value="true" />
+    <label for="small-searchterms" class="sr-only">@T("Search.SearchBox.Tooltip")</label>
+    <div class="input-group flex-row">
+        <input minlength="@(Model.SearchTermMinimumLength)" @if (Model.AutoCompleteEnabled) { <text>oninput="autocompleteVue(this)"</text> } type="search" name="q" class="form-control search-box-text" id="small-searchterms" placeholder="@T("Search.SearchBox.Tooltip")">
+        @if (Model.AvailableCategories.Any())
+        {
+            <select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" class="search-box-select custom-select input-group-addon"></select>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox_before_search_button" })
+
+        <div class="input-group-append"> 
+            <button type="submit" class="btn btn-info search-box-button float-sm-right d-inline-flex align-items-center">
+                <span class="sr-only">@T("Search.SearchBox.Tooltip")</span>
+                <b-icon icon="search"></b-icon>
+            </button>
+        </div>
+    </div>
+    <div id="adv_search" class="advanced-search-results" v-if="searchitems" onclick="StopPropagation(event)">
+        <b-col cols="12">
+            <b-form-row>
+                <b-col md="6" cols="12">
+                    <h5 class="title">@T("search.category")</h5>
+                    <div v-if="searchcategories.length">
+                        <ul class="list px-0">
+                            <li v-for="item in searchcategories">
+                                <h6 class="mb-0"><a :href="item.Url">{{item.Label}}</a></h6>
+                                <p v-if="item.Desc">{{item.Desc}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul v-else class="px-0 mb-1">
+                        <li class="alert alert-info">@T("search.noresultstextcategory")</li>
+                    </ul>
+                    <h5 class="title">@T("search.manufacturer")</h5>
+                    <div v-if="searchmanufacturers.length">
+                        <ul class="list px-0">
+                            <li v-for="item in searchmanufacturers">
+                                <h6 class="mb-0"><a :href="item.Url">{{item.Label}}</a></h6>
+                                <p v-if="item.Desc">{{item.Desc}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul v-else class="px-0 mb-1">
+                        <li class="alert alert-info">@T("search.noresultstextmanufacturer")</li>
+                    </ul>
+                    @if (BlogSettings.ShowBlogPostsInSearchAutoComplete)
+                    {
+                        <h5 class="title">@T("search.blog")</h5>
+                        <div v-if="searchblog.length">
+                            <ul class="list px-0">
+                                <li v-for="item in searchblog">
+                                    <h6 class="mb-0"><a :href="item.Url">{{item.Label}}</a></h6>
+                                    <p v-if="item.Desc">{{item.Desc}}</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <ul v-else class="px-0 mb-1">
+                            <li class="alert alert-info">@T("search.noresultstextblog")</li>
+                        </ul>
+                    }
+                </b-col>
+                <b-col md="6" cols="12" class="products">
+                    <h5 class="title">@T("search.products")</h5>
+                    <div v-if="searchproducts.length">
+                        <ul class="list px-0">
+                            <b-media v-for="item in searchproducts" tag="li">
+                                <template #aside v-if="item.PictureUrl">
+                                    <b-img class="img-fluid" alt="placeholder" :src="item.PictureUrl"></b-img>
+                                </template>
+                                <h6 class="mb-0"><a :href="item.Url">{{item.Label}}</a></h6>
+                                <b-form-rating class="p-0" variant="warning" no-border size="sm" show-value precision="2" readonly inline :value="item.Rating / 20"></b-form-rating>
+                                <div v-if="item.Price" class="price">{{item.Price}}</div>
+                                <p v-html="item.Desc" class="mt-1 mb-0"></p>
+                            </b-media>
+                        </ul>
+                    </div>
+                    <ul v-else class="px-0 mb-1">
+                        <li class="alert alert-info">@T("search.noresultstext")</li>
+                    </ul>
+                </b-col>
+            </b-form-row>
+        </b-col>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox" })
+</form>

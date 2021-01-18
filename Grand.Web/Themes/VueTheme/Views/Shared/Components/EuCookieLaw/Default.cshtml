@@ -1,0 +1,31 @@
+﻿<script asp-location="Footer">
+    document.getElementById('eu-cookie-bar-notification').style.display = "block";
+
+    function cookieFnc(e) {
+        var postData = {
+            accept: e.getAttribute("data-accept")
+        };
+        axios({
+            method: 'post',
+            url: '@Url.RouteUrl("EuCookieLawAccept")',
+            params: postData,
+        }).then(function (response) {
+            document.getElementById('eu-cookie-bar-notification').style.display = "none";
+        }).catch(function (error) {
+            alert(error);
+        })
+    }
+</script>
+
+<div id="eu-cookie-bar-notification" class="eu-cookie-bar-notification" style="display:none;">
+        <b-card class="alert alert-info mx-3">
+            <div class="d-inline-flex justify-content-center align-items-center flex-sm-nowrap flex-wrap w-100 mb-0">
+                <p class="mb-0">@T("EUCookieLaw.Description2")</p>
+                <b-btn-group size="sm" class="ml-0 mx-sm-3 mt-sm-0 mt-2">
+                    <b-button variant="outline-secondary" class="cookielaw-button" id="eu-cookie-ok" onclick="cookieFnc(this)" data-accept="true">@T("EUCookieLaw.Accept")</b-button>
+                    <b-button variant="outline-secondary" class="cookielaw-button mx-1" id="eu-cookie-refuse" onclick="cookieFnc(this)" data-accept="false">@T("EUCookieLaw.Refuse")</b-button>
+                    <b-button variant="info" class="learn-more" href="@Url.RouteUrl("Topic", new { SeName = TopicSeNameConstants.Privacyinfo })">@T("EUCookieLaw.LearnMore")</b-button>
+                </b-btn-group>
+            </div>
+        </b-card>
+</div>

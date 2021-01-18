@@ -1,0 +1,562 @@
+﻿@model CustomerInfoModel
+@inject Grand.Domain.Customers.CustomerSettings customerSettings
+@inject IPageHeadBuilder pagebuilder
+@using Grand.Web.Models.Customer;
+@using Grand.Core;
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
+}
+
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+<script asp-location="Footer">
+            document.getElementById("@Html.IdFor(model => model.CountryId)").addEventListener('change',function () {
+                var selectedItem = this.value;
+                var ddlStates = document.getElementById("@Html.IdFor(model => model.StateProvinceId)");
+                var statesProgress = document.getElementById("states-loading-progress");
+                statesProgress.style.display = "block";
+                axios({
+                    method: 'get',
+                    url: '@(Url.RouteUrl("GetStatesByCountryId"))',
+                    params: { "countryId": selectedItem, "addSelectStateItem": "true" },
+                }).then(function (response) {
+                    ddlStates.innerHTML = "";
+                    response.data.forEach(function (id, option) {
+                        elChild = document.createElement('option');
+                        elChild.setAttribute('value', id.id);
+                        elChild.innerHTML = id.name;
+                        ddlStates.appendChild(elChild);
+                    });
+                    statesProgress.style.display = "none";
+                }).catch(function (error) {
+                    alert(error);
+                    statesProgress.style.display = "none";
+                })
+            });
+</script>
+}
+<script asp-location="Footer">
+
+        toggleNewsletterCat();
+
+        function toggleNewsletterCat() {
+            var element = document.getElementById('@Html.FieldIdFor(model => model.Newsletter)');
+            if (element) {
+                if (document.getElementById('@Html.FieldIdFor(model => model.Newsletter)').checked) {
+                    if (document.querySelector('.register-category-newsletter')) {
+                        document.querySelector('.register-category-newsletter').style.display = "block";
+                    }
+                }
+                else {
+                    if (document.querySelector('.register-category-newsletter')) {
+                        document.querySelector('.register-category-newsletter').style.display = "none";
+                    }
+                }
+            }
+        }
+</script>
+<div class="page account-page customer-info-page pl-lg-3 pt-3 pt-lg-0">
+    @if (customerSettings.AllowUsersToExportData)
+    {
+        <b-button variant="info" class="float-sm-right mt-2" onclick="location.href='/customer/export'">
+            <b-icon icon="server"></b-icon> @T("Account.CustomerExportToXls")
+        </b-button>
+    }
+    <h2 class="generalTitle">@T("Account.CustomerInfo")</h2>
+    <form asp-route="CustomerInfo" method="post" v-on:submit.prevent="validateBeforeSubmit($event)">
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        <div class="card mb-3">
+            <h3 class="card-header">@T("Account.YourPersonalDetails")</h3>
+            <div class="card-body">
+                <fieldset class="form-fields">
+                    <legend class="sr-only">@T("Account.Fields.Gender")</legend>
+                    @if (Model.GenderEnabled)
+                    {
+                        <label class="col-form-label">
+                            @T("Account.Fields.Gender"):
+                        </label>
+                        <div class="form-group gender">
+                            <div class="flex-row">
+                                <div class="custom-control custom-radio male custom-control-inline">
+                                    <input type="radio" asp-for="Gender" value="M" checked="@(Model.Gender == "M")" id="gender-male" class="custom-control-input" />
+                                    <label class="custom-control-label" for="gender-male">@T("Account.Fields.Gender.Male")</label>
+                                </div>
+                                <div class="custom-control custom-radio female custom-control-inline">
+                                    <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" class="custom-control-input" />
+                                    <label class="custom-control-label" for="gender-female">@T("Account.Fields.Gender.Female")</label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </fieldset>
+                <div class="form-row">
+                    <fieldset class="form-group col-sm-6 col-12">
+                        <legend class="sr-only">@T("account.fields.firstname")</legend>
+                        <label asp-for="FirstName" class="col-form-label">@T("Account.Fields.FirstName"):</label>
+                        <span class="required">*</span>
+                        <input asp-for="FirstName" class="form-control" v-validate="'required'" />
+                        <span class="field-validation-error">{{veeErrors.first('FirstName')}}</span>
+                        <span asp-validation-for="FirstName"></span>
+                    </fieldset>
+                    <fieldset class="form-group col-sm-6 col-12">
+                        <legend class="sr-only">@T("account.fields.lastname")</legend>
+                        <label asp-for="LastName" class="col-form-label">@T("Account.Fields.LastName"):</label>
+                        <span class="required">*</span>
+                        <input asp-for="LastName" class="form-control" v-validate="'required'" />
+                        <span class="field-validation-error">{{veeErrors.first('LastName')}}</span>
+                        <span asp-validation-for="LastName"></span>
+                    </fieldset>
+                </div>
+                @if (Model.DateOfBirthEnabled)
+                {
+                    <fieldset class="form-group date-of-birth">
+                        <legend class="sr-only">@T("account.fields.dateofbirth")</legend>
+                        <span class="col-form-label">
+                            @T("Account.Fields.DateOfBirth"):
+                        </span>
+                        @if (Model.DateOfBirthRequired)
+                        {
+                            <span class="required">*</span>
+                        }
+                        <div class="input-group">
+                            <date-picker-dropdown control-day="@Html.IdFor(x => x.DateOfBirthDay)"
+                                                  control-month="@Html.IdFor(x => x.DateOfBirthMonth)"
+                                                  control-year="@Html.IdFor(x => x.DateOfBirthYear)"
+                                                  begin-year="@(DateTime.Now.Year - 100)"
+                                                  end-year="DateTime.Now.Year"
+                                                  selected-day="(Model.DateOfBirthDay.HasValue ? Model.DateOfBirthDay.Value : 0)"
+                                                  selected-month="(Model.DateOfBirthMonth.HasValue ? Model.DateOfBirthMonth.Value : 0)"
+                                                  selected-year="(Model.DateOfBirthYear.HasValue ? Model.DateOfBirthYear.Value : 0)"
+                                                  class="col-12 input-group px-0" />
+
+                            <span asp-validation-for="DateOfBirthDay"></span>
+                            <span asp-validation-for="DateOfBirthMonth"></span>
+                            <span asp-validation-for="DateOfBirthYear"></span>
+                        </div>
+                    </fieldset>
+                }
+                <fieldset class="form-group row mail">
+                    <legend class="sr-only">@T("account.associatedexternalauth.email")</legend>
+                    <div class="col-12">
+                        <label asp-for="Email" class="col-form-label">@T("Account.Fields.Email"):</label>
+                        <span class="required">*</span>
+                        <input asp-for="Email" class="form-control"
+                               v-validate.continues="'required|email'"
+                               asp-readonly=@(!Model.AllowUsersToChangeEmail) />
+                        <span class="field-validation-error">{{veeErrors.first('Email')}}</span>
+                        <span asp-validation-for="Email"></span>
+                    </div>
+                </fieldset>
+                @if (Model.UsernamesEnabled)
+                {
+                    if (Model.AllowUsersToChangeUsernames)
+                    {
+                        <fieldset class="form-group row mb-0">
+                            <legend class="sr-only">@T("account.associatedexternalauth.email")</legend>
+                            <div class="col-12">
+                                <label asp-for="Username" class="col-form-label">@T("Account.Fields.Username"):</label>
+                                <span class="required">*</span>
+                                <input asp-for="Username" class="form-control" v-validate="'required'" />
+                                <span asp-validation-for="Username"></span>
+                                <span class="field-validation-error">{{veeErrors.first('Username')}}</span>
+                                @if (Model.CheckUsernameAvailabilityEnabled)
+                                {
+                                    <partial name="_CheckUsernameAvailability" />
+                                }
+                            </div>
+                        </fieldset>
+                    }
+                    else
+                    {
+                        <fieldset class="form-group row mb-0">
+                            <legend class="sr-only">@T("account.fields.username")</legend>
+                            <label asp-for="Username" class="col-form-label px-3">@T("Account.Fields.Username"):</label>
+                            <span class="readonly-username px-3">@Model.Username</span>
+                        </fieldset>
+                    }
+                }
+            </div>
+        </div>
+        @if (Model.CompanyEnabled || Model.DisplayVatNumber)
+        {
+            <div class="card mb-3">
+                <h3 class="card-header">@T("Account.CompanyDetails")</h3>
+                <div class="card-body">
+                    <div class="form-fields">
+                        @if (Model.CompanyEnabled)
+                        {
+                            <div class="form-group">
+                                <label asp-for="Company" class="col-form-label">@T("Account.Fields.Company"):</label>
+                                @if (Model.CompanyRequired)
+                                {
+                                    <span class="required">*</span>
+                                    <input asp-for="Company" class="form-control" v-validate="'required'" />
+                                    <span class="field-validation-error">{{veeErrors.first('Company')}}</span>
+                                    <span asp-validation-for="Company"></span>
+                                }
+                                else
+                                {
+                                    <input asp-for="Company" class="form-control" />
+                                    <span asp-validation-for="Company"></span>
+                                }
+                            </div>
+                        }
+                        @if (Model.DisplayVatNumber)
+                        {
+                            <div class="form-group">
+                                <label asp-for="VatNumber" class="col-form-label">@T("Account.Fields.VatNumber"):</label>
+                                <input asp-for="VatNumber" class="form-control" />
+                                <span class="vat-status">@Model.VatNumberStatusNote</span>
+                                <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.StreetAddressEnabled ||
+     Model.StreetAddress2Enabled ||
+     Model.ZipPostalCodeEnabled ||
+     Model.CityEnabled ||
+     Model.CountryEnabled)
+        {
+            <div class="card mb-3">
+                <h3 class="card-header">
+                    @T("Account.YourAddress")
+                </h3>
+                <div class="card-body">
+                    <div class="form-fields">
+                        <div class="row d-flex">
+                            @if (Model.StreetAddressEnabled)
+                            {
+                                <fieldset class="form-group col-12 col-sm-6">
+                                    <legend class="sr-only">@T("account.fields.streetaddress")</legend>
+                                    <label asp-for="StreetAddress" class="col-form-label">@T("Account.Fields.StreetAddress"):</label>
+                                    @if (Model.StreetAddressRequired)
+                                    {
+                                        <span class="required">*</span>
+                                        <input asp-for="StreetAddress" class="form-control" v-validate="'required'" />
+                                        <span class="field-validation-error">{{veeErrors.first('StreetAddress')}}</span>
+                                        <span asp-validation-for="StreetAddress"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="StreetAddress" class="form-control" />
+                                        <span asp-validation-for="StreetAddress"></span>
+                                    }
+                                </fieldset>
+                            }
+                            @if (Model.StreetAddress2Enabled)
+                            {
+                                <fieldset class="form-group col-12 col-sm-6">
+                                    <legend class="sr-only">@T("account.fields.streetaddress2")</legend>
+                                    <label asp-for="StreetAddress2" class="col-form-label">@T("Account.Fields.StreetAddress2"):</label>
+                                    @if (Model.StreetAddress2Required)
+                                    {
+                                        <span class="required">*</span>
+                                        <input asp-for="StreetAddress2" class="form-control" v-validate="'required'" />
+                                        <span class="field-validation-error">{{veeErrors.first('StreetAddress2')}}</span>
+                                        <span asp-validation-for="StreetAddress2"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="StreetAddress2" class="form-control" />
+                                        <span asp-validation-for="StreetAddress2"></span>
+                                    }
+                                </fieldset>
+                            }
+                            @if (Model.ZipPostalCodeEnabled)
+                            {
+                                <fieldset class="form-group col-12 col-sm-6">
+                                    <legend class="sr-only">@T("account.fields.zippostalcode")</legend>
+                                    <label asp-for="ZipPostalCode" class="col-form-label">@T("Account.Fields.ZipPostalCode"):</label>
+                                    @if (Model.ZipPostalCodeRequired)
+                                    {
+                                        <span class="required">*</span>
+                                        <input asp-for="ZipPostalCode" class="form-control" v-validate="'required'" />
+                                        <span class="field-validation-error">{{veeErrors.first('ZipPostalCode')}}</span>
+                                        <span asp-validation-for="ZipPostalCode"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="ZipPostalCode" class="form-control" />
+                                        <span asp-validation-for="ZipPostalCode"></span>
+                                    }
+                                </fieldset>
+                            }
+                            @if (Model.CityEnabled)
+                            {
+                                <fieldset class="form-group col-12 col-sm-6">
+                                    <legend class="sr-only">@T("account.fields.city")</legend>
+                                    <label asp-for="City" class="col-form-label">@T("Account.Fields.City"):</label>
+                                    @if (Model.CityRequired)
+                                    {
+                                        <span class="required">*</span>
+                                        <input asp-for="City" class="form-control" v-validate="'required'" />
+                                        <span class="field-validation-error">{{veeErrors.first('City')}}</span>
+                                        <span asp-validation-for="City"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="City" class="form-control" />
+                                        <span asp-validation-for="City"></span>
+                                    }
+                                </fieldset>
+                            }
+                            @if (Model.CountryEnabled)
+                            {
+                                <fieldset class="form-group col-12">
+                                    <legend class="sr-only">@T("account.fields.country")</legend>
+                                    <label asp-for="CountryId" class="col-form-label">@T("Account.Fields.Country"):</label>
+                                    @if (Model.CountryRequired)
+                                    {
+                                        <span class="required">*</span>
+                                        <select asp-for="CountryId" class="custom-select form-control" asp-items="Model.AvailableCountries" v-validate="'required'" ></select>
+                                        <span class="field-validation-error">{{veeErrors.first('CountryId')}}</span>
+                                        <span asp-validation-for="CountryId"></span>
+                                    }
+                                    else
+                                    {
+                                        <select asp-for="CountryId" class="custom-select form-control" asp-items="Model.AvailableCountries"></select>
+                                        <span asp-validation-for="CountryId"></span>
+                                    }
+                                </fieldset>
+                            }
+                            @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+                            {
+                                <fieldset class="form-group col-12">
+                                    <legend class="sr-only">@T("account.fields.stateprovince")</legend>
+                                    <label asp-for="StateProvinceId" class="col-form-label">@T("Account.Fields.StateProvince"):</label>
+                                    @if (Model.StateProvinceRequired)
+                                    {
+                                        <span class="required">*</span>
+                                    }
+                                    <select asp-for="StateProvinceId"                                             
+                                            class="custom-select form-control" 
+                                            asp-items="Model.AvailableStates"></select>
+                                    <span asp-validation-for="StateProvinceId"></span>
+                                    <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                                </fieldset>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.PhoneEnabled || Model.FaxEnabled)
+        {
+            <div class="card mb-3">
+                <h3 class="card-header">@T("Account.YourContactInformation")</h3>
+                <div class="card-body d-flex flex-row row">
+                    @if (Model.PhoneEnabled)
+                    {
+                        <fieldset class="form-group col-12 col-sm-6">
+                            <legend class="sr-only">@T("account.fields.phone")</legend>
+                            <label asp-for="Phone" class="col-form-label">@T("Account.Fields.Phone"):</label>
+                            @if (Model.PhoneRequired)
+                            {
+                                <span class="required">*</span>
+                                <input asp-for="Phone" class="form-control" v-validate="'required'" />
+                                <span class="field-validation-error">{{veeErrors.first('Phone')}}</span>
+                                <span asp-validation-for="Phone"></span>
+                            }
+                            else
+                            {
+                                <input asp-for="Phone" class="form-control" />
+                                <span asp-validation-for="Phone"></span>
+                            }
+
+                        </fieldset>
+                    }
+                    @if (Model.FaxEnabled)
+                    {
+                        <fieldset class="form-group col-12 col-sm-6">
+                            <legend class="sr-only">@T("account.fields.fax")</legend>
+                            <label asp-for="Fax" class="col-form-label">@T("Account.Fields.Fax"):</label>
+                            @if (Model.FaxRequired)
+                            {
+                                <span class="required">*</span>
+                                <input asp-for="Fax" class="form-control" v-validate="'required'" />
+                                <span class="field-validation-error">{{veeErrors.first('Fax')}}</span>
+                                <span asp-validation-for="Fax"></span>
+                            }
+                            else
+                            {
+                                <input asp-for="Fax" class="form-control" />
+                                <span asp-validation-for="Fax"></span>
+                            }
+                        </fieldset>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.NewsletterEnabled || Model.CustomerAttributes.Any())
+        {
+            <div class="card mb-3">
+                <h3 class="card-header">
+                    @T("Account.Options")
+                </h3>
+                <div class="card-body">
+                    <fieldset class="form-fields">
+                        <legend class="sr-only">@T("account.fields.newsletter")</legend>
+                        @if (Model.NewsletterEnabled)
+                        {
+                            <div class="form-group">
+                                <label for="Newsletter" class="ml-1 custom-control custom-checkbox">
+                                    <input class="custom-control-input" asp-for="Newsletter" onchange="toggleNewsletterCat()" />
+                                    <span class="custom-control-label">@T("account.fields.newsletter")</span>
+                                    <span class="sr-only">@T("account.fields.newsletter")</span>
+                                </label>
+                                <span asp-validation-for="Newsletter"></span>
+                            </div>
+                            <partial name="_NewsLetterCategories" model="Model.NewsletterCategories" />
+                        }
+
+                        @if (Model.CustomerAttributes.Any())
+                        {
+                            <partial name="_CustomerAttributes" model="Model.CustomerAttributes" />
+                        }
+                    </fieldset>
+                </div>
+            </div>
+        }
+        @if (Model.AllowCustomersToSetTimeZone || Model.SignatureEnabled)
+        {
+            <div class="card mb-3">
+                <h3 class="card-header">@T("Account.Preferences")</h3>
+                <div class="card-body">
+                    <fieldset class="form-fields">
+                        <legend class="sr-only">@T("account.fields.timezone")</legend>
+                        @if (Model.AllowCustomersToSetTimeZone)
+                        {
+                            <div class="form-group">
+                                <label asp-for="TimeZoneId" class="col-form-label">@T("Account.Fields.TimeZone"):</label>
+                                <select asp-for="TimeZoneId" class="custom-select form-control" asp-items="Model.AvailableTimeZones"></select>
+                                <span asp-validation-for="TimeZoneId"></span>
+                            </div>
+                        }
+
+                        @if (Model.SignatureEnabled)
+                        {
+                            <div class="form-group">
+                                <label asp-for="Signature" class="col-form-label">@T("Account.Fields.Signature"):</label>
+                                <textarea asp-for="Signature" class="form-control account-signature-text"></textarea>
+                            </div>
+                        }
+                    </fieldset>
+                </div>
+            </div>
+        }
+
+        @if (Model.NumberOfExternalAuthenticationProviders > 0)
+        {
+            <div class="card mb-3">
+                <h3 class="card-header">@T("Account.AssociatedExternalAuth")</h3>
+                <div class="card-body">
+                    @if (Model.AssociatedExternalAuthRecords.Count > 0)
+                    {
+                        //existing associated external records
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <colgroup>
+                                    <col />
+                                    <col />
+                                    <col />
+                                </colgroup>
+                                <thead class="tab">
+                                    <tr>
+                                        <th class="auth-method-name">
+                                            @T("Account.AssociatedExternalAuth.AuthMethodName")
+                                        </th>
+                                        <th class="email">
+                                            @T("Account.AssociatedExternalAuth.Email")
+                                        </th>
+                                        <th class="external-id">
+                                            @T("Account.AssociatedExternalAuth.ExternalIdentifier")
+                                        </th>
+                                        <th class="remove">
+                                            @T("Account.AssociatedExternalAuth.Remove")
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.AssociatedExternalAuthRecords)
+                                    {
+                                        <tr>
+                                            <td class="auth-method-name">
+                                                @item.AuthMethodName
+                                            </td>
+                                            <td class="email">
+                                                @item.Email
+                                            </td>
+                                            <td class="external-id">
+                                                @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
+                                            </td>
+                                            <td class="remove">
+                                                <a href="#" onclick="removeexternalassociation('@item.Id')">@T("Account.AssociatedExternalAuth.Remove")</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
+                    {
+                        //we can add more external records
+                        <div class="form-fields add-more-external-records">
+                            @T("Account.AssociatedExternalAuth.AddMoreRecords") <a href="@Url.RouteUrl("Login", null, Context.Request.Scheme)">@Url.RouteUrl("Login", null, Context.Request.Scheme)</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (customerSettings.TwoFactorAuthenticationEnabled)
+        {
+            <div class="card mb-3">
+                <h3 class="card-header">@T("Account.TwoFactorAuth")</h3>
+                @if (Model.Is2faEnabled)
+                {
+                    @Html.ActionLink(T("Account.TwoFactorAuth.Disable").Text, "DisableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
+                }
+                else
+                {
+                    @Html.ActionLink(T("Account.TwoFactorAuth.Enable").Text, "EnableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
+                }
+            </div>
+        }
+        <div class="generalMarginSupporter">
+            <input type="submit" value="@T("Common.Save")" name="save-info-button" class="btn btn-secondary save-customer-info-button" />
+        </div>
+    </form>
+</div>
+
+<script asp-location="Footer">
+    function removeexternalassociation(itemId) {
+        if (confirm('@T("Common.AreYouSure")')) {
+            var bodyFormData = new FormData();
+            bodyFormData.append('Id', itemId);
+            bodyFormData.append('__RequestVerificationToken', document.querySelector('input[name=__RequestVerificationToken]').value);
+            axios({
+                method: 'POST',
+                url: '@Url.Action("RemoveExternalAssociation", "Customer")',
+                data: bodyFormData,
+            }).then(function (response) {
+                location = response.data.redirect;
+            }).catch(function (error) {
+                alert(error);
+            })
+        }
+        return false;
+    }
+</script>

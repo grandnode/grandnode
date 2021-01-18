@@ -1,0 +1,61 @@
+﻿@using Grand.Framework.Themes
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@inject IPageHeadBuilder pagebuilder
+@{ 
+    var supportRtl = workContext.WorkingLanguage.Rtl;
+    var themeName = themeContext.WorkingThemeName;
+    if (supportRtl)
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/header/header.rtl.css", themeName));
+    }
+    else
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/header/header.css", themeName));
+    }
+}
+<div class="header-nav">
+    <b-navbar type="light">
+        <b-container :fluid="fluid" id="header-container">
+            <template>
+                <b-button aria-label="menu-toggler" class="menu-toggler" v-b-toggle.sidebar-menu><span></span><span></span><span></span></b-button>
+                <b-sidebar id="sidebar-menu"
+                           backdrop
+                           shadow>
+                    <ul class="Menu -vertical">
+                        @await Component.InvokeAsync("TopMenu")
+                    </ul>
+                </b-sidebar>
+            </template>
+            @await Component.InvokeAsync("Logo")
+            <b-navbar-nav class="top-header-items order-3">
+                <b-nav-item class="d-lg-block d-none">
+                    <b-icon :variant="[fluid ? 'info' : 'dark']" icon="aspect-ratio" @@click="fluid = !fluid"></b-icon>
+                </b-nav-item>
+                <b-nav-item>
+                    <b-icon icon="search" variant="dark" v-b-modal.search-box></b-icon>
+                </b-nav-item>
+                <b-modal id="search-box"
+                     hide-footer hide-header size="xl">
+                    @await Component.InvokeAsync("SearchBox")
+                </b-modal>
+                <b-nav-item>
+                    <b-icon icon="gear" variant="dark" v-b-toggle.sidebar-right></b-icon>
+                </b-nav-item>
+                <template>
+                    <b-sidebar id="sidebar-right" body-class="user-panel" title="@T("Account.MyAccount")" @if (supportRtl) { <text> left</text> } else { <text>right</text> } backdrop>
+                        <div class="d-inline-flex flex-wrap mb-2">
+                            @await Component.InvokeAsync("TaxTypeSelector")
+                            @await Component.InvokeAsync("CurrencySelector")
+                            @await Component.InvokeAsync("LanguageSelector")
+                            @await Component.InvokeAsync("StoreSelector")
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
+                        </div>
+                        @await Component.InvokeAsync("HeaderLinks")
+                    </b-sidebar>
+                </template>
+                @await Component.InvokeAsync("ShoppingCartLinks")
+            </b-navbar-nav>
+        </b-container>
+    </b-navbar>
+</div>

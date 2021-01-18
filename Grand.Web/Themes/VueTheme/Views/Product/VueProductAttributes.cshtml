@@ -1,0 +1,181 @@
+﻿@model IList<ProductDetailsModel.ProductAttributeModel>
+@using System.Text;
+@using Grand.Services.Media;
+@using Grand.Domain.Media
+@inject IDownloadService downloadService
+@inject CatalogSettings catalogSettings
+
+    <div id="product-attributes"></div>
+    @{
+        //dynamic update support
+        var attributesHaveConditions = Model.Any(x => x.HasCondition);
+        var attributesHaveAssociatedPictures = true;
+        var dynamicPriceUpdate = catalogSettings.AjaxProcessAttributeChange;
+        var attributeChangeScriptsBuilder = new StringBuilder();
+        var productId = Model.First().ProductId;
+        var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);
+        if (dynamicPriceUpdate)
+        {
+            //generate change event script
+            foreach (var attribute in Model)
+            {
+                string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                        {
+                            attributeChangeScriptsBuilder.AppendFormat("document.querySelector('#{0}').addEventListener('change', function (){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
+                        }
+                        break;
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                        {
+                            foreach (var attributeValue in attribute.Values)
+                            {
+                                attributeChangeScriptsBuilder.AppendFormat("document.querySelector('#{0}_{1}').addEventListener('click',function(e){{{2}();}},false);\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            foreach (var attributeValue in attribute.Values)
+                            {
+                                attributeChangeScriptsBuilder.AppendFormat("document.querySelector('#{0}_{1}').addEventListener('click',function(e){{{2}();}},false);\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //render scripts
+        <script asp-location="Footer">
+                    function @(attributeChangeHandlerFuncName)() {
+                        var form = document.getElementById('product-details-form');
+                        var data = new FormData(form);
+                        axios({
+                            url: '@Html.Raw(Url.Action("productdetails_attributechange", "product", new { productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))',
+                            data: data,
+                            method: 'post',
+                            params: { product: '@productId' },
+                        }).then(function (response, url) {
+                                if (response.data.price) {
+                                   document.querySelector('.price-value-@productId').innerText = response.data.price;
+                                }
+                                if (response.data.sku) {
+                                    document.querySelector('#sku-@productId').innerText = response.data.sku;
+                                }
+                                if (response.data.mpn) {
+                                    document.querySelector('#mpn-@productId').innerText = response.data.mpn;
+                                }
+                                if (response.data.gtin) {
+                                    document.querySelector('#gtin-@productId').innerText = response.data.gtin;
+                                }
+                                if (response.data.stockAvailability) {
+                                    document.querySelector('#stock-availability-value-@productId').innerText = response.data.stockAvailability;
+                                }
+                                if (response.data.backInStockSubscription) {
+                                    var element = document.querySelector('#back-in-stock-subscribe-@productId');
+                                    if (element)
+                                        element.style.display = "block";
+                                }
+                                if (response.data.backInStockSubscription == false) {
+                                    var element = document.querySelector('#back-in-stock-subscribe-@productId');
+                                    if (element) {
+                                        element.style.display = "none";
+                                    }
+                                }
+                                if (response.data.buttonTextBackInStockSubscription) {
+                                    var element = document.querySelector('#back-in-stock-subscribe-@productId');
+                                    if (element)
+                                        element.value = response.data.buttonTextBackInStockSubscription;
+                                }
+                                if (response.data.enabledattributemappingids) {
+                                    for (var i = 0; i < response.data.enabledattributemappingids.length; i++) {
+                                        document.querySelector('#product_attribute_label_' + response.data.enabledattributemappingids[i]).style.display = "table-cell";
+                                        document.querySelector('#product_attribute_input_' + response.data.enabledattributemappingids[i]).style.display = "table-cell";
+                                    }
+                                }
+                                if (response.data.disabledattributemappingids) {
+                                    for (var i = 0; i < response.data.disabledattributemappingids.length; i++) {
+                                        document.querySelector('#product_attribute_label_' + response.data.disabledattributemappingids[i]).style.display = "none";
+                                        document.querySelector('#product_attribute_input_' + response.data.disabledattributemappingids[i]).style.display = "none";
+                                    }
+                                }
+                                var product = this.product;
+                                setTimeout(function () {
+                                    if (response.data.pictureDefaultSizeUrl) {
+                                        if (document.querySelector(".product-grouped")) {
+                                            document.getElementById('main-product-img-' + product).setAttribute("src", response.data.pictureDefaultSizeUrl);
+                                        }
+                                        else {
+                                            document.getElementById('main-product-img-@productId').setAttribute("src", response.data.pictureDefaultSizeUrl);
+                                        }
+
+                                    }}, 100);
+                        });
+                    }
+                    function uploadFile(e) {
+                            var formData = new FormData();
+                            var imagefile = e;
+                            var url = imagefile.getAttribute('data-url');
+                            formData.append("image", qqfile.files[0]);
+                            axios.post(url, formData, {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            }).then(function (response) {
+                                if (response.data.success) {
+                                    var message = response.data.message;
+                                    var downloadGuid = response.data.downloadGuid;
+                                    var downloadUrl = response.data.downloadUrl;
+                                    var downloadBtn = document.querySelector('.download-file');
+                                    var messageContainer = document.getElementById('download-message');
+
+                                    e.setAttribute('qq-button-id', downloadGuid);
+                                    document.querySelector('.hidden-upload-input').value = downloadGuid;
+
+                                    messageContainer.style.display = "block";
+                                    messageContainer.classList.remove('alert-danger');
+                                    messageContainer.classList.add('alert-info');
+                                    messageContainer.innerText = message;
+
+                                    downloadBtn.style.display = "block";
+                                    downloadBtn.children[0].setAttribute('href', downloadUrl);
+
+                                } else {
+                                    var message = response.data.message;
+                                    var messageContainer = document.getElementById('download-message');
+                                    messageContainer.style.display = "block";
+                                    messageContainer.classList.remove('alert-info');
+                                    messageContainer.classList.add('alert-danger');
+                                    messageContainer.innerText = message;
+                                }
+                            }).then(function () {
+                                @(attributeChangeHandlerFuncName)();
+                            });
+                        }
+                     var ProductAttributes = Vue.extend({
+                         template: ` <div class="attributes"> <table class="table"> <tr v-for="attribute in productAttributes"> <td :id="'product_attribute_label_' + attribute.Id"> <span class="text-prompt"> <template v-if="attribute.TextPrompt !==null">{{attribute.TextPrompt}}</template> <template v-else>{{attribute.Name}}</template> </span> <span v-if="attribute.IsRequired" class="required">*</span> <template v-if="attribute.Description !==null"> <span v-html="attribute.Description" class="attribute-description"></span> </template> </td><td :id="'product_attribute_input_' + attribute.Id"> <template v-if="attribute.AttributeControlType==4"> <label :for="'product_attribute_' + attribute.Id" class="sr-only">product_attribute_{{attribute.Id}}</label> <input :name="'product_attribute_' + attribute.Id" type="text" class="form-control textbox" :id="'product_attribute_' + attribute.Id" :value="attribute.DefaultValue"/> </template> <template v-if="attribute.AttributeControlType==1"> <label :for="'product_attribute_' + attribute.Id" class="sr-only">product_attribute_{{attribute.Id}}</label> <select :id="'product_attribute_' + attribute.Id" class="form-control custom-select" :name="'product_attribute_' + attribute.Id"> <template v-if="attribute.IsRequired==false"> <option value="0">---</option> </template> <option v-for="attributeValue in attribute.Values" :selected="attributeValue.IsPreSelected" :value="attributeValue.Id"> <template v-if="attributeValue.PriceAdjustment==null">{{attributeValue.Name}}</template> <template v-else>{{attributeValue.Name}}[{{attributeValue.PriceAdjustment}}] </template> </option> </select> </template> <template v-if="attribute.AttributeControlType==2"> <ul class="option-list px-0 mb-0"> <li v-for="attributeValue in attribute.Values"> <fieldset> <legend class="sr-only">product_attribute_{{attribute.Id}}</legend> <label class="custom-control custom-radio"> <input class="custom-control-input" :id="'product_attribute_' + attribute.Id + '_' + attributeValue.Id" type="radio" :name="'product_attribute_' + attribute.Id" :value="attributeValue.Id" :checked="attributeValue.IsPreSelected"/> <span class="custom-control-label"></span> <span class="custom-control-description" :for="'product_attribute_' + attribute.Id + '_' + attributeValue.Id"> <template v-if="attributeValue.PriceAdjustment==null">{{attributeValue.Name}}</template> <template v-else>{{attributeValue.Name}}[{{attributeValue.PriceAdjustment}}] </template> </span> </label> </fieldset> </li></ul> </template> <template v-if="attribute.AttributeControlType==3 || attribute.AttributeControlType==50"> <fieldset> <legend></legend> <ul class="option-list px-0 mb-0"> <li v-for="attributeValue in attribute.Values"> <label class="custom-control custom-checkbox"> <input v-if="attribute.AttributeControlType==50" class="custom-control-input" :id="'product_attribute_' + attribute.Id + '_' + attributeValue.Id" type="checkbox" :name="'product_attribute_' + attribute.Id" :value="attributeValue.Id" :checked="attributeValue.IsPreSelected" disabled="disabled"/> <input v-else class="custom-control-input" :id="'product_attribute_' + attribute.Id + '_' + attributeValue.Id" type="checkbox" :name="'product_attribute_' + attribute.Id" :value="attributeValue.Id" :checked="attributeValue.IsPreSelected"/> <span class="custom-control-label"></span> <span class="custom-control-description" :for="'product_attribute_' + attribute.Id + '_' + attributeValue.Id"> <template v-if="attributeValue.PriceAdjustment==null">{{attributeValue.Name}}</template> <template v-else>{{attributeValue.Name}}[{{attributeValue.PriceAdjustment}}] </template> </span> </label> </li></ul> </fieldset> </template> <template v-if="attribute.AttributeControlType==10"> <textarea :id="'product_attribute_' + attribute.Id" :name="'product_attribute_' + attribute.Id">{{attribute.DefaultValue}}</textarea> </template> <template v-if="attribute.AttributeControlType==30"> <template> <div :id="'product_attribute_' + attribute.Id + 'uploader'"> <b-form-file :accept="attribute.AllowedFileExtensions" type="file" id="qqfile" name="qqfile" :data-url="'/uploadfileproductattribute/' + attribute.Id + '?productId=' + attribute.ProductId" onchange="uploadFile(this)"/> </div></template> <input class="hidden-upload-input" type="hidden" onchange="@(attributeChangeHandlerFuncName)()" :id="'product_attribute_' + attribute.Id" :name="'product_attribute_' + attribute.Id" v-model="attribute.DefaultValue" :value="attribute.DefaultValue"/> <div id="download-message" class="alert my-2" style="display:none;"></div><div id="'product_attribute_' + attribute.Id + 'downloadurl'" class="download-file" style="display:none;"> <a class="btn btn-outline-info"> Download </a> </div></template> <template v-if="attribute.AttributeControlType==40"> <ul class="option-list color-squares w-100 d-inline-flex flex-wrap px-0 mb-0" :id="'color-squares-' + attribute.Id"> <li v-for="attributeValue in attribute.Values" class="mr-1 p-0"> <label :for="'product_attribute_' + attribute.Id + '_' + attributeValue.Id" class="mb-0"> <input :id="'product_attribute_' + attribute.Id + '_' + attributeValue.Id" type="radio" :name="'product_attribute_' + attribute.Id" :value="attributeValue.Id" :checked="attributeValue.IsPreSelected"/> <template v-if="attributeValue.PriceAdjustment==null"> <span class="color-container" :title="attributeValue.Name"> <span class="color" :style="'background-color:' + attributeValue.ColorSquaresRgb"></span> </span> </template> <template v-else> <span class="color-container" :title="attributeValue.Name + ' [' + attributeValue.PriceAdjustment + ']'"> <span class="color" :style="'background-color:' + attributeValue.ColorSquaresRgb"></span> </span> </template> </label> </li></ul> </template> <template v-if="attribute.AttributeControlType==45"> <ul class="option-list color-squares w-100 d-inline-flex flex-wrap px-0 mb-0" :id="'color-squares-' + attribute.Id"> <li v-for="attributeValue in attribute.Values" class="mr-1 p-0"> <label :for="'product_attribute_' + attribute.Id + '_' + attributeValue.Id" class="mb-0"> <template v-if="attributeValue.PriceAdjustment==null"> <input :id="'product_attribute_' + attribute.Id + '_' + attributeValue.Id" type="radio" :name="'product_attribute_' + attribute.Id" :value="attributeValue.Id" :checked="attributeValue.IsPreSelected"/> <span :id="'imgSqr_' + attributeValue.Id" class="color-container"> <span class="color" :style="'background: url(' + attributeValue.ImageSquaresPictureModel.ImageUrl + ') 50% 50% no-repeat;'"></span> </span> <b-tooltip :target="'imgSqr_' + attributeValue.Id" placement="bottom"> <div class="image-square-tooltip"><img :src="attributeValue.ImageSquaresPictureModel.FullSizeImageUrl" :alt="attributeValue.Name"/> <span>{{attributeValue.Name}}</span></div></b-tooltip> </template> <template v-else> <input :id="'product_attribute_' + attribute.Id + '_' + attributeValue.Id" type="radio" :name="'product_attribute_' + attribute.Id" :value="attributeValue.Id" :checked="attributeValue.IsPreSelected"/> <span class="color-container"> <span class="color" :style="'background: url(' + attributeValue.ImageSquaresPictureModel.ImageUrl + ') 50% 50% no-repeat;'"></span> </span> <b-tooltip :target="'imgSqr_' + attributeValue.Id" placement="bottom"> <div class="image-square-tooltip"> <img :src="attributeValue.ImageSquaresPictureModel.FullSizeImageUrl" :alt="attributeValue.Name + ' [' + attributeValue.PriceAdjustment + ']'"/> <span>{{attributeValue.Name}}[{{attributeValue.PriceAdjustment}}]</span> </div></b-tooltip> </template> </label> </li></ul> </template> </td></tr></table> </div>`,
+                        props: {
+                            productAttributes: null
+                        },
+                        methods: {
+                            initAttributes() {
+                               this.productAttributes = @Json.Serialize(Model);
+                            }
+                        },
+                        mounted() {
+                            this.initAttributes();
+                        },
+                        updated() {
+                            @(attributeChangeHandlerFuncName)();
+                            @Html.Raw(attributeChangeScriptsBuilder.ToString())
+                        }
+                    })
+                    new ProductAttributes().$mount('#product-attributes')
+        </script>
+        }
+    }

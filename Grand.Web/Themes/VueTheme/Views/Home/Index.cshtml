@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Http.Extensions
+@inject Grand.Services.Media.IPictureService pictureService
+@inject SeoSettings seoSettings
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    //open graph META tags
+    if (seoSettings.OpenGraphMetaTags)
+    {
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:type\" content=\"website\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + seoSettings.DefaultTitle + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(seoSettings.DefaultMetaDescription) + "\" />");
+        @if (!String.IsNullOrWhiteSpace(seoSettings.StorePictureId))
+        {
+            pagebuilder.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + await pictureService.GetPictureUrl(seoSettings.StorePictureId) + "\" />");
+        }
+        pagebuilder.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
+    }
+
+    //Twitter META tags
+    if (seoSettings.TwitterMetaTags)
+    {
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:card\" content=\"summary\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:site\" content=\"" + seoSettings.DefaultTitle + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:title\" content=\"" + seoSettings.DefaultTitle + "\" />");
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:description\" content=\"" + Html.Encode(seoSettings.DefaultMetaDescription) + "\" />");
+        @if (!String.IsNullOrWhiteSpace(seoSettings.StorePictureId))
+        {
+            pagebuilder.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + await pictureService.GetPictureUrl(seoSettings.StorePictureId) + "\" />");
+        }
+        pagebuilder.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
+    }
+}
+<div class="page home-page custom-container d-flex flex-column mt-0">
+    @await Component.InvokeAsync("PushNotificationsRegistration")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_top" })
+    @await Component.InvokeAsync("TopicBlock", new { systemName = "HomePageText" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_categories" })
+    @await Component.InvokeAsync("HomePageCategories")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_products" })
+    @await Component.InvokeAsync("PersonalizedProducts")
+    @await Component.InvokeAsync("RecommendedProducts")
+    @await Component.InvokeAsync("SuggestedProducts")
+    @await Component.InvokeAsync("HomePageProducts")
+    @await Component.InvokeAsync("HomePageNewProducts")
+    @await Component.InvokeAsync("CategoryFeaturedProducts")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_best_sellers" })
+    @await Component.InvokeAsync("HomePageBestSellers")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_manufacturers" })
+    @await Component.InvokeAsync("HomePageManufacturers")
+    @await Component.InvokeAsync("ManufacturerFeaturedProducts")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_news" })
+    @await Component.InvokeAsync("HomePageNews")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_blog" })
+    @await Component.InvokeAsync("HomePageBlog")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_poll" })
+    @await Component.InvokeAsync("HomePagePolls")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_bottom" })
+</div>

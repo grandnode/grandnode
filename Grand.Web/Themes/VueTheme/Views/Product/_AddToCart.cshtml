@@ -1,0 +1,106 @@
+﻿@model ProductDetailsModel.AddToCartModel
+@{ 
+    var shoppingCartType = Model.UpdateShoppingCartItemType.HasValue ? Model.UpdateShoppingCartItemType.Value : ShoppingCartType.ShoppingCart;
+}
+@if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId))
+{
+    <input asp-for="UpdatedShoppingCartItemId" type="hidden" />
+}
+@if (Model.CustomerEntersPrice)
+{
+    <div class="customer-entered-price mb-3 d-flex w-100 flex-column">
+        <div class="price-input">
+            <label asp-for="CustomerEnteredPrice" class="enter-price-label">@("Products.EnterProductPrice"):</label>
+            @*round price*@
+            <input asp-for="CustomerEnteredPrice" value="@Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice))" class="form-control enter-price-input" />
+        </div>
+        <div class="price-range pt-1">
+            @Model.CustomerEnteredPriceRange
+        </div>
+    </div>
+}
+<b-input-group class="product-add-to-cart flex-nowrap">
+@if (!Model.DisableBuyButton || Model.CustomerEntersPrice)
+{
+    if (!String.IsNullOrEmpty(Model.MinimumQuantityNotification))
+    {
+        <div class="min-qty-notification text-danger w-100 mb-2">@Model.MinimumQuantityNotification</div>
+    }
+    if (!Model.DisableBuyButton)
+    {
+        @if (Model.AllowedQuantities.Any())
+        {
+            <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="custom-select form-control qty-dropdown mr-2"></select>
+            if (!String.IsNullOrEmpty(Model.MeasureUnit))
+            {
+                <span class="qty-unit d-flex align-items-center mr-2">
+                    @Model.MeasureUnit
+                </span>
+            }
+        }
+        else
+        {
+
+            var addId = "addtocart_" + @Model.ProductId + "_EnteredQuantity";
+            <label for="@addId" class="sr-only">@T("ShoppingCart.AddToCart")</label>
+            <input asp-for="EnteredQuantity" class="qty-input form-control text-center" type="number" inputmode="numeric"/>
+            if (!String.IsNullOrEmpty(Model.MeasureUnit))
+            {
+                <span class="qty-unit d-flex align-items-center mr-2">
+                    @Model.MeasureUnit
+                </span>
+            }
+
+        }
+        {
+            var addToCartText = "";
+            if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && (Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart || Model.UpdateShoppingCartItemType.Value == ShoppingCartType.OnHoldCart))
+            {
+                addToCartText = T("ShoppingCart.AddToCart.Update").Text;
+            }
+            else
+            {
+                addToCartText = T("ShoppingCart.AddToCart").Text;
+                if (Model.IsReservation)
+                {
+                    addToCartText = T("ShoppingCart.Reservation").Text;
+                }
+                if (Model.AvailableForPreOrder)
+                {
+                    addToCartText = T("ShoppingCart.PreOrder").Text;
+                }
+                if (Model.IsAuction)
+                {
+                    addToCartText = T("ShoppingCart.BuyNow").Text;
+                }
+            }
+
+            //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
+            <script asp-location="Footer">
+                    if (document.getElementById("@Html.IdFor(model => model.EnteredQuantity)")) {
+                        document.getElementById("@Html.IdFor(model => model.EnteredQuantity)").addEventListener("keyup", function (event) {
+                            if (event.keyCode == 13) {
+                                document.getElementById("add-to-cart-button-@Model.ProductId").click();
+                                return false;
+                            }
+                        });
+                    }
+                    if (document.getElementById("@Html.IdFor(model => model.CustomerEnteredPrice)")) {
+                        document.getElementById("@Html.IdFor(model => model.CustomerEnteredPrice)").addEventListener("keyup", function (event) {
+                        if (event.keyCode == 13) {
+                            document.getElementById("add-to-cart-button-@Model.ProductId").click();
+                            return false;
+                        }
+                        });
+                    }
+
+            </script>
+            <b-input-group-append>
+            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn-info w-100 add-to-cart-button d-inline-flex" data-productid="@Model.ProductId" onclick="AxiosCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)shoppingCartType })', '#product-details-form');return false;">
+                <span>@addToCartText</span>
+            </button>
+            </b-input-group-append>
+        }
+    }
+}
+</b-input-group>

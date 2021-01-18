@@ -1,0 +1,115 @@
+﻿@{
+    Layout = "_Root";
+}
+@inject IPageHeadBuilder pagebuilder
+@using Grand.Framework.Themes
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@{
+    var supportRtl = workContext.WorkingLanguage.Rtl;
+    var themeName = themeContext.WorkingThemeName;
+    if (supportRtl)
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/catalog/catalog.rtl.css", themeName));
+    }
+    else
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/catalog/catalog.css", themeName));
+    }
+}
+@{
+    //current category ID
+    string currentCategoryId = "";
+    if (Url.ActionContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.OrdinalIgnoreCase) &&
+        Url.ActionContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.OrdinalIgnoreCase))
+    {
+        currentCategoryId = Url.ActionContext.RouteData.Values["categoryId"].ToString();
+    }
+
+
+    //current manufacturer ID
+    string currentManufacturerId = "";
+    if (Url.ActionContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.OrdinalIgnoreCase) &&
+        Url.ActionContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.OrdinalIgnoreCase))
+    {
+        currentManufacturerId = Url.ActionContext.RouteData.Values["manufacturerId"].ToString();
+    }
+
+
+    //current product ID
+    string currentProductId = "";
+    if (Url.ActionContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.OrdinalIgnoreCase) &&
+        Url.ActionContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.OrdinalIgnoreCase))
+    {
+        currentProductId = Url.ActionContext.RouteData.Values["productId"].ToString();
+    }
+}
+@if (IsSectionDefined("Breadcrumb"))
+{
+    @section Breadcrumb {
+        @RenderSection("Breadcrumb")
+    }
+}
+
+@if (!string.IsNullOrEmpty(currentCategoryId))
+{
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_category", additionalData = Model.Id })
+}
+@if (!string.IsNullOrEmpty(currentManufacturerId))
+{
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_manufacturer", additionalData = Model.Id })
+}
+<b-row id="TwoColumns" class="custom-container">
+        <div class="d-lg-none d-block">
+            <b-col cols="12">
+                <b-button id="sidebar-mobile-button" variant="outline-info" v-b-toggle.sidebar-mobile><b-icon icon="layout-sidebar-inset"></b-icon> @T("catalog.selectors.fiters")</b-button>
+            </b-col>
+            <b-sidebar id="sidebar-mobile"
+                       backdrop
+                       left
+                       shadow>
+            </b-sidebar>
+        </div>
+    <b-col lg="3" md="12" class="generalLeftSide order-1">
+        @if (IsSectionDefined("left"))
+        {
+            @RenderSection("left")
+        }
+        else
+        {
+            if (IsSectionDefined("filters"))
+            {
+                @RenderSection("filters")
+            }
+
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_before" })
+            @await Component.InvokeAsync("CategoryNavigation", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_category_navigation" })
+            @await Component.InvokeAsync("ManufacturerNavigation", new { currentManufacturerId = currentManufacturerId })
+            @await Component.InvokeAsync("VendorNavigation")
+            @await Component.InvokeAsync("RecentlyViewedProductsBlock", new { productThumbPictureSize = 64 })
+            @await Component.InvokeAsync("PopularProductTags")
+            @await Component.InvokeAsync("PollBlock", new { systemKeyword = "LeftColumnPoll" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after" })
+        }
+    </b-col>
+    <b-col lg="9" md="12" class="generalSideRight order-2">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_before" })
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })
+    </b-col>
+</b-row>
+<script asp-location="Footer">
+    var leftSide = document.querySelector('.generalLeftSide');
+    function LeftSideBar() {
+        if (991 > window.outerWidth) {
+            document.querySelector("#sidebar-mobile .b-sidebar-body").appendChild(leftSide);
+        } else {
+            document.getElementById("TwoColumns").appendChild(leftSide);
+        }
+    }
+    LeftSideBar();
+    window.addEventListener("resize", function () {
+        LeftSideBar();
+    }, false);
+</script>

@@ -1,0 +1,50 @@
+﻿@model NewsletterCategoryModel
+<div class="newsletter-category">
+    <div class="newsletter-category-title pb-3">
+        <h5>@T("NewsletterCategory.Title")</h5>
+    </div>
+    <form id="newsletter-category-method-form" action="" >
+        <input asp-for="NewsletterEmailId" type="hidden" />
+        <div class="newsletter-category-body form-group">
+                @foreach (var category in Model.NewsletterCategories)
+                {
+                    <label for="Category_@(category.Id)" class="custom-control custom-checkbox col-12">
+                        <input id="Category_@(category.Id)"  name="Category_@(category.Id)" type="checkbox" class="custom-control-input" @(category.Selected ? "checked": "")>
+                        <span class="custom-control-label"></span>
+                        <span class="custom-control-description">@category.Name</span>
+                    </label>
+                    <div>
+                        @Html.Raw(category.Description)
+                    </div>
+                }
+            <div class="newsletter-category-save pt-1 pb-1">
+                <input type="button" value="@T("NewsletterCategory.Options.Save")" id="newsletter-category-button" class="btn btn-success newsletter-subscribe-button" />
+            </div>
+        </div>
+    </form>
+
+    <script asp-location="Footer">
+        function newsletter_subscribe_category() {
+            var form = document.getElementById('newsletter-category-method-form');
+            var data = new FormData(form);
+            axios({
+                url: '@(Url.RouteUrl("SubscribeNewsletterCategory"))',
+                method: 'post',
+                data: data,
+            }).then(function (response) {
+                if (response.data.Success) {
+                    alert(response);
+                } else {
+                    alert(response.data.Message);
+                }
+            }).catch(function (error) {
+                alert(error);
+            })
+        }
+            document.getElementById('newsletter-category-button').addEventListener('click', function () {
+                newsletter_subscribe_category();
+            });
+
+    </script>
+
+</div>

@@ -1,0 +1,72 @@
+﻿@model EstimateShippingModel
+<div class="shipping">
+
+    <div class="estimate-shipping">
+        <div class="title">
+            <strong>@T("ShoppingCart.EstimateShipping")</strong>
+        </div>
+        <div class="hint generalMarginSupporter">@T("ShoppingCart.EstimateShipping.Tooltip")</div>
+
+        <div class="shipping-options">
+            <div class="form-group">
+                <label asp-for="CountryId">@T("ShoppingCart.EstimateShipping.Country"):</label>
+                <select onchange="ChangeEstimateShipping(this)" asp-for="CountryId" asp-items="Model.AvailableCountries" class="custom-select form-control country-input"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="StateProvinceId">@T("ShoppingCart.EstimateShipping.StateProvince"):</label>
+            <select asp-for="StateProvinceId" asp-items="Model.AvailableStates" class="custom-select form-control state-input"></select>
+            <span id="estimate-shipping-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ZipPostalCode">@T("ShoppingCart.EstimateShipping.ZipPostalCode"):</label>
+            <input asp-for="ZipPostalCode" class="form-control zip-input" />
+        </div>
+        <div class="buttons">
+            <input id="estimate-shipping-button" type="button" value="@T("ShoppingCart.EstimateShipping.Button")" class="btn btn-outline-secondary float-xs-right estimate-shipping-button" onclick="EstimateShipping()" />
+        </div>
+    </div>
+    <div class="col-12 px-0 estimate-shipping-result generalMarginSupporter"></div>
+</div>
+<script asp-location="Footer">
+            function EstimateShipping() {
+                var form = document.getElementById('shopping-cart-form');
+                var data = new FormData(form);
+                axios({
+                    method: 'post',
+                    data: data,
+                    url: '@(Url.RouteUrl("EstimateShipping"))',
+                }).then(function (response) {
+                    var resp = response.data;
+                    document.querySelector('.estimate-shipping-result').innerHTML = resp;
+                    checkoutAttributeChange();
+                }).catch(function (error) {
+                    alert('Failed to retrieve estimate shipping.');
+                })
+            }
+
+            function ChangeEstimateShipping(e) {
+                var selectedItem = e.value;
+                var ddlStates = document.getElementById("@Html.IdFor(model => model.StateProvinceId)");
+                var estimateProgress = document.getElementById("estimate-shipping-loading-progress");
+                estimateProgress.style.display = "block";
+                axios({
+                    method: "get",
+                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
+                    params: { "countryId": selectedItem, "addSelectStateItem": false },
+                }).then(function (response) {
+                    ddlStates.innerHTML = '';
+                    response.data.forEach(function (id, option) {
+                        elChild = document.createElement('option');
+                        elChild.setAttribute('value', id.id);
+                        elChild.innerHTML = id.name;
+                        ddlStates.appendChild(elChild);
+                        estimateProgress.style.display = "none";
+                    })
+                    checkoutAttributeChange();
+                }).catch(function (error) {
+                        alert(error);
+                        estimateProgress.style.display = "none";
+                })
+            }
+</script>

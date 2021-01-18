@@ -1,0 +1,189 @@
+﻿@model CustomerNavigationModel
+@using Grand.Framework.Themes
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@inject IPageHeadBuilder pagebuilder
+@{ 
+    var supportRtl = workContext.WorkingLanguage.Rtl;
+    var themeName = themeContext.WorkingThemeName;
+
+    if (supportRtl)
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/customer/customer.rtl.css", themeName));
+    }
+    else
+    {
+        pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/customer/customer.css", themeName));
+    }
+}
+<div id="block-account-navigation" class="block block-account-navigation mt-2">
+    <h2 class="h5"><strong>@T("Account.Navigation")</strong></h2>
+    <ul class="list viewBox">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_before" })
+        @if (!Model.HideInfo)
+        {
+            <li class="customer-info">
+                <a href="@Url.RouteUrl("CustomerInfo")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Info)
+                                                                   {<text>active</text>}
+                                                                   else
+                                                                   {<text>inactive</text>}"><b-icon icon="person"></b-icon> <span>@T("Account.CustomerInfo")</span></a>
+                                                            </li>
+                                                        }
+        @if (!Model.HideAddresses)
+        {
+            <li class="customer-addresses">
+                <a href="@Url.RouteUrl("CustomerAddresses")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Addresses)
+                                                                        {<text>active</text>}
+                                                                        else
+                                                                        {<text>inactive</text>}"><b-icon icon="file-earmark-richtext"></b-icon> <span>@T("Account.CustomerAddresses")</span></a>
+                                                                    </li>
+                                                                }
+        @if (!Model.HideOrders)
+        {
+            <li class="customer-orders">
+                <a href="@Url.RouteUrl("CustomerOrders")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Orders)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><b-icon icon="cart-check"></b-icon> <span>@T("Account.CustomerOrders")</span></a>
+                                                                </li>
+                                                            }
+        @if (!Model.HideCourses)
+        {
+            <li class="customer-auctions">
+                <a href="@Url.RouteUrl("CustomerCourses")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Courses)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><b-icon icon="file-earmark-easel"></b-icon> <span>@T("Account.CustomerCourses")</span></a>
+                                                                </li>
+                                                            }
+        @if (!Model.HideAuctions)
+        {
+            <li class="customer-auctions">
+                <a href="@Url.RouteUrl("CustomerAuctions")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Auctions)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><b-icon icon="hammer"></b-icon> <span>@T("Account.CustomerAuctions")</span></a>
+                                                                </li>
+                                                            }
+        @if (!Model.HideNotes)
+        {
+            <li class="customer-notes">
+                <a href="@Url.RouteUrl("CustomerNotes")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Notes)
+                                                                    {<text>active</text>}
+                                                                             else
+                                                                             {<text>inactive</text>}"><b-icon icon="file-earmark-font"></b-icon> <span>@T("Account.CustomerNotes")</span></a>
+                                                                        </li>
+                                                                    }
+        @if (!Model.HideDocuments)
+        {
+            <li class="customer-notes">
+                <a href="@Url.RouteUrl("CustomerDocuments")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Documents)
+                                                                    {<text>active</text>}
+                                                                             else
+                                                                             {<text>inactive</text>}"><b-icon icon="file-earmark-check"></b-icon> <span>@T("Account.CustomerDocuments")</span></a>
+                                                                        </li>
+                                                                    }
+        @if (!Model.HideReturnRequests)
+        {
+            <li class="customer-returns">
+                <a href="@Url.RouteUrl("CustomerReturnRequests")" class="@if (Model.SelectedTab == CustomerNavigationEnum.ReturnRequests)
+                                                                             {<text>active</text>}
+                                                                             else
+                                                                             {<text>inactive</text>}"><b-icon icon="arrow-return-left"></b-icon> <span>@T("Account.CustomerReturnRequests")</span></a>
+                                                                        </li>
+                                                                    }
+        @if (!Model.HideDownloadableProducts)
+        {
+            <li class="customer-downloadable">
+                <a href="@Url.RouteUrl("CustomerDownloadableProducts")" class="@if (Model.SelectedTab == CustomerNavigationEnum.DownloadableProducts)
+                                                                                   {<text>active</text>}
+                                                                                   else
+                                                                                   {<text>inactive</text>}"><b-icon icon="cloud-download"></b-icon> <span>@T("Account.DownloadableProducts")</span></a>
+                                                                            </li>
+                                                                        }
+        @if (!Model.HideBackInStockSubscriptions)
+        {
+            <li class="customer-back">
+                <a href="@Url.RouteUrl("CustomerBackInStockSubscriptions")" class="@if (Model.SelectedTab == CustomerNavigationEnum.BackInStockSubscriptions)
+                                                                                   {<text>active</text>}
+                                                                                   else
+                                                                                   {<text>inactive</text>}"><b-icon icon="skip-backward"></b-icon> <span>@T("Account.BackInStockSubscriptions")</span></a>
+                                                                            </li>
+                                                                        }
+        @if (!Model.HideRewardPoints)
+        {
+            <li class="reward-points">
+                <a href="@Url.RouteUrl("CustomerRewardPoints")" class="@if (Model.SelectedTab == CustomerNavigationEnum.RewardPoints)
+                                                                           {<text>active</text>}
+                                                                           else
+                                                                           {<text>inactive</text>}"><b-icon icon="trophy"></b-icon> <span>@T("Account.RewardPoints")</span></a>
+                                                                    </li>
+                                                                }
+        @if (!Model.HideChangePassword)
+        {
+            <li class="change-password">
+                <a href="@Url.RouteUrl("CustomerChangePassword")" class="@if (Model.SelectedTab == CustomerNavigationEnum.ChangePassword)
+                                                                             {<text>active</text>}
+                                                                             else
+                                                                             {<text>inactive</text>}"><b-icon icon="file-earmark-lock2"></b-icon> <span>@T("Account.ChangePassword")</span></a>
+                                                                        </li>
+                                                                    }
+        @if (!Model.HideDeleteAccount)
+        {
+            <li class="customer-delete">
+                <a href="@Url.RouteUrl("CustomerDeleteAccount")" class="@if (Model.SelectedTab == CustomerNavigationEnum.DeleteAccount)
+                                                                             {<text>active</text>}
+                                                                             else
+                                                                             {<text>inactive</text>}"><b-icon icon="trash"></b-icon> <span>@T("Account.DeleteAccount")</span></a>
+                                                                        </li>
+                                                                    }
+        @if (!Model.HideAvatar)
+        {
+            <li class="customer-avatar">
+                <a href="@Url.RouteUrl("CustomerAvatar")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Avatar)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><b-icon icon="person-circle"></b-icon> <span>@T("Account.Avatar")</span></a>
+                                                                </li>
+                                                            }
+        @if (!Model.HideForumSubscriptions)
+        {
+            <li class="customer-forum">
+                <a href="@Url.RouteUrl("CustomerForumSubscriptions")" class="@if (Model.SelectedTab == CustomerNavigationEnum.ForumSubscriptions)
+                                                                                 {<text>active</text>}
+                                                                                 else
+                                                                                 {<text>inactive</text>}"><b-icon icon="file-earmark-ruled"></b-icon> <span>@T("Account.ForumSubscriptions")</span></a>
+                                                                            </li>
+                                                                        }
+        @if (Model.ShowVendorInfo)
+        {
+            <li class="customer-vendor">
+                <a href="@Url.RouteUrl("CustomerVendorInfo")" class="@if(Model.SelectedTab == CustomerNavigationEnum.VendorInfo)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><b-icon icon="shop"></b-icon> <span>@T("Account.VendorInfo")</span></a>
+                                                                </li>
+                                                            }
+        @if (!Model.HideReviews)
+        {
+            <!--todo change class customer-notes to other (change icon???) and mdi mdi-account-supervisor - also change-->
+            <li class="customer-notes">
+                <a href="@Url.RouteUrl("CustomerReviews")" class="@if(Model.SelectedTab == CustomerNavigationEnum.Reviews)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><b-icon icon="star"></b-icon> <span>@T("Account.Reviews")</span></a>
+                                                                </li>
+                                                            }
+        @if (!Model.HideSubAccounts)
+        {
+            <!--todo change class customer-notes to other (change icon???) and mdi mdi-account-supervisor - also change-->
+            <li class="customer-subaccounts">
+                <a href="@Url.RouteUrl("CustomerSubAccounts")" class="@if(Model.SelectedTab == CustomerNavigationEnum.SubAccounts)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><b-icon icon="person-plus"></b-icon> <span>@T("Account.SubAccounts")</span></a>
+                                                                </li>
+                                                            }
+        @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after", additionalData = Model })
+    </ul>
+</div>

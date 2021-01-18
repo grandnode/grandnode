@@ -1,0 +1,54 @@
+﻿@model CustomerNotesModel
+@using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Notes").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Notes })
+}
+
+<div class="page account-page auction-list-page pl-lg-3 pt-3 pt-lg-0">
+    <h1 class="h2 generalTitle">@T("Account.CustomerNotes")</h1>
+    @if (Model.CustomerNoteList.Any())
+    {
+        foreach (var item in Model.CustomerNoteList)
+        {
+            <b-card class="mb-3">
+                <template v-slot:header>
+                    <h5 class="d-inline-flex">
+                        @item.Title
+                    </h5>
+                    <div class="d-inline-flex align-items-center w-100">
+                        <small class="text-muted mr-2">@T("Account.CustomerNotes.Createdate"):</small>
+                        <b-icon icon="calendar2-check" variant="info" class="mx-2"></b-icon>
+                        <small class="text-muted">@item.CreatedOn</small>
+                    </div>
+                </template>
+                <b-card-text>
+                    @item.Note
+                </b-card-text>
+                <template v-slot:footer>
+                    @if (!string.IsNullOrEmpty(item.DownloadId))
+                    {
+                        <div class="d-inline-flex">
+                            <span class="mb-2">
+                                <b-label class="col-form-label">@T("Account.CustomerNotes.Attachment"):</b-label>
+                                <b-link class="mx-2" href="@Url.RouteUrl("GetCustomerNoteFile", new { customerNoteId = item.NoteId})">@T("Customer.Notes.Download")</b-link>
+                            </span>
+                        </div>
+                    }
+                </template>
+            </b-card>
+        }
+    }
+    else
+    {
+        <div class="no-data alert alert-info mt-3">
+            @T("Account.CustomerNotes.NoExists")
+        </div>
+    }
+</div>

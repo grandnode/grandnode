@@ -1,0 +1,33 @@
+﻿@model ProductDetailsModel
+@if (Model.DisplayBackInStockSubscription)
+{
+    <input type="button" id="back-in-stock-subscribe-@Model.Id" @@click="showModalBackInStock" class="btn btn-secondary btn-sm subscribe-button" style="display:none;" value="@T("BackInStockSubscriptions.NotifyMeWhenAvailable")" />
+    <script asp-location="Footer">
+        document.getElementById("back-in-stock-subscribe-@Model.Id").addEventListener('click', function (event) {
+            var form = document.querySelector('#product-details-form');
+            var data = new FormData(form);
+            axios({
+                url: '@Url.RouteUrl("BackInStockSubscribePopup", new { productId = Model.Id })',
+                data: data,
+                method: 'post',
+            }).then(function (response) {
+                document.getElementById('modal-subscribe').innerHTML = response.data.resource;
+                document.querySelector('.subscribe-button').value = response.data.buttontext;
+            });
+        });
+        axios({
+            url: '@Url.RouteUrl("BackInStockSubscribeButton", new { productId = Model.Id, warehouseId = "" })',
+            method: 'get',
+        }).then(function (response) {
+            document.querySelector('.subscribe-button').value = response.data;
+            document.querySelector('.subscribe-button').style.display = "inline-block";
+        })
+    </script>
+
+    <b-modal id="subscribe-modal-form" ref="back-in-stock" hide-footer centered  title="@T("BackInStockSubscriptions.Title")">
+        <div id="modal-subscribe" class="alert-info alert mb-0">
+            @T("BackInStockSubscriptions.PleaseWait")
+        </div>
+    </b-modal>
+
+}

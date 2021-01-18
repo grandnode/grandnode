@@ -1,0 +1,41 @@
+﻿@model CustomerAvatarModel
+@using Grand.Web.Models.Customer;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Avatar })
+}
+<form asp-route="CustomerAvatar" method="post" enctype="multipart/form-data">
+    <div class="page account-page avatar-page pl-lg-3 pt-lg-0 pt-3">
+        <h1 class="h2 generalTitle">@T("Account.Avatar")</h1>
+        <div asp-validation-summary="ModelOnly" class="message-error alert alert-danger"></div>
+        <div class="fieldset">
+            @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+            {
+                <b-avatar src="@(Model.AvatarUrl)" size="6rem"></b-avatar>
+            }
+            <label class="btn btn-info" for="my-file-selector">
+                <input id="my-file-selector" name="uploadedFile" type="file" accept="image/*">
+            </label>
+            <span class='label label-info' id="upload-file-info"></span>
+        </div>
+        <div class="col-12 px-0">
+            <div class="alert alert-info my-3">
+                @T("Account.Avatar.UploadRules")
+            </div>
+        </div>
+        <b-btn-group>
+            <input type="submit" name="upload-avatar" class="btn btn-info upload-avatar-button" value="@T("Common.Upload")" />
+            @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+            {
+                <input type="submit" name="remove-avatar" class="btn btn-danger remove-avatar-button" value="@T("Account.Avatar.RemoveAvatar")" />
+            }
+        </b-btn-group>
+    </div>
+</form>

@@ -1,0 +1,15 @@
+﻿@model IList<ProductOverviewModel>
+@inject DisplayOrderHomePage order
+<div class="product-grid personalized-product-grid order-@order.PersonalizedProducts">
+    <h2 class="generalTitle text-center">@T("HomePage.Personalized.Products")</h2>
+    <b-col cols="12" class="px-0">
+        <b-form-row>
+            @foreach (var item in Model)
+            {
+                <b-col xl="@order.Pp_Xl" lg="@order.Pp_Lg" md="@order.Pp_Md" sm="@order.Pp_Sm" cols="@order.Pp_Col" class="product-container mb-2">
+                    <partial name="_ProductBox" model="item" />
+                </b-col>
+            }
+        </b-form-row>
+    </b-col>
+</div>

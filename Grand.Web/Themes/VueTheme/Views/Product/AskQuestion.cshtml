@@ -1,0 +1,62 @@
+﻿@model ProductAskQuestionModel
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    pagebuilder.AddTitleParts(Model.ProductName);
+    pagebuilder.AddTitleParts(T("PageTitle.ProductAskQuestion").Text);
+}
+<div class="page ask-a-question-page">
+    <h1 class="h2 text-xs-center generalTitle">@T("Products.AskQuestion.Title")</h1>
+    <h2 class="h4 text-xs-center"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">@Model.ProductName</a></h2>
+    @if (Model.SuccessfullySent)
+    {
+        <section class="result alert alert-info my-3">
+            @Model.Result
+        </section>
+    }
+    else
+    {
+        <form asp-route="AskQuestion" method="post"  v-on:submit.prevent="validateBeforeSubmitParam($event, 'send-email')"> 
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <fieldset class="form-group">
+                <label asp-for="Email" class="col-form-label">@T("Products.AskQuestion.Email"):</label>
+                <input asp-for="Email" placeholder="@T("Products.AskQuestion.Email.Hint")"
+                       class="form-control ask-question-email" v-validate="'required|email'" />
+                <span class="field-validation-error">{{veeErrors.first('Email')}}</span>
+                <span asp-validation-for="Email"></span>
+            </fieldset>
+            <fieldset class="form-group">
+                <label asp-for="FullName" class="col-form-label">@T("Products.AskQuestion.FullName"):</label>
+                <input asp-for="FullName" placeholder="@T("Products.AskQuestion.FullName.Hint")"
+                       class="form-control ask-question-fullname" v-validate="'required'" />
+                <span class="field-validation-error">{{veeErrors.first('FullName')}}</span>
+                <span asp-validation-for="FullName"></span>
+            </fieldset>
+            <fieldset class="form-group">
+                <label asp-for="Phone" class="col-form-label">@T("Products.AskQuestion.Phone"):</label>
+                <input asp-for="Phone" placeholder="@T("Products.AskQuestion.Phone.Hint")"
+                       class="form-control ask-question-phone" v-validate="'required'" />
+                <span class="field-validation-error">{{veeErrors.first('Phone')}}</span>
+                <span asp-validation-for="Phone"></span>
+            </fieldset>
+            <fieldset class="form-group">
+                <label asp-for="Message" class="col-form-label">@T("Products.AskQuestion.Message"):</label>
+                <textarea asp-for="Message" placeholder="@T("Products.AskQuestion.Message.Hint")" class="form-control ask-question-message" v-validate="'required'"></textarea>
+                <span class="field-validation-error">{{veeErrors.first('Message')}}</span>
+                <span asp-validation-for="Message"></span>
+            </fieldset>
+            @if (Model.DisplayCaptcha)
+            {
+                <div class="captcha-box">
+                    <captcha />
+                </div>
+            }
+            <div class="buttons generalMarginSupporter pt-1 pb-1">
+                <input type="submit" name="send-email" class="btn btn-info send-ask-question-button" value="@T("Products.AskQuestion.Button")" />
+                <span class="sr-only">@T("Products.AskQuestion.Button")</span>
+            </div>
+        </form>
+    }
+</div>

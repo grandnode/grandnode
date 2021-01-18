@@ -1,0 +1,50 @@
+﻿@model WishlistEmailAFriendModel
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    pagebuilder.AddTitleParts(T("PageTitle.WishlistEmailAFriend").Text);
+}
+<div class="page email-a-friend-page">
+    <h2 class="h2 generalTitle text-xs-center">@T("Wishlist.EmailAFriend.Title")</h2>
+    @if (Model.SuccessfullySent)
+    {
+        <div class="result alert alert-info">
+            @Model.Result
+        </div>
+    }
+    else
+    {
+        <form asp-route="EmailWishlist" method="post" v-on:submit.prevent="validateBeforeSubmitParam($event, 'send-email')">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <div class="form-fields">
+                <div class="inputs pb-1">
+                    <label class="col-form-label" asp-for="FriendEmail">@T("Wishlist.EmailAFriend.FriendEmail"):</label>
+                    <input asp-for="FriendEmail" class="form-control friend-email" placeholder="@T("Wishlist.EmailAFriend.FriendEmail.Hint")" v-validate="'required|email'" />
+                    <span class="field-validation-error">{{veeErrors.first('FriendEmail')}}</span>
+                    <span asp-validation-for="FriendEmail"></span>
+                </div>
+                <div class="inputs pb-1">
+                    <label class="col-form-label" asp-for="YourEmailAddress">@T("Wishlist.EmailAFriend.YourEmailAddress"):</label>
+                    <input asp-for="YourEmailAddress" class="form-control your-email" placeholder="@T("Wishlist.EmailAFriend.YourEmailAddress.Hint")" v-validate="'required'" />
+                    <span class="field-validation-error">{{veeErrors.first('YourEmailAddress')}}</span>
+                    <span asp-validation-for="YourEmailAddress"></span>
+                </div>
+                <div class="inputs pb-1">
+                    <label class="col-form-label" asp-for="PersonalMessage">@T("Wishlist.EmailAFriend.PersonalMessage"):</label>
+                    <textarea asp-for="PersonalMessage" class="form-control personal-message" placeholder="@T("Wishlist.EmailAFriend.PersonalMessage.Hint")"></textarea>
+                </div>
+                @if (Model.DisplayCaptcha)
+                {
+                    <div class="captcha-box pb-1">
+                        <captcha />
+                    </div>
+                }
+            </div>
+            <div class="btn-group mt-3">
+                <input type="submit" class="btn btn-info send-email-a-friend-button" value="@T("Wishlist.EmailAFriend.Button")">
+            </div>
+        </form>
+    }
+</div>

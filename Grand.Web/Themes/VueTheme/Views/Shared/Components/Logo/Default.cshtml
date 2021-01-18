@@ -1,0 +1,5 @@
+﻿@model LogoModel
+<b-navbar-brand href="@Url.RouteUrl("HomePage")" class="mx-auto">
+    <b-img src="@Model.LogoPath" alt="@Model.StoreName"></b-img>
+    <span class="sr-only">@T("admin.configuration.shipping.providers.fields.logo")</span>
+</b-navbar-brand>

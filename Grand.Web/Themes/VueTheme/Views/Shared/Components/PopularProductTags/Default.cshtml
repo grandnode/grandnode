@@ -1,0 +1,17 @@
+﻿@model PopularProductTagsModel
+
+<div id="block-popular-tags" class="block block-popular-tags">
+    <h2 class="h5 d-block"><strong>@T("Products.Tags.Popular")</strong></h2>
+    <b-button-toolbar size="sm">
+        @foreach (var item in Model.Tags)
+        {
+            <b-button variant="light" class="d-flex align-items-center mr-2 mb-2" href="@Url.RouteUrl("ProductsByTagName", new { SeName = item.SeName })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</b-button>
+        }
+        @if (Model.TotalTags > Model.Tags.Count)
+        {
+            <div class="view-all w-100 mt-2">
+                <b-button size="sm" variant="outline-info" href="@Url.RouteUrl("ProductTagsAll")">@T("Products.Tags.Popular.ViewAll")</b-button>
+            </div>
+        }
+    </b-button-toolbar>
+</div>

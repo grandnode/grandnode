@@ -1,0 +1,18 @@
+﻿@model IList<ProductOverviewModel>
+@inject DisplayOrderHomePage order
+@if (Model.Any())
+{
+    <div class="product-grid bestsellers order-@order.HomePageBestSellers">
+        <h2 class="generalTitle text-center">@T("Bestsellers")</h2>
+        <b-col cols="12" class="px-0">
+            <b-form-row>
+                @foreach (var item in Model)
+                {
+                    <b-col xl="@order.Bs_Xl" lg="@order.Bs_Lg" md="@order.Bs_Md" sm="@order.Bs_Sm" cols="@order.Bs_Col" class="product-container mb-2">
+                        <partial name="_ProductBox" model="item" />
+                    </b-col>
+                }
+            </b-form-row>
+        </b-col>
+    </div>
+}

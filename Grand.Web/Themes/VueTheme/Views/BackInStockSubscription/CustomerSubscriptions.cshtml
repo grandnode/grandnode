@@ -1,0 +1,100 @@
+﻿@model CustomerBackInStockSubscriptionsModel
+@using Grand.Web.Models.Catalog
+@using Grand.Web.Models.Customer
+@inject Grand.Services.Localization.ILocalizationService localizationService
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsTwo";
+
+    pagebuilder.AddTitleParts(T("PageTitle.BackInStockSubscriptions").Text);
+}
+@section left
+    {
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
+}
+<div class="page account-page back-in-stock-subscription-list-page pl-lg-3 pt-lg-0 pt-3">
+    <h1 class="h2 generalTitle">@T("Account.BackInStockSubscriptions")</h1>
+    @if (Model.Subscriptions.Count > 0)
+    {
+        <div class="description">
+            @T("Account.BackInStockSubscriptions.Description")
+        </div>
+        <script asp-location="Footer">
+                document.getElementById('selectall').addEventListener('click', function () {
+                    document.querySelector('.subscription-list .rowcheckbox').setAttribute('checked', this.getAttribute('checked'));
+                });
+                document.querySelector('.subscription-list .rowcheckbox').addEventListener('change', function (e) {
+                    var numChkBoxes = document.querySelector('.subscription-list .rowcheckbox').length;
+                    var numChkBoxesChecked = document.querySelector('.subscription-list .rowcheckbox:checked').length;
+                    document.getElementById('selectall').setAttribute('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                });
+        </script>
+        <form asp-route="CustomerBackInStockSubscriptions" method="post">
+            <div class="subscription-list">
+                <div class="table-responsive">
+                    <table class="table table-hover data-table">
+                        <colgroup>
+                            <col width="1" />
+                            <col />
+                        </colgroup>
+                        <thead class="table-inverse">
+                            <tr>
+                                <th class="select-boxes">
+                                    <label class="custom-control custom-checkbox">
+                                        <input id="selectall" type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-label"></span>
+                                        <span class="custom-control-description">&nbsp;</span>
+                                    </label>
+                                </th>
+                                <th class="product">
+                                    @T("Account.BackInStockSubscriptions.ProductColumn")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Subscriptions.Count; i++)
+                            {
+                                var item = Model.Subscriptions[i];
+                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                    <td class="select-boxes">
+                                        <label class="custom-control custom-checkbox">
+                                            <input id="selectall" type="checkbox" name="biss@(item.Id)" class="rowcheckbox custom-control-input">
+                                            <span class="custom-control-label"></span>
+                                            <span class="custom-control-description">&nbsp;</span>
+                                        </label>
+                                    </td>
+                                    <td class="product">
+                                        @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
+                                        @if (!string.IsNullOrEmpty(item.AttributeDescription))
+                                        {
+                                            <br />
+                                            @Html.Raw(item.AttributeDescription)
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @{
+                    var pager = Html.Pager(localizationService, Model.PagerModel);
+                }
+                @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+                {
+                    <div class="pager">
+                        @pager
+                    </div>
+                }
+                <div class="buttons mb-2 mt-2">
+                    <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="btn btn-secondary delete-selected-biss-button" />
+                </div>
+            </div>
+        </form>
+    }
+    else
+    {
+        <div class="no-data alert alert-info my-3">
+            @T("Account.BackInStockSubscriptions.NoSubscriptions")
+        </div>
+    }
+</div>

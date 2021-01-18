@@ -1,0 +1,39 @@
+﻿@model ProfilePostsModel
+@inject Grand.Services.Localization.ILocalizationService localizationService
+@if (Model.Posts.Any())
+{
+    <div class="latest-posts">
+
+        @foreach (var item in Model.Posts)
+        {
+            <b-card class="topic mb-3">
+                <template v-slot:header>
+                    <label><strong>@T("Profile.Topic"):</strong></label>
+                    <strong>@Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })</strong>
+                </template>
+                <div class="topic-body">
+                    <p>@Html.Raw(item.ForumPostText)</p>
+                </div>
+                <template v-slot:footer>
+                    <b-icon variant="info" icon="calendar2-check" class="mx-1"></b-icon>
+                    <small class="text-muted">@T("Profile.PostedOn"): @item.Posted</small>
+                </template>
+            </b-card>
+        }
+    </div>
+}
+else
+{
+    <div class="no-data alert alert-info">
+        @T("Profile.LatestPosts.NoPosts")
+    </div>
+}
+@{
+    var pager = Html.Pager(localizationService, Model.PagerModel);
+}
+@if (pager != null)
+{
+    <nav aria-label="Page navigation">
+        @pager
+    </nav>
+}

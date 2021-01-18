@@ -1,0 +1,27 @@
+﻿@model TopicMoveModel
+@using Grand.Web.Models.Boards;
+@inject IPageHeadBuilder pagebuilder
+@{
+    Layout = "_ColumnsOne";
+
+    pagebuilder.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
+}
+@await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
+
+<div class="page move-topic-page">
+    <h1 class="h2 generalTitle">@T("Forum.MoveTopic")</h1>
+
+    <form asp-route="TopicMove" method="post">
+        <input asp-for="Id" type="hidden" />
+        <div class="form-fields">
+            <div class="inputs col-md-4 col-12 px-0 mb-2 ">
+                <label>@T("Forum.SelectTheForumToMoveTopic"):</label>
+                @Html.DropDownList("ForumSelected", new SelectList(Model.ForumList, "Value", "Text"), new { @class = "form-control custom-select" })
+            </div>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <input type="submit" value="@T("Forum.Submit")" class="btn btn-secondary submit-forum-topic-button" />
+            <input type="button" class="btn btn-secondary cancel-forum-topic-button" value="@T("Forum.Cancel")" onclick="location = ('@Url.RouteUrl("TopicSlug", new { id = Model.Id, slug = Model.TopicSeName })')" />
+        </div>
+    </form>
+</div>

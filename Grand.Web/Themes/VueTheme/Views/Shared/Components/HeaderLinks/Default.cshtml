@@ -1,0 +1,58 @@
+﻿@model HeaderLinksModel
+@using System.Text.Encodings.Web
+@{
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] });
+}
+
+@await Component.InvokeAsync("Widget", new { widgetZone = "header_links_before" })
+<div>
+    @if (Model.IsAuthenticated)
+    {
+        @await Component.InvokeAsync("AdminHeaderLinks")
+            <b-button variant="outline-secondary" class="w-100 mb-2" href="@Url.RouteUrl("CustomerInfo")">
+                <b-icon icon="person"></b-icon>
+                <span class="text text-uppercase ml-3">@T("Account.MyAccount")</span>
+            </b-button>
+            <b-button variant="outline-secondary" class="w-100 mb-2" href="@Url.RouteUrl("CustomerOrders")">
+                <b-icon icon="handbag"></b-icon>
+                <span class="text text-uppercase ml-3">@T("Account.CustomerOrders")</span>
+            </b-button>
+        @if (Model.AllowPrivateMessages)
+        {
+                <b-button variant="outline-secondary" class="w-100 mb-2" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
+                    <b-icon icon="envelope"></b-icon>
+                    <span class="text text-uppercase ml-3">@T("PrivateMessages.Inbox")</span>
+                    <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
+                </b-button>
+        }
+            <b-button variant="outline-secondary" class="w-100 mb-2" href="@Url.RouteUrl("Logout")">
+                <b-icon icon="lock"></b-icon>
+                <span class="text text-uppercase ml-3">@T("Account.Logout")</span>
+            </b-button>
+    }
+    else
+    {
+            <span class="d-flex h5 justify-content-center mb-3 w-100">@T("Account.Login.ReturningCustomer") / @T("SideBar.NewCustomer")</span>
+            <div class="d-inline-flex flex-sm-nowrap flex-wrap w-100">
+                <b-button variant="secondary" class="w-100 mx-1 mb-2" href="@Url.RouteUrl("Login")">
+                    <b-icon icon="shield-lock"></b-icon>
+                    <span class="text text-uppercase ml-sm-3 ml-2">@T("Account.Login")</span>
+                </b-button>
+                <b-button variant="secondary" class="w-100 mx-1 mb-2" href="@registerUrl">
+                    <span class="text text-uppercase">@T("Account.Register")</span>
+                </b-button>
+            </div>
+            <div class="text-center generalMarginSupporter">
+                @T("Account.Login.NewCustomerText")
+            </div>
+    }
+</div>
+@await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })
+@if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
+{
+    //new private message notification
+    <script asp-location="Footer">
+                displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
+    </script>
+}
+

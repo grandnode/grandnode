@@ -1,0 +1,32 @@
+﻿@await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_method_top" })
+<div v-if="vmorder.PaymentMethod" class="payment-method">
+    <div v-if="vmorder.DisplayRewardPoints" class="use-reward-points">
+        <label class="custom-control custom-checkbox">
+            <input v-if="vmorder.RewardPointsEnoughToPayForOrder" id="UseRewardPoints" name="UseRewardPoints" type="checkbox" value="true" class="custom-control-input" onchange="PaymentMethod.toggleUseRewardPoints(this);" />
+            <input v-else id="UseRewardPoints" name="UseRewardPoints" type="checkbox" class="custom-control-input" value="true" />
+            <span class="custom-control-label"></span>
+            <span class="custom-control-description">        
+                @T("Checkout.UseRewardPoints").Text.Replace("{0}", "{{vmorder.RewardPointsBalance}}").Replace("{1}", "{{vmorder.RewardPointsAmount}}")
+            </span>
+        </label>
+    </div>
+        <div v-if="vmorder.PaymentMethods !== []" class="list-inline col-12 mt-2 mb-2 px-0" id="payment-method-block">
+            <div v-for="(paymentMethod, index) in vmorder.PaymentMethods" class="col-12 method-name px-0">
+                <label class="custom-control custom-radio flex-row">
+                    <input :id="'paymentmethod_' + index" type="radio" name="paymentmethod" :value="paymentMethod.PaymentMethodSystemName" :checked="paymentMethod.Selected" class="custom-control-input">
+                    <span class="custom-control-label"></span>
+                    <img v-if="paymentMethod.LogoUrl !== null" :src="paymentMethod.LogoUrl" :alt="paymentMethod.Name" />
+                    <span v-if="paymentMethod.Description !== null" class="custom-control-description pl-1">
+                        {{paymentMethod.Description}}
+                        <template v-if="paymentMethod.Fee !== null">
+                            {{paymentMethod.Fee}}
+                        </template>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div v-else class="message-error alert alert-danger my-3">
+            @T("Checkout.NoPaymentMethods")
+        </div>
+</div>
+@await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_method_bottom" })
