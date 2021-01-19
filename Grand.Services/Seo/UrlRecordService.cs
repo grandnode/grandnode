@@ -121,33 +121,6 @@ namespace Grand.Services.Seo
         }
 
         /// <summary>
-        /// Deletes URL records of related entity
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public virtual async Task DeleteByOwnerEntity<T>(T entity) where T : BaseEntity, ISlugSupported
-        {
-            if (entity == null)
-                throw new ArgumentNullException("entity");
-
-            string entityId = entity.Id;
-            string entityName = typeof(T).Name;
-
-            var query = from ur in _urlRecordRepository.Table
-                        where ur.EntityId == entityId &&
-                        ur.EntityName == entityName
-                        select ur;
-
-            var allUrlRecords = await query.ToListAsync();
-
-            foreach (var urlRecord in allUrlRecords)
-            {
-                await DeleteUrlRecord(urlRecord);
-            }
-        }
-
-        /// <summary>
         /// Gets an URL record
         /// </summary>
         /// <param name="urlRecordId">URL record identifier</param>

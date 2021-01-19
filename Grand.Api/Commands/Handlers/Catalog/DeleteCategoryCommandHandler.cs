@@ -1,8 +1,6 @@
-﻿using Grand.Domain.Catalog;
-using Grand.Services.Catalog;
+﻿using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
-using Grand.Services.Seo;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,17 +11,14 @@ namespace Grand.Api.Commands.Models.Catalog
     {
         private readonly ICategoryService _categoryService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IUrlRecordService _urlRecordService;
         private readonly ILocalizationService _localizationService;
 
         public DeleteCategoryCommandHandler(
             ICategoryService categoryService,
-            IUrlRecordService urlRecordService,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService)
         {
             _categoryService = categoryService;
-            _urlRecordService = urlRecordService;
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
         }
@@ -34,9 +29,6 @@ namespace Grand.Api.Commands.Models.Catalog
             if (category != null)
             {
                 await _categoryService.DeleteCategory(category);
-
-                //delete related uri records
-                await _urlRecordService.DeleteByOwnerEntity<Category>(category);
 
                 //activity log
                 await _customerActivityService.InsertActivity("DeleteCategory", category.Id, _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
