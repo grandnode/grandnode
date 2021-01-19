@@ -5036,6 +5036,7 @@ namespace Grand.Services.Installation
                 DefaultCategoryPageSizeOptions = "6, 3, 9",
                 DefaultManufacturerPageSize = 6,
                 LimitOfFeaturedProducts = 30,
+                SecondPictureOnCatalogPages = true
             });
 
             await _settingService.SaveSetting(new LocalizationSettings {
@@ -9238,7 +9239,7 @@ namespace Grand.Services.Installation
             productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productLenovoLegionY740.Id,
-                    ProductId2 = productPs5Camera.Id,
+                    ProductId2 = productAsusMixedReality.Id,
                 });
 
             productLenovoLegionY740.RelatedProducts.Add(
@@ -9262,7 +9263,7 @@ namespace Grand.Services.Installation
             productDellXPS.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productDellXPS.Id,
-                    ProductId2 = productPs5Camera.Id,
+                    ProductId2 = productAcerMonitor.Id,
                 });
 
             productDellXPS.RelatedProducts.Add(
@@ -9280,7 +9281,7 @@ namespace Grand.Services.Installation
             productMiNotebook.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productMiNotebook.Id,
-                    ProductId2 = productPs5Camera.Id,
+                    ProductId2 = productAcerMonitor.Id,
                 });
 
             productMiNotebook.RelatedProducts.Add(
@@ -9304,7 +9305,7 @@ namespace Grand.Services.Installation
             productAcerNitro.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productAcerNitro.Id,
-                    ProductId2 = productPs5Camera.Id,
+                    ProductId2 = productAcerProjector.Id,
                 });
 
             productAcerNitro.RelatedProducts.Add(
@@ -9340,17 +9341,17 @@ namespace Grand.Services.Installation
             productDellG5.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productDellG5.Id,
-                    ProductId2 = productPs5Camera.Id,
+                    ProductId2 = productAcerMonitor.Id,
                 });
             productPs5Camera.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productPs5Camera.Id,
-                    ProductId2 = productLenovoLegionY740.Id,
+                    ProductId2 = productPlaystationBundlePack.Id,
                 });
             productPs5Camera.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productPs5Camera.Id,
-                    ProductId2 = productMiNotebook.Id,
+                    ProductId2 = productPs4.Id,
                 });
 
             productPs5Camera.RelatedProducts.Add(

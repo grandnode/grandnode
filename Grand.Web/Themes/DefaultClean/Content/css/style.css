@@ -2955,6 +2955,12 @@ list settings .list__item,
     padding-left: 16px;
 }
 
+.navbar-nav .blank-link {
+    border-left: 2px solid #dddddd;
+    padding-left: 17px;
+    height: 25px;
+}
+
 .product-details-page .product-tabs .nav-link,
 #pills-mobile-tab .nav-item .nav-link {
     position: relative;
