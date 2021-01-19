@@ -2435,9 +2435,10 @@ list settings .list__item,
 }
 
 .product-box .picture {
-    display: flex;
+    display: block;
     align-items: center;
     position: relative;
+    overflow: hidden;
     height: 100%;
 }
 
@@ -2453,9 +2454,8 @@ list settings .list__item,
     right: 0;
     bottom: 0;
     left: 0;
-    width: auto;
+    width: 100%;
     max-width: 100%;
-    max-height: 100%;
     margin: auto;
 }
 
@@ -2841,10 +2841,6 @@ list settings .list__item,
     border-bottom: 1px solid #dfdfdf;
 }
 
-    .product-box.list-box img {
-        bottom: unset;
-    }
-
     .product-box.list-box .additional-info {
         position: absolute;
         top: 0;
@@ -2959,6 +2955,12 @@ list settings .list__item,
     padding-left: 16px;
 }
 
+.navbar-nav .blank-link {
+    border-left: 2px solid #dddddd;
+    padding-left: 17px;
+    height: 25px;
+}
+
 .product-details-page .product-tabs .nav-link,
 #pills-mobile-tab .nav-item .nav-link {
     position: relative;
@@ -2991,6 +2993,8 @@ list settings .list__item,
 .product-details-page .short-description {
     color: #777;
     font-weight: 300;
+    font-size: 19px;
+    letter-spacing: 1px;
 }
 
 .product-contact-error,
@@ -3379,7 +3383,9 @@ ul.opc .order-summary-content h5 {
     flex-wrap: nowrap;
     margin-top: 15px;
 }
-
+.product-details-page .gallery {
+    display: flex;
+}
     .product-details-page .sp-thumbs a {
         margin-right: 5px;
     }
@@ -3398,13 +3404,14 @@ ul.opc .order-summary-content h5 {
         }
 
 .product-details-page .thumbnails {
-    display: inline-flex;
+    display: flex;
     flex-wrap: wrap;
-    margin: 15px 0;
+    margin: 0px 15px;
+    flex-direction: column;
 }
 
     .product-details-page .thumbnails .thumb-popup-link {
-        margin-right: 5px;
+        margin-bottom: 5px;
     }
 
     .product-details-page .thumbnails img {

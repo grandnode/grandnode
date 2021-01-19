@@ -377,7 +377,7 @@ namespace Grand.Services.Installation
                                {
                                    new TaxCategory
                                        {
-                                           Name = "Books",
+                                           Name = "Lego",
                                            DisplayOrder = 1,
                                        },
                                    new TaxCategory
@@ -392,7 +392,7 @@ namespace Grand.Services.Installation
                                        },
                                    new TaxCategory
                                        {
-                                           Name = "Jewelry",
+                                           Name = "Balls",
                                            DisplayOrder = 15,
                                        },
                                    new TaxCategory
@@ -4742,7 +4742,7 @@ namespace Grand.Services.Installation
                                            IsPasswordProtected = false,
                                            DisplayOrder = 1,
                                            Title = "",
-                                           Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
+                                           Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true,
                                        },
@@ -4819,12 +4819,12 @@ namespace Grand.Services.Installation
 
             await _settingService.SaveSetting(new MenuItemSettings {
                 DisplayHomePageMenu = !installSampleData,
-                DisplayNewProductsMenu = !installSampleData,
+                DisplayNewProductsMenu = true,
                 DisplaySearchMenu = !installSampleData,
                 DisplayCustomerMenu = !installSampleData,
-                DisplayBlogMenu = !installSampleData,
+                DisplayBlogMenu = true,
                 DisplayForumsMenu = !installSampleData,
-                DisplayContactUsMenu = !installSampleData
+                DisplayContactUsMenu = true
             });
 
             await _settingService.SaveSetting(new PdfSettings {
@@ -4862,7 +4862,7 @@ namespace Grand.Services.Installation
                 AvatarPictureSize = 120,
                 BlogThumbPictureSize = 450,
                 ProductThumbPictureSize = 415,
-                ProductDetailsPictureSize = 550,
+                ProductDetailsPictureSize = 800,
                 ProductThumbPictureSizeOnProductDetailsPage = 100,
                 AssociatedProductPictureSize = 220,
                 CategoryThumbPictureSize = 450,
@@ -4930,6 +4930,7 @@ namespace Grand.Services.Installation
                         "config",
                         "eucookielawaccept",
                         "page-not-found",
+                        "home",
                         //system names are not allowed (anyway they will cause a runtime error),
                         "con",
                         "lpt1",
@@ -5043,6 +5044,7 @@ namespace Grand.Services.Installation
                 DefaultCategoryPageSizeOptions = "6, 3, 9",
                 DefaultManufacturerPageSize = 6,
                 LimitOfFeaturedProducts = 30,
+                SecondPictureOnCatalogPages = true
             });
 
             await _settingService.SaveSetting(new LocalizationSettings {
@@ -5633,14 +5635,14 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryComputers);
 
-            var categoryDesktops = new Category {
-                Name = "Desktops",
+            var categoryTablets = new Category {
+                Name = "Tablets",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Desktops"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_tablets.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Tablets"))).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5648,7 +5650,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryDesktops);
+            allCategories.Add(categoryTablets);
 
             var categoryNotebooks = new Category {
                 Name = "Notebooks",
@@ -5666,21 +5668,21 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryNotebooks);
 
-            var categorySoftware = new Category {
-                Name = "Software",
+            var categorySmartwatches = new Category {
+                Name = "Smartwatches",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Software"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_smartwatches.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Smartwatches"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 3,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categorySoftware);
+            allCategories.Add(categorySmartwatches);
 
             var categoryElectronics = new Category {
                 Name = "Electronics",
@@ -5692,21 +5694,21 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Electronics"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                ShowOnHomePage = true,
+                ShowOnHomePage = false,
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryElectronics);
 
-            var categoryCameraPhoto = new Category {
-                Name = "Camera & photo",
+            var categoryDisplay = new Category {
+                Name = "Display",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Camera, photo"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_display.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Display"))).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5714,29 +5716,30 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryCameraPhoto);
+            allCategories.Add(categoryDisplay);
 
-            var categoryCellPhones = new Category {
-                Name = "Cell phones",
+            var categorySmartphones = new Category {
+                Name = "Smartphones",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Cell phones"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_smartphones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Smartphones"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryCellPhones);
+            allCategories.Add(categorySmartphones);
 
             var categoryOthers = new Category {
                 Name = "Others",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
+                ShowOnHomePage = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Accessories"))).Id,
@@ -5749,14 +5752,14 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryOthers);
 
-            var categoryApparel = new Category {
-                Name = "Apparel",
+            var categorySport = new Category {
+                Name = "Sport",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 6,
+                PageSize = 9,
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "6, 3, 9",
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel"))).Id,
+                PageSizeOptions = "6, 3, 9, 12",
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_sport.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Sport"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5764,7 +5767,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryApparel);
+            allCategories.Add(categorySport);
 
             var categoryShoes = new Category {
                 Name = "Shoes",
@@ -5772,7 +5775,7 @@ namespace Grand.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                ParentCategoryId = categoryApparel.Id,
+                ParentCategoryId = categorySport.Id,
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Shoes"))).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
@@ -5783,38 +5786,38 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryShoes);
 
-            var categoryClothing = new Category {
-                Name = "Clothing",
+            var categoryApparel = new Category {
+                Name = "Apparel",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                ParentCategoryId = categoryApparel.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Clothing"))).Id,
+                ParentCategoryId = categorySport.Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_sport.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryClothing);
+            allCategories.Add(categoryApparel);
 
-            var categoryAccessories = new Category {
-                Name = "Accessories",
+            var categoryBalls = new Category {
+                Name = "Balls",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
+                ParentCategoryId = categorySport.Id,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                ParentCategoryId = categoryApparel.Id,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apparel Accessories"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_balls.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Balls"))).Id,
+                PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
-                PriceRanges = "-100;100-;",
                 Published = true,
-                DisplayOrder = 3,
+                DisplayOrder = 6,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryAccessories);
+            allCategories.Add(categoryBalls);
 
             var categoryDigitalDownloads = new Category {
                 Name = "Digital downloads",
@@ -5833,16 +5836,16 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryDigitalDownloads);
 
-            var categoryBooks = new Category {
-                Name = "Books",
+            var categoryLego = new Category {
+                Name = "Lego",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                MetaKeywords = "Books, Dictionary, Textbooks",
+                MetaKeywords = "Lego, Dictionary, Textbooks",
                 MetaDescription = "Books category description",
                 PageSize = 6,
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_lego.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Lego"))).Id,
                 PriceRanges = "-25;25-50;50-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5853,24 +5856,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryBooks);
-
-            var categoryJewelry = new Category {
-                Name = "Jewelry",
-                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 6,
-                ParentCategoryId = "",
-                AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "6, 3, 9",
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Jewelry"))).Id,
-                PriceRanges = "0-500;500-700;700-3000;",
-                IncludeInTopMenu = true,
-                Published = true,
-                DisplayOrder = 6,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allCategories.Add(categoryJewelry);
+            allCategories.Add(categoryLego);
 
             var categoryGiftCards = new Category {
                 Name = "Gift Cards",
@@ -5943,52 +5929,52 @@ namespace Grand.Services.Installation
                 throw new Exception("Manufacturer template cannot be loaded");
 
             var allManufacturers = new List<Manufacturer>();
-            var manufacturerAsus = new Manufacturer {
-                Name = "Apple",
+            var manufacturerXiaomi = new Manufacturer {
+                Name = "Xiaomi",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apple"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_xiaomi.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Xiaomi"))).Id,
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _manufacturerRepository.InsertAsync(manufacturerAsus);
-            allManufacturers.Add(manufacturerAsus);
+            await _manufacturerRepository.InsertAsync(manufacturerXiaomi);
+            allManufacturers.Add(manufacturerXiaomi);
 
 
-            var manufacturerHp = new Manufacturer {
-                Name = "HP",
+            var manufacturerDell = new Manufacturer {
+                Name = "Dell",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Hp"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_dell.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Dell"))).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _manufacturerRepository.InsertAsync(manufacturerHp);
-            allManufacturers.Add(manufacturerHp);
+            await _manufacturerRepository.InsertAsync(manufacturerDell);
+            allManufacturers.Add(manufacturerDell);
 
 
-            var manufacturerNike = new Manufacturer {
-                Name = "Nike",
+            var manufacturerAdidas = new Manufacturer {
+                Name = "Adidas",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Nike"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Adidas"))).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _manufacturerRepository.InsertAsync(manufacturerNike);
-            allManufacturers.Add(manufacturerNike);
+            await _manufacturerRepository.InsertAsync(manufacturerAdidas);
+            allManufacturers.Add(manufacturerAdidas);
 
             //search engine names
             foreach (var manufacturer in allManufacturers)
@@ -6041,7 +6027,7 @@ namespace Grand.Services.Installation
             //products
             var allProducts = new List<Product>();
 
-            #region Desktops
+            #region Computers
 
 
             var productBuildComputer = new Product {
@@ -6049,7 +6035,7 @@ namespace Grand.Services.Installation
                 VisibleIndividually = true,
                 Name = "Build your own computer",
                 ShortDescription = "Build it",
-                FullDescription = "<p>Fight back against cluttered workspaces with the stylish IBM zBC12 All-in-One desktop PC, featuring powerful computing resources and a stunning 20.1-inch widescreen display with stunning XBRITE-HiColor LCD technology. The black IBM zBC12 has a built-in microphone and MOTION EYE camera with face-tracking technology that allows for easy communication with friends and family. And it has a built-in DVD burner and Sony's Movie Store software so you can create a digital entertainment library for personal viewing at your convenience. Easy to setup and even easier to use, this JS-series All-in-One includes an elegantly designed keyboard and a USB mouse.</p>",
+                FullDescription = "<p>Fight back against cluttered workspaces with the stylish DELL Inspiron desktop PC, featuring powerful computing resources and a stunning 20.1-inch widescreen display with stunning XBRITE-HiColor LCD technology. The black IBM zBC12 has a built-in microphone and MOTION EYE camera with face-tracking technology that allows for easy communication with friends and family. And it has a built-in DVD burner and Sony's Movie Store software so you can create a digital entertainment library for personal viewing at your convenience. Easy to setup and even easier to use, this JS-series All-in-One includes an elegantly designed keyboard and a USB mouse.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1200M,
@@ -6208,15 +6194,15 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
             allProducts.Add(productBuildComputer);
 
-            var Picture1 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
-            var Picture2 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
+            var Picture1 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_desktop_1.jpg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
+            var Picture2 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_desktop_2.jpg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
 
             await _productRepository.InsertAsync(productBuildComputer);
 
@@ -6234,15 +6220,15 @@ namespace Grand.Services.Installation
             productBuildComputer.ProductPictures.Add(productpicture2);
             await _productRepository.UpdateAsync(productBuildComputer);
 
-            var productDigitalStorm = new Product {
+            var productSonyPS5Pad = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Digital Storm VANQUISH 3 Custom Performance PC",
-                ShortDescription = "Digital Storm Vanquish 3 Desktop PC",
-                FullDescription = "<p>Blow the doors off today?s most demanding games with maximum detail, speed, and power for an immersive gaming experience without breaking the bank.</p><p>Stay ahead of the competition, VANQUISH 3 is fully equipped to easily handle future upgrades, keeping your system on the cutting edge for years to come.</p><p>Each system is put through an extensive stress test, ensuring you experience zero bottlenecks and get the maximum performance from your hardware.</p>",
+                Name = "Playstation 5 Gamepad",
+                ShortDescription = "The DualSense wireless controller for PS5 offers realistic touch effects2, adaptive 'Trigger' effects and a built-in microphone - all integrated into an iconic design.",
+                FullDescription = "<p>The DualSense wireless controller for PS5 offers realistic touch effects2, adaptive 'Trigger' effects and a built-in microphone - all integrated into an iconic design.</p><p>Feel a physical reaction to your in-game actions thanks to dual actuators that replace traditional vibration motors. Such dynamic vibrations in your hands can simulate the tactile sensations of many things, from the world around you to the recoil of various weapons.</p><p>Enjoy intuitive motion controls for selected games thanks to the built-in accelerometer and gyroscope.</p><p>Chat with friends online using the built-in microphone or by plugging a headset into the 3.5mm jack. With the dedicated MUTE button you can disable voice recording.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 1259M,
+                Price = 59M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -6265,27 +6251,33 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                         DisplayOrder = 1,
                     }
                 }
-            };
-            allProducts.Add(productDigitalStorm);
-            productDigitalStorm.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDigitalStorm.Name))).Id,
-                DisplayOrder = 1,
-            });
-            await _productRepository.InsertAsync(productDigitalStorm);
 
-            var productLenovoIdeaCentre = new Product {
+            };
+
+            allProducts.Add(productSonyPS5Pad);
+            productSonyPS5Pad.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_pad_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyPS5Pad.Name))).Id,
+                DisplayOrder = 1,
+            });
+            productSonyPS5Pad.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_pad_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyPS5Pad.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productSonyPS5Pad);
+
+            var productLenovoIdeaPadDual = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Lenovo IdeaCentre 600 All-in-One PC",
-                ShortDescription = "",
-                FullDescription = "<p>The A600 features a 21.5in screen, DVD or optional Blu-Ray drive, support for the full beans 1920 x 1080 HD, Dolby Home Cinema certification and an optional hybrid analogue/digital TV tuner.</p><p>Connectivity is handled by 802.11a/b/g - 802.11n is optional - and an ethernet port. You also get four USB ports, a Firewire slot, a six-in-one card reader and a 1.3- or two-megapixel webcam.</p>",
+                Name = "Lenovo IdeaPad Dual 3i",
+                ShortDescription = "Get dependable performance for work and play from the Dual 3i’s Intel® Pentium® processor, which gives you the ability to effortlessly multitask with multi-screen capabilities.",
+                FullDescription = "<p>Get dependable performance for work and play from the Duet 3i’s Intel® Pentium® processor, which gives you the ability to effortlessly multitask with multi-screen capabilities, communicate easily with friends and family, and take all your favorite entertainment to go.</p><p>Work more freely on the elegant IdeaPad Duet 3i than on a regular laptop. The detachable Bluetooth keyboard allows you to easily switch between laptop and tablet modes, and the stand makes it easy to position your computer on any surface. The laptop runs on the power of an Intel® Pentium® processor, and the HD touchscreen, Dolby Audio ™ sound and optional LTE connectivity will keep you entertained anywhere.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 500M,
+                Price = 99M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -6308,28 +6300,32 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Tablets").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productLenovoIdeaCentre);
-            productLenovoIdeaCentre.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaCentre.Name))).Id,
+            allProducts.Add(productLenovoIdeaPadDual);
+            productLenovoIdeaPadDual.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_ideapad_dual_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaPadDual.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productLenovoIdeaCentre);
+            productLenovoIdeaPadDual.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_ideapad_dual_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaPadDual.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productLenovoIdeaPadDual);
 
             #endregion
 
             #region Notebooks
 
-            var productAppleMacBookPro = new Product {
+            var productMiNotebook = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Apple MacBook Pro 13-inch",
-                ShortDescription = "A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors. Together, these features take the notebook to a new level of performance. And they will do the same for you in everything you create.",
-                FullDescription = "<p>With fifth-generation Intel Core processors, the latest graphics, and faster flash storage, the incredibly advanced MacBook Pro with Retina display moves even further ahead in performance and battery life.* *Compared with the previous generation.</p><p>Retina display with 2560-by-1600 resolution</p><p>Fifth-generation dual-core Intel Core i5 processor</p><p>Intel Iris Graphics</p><p>Up to 9 hours of battery life1</p><p>Faster flash storage2</p><p>802.11ac Wi-Fi</p><p>Two Thunderbolt 2 ports for connecting high-performance devices and transferring data at lightning speed</p><p>Two USB 3 ports (compatible with USB 2 devices) and HDMI</p><p>FaceTime HD camera</p><p>Pages, Numbers, Keynote, iPhoto, iMovie, GarageBand included</p><p>OS X, the world's most advanced desktop operating system</p>",
+                Name = "Mi Notebook 14",
+                ShortDescription = "Designed with utmost patience and craftsmanship, the Mi NoteBook 14 is so beautiful that you can't help but notice it. Weighing just 1.5kg, the sleek unibody metal chassis and an anodized sandblasted coating makes your device sturdy and gives it a svelte look.",
+                FullDescription = "<p>Designed with utmost patience and craftsmanship, the Mi NoteBook 14 is so beautiful that you can't help but notice it. Weighing just 1.5kg, the sleek unibody metal chassis and an anodized sandblasted coating makes your device sturdy and gives it a slim look.</p><p>With the power-efficient NVIDIA® GeForce® MX250 graphics, now enjoy incredible HD photo and video editing, faster and smoother gaming. The powerful graphics engine and next-gen technologies gives you performance you desire.</p><p>The Mi Notebook 14 offers great clock speeds at 2666MHz, and thus makes you say goodbye to slow and insufficient memory. This helps you multi-task with your favorite editing/productivity tools and casual games.</p><p>Comes with a wider air intake area of 2530mm² and a large diameter fan which brings excellent cooling to the whole machine. This keeps your machine cool so that you can hold onto yours. The maximum sound of the fan is a mere 37 dB even when the system is loaded to its max.</p><p>Based on the scissor mechanism, the keys have ABS texture and a travel distance of 1.3mm which makes typing a lot more comfortable and low-profile on this device. The in-built dust protection layer is also an excellent addition.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1800M,
@@ -6366,7 +6362,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductManufacturer
                     {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Apple").Id,
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
                         DisplayOrder = 2,
                     }
                 },
@@ -6398,24 +6394,24 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productAppleMacBookPro);
-            productAppleMacBookPro.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name))).Id,
+            allProducts.Add(productMiNotebook);
+            productMiNotebook.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_notebook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiNotebook.Name))).Id,
                 DisplayOrder = 1,
             });
-            productAppleMacBookPro.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name))).Id,
+            productMiNotebook.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_notebook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiNotebook.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productAppleMacBookPro);
+            await _productRepository.InsertAsync(productMiNotebook);
 
 
-            var productAsusN551JK = new Product {
+            var productLenovoLegionY740 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Asus N551JK-XO076H Laptop",
-                ShortDescription = "Laptop Asus N551JK Intel Core i7-4710HQ 2.5 GHz, RAM 16GB, HDD 1TB, Video NVidia GTX 850M 4GB, BluRay, 15.6, Full HD, Win 8.1",
-                FullDescription = "<p>The ASUS N550JX combines cutting-edge audio and visual technology to deliver an unsurpassed multimedia experience. A full HD wide-view IPS panel is tailor-made for watching movies and the intuitive touchscreen makes for easy, seamless navigation. ASUS has paired the N550JX?s impressive display with SonicMaster Premium, co-developed with Bang & Olufsen ICEpower® audio experts, for true surround sound. A quad-speaker array and external subwoofer combine for distinct vocals and a low bass that you can feel.</p>",
+                Name = "Lenovo Legion Y740",
+                ShortDescription = "The 17.3 ”Y740 Legion is a gaming masterpiece. You will be immersed in the action thanks to best-in-class Corsair iCUE lighting and Dolby realistic image and surround sound technologies.",
+                FullDescription = "<p>The 17.3 ”Y740 Legion is a gaming masterpiece. You will be immersed in the action thanks to best-in-class Corsair iCUE lighting and Dolby realistic image and surround sound technologies. Check out what the Lenovo Legion Y740 looks like in reality.Grab the photo below and drag it left or right to rotate the product, or use the navigation buttons.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1500M,
@@ -6481,23 +6477,27 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productAsusN551JK);
-            productAsusN551JK.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusN551JK.Name))).Id,
+            allProducts.Add(productLenovoLegionY740);
+            productLenovoLegionY740.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_legion_y740_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoLegionY740.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productAsusN551JK);
+            productLenovoLegionY740.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_legion_y740_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoLegionY740.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLenovoLegionY740);
 
 
-            var productSamsungSeries = new Product {
+            var productPs5Camera = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Samsung Series 9 NP900X4C Premium Ultrabook",
-                ShortDescription = "Samsung Series 9 NP900X4C-A06US 15-Inch Ultrabook (1.70 GHz Intel Core i5-3317U Processor, 8GB DDR3, 128GB SSD, Windows 8) Ash Black",
-                FullDescription = "<p>Designed with mobility in mind, Samsung's durable, ultra premium, lightweight Series 9 laptop (model NP900X4C-A01US) offers mobile professionals and power users a sophisticated laptop equally suited for work and entertainment. Featuring a minimalist look that is both simple and sophisticated, its polished aluminum uni-body design offers an iconic look and feel that pushes the envelope with an edge just 0.58 inches thin. This Series 9 laptop also includes a brilliant 15-inch SuperBright Plus display with HD+ technology, 128 GB Solid State Drive (SSD), 8 GB of system memory, and up to 10 hours of battery life.</p>",
+                Name = "Playstation 5 Camera",
+                ShortDescription = "Use the new Sony HD Camera for PlayStation 5 to show other players your reactions during the game.",
+                FullDescription = "<p>Use the new Sony HD Camera for PlayStation 5 to show other players your reactions during the game. Equipped with two lenses, the camera can record images in 1080p quality and works seamlessly with the PS5 background removal tools. They put you in the spotlight of viewers. In addition, the camera has been equipped with a stand that makes it easy to mount it above or below the TV.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 1590M,
+                Price = 150M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -6520,7 +6520,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                         DisplayOrder = 1,
                     }
                 },
@@ -6560,19 +6560,23 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productSamsungSeries);
-            productSamsungSeries.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungSeries.Name))).Id,
+            allProducts.Add(productPs5Camera);
+            productPs5Camera.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps5_camera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs5Camera.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productSamsungSeries);
+            productPs5Camera.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps5_camera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs5Camera.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productPs5Camera);
 
-            var productHpSpectre = new Product {
+            var productAcerNitro = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HP Spectre XT Pro UltraBook",
-                ShortDescription = "HP Spectre XT Pro UltraBook / Intel Core i5-2467M / 13.3 / 4GB / 128GB / Windows 7 Professional / Laptop",
-                FullDescription = "<p>Introducing HP ENVY Spectre XT, the Ultrabook designed for those who want style without sacrificing substance. It's sleek. It's thin. And with Intel. Corer i5 processor and premium materials, it's designed to go anywhere from the bistro to the boardroom, it's unlike anything you've ever seen from HP.</p>",
+                Name = "Acer Nitro 5",
+                ShortDescription = "Experience a new dimension of gameplay with the Acer Nitro 5 laptop. Equipped with a powerful Intel Core i5 processor and GTX1050 graphics card, it is able to cope with even the most demanding tasks.",
+                FullDescription = "<p>Experience a new dimension of gameplay with the Acer Nitro 5 laptop. Equipped with a powerful Intel Core i5 processor and GTX1050 graphics card, it is able to cope with even the most demanding tasks. Additionally, the matrix in IPS technology will ensure high quality of the displayed image, good color reproduction and wide viewing angles. The Acer Nitro 5 laptop is the perfect choice for both gaming and work. Dominate the virtual battlefield with the GeForce GTX 1050 graphics card, featuring the groundbreaking NVIDIA Pascal architecture. Excellent performance, innovative gaming technologies and support for DirectX 12 libraries will allow you to immerse yourself in phenomenal 4K resolution, enriched with HDR mode, or play in an amazingly realistic VR scenery. Every time without cuts or delays, every time on high details. Play the latest, most challenging games the way they deserve.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1350M,
@@ -6600,14 +6604,6 @@ namespace Grand.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                         DisplayOrder = 1,
-                    }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "HP").Id,
-                        DisplayOrder = 3,
                     }
                 },
                 ProductSpecificationAttributes =
@@ -6646,24 +6642,24 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productHpSpectre);
-            productHpSpectre.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name))).Id,
+            allProducts.Add(productAcerNitro);
+            productAcerNitro.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_nitro_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerNitro.Name))).Id,
                 DisplayOrder = 1,
             });
-            productHpSpectre.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name))).Id,
+            productAcerNitro.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_nitro_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerNitro.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productHpSpectre);
+            await _productRepository.InsertAsync(productAcerNitro);
 
 
-            var productHpEnvy = new Product {
+            var productDellG5 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HP Envy 6-1180ca 15.6-Inch Sleekbook",
-                ShortDescription = "HP ENVY 6-1202ea Ultrabook Beats Audio, 3rd generation Intel® CoreTM i7-3517U processor, 8GB RAM, 500GB HDD, Microsoft Windows 8, AMD Radeon HD 8750M (2 GB DDR3 dedicated)",
-                FullDescription = "The UltrabookTM that's up for anything. Thin and light, the HP ENVY is the large screen UltrabookTM with Beats AudioTM. With a soft-touch base that makes it easy to grab and go, it's a laptop that's up for anything.<br><br><b>Features</b><br><br>- Windows 8 or other operating systems available<br><br><b>Top performance. Stylish design. Take notice.</b><br><br>- At just 19.8 mm (0.78 in) thin, the HP ENVY UltrabookTM is slim and light enough to take anywhere. It's the laptop that gets you noticed with the power to get it done.<br>- With an eye-catching metal design, it's a laptop that you want to carry with you. The soft-touch, slip-resistant base gives you the confidence to carry it with ease.<br><br><b>More entertaining. More gaming. More fun.</b><br><br>- Own the UltrabookTM with Beats AudioTM, dual speakers, a subwoofer, and an awesome display. Your music, movies and photo slideshows will always look and sound their best.<br>- Tons of video memory let you experience incredible gaming and multimedia without slowing down. Create and edit videos in a flash. And enjoy more of what you love to the fullest.<br>- The HP ENVY UltrabookTM is loaded with the ports you'd expect on a world-class laptop, but on a Sleekbook instead. Like HDMI, USB, RJ-45, and a headphone jack. You get all the right connections without compromising size.<br><br><b>Only from HP.</b><br><br>- Life heats up. That's why there's HP CoolSense technology, which automatically adjusts your notebook's temperature based on usage and conditions. It stays cool. You stay comfortable.<br>- With HP ProtectSmart, your notebook's data stays safe from accidental bumps and bruises. It senses motion and plans ahead, stopping your hard drive and protecting your entire digital life.<br>- Keep playing even in dimly lit rooms or on red eye flights. The optional backlit keyboard[1] is full-size so you don't compromise comfort. Backlit keyboard. Another bright idea.<br><br>",
+                Name = "Dell Inspiron G5",
+                ShortDescription = "The Dell Inspiron G5 is a 15-inch gaming notebook with fantastic graphics capabilities, thanks to the NVIDIA® GeForce® GTX 1060 Max-Q graphics card, the latest 8th generation Intel® Core ™ i7 hexa-core processor and efficient DDR4 2666MHz RAM memory. The Inspiron G5 is designed specifically with the specific, demanding needs of gaming enthusiasts in mind.",
+                FullDescription = "The Dell Inspiron G5 is a 15-inch gaming notebook with fantastic graphics capabilities, thanks to the NVIDIA® GeForce® GTX 1060 Max-Q graphics card, the latest 8th generation Intel® Core ™ i7 hexa-core processor and efficient DDR4 2666MHz RAM memory. The Inspiron G5 is designed specifically with the specific, demanding needs of gaming enthusiasts in mind.</p><p>The enormous performance, speed and dynamics of the eighth generation Intel Core i7 Coffee Lake processor is a guarantee of the highest performance in gaming and smooth operation with advanced applications. When more power is needed, Turbo Boost 2.0 technology intelligently speeds up the clock speed, unleashing the maximum potential of each CPU core. In addition, the unit flawlessly supports the highest definition video as well as spherical videos, while ensuring the security of transactions concluded on the network.</p><p>Play the latest, most demanding games with GeForce GTX 1060 Max-Q. Pull the sliders to the maximum and admire virtual worlds in 4K quality, enriched with HDR mode and DirectX 12 functions. All this with excellent smoothness of the image, without lag and clipping, thanks to the breakthrough architecture of Pascal GPU, packed with technologies for players.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1460M,
@@ -6697,7 +6693,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductManufacturer
                     {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "HP").Id,
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Dell").Id,
                         DisplayOrder = 4,
                     }
                 },
@@ -6737,20 +6733,24 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productHpEnvy);
-            productHpEnvy.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpEnvy.Name))).Id,
+            allProducts.Add(productDellG5);
+            productDellG5.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_g5_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDellG5.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productHpEnvy);
+            productDellG5.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_g5_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDellG5.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDellG5);
 
 
-            var productLenovoThinkpad = new Product {
+            var productDellXPS = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Lenovo Thinkpad X1 Carbon Laptop",
-                ShortDescription = "Lenovo Thinkpad X1 Carbon Touch Intel Core i7 14 Ultrabook",
-                FullDescription = "<p>The X1 Carbon brings a new level of quality to the ThinkPad legacy of high standards and innovation. It starts with the durable, carbon fiber-reinforced roll cage, making for the best Ultrabook construction available, and adds a host of other new features on top of the old favorites. Because for 20 years, we haven't stopped innovating. And you shouldn't stop benefiting from that.</p>",
+                Name = "Dell XPS",
+                ShortDescription = "Dell laptop with a screen size of 13.4 inches and a resolution of 1920 x 1200 pixels. It is equipped with an Intel Core i7-1065G7 processor with a clock frequency of 1.3 - 3.9 GHz, DDR4 RAM memory with a size of 16 GB. 1000 GB SSD hard drive. Intel HD Graphics.",
+                FullDescription = "<p>Dell laptop with a screen size of 13.4 inches and a resolution of 1920 x 1200 pixels. It is equipped with an Intel Core i7-1065G7 processor with a clock frequency of 1.3 - 3.9 GHz, DDR4 RAM memory with a size of 16 GB. 1000 GB SSD hard drive. Intel HD Graphics. Graphics card size shared with RAM, integrated. The installed operating system is Windows 10 Home.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1360M,
@@ -6780,6 +6780,14 @@ namespace Grand.Services.Installation
                         DisplayOrder = 1,
                     }
                 },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Dell").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 ProductSpecificationAttributes =
                 {
                    new ProductSpecificationAttribute
@@ -6800,24 +6808,28 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productLenovoThinkpad);
-            productLenovoThinkpad.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoThinkpad.Name))).Id,
+            allProducts.Add(productDellXPS);
+            productDellXPS.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_xps_1.jpg"), "image/jpeg", pictureService.GetPictureSeName(productDellXPS.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productLenovoThinkpad);
+            productDellXPS.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_xps_2.jpg"), "image/jpeg", pictureService.GetPictureSeName(productDellXPS.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productDellXPS);
 
             #endregion
 
-            #region Software
+            #region Accessories
 
 
-            var productAdobePhotoshop = new Product {
+            var productLenovoYogaDuet = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Adobe Photoshop CS4",
-                ShortDescription = "Easily find and view all your photos",
-                FullDescription = "<p>Adobe Photoshop CS4 software combines power and simplicity so you can make ordinary photos extraordinary; tell engaging stories in beautiful, personalized creations for print and web; and easily find and view all your photos. New Photoshop.com membership* works with Photoshop CS4 so you can protect your photos with automatic online backup and 2 GB of storage; view your photos anywhere you are; and share your photos in fun, interactive ways with invitation-only Online Albums.</p>",
+                Name = "Lenovo Yoga Duet",
+                ShortDescription = "The adjustable stand allows for more convenient and effective work, sketching or taking notes in laptop mode or at a lower angle. The detachable Bluetooth® keyboard allows you to write and look at the screen with even more freedom.",
+                FullDescription = "<p>Weighing just 1.16 kg, the Yoga Duet 7i is light and versatile enough to be used anywhere. The adjustable stand allows for more convenient and effective work, sketching or taking notes in laptop mode or at a lower angle. The detachable Bluetooth® keyboard allows you to write and look at the screen with even more freedom.</p><p>The Yoga Duet 7i is an advanced mobile device that is not only intuitive to use and easily personalized, but also uncompromisingly efficient. How is this possible? Powered by the 10th Gen Intel® Core ™ processor and artificial intelligence features that dynamically adjust power to optimize battery life. So it works for up to 10.8 hours on a single charge. It also has USB-C ports for faster charging.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 75M,
@@ -6843,25 +6855,29 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Tablets").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productAdobePhotoshop);
-            productAdobePhotoshop.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name))).Id,
+            allProducts.Add(productLenovoYogaDuet);
+            productLenovoYogaDuet.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_yoga_duet_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoYogaDuet.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productAdobePhotoshop);
+            productLenovoYogaDuet.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_yoga_duet_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoYogaDuet.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLenovoYogaDuet);
 
 
-            var productWindows8Pro = new Product {
+            var productLenovoSmartTab = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Windows 8 Pro",
-                ShortDescription = "Windows 8 is a Microsoft operating system that was released in 2012 as part of the company's Windows NT OS family. ",
-                FullDescription = "<p>Windows 8 Pro is comparable to Windows 7 Professional and Ultimate and is targeted towards enthusiasts and business users; it includes all the features of Windows 8. Additional features include the ability to receive Remote Desktop connections, the ability to participate in a Windows Server domain, Encrypting File System, Hyper-V, and Virtual Hard Disk Booting, Group Policy as well as BitLocker and BitLocker To Go. Windows Media Center functionality is available only for Windows 8 Pro as a separate software package.</p>",
+                Name = "Lenovo Smart Tab",
+                ShortDescription = "The most versatile entertainment tablet now can do even more.",
+                FullDescription = "<p>The most versatile entertainment tablet now can do even more. Lenovo Yoga Smart Tab with Google Assistant is a development of the groundbreaking Yoga Tab 3 with a stand for working in various modes. This tablet offers high-end entertainment features such as an IPS display with FHD resolution and two JBL® stereo speakers. Additionally, it also acts as a digital home control center. The built-in LTE modem ensures permanent access to the Internet.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 65M,
@@ -6887,28 +6903,32 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Tablets").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productWindows8Pro);
-            productWindows8Pro.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWindows8Pro.Name))).Id,
+            allProducts.Add(productLenovoSmartTab);
+            productLenovoSmartTab.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_smart_tab_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoSmartTab.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productWindows8Pro);
+            productLenovoSmartTab.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_smart_tab_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoSmartTab.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLenovoSmartTab);
 
 
-            var productSoundForge = new Product {
+            var productAsusMixedReality = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Sound Forge Pro 11",
-                ShortDescription = "Advanced audio waveform editor.",
-                FullDescription = "<p>Sound Forge? Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
+                Name = "Asus Mixed Reality",
+                ShortDescription = "Explore exciting new virtual worlds with the ASUS Windows Mixed Reality Headset!",
+                FullDescription = "<p>Explore exciting new virtual worlds with the ASUS Windows Mixed Reality Headset! It features a unique and beautiful 3D-pattern aesthetic and a comfy weight-balanced design with premium antibacterial cushioned materials, so it’s not only stylish but also supremely cool and comfortable for extended periods of exploring. Unlike other headsets, the ASUS Windows Mixed Reality Headset doesn’t need any external sensors, making initial set up super easy — you’ll be ready to play in 10 minutes or less*! It’s the revolutionary, easy-to-use and affordable way to explore your imagination.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 54.99M,
+                Price = 399M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -6931,144 +6951,33 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Display").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productSoundForge);
-            productSoundForge.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoundForge.Name))).Id,
+            allProducts.Add(productAsusMixedReality);
+            productAsusMixedReality.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asus_mixed_reality_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusMixedReality.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productSoundForge);
+            productAsusMixedReality.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asus_mixed_reality_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusMixedReality.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productAsusMixedReality);
 
 
             #endregion
 
-            #region Camera, Photo
-
-
-            //this one is a grouped product with two associated ones
-            var productNikonD5500DSLR = new Product {
-                ProductType = ProductType.GroupedProduct,
-                VisibleIndividually = true,
-                Name = "Nikon D5500 DSLR",
-                ShortDescription = "Slim, lightweight Nikon D5500 packs a vari-angle touchscreen",
-                FullDescription = "Nikon has announced its latest DSLR, the D5500. A lightweight, compact DX-format camera with a 24.2MP sensor, it?s the first of its type to offer a vari-angle touchscreen. The D5500 replaces the D5300 in Nikon?s range, and while it offers much the same features the company says it?s a much slimmer and lighter prospect. There?s a deep grip for easier handling and built-in Wi-Fi that lets you transfer and share shots via your phone or tablet.",
-                ProductTemplateId = productTemplateGrouped.Id,
-                AllowCustomerReviews = true,
-                Published = true,
-                Price = 670M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productNikonD5500DSLR);
-            productNikonD5500DSLR.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name))).Id,
-                DisplayOrder = 1,
-            });
-            productNikonD5500DSLR.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name))).Id,
-                DisplayOrder = 2,
-            });
-            await _productRepository.InsertAsync(productNikonD5500DSLR);
-            var productNikonD5500DSLR_associated_1 = new Product {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = false, //hide this products
-                ParentGroupedProductId = productNikonD5500DSLR.Id,
-                Name = "Nikon D5500 DSLR - Black",
-                ProductTemplateId = productTemplateSimple.Id,
-                AllowCustomerReviews = true,
-                Published = true,
-                Price = 670M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productNikonD5500DSLR_associated_1);
-            productNikonD5500DSLR_associated_1.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black"))).Id,
-                DisplayOrder = 1,
-            });
-            await _productRepository.InsertAsync(productNikonD5500DSLR_associated_1);
-            var productNikonD5500DSLR_associated_2 = new Product {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = false,
-                ParentGroupedProductId = productNikonD5500DSLR.Id,
-                Name = "Nikon D5500 DSLR - Red",
-                ProductTemplateId = productTemplateSimple.Id,
-                AllowCustomerReviews = true,
-                Published = true,
-                Price = 630M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productNikonD5500DSLR_associated_2);
-            productNikonD5500DSLR_associated_2.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver"))).Id,
-                DisplayOrder = 1,
-            });
-            await _productRepository.InsertAsync(productNikonD5500DSLR_associated_2);
-
-            var productLeica = new Product {
+            #region Display
+            
+            var productAcerProjector = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Leica T Mirrorless Digital Camera",
-                ShortDescription = "Leica T (Typ 701) Silver",
-                FullDescription = "<p>The new Leica T offers a minimalist design that's crafted from a single block of aluminum.  Made in Germany and assembled by hand, this 16.3 effective mega pixel camera is easy to use.  With a massive 3.7 TFT LCD intuitive touch screen control, the user is able to configure and save their own menu system.  The Leica T has outstanding image quality and also has 16GB of built in memory.  This is Leica's first system camera to use Wi-Fi.  Add the T-App to your portable iOS device and be able to transfer and share your images (free download from the Apple App Store)</p>",
+                Name = "Acer Projector C250",
+                ShortDescription = "Auto-Portrait Technology Now the projector image can rotate automatically, just like on your phone!",
+                FullDescription = "<p>Auto-Portrait Technology Now the projector image can rotate automatically, just like on your phone! Equipped with Auto-Portrait technology, the C250i is the first model to be able to rotate the projected image in real time. There is no need to customize settings or content. Simply place the image vertically and the Acer C250i projector will remove intrusive black stripes by itself when you activate this mode. No stand, projecting from any angle The projector can be easily taken anywhere. The exclusive design does not take up much space and allows a 360-degree projection from any angle without using the stand. FHD Resolutions A beautiful 100-inch 1080p Full HD picture looks almost as realistic as the view from the window.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 530M,
@@ -7094,25 +7003,29 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Display").Id,
                         DisplayOrder = 3,
                     }
                 }
             };
-            allProducts.Add(productLeica);
-            productLeica.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLeica.Name))).Id,
+            allProducts.Add(productAcerProjector);
+            productAcerProjector.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_projector_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerProjector.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productLeica);
+            productAcerProjector.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_projector_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerProjector.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productAcerProjector);
 
 
-            var productAppleICam = new Product {
+            var productAcerMonitor = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Apple iCam",
-                ShortDescription = "Photography becomes smart",
-                FullDescription = "<p>A few months ago we featured the amazing WVIL camera, by many considered the future of digital photography. This is another very good looking concept, iCam is the vision of Italian designer Antonio DeRosa, the idea is to have a device that attaches to the iPhone 5, which then allows the user to have a camera with interchangeable lenses. The device would also feature a front-touch screen and a projector. Would be great if apple picked up on this and made it reality.</p>",
+                Name = "Acer Nitro XZ2",
+                ShortDescription = "Eliminate choppy gameplay and distracting visual tear with AMD Radeon FreeSync™1. Savor the smooth, responsive visuals as the monitor’s refresh rate is synched to your computer’s framerate.",
+                FullDescription = "<p>Eliminate choppy gameplay and distracting visual tear with AMD Radeon FreeSync™1. Savor the smooth, responsive visuals as the monitor’s refresh rate is synched to your computer’s framerate.</p><p>Enjoy seamless, lag-free gaming with a blazingly fast 165Hz2 refresh rate. To keep pace with the action, the rapid 4ms response time provides clearer, more immersive images.</p><p>Take your gameplay to the next level with improved color accuracy and contrast guaranteed by this VESA Certified DisplayHDR™ 400 monitor. This industry standard specifies HDR quality, including luminance, color gamut, bit depth, and rise time.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 1300M,
@@ -7138,40 +7051,36 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Display").Id,
                         DisplayOrder = 2,
-                    }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Apple").Id,
-                        DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productAppleICam);
-            productAppleICam.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleICam.Name))).Id,
+            allProducts.Add(productAcerMonitor);
+            productAcerMonitor.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_monitor_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerMonitor.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productAppleICam);
+            productAcerMonitor.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_monitor_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerMonitor.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productAcerMonitor);
 
             #endregion
 
-            #region Cell Phone
+            #region Smartphone
 
-            var productHtcOne = new Product {
+            var productRedmiK30 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HTC One M8 Android L 5.0 Lollipop",
-                ShortDescription = "HTC - One (M8) 4G LTE Cell Phone with 32GB Memory - Gunmetal (Sprint)",
-                FullDescription = "<p><b>HTC One (M8) Cell Phone for Sprint:</b> With its brushed-metal design and wrap-around unibody frame, the HTC One (M8) is designed to fit beautifully in your hand. It's fun to use with amped up sound and a large Full HD touch screen, and intuitive gesture controls make it seem like your phone almost knows what you need before you do. <br><br>Sprint Easy Pay option available in store.</p>",
+                Name = "Redmi K30 Ultra",
+                ShortDescription = "Redmi K30 Ultra will be equipped with top-class components. The smartphone is to debut on the market with a screen made in IPS LCD technology with a maximum refresh rate of 144 Hz, which guarantees smooth scrolling and perfect sharpness in movies and video games. It is worth noting that until now, displays of this type have been reserved exclusively for high-end gaming smartphones. The heart of the latest Redmi will be the MediaTek Dimensity 1000+ processor.",
+                FullDescription = "<p>Redmi K30 Ultra equipped with top-class components. The smartphone debut on the market with a screen made in IPS LCD technology with a maximum refresh rate of 144 Hz, which guarantees smooth scrolling and perfect sharpness in movies and video games. It is worth noting that until now, displays of this type have been reserved exclusively for high-end gaming smartphones. The heart of the latest Redmi will be the MediaTek Dimensity 1000+ processor. It is the manufacturer's flagship chip offering eight cores, support for 5G connectivity and support for up to 16 GB RAM.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 Flag = "New",
                 AllowCustomerReviews = true,
-                Price = 245M,
+                Price = 199M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -7192,32 +7101,40 @@ namespace Grand.Services.Installation
                 MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 ProductCategories =
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartphones").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productHtcOne);
-            productHtcOne.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOne.Name))).Id,
+            allProducts.Add(productRedmiK30);
+            productRedmiK30.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_K30.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiK30.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productHtcOne);
+            await _productRepository.InsertAsync(productRedmiK30);
 
 
-            var productHtcOneMini = new Product {
+            var productRedmiNote9 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HTC One Mini Blue",
-                ShortDescription = "HTC One and HTC One Mini now available in bright blue hue",
-                FullDescription = "<p>HTC One mini smartphone with 4.30-inch 720x1280 display powered by 1.4GHz processor alongside 1GB RAM and 4-Ultrapixel rear camera.</p>",
+                Name = "Redmi Note 9",
+                ShortDescription = "Redmi Note 9 is equipped with a high-performance octa-core processor with a maximum clock frequency of 2.0 GHz. The maximum GPU frequency of 1.0GHz ensures better performance and thus offers a smooth gaming experience.",
+                FullDescription = "<p>Redmi Note 9 is equipped with a high-performance octa-core processor with a maximum clock frequency of 2.0 GHz. The maximum GPU frequency of 1.0GHz ensures better performance and thus offers a smooth gaming experience.</p><p>Thanks to the improved 5020mAh battery, you can enjoy long work on a single charge. In combination with the 18W fast charge, you will get excellent results and charge the battery in no time.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 100M,
+                Price = 249M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -7236,36 +7153,44 @@ namespace Grand.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 ProductCategories =
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartphones").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productHtcOneMini);
-            productHtcOneMini.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name))).Id,
+            allProducts.Add(productRedmiNote9);
+            productRedmiNote9.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_Note_9_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiNote9.Name))).Id,
                 DisplayOrder = 1,
             });
-            productHtcOneMini.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name))).Id,
+            productRedmiNote9.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_Note_9_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiNote9.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productHtcOneMini);
+            await _productRepository.InsertAsync(productRedmiNote9);
 
 
-            var productNokiaLumia = new Product {
+            var productPocoF2Pro = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Nokia Lumia 1020",
-                ShortDescription = "Nokia Lumia 1020 4G Cell Phone (Unlocked)",
-                FullDescription = "<p>Capture special moments for friends and family with this Nokia Lumia 1020 32GB WHITE cell phone that features an easy-to-use 41.0MP rear-facing camera and a 1.2MP front-facing camera. The AMOLED touch screen offers 768 x 1280 resolution for crisp visuals.</p>",
+                Name = "POCO F2 Pro",
+                ShortDescription = "The speed demon is now even better. Powered by an octa-core trifecta processor with a liquid cooling system, it provides a perfect working experience. Quad Camera with Pro Mode support.",
+                FullDescription = "<p>The speed demon is now even better. Powered by an octa-core trifecta processor with a liquid cooling system, it provides a perfect working experience. Quad Camera with Pro Mode support.</p><p>The technology of execution in 7nm provides a 25% increase in performance, improving the smoothness of graphics rendering, while significantly reducing energy consumption. Kryo 585 ™ processor | Adreno 650 ™ graphics processor</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 349M,
+                Price = 299M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -7284,21 +7209,29 @@ namespace Grand.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 ProductCategories =
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartphones").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productNokiaLumia);
-            productNokiaLumia.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNokiaLumia.Name))).Id,
+            allProducts.Add(productPocoF2Pro);
+            productPocoF2Pro.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_POCO_F2_Pro.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPocoF2Pro.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productNokiaLumia);
+            await _productRepository.InsertAsync(productPocoF2Pro);
 
 
             #endregion
@@ -7307,12 +7240,12 @@ namespace Grand.Services.Installation
 
 
 
-            var productBeatsPill = new Product {
+            var productMiSmartBand = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Beats Pill 2.0 Wireless Speaker",
-                ShortDescription = "<b>Pill 2.0 Portable Bluetooth Speaker (1-Piece):</b> Watch your favorite movies and listen to music with striking sound quality. This lightweight, portable speaker is easy to take with you as you travel to any destination, keeping you entertained wherever you are. ",
-                FullDescription = "<p><ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills? together for twice the sound with Beats Bond?</li></ul></p>",
+                Name = "Mi Smart Band 3i",
+                ShortDescription = "<b>Mi Smart Band 3i:</b> Ignite your fitness journey with water resistant smart watch. Intuitive and Easy to View with large 0.78 inch OLED touch display. Get moving with the Fit App. Activity tracker and sleep tracker included.",
+                FullDescription = "<p><b>Mi Smart Band 3i:</b> Ignite your fitness journey with water resistant smart watch. Intuitive and Easy to View with large 0.78 inch OLED touch display. Get moving with the Fit App. Activity tracker and sleep tracker included.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 79.99M,
@@ -7336,6 +7269,14 @@ namespace Grand.Services.Installation
                 MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 TierPrices =
                 {
                     new TierPrice
@@ -7360,29 +7301,29 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartwatches").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productBeatsPill);
-            productBeatsPill.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name))).Id,
+            allProducts.Add(productMiSmartBand);
+            productMiSmartBand.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mi_Smart_Band_3i_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiSmartBand.Name))).Id,
                 DisplayOrder = 1,
             });
-            productBeatsPill.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name))).Id,
+            productMiSmartBand.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mi_Smart_Band_3i_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiSmartBand.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productBeatsPill);
+            await _productRepository.InsertAsync(productMiSmartBand);
 
 
-            var productUniversalTabletCover = new Product {
+            var productPs4 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Universal 7-8 Inch Tablet Cover",
-                ShortDescription = "Universal protection for 7-inch & 8-inch tablets",
-                FullDescription = "<p>Made of durable polyurethane, our Universal Cover is slim, lightweight, and strong, with protective corners that stretch to hold most 7 and 8-inch tablets securely. This tough case helps protects your tablet from bumps, scuffs, and dings.</p>",
+                Name = "Playstation 4 Slim",
+                ShortDescription = "Meet the sleeker, smaller PS4 ™ that offers gamers an amazing gaming experience. The volume of the new PS4 is more than 30% smaller compared to previous console models, and its weight has been reduced by 25% and 16% respectively compared to the first (CUH-1000 series) and current (CUH-1200) versions of the PS4™.",
+                FullDescription = "<p>Meet the sleeker, smaller PS4 ™ that offers gamers an amazing gaming experience. The volume of the new PS4 is more than 30% smaller compared to previous console models, and its weight has been reduced by 25% and 16% respectively compared to the first (CUH-1000 series) and current (CUH-1200) versions of the PS4 ™.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 39M,
@@ -7413,20 +7354,24 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productUniversalTabletCover);
-            productUniversalTabletCover.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productUniversalTabletCover.Name))).Id,
+            allProducts.Add(productPs4);
+            productPs4.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs4.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productUniversalTabletCover);
+            productPs4.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs4.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productPs4);
 
 
-            var productPortableSoundSpeakers = new Product {
+            var productMiBeard = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Portable Sound Speakers",
-                ShortDescription = "Universall portable sound speakers",
-                FullDescription = "<p>Your phone cut the cord, now it's time for you to set your music free and buy a Bluetooth speaker. Thankfully, there's one suited for everyone out there.</p><p>Some Bluetooth speakers excel at packing in as much functionality as the unit can handle while keeping the price down. Other speakers shuck excess functionality in favor of premium build materials instead. Whatever path you choose to go down, you'll be greeted with many options to suit your personal tastes.</p>",
+                Name = "Xiaomi Mi Beard",
+                ShortDescription = "Rounded blades for skin - friendly performance. Advanced self - sharpening. When in a rush, simply plug in the cord and get trimming. IPX7 fully-washable body The whole body is hydro - resistant and fully washable for your convenience.Comes with detachable head.",
+                FullDescription = "<p>Rounded blades for skin - friendly performance. Advanced self - sharpening. With 2 combs that can go between 0.5mm and 20mm, this trimmer will perfectly sculpt your beard.Precision is at its finest with 6000 oscillations per min delivering accurate cuts and even shape.</p><p>IPX7 fully-washable body The whole body is hydro - resistant and fully washable for your convenience.Comes with detachable head.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 37M,
@@ -7448,6 +7393,14 @@ namespace Grand.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Xiaomi").Id,
+                        DisplayOrder = 2,
+                    }
+                },
                 ProductCategories =
                 {
                     new ProductCategory
@@ -7457,12 +7410,16 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productPortableSoundSpeakers);
-            productPortableSoundSpeakers.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPortableSoundSpeakers.Name))).Id,
+            allProducts.Add(productMiBeard);
+            productMiBeard.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_beard_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiBeard.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productPortableSoundSpeakers);
+            productMiBeard.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_beard_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiBeard.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productMiBeard);
 
 
             #endregion
@@ -7470,15 +7427,15 @@ namespace Grand.Services.Installation
             #region Shoes
 
 
-            var productNikeFloral = new Product {
+            var productAdidasPredator = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Nike Floral Roshe Customized Running Shoes",
-                ShortDescription = "When you ran across these shoes, you will immediately fell in love and needed a pair of these customized beauties.",
-                FullDescription = "<p>Each Rosh Run is personalized and exclusive, handmade in our workshop Custom. Run Your Rosh creations born from the hand of an artist specialized in sneakers, more than 10 years of experience.</p>",
+                Name = "adidas Predator Instinct",
+                ShortDescription = "Adidas Predator is the highest quality model of football boots. The special construction of the sole guarantees high flexibility and great adhesion, and the ingredients used to make the upper (synthetic material) ensure optimal weight of the shoe and adequate protection throughout the year.",
+                FullDescription = "<p>Adidas Predator is the highest quality model of football boots. The special construction of the sole guarantees high flexibility and great adhesion, and the ingredients used to make the upper (synthetic material) ensure optimal weight of the shoe and adequate protection throughout the year. A feature of this model is also excellent vapor permeability - the moisture generated during the game is effectively expelled to the outside. The unique comfort and excellent foot support are due to the modern construction elements used by Adidas, which improve the player's features on the pitch. In Adidas footwear, the footballer turns into a ruthless predator. Thanks to the combination of modern technologies and great design, it is an excellent choice and fun to play.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 40M,
+                Price = 149M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -7566,32 +7523,28 @@ namespace Grand.Services.Installation
                 {
                     new ProductManufacturer
                     {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Adidas").Id,
                         DisplayOrder = 2,
                     }
                 }
             };
-            allProducts.Add(productNikeFloral);
-            productNikeFloral.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name))).Id,
+            allProducts.Add(productAdidasPredator);
+            productAdidasPredator.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_predator_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasPredator.Name))).Id,
                 DisplayOrder = 1,
             });
-            productNikeFloral.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name))).Id,
-                DisplayOrder = 2,
-            });
-            await _productRepository.InsertAsync(productNikeFloral);
+            await _productRepository.InsertAsync(productAdidasPredator);
 
 
-            var productAdidas = new Product {
+            var productAdidasNitrocharge = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "adidas Consortium Campus 80s Running Shoes",
-                ShortDescription = "adidas Consortium Campus 80s Primeknit Light Maroon/Running Shoes",
+                Name = "Adidas Nitrocharge",
+                ShortDescription = "The shoes are made of synthetic materials, they fit well to the foot thanks to their anatomical design and the insole made of Eva material. They are designed for playing and running on natural surfaces.",
                 FullDescription = "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 27.56M,
+                Price = 99M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -7655,9 +7608,9 @@ namespace Grand.Services.Installation
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
-                                Name = "Red",
+                                Name = "Yellow",
                                 IsPreSelected = true,
-                                ColorSquaresRgb = "#663030",
+                                ColorSquaresRgb = "#FFFF00",
                                 DisplayOrder = 1,
                             },
                             new ProductAttributeValue
@@ -7670,8 +7623,8 @@ namespace Grand.Services.Installation
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
-                                Name = "Silver",
-                                ColorSquaresRgb = "#c5c5d5",
+                                Name = "Orange",
+                                ColorSquaresRgb = "#FF8000",
                                 DisplayOrder = 3,
                            }
                         }
@@ -7684,42 +7637,54 @@ namespace Grand.Services.Installation
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
                         DisplayOrder = 1,
                     }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Adidas").Id,
+                        DisplayOrder = 2,
+                    }
                 }
             };
-            allProducts.Add(productAdidas);
-            productAdidas.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name))).Id,
+            allProducts.Add(productAdidasNitrocharge);
+            productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
                 DisplayOrder = 1,
             });
-            productAdidas.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name))).Id,
+            productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
                 DisplayOrder = 2,
             });
-            productAdidas.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name))).Id,
+            productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
                 DisplayOrder = 3,
+            });
+            productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_4.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
+                DisplayOrder = 4,
             });
 
 
-            await _productRepository.InsertAsync(productAdidas);
+            await _productRepository.InsertAsync(productAdidasNitrocharge);
 
             var productAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Color").FirstOrDefault();
 
-            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Red").First().PictureId = productAdidas.ProductPictures.ElementAt(0).PictureId;
-            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Blue").First().PictureId = productAdidas.ProductPictures.ElementAt(1).PictureId;
-            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Silver").First().PictureId = productAdidas.ProductPictures.ElementAt(2).PictureId;
-            await _productRepository.UpdateAsync(productAdidas);
+            productAdidasNitrocharge.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Blue").First().PictureId = productAdidasNitrocharge.ProductPictures.ElementAt(1).PictureId;
+            productAdidasNitrocharge.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Yellow").First().PictureId = productAdidasNitrocharge.ProductPictures.ElementAt(2).PictureId;
+            productAdidasNitrocharge.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Orange").First().PictureId = productAdidasNitrocharge.ProductPictures.ElementAt(3).PictureId;
+            await _productRepository.UpdateAsync(productAdidasNitrocharge);
 
 
-            var productNikeZoom = new Product {
+            var productAdidasTurfs = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Nike SB Zoom Stefan Janoski \"Medium Mint\"",
-                ShortDescription = "Nike SB Zoom Stefan Janoski Dark Grey Medium Mint Teal ...",
-                FullDescription = "The newly Nike SB Zoom Stefan Janoski gets hit with a \"Medium Mint\" accents that sits atop a Dark Grey suede. Expected to drop in October.",
+                Name = "Adidas Turfs",
+                ShortDescription = "Be unpredictable. Shoes designed for the youngest players starting their adventure with football. The sole is designed to provide perfect grip on artificial turf and hard or frozen surfaces.",
+                FullDescription = "Be unpredictable. Shoes designed for the youngest players starting their adventure with football. The sole is designed to provide perfect grip on artificial turf and hard or frozen surfaces. The X-SKIN INSPIRATION upper made of synthetic material will give a feeling of lightness and support while guiding the ball thanks to the convex texture. The heel stiffening will provide stability, and the textile inner lining will provide comfort and adequate cushioning. A profiled insole reflecting the anatomical shape of the foot and symmetrical lacing will keep the foot in the right position. The sole will allow for dynamic feints and changes in the direction of the run on artificial turf as well as hard or frozen surfaces.",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 30M,
+                Price = 89M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
@@ -7750,33 +7715,148 @@ namespace Grand.Services.Installation
                 {
                     new ProductManufacturer
                     {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
+                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Adidas").Id,
                         DisplayOrder = 2,
                     }
                 }
             };
-            allProducts.Add(productNikeZoom);
-            productNikeZoom.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeZoom.Name))).Id,
+            allProducts.Add(productAdidasTurfs);
+            productAdidasTurfs.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidasturfs.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasTurfs.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productNikeZoom);
+            await _productRepository.InsertAsync(productAdidasTurfs);
 
 
             #endregion
 
             #region Clothing
 
-            var productNikeTailwind = new Product {
-                ProductType = ProductType.SimpleProduct,
+            //this one is a grouped product with two associated ones
+            var productDerbyKit = new Product {
+                ProductType = ProductType.GroupedProduct,
                 VisibleIndividually = true,
-                Name = "Nike Tailwind Loose Short-Sleeve Running Shirt",
-                ShortDescription = "",
-                FullDescription = "<p>Boost your adrenaline with the Nike® Women's Tailwind Running Shirt. The lightweight, slouchy fit is great for layering, and moisture-wicking fabrics keep you feeling at your best. This tee has a notched hem for an enhanced range of motion, while flat seams with reinforcement tape lessen discomfort and irritation over longer distances. Put your keys and card in the side zip pocket and take off in your Nike® running t-shirt.</p>",
+                Name = "Derby County Kit",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Costumes.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
+                ProductTemplateId = productTemplateGrouped.Id,
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 129.99M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productDerbyKit);
+            productDerbyKit.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
+                DisplayOrder = 1,
+            });
+            productDerbyKit.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productDerbyKit);
+            var productDerbyKit_associated_1 = new Product {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = false, //hide this products
+                ParentGroupedProductId = productDerbyKit.Id,
+                Name = "Derby County Shirt - Away",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Published = true,
-                Price = 15M,
+                Price = 129.99M,
+                IsShipEnabled = true,
+                Flag = "Grouped",
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productDerbyKit_associated_1);
+            productDerbyKit_associated_1.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Derby County Away Shirt"))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDerbyKit_associated_1);
+            var productDerbyKit_associated_2 = new Product {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = false,
+                ParentGroupedProductId = productDerbyKit.Id,
+                Name = "Derby County Shirt - Home",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 149.99M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productDerbyKit_associated_2);
+            productDerbyKit_associated_2.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Derby County Shirt - Home"))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDerbyKit_associated_2);
+
+            var productNikeKids = new Product {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Nike Kids Kit",
+                ShortDescription = "Nike Dry-FIT football kit for kids. The set includes a T-shirt, shorts and football socks. Clothes made of high-quality synthetic materials that perfectly transport moisture and dry quickly.",
+                FullDescription = "<p>Nike Dry-FIT football kit for kids. The set includes a T-shirt, shorts and football socks. Clothes made of high-quality synthetic materials that perfectly transport moisture and dry quickly. The set is perfect for training, matches, PE lessons, and the T-shirt and shorts are also perfect for everyday use. The shirt has ventilation panels under the arms and the back is made of airy mesh that removes excess heat. Children's shorts with an elastic, rubber belt will adapt to any figure. The set also includes football socks made of a pleasant-to-touch material that ensures high comfort of use.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 39M,
                 IsShipEnabled = true,
                 Weight = 1,
                 Length = 2,
@@ -7847,35 +7927,27 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
-                    }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
-                        DisplayOrder = 2,
                     }
                 }
             };
-            allProducts.Add(productNikeTailwind);
-            productNikeTailwind.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeTailwind.Name))).Id,
+            allProducts.Add(productNikeKids);
+            productNikeKids.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_kidskit.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeKids.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productNikeTailwind);
+            await _productRepository.InsertAsync(productNikeKids);
 
-            var productOversizedWomenTShirt = new Product {
+            var productPsgKit = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Oversized Women T-Shirt",
+                Name = "Paris Saint Germain Home Kit",
                 ShortDescription = "",
                 FullDescription = "<p>This oversized women t-Shirt needs minimum ironing. It is a great product at a great value!</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 24M,
+                Price = 99.99M,
                 IsShipEnabled = true,
                 Weight = 4,
                 Length = 3,
@@ -7916,28 +7988,32 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productOversizedWomenTShirt);
-            productOversizedWomenTShirt.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productOversizedWomenTShirt.Name))).Id,
+            allProducts.Add(productPsgKit);
+            productPsgKit.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_psg_1.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productPsgKit.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productOversizedWomenTShirt);
+            productPsgKit.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_psg_2.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productPsgKit.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productPsgKit);
 
 
-            var productCustomTShirt = new Product {
+            var productDerbyShirt = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Custom T-Shirt",
-                ShortDescription = "T-Shirt - Add Your Content",
-                FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
+                Name = "Derby County Home Shirt",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Kits.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 15M,
+                Price = 59M,
                 IsShipEnabled = true,
                 Weight = 4,
                 Length = 3,
@@ -7970,25 +8046,145 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productCustomTShirt);
-            productCustomTShirt.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name))).Id,
+            allProducts.Add(productDerbyShirt);
+            productDerbyShirt.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyShirt.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productCustomTShirt);
+            await _productRepository.InsertAsync(productDerbyShirt);
 
-
-            var productLeviJeans = new Product {
+            var productDerbyShorts = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Levi's 511 Jeans",
-                ShortDescription = "Levi's Faded Black 511 Jeans ",
-                FullDescription = "<p>Between a skinny and straight fit, our 511&trade; slim fit jeans are cut close without being too restricting. Slim throughout the thigh and leg opening for a long and lean look.</p><ul><li>Slouch1y at top; sits below the waist</li><li>Slim through the leg, close at the thigh and straight to the ankle</li><li>Stretch for added comfort</li><li>Classic five-pocket styling</li><li>99% Cotton, 1% Spandex, 11.2 oz. - Imported</li></ul>",
+                Name = "Derby County Home Shorts",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Kits.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Price = 29M,
+                IsShipEnabled = true,
+                Weight = 4,
+                Length = 3,
+                Width = 3,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productDerbyShorts);
+            productDerbyShorts.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shorts_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyShorts.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDerbyShorts);
+
+            var productDerbySocks = new Product {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Derby County Home Socks",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Kits.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Price = 15M,
+                IsShipEnabled = true,
+                Weight = 4,
+                Length = 3,
+                Width = 3,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productDerbySocks);
+            productDerbySocks.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_socks_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbySocks.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDerbySocks);
+
+            var productDerbyKitHome = new Product {
+                ProductType = ProductType.BundledProduct,
+                VisibleIndividually = true,
+                Name = "Derby County Home Shirt",
+                ShortDescription = "Show your pride and support and show off in The Rams Homemade Kits.",
+                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Price = 15M,
+                IsShipEnabled = true,
+                Weight = 4,
+                Length = 3,
+                Width = 3,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productDerbyKitHome);
+            productDerbyKitHome.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKitHome.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productDerbyKitHome);
+
+            var productChicagoBulls = new Product {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Chicago Bulls Jersey",
+                ShortDescription = "Capture your team's distinct identity when you grab this custom Chicago Bulls jersey, It features classic trims and Chicago Bulls graphics along with Nike Dry and Dri-FIT technologies for added comfort.",
+                FullDescription = "<p>Capture your team's distinct identity when you grab this custom Chicago Bulls jersey, It features classic trims and Chicago Bulls graphics along with Nike Dry and Dri-FIT technologies for added comfort. Before you watch the next game, grab this incredible jersey so everyone knows your fandom is on the cutting edge.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 43.5M,
@@ -8033,35 +8229,35 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productLeviJeans);
+            allProducts.Add(productChicagoBulls);
 
-            productLeviJeans.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
+            productChicagoBulls.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_1.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productChicagoBulls.Name))).Id,
                 DisplayOrder = 1,
             });
-            productLeviJeans.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
+            productChicagoBulls.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_2.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productChicagoBulls.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productLeviJeans);
+            await _productRepository.InsertAsync(productChicagoBulls);
 
 
             #endregion
 
-            #region Accessories
+            #region Smartwatches
 
 
-            var productObeyHat = new Product {
+            var productVivoactive = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Obey Propaganda Hat",
-                ShortDescription = "",
-                FullDescription = "<p>Printed poplin 5 panel camp hat with debossed leather patch and web closure</p>",
+                Name = "Garmin VivoActive",
+                ShortDescription = "The Vívoactive watch offers easy-to-repeat animated cardio, strength, yoga and Pilates exercises that you can view on your watch screen. Choose from preloaded animated workouts or download more from the Garmin Connect ™ community site.",
+                FullDescription = "<p>You no longer need to search for videos and advice on the web to know what to do while training. The Vívoactive watch offers easy-to-repeat animated cardio, strength, yoga and Pilates exercises that you can view on your watch screen. Choose from preloaded animated workouts or download more from the Garmin Connect ™ community site.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 30M,
@@ -8123,26 +8319,26 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartwatches").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productObeyHat);
-            productObeyHat.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productObeyHat.Name))).Id,
+            allProducts.Add(productVivoactive);
+            productVivoactive.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_vivoactive.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productVivoactive.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productObeyHat);
+            await _productRepository.InsertAsync(productVivoactive);
 
 
 
-            var productBelt = new Product {
+            var productGarminFenix = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Reversible Horseferry Check Belt",
-                ShortDescription = "Reversible belt in Horseferry check with smooth leather trim",
-                FullDescription = "<p>Reversible belt in Horseferry check with smooth leather trim</p><p>Leather lining, polished metal buckle</p>",
+                Name = "Garmin Fenix 2",
+                ShortDescription = "Fēnix 2 combines the best features of our fitness watches with outdoor training watches. It is both a great navigation system and an ideal training partner in many different sports.",
+                FullDescription = "<p>Fēnix 2 combines the best features of our fitness watches with outdoor training watches. It is both a great navigation system and an ideal training partner in many different sports. Whether you're running, swimming, skiing, cycling or hiking in the mountains, fēnix 2 lets you easily switch between groups of settings optimized for each activity.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 45M,
@@ -8168,26 +8364,30 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartwatches").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productBelt);
-            productBelt.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBelt.Name))).Id,
+            allProducts.Add(productGarminFenix);
+            productGarminFenix.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_garmin_fenix_1.jpg"), "image/jpeg", pictureService.GetPictureSeName(productGarminFenix.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productBelt);
+            productGarminFenix.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_garmin_fenix_2.jpg"), "image/jpeg", pictureService.GetPictureSeName(productGarminFenix.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productGarminFenix);
 
 
 
-            var productSunglasses = new Product {
+            var productForerunner = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Ray Ban Aviator Sunglasses",
-                ShortDescription = "Aviator sunglasses are one of the first widely popularized styles of modern day sunwear.",
-                FullDescription = "<p>Since 1937, Ray-Ban can genuinely claim the title as the world's leading sunglasses and optical eyewear brand. Combining the best of fashion and sports performance, the Ray-Ban line of Sunglasses delivers a truly classic style that will have you looking great today and for years to come.</p>",
+                Name = "Garmin Forerunner",
+                ShortDescription = "This easy-to-use running watch is great for everyday runs, workouts and even pre-race training in a 10k run. Built-in GPS tracks your running route and provides accurate distance, pace and interval statistics.",
+                FullDescription = "<p>This easy-to-use running watch is great for everyday runs, workouts and even pre-race training in a 10k run. Built-in GPS tracks your running route and provides accurate distance, pace and interval statistics. Its intuitive interface makes it easy to mark laps or pause the timer, even with sweaty hands. Forerunner 45 also monitors heart rate on the wrist during the day and while you sleep.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
                 Price = 25M,
@@ -8213,50 +8413,50 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Smartwatches").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productSunglasses);
-            productSunglasses.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name))).Id,
+            allProducts.Add(productForerunner);
+            productForerunner.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_forerunner.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productForerunner.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productSunglasses);
+            await _productRepository.InsertAsync(productForerunner);
 
             #endregion
 
             #region Digital Downloads
 
 
-            var downloadNightVision1 = new Download {
+            var downloadCyberpunk1 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_1.zip"),
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_cyberpunk_1.zip"),
                 Extension = ".zip",
-                Filename = "Night_Vision_1",
+                Filename = "Cyberpunk",
                 IsNew = true,
             };
-            await downloadService.InsertDownload(downloadNightVision1);
-            var downloadNightVision2 = new Download {
+            await downloadService.InsertDownload(downloadCyberpunk1);
+            var downloadCyberpunk2 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_2.txt"),
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_cyberpunk_2.txt"),
                 Extension = ".txt",
-                Filename = "Night_Vision_1",
+                Filename = "Cyberpunk",
                 IsNew = true,
             };
-            await downloadService.InsertDownload(downloadNightVision2);
-            var productNightVision = new Product {
+            await downloadService.InsertDownload(downloadCyberpunk2);
+            var productCyberpunk = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Night Visions",
-                ShortDescription = "Night Visions is the debut studio album by American rock band Imagine Dragons.",
-                FullDescription = "<p>Original Release Date: September 4, 2012</p><p>Release Date: September 4, 2012</p><p>Genre - Alternative rock, indie rock, electronic rock</p><p>Label - Interscope/KIDinaKORNER</p><p>Copyright: (C) 2011 Interscope Records</p>",
+                Name = "Cyberpunk 2077",
+                ShortDescription = "Cyberpunk 2077 is an open-world adventure set in Night City, a megalopolis ruled by an obsessive quest for power, fame and body remake. Your name is V and you must acquire a one-of-a-kind implant - the key to immortality. Create your own playstyle and set out to conquer the mighty city of the future, whose history is shaped by your decisions.",
+                FullDescription = "<p>Cyberpunk 2077 is an open-world adventure set in Night City, a megalopolis ruled by an obsessive quest for power, fame and body remake. Your name is V and you must acquire a one-of-a-kind implant - the key to immortality. Create your own playstyle and set out to conquer the mighty city of the future, whose history is shaped by your decisions.</p><p>Become a cyberpunk, a freelance armed to the teeth, and become the legend of the most dangerous city of the future. Create your character from scratch. Take on the role of the outlaw Punk, freedom-loving Nomad or ruthless Corp.</p><p>Get the most powerful implant in Night City and take on those who shake the whole city. Follow Rockerboy Johnny Silverhand (played by Keanu Reeves) and change a world ruled by large corporations forever. And all this is accompanied by music from bands and creators such as Run the Jewels, Refused, Grimes, A $ AP Rocky, Gazelle Twin, Ilan Rubin, Richard Devine, Nina Kraviz, Deadly Hunta, Rat Boy and Tina Guo.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 2.8M,
+                Price = 69M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -8268,12 +8468,12 @@ namespace Grand.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 IsDownload = true,
-                DownloadId = downloadNightVision1.Id,
+                DownloadId = downloadCyberpunk1.Id,
                 DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
                 UnlimitedDownloads = true,
                 HasUserAgreement = false,
                 HasSampleDownload = true,
-                SampleDownloadId = downloadNightVision2.Id,
+                SampleDownloadId = downloadCyberpunk2.Id,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
@@ -8286,42 +8486,42 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productNightVision);
-            productNightVision.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNightVision.Name))).Id,
+            allProducts.Add(productCyberpunk);
+            productCyberpunk.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_cyberpunk_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCyberpunk.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productNightVision);
+            await _productRepository.InsertAsync(productCyberpunk);
 
 
 
-            var downloadIfYouWait1 = new Download {
+            var downloadGTA1 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_1.zip"),
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_GTA_1.zip"),
                 Extension = ".zip",
-                Filename = "If_You_Wait_1",
+                Filename = "GTA",
                 IsNew = true,
             };
-            await downloadService.InsertDownload(downloadIfYouWait1);
-            var downloadIfYouWait2 = new Download {
+            await downloadService.InsertDownload(downloadGTA1);
+            var downloadGTA2 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_2.txt"),
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_GTA_2.txt"),
                 Extension = ".txt",
-                Filename = "If_You_Wait_1",
+                Filename = "GTA",
                 IsNew = true,
             };
-            await downloadService.InsertDownload(downloadIfYouWait2);
-            var productIfYouWait = new Product {
+            await downloadService.InsertDownload(downloadGTA2);
+            var productGTA = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "If You Wait",
-                ShortDescription = "If You Wait is the debut studio album by English indie pop band London Grammar",
-                FullDescription = "<p>Original Release Date: September 6, 2013</p><p>Genre - Electronica, dream pop downtempo, pop</p><p>Label - Metal & Dust/Ministry of Sound</p><p>Producer - Tim Bran, Roy Kerr London, Grammar</p><p>Length - 43:22</p>",
+                Name = "Grand Theft Auto 5",
+                ShortDescription = "When a young street hustler, a retired bank robber and a terrifying psychopath land themselves in trouble, they must pull off a series of dangerous heists to survive in a city in which they can trust nobody, least of all each other.",
+                FullDescription = "<p>When a young street hustler, a retired bank robber and a terrifying psychopath land themselves in trouble, they must pull off a series of dangerous heists to survive in a city in which they can trust nobody, least of all each other.</p><p>Launch business ventures from your Maze Bank West Executive Office, research powerful weapons technology from your underground Gunrunning Bunker and use your Counterfeit Cash Factory to start a lucrative counterfeiting operation.</p><p>Tear through the streets with a range of 10 high performance vehicles including a Supercar, Motorcycles, the weaponized Dune FAV, a Helicopter, a Rally Car and more. You’ll also get properties including a 10 car garage to store your growing fleet.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 3M,
+                Price = 49M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -8333,12 +8533,12 @@ namespace Grand.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 IsDownload = true,
-                DownloadId = downloadIfYouWait1.Id,
+                DownloadId = downloadGTA1.Id,
                 DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
                 UnlimitedDownloads = true,
                 HasUserAgreement = false,
                 HasSampleDownload = true,
-                SampleDownloadId = downloadIfYouWait2.Id,
+                SampleDownloadId = downloadGTA2.Id,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
@@ -8351,33 +8551,33 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productIfYouWait);
+            allProducts.Add(productGTA);
 
-            productIfYouWait.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productIfYouWait.Name))).Id,
+            productGTA.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_gta_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productGTA.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productIfYouWait);
+            await _productRepository.InsertAsync(productGTA);
 
 
-            var downloadScienceAndFaith = new Download {
+            var downloadCod = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_ScienceAndFaith_1.zip"),
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_cod_1.zip"),
                 Extension = ".zip",
-                Filename = "Science_And_Faith",
+                Filename = "Call of Duty",
                 IsNew = true,
             };
-            await downloadService.InsertDownload(downloadScienceAndFaith);
-            var productScienceAndFaith = new Product {
+            await downloadService.InsertDownload(downloadCod);
+            var productCod = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Science & Faith",
-                ShortDescription = "Science & Faith is the second studio album by Irish pop rock band The Script.",
-                FullDescription = "<p># Original Release Date: September 10, 2010<br /># Label: RCA, Epic/Phonogenic(America)<br /># Copyright: 2010 RCA Records.</p>",
+                Name = "Call of Duty: ColdWar",
+                ShortDescription = "The iconic Black Ops series is back with Call of Duty®: Black Ops Cold War - the direct sequel to the original and fan-favorite Call of Duty®: Black Ops. Black Ops Cold War will drop fans into the depths of the Cold War’s volatile geopolitical battle of the early 1980s.",
+                FullDescription = "<p>The iconic Black Ops series is back with Call of Duty®: Black Ops Cold War - the direct sequel to the original and fan-favorite Call of Duty®: Black Ops. Black Ops Cold War will drop fans into the depths of the Cold War’s volatile geopolitical battle of the early 1980s. Nothing is ever as it seems in a gripping single-player Campaign, where players will come face-to-face with historical figures and hard truths, as they battle around the globe through iconic locales like East Berlin, Vietnam, Turkey, Soviet KGB headquarters and more. As elite operatives, you will follow the trail of a shadowy figure named Perseus who is on a mission to destabilize the global balance of power and change the course of history. Descend into the dark center of this global conspiracy alongside iconic characters Woods, Mason and Hudson and a new cast of operatives attempting to stop a plot decades in the making. Beyond the Campaign, players will bring a Cold War arsenal of weapons and equipment into the next generation of Multiplayer and Zombies experiences.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 3M,
+                Price = 69M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
@@ -8389,7 +8589,7 @@ namespace Grand.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 IsDownload = true,
-                DownloadId = downloadScienceAndFaith.Id,
+                DownloadId = downloadCod.Id,
                 DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
                 UnlimitedDownloads = true,
                 HasUserAgreement = false,
@@ -8405,36 +8605,36 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productScienceAndFaith);
-            productScienceAndFaith.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productScienceAndFaith.Name))).Id,
+            allProducts.Add(productCod);
+            productCod.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_cod_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCod.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productScienceAndFaith);
+            await _productRepository.InsertAsync(productCod);
 
 
 
             #endregion
 
-            #region Books
+            #region Lego
 
-            var productFahrenheit = new Product {
+            var productLegoFalcon = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Fahrenheit 451 by Ray Bradbury",
-                ShortDescription = "Fahrenheit 451 is a dystopian novel by Ray Bradbury published in 1953. It is regarded as one of his best works.",
-                FullDescription = "<p>The novel presents a future American society where books are outlawed and firemen burn any that are found. The title refers to the temperature that Bradbury understood to be the autoignition point of paper.</p>",
+                Name = "LEGO Millennium Falcon",
+                ShortDescription = "Inspire kids and adults with the LEGO® Star Wars ™ 75257 Millennium Falcon model. The brick-built version of the iconic Corellian freighter features a variety of details. This iconic set from the LEGO Star Wars series is a great addition to any fan's collection.",
+                FullDescription = "<p>Inspire kids and adults with the LEGO® Star Wars ™ 75257 Millennium Falcon model. The brick-built version of the iconic Corellian freighter features a variety of details, including a rotating lower and upper gun turret, 2 spring-loaded shooters, a lowering ramp and an opening cockpit with space for 2 minifigures. The top panels fold out to reveal a detailed interior where children will love to reenact scenes from Star Wars: Skywalker. Rebirth ”featuring characters from the“ Star Wars ”universe - Finn, Chewbakka, Lando Calrissian, Boolio, C-3PO, R2-D2 and D-O. This iconic set from the LEGO Star Wars series is a great addition to any fan's collection.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 27M,
-                OldPrice = 30M,
+                Price = 109M,
+                OldPrice = 199M,
                 IsShipEnabled = true,
                 IsFreeShipping = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Lego").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8451,36 +8651,40 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Lego").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productFahrenheit);
-            productFahrenheit.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFahrenheit.Name))).Id,
+            allProducts.Add(productLegoFalcon);
+            productLegoFalcon.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_falcon_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoFalcon.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productFahrenheit);
+            productLegoFalcon.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_falcon_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoFalcon.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLegoFalcon);
 
 
 
-            var productFirstPrizePies = new Product {
+            var productLegoHogwarts = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "First Prize Pies",
-                ShortDescription = "Allison Kave made pies as a hobby, until one day her boyfriend convinced her to enter a Brooklyn pie-making contest. She won. In fact, her pies were such a hit that she turned pro.",
-                FullDescription = "<p>First Prize Pies, a boutique, made-to-order pie business that originated on New York's Lower East Side, has become synonymous with tempting and unusual confections. For the home baker who is passionate about seasonal ingredients and loves a creative approach to recipes, First Prize Pies serves up 52 weeks of seasonal and eclectic pastries in an interesting pie-a-week format. Clear instructions, technical tips and creative encouragement guide novice bakers as well as pie mavens. With its nostalgia-evoking photos of homemade pies fresh out of the oven, First Prize Pies will be as giftable as it is practical.</p>",
+                Name = "Lego Hogwarts",
+                ShortDescription = "Taste real magic at the LEGO® Harry Potter™ Hogwarts™ Castle! Unforgettable building satisfaction with this highly detailed LEGO Harry Potter collectible set with over 6,000 pieces.",
+                FullDescription = "<p>Taste real magic at the LEGO® Harry Potter™ Hogwarts™ Castle! Unforgettable building satisfaction with this highly detailed LEGO Harry Potter collectible set with over 6,000 pieces. It is packed with elements from the Harry Potter series - you will find towers, turrets, chambers, classrooms, creatures, Whomping Willow ™, Hagrid's hut and many other signature details. Plus, with 4 minifigures and 27 microfigures of students, teachers, statues and 5 Dementors, this advanced construction toy set is the perfect gift for any Harry Potter fan.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 51M,
-                OldPrice = 67M,
+                Price = 99M,
+                OldPrice = 149M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Lego").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8497,34 +8701,38 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Lego").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productFirstPrizePies);
-            productFirstPrizePies.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFirstPrizePies.Name))).Id,
+            allProducts.Add(productLegoHogwarts);
+            productLegoHogwarts.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_hogwarts_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoHogwarts.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productFirstPrizePies);
+            productLegoHogwarts.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_hogwarts_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoHogwarts.Name))).Id,
+                DisplayOrder = 1,
+            });
+            await _productRepository.InsertAsync(productLegoHogwarts);
 
-            var productPrideAndPrejudice = new Product {
+            var productLegoCity = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Pride and Prejudice",
-                ShortDescription = "Pride and Prejudice is a novel of manners by Jane Austen, first published in 1813.",
-                FullDescription = "<p>Set in England in the early 19th century, Pride and Prejudice tells the story of Mr and Mrs Bennet's five unmarried daughters after the rich and eligible Mr Bingley and his status-conscious friend, Mr Darcy, have moved into their neighbourhood. While Bingley takes an immediate liking to the eldest Bennet daughter, Jane, Darcy has difficulty adapting to local society and repeatedly clashes with the second-eldest Bennet daughter, Elizabeth.</p>",
+                Name = "Lego City Police Base",
+                ShortDescription = "Everything is awesome about the LEGO® City Police Station (60246) playset. Little law enforcers and fans of the LEGO City TV series will love creating stories with a host of fun characters, including Duke DeTain, Chief Wheeler and Daisy Kaboom. ",
+                FullDescription = "<p>Everything is awesome about the LEGO® City Police Station (60246) playset. Little law enforcers and fans of the LEGO City TV series will love creating stories with a host of fun characters, including Duke DeTain, Chief Wheeler and Daisy Kaboom. </p><p>This fantastic set includes a police station with a light-brick searchlight and a police car with sound-brick siren, plus a cool truck, motorcycle and surveillance drone. A building toy with a little extra With this toy playset you get a simple building guide and Instructions.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 24M,
-                OldPrice = 35M,
+                Price = 59M,
+                OldPrice = 99M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Lego").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8541,39 +8749,43 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Lego").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productPrideAndPrejudice);
-            productPrideAndPrejudice.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPrideAndPrejudice.Name))).Id,
+            allProducts.Add(productLegoCity);
+            productLegoCity.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LegoCity_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoCity.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productPrideAndPrejudice);
+            productLegoCity.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LegoCity_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoCity.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productLegoCity);
 
 
 
             #endregion
 
-            #region Jewelry
+            #region Balls
 
-            var productElegantGemstoneNecklace = new Product {
+            var productAdidasBall = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Elegant Gemstone Necklace",
-                ShortDescription = "Classic and elegant gemstone necklace now available in our store",
-                FullDescription = "<p>For those who like jewelry, creating their ownelegant jewelry from gemstone beads provides an economical way to incorporate genuine gemstones into your jewelry wardrobe. Manufacturers create beads from all kinds of precious gemstones and semi-precious gemstones, which are available in bead shops, craft stores, and online marketplaces.</p>",
+                Name = "Adidas Ball",
+                ShortDescription = "The Adidas Finale Top Capitano is a durable training ball with strong references to the UEFA Champions League. The ball is a replica of the model used in this year's Champions League group stage and is perfect for training and spontaneous games.",
+                FullDescription = "<p>The Adidas Finale Top Capitano is a durable training ball with strong references to the UEFA Champions League. The ball is a replica of the model used in this year's Champions League group stage and is perfect for training and spontaneous games. The strong TPU coating has been machine-stitched to increase the durability of the ball. The ball's electrifying multicolored design shows the emotions of fans around the world as Europe's top teams compete for the highest honor.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 569M,
+                Price = 69M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Balls").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8591,35 +8803,35 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Balls").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productElegantGemstoneNecklace);
-            productElegantGemstoneNecklace.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name))).Id,
+            allProducts.Add(productAdidasBall);
+            productAdidasBall.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidasball.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasBall.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productElegantGemstoneNecklace);
+            await _productRepository.InsertAsync(productAdidasBall);
 
 
-            var productFlowerGirlBracelet = new Product {
+            var productMikasa = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Flower Girl Bracelet",
-                ShortDescription = "Personalised Flower Braceled",
-                FullDescription = "<p>This is a great gift for your flower girl to wear on your wedding day. A delicate bracelet that is made with silver plated soldered cable chain, gives this bracelet a dainty look for young wrist. A Swarovski heart, shown in Rose, hangs off a silver plated flower. Hanging alongside the heart is a silver plated heart charm with Flower Girl engraved on both sides. This is a great style for the younger flower girl.</p>",
+                Name = "Volleyball Ball",
+                ShortDescription = "Made of high-quality synthetic leather (PU) A high-class ball based on the V200W match model. Solid and strong machine sewing.The 18 - panel, colorful design increases the visibility of the ball during the game.",
+                FullDescription = "<p>Made of high-quality synthetic leather (PU) A high-class ball based on the V200W match model. Solid and strong machine sewing.The 18 - panel, colorful design increases the visibility of the ball during the game.</p><p> Weight: 260 - 280g </p><p> Circumference: 65 - 67cm </p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 360M,
+                Price = 29.99M,
                 IsShipEnabled = true,
                 IsFreeShipping = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Balls").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8636,34 +8848,34 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Balls").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productFlowerGirlBracelet);
-            productFlowerGirlBracelet.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productFlowerGirlBracelet.Name))).Id,
+            allProducts.Add(productMikasa);
+            productMikasa.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mikasa.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productMikasa.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productFlowerGirlBracelet);
+            await _productRepository.InsertAsync(productMikasa);
 
 
-            var productEngagementRing = new Product {
+            var productSpalding = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Vintage Style Engagement Ring",
-                ShortDescription = "1.24 Carat (ctw) in 14K White Gold (Certified)",
-                FullDescription = "<p>Dazzle her with this gleaming 14 karat white gold vintage proposal. A ravishing collection of 11 decadent diamonds come together to invigorate a superbly ornate gold shank. Total diamond weight on this antique style engagement ring equals 1 1/4 carat (ctw). Item includes diamond certificate.</p>",
+                Name = "Spalding Basketball Ball",
+                ShortDescription = "The panels of leather, composite leather are attached to the rubber body by hand. This technique is used for indoor and indoor / outdoor balls. Balloon - the highest quality inner tube that maintains the pressure of the ball.",
+                FullDescription = "<p>The panels of leather, composite leather are attached to the rubber body by hand. This technique is used for indoor and indoor / outdoor balls. Balloon - the highest quality inner tube that maintains the pressure of the ball. A specialized nylon braid - nylon lines give the ball integrity and durability. Smooth body and channels for a softer feel and strength - optimized deep channel design for better grip and control. Composite leather cover - provides a good grip, feel and aesthetic appearance of the ball, as well as the necessary strength and resistance to abrasion. Composite leather has an advanced moisture management system to improve dry and wet grip.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 AllowCustomerReviews = true,
-                Price = 2100M,
+                Price = 49M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Balls").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8680,17 +8892,17 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Balls").Id,
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productEngagementRing);
-            productEngagementRing.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name))).Id,
+            allProducts.Add(productSpalding);
+            productSpalding.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_spalding.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productSpalding.Name))).Id,
                 DisplayOrder = 1,
             });
-            await _productRepository.InsertAsync(productEngagementRing);
+            await _productRepository.InsertAsync(productSpalding);
 
 
 
@@ -8824,6 +9036,84 @@ namespace Grand.Services.Installation
             });
             await _productRepository.InsertAsync(product100GiftCard);
 
+            var productPlaystationBundlePack = new Product {
+                ProductType = ProductType.BundledProduct,
+                VisibleIndividually = true,
+                Name = "Playstation 4 Slim Kit",
+                ShortDescription = "Meet the sleeker, smaller PS4 ™ that offers gamers an amazing gaming experience. The volume of the new PS4 is more than 30% smaller compared to previous console models, and its weight has been reduced by 25% and 16% respectively compared to the first (CUH-1000 series) and current (CUH-1200) versions of the PS4™.",
+                FullDescription = "<p>Meet the sleeker, smaller PS4 ™ that offers gamers an amazing gaming experience. The volume of the new PS4 is more than 30% smaller compared to previous console models, and its weight has been reduced by 25% and 16% respectively compared to the first (CUH-1000 series) and current (CUH-1200) versions of the PS4 ™.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                AllowCustomerReviews = true,
+                Price = 259M,
+                IsShipEnabled = true,
+                Flag = "Bundle Product",
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+               {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productPlaystationBundlePack);
+            productPlaystationBundlePack.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPlaystationBundlePack.Name))).Id,
+                DisplayOrder = 1,
+            });
+            productPlaystationBundlePack.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPlaystationBundlePack.Name))).Id,
+                DisplayOrder = 2,
+            });
+            await _productRepository.InsertAsync(productPlaystationBundlePack);
+
+            var productbundle1 = new BundleProduct {
+                ProductBundleId = productPlaystationBundlePack.Id,
+                ProductId = productPs4.Id,
+                DisplayOrder = 1,
+                Quantity = 1
+            };
+            var productbundle2 = new BundleProduct {
+                ProductBundleId = productPlaystationBundlePack.Id,
+                ProductId = productSonyPS5Pad.Id,
+                DisplayOrder = 2,
+                Quantity = 2
+            };
+            var productbundle3 = new BundleProduct {
+                ProductBundleId = productPlaystationBundlePack.Id,
+                ProductId = productPs5Camera.Id,
+                DisplayOrder = 3,
+                Quantity = 1
+            };
+            var productbundle4 = new BundleProduct {
+                ProductBundleId = productPlaystationBundlePack.Id,
+                ProductId = productCod.Id,
+                DisplayOrder = 4,
+                Quantity = 1
+            };
+            productPlaystationBundlePack.BundleProducts.Add(productbundle1);
+            productPlaystationBundlePack.BundleProducts.Add(productbundle2);
+            productPlaystationBundlePack.BundleProducts.Add(productbundle3);
+            productPlaystationBundlePack.BundleProducts.Add(productbundle4);
+            await _productRepository.UpdateAsync(productPlaystationBundlePack);
+
             #endregion
 
             //search engine names
@@ -8846,439 +9136,439 @@ namespace Grand.Services.Installation
 
             //related products
 
-            productFlowerGirlBracelet.RelatedProducts.Add(
+            productMikasa.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFlowerGirlBracelet.Id,
-                    ProductId2 = productEngagementRing.Id,
+                    ProductId1 = productMikasa.Id,
+                    ProductId2 = productSpalding.Id,
                 });
 
-            productFlowerGirlBracelet.RelatedProducts.Add(
+            productMikasa.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFlowerGirlBracelet.Id,
-                    ProductId2 = productElegantGemstoneNecklace.Id,
+                    ProductId1 = productMikasa.Id,
+                    ProductId2 = productAdidasBall.Id,
                 });
 
-            productEngagementRing.RelatedProducts.Add(
+            productSpalding.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productEngagementRing.Id,
-                    ProductId2 = productFlowerGirlBracelet.Id,
+                    ProductId1 = productSpalding.Id,
+                    ProductId2 = productMikasa.Id,
                 });
 
-            productEngagementRing.RelatedProducts.Add(
+            productSpalding.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productEngagementRing.Id,
-                    ProductId2 = productElegantGemstoneNecklace.Id,
+                    ProductId1 = productSpalding.Id,
+                    ProductId2 = productAdidasBall.Id,
                 });
 
-            productElegantGemstoneNecklace.RelatedProducts.Add(
+            productAdidasBall.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productElegantGemstoneNecklace.Id,
-                    ProductId2 = productFlowerGirlBracelet.Id,
+                    ProductId1 = productAdidasBall.Id,
+                    ProductId2 = productMikasa.Id,
                 });
 
-            productElegantGemstoneNecklace.RelatedProducts.Add(
+            productAdidasBall.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productElegantGemstoneNecklace.Id,
-                    ProductId2 = productEngagementRing.Id,
+                    ProductId1 = productAdidasBall.Id,
+                    ProductId2 = productSpalding.Id,
                 });
 
-            productIfYouWait.RelatedProducts.Add(
+            productGTA.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productIfYouWait.Id,
-                    ProductId2 = productNightVision.Id,
+                    ProductId1 = productGTA.Id,
+                    ProductId2 = productCyberpunk.Id,
                 });
 
-            productIfYouWait.RelatedProducts.Add(
+            productGTA.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productIfYouWait.Id,
-                    ProductId2 = productScienceAndFaith.Id,
+                    ProductId1 = productGTA.Id,
+                    ProductId2 = productCod.Id,
                 });
 
-            productNightVision.RelatedProducts.Add(
+            productCyberpunk.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productNightVision.Id,
-                    ProductId2 = productIfYouWait.Id,
+                    ProductId1 = productCyberpunk.Id,
+                    ProductId2 = productGTA.Id,
                 });
 
-            productNightVision.RelatedProducts.Add(
+            productCyberpunk.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productNightVision.Id,
-                    ProductId2 = productScienceAndFaith.Id,
+                    ProductId1 = productCyberpunk.Id,
+                    ProductId2 = productCod.Id,
                 });
 
-            productPrideAndPrejudice.RelatedProducts.Add(
+            productLegoCity.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productPrideAndPrejudice.Id,
-                    ProductId2 = productFirstPrizePies.Id,
+                    ProductId1 = productLegoCity.Id,
+                    ProductId2 = productLegoHogwarts.Id,
                 });
 
-            productPrideAndPrejudice.RelatedProducts.Add(
+            productLegoCity.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productPrideAndPrejudice.Id,
-                    ProductId2 = productFahrenheit.Id,
+                    ProductId1 = productLegoCity.Id,
+                    ProductId2 = productLegoFalcon.Id,
                 });
 
-            productFirstPrizePies.RelatedProducts.Add(
+            productLegoHogwarts.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFirstPrizePies.Id,
-                    ProductId2 = productPrideAndPrejudice.Id,
+                    ProductId1 = productLegoHogwarts.Id,
+                    ProductId2 = productLegoCity.Id,
                 });
 
-            productFirstPrizePies.RelatedProducts.Add(
+            productLegoHogwarts.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFirstPrizePies.Id,
-                    ProductId2 = productFahrenheit.Id,
+                    ProductId1 = productLegoHogwarts.Id,
+                    ProductId2 = productLegoFalcon.Id,
                 });
 
-            productFahrenheit.RelatedProducts.Add(
+            productLegoFalcon.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFahrenheit.Id,
-                    ProductId2 = productFirstPrizePies.Id,
+                    ProductId1 = productLegoFalcon.Id,
+                    ProductId2 = productLegoHogwarts.Id,
                 });
 
-            productFahrenheit.RelatedProducts.Add(
+            productLegoFalcon.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productFahrenheit.Id,
-                    ProductId2 = productPrideAndPrejudice.Id,
+                    ProductId1 = productLegoFalcon.Id,
+                    ProductId2 = productLegoCity.Id,
                 });
 
-            productAsusN551JK.RelatedProducts.Add(
+            productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAsusN551JK.Id,
-                    ProductId2 = productLenovoThinkpad.Id,
+                    ProductId1 = productLenovoLegionY740.Id,
+                    ProductId2 = productDellXPS.Id,
                 });
 
-            productAsusN551JK.RelatedProducts.Add(
+            productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAsusN551JK.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId1 = productLenovoLegionY740.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
-            productAsusN551JK.RelatedProducts.Add(
+            productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAsusN551JK.Id,
-                    ProductId2 = productSamsungSeries.Id,
+                    ProductId1 = productLenovoLegionY740.Id,
+                    ProductId2 = productAsusMixedReality.Id,
                 });
 
-            productAsusN551JK.RelatedProducts.Add(
+            productLenovoLegionY740.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAsusN551JK.Id,
-                    ProductId2 = productHpSpectre.Id,
+                    ProductId1 = productLenovoLegionY740.Id,
+                    ProductId2 = productAcerNitro.Id,
                 });
 
-            productLenovoThinkpad.RelatedProducts.Add(
+            productDellXPS.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoThinkpad.Id,
-                    ProductId2 = productAsusN551JK.Id,
+                    ProductId1 = productDellXPS.Id,
+                    ProductId2 = productLenovoLegionY740.Id,
                 });
 
-            productLenovoThinkpad.RelatedProducts.Add(
+            productDellXPS.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoThinkpad.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId1 = productDellXPS.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
-            productLenovoThinkpad.RelatedProducts.Add(
+            productDellXPS.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoThinkpad.Id,
-                    ProductId2 = productSamsungSeries.Id,
+                    ProductId1 = productDellXPS.Id,
+                    ProductId2 = productAcerMonitor.Id,
                 });
 
-            productLenovoThinkpad.RelatedProducts.Add(
+            productDellXPS.RelatedProducts.Add(
                  new RelatedProduct {
-                     ProductId1 = productLenovoThinkpad.Id,
-                     ProductId2 = productHpEnvy.Id,
+                     ProductId1 = productDellXPS.Id,
+                     ProductId2 = productDellG5.Id,
                  });
 
-            productAppleMacBookPro.RelatedProducts.Add(
+            productMiNotebook.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAppleMacBookPro.Id,
-                    ProductId2 = productLenovoThinkpad.Id,
+                    ProductId1 = productMiNotebook.Id,
+                    ProductId2 = productDellXPS.Id,
                 });
 
-            productAppleMacBookPro.RelatedProducts.Add(
+            productMiNotebook.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAppleMacBookPro.Id,
-                    ProductId2 = productSamsungSeries.Id,
+                    ProductId1 = productMiNotebook.Id,
+                    ProductId2 = productAcerMonitor.Id,
                 });
 
-            productAppleMacBookPro.RelatedProducts.Add(
+            productMiNotebook.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAppleMacBookPro.Id,
-                    ProductId2 = productAsusN551JK.Id,
+                    ProductId1 = productMiNotebook.Id,
+                    ProductId2 = productLenovoLegionY740.Id,
                 });
 
-            productAppleMacBookPro.RelatedProducts.Add(
+            productMiNotebook.RelatedProducts.Add(
                  new RelatedProduct {
-                     ProductId1 = productAppleMacBookPro.Id,
-                     ProductId2 = productHpSpectre.Id,
+                     ProductId1 = productMiNotebook.Id,
+                     ProductId2 = productAcerNitro.Id,
                  });
 
-            productHpSpectre.RelatedProducts.Add(
+            productAcerNitro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpSpectre.Id,
-                    ProductId2 = productLenovoThinkpad.Id,
+                    ProductId1 = productAcerNitro.Id,
+                    ProductId2 = productDellXPS.Id,
                 });
 
-            productHpSpectre.RelatedProducts.Add(
+            productAcerNitro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpSpectre.Id,
-                    ProductId2 = productSamsungSeries.Id,
+                    ProductId1 = productAcerNitro.Id,
+                    ProductId2 = productAcerProjector.Id,
                 });
 
-            productHpSpectre.RelatedProducts.Add(
+            productAcerNitro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpSpectre.Id,
-                    ProductId2 = productAsusN551JK.Id,
+                    ProductId1 = productAcerNitro.Id,
+                    ProductId2 = productLenovoLegionY740.Id,
                 });
 
-            productHpSpectre.RelatedProducts.Add(
+            productAcerNitro.RelatedProducts.Add(
                  new RelatedProduct {
-                     ProductId1 = productHpSpectre.Id,
-                     ProductId2 = productHpEnvy.Id,
+                     ProductId1 = productAcerNitro.Id,
+                     ProductId2 = productDellG5.Id,
                  });
 
-            productHpEnvy.RelatedProducts.Add(
+            productDellG5.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpEnvy.Id,
-                    ProductId2 = productAsusN551JK.Id,
+                    ProductId1 = productDellG5.Id,
+                    ProductId2 = productLenovoLegionY740.Id,
                 });
 
-            productHpEnvy.RelatedProducts.Add(
+            productDellG5.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpEnvy.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId1 = productDellG5.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
-            productHpEnvy.RelatedProducts.Add(
+            productDellG5.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpEnvy.Id,
-                    ProductId2 = productHpSpectre.Id,
+                    ProductId1 = productDellG5.Id,
+                    ProductId2 = productAcerNitro.Id,
                 });
 
-            productHpEnvy.RelatedProducts.Add(
+            productDellG5.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHpEnvy.Id,
-                    ProductId2 = productSamsungSeries.Id,
+                    ProductId1 = productDellG5.Id,
+                    ProductId2 = productAcerMonitor.Id,
                 });
-            productSamsungSeries.RelatedProducts.Add(
+            productPs5Camera.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productSamsungSeries.Id,
-                    ProductId2 = productAsusN551JK.Id,
+                    ProductId1 = productPs5Camera.Id,
+                    ProductId2 = productPlaystationBundlePack.Id,
                 });
-            productSamsungSeries.RelatedProducts.Add(
+            productPs5Camera.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productSamsungSeries.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId1 = productPs5Camera.Id,
+                    ProductId2 = productPs4.Id,
                 });
 
-            productSamsungSeries.RelatedProducts.Add(
+            productPs5Camera.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productSamsungSeries.Id,
-                    ProductId2 = productHpEnvy.Id,
+                    ProductId1 = productPs5Camera.Id,
+                    ProductId2 = productDellG5.Id,
                 });
-            productSamsungSeries.RelatedProducts.Add(
+            productPs5Camera.RelatedProducts.Add(
                  new RelatedProduct {
-                     ProductId1 = productSamsungSeries.Id,
-                     ProductId2 = productHpSpectre.Id,
+                     ProductId1 = productPs5Camera.Id,
+                     ProductId2 = productAcerNitro.Id,
                  });
-            productLeica.RelatedProducts.Add(
+            productAcerProjector.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeica.Id,
-                    ProductId2 = productHtcOneMini.Id,
+                    ProductId1 = productAcerProjector.Id,
+                    ProductId2 = productRedmiNote9.Id,
                 });
 
-            productLeica.RelatedProducts.Add(
+            productAcerProjector.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeica.Id,
-                    ProductId2 = productNikonD5500DSLR.Id,
+                    ProductId1 = productAcerProjector.Id,
+                    ProductId2 = productDerbyKit.Id,
                 });
 
-            productLeica.RelatedProducts.Add(
+            productAcerProjector.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeica.Id,
-                    ProductId2 = productAppleICam.Id,
+                    ProductId1 = productAcerProjector.Id,
+                    ProductId2 = productAcerMonitor.Id,
                 });
 
-            productLeica.RelatedProducts.Add(
+            productAcerProjector.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeica.Id,
-                    ProductId2 = productNokiaLumia.Id,
+                    ProductId1 = productAcerProjector.Id,
+                    ProductId2 = productPocoF2Pro.Id,
                 });
-            productHtcOne.RelatedProducts.Add(
+            productRedmiK30.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOne.Id,
-                    ProductId2 = productHtcOneMini.Id,
-                });
-
-            productHtcOne.RelatedProducts.Add(
-                new RelatedProduct {
-                    ProductId1 = productHtcOne.Id,
-                    ProductId2 = productNokiaLumia.Id,
-                });
-            productHtcOne.RelatedProducts.Add(
-                new RelatedProduct {
-                    ProductId1 = productHtcOne.Id,
-                    ProductId2 = productBeatsPill.Id,
+                    ProductId1 = productRedmiK30.Id,
+                    ProductId2 = productRedmiNote9.Id,
                 });
 
-            productHtcOne.RelatedProducts.Add(
+            productRedmiK30.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOne.Id,
-                    ProductId2 = productPortableSoundSpeakers.Id,
+                    ProductId1 = productRedmiK30.Id,
+                    ProductId2 = productPocoF2Pro.Id,
+                });
+            productRedmiK30.RelatedProducts.Add(
+                new RelatedProduct {
+                    ProductId1 = productRedmiK30.Id,
+                    ProductId2 = productMiSmartBand.Id,
                 });
 
-            productHtcOneMini.RelatedProducts.Add(
+            productRedmiK30.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOneMini.Id,
-                    ProductId2 = productHtcOne.Id,
-                });
-            productHtcOneMini.RelatedProducts.Add(
-                new RelatedProduct {
-                    ProductId1 = productHtcOneMini.Id,
-                    ProductId2 = productNokiaLumia.Id,
+                    ProductId1 = productRedmiK30.Id,
+                    ProductId2 = productMiBeard.Id,
                 });
 
-            productHtcOneMini.RelatedProducts.Add(
+            productRedmiNote9.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOneMini.Id,
-                    ProductId2 = productBeatsPill.Id,
+                    ProductId1 = productRedmiNote9.Id,
+                    ProductId2 = productRedmiK30.Id,
                 });
-            productHtcOneMini.RelatedProducts.Add(
+            productRedmiNote9.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productHtcOneMini.Id,
-                    ProductId2 = productPortableSoundSpeakers.Id,
-                });
-            productNokiaLumia.RelatedProducts.Add(
-                new RelatedProduct {
-                    ProductId1 = productNokiaLumia.Id,
-                    ProductId2 = productHtcOne.Id,
-                });
-            productNokiaLumia.RelatedProducts.Add(
-                new RelatedProduct {
-                    ProductId1 = productNokiaLumia.Id,
-                    ProductId2 = productHtcOneMini.Id,
+                    ProductId1 = productRedmiNote9.Id,
+                    ProductId2 = productPocoF2Pro.Id,
                 });
 
-            productNokiaLumia.RelatedProducts.Add(
+            productRedmiNote9.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productNokiaLumia.Id,
-                    ProductId2 = productBeatsPill.Id,
+                    ProductId1 = productRedmiNote9.Id,
+                    ProductId2 = productMiSmartBand.Id,
                 });
-            productNokiaLumia.RelatedProducts.Add(
+            productRedmiNote9.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productNokiaLumia.Id,
-                    ProductId2 = productPortableSoundSpeakers.Id,
+                    ProductId1 = productRedmiNote9.Id,
+                    ProductId2 = productMiBeard.Id,
                 });
-
-            productAdidas.RelatedProducts.Add(
+            productPocoF2Pro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAdidas.Id,
-                    ProductId2 = productLeviJeans.Id,
+                    ProductId1 = productPocoF2Pro.Id,
+                    ProductId2 = productRedmiK30.Id,
                 });
-
-            productAdidas.RelatedProducts.Add(
+            productPocoF2Pro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAdidas.Id,
-                    ProductId2 = productNikeFloral.Id,
+                    ProductId1 = productPocoF2Pro.Id,
+                    ProductId2 = productRedmiNote9.Id,
                 });
 
-            productAdidas.RelatedProducts.Add(
+            productPocoF2Pro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAdidas.Id,
-                    ProductId2 = productNikeZoom.Id,
+                    ProductId1 = productPocoF2Pro.Id,
+                    ProductId2 = productMiSmartBand.Id,
                 });
-            productAdidas.RelatedProducts.Add(
+            productPocoF2Pro.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productAdidas.Id,
-                    ProductId2 = productNikeTailwind.Id,
-                });
-            productLeviJeans.RelatedProducts.Add(
-                new RelatedProduct {
-                    ProductId1 = productLeviJeans.Id,
-                    ProductId2 = productAdidas.Id,
-                });
-            productLeviJeans.RelatedProducts.Add(
-                new RelatedProduct {
-                    ProductId1 = productLeviJeans.Id,
-                    ProductId2 = productNikeFloral.Id,
+                    ProductId1 = productPocoF2Pro.Id,
+                    ProductId2 = productMiBeard.Id,
                 });
 
-            productLeviJeans.RelatedProducts.Add(
+            productAdidasNitrocharge.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeviJeans.Id,
-                    ProductId2 = productNikeZoom.Id,
-                });
-            productLeviJeans.RelatedProducts.Add(
-                new RelatedProduct {
-                    ProductId1 = productLeviJeans.Id,
-                    ProductId2 = productNikeTailwind.Id,
+                    ProductId1 = productAdidasNitrocharge.Id,
+                    ProductId2 = productChicagoBulls.Id,
                 });
 
-            productCustomTShirt.RelatedProducts.Add(
+            productAdidasNitrocharge.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productCustomTShirt.Id,
-                    ProductId2 = productLeviJeans.Id,
+                    ProductId1 = productAdidasNitrocharge.Id,
+                    ProductId2 = productAdidasPredator.Id,
                 });
 
-            productCustomTShirt.RelatedProducts.Add(
+            productAdidasNitrocharge.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productCustomTShirt.Id,
-                    ProductId2 = productNikeTailwind.Id,
+                    ProductId1 = productAdidasNitrocharge.Id,
+                    ProductId2 = productAdidasTurfs.Id,
                 });
-            productCustomTShirt.RelatedProducts.Add(
+            productAdidasNitrocharge.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productCustomTShirt.Id,
-                    ProductId2 = productOversizedWomenTShirt.Id,
+                    ProductId1 = productAdidasNitrocharge.Id,
+                    ProductId2 = productNikeKids.Id,
                 });
-            productCustomTShirt.RelatedProducts.Add(
+            productChicagoBulls.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productCustomTShirt.Id,
-                    ProductId2 = productObeyHat.Id,
+                    ProductId1 = productChicagoBulls.Id,
+                    ProductId2 = productAdidasNitrocharge.Id,
                 });
-            productDigitalStorm.RelatedProducts.Add(
+            productChicagoBulls.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productDigitalStorm.Id,
+                    ProductId1 = productChicagoBulls.Id,
+                    ProductId2 = productAdidasPredator.Id,
+                });
+
+            productChicagoBulls.RelatedProducts.Add(
+                new RelatedProduct {
+                    ProductId1 = productChicagoBulls.Id,
+                    ProductId2 = productAdidasTurfs.Id,
+                });
+            productChicagoBulls.RelatedProducts.Add(
+                new RelatedProduct {
+                    ProductId1 = productChicagoBulls.Id,
+                    ProductId2 = productNikeKids.Id,
+                });
+
+            productDerbyShirt.RelatedProducts.Add(
+                new RelatedProduct {
+                    ProductId1 = productDerbyShirt.Id,
+                    ProductId2 = productChicagoBulls.Id,
+                });
+
+            productDerbyShirt.RelatedProducts.Add(
+                new RelatedProduct {
+                    ProductId1 = productDerbyShirt.Id,
+                    ProductId2 = productNikeKids.Id,
+                });
+            productDerbyShirt.RelatedProducts.Add(
+                new RelatedProduct {
+                    ProductId1 = productDerbyShirt.Id,
+                    ProductId2 = productPsgKit.Id,
+                });
+            productDerbyShirt.RelatedProducts.Add(
+                new RelatedProduct {
+                    ProductId1 = productDerbyShirt.Id,
+                    ProductId2 = productVivoactive.Id,
+                });
+            productSonyPS5Pad.RelatedProducts.Add(
+                new RelatedProduct {
+                    ProductId1 = productSonyPS5Pad.Id,
                     ProductId2 = productBuildComputer.Id,
                 });
-            productDigitalStorm.RelatedProducts.Add(
+            productSonyPS5Pad.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productDigitalStorm.Id,
-                    ProductId2 = productLenovoIdeaCentre.Id,
+                    ProductId1 = productSonyPS5Pad.Id,
+                    ProductId2 = productLenovoIdeaPadDual.Id,
                 });
-            productDigitalStorm.RelatedProducts.Add(
+            productSonyPS5Pad.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productDigitalStorm.Id,
-                    ProductId2 = productLenovoThinkpad.Id,
+                    ProductId1 = productSonyPS5Pad.Id,
+                    ProductId2 = productDellXPS.Id,
                 });
-            productDigitalStorm.RelatedProducts.Add(
+            productSonyPS5Pad.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productDigitalStorm.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId1 = productSonyPS5Pad.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
-            productLenovoIdeaCentre.RelatedProducts.Add(
+            productLenovoIdeaPadDual.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoIdeaCentre.Id,
+                    ProductId1 = productLenovoIdeaPadDual.Id,
                     ProductId2 = productBuildComputer.Id,
                 });
 
-            productLenovoIdeaCentre.RelatedProducts.Add(
+            productLenovoIdeaPadDual.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoIdeaCentre.Id,
-                    ProductId2 = productDigitalStorm.Id,
+                    ProductId1 = productLenovoIdeaPadDual.Id,
+                    ProductId2 = productSonyPS5Pad.Id,
                 });
 
-            productLenovoIdeaCentre.RelatedProducts.Add(
+            productLenovoIdeaPadDual.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoIdeaCentre.Id,
-                    ProductId2 = productLenovoThinkpad.Id,
+                    ProductId1 = productLenovoIdeaPadDual.Id,
+                    ProductId2 = productDellXPS.Id,
                 });
 
-            productLenovoIdeaCentre.RelatedProducts.Add(
+            productLenovoIdeaPadDual.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLenovoIdeaCentre.Id,
-                    ProductId2 = productAppleMacBookPro.Id,
+                    ProductId1 = productLenovoIdeaPadDual.Id,
+                    ProductId2 = productMiNotebook.Id,
                 });
 
 
@@ -9289,95 +9579,95 @@ namespace Grand.Services.Installation
             //product tags
             await AddProductTag(product25GiftCard, "nice");
             await AddProductTag(product25GiftCard, "gift");
-            await AddProductTag(productNikeTailwind, "cool");
-            await AddProductTag(productNikeTailwind, "apparel");
-            await AddProductTag(productNikeTailwind, "shirt");
-            await AddProductTag(productBeatsPill, "computer");
-            await AddProductTag(productBeatsPill, "cool");
-            await AddProductTag(productNikeFloral, "cool");
-            await AddProductTag(productNikeFloral, "shoes");
-            await AddProductTag(productNikeFloral, "apparel");
-            await AddProductTag(productAdobePhotoshop, "computer");
-            await AddProductTag(productAdobePhotoshop, "awesome");
-            await AddProductTag(productUniversalTabletCover, "computer");
-            await AddProductTag(productUniversalTabletCover, "cool");
-            await AddProductTag(productOversizedWomenTShirt, "cool");
-            await AddProductTag(productOversizedWomenTShirt, "apparel");
-            await AddProductTag(productOversizedWomenTShirt, "shirt");
-            await AddProductTag(productAppleMacBookPro, "compact");
-            await AddProductTag(productAppleMacBookPro, "awesome");
-            await AddProductTag(productAppleMacBookPro, "computer");
-            await AddProductTag(productAsusN551JK, "compact");
-            await AddProductTag(productAsusN551JK, "awesome");
-            await AddProductTag(productAsusN551JK, "computer");
-            await AddProductTag(productFahrenheit, "awesome");
-            await AddProductTag(productFahrenheit, "book");
-            await AddProductTag(productFahrenheit, "nice");
-            await AddProductTag(productHtcOne, "cell");
-            await AddProductTag(productHtcOne, "compact");
-            await AddProductTag(productHtcOne, "awesome");
+            await AddProductTag(productNikeKids, "cool");
+            await AddProductTag(productNikeKids, "apparel");
+            await AddProductTag(productNikeKids, "shirt");
+            await AddProductTag(productMiSmartBand, "computer");
+            await AddProductTag(productMiSmartBand, "cool");
+            await AddProductTag(productAdidasPredator, "cool");
+            await AddProductTag(productAdidasPredator, "shoes");
+            await AddProductTag(productAdidasPredator, "apparel");
+            await AddProductTag(productLenovoYogaDuet, "tablet");
+            await AddProductTag(productLenovoYogaDuet, "awesome");
+            await AddProductTag(productPs4, "computer");
+            await AddProductTag(productPs4, "cool");
+            await AddProductTag(productPsgKit, "cool");
+            await AddProductTag(productPsgKit, "apparel");
+            await AddProductTag(productPsgKit, "shirt");
+            await AddProductTag(productMiNotebook, "compact");
+            await AddProductTag(productMiNotebook, "awesome");
+            await AddProductTag(productMiNotebook, "computer");
+            await AddProductTag(productLenovoLegionY740, "compact");
+            await AddProductTag(productLenovoLegionY740, "awesome");
+            await AddProductTag(productLenovoLegionY740, "computer");
+            await AddProductTag(productLegoFalcon, "awesome");
+            await AddProductTag(productLegoFalcon, "lego");
+            await AddProductTag(productLegoFalcon, "nice");
+            await AddProductTag(productRedmiK30, "cell");
+            await AddProductTag(productRedmiK30, "compact");
+            await AddProductTag(productRedmiK30, "awesome");
             await AddProductTag(productBuildComputer, "awesome");
             await AddProductTag(productBuildComputer, "computer");
-            await AddProductTag(productNikonD5500DSLR, "cool");
-            await AddProductTag(productNikonD5500DSLR, "camera");
-            await AddProductTag(productLeica, "camera");
-            await AddProductTag(productLeica, "cool");
-            await AddProductTag(productDigitalStorm, "cool");
-            await AddProductTag(productDigitalStorm, "computer");
-            await AddProductTag(productWindows8Pro, "awesome");
-            await AddProductTag(productWindows8Pro, "computer");
-            await AddProductTag(productCustomTShirt, "cool");
-            await AddProductTag(productCustomTShirt, "shirt");
-            await AddProductTag(productCustomTShirt, "apparel");
-            await AddProductTag(productElegantGemstoneNecklace, "jewelry");
-            await AddProductTag(productElegantGemstoneNecklace, "awesome");
-            await AddProductTag(productFlowerGirlBracelet, "awesome");
-            await AddProductTag(productFlowerGirlBracelet, "jewelry");
-            await AddProductTag(productFirstPrizePies, "book");
-            await AddProductTag(productAdidas, "cool");
-            await AddProductTag(productAdidas, "shoes");
-            await AddProductTag(productAdidas, "apparel");
-            await AddProductTag(productLenovoIdeaCentre, "awesome");
-            await AddProductTag(productLenovoIdeaCentre, "computer");
-            await AddProductTag(productSamsungSeries, "nice");
-            await AddProductTag(productSamsungSeries, "computer");
-            await AddProductTag(productSamsungSeries, "compact");
-            await AddProductTag(productHpSpectre, "nice");
-            await AddProductTag(productHpSpectre, "computer");
-            await AddProductTag(productHpEnvy, "computer");
-            await AddProductTag(productHpEnvy, "cool");
-            await AddProductTag(productHpEnvy, "compact");
-            await AddProductTag(productObeyHat, "apparel");
-            await AddProductTag(productObeyHat, "cool");
-            await AddProductTag(productLeviJeans, "cool");
-            await AddProductTag(productLeviJeans, "jeans");
-            await AddProductTag(productLeviJeans, "apparel");
-            await AddProductTag(productSoundForge, "game");
-            await AddProductTag(productSoundForge, "computer");
-            await AddProductTag(productSoundForge, "cool");
-            await AddProductTag(productNightVision, "awesome");
-            await AddProductTag(productNightVision, "digital");
-            await AddProductTag(productSunglasses, "apparel");
-            await AddProductTag(productSunglasses, "cool");
-            await AddProductTag(productHtcOneMini, "awesome");
-            await AddProductTag(productHtcOneMini, "compact");
-            await AddProductTag(productHtcOneMini, "cell");
-            await AddProductTag(productIfYouWait, "digital");
-            await AddProductTag(productIfYouWait, "awesome");
-            await AddProductTag(productNokiaLumia, "awesome");
-            await AddProductTag(productNokiaLumia, "cool");
-            await AddProductTag(productNokiaLumia, "camera");
-            await AddProductTag(productScienceAndFaith, "digital");
-            await AddProductTag(productScienceAndFaith, "awesome");
-            await AddProductTag(productPrideAndPrejudice, "book");
-            await AddProductTag(productLenovoThinkpad, "awesome");
-            await AddProductTag(productLenovoThinkpad, "computer");
-            await AddProductTag(productLenovoThinkpad, "compact");
-            await AddProductTag(productNikeZoom, "jeans");
-            await AddProductTag(productNikeZoom, "cool");
-            await AddProductTag(productNikeZoom, "apparel");
-            await AddProductTag(productEngagementRing, "jewelry");
-            await AddProductTag(productEngagementRing, "awesome");
+            await AddProductTag(productDerbyKit, "cool");
+            await AddProductTag(productDerbyKit, "football kit");
+            await AddProductTag(productAcerProjector, "projector");
+            await AddProductTag(productAcerProjector, "cool");
+            await AddProductTag(productSonyPS5Pad, "cool");
+            await AddProductTag(productSonyPS5Pad, "computer");
+            await AddProductTag(productLenovoSmartTab, "awesome");
+            await AddProductTag(productLenovoSmartTab, "tablet");
+            await AddProductTag(productDerbyShirt, "cool");
+            await AddProductTag(productDerbyShirt, "shirt");
+            await AddProductTag(productDerbyShirt, "apparel");
+            await AddProductTag(productAdidasBall, "Balls");
+            await AddProductTag(productAdidasBall, "awesome");
+            await AddProductTag(productMikasa, "awesome");
+            await AddProductTag(productMikasa, "Balls");
+            await AddProductTag(productLegoHogwarts, "lego");
+            await AddProductTag(productAdidasNitrocharge, "cool");
+            await AddProductTag(productAdidasNitrocharge, "shoes");
+            await AddProductTag(productAdidasNitrocharge, "apparel");
+            await AddProductTag(productLenovoIdeaPadDual, "awesome");
+            await AddProductTag(productLenovoIdeaPadDual, "tablet");
+            await AddProductTag(productPs5Camera, "nice");
+            await AddProductTag(productPs5Camera, "computer");
+            await AddProductTag(productPs5Camera, "compact");
+            await AddProductTag(productAcerNitro, "nice");
+            await AddProductTag(productAcerNitro, "computer");
+            await AddProductTag(productDellG5, "computer");
+            await AddProductTag(productDellG5, "cool");
+            await AddProductTag(productDellG5, "compact");
+            await AddProductTag(productVivoactive, "apparel");
+            await AddProductTag(productVivoactive, "cool");
+            await AddProductTag(productChicagoBulls, "cool");
+            await AddProductTag(productChicagoBulls, "sport");
+            await AddProductTag(productChicagoBulls, "apparel");
+            await AddProductTag(productAsusMixedReality, "game");
+            await AddProductTag(productAsusMixedReality, "computer");
+            await AddProductTag(productAsusMixedReality, "cool");
+            await AddProductTag(productCyberpunk, "awesome");
+            await AddProductTag(productCyberpunk, "digital");
+            await AddProductTag(productForerunner, "apparel");
+            await AddProductTag(productForerunner, "cool");
+            await AddProductTag(productRedmiNote9, "awesome");
+            await AddProductTag(productRedmiNote9, "compact");
+            await AddProductTag(productRedmiNote9, "cell");
+            await AddProductTag(productGTA, "digital");
+            await AddProductTag(productGTA, "game");
+            await AddProductTag(productPocoF2Pro, "awesome");
+            await AddProductTag(productPocoF2Pro, "cool");
+            await AddProductTag(productPocoF2Pro, "camera");
+            await AddProductTag(productCod, "digital");
+            await AddProductTag(productCod, "awesome");
+            await AddProductTag(productLegoCity, "lego");
+            await AddProductTag(productDellXPS, "awesome");
+            await AddProductTag(productDellXPS, "computer");
+            await AddProductTag(productDellXPS, "compact");
+            await AddProductTag(productAdidasTurfs, "jeans");
+            await AddProductTag(productAdidasTurfs, "cool");
+            await AddProductTag(productAdidasTurfs, "apparel");
+            await AddProductTag(productSpalding, "Balls");
+            await AddProductTag(productSpalding, "awesome");
 
 
             #endregion
