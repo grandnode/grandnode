@@ -189,13 +189,13 @@ namespace Grand.Services.Orders
             await _mediator.Send(new UpdateCustomerReminderHistoryCommand() { CustomerId = order.CustomerId, OrderId = order.Id });
 
             //Updated field "free shipping" after added a new order
-            await _customerService.UpdateFreeShipping(order.CustomerId, false);
+            await _customerService.UpdateCustomerField(_workContext.CurrentCustomer, x => x.FreeShipping, false);
 
             //Update field Last purchase date after added a new order
-            await _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);
+            await _customerService.UpdateCustomerField(_workContext.CurrentCustomer, x => x.LastPurchaseDateUtc, order.CreatedOnUtc);
 
             //Update field Last purchase date after added a new order
-            await _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
+            await _customerService.UpdateCustomerField(_workContext.CurrentCustomer, x => x.LastUpdateCartDateUtc, null);
 
             if (!details.Customer.HasContributions)
             {

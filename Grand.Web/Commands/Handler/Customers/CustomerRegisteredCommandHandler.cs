@@ -200,7 +200,7 @@ namespace Grand.Web.Commands.Handler.Customers
 
             //New customer has a free shipping for the first order
             if (_customerSettings.RegistrationFreeShipping)
-                await _customerService.UpdateFreeShipping(request.Customer.Id, true);
+                await _customerService.UpdateCustomerField(request.Customer, x => x.FreeShipping, true);
 
             await _customerActionEventService.Registration(request.Customer);
 

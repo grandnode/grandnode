@@ -150,14 +150,15 @@ namespace Grand.Services.Customers
         /// Updates the customer field
         /// </summary>
         /// <param name="customer">Customer</param>
-        Task UpdateCustomerField(Customer customer,
-            Expression<Func<Customer, object>> expression, object value);
+        Task UpdateCustomerField<T>(Customer customer,
+            Expression<Func<Customer, T>> expression, T value);
 
         /// <summary>
-        /// Updates the customer
+        /// Updates the customer field
         /// </summary>
-        /// <param name="customer">Customer</param>
-        Task UpdateCustomerLastActivityDate(Customer customer);
+        /// <param name="customerId">Customer ident</param>
+        Task UpdateCustomerField<T>(string customerId,
+            Expression<Func<Customer, T>> expression, T value);
 
         /// <summary>
         /// Updates the customer
@@ -170,14 +171,6 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         Task UpdateCustomerPassword(Customer customer);
-
-
-        /// <summary>
-        /// Update free shipping
-        /// </summary>
-        /// <param name="customerId"></param>
-        /// <param name="freeShipping"></param>
-        Task UpdateFreeShipping(string customerId, bool freeShipping);
 
         /// <summary>
         /// Updates the customer
@@ -202,28 +195,7 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         Task UpdateCustomerLastLoginDate(Customer customer);
-
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        Task UpdateCustomerLastIpAddress(Customer customer);
-
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        Task UpdateCustomerLastPurchaseDate(string customerId, DateTime date);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        Task UpdateCustomerLastUpdateCartDate(string customerId, DateTime? date);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        Task UpdateCustomerLastUpdateWishList(string customerId, DateTime date);
+        
         /// <summary>
         /// Updates the customer in admin panel
         /// </summary>

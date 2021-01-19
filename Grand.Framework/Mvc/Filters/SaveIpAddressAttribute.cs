@@ -78,7 +78,7 @@ namespace Grand.Framework.Mvc.Filters
                 if (!currentIpAddress.Equals(_workContext.CurrentCustomer.LastIpAddress, StringComparison.OrdinalIgnoreCase))
                 {
                     _workContext.CurrentCustomer.LastIpAddress = currentIpAddress;
-                    await _customerService.UpdateCustomerLastIpAddress(_workContext.CurrentCustomer);
+                    await _customerService.UpdateCustomerField(_workContext.CurrentCustomer, x => x.LastIpAddress, currentIpAddress);
                 }
             }
             #endregion

@@ -1,9 +1,10 @@
 using Grand.Core;
-using Grand.Domain;
 using Grand.Core.Caching;
-using Grand.Domain.Data;
+using Grand.Core.Caching.Constants;
+using Grand.Domain;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
+using Grand.Domain.Data;
 using Grand.Domain.Orders;
 using Grand.Domain.Shipping;
 using Grand.Domain.Stores;
@@ -16,9 +17,8 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Linq.Expressions;
-using Grand.Core.Caching.Constants;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -27,12 +27,6 @@ namespace Grand.Services.Customers
     /// </summary>
     public partial class CustomerService : ICustomerService
     {
-        #region Constants
-
-
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Customer> _customerRepository;
@@ -143,23 +137,23 @@ namespace Grand.Services.Customers
                 query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.FirstName && y.Value != null && y.Value.ToLower().Contains(firstName.ToLower())));
             }
 
-            if (!String.IsNullOrWhiteSpace(lastName))
+            if (!string.IsNullOrWhiteSpace(lastName))
             {
                 query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.LastName && y.Value != null && y.Value.ToLower().Contains(lastName.ToLower())));
             }
 
             //search by company
-            if (!String.IsNullOrWhiteSpace(company))
+            if (!string.IsNullOrWhiteSpace(company))
             {
                 query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.Company && y.Value != null && y.Value.ToLower().Contains(company.ToLower())));
             }
             //search by phone
-            if (!String.IsNullOrWhiteSpace(phone))
+            if (!string.IsNullOrWhiteSpace(phone))
             {
                 query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.Phone && y.Value != null && y.Value.ToLower().Contains(phone.ToLower())));
             }
             //search by zip
-            if (!String.IsNullOrWhiteSpace(zipPostalCode))
+            if (!string.IsNullOrWhiteSpace(zipPostalCode))
             {
                 query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.ZipPostalCode && y.Value != null && y.Value.ToLower().Contains(zipPostalCode.ToLower())));
             }
@@ -322,7 +316,7 @@ namespace Grand.Services.Customers
             var customers = await query.ToListAsync();
             //sort by passed identifiers
             var sortedCustomers = new List<Customer>();
-            foreach (string id in customerIds)
+            foreach (var id in customerIds)
             {
                 var customer = customers.Find(x => x.Id == id);
                 if (customer != null)
@@ -450,12 +444,13 @@ namespace Grand.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var chp = new CustomerHistoryPassword();
-            chp.Password = customer.Password;
-            chp.PasswordFormatId = customer.PasswordFormatId;
-            chp.PasswordSalt = customer.PasswordSalt;
-            chp.CustomerId = customer.Id;
-            chp.CreatedOnUtc = DateTime.UtcNow;
+            var chp = new CustomerHistoryPassword {
+                Password = customer.Password,
+                PasswordFormatId = customer.PasswordFormatId,
+                PasswordSalt = customer.PasswordSalt,
+                CustomerId = customer.Id,
+                CreatedOnUtc = DateTime.UtcNow
+            };
 
             await _customerHistoryPasswordProductRepository.InsertAsync(chp);
 
@@ -482,21 +477,34 @@ namespace Grand.Services.Customers
         /// Updates the customer field
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual async Task UpdateCustomerField(Customer customer,
-            Expression<Func<Customer, object>> expression, object value)
+        public virtual async Task UpdateCustomerField<T>(Customer customer,
+            Expression<Func<Customer, T>> expression, T value)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
+            await UpdateCustomerField(customer.Id, expression, value);
+
+        }
+
+        /// <summary>
+        /// Updates the customer field
+        /// </summary>
+        /// <param name="customerId">Customer ident</param>
+        public virtual async Task UpdateCustomerField<T>(string customerId,
+            Expression<Func<Customer, T>> expression, T value)
+        {
+            if (string.IsNullOrEmpty(customerId))
+                throw new ArgumentNullException("customerId");
+
             var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
+            var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(expression, value);
 
             await _customerRepository.Collection.UpdateOneAsync(filter, update);
 
         }
-
         /// <summary>
         /// Updates the customer
         /// </summary>
@@ -524,22 +532,7 @@ namespace Grand.Services.Customers
             //event notification
             await _mediator.EntityUpdated(customer);
         }
-        /// <summary>
-        /// Updates the customer - last activity date
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        public virtual async Task UpdateCustomerLastActivityDate(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
 
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
-            var update = Builders<Customer>.Update
-                .Set(x => x.LastActivityDateUtc, customer.LastActivityDateUtc);
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
-
-        }
         /// <summary>
         /// Updates the customer - last activity date
         /// </summary>
@@ -577,22 +570,7 @@ namespace Grand.Services.Customers
             //event notification
             await _mediator.EntityUpdated(customer);
         }
-        /// <summary>
-        /// Updates the customer - last activity date
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        public virtual async Task UpdateCustomerLastIpAddress(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
 
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
-            var update = Builders<Customer>.Update
-                .Set(x => x.LastIpAddress, customer.LastIpAddress);
-
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
-        }
         /// <summary>
         /// Updates the customer - password
         /// </summary>
@@ -641,15 +619,6 @@ namespace Grand.Services.Customers
             await _mediator.EntityUpdated(customer);
 
         }
-        public virtual async Task UpdateFreeShipping(string customerId, bool freeShipping)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.FreeShipping, freeShipping);
-
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
-        }
 
         public virtual async Task UpdateAffiliate(Customer customer)
         {
@@ -681,38 +650,7 @@ namespace Grand.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
-            var update = Builders<Customer>.Update
-                .Set(x => x.HasContributions, true);
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
-        }
-
-        public virtual async Task UpdateCustomerLastPurchaseDate(string customerId, DateTime date)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.LastPurchaseDateUtc, date);
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
-        }
-
-        public virtual async Task UpdateCustomerLastUpdateCartDate(string customerId, DateTime? date)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.LastUpdateCartDateUtc, date);
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
-        }
-
-        public virtual async Task UpdateCustomerLastUpdateWishList(string customerId, DateTime date)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.LastUpdateWishListDateUtc, date);
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
+            await UpdateCustomerField(customer.Id, x => x.HasContributions, true);
         }
 
         /// <summary>
@@ -1167,9 +1105,9 @@ namespace Grand.Services.Customers
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
+                await UpdateCustomerField(customerId, x => x.LastUpdateCartDateUtc, DateTime.UtcNow);
             else
-                await UpdateCustomerLastUpdateWishList(customerId, DateTime.UtcNow);
+                await UpdateCustomerField(customerId, x => x.LastUpdateWishListDateUtc, DateTime.UtcNow);
 
         }
 
@@ -1181,10 +1119,9 @@ namespace Grand.Services.Customers
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
             if (cart.Any(c => c.ShoppingCartType == ShoppingCartType.ShoppingCart || c.ShoppingCartType == ShoppingCartType.Auctions))
-                await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
+                await UpdateCustomerField(customerId, x => x.LastUpdateCartDateUtc, DateTime.UtcNow);
             if (cart.Any(c => c.ShoppingCartType == ShoppingCartType.Wishlist))
-                await UpdateCustomerLastUpdateWishList(customerId, DateTime.UtcNow);
-
+                await UpdateCustomerField(customerId, x => x.LastUpdateWishListDateUtc, DateTime.UtcNow);
         }
 
         public virtual async Task InsertShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem)
@@ -1197,9 +1134,9 @@ namespace Grand.Services.Customers
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
+                await UpdateCustomerField(customerId, x => x.LastUpdateCartDateUtc, DateTime.UtcNow);
             else
-                await UpdateCustomerLastUpdateWishList(customerId, DateTime.UtcNow);
+                await UpdateCustomerField(customerId, x => x.LastUpdateWishListDateUtc, DateTime.UtcNow);
         }
 
         public virtual async Task UpdateShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem)
@@ -1209,7 +1146,7 @@ namespace Grand.Services.Customers
 
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
-            filter = filter & builder.ElemMatch(x => x.ShoppingCartItems, y => y.Id == shoppingCartItem.Id);
+            filter &= builder.ElemMatch(x => x.ShoppingCartItems, y => y.Id == shoppingCartItem.Id);
             var update = Builders<Customer>.Update
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).WarehouseId, shoppingCartItem.WarehouseId)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).Quantity, shoppingCartItem.Quantity)
@@ -1224,14 +1161,17 @@ namespace Grand.Services.Customers
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).Attributes, shoppingCartItem.Attributes)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).EnteredPrice, shoppingCartItem.EnteredPrice)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).UpdatedOnUtc, shoppingCartItem.UpdatedOnUtc)
+                .Set(x => x.ShoppingCartItems.ElementAt(-1).Duration, shoppingCartItem.Duration)
+                .Set(x => x.ShoppingCartItems.ElementAt(-1).Parameter, shoppingCartItem.Parameter)
+                .Set(x => x.ShoppingCartItems.ElementAt(-1).StoreId, shoppingCartItem.StoreId)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).ShoppingCartTypeId, shoppingCartItem.ShoppingCartTypeId);
 
             await _customerRepository.Collection.UpdateManyAsync(filter, update);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
+                await UpdateCustomerField(customerId, x => x.LastUpdateCartDateUtc, DateTime.UtcNow);
             else
-                await UpdateCustomerLastUpdateWishList(customerId, DateTime.UtcNow);
+                await UpdateCustomerField(customerId, x => x.LastUpdateWishListDateUtc, DateTime.UtcNow);
 
         }
 

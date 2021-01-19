@@ -71,8 +71,7 @@ namespace Grand.Framework.Mvc.Filters
                 //update last activity date
                 if (_workContext.CurrentCustomer.LastActivityDateUtc.AddMinutes(1.0) < DateTime.UtcNow)
                 {
-                    _workContext.CurrentCustomer.LastActivityDateUtc = DateTime.UtcNow;
-                    await _customerService.UpdateCustomerLastActivityDate(_workContext.CurrentCustomer);
+                    await _customerService.UpdateCustomerField(_workContext.CurrentCustomer, x => x.LastActivityDateUtc, DateTime.UtcNow);
                 }
 
                 await _customerActionEventService.Url(_workContext.CurrentCustomer, context.HttpContext?.Request?.Path.ToString(), context.HttpContext?.Request?.Headers["Referer"]);
