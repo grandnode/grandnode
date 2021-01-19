@@ -8171,7 +8171,7 @@ namespace Grand.Services.Installation
             });
             await _productRepository.InsertAsync(productDerbyKitHome);
 
-            var productLeviJeans = new Product {
+            var productChicagoBulls = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Chicago Bulls Jersey",
@@ -8226,17 +8226,17 @@ namespace Grand.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productLeviJeans);
+            allProducts.Add(productChicagoBulls);
 
-            productLeviJeans.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_1.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
+            productChicagoBulls.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_1.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productChicagoBulls.Name))).Id,
                 DisplayOrder = 1,
             });
-            productLeviJeans.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_2.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
+            productChicagoBulls.ProductPictures.Add(new ProductPicture {
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_2.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productChicagoBulls.Name))).Id,
                 DisplayOrder = 2,
             });
-            await _productRepository.InsertAsync(productLeviJeans);
+            await _productRepository.InsertAsync(productChicagoBulls);
 
 
             #endregion
@@ -9456,7 +9456,7 @@ namespace Grand.Services.Installation
             productAdidasNitrocharge.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productAdidasNitrocharge.Id,
-                    ProductId2 = productLeviJeans.Id,
+                    ProductId2 = productChicagoBulls.Id,
                 });
 
             productAdidasNitrocharge.RelatedProducts.Add(
@@ -9475,32 +9475,32 @@ namespace Grand.Services.Installation
                     ProductId1 = productAdidasNitrocharge.Id,
                     ProductId2 = productNikeKids.Id,
                 });
-            productLeviJeans.RelatedProducts.Add(
+            productChicagoBulls.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeviJeans.Id,
+                    ProductId1 = productChicagoBulls.Id,
                     ProductId2 = productAdidasNitrocharge.Id,
                 });
-            productLeviJeans.RelatedProducts.Add(
+            productChicagoBulls.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeviJeans.Id,
+                    ProductId1 = productChicagoBulls.Id,
                     ProductId2 = productAdidasPredator.Id,
                 });
 
-            productLeviJeans.RelatedProducts.Add(
+            productChicagoBulls.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeviJeans.Id,
+                    ProductId1 = productChicagoBulls.Id,
                     ProductId2 = productAdidasTurfs.Id,
                 });
-            productLeviJeans.RelatedProducts.Add(
+            productChicagoBulls.RelatedProducts.Add(
                 new RelatedProduct {
-                    ProductId1 = productLeviJeans.Id,
+                    ProductId1 = productChicagoBulls.Id,
                     ProductId2 = productNikeKids.Id,
                 });
 
             productDerbyShirt.RelatedProducts.Add(
                 new RelatedProduct {
                     ProductId1 = productDerbyShirt.Id,
-                    ProductId2 = productLeviJeans.Id,
+                    ProductId2 = productChicagoBulls.Id,
                 });
 
             productDerbyShirt.RelatedProducts.Add(
@@ -9631,9 +9631,9 @@ namespace Grand.Services.Installation
             await AddProductTag(productDellG5, "compact");
             await AddProductTag(productVivoactive, "apparel");
             await AddProductTag(productVivoactive, "cool");
-            await AddProductTag(productLeviJeans, "cool");
-            await AddProductTag(productLeviJeans, "jeans");
-            await AddProductTag(productLeviJeans, "apparel");
+            await AddProductTag(productChicagoBulls, "cool");
+            await AddProductTag(productChicagoBulls, "sport");
+            await AddProductTag(productChicagoBulls, "apparel");
             await AddProductTag(productAsusMixedReality, "game");
             await AddProductTag(productAsusMixedReality, "computer");
             await AddProductTag(productAsusMixedReality, "cool");
