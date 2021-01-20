@@ -18,6 +18,19 @@
                         <div class="btn-group btn-group-devided">
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                             <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                            @if (Model.Active)
+                            {
+                                <button type="submit" name="activatevendor" value="deactive" class="btn purple" onclick="return confirm('@T("Admin.Common.AreYouSure")');"> 
+                                    @T("Admin.Common.Deactivate")
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" name="activatevendor" value="active" class="btn bg-orange"
+                                        onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                                    @T("Admin.Common.Activate")
+                                </button>
+                            }
                             <span id="vendor-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                             <vc:admin-widget widget-zone="vendor_details_buttons" additional-data="Model" />
                         </div>

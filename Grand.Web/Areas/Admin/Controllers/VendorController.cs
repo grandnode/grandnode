@@ -17,6 +17,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using MediatR;
+using Grand.Services.Commands.Models.Customers;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -28,6 +30,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IVendorService _vendorService;
         private readonly ILanguageService _languageService;
+        private readonly IMediator _mediator;
         #endregion
 
         #region Constructors
@@ -36,12 +39,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             IVendorViewModelService vendorViewModelService,
             ILocalizationService localizationService,
             IVendorService vendorService,
-            ILanguageService languageService)
+            ILanguageService languageService,
+            IMediator mediator)
         {
             _vendorViewModelService = vendorViewModelService;
             _localizationService = localizationService;
             _vendorService = vendorService;
             _languageService = languageService;
+            _mediator = mediator;
         }
 
         #endregion
@@ -62,8 +67,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> List(DataSourceRequest command, VendorListModel model)
         {
             var vendors = await _vendorService.GetAllVendors(model.SearchName, command.Page - 1, command.PageSize, true);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = vendors.Select(x =>
                 {
                     var vendorModel = x.ToModel();
@@ -147,7 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (vendor == null || vendor.Deleted)
                 //No vendor found with the specified id
                 return RedirectToAction("List");
-            
+
             if (ModelState.IsValid)
             {
                 vendor = await _vendorViewModelService.UpdateVendorModel(vendor, model);
@@ -174,6 +178,37 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _vendorViewModelService.PrepareStore(model);
 
             return View(model);
+        }
+
+
+        [PermissionAuthorizeAction(PermissionActionName.Edit)]
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("activatevendor", "deactivatevendor")]
+        public async Task<IActionResult> Activate(string id, string activatevendor)
+        {
+            var vendor = await _vendorService.GetVendorById(id);
+            if (vendor == null || vendor.Deleted)
+                //No vendor found with the specified id
+                return RedirectToAction("List");
+
+            var associatedCustomers = await _vendorViewModelService.AssociatedCustomers(vendor.Id);
+            if (!associatedCustomers.Any())
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Vendors.Fields.AssociatedCustomerEmails.None"));
+                return RedirectToAction("Edit", new { id = vendor.Id });
+            }
+
+            var activate = await _mediator.Send(new ActiveVendorCommand() {
+                Vendor = vendor,
+                Active = activatevendor == "active",
+                CustomerIds = associatedCustomers.Select(x => x.Id).ToList()
+            });
+
+            if (activate)
+                SuccessNotification(_localizationService.GetResource("Admin.Vendors.Updated"));
+
+            return RedirectToAction("Edit", new { id = vendor.Id });
+
         }
 
         //delete
@@ -209,8 +244,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No vendor found with the specified id");
 
             var vendorNoteModels = _vendorViewModelService.PrepareVendorNote(vendor);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = vendorNoteModels,
                 Total = vendorNoteModels.Count
             };
@@ -266,8 +300,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _vendorViewModelService.PrepareVendorReviewModel(m, item, false, true);
                 items.Add(m);
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = vendorReviews.TotalCount,
             };

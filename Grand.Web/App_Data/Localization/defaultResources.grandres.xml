@@ -4794,6 +4794,9 @@
   <LocaleResource Name="Admin.Catalog.Vendors.List.SearchVendorName.Hint">
     <Value>A vendor name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Activate">
+    <Value>Activate</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.AddNew">
     <Value>Add new</Value>
   </LocaleResource>
@@ -4826,6 +4829,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.CsvFile">
     <Value>CSV file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Deactivate">
+    <Value>Deactivate</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Delete">
     <Value>Delete</Value>

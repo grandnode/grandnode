@@ -23,6 +23,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.Coordinates, mo => mo.Ignore())
+                .ForMember(dest => dest.Active, mo => mo.Ignore())
                 .ForMember(dest => dest.Deleted, mo => mo.Ignore());
         }
 

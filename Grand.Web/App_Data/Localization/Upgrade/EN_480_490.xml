@@ -182,4 +182,10 @@
   <LocaleResource Name="ActivityLog.AddNewRewardPoints">
     <Value>Added a reward points {1} to customer {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Activate">
+    <Value>Activate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Deactivate">
+    <Value>Deactivate</Value>
+  </LocaleResource>
 </Language>
