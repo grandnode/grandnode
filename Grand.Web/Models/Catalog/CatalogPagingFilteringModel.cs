@@ -47,12 +47,15 @@ namespace Grand.Web.Models.Catalog
 
         public bool AllowProductSorting { get; set; }
         public IList<SelectListItem> AvailableSortOptions { get; set; }
+        public string AvailableSortOption { get; set; }
 
         public bool AllowProductViewModeChanging { get; set; }
         public IList<SelectListItem> AvailableViewModes { get; set; }
 
         public bool AllowCustomersToSelectPageSize { get; set; }
         public IList<SelectListItem> PageSizeOptions { get; set; }
+
+        public string PageSizeOption { get; set; }
 
         /// <summary>
         /// Order by
