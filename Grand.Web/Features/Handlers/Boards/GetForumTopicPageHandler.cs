@@ -112,9 +112,9 @@ namespace Grand.Web.Features.Handlers.Boards
                     forumPostModel.PostCreatedOnStr = _dateTimeHelper.ConvertToUserTime(post.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
                 //avatar
                 if (_customerSettings.AllowCustomersToUploadAvatars)
-                {
+                {                    
                     forumPostModel.CustomerAvatarUrl = await _pictureService.GetPictureUrl(
-                        request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                        customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId),
                         _mediaSettings.AvatarPictureSize,
                         _customerSettings.DefaultAvatarEnabled,
                         defaultPictureType: PictureType.Avatar);
