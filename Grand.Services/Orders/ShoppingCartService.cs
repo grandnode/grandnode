@@ -1154,29 +1154,29 @@ namespace Grand.Services.Orders
             return null;
         }
 
-        private async Task CheckCommonWarnings(List<string> warnings, Customer customer, Product product, IGrouping<string, ProductReservation> groupToBook,
+        private async Task<(List<string>, IGrouping<string, ProductReservation>)> CheckCommonWarnings(List<string> warnings, Customer customer, Product product, IGrouping<string, ProductReservation> groupToBook,
              ShoppingCartType shoppingCartType, DateTime? rentalStartDate, DateTime? rentalEndDate, int quantity, string reservationId)
         {
             if (shoppingCartType == ShoppingCartType.ShoppingCart && !await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, customer))
             {
                 warnings.Add("Shopping cart is disabled");
-                return;
+                return (warnings, groupToBook);
             }
             if (shoppingCartType == ShoppingCartType.Wishlist && !await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, customer))
             {
                 warnings.Add("Wishlist is disabled");
-                return;
+                return (warnings, groupToBook); 
             }
             if (customer.IsSearchEngineAccount())
             {
                 warnings.Add("Search engine can't add to cart");
-                return;
+                return (warnings, groupToBook);
             }
 
             if (quantity <= 0)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
-                return;
+                return (warnings, groupToBook);
             }
 
             if (!string.IsNullOrEmpty(reservationId))
@@ -1235,9 +1235,10 @@ namespace Grand.Services.Orders
                 if (groupToBook == null)
                 {
                     warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.NoFreeReservationsInThisPeriod"));
-                    return;
+                    return (warnings, groupToBook);
                 }
             }
+            return (warnings, groupToBook);
         }
 
         /// <summary>
@@ -1274,7 +1275,7 @@ namespace Grand.Services.Orders
             var warnings = new List<string>();
             IGrouping<string, ProductReservation> groupToBook = null;
 
-            await CheckCommonWarnings(warnings, customer, product, groupToBook, shoppingCartType, rentalStartDate, rentalEndDate, quantity, reservationId);
+            (warnings, groupToBook) = await CheckCommonWarnings(warnings, customer, product, groupToBook, shoppingCartType, rentalStartDate, rentalEndDate, quantity, reservationId);
 
             if (warnings.Any())
                 return warnings;
