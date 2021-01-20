@@ -7730,7 +7730,7 @@ namespace Grand.Services.Installation
 
             #endregion
 
-            #region Clothing
+            #region Apparel
 
             //this one is a grouped product with two associated ones
             var productDerbyKit = new Product {
@@ -7764,7 +7764,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -7805,7 +7805,15 @@ namespace Grand.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productDerbyKit_associated_1);
             productDerbyKit_associated_1.ProductPictures.Add(new ProductPicture {
@@ -7838,7 +7846,15 @@ namespace Grand.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productDerbyKit_associated_2);
             productDerbyKit_associated_2.ProductPictures.Add(new ProductPicture {
@@ -7927,7 +7943,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -7988,7 +8004,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -8046,7 +8062,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -8089,7 +8105,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -8132,7 +8148,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
                         DisplayOrder = 1,
                     }
                 }
@@ -8170,7 +8186,15 @@ namespace Grand.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productDerbyKitHome);
             productDerbyKitHome.ProductPictures.Add(new ProductPicture {
@@ -8229,7 +8253,7 @@ namespace Grand.Services.Installation
                 {
                     new ProductCategory
                     {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Sport").Id,
+                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
                         DisplayOrder = 1,
                     }
                 }
