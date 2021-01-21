@@ -361,8 +361,18 @@ namespace Grand.Services.Orders
                         {
                             if (product.BackorderMode == BackorderMode.NoBackorders)
                             {
-                                int maximumQuantityCanBeAdded = product.GetTotalStockQuantity(warehouseId: warehouseId);
-                                if (maximumQuantityCanBeAdded < shoppingCartItem.Quantity)
+                                var qty = shoppingCartItem.Quantity;
+
+                                qty += customer.ShoppingCartItems
+                                    .Where(x => x.ShoppingCartTypeId == shoppingCartItem.ShoppingCartTypeId && 
+                                        x.WarehouseId == warehouseId && 
+                                        x.ProductId == shoppingCartItem.ProductId && 
+                                        x.StoreId == shoppingCartItem.StoreId && 
+                                        x.Id != shoppingCartItem.Id)
+                                    .Sum(x => x.Quantity);
+
+                                var maximumQuantityCanBeAdded = product.GetTotalStockQuantity(warehouseId: warehouseId);
+                                if (maximumQuantityCanBeAdded < qty)
                                 {
                                     if (maximumQuantityCanBeAdded <= 0)
                                         warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
@@ -400,14 +410,13 @@ namespace Grand.Services.Orders
                                                 var stockquantity = p1.GetTotalStockQuantityForCombination(combination, warehouseId: warehouseId);
                                                 if (!combination.AllowOutOfStockOrders && stockquantity < _qty)
                                                 {
-                                                    int maximumQuantityCanBeAdded = stockquantity;
-                                                    if (maximumQuantityCanBeAdded <= 0)
+                                                    if (stockquantity <= 0)
                                                     {
                                                         warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.OutOfStock.BundleProduct"), p1.Name));
                                                     }
                                                     else
                                                     {
-                                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock.BundleProduct"), p1.Name, maximumQuantityCanBeAdded));
+                                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock.BundleProduct"), p1.Name, stockquantity));
                                                     }
                                                 }
                                             }
