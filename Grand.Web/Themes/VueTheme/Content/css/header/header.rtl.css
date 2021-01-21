@@ -9,6 +9,7 @@
 }
 .navbar-nav .nav-link {
     position: relative;
+    cursor: pointer;
 }
 .qty-indicator {
     position: absolute;
@@ -154,4 +155,20 @@
     .header-nav .navbar-brand img {
         max-width: 120px;
     }
+}
+
+/* dark header */
+
+[dark-theme="true"] .header-nav {
+    background-color: #2d3133;
+    border-bottom: none;
+}
+[dark-theme="true"] .menu-toggler span {
+    background: #fff;
+}
+[dark-theme="true"] .navbar-light .navbar-nav .nav-link {
+    color: #fff;
+}
+[dark-theme="true"] .qty-indicator {
+    background: #1FB0C7;
 }

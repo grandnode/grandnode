@@ -11,7 +11,7 @@
     Layout = "";
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_quickview_after_breadcrumb", additionalData = Model.Id })
-<b-modal ref="ModalQuickView" id="ModalQuickView" @@shown="onShown" size="xl" centered hide-footer hide-header>
+<b-modal ref="ModalQuickView" id="ModalQuickView" :dark-theme="darkMode" @@shown="onShown" size="xl" centered hide-footer hide-header>
     @{
         var supportRtl = workContext.WorkingLanguage.Rtl;
         if (supportRtl)
