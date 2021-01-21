@@ -129,3 +129,14 @@
         font-size: 56px;
     }
 }
+
+/* dark cart */
+
+[dark-theme="true"] .shopping-cart.table thead th {
+    border-color: #fff;
+}
+@media (max-width: 991px) {
+    [dark-theme="true"] .shopping-cart.table td, [dark-theme="true"] .shopping-cart.table td:first-child, [dark-theme="true"] .shopping-cart.table td:last-child {
+        border-color: #fff;
+    }
+} 

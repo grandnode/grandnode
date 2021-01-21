@@ -8,7 +8,7 @@
     var themeName = themeContext.WorkingThemeName;
     pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/VueAutocomplete.js", themeName));
 }
-<form asp-route="ProductSearch" method="get" id="small-search-box-form" class="searchBox w-100">
+<form asp-route="ProductSearch" method="get" :dark-theme="darkMode" id="small-search-box-form" class="searchBox w-100">
     <input type="hidden" asp-for="Box" value="true" />
     <label for="small-searchterms" class="sr-only">@T("Search.SearchBox.Tooltip")</label>
     <div class="input-group flex-row">

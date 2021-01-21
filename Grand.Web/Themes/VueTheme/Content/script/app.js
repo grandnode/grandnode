@@ -5,6 +5,7 @@
             show: false,
             fluid: false,
             hover: false,
+            darkMode: false,
             active: false,
             NextDropdownVisible: false,
             value: 5,
@@ -24,11 +25,15 @@
         if (localStorage.fluid == "true") this.fluid = "fluid";
         if (localStorage.fluid == "fluid") this.fluid = "fluid";
         if (localStorage.fluid == "") this.fluid = "false";
+        if (localStorage.darkMode == "true") this.darkMode = true;
         this.updateFly();
     },
     watch: {
         fluid(newName) {
             localStorage.fluid = newName;
+        },
+        darkMode(newValue) {
+            localStorage.darkMode = newValue;
         },
     },
     methods: {

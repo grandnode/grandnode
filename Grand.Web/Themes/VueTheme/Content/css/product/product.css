@@ -163,3 +163,21 @@
 .product-collateral .add-to-wishlist-button {
     width: 235px;
 }
+
+/* dark product */
+
+[dark-theme="true"] .product-details-page .overview .label {
+    color: #ccc;
+}
+[dark-theme="true"] .b-rating .b-rating-value, [dark-theme="true"] .attributes .text-prompt,
+[dark-theme="true"] .product-details-page .nav-tabs .nav-link:hover:not(.active) {
+    color: #fff;
+}
+[dark-theme="true"] .product-details-page .nav-tabs .nav-link {
+    color: #fff;
+    background-color: transparent;
+}
+[dark-theme="true"] .product-details-page .nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: #2d3133;
+}

@@ -87,7 +87,8 @@ function displayPopupQuickView(html) {
         data: {
             template: null,
             hover: false,
-            active: false
+            active: false,
+            darkMode: false,
         },
         render: function (createElement) {
             if (!this.template) {
@@ -131,6 +132,11 @@ function displayPopupQuickView(html) {
                 return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
             }
         },
+        watch: {
+            darkMode(newValue) {
+                localStorage.darkMode = newValue;
+            }
+        },
         mounted() {
             var self = this;
             self.template = Vue.compile(html).render;
@@ -140,7 +146,8 @@ function displayPopupQuickView(html) {
                         document.querySelector('#ModalQuickView___BV_modal_outer_').remove();
                     }
                 }
-            })
+            });
+            if (localStorage.darkMode == "true") this.darkMode = true;
         },
         updated: function () {
             this.showModal();
