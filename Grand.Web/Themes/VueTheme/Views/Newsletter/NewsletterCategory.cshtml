@@ -1,5 +1,5 @@
 ﻿@model NewsletterCategoryModel
-<b-modal ref="ModalNewsletterCategory" id="ModalNewsletterCategory" title="@T("NewsletterCategory.Title")" centered hide-footer>
+<b-modal ref="ModalNewsletterCategory" id="ModalNewsletterCategory" :dark-theme="darkMode" title="@T("NewsletterCategory.Title")" centered hide-footer>
     <div class="newsletter-category">
         <form id="newsletter-category-method-form" action="">
             <input asp-for="NewsletterEmailId" type="hidden" />
@@ -16,7 +16,7 @@
                     </div>
                 }
                 <div class="newsletter-category-save pt-1 pb-1">
-                    <input type="button" value="@T("NewsletterCategory.Options.Save")" id="newsletter-category-button" @@click="$bvModal.hide('ModalNewsletterCategory')" onclick="newsletter_subscribe_category('@(Url.RouteUrl("SubscribeNewsletterCategory"))')" class="btn btn-success newsletter-subscribe-button" />
+                    <input type="button" value="@T("NewsletterCategory.Options.Save")" id="newsletter-category-button" @@click="$bvModal.hide('ModalNewsletterCategory')" onclick="newsletter_subscribe_category('@(Url.RouteUrl("SubscribeNewsletterCategory"))')" class="btn btn-outline-info newsletter-subscribe-button" />
                 </div>
             </div>
         </form>

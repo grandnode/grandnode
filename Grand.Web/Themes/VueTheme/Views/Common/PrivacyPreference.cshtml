@@ -1,5 +1,5 @@
 ﻿@model IList<PrivacyPreferenceModel>
-<b-modal ref="ModalPrivacyPreference" title="@T("PrivacyPreference.Center")" id="ModalPrivacyPreference" centered hide-footer>
+<b-modal ref="ModalPrivacyPreference" :dark-theme="darkMode" title="@T("PrivacyPreference.Center")" id="ModalPrivacyPreference" centered hide-footer>
     <b-alert show>
         @T("PrivacyPreference.Description")
     </b-alert>

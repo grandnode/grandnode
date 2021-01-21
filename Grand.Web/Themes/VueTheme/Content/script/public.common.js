@@ -21,6 +21,7 @@ function displayPopupPrivacyPreference(html) {
         el: '#ModalPrivacyPreference',
         data: {
             template: null,
+            darkMode: false,
         },
         render: function (createElement) {
             if (!this.template) {
@@ -36,9 +37,15 @@ function displayPopupPrivacyPreference(html) {
                 this.$refs['ModalPrivacyPreference'].show()
             }
         },
+        watch: {
+            darkMode: function (newValue) {
+                localStorage.darkMode = newValue;
+            },
+        },
         mounted: function () {
             var self = this;
             self.template = Vue.compile(html).render;
+            if (localStorage.darkMode == "true") this.darkMode = true;
         },
         updated: function () {
             this.showModal();
@@ -50,6 +57,7 @@ function displayPopupNewsletterCategory(html) {
         el: '#ModalNewsletterCategory',
         data: {
             template: null,
+            darkMode: false,
         },
         render: function (createElement) {
             if (!this.template) {
@@ -65,9 +73,15 @@ function displayPopupNewsletterCategory(html) {
                 this.$refs['ModalNewsletterCategory'].show()
             }
         },
+        watch: {
+            darkMode: function (newValue) {
+                localStorage.darkMode = newValue;
+            },
+        },
         mounted: function () {
             var self = this;
             self.template = Vue.compile(html).render;
+            if (localStorage.darkMode == "true") this.darkMode = true;
         },
         updated: function () {
             this.showModal();
