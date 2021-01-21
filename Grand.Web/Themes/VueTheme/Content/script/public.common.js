@@ -32,11 +32,11 @@ function displayPopupPrivacyPreference(html) {
             }
         },
         methods: {
-            showModal() {
+            showModal: function() {
                 this.$refs['ModalPrivacyPreference'].show()
             }
         },
-        mounted() {
+        mounted: function () {
             var self = this;
             self.template = Vue.compile(html).render;
         },
@@ -52,6 +52,7 @@ function displayPopupAddToCart(html) {
             el: '#ModalAddToCart',
             data: {
                 template: null,
+                darkMode: false,
             },
             render: function (createElement) {
                 if (!this.template) {
@@ -63,16 +64,22 @@ function displayPopupAddToCart(html) {
                 }
             },
             methods: {
-                showModal() {
+                showModal: function () {
                     this.$refs['ModalAddToCart'].show()
                 },
-                onShown() {
+                onShown: function () {
                     runScripts(document.querySelector('.script-tag'))
                 }
             },
-            mounted() {
+            watch: {
+                darkMode: function (newValue) {
+                    localStorage.darkMode = newValue;
+                }
+            },
+            mounted: function () {
                 var self = this;
                 self.template = Vue.compile(html).render;
+                if (localStorage.darkMode == "true") this.darkMode = true;
             },
             updated: function () {
                 this.showModal();
@@ -100,10 +107,10 @@ function displayPopupQuickView(html) {
             }
         },
         methods: {
-            showModal() {
+            showModal: function () {
                 this.$refs['ModalQuickView'].show()
             },
-            onShown() {
+            onShown: function () {
                 runScripts(document.querySelector('.script-tag'))
             },
             productImage: function (event) {
@@ -111,10 +118,10 @@ function displayPopupQuickView(html) {
                 var Image = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.querySelectorAll(".img-second")[0];
                 Image.setAttribute('src', Imagesrc);
             },
-            showModalBackInStock() {
+            showModalBackInStock: function () {
                 this.$refs['back-in-stock'].show()
             },
-            validateBeforeClick(event) {
+            validateBeforeClick: function (event) {
                 this.$validator.validateAll().then((result) => {
                     if (result) {
                         var callFunction = event.srcElement.getAttribute('data-click');
@@ -123,21 +130,21 @@ function displayPopupQuickView(html) {
                     }
                 });
             },
-            changeImg(event) {
+            changeImg: function (event){
                 var img = event.srcElement.getAttribute('data-src');
                 var mainImg = document.querySelector('#ModalQuickView .gallery .main-image');
                 mainImg.setAttribute('src', img);
             },
-            isMobile() {
+            isMobile: function () {
                 return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
             }
         },
         watch: {
-            darkMode(newValue) {
+            darkMode: function (newValue) {
                 localStorage.darkMode = newValue;
             }
         },
-        mounted() {
+        mounted: function () {
             var self = this;
             self.template = Vue.compile(html).render;
             this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
@@ -166,7 +173,7 @@ function displayBarNotification(message, messagetype, timeout) {
     new Vue({
         el: ".modal-place",
         methods: {
-            toast() {
+            toast: function () {
                 this.$bvToast.show('grandToast')
             }
         },
@@ -493,11 +500,11 @@ function displayPopupNotification(message, messagetype) {
                 }
             },
             methods: {
-                showModal() {
+                showModal: function () {
                     this.$refs['grandModal'].show()
                 },
             },
-            mounted() {
+            mounted: function () {
                 var self = this;
                 self.template = Vue.compile(htmlcode).render;
             },
@@ -509,7 +516,7 @@ function displayPopupNotification(message, messagetype) {
             new Vue({
                 el: "#app",
                 methods: {
-                    toast() {
+                    toast: function () {
                         for (var i = 0; i < message.length; i++) {
                             if (messagetype == 'error') {
                                 this.$bvToast.toast(message[i], {
