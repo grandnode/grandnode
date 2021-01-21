@@ -18,3 +18,11 @@
 .block-account-navigation ul li span {
     font-size: 16px;
 }
+
+/* dark customer */
+
+[dark-theme="true"] .block-account-navigation ul li a.active, [dark-theme="true"] .block-account-navigation ul li a:hover {
+    color: #fff;
+    border-color: #1fb0c7;
+    background-color: #2d3133;
+}

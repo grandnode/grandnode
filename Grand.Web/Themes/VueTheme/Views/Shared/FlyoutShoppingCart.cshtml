@@ -1,11 +1,12 @@
 ﻿
-    <li>
-        <ul class="flyout-cart px-0">
-            <b-nav-item>
-                <b-icon icon="cart" variant="dark" v-b-toggle.sidebar-cart></b-icon>
-                <div class="qty-indicator cart-qty">{{flycartindicator}}</div>
-            </b-nav-item>
-            <template>
+<li class="nav-item">
+    <ul class="flyout-cart px-0">
+        <b-nav-item>
+            <b-icon icon="cart" :variant="[darkMode ? 'white' : 'dark']" v-b-toggle.sidebar-cart></b-icon>
+            <span class="qty-indicator cart-qty">{{flycartindicator}}</span>
+        </b-nav-item>
+        <template>
+            <li>
                 <b-sidebar id="sidebar-cart" backdrop right>
                     <template v-slot:title v-if="flycartindicator > 0">
                         @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\">{1}</a>", "/cart", string.Format(T("ShoppingCart.Mini.Items").Text, "{{flycartindicator}}"))))
@@ -57,6 +58,7 @@
                         <div class="text-center text-muted mt-3">@T("ShoppingCart.Mini.NoDataText")</div>
                     </div>
                 </b-sidebar>
-            </template>
-        </ul>
-    </li>
+            </li>
+        </template>
+    </ul>
+</li>

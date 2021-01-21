@@ -129,3 +129,11 @@
         width: 100%;
     }
 }
+
+/* dark catalog */
+
+[dark-theme="true"] .pagination .page-link {
+    color: #fff;
+    border-color: #555;
+    background-color: #2d3133;
+}

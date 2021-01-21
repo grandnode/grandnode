@@ -2,7 +2,7 @@
 @inject IWorkContext workContext
 @inject IThemeContext themeContext
 @inject IPageHeadBuilder pagebuilder
-@{ 
+@{
     var supportRtl = workContext.WorkingLanguage.Rtl;
     var themeName = themeContext.WorkingThemeName;
     if (supportRtl)
@@ -29,30 +29,46 @@
             </template>
             @await Component.InvokeAsync("Logo")
             <b-navbar-nav class="top-header-items order-3">
+                <template>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <template>
+                                <b-form-checkbox size="lg" v-model="darkMode" name="contrast-button" class="contrast-switch" switch>
+                                    <b-icon icon="sun" class="light" variant="info"></b-icon>
+                                    <b-icon icon="moon" class="dark" variant="dark"></b-icon>
+                                </b-form-checkbox>
+                            </template>
+                        </a>
+                    </li>
+                </template>
                 <b-nav-item class="d-lg-block d-none">
-                    <b-icon :variant="[fluid ? 'info' : 'dark']" icon="aspect-ratio" @@click="fluid = !fluid"></b-icon>
+                    <b-icon :variant="[darkMode ? 'white' : 'dark']" icon="aspect-ratio" @@click="fluid = !fluid"></b-icon>
                 </b-nav-item>
                 <b-nav-item>
-                    <b-icon icon="search" variant="dark" v-b-modal.search-box></b-icon>
+                    <b-icon icon="search" :variant="[darkMode ? 'white' : 'dark']" v-b-modal.search-box></b-icon>
                 </b-nav-item>
                 <b-modal id="search-box"
-                     hide-footer hide-header size="xl">
+                         hide-footer hide-header size="xl">
                     @await Component.InvokeAsync("SearchBox")
                 </b-modal>
-                <b-nav-item>
-                    <b-icon icon="gear" variant="dark" v-b-toggle.sidebar-right></b-icon>
-                </b-nav-item>
                 <template>
-                    <b-sidebar id="sidebar-right" body-class="user-panel" title="@T("Account.MyAccount")" @if (supportRtl) { <text> left</text> } else { <text>right</text> } backdrop>
-                        <div class="d-inline-flex flex-wrap mb-2">
-                            @await Component.InvokeAsync("TaxTypeSelector")
-                            @await Component.InvokeAsync("CurrencySelector")
-                            @await Component.InvokeAsync("LanguageSelector")
-                            @await Component.InvokeAsync("StoreSelector")
-                            @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
-                        </div>
-                        @await Component.InvokeAsync("HeaderLinks")
-                    </b-sidebar>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <b-icon icon="gear" :variant="[darkMode ? 'white' : 'dark']" v-b-toggle.sidebar-right></b-icon>
+                        </a>
+                        <template>
+                            <b-sidebar id="sidebar-right" body-class="user-panel" title="@T("Account.MyAccount")" @if (supportRtl) { <text> left</text> } else { <text>right</text> } backdrop>
+                                <div class="d-inline-flex flex-wrap mb-2">
+                                    @await Component.InvokeAsync("TaxTypeSelector")
+                                    @await Component.InvokeAsync("CurrencySelector")
+                                    @await Component.InvokeAsync("LanguageSelector")
+                                    @await Component.InvokeAsync("StoreSelector")
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
+                                </div>
+                                @await Component.InvokeAsync("HeaderLinks")
+                            </b-sidebar>
+                        </template>
+                    </li>
                 </template>
                 @await Component.InvokeAsync("ShoppingCartLinks")
             </b-navbar-nav>

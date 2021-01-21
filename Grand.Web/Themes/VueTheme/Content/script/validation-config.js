@@ -57,7 +57,7 @@ vee._validator.extend('email', {
 
 vee._validator.extend('confirmed', {
     paramNames: ['targetValue'],
-    validate(value, ref) {
+    validate: function (value, ref) {
         return value === ref.targetValue;
     },
     options: {
@@ -84,7 +84,7 @@ vee._validator.extend('min', {
         hasTarget: true
     },
     paramNames: ['targetValue'],
-    validate(value, ref) {
+    validate: function (value, ref) {
         // if the field is empty
         if (!value) {
             return true;
