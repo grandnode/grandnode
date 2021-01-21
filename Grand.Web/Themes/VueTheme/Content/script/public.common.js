@@ -45,6 +45,35 @@ function displayPopupPrivacyPreference(html) {
         }
     });
 }
+function displayPopupNewsletterCategory(html) {
+    new Vue({
+        el: '#ModalNewsletterCategory',
+        data: {
+            template: null,
+        },
+        render: function (createElement) {
+            if (!this.template) {
+                return createElement('b-overlay', {
+                    attrs: { show: 'true' }
+                });
+            } else {
+                return this.template();
+            }
+        },
+        methods: {
+            showModal: function () {
+                this.$refs['ModalNewsletterCategory'].show()
+            }
+        },
+        mounted: function () {
+            var self = this;
+            self.template = Vue.compile(html).render;
+        },
+        updated: function () {
+            this.showModal();
+        }
+    });
+}
 
 function displayPopupAddToCart(html) {
     document.querySelector('.modal-place').innerHTML = html;
@@ -218,12 +247,10 @@ function newsletter_subscribe(subscribe) {
                 document.querySelector('.newsletter-inputs .newsletter-subscribe-unsubscribe').style.display = "none";
             }
             document.querySelector("#newsletter-result-block").style.display = "block";
-            document.getElementById('newsletter-result-block').classList.add("success").style.bottom = "unset";
-            if (data.response.Showcategories) {
-                document.getElementById('nc_modal_form').innerHTML = response.data.ResultCategory;
-                window.setTimeout(function () {
-                    //document.querySelector('.nc-action-form').magnificPopup('open');
-                }, 100);
+            document.getElementById('newsletter-result-block').classList.add("success");
+            document.getElementById('newsletter-result-block').style.bottom = "unset";
+            if (response.data.Showcategories) {
+                displayPopupNewsletterCategory(response.data.ResultCategory)
             }
         } else {
             document.querySelector("#newsletter-result-block").style.display = "block";
@@ -235,6 +262,23 @@ function newsletter_subscribe(subscribe) {
         subscribeProgress.style.display = "none";
     })
 }
+
+function newsletter_subscribe_category(url) {
+    var form = document.getElementById('newsletter-category-method-form');
+    var data = new FormData(form);
+    axios({
+        url: url,
+        method: 'post',
+        data: data,
+    }).then(function (response) {
+        if (!response.data.Success) {
+            alert(response.data.Message);
+        }
+    }).catch(function (error) {
+        alert(error);
+    })
+}
+
 function newsletterBox() {
     var el = document.getElementById('newsletter-subscribe-button');
     el.onclick = function () {
