@@ -1,6 +1,5 @@
 ﻿using Grand.Api.Infrastructure.Extensions;
 using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
 using Microsoft.AspNetCore.Authentication;
@@ -22,8 +21,7 @@ namespace Grand.Api.Infrastructure
             {
                 var config = new ApiConfig();
                 configuration.GetSection("Api").Bind(config);
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
+                options.TokenValidationParameters = new TokenValidationParameters {
                     ValidateIssuer = config.ValidateIssuer,
                     ValidateAudience = config.ValidateAudience,
                     ValidateLifetime = true,
@@ -33,8 +31,7 @@ namespace Grand.Api.Infrastructure
                     IssuerSigningKey = JwtSecurityKey.Create(config.SecretKey)
                 };
 
-                options.Events = new JwtBearerEvents
-                {
+                options.Events = new JwtBearerEvents {
                     OnAuthenticationFailed = async context =>
                     {
                         context.NoResult();
@@ -51,11 +48,14 @@ namespace Grand.Api.Infrastructure
                     {
                         try
                         {
-                            var apiAuthenticationService = context.HttpContext.RequestServices.GetRequiredService<IApiAuthenticationService>();
-                            if (await apiAuthenticationService.Valid(context))
-                                await apiAuthenticationService.SignIn();
+                            if (config.Enabled)
+                            {
+                                var jwtAuthentication = context.HttpContext.RequestServices.GetRequiredService<IJwtBearerAuthenticationService>();
+                                if (!await jwtAuthentication.Valid(context))
+                                    throw new Exception(await jwtAuthentication.ErrorMessage());
+                            }
                             else
-                                throw new Exception(await apiAuthenticationService.ErrorMessage());
+                                throw new Exception("API is disable");
                         }
                         catch (Exception ex)
                         {

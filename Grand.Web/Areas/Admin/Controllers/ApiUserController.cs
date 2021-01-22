@@ -64,6 +64,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     var keys = HashPassword(model.Password);
                     userapi.Password = keys.hashpassword;
                     userapi.PrivateKey = keys.privatekey;
+                    userapi.Token = Guid.NewGuid().ToString();
                 }
                 await _userApiService.UpdateUserApi(userapi);
                 return new NullJsonResult();
@@ -87,6 +88,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var keys = HashPassword(model.Password);
                 userapi.Password = keys.hashpassword;
                 userapi.PrivateKey = keys.privatekey;
+                userapi.Token = Guid.NewGuid().ToString();
                 await _userApiService.InsertUserApi(userapi);
                 return new NullJsonResult();
             }
