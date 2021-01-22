@@ -2222,10 +2222,11 @@ list settings .list__item,
     opacity: 1;
 }
 .product-box .picture img {
-    -webkit-transition: .2s ease;
-    -moz-transition: .2s ease;
-    -o-transition: .2s ease;
-    transition: .2s ease;
+	background-color: #F8F9FB;
+	-webkit-transition: .2s ease;
+	-moz-transition: .2s ease;
+	-o-transition: .2s ease;
+	transition: .2s ease;
 }
 .product-box .hover-img {
     position: absolute;

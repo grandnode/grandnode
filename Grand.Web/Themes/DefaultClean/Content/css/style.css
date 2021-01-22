@@ -2488,6 +2488,7 @@ list settings .list__item,
 }
 
 .product-box .picture img {
+    background-color: #F8F9FB;
     -webkit-transition: .2s ease;
     -moz-transition: .2s ease;
     -o-transition: .2s ease;
