@@ -153,6 +153,7 @@ namespace Grand.Services.Infrastructure
         {
             serviceCollection.AddScoped<IGrandAuthenticationService, CookieAuthenticationService>();
             serviceCollection.AddScoped<IApiAuthenticationService, ApiAuthenticationService>();
+            serviceCollection.AddScoped<IJwtBearerAuthenticationService, JwtBearerAuthenticationService>();
             serviceCollection.AddScoped<ITwoFactorAuthenticationService, TwoFactorAuthenticationService>();
             serviceCollection.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
         }
