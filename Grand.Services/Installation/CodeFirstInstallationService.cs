@@ -5028,7 +5028,7 @@ namespace Grand.Services.Installation
                 IgnoreFeaturedProducts = false,
                 IgnoreAcl = true,
                 IgnoreStoreLimitations = true,
-                IgnoreFilterableSpecAttributeOption = true,
+                IgnoreFilterableSpecAttributeOption = false,
                 IgnoreFilterableAvailableStartEndDateTime = true,
                 CustomerProductPrice = false,
                 ProductsByTagAllowCustomersToSelectPageSize = true,
@@ -6201,8 +6201,8 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productBuildComputer);
 
-            var Picture1 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_desktop_1.jpg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
-            var Picture2 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_desktop_2.jpg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
+            var Picture1 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_desktop_1.png"), "image/png", pictureService.GetPictureSeName(productBuildComputer.Name));
+            var Picture2 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_desktop_2.png"), "image/png", pictureService.GetPictureSeName(productBuildComputer.Name));
 
             await _productRepository.InsertAsync(productBuildComputer);
 
@@ -6260,11 +6260,11 @@ namespace Grand.Services.Installation
 
             allProducts.Add(productSonyPS5Pad);
             productSonyPS5Pad.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_pad_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyPS5Pad.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_pad_1.png"), "image/png", pictureService.GetPictureSeName(productSonyPS5Pad.Name))).Id,
                 DisplayOrder = 1,
             });
             productSonyPS5Pad.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_pad_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyPS5Pad.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_pad_2.png"), "image/png", pictureService.GetPictureSeName(productSonyPS5Pad.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productSonyPS5Pad);
@@ -6307,11 +6307,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productLenovoIdeaPadDual);
             productLenovoIdeaPadDual.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_ideapad_dual_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaPadDual.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_ideapad_dual_1.png"), "image/png", pictureService.GetPictureSeName(productLenovoIdeaPadDual.Name))).Id,
                 DisplayOrder = 1,
             });
             productLenovoIdeaPadDual.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_ideapad_dual_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaPadDual.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_ideapad_dual_2.png"), "image/png", pictureService.GetPictureSeName(productLenovoIdeaPadDual.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productLenovoIdeaPadDual);
@@ -6396,11 +6396,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productMiNotebook);
             productMiNotebook.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_notebook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiNotebook.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_notebook_1.png"), "image/png", pictureService.GetPictureSeName(productMiNotebook.Name))).Id,
                 DisplayOrder = 1,
             });
             productMiNotebook.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_notebook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiNotebook.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_notebook_2.png"), "image/png", pictureService.GetPictureSeName(productMiNotebook.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productMiNotebook);
@@ -6479,11 +6479,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productLenovoLegionY740);
             productLenovoLegionY740.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_legion_y740_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoLegionY740.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_legion_y740_1.png"), "image/png", pictureService.GetPictureSeName(productLenovoLegionY740.Name))).Id,
                 DisplayOrder = 1,
             });
             productLenovoLegionY740.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_legion_y740_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoLegionY740.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_legion_y740_2.png"), "image/png", pictureService.GetPictureSeName(productLenovoLegionY740.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productLenovoLegionY740);
@@ -6562,11 +6562,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productPs5Camera);
             productPs5Camera.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps5_camera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs5Camera.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps5_camera_1.png"), "image/png", pictureService.GetPictureSeName(productPs5Camera.Name))).Id,
                 DisplayOrder = 1,
             });
             productPs5Camera.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps5_camera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs5Camera.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps5_camera_2.png"), "image/png", pictureService.GetPictureSeName(productPs5Camera.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productPs5Camera);
@@ -6644,11 +6644,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productAcerNitro);
             productAcerNitro.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_nitro_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerNitro.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_nitro_1.png"), "image/png", pictureService.GetPictureSeName(productAcerNitro.Name))).Id,
                 DisplayOrder = 1,
             });
             productAcerNitro.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_nitro_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerNitro.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_nitro_2.png"), "image/png", pictureService.GetPictureSeName(productAcerNitro.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productAcerNitro);
@@ -6735,11 +6735,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productDellG5);
             productDellG5.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_g5_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDellG5.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_g5_1.png"), "image/png", pictureService.GetPictureSeName(productDellG5.Name))).Id,
                 DisplayOrder = 1,
             });
             productDellG5.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_g5_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDellG5.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_g5_2.png"), "image/png", pictureService.GetPictureSeName(productDellG5.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productDellG5);
@@ -6810,11 +6810,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productDellXPS);
             productDellXPS.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_xps_1.jpg"), "image/jpeg", pictureService.GetPictureSeName(productDellXPS.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_xps_1.png"), "image/png", pictureService.GetPictureSeName(productDellXPS.Name))).Id,
                 DisplayOrder = 1,
             });
             productDellXPS.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_xps_2.jpg"), "image/jpeg", pictureService.GetPictureSeName(productDellXPS.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_dell_xps_2.png"), "image/png", pictureService.GetPictureSeName(productDellXPS.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productDellXPS);
@@ -6862,11 +6862,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productLenovoYogaDuet);
             productLenovoYogaDuet.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_yoga_duet_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoYogaDuet.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_yoga_duet_1.png"), "image/png", pictureService.GetPictureSeName(productLenovoYogaDuet.Name))).Id,
                 DisplayOrder = 1,
             });
             productLenovoYogaDuet.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_yoga_duet_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoYogaDuet.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_yoga_duet_2.png"), "image/png", pictureService.GetPictureSeName(productLenovoYogaDuet.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productLenovoYogaDuet);
@@ -6910,11 +6910,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productLenovoSmartTab);
             productLenovoSmartTab.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_smart_tab_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoSmartTab.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_smart_tab_1.png"), "image/png", pictureService.GetPictureSeName(productLenovoSmartTab.Name))).Id,
                 DisplayOrder = 1,
             });
             productLenovoSmartTab.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_smart_tab_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoSmartTab.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lenovo_smart_tab_2.png"), "image/png", pictureService.GetPictureSeName(productLenovoSmartTab.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productLenovoSmartTab);
@@ -6958,11 +6958,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productAsusMixedReality);
             productAsusMixedReality.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asus_mixed_reality_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusMixedReality.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asus_mixed_reality_1.png"), "image/png", pictureService.GetPictureSeName(productAsusMixedReality.Name))).Id,
                 DisplayOrder = 1,
             });
             productAsusMixedReality.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asus_mixed_reality_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusMixedReality.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asus_mixed_reality_2.png"), "image/png", pictureService.GetPictureSeName(productAsusMixedReality.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productAsusMixedReality);
@@ -7010,11 +7010,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productAcerProjector);
             productAcerProjector.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_projector_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerProjector.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_projector_1.png"), "image/png", pictureService.GetPictureSeName(productAcerProjector.Name))).Id,
                 DisplayOrder = 1,
             });
             productAcerProjector.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_projector_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerProjector.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_projector_2.png"), "image/png", pictureService.GetPictureSeName(productAcerProjector.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productAcerProjector);
@@ -7058,11 +7058,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productAcerMonitor);
             productAcerMonitor.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_monitor_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerMonitor.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_monitor_1.png"), "image/png", pictureService.GetPictureSeName(productAcerMonitor.Name))).Id,
                 DisplayOrder = 1,
             });
             productAcerMonitor.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_monitor_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerMonitor.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_acer_monitor_2.png"), "image/png", pictureService.GetPictureSeName(productAcerMonitor.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productAcerMonitor);
@@ -7120,7 +7120,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productRedmiK30);
             productRedmiK30.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_K30.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiK30.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_K30.png"), "image/png", pictureService.GetPictureSeName(productRedmiK30.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productRedmiK30);
@@ -7172,11 +7172,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productRedmiNote9);
             productRedmiNote9.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_Note_9_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiNote9.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_Note_9_1.png"), "image/png", pictureService.GetPictureSeName(productRedmiNote9.Name))).Id,
                 DisplayOrder = 1,
             });
             productRedmiNote9.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_Note_9_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productRedmiNote9.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Redmi_Note_9_2.png"), "image/png", pictureService.GetPictureSeName(productRedmiNote9.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productRedmiNote9);
@@ -7228,7 +7228,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productPocoF2Pro);
             productPocoF2Pro.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_POCO_F2_Pro.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPocoF2Pro.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_POCO_F2_Pro.png"), "image/png", pictureService.GetPictureSeName(productPocoF2Pro.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productPocoF2Pro);
@@ -7308,11 +7308,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productMiSmartBand);
             productMiSmartBand.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mi_Smart_Band_3i_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiSmartBand.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mi_Smart_Band_3i_1.png"), "image/png", pictureService.GetPictureSeName(productMiSmartBand.Name))).Id,
                 DisplayOrder = 1,
             });
             productMiSmartBand.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mi_Smart_Band_3i_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiSmartBand.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mi_Smart_Band_3i_2.png"), "image/png", pictureService.GetPictureSeName(productMiSmartBand.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productMiSmartBand);
@@ -7356,11 +7356,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productPs4);
             productPs4.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs4.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_1.png"), "image/png", pictureService.GetPictureSeName(productPs4.Name))).Id,
                 DisplayOrder = 1,
             });
             productPs4.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPs4.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_2.png"), "image/png", pictureService.GetPictureSeName(productPs4.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productPs4);
@@ -7412,11 +7412,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productMiBeard);
             productMiBeard.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_beard_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiBeard.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_beard_1.png"), "image/png", pictureService.GetPictureSeName(productMiBeard.Name))).Id,
                 DisplayOrder = 1,
             });
             productMiBeard.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_beard_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMiBeard.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mi_beard_2.png"), "image/png", pictureService.GetPictureSeName(productMiBeard.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productMiBeard);
@@ -7530,7 +7530,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productAdidasPredator);
             productAdidasPredator.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_predator_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasPredator.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_predator_1.png"), "image/png", pictureService.GetPictureSeName(productAdidasPredator.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productAdidasPredator);
@@ -7649,19 +7649,19 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productAdidasNitrocharge);
             productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.png"), "image/png", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
                 DisplayOrder = 1,
             });
             productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.png"), "image/png", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
                 DisplayOrder = 2,
             });
             productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.png"), "image/png", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
                 DisplayOrder = 3,
             });
             productAdidasNitrocharge.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_4.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_4.png"), "image/png", pictureService.GetPictureSeName(productAdidasNitrocharge.Name))).Id,
                 DisplayOrder = 4,
             });
 
@@ -7722,7 +7722,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productAdidasTurfs);
             productAdidasTurfs.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidasturfs.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasTurfs.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidasturfs.png"), "image/png", pictureService.GetPictureSeName(productAdidasTurfs.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productAdidasTurfs);
@@ -7771,11 +7771,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productDerbyKit);
             productDerbyKit.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.png"), "image/png", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
                 DisplayOrder = 1,
             });
             productDerbyKit.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.png"), "image/png", pictureService.GetPictureSeName(productDerbyKit.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productDerbyKit);
@@ -7817,7 +7817,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productDerbyKit_associated_1);
             productDerbyKit_associated_1.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Derby County Away Shirt"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_awayshirt_1.png"), "image/png", pictureService.GetPictureSeName("Derby County Away Shirt"))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productDerbyKit_associated_1);
@@ -7858,7 +7858,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productDerbyKit_associated_2);
             productDerbyKit_associated_2.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Derby County Shirt - Home"))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.png"), "image/png", pictureService.GetPictureSeName("Derby County Shirt - Home"))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productDerbyKit_associated_2);
@@ -7950,7 +7950,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productNikeKids);
             productNikeKids.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_kidskit.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeKids.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_kidskit.png"), "image/png", pictureService.GetPictureSeName(productNikeKids.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productNikeKids);
@@ -8011,11 +8011,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productPsgKit);
             productPsgKit.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_psg_1.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productPsgKit.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_psg_1.png"), "image/png", pictureService.GetPictureSeName(productPsgKit.Name))).Id,
                 DisplayOrder = 1,
             });
             productPsgKit.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_psg_2.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productPsgKit.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_psg_2.png"), "image/png", pictureService.GetPictureSeName(productPsgKit.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productPsgKit);
@@ -8069,7 +8069,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productDerbyShirt);
             productDerbyShirt.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyShirt.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.png"), "image/png", pictureService.GetPictureSeName(productDerbyShirt.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productDerbyShirt);
@@ -8112,53 +8112,10 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productDerbyShorts);
             productDerbyShorts.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shorts_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyShorts.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shorts_1.png"), "image/png", pictureService.GetPictureSeName(productDerbyShorts.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productDerbyShorts);
-
-            var productDerbySocks = new Product {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "Derby County Home Socks",
-                ShortDescription = "Show your pride and support and show off in The Rams Homemade Kits.",
-                FullDescription = "<p>Show your pride and support and show off in The Rams Homemade Costumes.</p><p>This is an official t-shirt made according to The Rams homewear specification. The whole is decorated with the club badge and the Umbro Double Diamond logo.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                AllowCustomerReviews = true,
-                Price = 15M,
-                IsShipEnabled = true,
-                Weight = 4,
-                Length = 3,
-                Width = 3,
-                Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        CategoryId = _categoryRepository.Table.Single(c => c.Name == "Apparel").Id,
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productDerbySocks);
-            productDerbySocks.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_socks_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbySocks.Name))).Id,
-                DisplayOrder = 1,
-            });
-            await _productRepository.InsertAsync(productDerbySocks);
 
             var productDerbyKitHome = new Product {
                 ProductType = ProductType.BundledProduct,
@@ -8198,7 +8155,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productDerbyKitHome);
             productDerbyKitHome.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDerbyKitHome.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_derby_shirt_1.png"), "image/png", pictureService.GetPictureSeName(productDerbyKitHome.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productDerbyKitHome);
@@ -8261,11 +8218,11 @@ namespace Grand.Services.Installation
             allProducts.Add(productChicagoBulls);
 
             productChicagoBulls.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_1.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productChicagoBulls.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_1.png"), "image/png", pictureService.GetPictureSeName(productChicagoBulls.Name))).Id,
                 DisplayOrder = 1,
             });
             productChicagoBulls.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_2.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productChicagoBulls.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_chicago_jersey_2.png"), "image/png", pictureService.GetPictureSeName(productChicagoBulls.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productChicagoBulls);
@@ -8350,7 +8307,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productVivoactive);
             productVivoactive.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_vivoactive.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productVivoactive.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_vivoactive.png"), "image/png", pictureService.GetPictureSeName(productVivoactive.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productVivoactive);
@@ -8395,11 +8352,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productGarminFenix);
             productGarminFenix.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_garmin_fenix_1.jpg"), "image/jpeg", pictureService.GetPictureSeName(productGarminFenix.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_garmin_fenix_1.png"), "image/png", pictureService.GetPictureSeName(productGarminFenix.Name))).Id,
                 DisplayOrder = 1,
             });
             productGarminFenix.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_garmin_fenix_2.jpg"), "image/jpeg", pictureService.GetPictureSeName(productGarminFenix.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_garmin_fenix_2.png"), "image/png", pictureService.GetPictureSeName(productGarminFenix.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productGarminFenix);
@@ -8444,7 +8401,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productForerunner);
             productForerunner.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_forerunner.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productForerunner.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_forerunner.png"), "image/png", pictureService.GetPictureSeName(productForerunner.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productForerunner);
@@ -8512,7 +8469,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productCyberpunk);
             productCyberpunk.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_cyberpunk_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCyberpunk.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_cyberpunk_1.png"), "image/png", pictureService.GetPictureSeName(productCyberpunk.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productCyberpunk);
@@ -8578,7 +8535,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productGTA);
 
             productGTA.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_gta_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productGTA.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_gta_1.png"), "image/png", pictureService.GetPictureSeName(productGTA.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productGTA);
@@ -8631,7 +8588,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productCod);
             productCod.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_cod_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCod.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_cod_1.png"), "image/png", pictureService.GetPictureSeName(productCod.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productCod);
@@ -8682,11 +8639,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productLegoFalcon);
             productLegoFalcon.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_falcon_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoFalcon.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_falcon_1.png"), "image/png", pictureService.GetPictureSeName(productLegoFalcon.Name))).Id,
                 DisplayOrder = 1,
             });
             productLegoFalcon.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_falcon_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoFalcon.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_falcon_2.png"), "image/png", pictureService.GetPictureSeName(productLegoFalcon.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productLegoFalcon);
@@ -8732,11 +8689,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productLegoHogwarts);
             productLegoHogwarts.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_hogwarts_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoHogwarts.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_hogwarts_1.png"), "image/png", pictureService.GetPictureSeName(productLegoHogwarts.Name))).Id,
                 DisplayOrder = 1,
             });
             productLegoHogwarts.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_hogwarts_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoHogwarts.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_lego_hogwarts_2.png"), "image/png", pictureService.GetPictureSeName(productLegoHogwarts.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productLegoHogwarts);
@@ -8780,11 +8737,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productLegoCity);
             productLegoCity.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LegoCity_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoCity.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LegoCity_1.png"), "image/png", pictureService.GetPictureSeName(productLegoCity.Name))).Id,
                 DisplayOrder = 1,
             });
             productLegoCity.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LegoCity_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLegoCity.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LegoCity_2.png"), "image/png", pictureService.GetPictureSeName(productLegoCity.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productLegoCity);
@@ -8834,7 +8791,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productAdidasBall);
             productAdidasBall.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidasball.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasBall.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidasball.png"), "image/png", pictureService.GetPictureSeName(productAdidasBall.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productAdidasBall);
@@ -8879,7 +8836,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productMikasa);
             productMikasa.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mikasa.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productMikasa.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_mikasa.png"), "image/png", pictureService.GetPictureSeName(productMikasa.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productMikasa);
@@ -8923,7 +8880,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productSpalding);
             productSpalding.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_spalding.jpeg"), "image/pjpeg", pictureService.GetPictureSeName(productSpalding.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_spalding.png"), "image/png", pictureService.GetPictureSeName(productSpalding.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productSpalding);
@@ -8967,7 +8924,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(product25GiftCard);
             product25GiftCard.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.png"), "image/png", pictureService.GetPictureSeName(product25GiftCard.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(product25GiftCard);
@@ -9012,7 +8969,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(product50GiftCard);
             product50GiftCard.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.png"), "image/png", pictureService.GetPictureSeName(product50GiftCard.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(product50GiftCard);
@@ -9055,7 +9012,7 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(product100GiftCard);
             product100GiftCard.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.png"), "image/png", pictureService.GetPictureSeName(product100GiftCard.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(product100GiftCard);
@@ -9063,7 +9020,7 @@ namespace Grand.Services.Installation
             var productPlaystationBundlePack = new Product {
                 ProductType = ProductType.BundledProduct,
                 VisibleIndividually = true,
-                Name = "Playstation 4 Slim Kit",
+                Name = "Playstation 5 Kit",
                 ShortDescription = "Meet the sleeker, smaller PS4 ™ that offers gamers an amazing gaming experience. The volume of the new PS4 is more than 30% smaller compared to previous console models, and its weight has been reduced by 25% and 16% respectively compared to the first (CUH-1000 series) and current (CUH-1200) versions of the PS4™.",
                 FullDescription = "<p>Meet the sleeker, smaller PS4 ™ that offers gamers an amazing gaming experience. The volume of the new PS4 is more than 30% smaller compared to previous console models, and its weight has been reduced by 25% and 16% respectively compared to the first (CUH-1000 series) and current (CUH-1200) versions of the PS4 ™.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -9099,11 +9056,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productPlaystationBundlePack);
             productPlaystationBundlePack.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPlaystationBundlePack.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_console_1.png"), "image/png", pictureService.GetPictureSeName(productPlaystationBundlePack.Name))).Id,
                 DisplayOrder = 1,
             });
             productPlaystationBundlePack.ProductPictures.Add(new ProductPicture {
-                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ps4_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPlaystationBundlePack.Name))).Id,
+                PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_sony_ps5_console_2.png"), "image/png", pictureService.GetPictureSeName(productPlaystationBundlePack.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productPlaystationBundlePack);
