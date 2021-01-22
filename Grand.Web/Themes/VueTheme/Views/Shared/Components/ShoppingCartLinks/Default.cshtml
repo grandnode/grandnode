@@ -2,7 +2,7 @@
 
 @if (Model.WishlistEnabled)
 {
-    <b-nav-item href="@Url.RouteUrl("Wishlist")"><b-icon icon="heart" variant="dark"></b-icon><div class="qty-indicator wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</div></b-nav-item>
+    <b-nav-item href="@Url.RouteUrl("Wishlist")"><b-icon icon="heart" :variant="[darkMode ? 'white' : 'dark']"></b-icon><div class="qty-indicator wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</div></b-nav-item>
 }
 @if (Model.ShoppingCartEnabled)
 {
@@ -14,7 +14,7 @@
     else
     {
         <b-nav-item href="@Url.RouteUrl("ShoppingCart")">
-            <b-icon icon="cart" variant="dark"></b-icon>
+            <b-icon icon="cart" :variant="[darkMode ? 'white' : 'dark']"></b-icon>
             <div class="qty-indicator cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</div>
         </b-nav-item>
     }

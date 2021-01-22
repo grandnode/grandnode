@@ -1,10 +1,11 @@
 ﻿var vm = new Vue({
     el: '#app',
-    data() {
+    data: function() {
         return {
             show: false,
             fluid: false,
             hover: false,
+            darkMode: false,
             active: false,
             NextDropdownVisible: false,
             value: 5,
@@ -20,19 +21,23 @@
         flycartitems: null,
         flycartindicator: null,
     },
-    mounted() {
+    mounted: function () {
         if (localStorage.fluid == "true") this.fluid = "fluid";
         if (localStorage.fluid == "fluid") this.fluid = "fluid";
         if (localStorage.fluid == "") this.fluid = "false";
+        if (localStorage.darkMode == "true") this.darkMode = true;
         this.updateFly();
     },
     watch: {
-        fluid(newName) {
+        fluid: function (newName) {
             localStorage.fluid = newName;
+        },
+        darkMode: function (newValue) {
+            localStorage.darkMode = newValue;
         },
     },
     methods: {
-        updateFly() {
+        updateFly: function () {
             axios({
                 baseURL: '/Component/Index?Name=FlyoutShoppingCart',
                 method: 'get',
@@ -48,7 +53,7 @@
                 this.flycartindicator = response.data.TotalProducts
             ))
         },
-        showModalBackInStock() {
+        showModalBackInStock: function () {
             this.$refs['back-in-stock'].show()
         },
         productImage: function (event) {
@@ -74,7 +79,7 @@
             var Image = parent.querySelectorAll(".main-product-img")[0];
             Image.setAttribute('src', Imagesrc);
         },
-        validateBeforeSubmit(event) {
+        validateBeforeSubmit: function (event) {
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     event.srcElement.submit();
@@ -91,7 +96,7 @@
                 }
             });
         },
-        validateBeforeClick(event) {
+        validateBeforeClick: function (event) {
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     var callFunction = event.srcElement.getAttribute('data-click');
@@ -100,7 +105,7 @@
                 }
             });
         },
-        validateBeforeSubmitParam(event, param) {
+        validateBeforeSubmitParam: function (event,param) {
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     var para = document.createElement("input");
@@ -122,7 +127,7 @@
                 }
             });
         },
-        isMobile() {
+        isMobile: function () {
             return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
         },
     }

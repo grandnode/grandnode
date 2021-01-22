@@ -23,16 +23,16 @@
     pagebuilder.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/bootstrap-vue/bootstrap.min.css", themeName));
 
 
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/validation-config.js", themeName));
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/validation-config.min.js", themeName), excludeFromBundle: true);
     pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/vee-validate.minimal.min.js", themeName));
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/vue-awesome-countdown.umd.min.js", themeName));
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/vue-awesome-countdown.umd.min.js", themeName), excludeFromBundle: true);
     pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/axios.min.js", themeName));
     pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/public.axios.js", themeName));
     pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/script/public.common.js", themeName));
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/vue/bootstrap-vue-icons-slim.min.js", themeName));
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/vue/bootstrap-vue.min.js", themeName));
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/vue/portal-vue.umd.min.js", themeName));
-    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/vue/vue.min.js", themeName));
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/vue/bootstrap-vue-icons-slim.min.js", themeName), excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/vue/bootstrap-vue.min.js", themeName), excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/vue/portal-vue.umd.min.js", themeName), excludeFromBundle: true);
+    pagebuilder.AppendScriptParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/vue/vue.min.js", themeName), excludeFromBundle: true);
 
     pagebuilder.AppendScriptParts(ResourceLocation.Footer, string.Format("~/Themes/{0}/Content/script/menu.js", themeName));
     pagebuilder.AppendScriptParts(ResourceLocation.Footer, "~/content/bootstrap/popper.min.js");

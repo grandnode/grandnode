@@ -7,7 +7,7 @@
     pagebuilder.AppendScriptParts(ResourceLocation.Footer, string.Format("~/Themes/{0}/Content/script/app.js", themeName));
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
-<div id="app" v-cloak>
+<div id="app"  :dark-theme="darkMode" v-cloak>
     <div class="page-loader-container">
         <div class="page-loader"></div>
     </div>

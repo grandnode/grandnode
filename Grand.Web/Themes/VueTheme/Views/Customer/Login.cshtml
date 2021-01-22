@@ -20,7 +20,7 @@
                 <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" v-on:submit.prevent="validateBeforeSubmit($event)">
                     <b-card>
                         <template v-slot:header>
-                            <h3 class="h5 mb-0">
+                            <h3 class="h5 mb-0 text-center">
                                 @T("Account.Login.ReturningCustomer")
                             </h3>
                         </template>
@@ -99,22 +99,28 @@
             @if (Model.CheckoutAsGuest)
             {
                 <b-col cols="12" class="new-wrapper checkout-as-guest-or-register-block mt-3 mx-lg-0 mx-auto">
-                    <h5>
-                        <strong>@T("Account.Login.CheckoutAsGuestOrRegister")</strong>
-                    </h5>
-                    <b-row class="text">
-                        <b-col cols="12">
-                            @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
-                        </b-col>
-                    </b-row>
-                    <btn-group class="buttons text-center mt-1 areYouGuest">
-                        <b-button variant="secondary" class="checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'">
-                            @T("Account.Login.CheckoutAsGuest")
-                        </b-button>
-                        <b-button variant="secondary" class="register-button" onclick="location.href='@registerUrl'">
-                            @T("Account.Register")
-                        </b-button>
-                    </btn-group>
+                    <b-card>
+                        <template v-slot:header>
+                            <h3 class="h5 mb-0 text-center">
+                                @T("Account.Login.CheckoutAsGuestOrRegister")
+                            </h3>
+                        </template>
+                        <b-card-text class="text-center">
+                            <b-row class="text">
+                                <b-col cols="12">
+                                    @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
+                                </b-col>
+                            </b-row>
+                            <btn-group class="buttons text-center mt-1 areYouGuest">
+                                <b-button variant="secondary" class="checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'">
+                                    @T("Account.Login.CheckoutAsGuest")
+                                </b-button>
+                                <b-button variant="secondary" class="register-button" onclick="location.href='@registerUrl'">
+                                    @T("Account.Register")
+                                </b-button>
+                            </btn-group>
+                        </b-card-text>
+                    </b-card>
                 </b-col>
             }
             else
