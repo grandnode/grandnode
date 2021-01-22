@@ -46,6 +46,9 @@
     text-align: right;
     border-bottom: 1px solid #efefef;
 }
+.flyout-cart .item img {
+    background-color: #F8F9FB;
+}
 .flyout-cart .item:last-child,
 .flyout-cart .item:last-child:first-child {
     margin: 0;

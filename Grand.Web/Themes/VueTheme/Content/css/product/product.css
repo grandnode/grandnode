@@ -9,6 +9,7 @@
 .product-details-page .gallery img.image.main-image {
     max-width: 100%;
     margin: 0 0 15px 0;
+    background-color: #F8F9FB;
 }
 .product-details-page .gallery img.image.main-image + div {
     width: 100%;
@@ -17,6 +18,7 @@
     max-width: 100px;
     margin: 0 7px 7px 0;
     border: 1px solid #ddd;
+    background-color: #F8F9FB;
 }
 .product-details-page .gallery img.image.zoom,
 .product-details-page .gallery .thumb-image {
@@ -179,5 +181,8 @@
 }
 [dark-theme="true"] .product-details-page .nav-tabs .nav-link.active {
     color: #fff;
+    background-color: #2d3133;
+}
+[dark-theme="true"] .product-details-page .gallery img.image.main-image, [dark-theme="true"] .product-details-page .gallery img.image.thumb-image {
     background-color: #2d3133;
 }

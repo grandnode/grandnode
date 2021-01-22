@@ -453,6 +453,9 @@ dl, ol, ul {
     height: 100%;
     z-index: 1050;
 }
+#ModalAddToCart img {
+    background-color: #F8F9FB;
+}
 
 /* color squares */
 

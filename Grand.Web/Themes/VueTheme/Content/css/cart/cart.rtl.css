@@ -21,6 +21,9 @@
     text-align: center;
     vertical-align: middle;
 }
+.shopping-cart.table td img {
+	background-color: #F8F9FB;
+}
 .shopping-cart.table .product-name {
     font-size: 16px;
     font-weight: 500;

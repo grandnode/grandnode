@@ -1403,6 +1403,7 @@ a.read {
 }
 .mfp-content img {
 	width: auto;
+	background-color: #F8F9FB;
 }
 .img-wish {
 	width: 100%;
@@ -2669,6 +2670,47 @@ list settings .list__item,
 	color: #777;
 	font-weight: 300;
 }
+.product-details-page .gallery {
+    display: flex;
+	align-items: flex-start;
+}
+.product-details-page .gallery img {
+    background-color: #F8F9FB;
+}
+    .product-details-page .sp-thumbs a {
+        margin-right: 5px;
+    }
+
+        .product-details-page .sp-thumbs a:link,
+        .sp-thumbs a:visited {
+            display: flex;
+            width: 100px;
+            min-width: 100px;
+            min-height: 100px;
+            height: 100px;
+            padding: .25rem;
+            background-color: #fff;
+            border: 4px solid #fff;
+            outline: 1px solid #ddd;
+        }
+
+.product-details-page .thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px 15px;
+    flex-direction: column;
+}
+
+    .product-details-page .thumbnails .thumb-popup-link {
+        margin-bottom: 5px;
+    }
+
+    .product-details-page .thumbnails img {
+        width: 100px;
+        height: auto;
+        border-radius: 0 !important;
+    }
+
 .product-contact-error,
 .product-contact-send {
 	display: none;
@@ -3003,12 +3045,6 @@ ul.opc .order-summary-content h5 {
 	background-color: #fff;
 	border: 4px solid #fff;
 	outline: 1px solid #ddd;
-}
-.product-details-page .thumbnails {
-	display: inline-flex;
-    flex-wrap: wrap;
-	width: 100%;
-	margin: 15px 0;
 }
 .product-details-page .thumbnails .thumb-popup-link {
 	margin-right: 5px;
@@ -3597,6 +3633,9 @@ valid mgs .input-validation-error {
 	min-width: 60px;
 	padding: 20px;
 }
+.shopping-cart td img {
+	background-color: #F8F9FB;
+}
 .shopping-cart td:last-child {
 	border-right: 0 !important;
 	text-align: center;
@@ -4066,6 +4105,9 @@ input[type='checkbox'].checkbox-u:checked + label:after {
 .flyout-cart .item {
 	border-bottom: 1px solid #dddddd;
 	padding: 15px !important;
+}
+.flyout-cart .item img {
+	background-color: #F8F9FB;
 }
 .flyout-cart .item:last-of-type {
 	border-bottom: none;
