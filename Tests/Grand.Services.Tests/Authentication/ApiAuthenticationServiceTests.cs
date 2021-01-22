@@ -40,10 +40,28 @@ namespace Grand.Services.Tests.Authentication
         {
             var httpContext = new Mock<HttpContext>();
             var context = new TokenValidatedContext(httpContext.Object,new AuthenticationScheme("","",typeof(AuthSchemaMock)), new JwtBearerOptions());
-            context.Principal = new ClaimsPrincipal();
+            IList<Claim> claims = new List<Claim>
+            {
+                 new Claim("Token", "123")
+            };
+            context.Principal = new ClaimsPrincipal(new ClaimsIdentity(claims, ""));
             var result =await _jwtBearerAuthenticationService.Valid(context);
             Assert.IsFalse(result);
             Assert.AreEqual(await _jwtBearerAuthenticationService.ErrorMessage(), "Email not exists in the context");
+        }
+        [TestMethod()]
+        public async Task Valid_NullToken_ReturnFalse()
+        {
+            var httpContext = new Mock<HttpContext>();
+            var context = new TokenValidatedContext(httpContext.Object, new AuthenticationScheme("", "", typeof(AuthSchemaMock)), new JwtBearerOptions());
+            IList<Claim> claims = new List<Claim>
+            {
+                  new Claim("Email", "johny@gmail.com"),
+            };
+            context.Principal = new ClaimsPrincipal(new ClaimsIdentity(claims, ""));
+            var result = await _jwtBearerAuthenticationService.Valid(context);
+            Assert.IsFalse(result);
+            Assert.AreEqual(await _jwtBearerAuthenticationService.ErrorMessage(), "Wrong token, change password on the customer and create token again");
         }
 
         [TestMethod()]
@@ -53,7 +71,8 @@ namespace Grand.Services.Tests.Authentication
             var context = new TokenValidatedContext(httpContext.Object, new AuthenticationScheme("", "", typeof(AuthSchemaMock)), new JwtBearerOptions());
             IList<Claim> claims = new List<Claim>
             {
-                 new Claim("Email", "johny@gmail.com")
+                 new Claim("Email", "johny@gmail.com"),
+                 new Claim("Token", "123")
             };
             context.Principal = new ClaimsPrincipal(new ClaimsIdentity(claims,""));
             _customerService.Setup(c => c.GetCustomerByEmail(It.IsAny<string>())).Returns(() => Task.FromResult<Customer>(null));
@@ -96,7 +115,23 @@ namespace Grand.Services.Tests.Authentication
             Assert.IsFalse(result);
             Assert.AreEqual("User api not exists/or not active in the user api table", await _jwtBearerAuthenticationService.ErrorMessage());
         }
-
+        [TestMethod()]
+        public async Task Valid_WrongTokenUserApi_ReturnFalse()
+        {
+            var httpContext = new Mock<HttpContext>();
+            var context = new TokenValidatedContext(httpContext.Object, new AuthenticationScheme("", "", typeof(AuthSchemaMock)), new JwtBearerOptions());
+            IList<Claim> claims = new List<Claim>
+            {
+                 new Claim("Email", "johny@gmail.com"),
+                 new Claim("Token", "123")
+            };
+            context.Principal = new ClaimsPrincipal(new ClaimsIdentity(claims, ""));
+            _customerService.Setup(c => c.GetCustomerByEmail(It.IsAny<string>())).Returns(() => Task.FromResult(new Customer() { Active = true }));
+            _userApiServiceMock.Setup(c => c.GetUserByEmail(It.IsAny<string>())).Returns(() => Task.FromResult(new UserApi() { IsActive = true, Token = "321" }));
+            var result = await _jwtBearerAuthenticationService.Valid(context);
+            Assert.IsFalse(result);
+            Assert.AreEqual("Wrong token, generate again", await _jwtBearerAuthenticationService.ErrorMessage());
+        }
         [TestMethod()]
         public async Task Valid_ActiveUserApi_ReturnTrue()
         {
