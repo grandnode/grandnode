@@ -10,7 +10,7 @@
             <div class="sort-container">
                 <label class="mb-0">@T("Catalog.OrderBy")</label>
                 <div class="selectdiv ml-4">
-                    @Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { @class = "form-control custom-select", onchange = "setLocation(this.value);" })
+                    <select class="custom-select form-control" asp-for="AvailableSortOption" asp-items="Model.AvailableSortOptions" onchange="setLocation(this.value);" aria-label="@T("Catalog.OrderBy")"></select>
                 </div>
             </div>
         }
@@ -26,7 +26,7 @@
             <div class="sort-container">
                 <label class="mb-0">@T("Catalog.PageSize")</label>
                 <div class="selectdiv ml-4">
-                    @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { @class = "custom-select form-control", onchange = "setLocation(this.value);" })
+                    <select class="custom-select form-control" asp-for="PageSizeOption" asp-items="Model.PageSizeOptions" onchange="setLocation(this.value);" aria-label="@T("Catalog.PageSize")"></select>
                 </div>
             </div>
         }
