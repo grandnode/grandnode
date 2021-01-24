@@ -4,6 +4,7 @@ using Grand.Services.Security;
 using Grand.Web.Features.Models.Topics;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
@@ -44,6 +45,9 @@ namespace Grand.Web.Controllers
 
             var model = await _mediator.Send(new GetTopicBlock() { TopicId = topicId });
             if (model == null)
+                return RedirectToRoute("HomePage");
+
+            if (model.EndDate.HasValue && model.EndDate < DateTime.UtcNow)
                 return RedirectToRoute("HomePage");
 
             //hide topic if it`s set as no published
