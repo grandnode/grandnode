@@ -1256,6 +1256,10 @@ namespace Grand.Web.Controllers
 
                     var model = new CheckoutBillingAddressModel();
                     await TryUpdateModelAsync(model);
+
+                    if(_orderSettings.DisableBillingAddressCheckoutStep)
+                        model.ShipToSameAddress = false;
+
                     if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress)
                     {
                         _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
