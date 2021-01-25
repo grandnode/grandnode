@@ -44,13 +44,10 @@ namespace Grand.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to Int32
         /// </summary>
-        public int IntValue
-        {
-            get
-            {
-                int rez;
-                if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out rez))
-                    return default(int);
+        public int IntValue {
+            get {
+                if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out var rez))
+                    return default;
                 return rez;
             }
         }
@@ -58,13 +55,10 @@ namespace Grand.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to bool
         /// </summary>
-        public bool BooleanValue
-        {
-            get
-            {
-                bool rez;
-                if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out rez))
-                    return default(bool);
+        public bool BooleanValue {
+            get {
+                if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out var rez))
+                    return default;
                 return rez;
             }
         }
@@ -72,21 +66,17 @@ namespace Grand.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to string
         /// </summary>
-        public string StringValue
-        {
+        public string StringValue {
             get { return PropertyValue == null ? string.Empty : Convert.ToString(PropertyValue); }
         }
 
         /// <summary>
         /// Converted property value to decimal
         /// </summary>
-        public decimal DecimalValue
-        {
-            get
-            {
-                decimal rez;
-                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out rez))
-                    return default(decimal);
+        public decimal DecimalValue {
+            get {
+                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out var rez))
+                    return default;
                 return rez;
             }
         }
@@ -94,12 +84,9 @@ namespace Grand.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to decimal?
         /// </summary>
-        public decimal? DecimalValueNullable
-        {
-            get
-            {
-                decimal rez;
-                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out rez))
+        public decimal? DecimalValueNullable {
+            get {
+                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out var rez))
                     return null;
                 return rez;
             }
@@ -108,13 +95,10 @@ namespace Grand.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to double
         /// </summary>
-        public double DoubleValue
-        {
-            get
-            {
-                double rez;
-                if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out rez))
-                    return default(double);
+        public double DoubleValue {
+            get {
+                if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out var rez))
+                    return default;
                 return rez;
             }
         }
@@ -122,9 +106,14 @@ namespace Grand.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to DateTime?
         /// </summary>
-        public DateTime? DateTimeNullable
-        {
-            get { return PropertyValue == null ? null : DateTime.Parse(PropertyValue.ToString()) as DateTime?; }
+        public DateTime? DateTimeNullable {
+            get {
+                if (PropertyValue != null && DateTime.TryParse(PropertyValue.ToString(), out DateTime date))
+                    return (DateTime?)date;
+
+                return default;
+            }
+
         }
 
         public override string ToString()
