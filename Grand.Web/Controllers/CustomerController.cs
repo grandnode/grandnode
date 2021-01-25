@@ -119,7 +119,7 @@ namespace Grand.Web.Controllers
                         {
                             var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(model.Username) : await _customerService.GetCustomerByEmail(model.Email);
                             //sign in
-                            return await SignInAction(shoppingCartService, customer, returnUrl);
+                            return await SignInAction(shoppingCartService, customer, model.RememberMe, returnUrl);
                         }
                     case CustomerLoginResults.RequiresTwoFactor:
                         {
@@ -223,13 +223,13 @@ namespace Grand.Web.Controllers
             return View();
         }
 
-        protected async Task<IActionResult> SignInAction(IShoppingCartService shoppingCartService, Customer customer, string returnUrl = null)
+        protected async Task<IActionResult> SignInAction(IShoppingCartService shoppingCartService, Customer customer, bool createPersistentCookie = false, string returnUrl = null)
         {
             //migrate shopping cart
             await shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
 
             //sign in new customer
-            await _authenticationService.SignIn(customer, true);
+            await _authenticationService.SignIn(customer, createPersistentCookie);
 
             //raise event       
             await _mediator.Publish(new CustomerLoggedInEvent(customer));
