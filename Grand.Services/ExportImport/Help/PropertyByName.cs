@@ -48,9 +48,8 @@ namespace Grand.Services.ExportImport.Help
         {
             get
             {
-                int rez;
-                if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out rez))
-                    return default(int);
+                if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out var rez))
+                    return default;
                 return rez;
             }
         }
@@ -62,9 +61,8 @@ namespace Grand.Services.ExportImport.Help
         {
             get
             {
-                bool rez;
-                if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out rez))
-                    return default(bool);
+                if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out var rez))
+                    return default;
                 return rez;
             }
         }
@@ -84,9 +82,8 @@ namespace Grand.Services.ExportImport.Help
         {
             get
             {
-                decimal rez;
-                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out rez))
-                    return default(decimal);
+                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out var rez))
+                    return default;
                 return rez;
             }
         }
@@ -98,8 +95,7 @@ namespace Grand.Services.ExportImport.Help
         {
             get
             {
-                decimal rez;
-                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out rez))
+                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out var rez))
                     return null;
                 return rez;
             }
@@ -112,9 +108,8 @@ namespace Grand.Services.ExportImport.Help
         {
             get
             {
-                double rez;
-                if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out rez))
-                    return default(double);
+                if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out var rez))
+                    return default;
                 return rez;
             }
         }
@@ -124,7 +119,13 @@ namespace Grand.Services.ExportImport.Help
         /// </summary>
         public DateTime? DateTimeNullable
         {
-            get { return PropertyValue == null ? null : DateTime.Parse(PropertyValue.ToString()) as DateTime?; }
+            get {
+                if (PropertyValue != null && DateTime.TryParse(PropertyValue.ToString(), out DateTime date))
+                    return (DateTime?)date;
+
+                return default;
+            }
+
         }
 
         public override string ToString()
