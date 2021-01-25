@@ -19,7 +19,7 @@
     <ProjectReference Include="..\Grand.Api\Grand.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\appsettings.json;App_Data\sitemap.config;App_Data\DataProtectionKeys\*.xml;App_Data\Settings.txt;App_Data\InstalledPlugins.txt;" />
+    <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\appsettings.json;App_Data\sitemap.config;App_Data\DataProtectionKeys\*.xml;App_Data\Settings.txt;App_Data\InstalledPlugins.txt;" />   
     <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.config;Themes\**\*.cshtml" />
     <Content Include="Roslyn\**" CopyToPublishDirectory="PreserveNewest" Exclude="Roslyn\**\*.dll" />
     <Content Include="logs\**" CopyToPublishDirectory="PreserveNewest" />

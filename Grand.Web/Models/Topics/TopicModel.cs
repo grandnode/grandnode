@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Models;
+using System;
 
 namespace Grand.Web.Models.Topics
 {
@@ -27,5 +28,7 @@ namespace Grand.Web.Models.Topics
         public string TopicTemplateId { get; set; }
 
         public bool Published { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 }

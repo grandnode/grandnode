@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using Grand.Framework.Mvc.Models;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace Grand.Web.Areas.Admin.Models.Topics
 {
@@ -99,6 +100,13 @@ namespace Grand.Web.Areas.Admin.Models.Topics
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
         public string[] SelectedCustomerRoleIds { get; set; }
 
+        [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.StartDate")]
+        [UIHint("DateTimeNullable")]
+        public DateTime? StartDateUtc { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.EndDate")]
+        [UIHint("DateTimeNullable")]
+        public DateTime? EndDateUtc { get; set; }
     }
 
     public partial class TopicLocalizedModel : ILocalizedModelLocal, ISlugModelLocal

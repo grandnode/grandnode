@@ -2,6 +2,7 @@ using Grand.Domain.Localization;
 using Grand.Domain.Security;
 using Grand.Domain.Seo;
 using Grand.Domain.Stores;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Domain.Topics
@@ -122,5 +123,13 @@ namespace Grand.Domain.Topics
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
         public bool Published { get; set; }
+        /// <summary>
+        /// Gets or sets a start date of topic
+        /// </summary>
+        public DateTime? StartDateUtc { get; set; }
+        /// <summary>
+        /// Gets or sets a end date of topic
+        /// </summary>
+        public DateTime? EndDateUtc { get; set; }
     }
 }

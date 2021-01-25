@@ -6,6 +6,7 @@ using Grand.Domain.Forums;
 using Grand.Domain.Localization;
 using Grand.Domain.Polls;
 using Grand.Domain.Topics;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Models.Boards;
@@ -121,7 +122,7 @@ namespace Grand.Web.Extensions
         }
 
         //topic
-        public static TopicModel ToModel(this Topic entity, Language language, string password = "")
+        public static TopicModel ToModel(this Topic entity, Language language, IDateTimeHelper dateTimeHelper, string password = "")
         {
             var model = new TopicModel {
                 Id = entity.Id,
@@ -136,7 +137,9 @@ namespace Grand.Web.Extensions
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
                 SeName = entity.GetSeName(language.Id),
                 TopicTemplateId = entity.TopicTemplateId,
-                Published = entity.Published
+                Published = entity.Published,
+                StartDate = entity.StartDateUtc.HasValue ? dateTimeHelper.ConvertToUserTime(entity.StartDateUtc.Value) : default,
+                EndDate = entity.EndDateUtc.HasValue ? dateTimeHelper.ConvertToUserTime(entity.EndDateUtc.Value) : default
             };
             return model;
 
