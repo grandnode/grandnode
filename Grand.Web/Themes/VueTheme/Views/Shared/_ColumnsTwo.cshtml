@@ -100,16 +100,18 @@
     </b-col>
 </b-row>
 <script asp-location="Footer">
-    var leftSide = document.querySelector('.generalLeftSide');
-    function LeftSideBar() {
-        if (991 > window.outerWidth) {
-            document.querySelector("#sidebar-mobile .b-sidebar-body").appendChild(leftSide);
-        } else {
-            document.getElementById("TwoColumns").appendChild(leftSide);
+    document.addEventListener("DOMContentLoaded", function () {
+        var leftSide = document.querySelector('.generalLeftSide');
+        function LeftSideBar() {
+            if (991 > (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth)) {
+                document.querySelector("#sidebar-mobile .b-sidebar-body").appendChild(leftSide);
+            } else {
+                document.getElementById("TwoColumns").appendChild(leftSide);
+            }
         }
-    }
-    LeftSideBar();
-    window.addEventListener("resize", function () {
         LeftSideBar();
-    }, false);
+        window.addEventListener("resize", function () {
+            LeftSideBar();
+        });
+    });
 </script>
