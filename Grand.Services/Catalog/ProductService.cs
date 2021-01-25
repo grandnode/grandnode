@@ -413,7 +413,7 @@ namespace Grand.Services.Catalog
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);
             var update = Builders<Product>.Update
                     .Set(x => x.StockQuantity, product.StockQuantity)
-                    .Set(x => x.LowStock, ((product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity) || product.StockQuantity < 0))
+                    .Set(x => x.LowStock, ((product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity) || product.StockQuantity <= 0))
                     .CurrentDate("UpdatedOnUtc");
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
@@ -666,9 +666,8 @@ namespace Grand.Services.Catalog
             //simple products
             var query_simple_products = from p in _productRepository.Table
                                         where p.LowStock &&
-                                        ((p.ProductTypeId == (int)ProductType.SimpleProduct && p.ManageInventoryMethodId != (int)ManageInventoryMethod.DontManageStock)
-                                        ||
-                                        (p.ProductTypeId == (int)ProductType.BundledProduct && p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock))
+                                        ((p.ProductTypeId == (int)ProductType.SimpleProduct || p.ProductTypeId == (int)ProductType.BundledProduct)
+                                        && p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock)
                                         select p;
 
             if (!string.IsNullOrEmpty(vendorId))
