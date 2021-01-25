@@ -26,9 +26,8 @@ namespace Grand.Services.Queries.Handlers.Catalog
             //simple products
             var query_simple_products = from p in _productRepository.Table
                                         where p.LowStock &&
-                                        ((p.ProductTypeId == (int)ProductType.SimpleProduct && p.ManageInventoryMethodId != (int)ManageInventoryMethod.DontManageStock)
-                                        ||
-                                        (p.ProductTypeId == (int)ProductType.BundledProduct && p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock))
+                                        ((p.ProductTypeId == (int)ProductType.SimpleProduct || p.ProductTypeId == (int)ProductType.BundledProduct) 
+                                        && p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock)
                                         select p;
 
             if (!string.IsNullOrEmpty(request.VendorId))

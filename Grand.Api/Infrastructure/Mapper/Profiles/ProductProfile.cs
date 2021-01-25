@@ -19,7 +19,6 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.LowStockActivityId, mo => mo.MapFrom(src => (int)src.LowStockActivity))
                 .ForMember(dest => dest.ManageInventoryMethodId, mo => mo.MapFrom(src => (int)src.ManageInventoryMethod))
                 .ForMember(dest => dest.RecurringCyclePeriodId, mo => mo.MapFrom(src => (int)src.RecurringCyclePeriod))
-                .ForMember(dest => dest.StockQuantity, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductManufacturers, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductPictures, mo => mo.Ignore())
