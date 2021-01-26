@@ -52,7 +52,12 @@ namespace Grand.Framework.Mvc.Rss
         private void Init(string title, string content, Uri link, string id, DateTimeOffset pubDate)
         {
             Title = new XElement("title", title);
-            Content = new XElement("description", new XCData(content));
+
+            if (string.IsNullOrEmpty(content))
+                Content = new XElement("description");
+            else
+                Content = new XElement("description", new XCData(content));
+
             Link = new XElement("link", link);
             Id = new XElement("guid", new XAttribute("isPermaLink", false), id);
             PubDate = new XElement("pubDate", pubDate.ToString("r"));
