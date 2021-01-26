@@ -61,11 +61,11 @@ namespace Grand.Plugin.Widgets.Slider
         {
             //pictures
             var sampleImagesPath = CommonHelper.MapPath("~/Plugins/Widgets.Slider/Content/slider/sample-images/");
-            var byte1 = File.ReadAllBytes(sampleImagesPath + "banner1.jpg");
-            var byte2 = File.ReadAllBytes(sampleImagesPath + "banner2.jpg");
+            var byte1 = File.ReadAllBytes(sampleImagesPath + "banner1.png");
+            var byte2 = File.ReadAllBytes(sampleImagesPath + "banner2.png");
 
-            var pic1 = await _pictureService.InsertPicture(byte1, "image/jpeg", "banner_1", validateBinary: false);
-            var pic2 = await _pictureService.InsertPicture(byte2, "image/jpeg", "banner_2", validateBinary: false);
+            var pic1 = await _pictureService.InsertPicture(byte1, "image/png", "banner_1", validateBinary: false);
+            var pic2 = await _pictureService.InsertPicture(byte2, "image/png", "banner_2", validateBinary: false);
 
             await _pictureSliderRepository.InsertAsync(new PictureSlider()
             {
@@ -86,7 +86,7 @@ namespace Grand.Plugin.Widgets.Slider
                 FullWidth = true,
                 Published = true,
                 PictureId = pic2.Id,
-                Description = "<div class=\"row slideRow\"><div class=\"col-md-6 offset-md-6 col-12 offset-0 d-flex flex-column justify-content-center align-items-start px-0 pr-md-3\"><div class=\"slide-title text-dark animated bounceInRight delay-0-5s\"><h2 class=\"mt-0\">Redmi Note 9</h2></div><div class=\"slide-content animated bounceInRight delay-1s\"><p class=\"mb-0\"><span style=\"color: #999999;\">Equipped with a high-performance octa-core processor with a maximum clock frequency of 2.0 GHz.</span></p></div><div class=\"slide-price animated fadeInRight delay-1-5s d-inline-flex align-items-center justify-content-start w-100 mt-2\"><p class=\"actual\">$249.00</p><p class=\"old-price\">$399.00</p></div><div class=\"slide-button animated bounceInUp delay-2s mt-3\"><a class=\"btn btn-outline-info\" href=\"/redmi-note-9\">See More</a></div></div></div>",
+                Description = "<div class=\"row slideRow\"><div class=\"col-md-6 offset-md-6 col-12 offset-0 d-flex flex-column justify-content-center align-items-start px-0 pr-md-3\"><div class=\"slide-title text-dark animated bounceInRight delay-0-5s\"><h2 class=\"mt-0\">Redmi Note 9</h2></div><div class=\"slide-content animated bounceInRight delay-1s\"><p class=\"mb-0\"><span style=\"color: #000000;\">Equipped with a high-performance octa-core processor with a maximum clock frequency of 2.0 GHz.</span></p></div><div class=\"slide-price animated fadeInRight delay-1-5s d-inline-flex align-items-center justify-content-start w-100 mt-2\"><p class=\"actual\">$249.00</p><p class=\"old-price\">$399.00</p></div><div class=\"slide-button animated bounceInUp delay-2s mt-3\"><a class=\"btn btn-outline-info\" href=\"/redmi-note-9\">See More</a></div></div></div>",
             });
 
             await this.AddOrUpdatePluginLocaleResource(_localizationService, _languageService, "Plugins.Widgets.Slider.Added", "Slider added");
