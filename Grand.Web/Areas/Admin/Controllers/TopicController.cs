@@ -3,6 +3,7 @@ using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
@@ -21,6 +22,7 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class TopicController : BaseAdminController
     {
         #region Fields
+
         private readonly ITopicViewModelService _topicViewModelService;
         private readonly ITopicService _topicService;
         private readonly ILanguageService _languageService;
@@ -28,6 +30,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
+        private readonly IDateTimeHelper _dateTimeHelper;
+
         #endregion Fields
 
         #region Constructors
@@ -39,7 +43,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             IStoreService storeService,
             ICustomerService customerService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IDateTimeHelper dateTimeHelper)
         {
             _topicViewModelService = topicViewModelService;
             _topicService = topicService;
@@ -48,6 +53,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _storeService = storeService;
             _customerService = customerService;
             _workContext = workContext;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -67,7 +73,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> List(DataSourceRequest command, TopicListModel model)
         {
             var topicModels = (await _topicService.GetAllTopics(model.SearchStoreId, true))
-                .Select(x => x.ToModel())
+                .Select(x => x.ToModel(_dateTimeHelper))
                 .ToList();
 
             if (!string.IsNullOrEmpty(model.Name))
@@ -140,7 +146,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No topic found with the specified id
                 return RedirectToAction("List");
 
-            var model = topic.ToModel();
+            var model = topic.ToModel(_dateTimeHelper);
             model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName(_workContext.WorkingLanguage.Id) }, "http");
             //templates
             await _topicViewModelService.PrepareTemplatesModel(model);

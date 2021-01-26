@@ -304,8 +304,10 @@ namespace Grand.Services.Seo
         /// <returns>Collection of sitemap URLs</returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetTopicUrls(IUrlHelper urlHelper, string language, string store)
         {
-            var topics = await _topicService.GetAllTopics(storeId: store);
-            return topics.Where(t => t.IncludeInSitemap).Select(topic =>
+            var now = DateTime.UtcNow;
+            return (await _topicService.GetAllTopics(storeId: store))
+                .Where(t => t.IncludeInSitemap && (!t.StartDateUtc.HasValue || t.StartDateUtc < now) && (!t.EndDateUtc.HasValue || t.EndDateUtc > now))
+                .Select(topic =>
             {
                 var url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName(language) }, GetHttpProtocol());
                 return new SitemapUrl(url, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow);
