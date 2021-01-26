@@ -29,6 +29,12 @@
                                 <admin-input asp-for="SeName" />
                             </div>
                         </div>
+                        <div class="form-group">
+                            <admin-label asp-for="SearchActiveId"/>
+                            <div class="col-4 col-md-6">
+                                <admin-select asp-for="SearchActiveId" asp-items="Model.AvailableActiveOptions" />
+                            </div>
+                        </div>
                     </div>
                     <div class="form-actions">
                         <div class="row">
@@ -197,7 +203,8 @@
 
     function additionalData() {
         var data = {
-            SeName: $('#@Html.FieldIdFor(model => model.SeName)').val()
+            SeName: $('#@Html.FieldIdFor(model => model.SeName)').val(),
+            SearchActiveId: $('#@Html.FieldIdFor(model => model.SearchActiveId)').val()
         };
         addAntiForgeryToken(data);
         return data;

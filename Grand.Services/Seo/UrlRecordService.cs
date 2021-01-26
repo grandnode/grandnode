@@ -222,16 +222,21 @@ namespace Grand.Services.Seo
         /// Gets all URL records
         /// </summary>
         /// <param name="slug">Slug</param>
+        /// <param name="active">Active</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>URL records</returns>
-        public virtual async Task<IPagedList<UrlRecord>> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<UrlRecord>> GetAllUrlRecords(string slug = "", bool? active = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
 
             var query = _urlRecordRepository.Table;
 
-            if (!String.IsNullOrWhiteSpace(slug))
-                query = query.Where(ur => ur.Slug.ToLower().Contains(slug.ToLowerInvariant()));
+            if (!string.IsNullOrWhiteSpace(slug))
+                query = query.Where(ur => ur.Slug.Contains(slug.ToLowerInvariant()));
+
+            if (active.HasValue)
+                query = query.Where(ur => ur.IsActive == active.Value);
+
             query = query.OrderBy(ur => ur.Slug);
             return await PagedList<UrlRecord>.Create(query, pageIndex, pageSize);
         }

@@ -188,4 +188,19 @@
   <LocaleResource Name="Admin.Common.Deactivate">
     <Value>Deactivate</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Active">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Active.Hint">
+    <Value>Search by a "Active" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Search.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Search.ActiveOnly">
+    <Value>Active only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Search.InActiveOnly">
+    <Value>InActive only</Value>
+  </LocaleResource>
 </Language>
