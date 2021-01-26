@@ -279,7 +279,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             if (!string.IsNullOrEmpty(model.PictureId))
             {
-                var pictureThumbnailUrl = await _pictureService.GetPictureUrl(model.PictureId, 75, false);
+                var pictureThumbnailUrl = await _pictureService.GetPictureUrl(model.PictureId, 100, false);
                 model.PictureThumbnailUrl = pictureThumbnailUrl;
             }
             foreach (var picture in product.ProductPictures)
@@ -852,7 +852,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var defaultProductPicture = x.ProductPictures.FirstOrDefault();
                 if (defaultProductPicture == null)
                     defaultProductPicture = new ProductPicture();
-                productModel.PictureThumbnailUrl = await _pictureService.GetPictureUrl(defaultProductPicture.PictureId, 75, true);
+                productModel.PictureThumbnailUrl = await _pictureService.GetPictureUrl(defaultProductPicture.PictureId, 100, true);
                 //product type
                 productModel.ProductTypeName = x.ProductType.GetLocalizedEnum(_localizationService, _workContext);
                 //friendly stock qantity
@@ -2453,7 +2453,7 @@ namespace Grand.Web.Areas.Admin.Services
                     associatedProduct = await _productService.GetProductById(x.AssociatedProductId);
                 }
 
-                var pictureThumbnailUrl = await _pictureService.GetPictureUrl(string.IsNullOrEmpty(x.PictureId) ? x.ImageSquaresPictureId : x.PictureId, 75, false);
+                var pictureThumbnailUrl = await _pictureService.GetPictureUrl(string.IsNullOrEmpty(x.PictureId) ? x.ImageSquaresPictureId : x.PictureId, 100, false);
 
                 //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
                 if (string.IsNullOrEmpty(pictureThumbnailUrl))
