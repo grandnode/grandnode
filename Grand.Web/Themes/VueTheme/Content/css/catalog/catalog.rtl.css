@@ -137,3 +137,7 @@
     border-color: #555;
     background-color: #2d3133;
 }
+[dark-theme="true"] .viewBox img {
+    background-color: #2d3133;
+    border: 1px solid #555;
+}

@@ -1288,6 +1288,10 @@ footer .list-group-item span:last-child {
 [dark-theme="true"] .shopping-cart.table td, [dark-theme="true"] .b-rating:focus, [dark-theme="true"] .product-box .picture-container .img-container img {
     background-color: #2d3133;
 }
+[dark-theme="true"] #ModalAddToCart img {
+    background-color: #2d3133;
+    border: 1px solid #555;
+}
 [dark-theme="true"] .advanced-search-results {
     background: #2d3133;
 }

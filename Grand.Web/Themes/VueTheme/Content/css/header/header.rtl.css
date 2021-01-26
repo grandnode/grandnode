@@ -175,3 +175,7 @@
 [dark-theme="true"] .qty-indicator {
     background: #1FB0C7;
 }
+[dark-theme="true"] .flyout-cart .item img {
+    background-color: #2d3133;
+    border: 1px solid #555;
+}

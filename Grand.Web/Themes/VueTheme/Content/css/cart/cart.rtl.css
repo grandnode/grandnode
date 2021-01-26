@@ -138,6 +138,10 @@
 [dark-theme="true"] .shopping-cart.table thead th {
     border-color: #fff;
 }
+[dark-theme="true"] .shopping-cart.table td img {
+    background-color: #2d3133;
+    border: 1px solid #555;
+}
 @media (max-width: 991px) {
     [dark-theme="true"] .shopping-cart.table td, [dark-theme="true"] .shopping-cart.table td:first-child, [dark-theme="true"] .shopping-cart.table td:last-child {
         border-color: #fff;
