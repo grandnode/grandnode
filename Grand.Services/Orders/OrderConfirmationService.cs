@@ -630,6 +630,7 @@ namespace Grand.Services.Orders
                 var newOrderItem = new OrderItem {
                     OrderItemGuid = Guid.NewGuid(),
                     ProductId = orderItem.ProductId,
+                    Sku = orderItem.Sku,
                     VendorId = orderItem.VendorId,
                     WarehouseId = orderItem.WarehouseId,
                     SeId = orderItem.SeId,
@@ -798,6 +799,7 @@ namespace Grand.Services.Orders
             var orderItem = new OrderItem {
                 OrderItemGuid = Guid.NewGuid(),
                 ProductId = sc.ProductId,
+                Sku = product.FormatSku(sc.Attributes, _productAttributeParser),
                 VendorId = product.VendorId,
                 WarehouseId = warehouseId,
                 SeId = details.Customer.SeId,
