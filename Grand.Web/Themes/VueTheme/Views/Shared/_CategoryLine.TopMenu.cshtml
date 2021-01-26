@@ -2,7 +2,7 @@
 
 @if (Model.Category.IncludeInTopMenu)
 {
-    <li class="@(Model.Category.SubCategories.Count() == 0 ? "": "-hasSubmenu" )">
+    <li class="@(Model.Category.SubCategories.Count() == 0 ? "category": "category -hasSubmenu" )">
 
         @if (Model.Category.SubCategories.Count() == 0)
         {

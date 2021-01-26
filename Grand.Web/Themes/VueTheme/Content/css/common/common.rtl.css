@@ -316,6 +316,15 @@ body:not(.modal-open) {
      padding: 0px;
      margin: 0px;
 }
+ .Menu li > a, .Menu li > div {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+}
  .Menu li {
      display: flex;
      align-items: center;
@@ -324,6 +333,15 @@ body:not(.modal-open) {
      border-bottom: 1px solid #f2f2f2;
      cursor: pointer;
 }
+ .Menu li.category {
+     background-color: #E8E9EA;
+ }
+ .Menu li:not(.category) {
+     background-color: #fff;
+ }
+ .Menu li.category > div > span, .Menu li.category > a {
+     font-weight: 700;
+ }
  .Menu li .badge {
      position: absolute;
      top: 0;
@@ -334,10 +352,17 @@ body:not(.modal-open) {
 }
  .Menu li .back {
      background: #f2f2f2;
+     display: flex;
+     align-items: center;
+     width: 100%;
+     justify-content: flex-start;
+     padding: 10px;
+     font-weight: 500;
 }
  .Menu li .back .b-icon.bi {
      font-size: 16px;
      margin: 0 15px 0 0;
+     padding: 0;
 }
  .Menu li > * {
      display: block;
@@ -387,7 +412,7 @@ body:not(.modal-open) {
      padding-right: 0px !important;
 }
 /* Submenu chevrons */
- .Menu li.-hasSubmenu > a:after {
+ .Menu li.-hasSubmenu > a:after, .Menu li.-hasSubmenu > div:after {
      display: block;
      position: absolute;
      width: 8px;
@@ -410,6 +435,8 @@ body:not(.modal-open) {
 }
  .Menu li, .Menu li > :first-child {
      height: 50px;
+     display: flex;
+     align-items: center;
 }
  .Menu *[data-icon]:before, .Menu .Icon {
      width: 40px;
@@ -1262,7 +1289,8 @@ footer .list-group-item span:last-child {
 
 #app[dark-theme="true"],
 [dark-theme="true"] .modal-content,
-[dark-theme="true"] .Menu li .back {
+[dark-theme="true"] .Menu li .back,
+[dark-theme="true"] .Menu li .back, [dark-theme="true"] .Menu li:not(.category) {
     color: #fff;
     background-color: #363c40;
 }
@@ -1285,12 +1313,18 @@ footer .list-group-item span:last-child {
 [dark-theme="true"] .card,
 [dark-theme="true"] .product-box .card-footer, [dark-theme="true"] .product-box .card-footer::before,
 [dark-theme="true"] footer, [dark-theme="true"] .product-box:hover::before, [dark-theme="true"] .product-box:hover,
-[dark-theme="true"] .shopping-cart.table td, [dark-theme="true"] .b-rating:focus, [dark-theme="true"] .product-box .picture-container .img-container img {
+[dark-theme="true"] .shopping-cart.table td, [dark-theme="true"] .b-rating:focus, [dark-theme="true"] .product-box .picture-container .img-container img, [dark-theme="true"] .Menu li:not(.category):hover {
     background-color: #2d3133;
 }
 [dark-theme="true"] #ModalAddToCart img {
     background-color: #2d3133;
     border: 1px solid #555;
+}
+[dark-theme="true"] .Menu li.category {
+    background-color: #242424;
+}
+[dark-theme="true"] .Menu li.category:hover, [dark-theme="true"] .Menu li.sub-cat-name-container:hover a {
+    background-color: #000;
 }
 [dark-theme="true"] .advanced-search-results {
     background: #2d3133;

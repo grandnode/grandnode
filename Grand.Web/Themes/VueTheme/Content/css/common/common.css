@@ -225,6 +225,15 @@ ul.Menu.-vertical {
      border-bottom: 1px solid #f2f2f2;
      cursor: pointer;
 }
+ .Menu li.category {
+     background-color: #E8E9EA;
+ }
+ .Menu li.category > div > span, .Menu li.category > a {
+     font-weight: 700;
+ }
+ .Menu li:not(.category) {
+     background-color: #fff;
+ }
  .Menu li .badge {
      position: absolute;
      top: 0;
@@ -376,8 +385,8 @@ ul.Menu.-vertical {
      transition: background-color 0.2s;
 }
 /* Colour of :hover shading */
- .Menu li:hover > a:first-child, .Menu li.-active > a:first-child {
-     background-color: rgba(0,0,0,0.1);
+ .Menu li.category:hover {
+     background-color: rgba(0,0,0,0.2);
 }
 
 
@@ -1196,7 +1205,7 @@ footer .list-group-item span:last-child {
 
 #app[dark-theme="true"],
 [dark-theme="true"] .modal-content,
-[dark-theme="true"] .Menu li .back {
+[dark-theme="true"] .Menu li .back, [dark-theme="true"] .Menu li:not(.category) {
     color: #fff;
     background-color: #363c40;
 }
@@ -1219,12 +1228,18 @@ footer .list-group-item span:last-child {
 [dark-theme="true"] .card,
 [dark-theme="true"] .product-box .card-footer, [dark-theme="true"] .product-box .card-footer::before,
 [dark-theme="true"] footer, [dark-theme="true"] .product-box:hover::before, [dark-theme="true"] .product-box:hover,
-[dark-theme="true"] .shopping-cart.table td, [dark-theme="true"] .b-rating:focus, [dark-theme="true"] .product-box .picture-container .img-container img {
+[dark-theme="true"] .shopping-cart.table td, [dark-theme="true"] .b-rating:focus, [dark-theme="true"] .product-box .picture-container .img-container img, [dark-theme="true"] .Menu li:not(.category):hover {
     background-color: #2d3133;
 }
 [dark-theme="true"] #ModalAddToCart img {
     background-color: #2d3133;
     border: 1px solid #555;
+}
+[dark-theme="true"] .Menu li.category {
+    background-color: #242424;
+}
+[dark-theme="true"] .Menu li.category:hover, [dark-theme="true"] .Menu li.sub-cat-name-container:hover a {
+    background-color: #000;
 }
 [dark-theme="true"] .advanced-search-results {
     background: #2d3133;
