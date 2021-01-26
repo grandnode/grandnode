@@ -183,6 +183,9 @@
     color: #fff;
     background-color: #2d3133;
 }
-[dark-theme="true"] .product-details-page .gallery img.image.main-image, [dark-theme="true"] .product-details-page .gallery img.image.thumb-image {
+[dark-theme="true"] .product-details-page .gallery img.image.main-image, [dark-theme="true"] .product-details-page .gallery img.image.thumb-image, [dark-theme="true"] .product-details-page .gallery img {
     background-color: #2d3133;
+}
+[dark-theme] .product-details-page .gallery img.image.thumb-image {
+    border-color: #666;
 }
