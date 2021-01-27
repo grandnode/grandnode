@@ -22,6 +22,11 @@ namespace Grand.Domain.Orders
         public string ProductId { get; set; }
 
         /// <summary>
+        /// Gets or sets the sku product identifier
+        /// </summary>
+        public string Sku { get; set; }
+
+        /// <summary>
         /// Gets or sets the vendor identifier
         /// </summary>
         public string VendorId { get; set; }

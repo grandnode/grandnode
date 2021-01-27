@@ -20,6 +20,7 @@ using Grand.Web.Models.Common;
 using Grand.Web.Models.Knowledgebase;
 using Grand.Web.Models.Topics;
 using MediatR;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -114,8 +115,9 @@ namespace Grand.Web.Features.Handlers.Common
                 }
 
                 //topics
+                var now = DateTime.UtcNow;
                 var topics = (await _topicService.GetAllTopics(request.Store.Id))
-                    .Where(t => t.IncludeInSitemap)
+                    .Where(t => t.IncludeInSitemap && (!t.StartDateUtc.HasValue || t.StartDateUtc < now) && (!t.EndDateUtc.HasValue || t.EndDateUtc > now))
                     .ToList();
                 model.Topics = topics.Select(topic => new TopicModel {
                     Id = topic.Id,

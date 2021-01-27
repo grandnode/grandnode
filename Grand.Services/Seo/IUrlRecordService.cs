@@ -54,10 +54,11 @@ namespace Grand.Services.Seo
         /// Gets all URL records
         /// </summary>
         /// <param name="slug">Slug</param>
+        /// <param name="active">active</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>URL records</returns>
-        Task<IPagedList<UrlRecord>> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<UrlRecord>> GetAllUrlRecords(string slug = "", bool? active = null, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Find slug

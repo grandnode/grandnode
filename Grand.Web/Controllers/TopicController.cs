@@ -47,9 +47,6 @@ namespace Grand.Web.Controllers
             if (model == null)
                 return RedirectToRoute("HomePage");
 
-            if (model.EndDate.HasValue && model.EndDate < DateTime.UtcNow)
-                return RedirectToRoute("HomePage");
-
             //hide topic if it`s set as no published
             if (!model.Published
                 && !(await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))

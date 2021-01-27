@@ -44,6 +44,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Grand.Services.Logging;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -584,12 +585,32 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult SeNames()
         {
             var model = new UrlRecordListModel();
+            //"Active" property
+            //0 - all (according to "IsActive" parameter)
+            //1 - active only
+            //2 - inactive only
+            model.AvailableActiveOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.System.SeNames.Search.All"), Value = "0" });
+            model.AvailableActiveOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.System.SeNames.Search.ActiveOnly"), Value = "1" });
+            model.AvailableActiveOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.System.SeNames.Search.InActiveOnly"), Value = "2" });
+
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> SeNames(DataSourceRequest command, UrlRecordListModel model)
         {
-            var urlRecords = await _urlRecordService.GetAllUrlRecords(model.SeName, command.Page - 1, command.PageSize);
+            bool? active = null;
+            switch (model.SearchActiveId)
+            {
+                case 1:
+                    active = true;
+                    break;
+                case 2:
+                    active = false;
+                    break;
+                default:
+                    break;
+            }
+            var urlRecords = await _urlRecordService.GetAllUrlRecords(model.SeName, active, command.Page - 1, command.PageSize);
             var items = new List<UrlRecordModel>();
             foreach (var x in urlRecords)
             {

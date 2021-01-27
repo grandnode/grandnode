@@ -56,8 +56,9 @@ namespace Grand.Web.Features.Handlers.Catalog
             var cachedCategoriesModel = await _mediator.Send(new GetCategorySimple() { Customer = request.Customer, Language = request.Language, Store = request.Store });
 
             //top menu topics
+            var now = DateTime.UtcNow;
             var topicModel = (await _topicService.GetAllTopics(request.Store.Id))
-                .Where(t => t.IncludeInTopMenu)
+                .Where(t => t.IncludeInTopMenu && (!t.StartDateUtc.HasValue || t.StartDateUtc < now) && (!t.EndDateUtc.HasValue || t.EndDateUtc > now))
                 .Select(t => new TopMenuModel.TopMenuTopicModel {
                     Id = t.Id,
                     Name = t.GetLocalized(x => x.Title, request.Language.Id),

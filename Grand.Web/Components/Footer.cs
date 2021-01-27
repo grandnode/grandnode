@@ -76,7 +76,7 @@ namespace Grand.Web.ViewComponents
             var now = DateTime.UtcNow;
             var topicModel = (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                 .Where(t => (t.IncludeInFooterRow1 || t.IncludeInFooterRow2 || t.IncludeInFooterRow3) && t.Published &&
-                            (t.StartDateUtc <= now && now < t.EndDateUtc) || !(t.StartDateUtc.HasValue && t.EndDateUtc.HasValue))
+                            (!t.StartDateUtc.HasValue || t.StartDateUtc < now) && (!t.EndDateUtc.HasValue || t.EndDateUtc > now))
                 .Select(t => new FooterModel.FooterTopicModel {
                     Id = t.Id,
                     Name = t.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id),

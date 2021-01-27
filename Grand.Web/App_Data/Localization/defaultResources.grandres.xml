@@ -16906,6 +16906,21 @@
   <LocaleResource Name="Admin.System.SeNames.Name.Hint">
     <Value>A name to find.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Active">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Active.Hint">
+    <Value>Search by a "Active" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Search.ActiveOnly">
+    <Value>Active only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Search.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Search.InActiveOnly">
+    <Value>Inactive only</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo">
     <Value>System information</Value>
   </LocaleResource>
@@ -18744,6 +18759,9 @@
   </LocaleResource>
   <LocaleResource Name="EUCookieLaw.Title">
     <Value>Your cookie settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Fields.IsRequired">
+    <Value>The value of the field {0} is required</Value>
   </LocaleResource>
   <LocaleResource Name="Filtering.FilterResults">
     <Value>Filter your results</Value>

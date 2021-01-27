@@ -6,6 +6,7 @@ using Grand.Web.Extensions;
 using Grand.Web.Features.Models.Topics;
 using Grand.Web.Models.Topics;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,6 +42,9 @@ namespace Grand.Web.Features.Handlers.Topics
                 await _topicService.GetTopicById(request.TopicId);
 
             if (topic == null || !topic.Published)
+                return null;
+
+            if ((topic.StartDateUtc.HasValue && topic.StartDateUtc > DateTime.UtcNow) || (topic.EndDateUtc.HasValue && topic.EndDateUtc < DateTime.UtcNow))
                 return null;
 
             //ACL (access control list)

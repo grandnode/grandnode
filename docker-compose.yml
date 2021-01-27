@@ -1,7 +1,17 @@
 version: '3.4'
 
 services:
+
+  database:
+     image: mongo:latest
+     ports:
+      - 27017:27017
+     volumes:
+       - mongodb_data_container:/data/db
+
   grand.web:
+    depends_on:
+       - database
     image: ${DOCKER_REGISTRY-}grandweb
     ulimits:
         nofile:
@@ -10,3 +20,6 @@ services:
     build:
       context: .
       dockerfile: Grand.Web/Dockerfile
+
+volumes:
+  mongodb_data_container:
