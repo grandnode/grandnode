@@ -18760,6 +18760,9 @@
   <LocaleResource Name="EUCookieLaw.Title">
     <Value>Your cookie settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Fields.IsRequired">
+    <Value>The value of the field {0} is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Filtering.FilterResults">
     <Value>Filter your results</Value>
   </LocaleResource>

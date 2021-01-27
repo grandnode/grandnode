@@ -203,4 +203,7 @@
   <LocaleResource Name="Admin.System.SeNames.Search.InActiveOnly">
     <Value>InActive only</Value>
   </LocaleResource>
+  <LocaleResource Name="Fields.IsRequired">
+    <Value>The value of the field {0} is required</Value>
+  </LocaleResource>
 </Language>
