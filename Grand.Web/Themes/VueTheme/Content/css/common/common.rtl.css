@@ -695,6 +695,7 @@ input:checked ~ .color-container .color::before {
 }
 .product-box .picture-container {
     position: relative;
+    display: table;
     overflow: hidden;
 }
 .product-box .picture-container .img-container {
@@ -1312,7 +1313,7 @@ footer .list-group-item span:last-child {
 }
 [dark-theme="true"] .card,
 [dark-theme="true"] .product-box .card-footer, [dark-theme="true"] .product-box .card-footer::before,
-[dark-theme="true"] footer, [dark-theme="true"] .product-box:hover::before, [dark-theme="true"] .product-box:hover,
+[dark-theme="true"] footer, [dark-theme="true"] .product-box:hover::before, [dark-theme="true"] .product-box:not(.mobile):hover,
 [dark-theme="true"] .shopping-cart.table td, [dark-theme="true"] .b-rating:focus, [dark-theme="true"] .product-box .picture-container .img-container img, [dark-theme="true"] .Menu li:not(.category):hover {
     background-color: #2d3133;
 }
