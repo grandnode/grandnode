@@ -20,13 +20,13 @@ namespace Grand.Services.Commands.Handlers.Orders
 
         public async Task<int?> Handle(MaxOrderNumberCommand request, CancellationToken cancellationToken)
         {
-            if (_orderRepository.Table.Count() == 0)
+            var count = _orderRepository.Table.Count();
+            if (count == 0 && !request.OrderNumber.HasValue)
                 return null;
 
-            var max = _orderRepository.Table.Max(x => x.OrderNumber);
+            var max = count > 0 ? _orderRepository.Table.Max(x => x.OrderNumber) : 0;
             if (request.OrderNumber.HasValue)
             {
-                if (_orderRepository.Table.Count() > 0)
                     if (request.OrderNumber.Value > max)
                     {
                         await _orderRepository.InsertAsync(new Order() { OrderNumber = request.OrderNumber.Value, Deleted = true, CreatedOnUtc = DateTime.UtcNow });
