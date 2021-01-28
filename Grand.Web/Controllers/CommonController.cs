@@ -462,6 +462,7 @@ namespace Grand.Web.Controllers
         //store is closed
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
+        [CheckAccessPublicStore(true)]
         public virtual IActionResult StoreClosed() => View();
 
         [HttpPost]
@@ -574,6 +575,10 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
+        //available even when a store is closed
+        [CheckAccessClosedStore(true)]
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> SaveCurrentPosition(
             LocationModel model,
             [FromServices] CustomerSettings customerSettings)
