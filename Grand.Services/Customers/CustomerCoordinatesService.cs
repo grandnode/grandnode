@@ -1,6 +1,8 @@
 ﻿using Grand.Core;
 using Grand.Domain.Customers;
 using Grand.Domain.Data;
+using Grand.Services.Notifications.Customers;
+using MediatR;
 using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
@@ -11,13 +13,16 @@ namespace Grand.Services.Customers
     {
         private readonly IRepository<Customer> _customerRepository;
         private readonly IWorkContext _workContext;
+        private readonly IMediator _mediator;
 
         public CustomerCoordinatesService(
             IRepository<Customer> customerRepository,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IMediator mediator)
         {
             _customerRepository = customerRepository;
             _workContext = workContext;
+            _mediator = mediator;
         }
 
         public Task<(double longitude, double latitude)> GetGeoCoordinate()
@@ -48,8 +53,11 @@ namespace Grand.Services.Customers
             var update = Builders<Customer>.Update
                 .Set(x => x.Coordinates, coordinates);
 
+            //update customer
             await _customerRepository.Collection.UpdateOneAsync(filter, update);
 
+            //raise event       
+            await _mediator.Publish(new CustomerCoordinatesEvent(customer));
         }
     }
 }
