@@ -206,4 +206,13 @@
   <LocaleResource Name="Fields.IsRequired">
     <Value>The value of the field {0} is required</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFProductCatalog.SKU">
+    <Value>SKU: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFProductCatalog.StockQuantity">
+    <Value>Stock quantity: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFProductCatalog.Weight">
+    <Value>Weight: {0}</Value>
+  </LocaleResource>
 </Language>
