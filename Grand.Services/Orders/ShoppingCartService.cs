@@ -1301,7 +1301,7 @@ namespace Grand.Services.Orders
                 shoppingCartType, productId, warehouseId, attributes, customerEnteredPrice,
                 rentalStartDate, rentalEndDate);
 
-            if (shoppingCartItem != null && product.ProductType != ProductType.Reservation)
+            if (shoppingCartItem != null && product.ProductType != ProductType.Reservation && String.IsNullOrEmpty(product.AllowedQuantities))
             {
                 //update existing shopping cart item
                 shoppingCartItem.Quantity = shoppingCartItem.Quantity + quantity;
