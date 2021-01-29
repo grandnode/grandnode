@@ -364,10 +364,10 @@ namespace Grand.Services.Orders
                                 var qty = shoppingCartItem.Quantity;
 
                                 qty += customer.ShoppingCartItems
-                                    .Where(x => x.ShoppingCartTypeId == shoppingCartItem.ShoppingCartTypeId && 
-                                        x.WarehouseId == warehouseId && 
-                                        x.ProductId == shoppingCartItem.ProductId && 
-                                        x.StoreId == shoppingCartItem.StoreId && 
+                                    .Where(x => x.ShoppingCartTypeId == shoppingCartItem.ShoppingCartTypeId &&
+                                        x.WarehouseId == warehouseId &&
+                                        x.ProductId == shoppingCartItem.ProductId &&
+                                        x.StoreId == shoppingCartItem.StoreId &&
                                         x.Id != shoppingCartItem.Id)
                                     .Sum(x => x.Quantity);
 
@@ -517,18 +517,12 @@ namespace Grand.Services.Orders
         /// Validates shopping cart item attributes
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Warnings</returns>
         public virtual async Task<IList<string>> GetShoppingCartItemAttributeWarnings(Customer customer,
-            ShoppingCartType shoppingCartType,
-            Product product,
-            int quantity = 1,
-            IList<CustomAttribute> attributes = null,
-            bool ignoreNonCombinableAttributes = false)
+            Product product, ShoppingCartItem shoppingCartItem, bool ignoreNonCombinableAttributes = false)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -536,7 +530,7 @@ namespace Grand.Services.Orders
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var attributes1 = _productAttributeParser.ParseProductAttributeMappings(product, attributes).ToList();
+            var attributes1 = _productAttributeParser.ParseProductAttributeMappings(product, shoppingCartItem.Attributes).ToList();
             if (product.ProductType == ProductType.BundledProduct)
             {
                 foreach (var bundle in product.BundleProducts)
@@ -544,7 +538,7 @@ namespace Grand.Services.Orders
                     var p1 = await _productService.GetProductById(bundle.ProductId);
                     if (p1 != null)
                     {
-                        var a1 = _productAttributeParser.ParseProductAttributeMappings(p1, attributes).ToList();
+                        var a1 = _productAttributeParser.ParseProductAttributeMappings(p1, shoppingCartItem.Attributes).ToList();
                         attributes1.AddRange(a1);
                     }
                 }
@@ -584,7 +578,7 @@ namespace Grand.Services.Orders
             //validate conditional attributes only (if specified)
             attributes2 = attributes2.Where(x =>
             {
-                var conditionMet = _productAttributeParser.IsConditionMet(product, x, attributes);
+                var conditionMet = _productAttributeParser.IsConditionMet(product, x, shoppingCartItem.Attributes);
                 return !conditionMet.HasValue || conditionMet.Value;
             }).ToList();
             foreach (var a2 in attributes2)
@@ -597,7 +591,7 @@ namespace Grand.Services.Orders
                     {
                         if (a1.Id == a2.Id)
                         {
-                            var attributeValuesStr = _productAttributeParser.ParseValues(attributes, a1.Id);
+                            var attributeValuesStr = _productAttributeParser.ParseValues(shoppingCartItem.Attributes, a1.Id);
                             foreach (string str1 in attributeValuesStr)
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))
@@ -629,7 +623,7 @@ namespace Grand.Services.Orders
                         .Select(x => x.Id)
                         .ToArray();
 
-                    var selectedReadOnlyValueIds = _productAttributeParser.ParseProductAttributeValues(product, attributes)
+                    var selectedReadOnlyValueIds = _productAttributeParser.ParseProductAttributeValues(product, shoppingCartItem.Attributes)
                         .Where(x => x.ProductAttributeMappingId == a2.Id)
                         .Select(x => x.Id)
                         .ToArray();
@@ -653,7 +647,7 @@ namespace Grand.Services.Orders
                     if (pam.AttributeControlType == AttributeControlType.TextBox ||
                         pam.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _productAttributeParser.ParseValues(attributes, pam.Id);
+                        var valuesStr = _productAttributeParser.ParseValues(shoppingCartItem.Attributes, pam.Id);
                         var enteredText = valuesStr.FirstOrDefault();
                         int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
@@ -671,9 +665,9 @@ namespace Grand.Services.Orders
                     if (pam.AttributeControlType == AttributeControlType.TextBox ||
                         pam.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _productAttributeParser.ParseValues(attributes, pam.Id);
+                        var valuesStr = _productAttributeParser.ParseValues(shoppingCartItem.Attributes, pam.Id);
                         var enteredText = valuesStr.FirstOrDefault();
-                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+                        int enteredTextLength = string.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
                         if (pam.ValidationMaxLength.Value < enteredTextLength)
                         {
@@ -688,7 +682,7 @@ namespace Grand.Services.Orders
                 return warnings;
 
             //validate bundled products
-            var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributes);
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, shoppingCartItem.Attributes);
             foreach (var attributeValue in attributeValues)
             {
                 var _productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == attributeValue.ProductAttributeMappingId).FirstOrDefault();
@@ -701,8 +695,13 @@ namespace Grand.Services.Orders
                     var associatedProduct = await _productService.GetProductById(attributeValue.AssociatedProductId);
                     if (associatedProduct != null)
                     {
-                        var totalQty = quantity * attributeValue.Quantity;
-                        var associatedProductWarnings = await GetShoppingCartItemWarnings(customer, new ShoppingCartItem() { ShoppingCartType = shoppingCartType, StoreId = _storeContext.CurrentStore.Id, Quantity = totalQty }, associatedProduct, false);
+                        var totalQty = shoppingCartItem.Quantity * attributeValue.Quantity;
+                        var associatedProductWarnings = await GetShoppingCartItemWarnings(customer, new ShoppingCartItem() {
+                            ShoppingCartType = shoppingCartItem.ShoppingCartType,
+                            StoreId = _storeContext.CurrentStore.Id,
+                            Quantity = totalQty,
+                            WarehouseId = shoppingCartItem.WarehouseId
+                        }, associatedProduct, false);
                         foreach (var associatedProductWarning in associatedProductWarnings)
                         {
                             var productAttribute = await _productAttributeService.GetProductAttributeById(_productAttributeMapping.ProductAttributeId);
@@ -924,7 +923,7 @@ namespace Grand.Services.Orders
 
             //selected attributes
             if (getAttributesWarnings)
-                warnings.AddRange(await GetShoppingCartItemAttributeWarnings(customer, shoppingCartItem.ShoppingCartType, product, shoppingCartItem.Quantity, shoppingCartItem.Attributes));
+                warnings.AddRange(await GetShoppingCartItemAttributeWarnings(customer, product, shoppingCartItem));
 
             //gift cards
             if (getGiftCardWarnings)
@@ -1174,7 +1173,7 @@ namespace Grand.Services.Orders
             if (shoppingCartType == ShoppingCartType.Wishlist && !await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, customer))
             {
                 warnings.Add("Wishlist is disabled");
-                return (warnings, groupToBook); 
+                return (warnings, groupToBook);
             }
             if (customer.IsSearchEngineAccount())
             {

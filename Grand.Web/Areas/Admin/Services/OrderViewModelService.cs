@@ -1261,7 +1261,12 @@ namespace Grand.Web.Areas.Admin.Services
             var shoppingCartService = _serviceProvider.GetRequiredService<IShoppingCartService>();
             var inventoryManageService = _serviceProvider.GetRequiredService<IInventoryManageService>();
 
-            warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(customer, ShoppingCartType.ShoppingCart, product, quantity, customattributes));
+            warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(customer, product, new ShoppingCartItem() { 
+                ShoppingCartType = ShoppingCartType.ShoppingCart, 
+                Quantity = quantity,
+                WarehouseId = product.WarehouseId,
+                Attributes = customattributes
+            }));
             warnings.AddRange(shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, customattributes));
             if (warnings.Count == 0)
             {
@@ -1275,6 +1280,9 @@ namespace Grand.Web.Areas.Admin.Services
                     OrderItemGuid = Guid.NewGuid(),
                     ProductId = product.Id,
                     VendorId = product.VendorId,
+                    WarehouseId = product.WarehouseId,
+                    Sku = product.FormatSku(customattributes, _productAttributeParser),
+                    SeId = order.SeId,
                     UnitPriceInclTax = unitPriceInclTax,
                     UnitPriceExclTax = unitPriceExclTax,
                     PriceInclTax = priceInclTax,

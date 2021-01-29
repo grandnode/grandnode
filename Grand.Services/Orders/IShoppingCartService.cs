@@ -57,17 +57,12 @@ namespace Grand.Services.Orders
         /// Validates shopping cart item attributes
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Warnings</returns>
         Task<IList<string>> GetShoppingCartItemAttributeWarnings(Customer customer, 
-            ShoppingCartType shoppingCartType,
-            Product product,
-            int quantity = 1,
-            IList<CustomAttribute> attributes = null,
+            Product product, ShoppingCartItem shoppingCartItem,
             bool ignoreNonCombinableAttributes = false);
         
         /// <summary>

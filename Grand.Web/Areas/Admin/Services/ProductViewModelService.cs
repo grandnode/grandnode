@@ -2599,7 +2599,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             foreach (var x in product.ProductAttributeCombinations)
             {
-                var attributesXml = await _productAttributeFormatter.FormatAttributes((await _productService.GetProductById(product.Id)), x.Attributes, _workContext.CurrentCustomer, "<br />", true, true, true, false, true, true);
+                var attributesXml = await _productAttributeFormatter.FormatAttributes(product, x.Attributes, _workContext.CurrentCustomer, "<br />", true, true, true, false, true, true);
                 var pacModel = new ProductModel.ProductAttributeCombinationModel {
                     Id = x.Id,
                     ProductId = product.Id,
@@ -2614,7 +2614,13 @@ namespace Grand.Web.Areas.Admin.Services
                 };
                 //warnings
                 var warnings = await shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                    ShoppingCartType.ShoppingCart, await _productService.GetProductById(product.Id), 1, x.Attributes, true);
+                    await _productService.GetProductById(product.Id),
+                    new ShoppingCartItem() {
+                        ShoppingCartType = ShoppingCartType.ShoppingCart,
+                        Quantity = 1,
+                        WarehouseId = product.WarehouseId,
+                        Attributes = x.Attributes
+                    }, true);
                 for (var i = 0; i < warnings.Count; i++)
                 {
                     pacModel.Warnings += warnings[i];
@@ -2831,8 +2837,14 @@ namespace Grand.Web.Areas.Admin.Services
 
                 #endregion
 
-                warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                    ShoppingCartType.ShoppingCart, product, 1, customAttributes, true));
+                warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer, product,
+                    new ShoppingCartItem() 
+                    { 
+                        ShoppingCartType = ShoppingCartType.ShoppingCart, 
+                        Quantity = 1, 
+                        WarehouseId = product.WarehouseId, 
+                        Attributes = customAttributes 
+                    }, true ));
 
                 if (_productAttributeParser.FindProductAttributeCombination(product, customAttributes) != null)
                 {
@@ -2916,10 +2928,16 @@ namespace Grand.Web.Areas.Admin.Services
                 if (existingCombination != null)
                     continue;
 
+                //
                 //new one
                 var warnings = new List<string>();
-                warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                    ShoppingCartType.ShoppingCart, product, 1, attributes.ToList(), true));
+                warnings.AddRange(await shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer, product, 
+                    new ShoppingCartItem() { 
+                        ShoppingCartType = ShoppingCartType.ShoppingCart,
+                        Quantity = 1,
+                        WarehouseId = product.WarehouseId, 
+                        Attributes = attributes.ToList()
+                    }, true));
                 if (warnings.Count != 0)
                     continue;
 
