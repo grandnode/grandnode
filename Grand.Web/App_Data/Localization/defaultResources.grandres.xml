@@ -20075,13 +20075,13 @@
     <Value>Price</Value>
   </LocaleResource>
   <LocaleResource Name="PDFProductCatalog.SKU">
-    <Value>SKU</Value>
+    <Value>SKU: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="PDFProductCatalog.StockQuantity">
-    <Value>Stock quantity</Value>
+    <Value>Stock quantity: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="PDFProductCatalog.Weight">
-    <Value>Weight</Value>
+    <Value>Weight: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.AccessAdminPanel">
     <Value>Access admin area</Value>

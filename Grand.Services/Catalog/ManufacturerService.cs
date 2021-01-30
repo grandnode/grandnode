@@ -91,6 +91,9 @@ namespace Grand.Services.Catalog
 
             await _manufacturerRepository.DeleteAsync(manufacturer);
 
+            //event notification
+            await _mediator.EntityDeleted(manufacturer);
+
         }
 
         /// <summary>

@@ -656,9 +656,9 @@ input:checked ~ .color-container .color::before {
 }
 .product-box .quick-view-button {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+    bottom: 1px;
+    left: 1px;
+    width: calc(100% - 2px);
     font-size: 16px;
     font-weight: 500;
     text-transform: uppercase;
@@ -1209,7 +1209,7 @@ footer .list-group-item span:last-child {
     color: #fff;
     background-color: #363c40;
 }
-[dark-theme="true"] .product-box .picture-container {
+[dark-theme="true"] .product-box .picture-container .img-container {
     border: 1px solid #555;
 }
 [dark-theme="true"] .modal-close.btn-secondary {
@@ -1227,7 +1227,7 @@ footer .list-group-item span:last-child {
 }
 [dark-theme="true"] .card,
 [dark-theme="true"] .product-box .card-footer, [dark-theme="true"] .product-box .card-footer::before,
-[dark-theme="true"] footer, [dark-theme="true"] .product-box:hover::before, [dark-theme="true"] .product-box:hover,
+[dark-theme="true"] footer, [dark-theme="true"] .product-box:hover::before, [dark-theme="true"] .product-box:not(.mobile):hover,
 [dark-theme="true"] .shopping-cart.table td, [dark-theme="true"] .b-rating:focus, [dark-theme="true"] .product-box .picture-container .img-container img, [dark-theme="true"] .Menu li:not(.category):hover {
     background-color: #2d3133;
 }

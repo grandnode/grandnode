@@ -108,7 +108,9 @@ namespace Grand.Framework.Mvc.Filters
                 var actionName = actionDescriptor?.ActionName;
                 var controllerName = actionDescriptor?.ControllerName;
 
-                if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
+                if ((string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName)) ||
+                    (controllerName.Equals("Common", StringComparison.OrdinalIgnoreCase) &&
+                    actionName.Equals("StoreClosed", StringComparison.OrdinalIgnoreCase)))
                 {
                     await next();
                     return;
