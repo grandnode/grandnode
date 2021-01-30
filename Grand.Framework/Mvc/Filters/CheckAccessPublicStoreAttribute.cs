@@ -1,7 +1,9 @@
 ﻿using Grand.Core.Data;
+using Grand.Domain.Stores;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,15 +40,16 @@ namespace Grand.Framework.Mvc.Filters
 
             private readonly bool _ignoreFilter;
             private readonly IPermissionService _permissionService;
-
+            private readonly StoreInformationSettings _storeInformationSettings;
             #endregion
 
             #region Ctor
 
-            public CheckAccessPublicStoreFilter(bool ignoreFilter, IPermissionService permissionService)
+            public CheckAccessPublicStoreFilter(bool ignoreFilter, IPermissionService permissionService, StoreInformationSettings storeInformationSettings)
             {
                 _ignoreFilter = ignoreFilter;
                 _permissionService = permissionService;
+                _storeInformationSettings = storeInformationSettings;
             }
 
             #endregion
@@ -68,6 +71,7 @@ namespace Grand.Framework.Mvc.Filters
                     .Where(f => f.Scope == FilterScope.Action)
                     .Select(f => f.Filter).OfType<CheckAccessPublicStoreAttribute>().FirstOrDefault();
 
+               
                 //ignore filter (the action is available even if navigation is not allowed)
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
                     return;
@@ -76,11 +80,17 @@ namespace Grand.Framework.Mvc.Filters
                     return;
 
                 //check whether current customer has access to a public store
+                
                 if (await _permissionService.Authorize(StandardPermissionProvider.PublicStoreAllowNavigation))
                     return;
 
-                //customer hasn't access to a public store
-                filterContext.Result = new ChallengeResult();
+                if (_storeInformationSettings.StoreClosed)
+                {
+                    filterContext.Result = new RedirectToRouteResult("StoreClosed", new RouteValueDictionary());                    
+                }
+                else
+                    //customer hasn't access to a public store
+                    filterContext.Result = new ChallengeResult();
             }
 
             #endregion
