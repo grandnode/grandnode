@@ -47,18 +47,6 @@ namespace Grand.Web.Controllers
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// A value indicating whether we use MARS (Multiple Active Result Sets)
-        /// </summary>
-        protected bool UseMars {
-            get { return false; }
-        }
-
-
-        #endregion
-
         #region Methods
 
         public virtual async Task<IActionResult> Index()
