@@ -31,6 +31,14 @@
         /// Key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : ident
+        /// </remarks>
+        public static string CUSTOMERROLES_BY_KEY => "Grand.customerrole.key-{0}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : system name
         /// </remarks>
         public static string CUSTOMERROLES_BY_SYSTEMNAME_KEY => "Grand.customerrole.systemname-{0}";

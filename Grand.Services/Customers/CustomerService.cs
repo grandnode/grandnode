@@ -385,7 +385,7 @@ namespace Grand.Services.Customers
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual async Task<Customer> InsertGuestCustomer(Store store, string urlreferrer = "")
+        public virtual async Task<Customer> InsertGuestCustomer(Store store)
         {
             var customer = new Customer {
                 CustomerGuid = Guid.NewGuid(),
@@ -395,14 +395,6 @@ namespace Grand.Services.Customers
                 LastActivityDateUtc = DateTime.UtcNow,
             };
 
-            if (!string.IsNullOrEmpty(urlreferrer))
-            {
-                customer.GenericAttributes.Add(new GenericAttribute {
-                    Key = SystemCustomerAttributeNames.UrlReferrer,
-                    Value = urlreferrer,
-                    StoreId = "",
-                });
-            }
             //add to 'Guests' role
             var guestRole = await GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
             if (guestRole == null)
@@ -410,6 +402,9 @@ namespace Grand.Services.Customers
             customer.CustomerRoles.Add(guestRole);
 
             await _customerRepository.InsertAsync(customer);
+
+            //event notification
+            await _mediator.EntityInserted(customer);
 
             return customer;
         }
@@ -560,12 +555,7 @@ namespace Grand.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
-            var update = Builders<Customer>.Update
-                .Set(x => x.VendorId, customer.VendorId);
-
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
+            await UpdateCustomerField(customer.Id, x => x.VendorId, customer.VendorId);
 
             //event notification
             await _mediator.EntityUpdated(customer);
@@ -580,13 +570,13 @@ namespace Grand.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
-            var update = Builders<Customer>.Update
-                .Set(x => x.Password, customer.Password);
+            await UpdateCustomerField(customer.Id, x => x.Password, customer.Password);
 
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
+            //event notification
+            await _mediator.EntityUpdated(customer);
+
         }
+
         public virtual async Task UpdateCustomerinAdminPanel(Customer customer)
         {
             if (customer == null)
@@ -625,12 +615,10 @@ namespace Grand.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
-            var update = Builders<Customer>.Update
-                .Set(x => x.AffiliateId, customer.AffiliateId);
+            await UpdateCustomerField(customer.Id, x => x.AffiliateId, customer.AffiliateId);
 
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
+            //event notification
+            await _mediator.EntityUpdated(customer);
         }
 
         public virtual async Task UpdateActive(Customer customer)
@@ -644,13 +632,20 @@ namespace Grand.Services.Customers
                 .Set(x => x.StoreId, customer.StoreId);
 
             await _customerRepository.Collection.UpdateOneAsync(filter, update);
+
+            //event notification
+            await _mediator.EntityUpdated(customer);
         }
 
         public virtual async Task UpdateContributions(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
+
             await UpdateCustomerField(customer.Id, x => x.HasContributions, true);
+
+            //event notification
+            await _mediator.EntityUpdated(customer);
         }
 
         /// <summary>
@@ -779,7 +774,13 @@ namespace Grand.Services.Customers
             if (string.IsNullOrWhiteSpace(customerRoleId))
                 return Task.FromResult<CustomerRole>(null);
 
-            return _customerRoleRepository.GetByIdAsync(customerRoleId);
+            string key = string.Format(CacheKey.CUSTOMERROLES_BY_KEY, customerRoleId);
+            return _cacheManager.GetAsync(key, () =>
+            {
+                return _customerRoleRepository.GetByIdAsync(customerRoleId);
+            });
+
+            
         }
 
         /// <summary>
@@ -866,6 +867,8 @@ namespace Grand.Services.Customers
             var update = updatebuilder.Pull(p => p.CustomerRoles, customerRole);
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerRole.CustomerId), update);
 
+            //event notification
+            await _mediator.EntityDeleted(customerRole);
         }
 
         public virtual async Task InsertCustomerRoleInCustomer(CustomerRole customerRole)
@@ -876,6 +879,9 @@ namespace Grand.Services.Customers
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.AddToSet(p => p.CustomerRoles, customerRole);
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerRole.CustomerId), update);
+
+            //event notification
+            await _mediator.EntityInserted(customerRole);
 
         }
 
@@ -971,7 +977,7 @@ namespace Grand.Services.Customers
         {
             var filters = Builders<CustomerRoleProduct>.Filter;
             var filter = filters.Eq(x => x.CustomerRoleId, customerRoleId);
-            filter = filter & filters.Eq(x => x.ProductId, productId);
+            filter &= filters.Eq(x => x.ProductId, productId);
 
             return _customerRoleProductRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).FirstOrDefaultAsync();
         }

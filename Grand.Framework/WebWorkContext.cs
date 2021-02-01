@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Configuration;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
 using Grand.Domain.Localization;
@@ -250,8 +251,17 @@ namespace Grand.Framework
             if (customer == null || customer.Deleted || !customer.Active)
             {
                 //create guest if not exists
+                customer = await _customerService.InsertGuestCustomer(_storeContext.CurrentStore);
                 string referrer = _httpContextAccessor?.HttpContext?.Request?.Headers[HeaderNames.Referer];
-                customer = await _customerService.InsertGuestCustomer(_storeContext.CurrentStore, referrer);
+                if (!string.IsNullOrEmpty(referrer))
+                {
+                    customer.GenericAttributes.Add(new GenericAttribute {
+                        Key = SystemCustomerAttributeNames.UrlReferrer,
+                        Value = referrer,
+                        StoreId = "",
+                    });
+                }
+
             }
 
             if (!customer.Deleted && customer.Active)

@@ -132,7 +132,7 @@ namespace Grand.Services.Customers
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
-        Task<Customer> InsertGuestCustomer(Store store, string urlreferrer = "");
+        Task<Customer> InsertGuestCustomer(Store store);
 
         /// <summary>
         /// Insert a customer
