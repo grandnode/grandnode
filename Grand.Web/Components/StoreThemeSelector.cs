@@ -37,13 +37,13 @@ namespace Grand.Web.ViewComponents
 
             var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingThemeName);
             model.CurrentStoreTheme = new StoreThemeModel {
-                Name = currentTheme.ThemeName,
-                Title = currentTheme.ThemeTitle
+                Name = currentTheme.Name,
+                Title = currentTheme.Title
             };
             model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations()
                 .Select(x => new StoreThemeModel {
-                    Name = x.ThemeName,
-                    Title = x.ThemeTitle
+                    Name = x.Name,
+                    Title = x.Title
                 })
                 .ToList();
             return model;

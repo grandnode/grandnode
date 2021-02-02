@@ -65,7 +65,7 @@ namespace Grand.Framework.Themes
                         .FirstOrDefault();
                     if (themeInstance == null)
                         throw new Exception("No theme could be loaded");
-                    theme = themeInstance.ThemeName;
+                    theme = themeInstance.Name;
                 }
 
                 //cache theme

@@ -1568,12 +1568,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
                 .GetThemeConfigurations()
                 .Select(x => new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel {
-                    ThemeTitle = x.ThemeTitle,
-                    ThemeName = x.ThemeName,
+                    ThemeTitle = x.Title,
+                    ThemeName = x.Name,
+                    ThemeVersion = x.Version,
                     PreviewImageUrl = x.PreviewImageUrl,
                     PreviewText = x.PreviewText,
                     SupportRtl = x.SupportRtl,
-                    Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreTheme, StringComparison.OrdinalIgnoreCase)
+                    Selected = x.Name.Equals(storeInformationSettings.DefaultStoreTheme, StringComparison.OrdinalIgnoreCase)
                 })
                 .ToList();
             model.StoreInformationSettings.AllowCustomerToSelectTheme = storeInformationSettings.AllowCustomerToSelectTheme;

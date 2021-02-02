@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Grand.Core;
+using Grand.Core.Plugins;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
-using Grand.Core;
-using Grand.Core.Plugins;
 
 namespace Grand.Framework.Themes
 {
@@ -44,15 +44,17 @@ namespace Grand.Framework.Themes
         private ThemeConfiguration CreateThemeConfiguration(string themePath)
         {
             var themeDirectory = new DirectoryInfo(themePath);
-            var themeConfigFile = new FileInfo(Path.Combine(themeDirectory.FullName, "theme.config"));
+            var themeConfigFile = new FileInfo(Path.Combine(themeDirectory.FullName, "theme.cfg"));
 
             if (themeConfigFile.Exists)
             {
-                var doc = new XmlDocument();
-                doc.Load(File.OpenRead(themeConfigFile.FullName));
-                return new ThemeConfiguration(themeDirectory.Name, themeDirectory.FullName, doc);
+                var themeConfiguration = JsonConvert.DeserializeObject<ThemeConfiguration>(File.ReadAllText(themeConfigFile.FullName));
+                if (themeConfiguration != null)
+                {
+                    themeConfiguration.Name = themeDirectory.Name;
+                    return themeConfiguration;
+                }
             }
-
             return null;
         }
 
@@ -63,7 +65,7 @@ namespace Grand.Framework.Themes
         public ThemeConfiguration GetThemeConfiguration(string themeName)
         {
             return _themeConfigurations
-                .SingleOrDefault(x => x.ThemeName.Equals(themeName, StringComparison.OrdinalIgnoreCase));
+                .SingleOrDefault(x => x.Name.Equals(themeName, StringComparison.OrdinalIgnoreCase));
         }
 
         public IList<ThemeConfiguration> GetThemeConfigurations()
@@ -73,21 +75,16 @@ namespace Grand.Framework.Themes
 
         public bool ThemeConfigurationExists(string themeName)
         {
-            return GetThemeConfigurations().Any(configuration => configuration.ThemeName.Equals(themeName, StringComparison.OrdinalIgnoreCase));
+            return GetThemeConfigurations().Any(configuration => configuration.Name.Equals(themeName, StringComparison.OrdinalIgnoreCase));
         }
 
         public ThemeDescriptor GetThemeDescriptorFromText(string text)
         {
-            ThemeDescriptor themeDescriptor = new ThemeDescriptor();
-
+            var themeDescriptor = new ThemeDescriptor();
             try
             {
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(text);
-
-                XmlNodeList Tags = doc.GetElementsByTagName("Theme");
-                var name = Tags[0].Attributes["title"].Value;
-                themeDescriptor.FriendlyName = name;
+                var themeConfiguration = JsonConvert.DeserializeObject<ThemeConfiguration>(text);
+                themeDescriptor.FriendlyName = themeConfiguration.Title;
             }
             catch { }
 

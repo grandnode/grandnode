@@ -498,16 +498,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //get directory name (remove the ending /)
                 uploadedItemDirectoryName = rootDirectories.First().FullName.TrimEnd('/');
 
-                var themeDescriptorEntry = archive.Entries.Where(x => x.FullName.Contains("theme.config")).FirstOrDefault();
+                var themeDescriptorEntry = archive.Entries.Where(x => x.FullName.Contains("theme.cfg")).FirstOrDefault();
                 if (themeDescriptorEntry != null)
                 {
-                    using (var unzippedEntryStream = themeDescriptorEntry.Open())
-                    {
-                        using (var reader = new StreamReader(unzippedEntryStream))
-                        {
-                            descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
-                        }
-                    }
+                    using var unzippedEntryStream = themeDescriptorEntry.Open();
+                    using var reader = new StreamReader(unzippedEntryStream);
+                    descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
                 }
                 else
                 {

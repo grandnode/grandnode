@@ -110,6 +110,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public partial class ThemeConfigurationModel
             {
                 public string ThemeName { get; set; }
+                public string ThemeVersion { get; set; }
                 public string ThemeTitle { get; set; }
                 public string PreviewImageUrl { get; set; }
                 public string PreviewText { get; set; }
