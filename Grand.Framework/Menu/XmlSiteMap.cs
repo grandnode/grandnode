@@ -4,7 +4,6 @@ using Grand.Services.Security;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -34,8 +33,7 @@ namespace Grand.Framework.Menu
                 using (var sr = new StringReader(content))
                 {
                     using (var xr = XmlReader.Create(sr,
-                            new XmlReaderSettings
-                            {
+                            new XmlReaderSettings {
                                 CloseInput = true,
                                 IgnoreWhitespace = true,
                                 IgnoreComments = true,
