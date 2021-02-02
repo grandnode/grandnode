@@ -2,13 +2,15 @@
 @using Grand.Services.Security
 @using Grand.Services.Localization
 @using Grand.Framework.Menu
+@using Grand.Core.Caching
 @inject IPluginFinder pluginFinder
 @inject IPermissionService permissionService
-@inject ILocalizationService localizationService 
+@inject ILocalizationService localizationService
+@inject ICacheManager cacheManager
 @{
     //load sitemap
-    var siteMap = new XmlSiteMap(localizationService, permissionService);
-    await siteMap.LoadFrom("~/App_Data/sitemap.config");
+    var siteMap = new SiteMap(permissionService, cacheManager);
+    await siteMap.LoadFrom("~/App_Data/sitemap.cfg");
 }
 
 <div class="col-md-3 left_col">
