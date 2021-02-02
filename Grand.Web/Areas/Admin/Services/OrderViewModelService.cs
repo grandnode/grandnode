@@ -858,7 +858,7 @@ namespace Grand.Web.Areas.Admin.Services
 
                     // commission
                     orderItemModel.CommissionValue = orderItem.Commission;
-                    orderItemModel.Commission = _priceFormatter.FormatPrice(orderItem.Commission, true, orderCurrency, _workContext.WorkingLanguage, true, true);
+                    orderItemModel.Commission = _priceFormatter.FormatPrice(orderItem.Commission, true, orderCurrency, _workContext.WorkingLanguage, false, false);
 
                     orderItemModel.AttributeInfo = orderItem.AttributeDescription;
                     if (product.IsRecurring)
