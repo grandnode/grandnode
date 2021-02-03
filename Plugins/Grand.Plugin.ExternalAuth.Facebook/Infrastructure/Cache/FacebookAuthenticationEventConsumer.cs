@@ -50,9 +50,6 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
                 await _genericAttributeService.SaveAttribute(eventMessage.Customer, SystemCustomerAttributeNames.LastName, lastName);
         }
 
-        public void HandleEvent(CustomerAutoRegisteredByExternalMethodEvent eventMessage) { }
-
-
         #endregion
     }
 }
