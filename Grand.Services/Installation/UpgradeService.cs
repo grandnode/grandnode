@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain;
+using Grand.Domain.Admin;
 using Grand.Domain.AdminSearch;
 using Grand.Domain.Blogs;
 using Grand.Domain.Catalog;
@@ -17,6 +18,7 @@ using Grand.Domain.Seo;
 using Grand.Domain.Shipping;
 using Grand.Domain.Tasks;
 using Grand.Domain.Topics;
+using Grand.Services.Admin;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Security;
 using Grand.Services.Configuration;
@@ -1435,6 +1437,13 @@ namespace Grand.Services.Installation
                 if(update)
                     await products.UpdateAsync(product);
             }
+
+            #endregion
+
+            #region Admin menu
+
+            var adminRepository = _serviceProvider.GetRequiredService<IRepository<AdminSiteMap>>();
+            await adminRepository.InsertManyAsync(StandardAdminSiteMap.SiteMap);
 
             #endregion
         }

@@ -1,9 +1,7 @@
-﻿using Grand.Core;
-using Grand.Core.Caching;
+﻿using Grand.Domain.Admin;
+using Grand.Services.Admin;
 using Grand.Services.Security;
-using Microsoft.AspNetCore.Routing;
-using Newtonsoft.Json;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,81 +9,92 @@ namespace Grand.Framework.Menu
 {
     public class SiteMap
     {
+        private readonly IAdminSiteMapService _adminSiteMapService;
         private readonly IPermissionService _permissionService;
-        private readonly ICacheManager _cacheManager;
-        public SiteMap(IPermissionService permissionService, ICacheManager cacheManager)
+        public SiteMap(
+            IAdminSiteMapService adminSiteMapService,
+            IPermissionService permissionService)
         {
+            _adminSiteMapService = adminSiteMapService;
             _permissionService = permissionService;
-            _cacheManager = cacheManager;
         }
 
         public SiteMapNode RootNode { get; set; }
 
-        public virtual async Task LoadFrom(string physicalPath)
+        public virtual async Task Load()
         {
-            var sitemap = _cacheManager.Get($"ADMIN_SITEMAP_{physicalPath}", () =>
-            {
-                var filePath = CommonHelper.MapPath(physicalPath);
-                var content = File.ReadAllText(filePath);
-                if (!string.IsNullOrEmpty(content))
-                {
-                    return JsonConvert.DeserializeObject<SiteMapNode>(content);
-                }
-                else
-                    return new SiteMapNode();
-            });
-            await PrepareRootNode(sitemap);
+            var adminSiteMaps = await _adminSiteMapService.GetSiteMap();
+            var sitemap = new SiteMapNode() {
+                SystemName = "Home",
+                ResourceName = "Admin.Home",
+                ControllerName = "Home",
+                ActionName = "Overview",
+            };
+            await PrepareRootNode(sitemap, adminSiteMaps);
         }
 
-        private async Task PrepareRootNode(SiteMapNode siteMap)
+
+        private async Task PrepareRootNode(SiteMapNode siteMap, IList<AdminSiteMap> adminSiteMaps)
         {
-            if (siteMap != null)
+            if (adminSiteMaps != null)
             {
-                await Iterate(siteMap);
+                foreach (var item in adminSiteMaps)
+                {
+                    var mainsite = new SiteMapNode();
+                    siteMap.ChildNodes.Add(mainsite);
+                    await Iterate(mainsite, item);
+                }
             }
             RootNode = siteMap;
         }
 
-        private async Task Iterate(SiteMapNode siteMapNode)
+        private async Task Iterate(SiteMapNode siteMap, AdminSiteMap siteMapNode)
         {
-            await PopulateNode(siteMapNode);
+            await PopulateNode(siteMap, siteMapNode);
 
             foreach (var item in siteMapNode.ChildNodes)
             {
-                await Iterate(item);
+                var mainsite = new SiteMapNode();
+                siteMap.ChildNodes.Add(mainsite);
+                await Iterate(mainsite, item);
             }
         }
 
-        private async Task PopulateNode(SiteMapNode siteNode)
+        private async Task PopulateNode(SiteMapNode siteMap, AdminSiteMap siteNode)
         {
-            if (!string.IsNullOrEmpty(siteNode.ControllerName) && !string.IsNullOrEmpty(siteNode.ActionName))
-            {
-                siteNode.RouteValues = new RouteValueDictionary { { "area", "Admin" } };
-            }
+            siteMap.ActionName = siteNode.ActionName;
+            siteMap.AllPermissions = siteNode.AllPermissions;
+            siteMap.ControllerName = siteNode.ControllerName;
+            siteMap.IconClass = siteNode.IconClass;
+            siteMap.OpenUrlInNewTab = siteNode.OpenUrlInNewTab;
+            siteMap.ResourceName = siteNode.ResourceName;
+            siteMap.SystemName = siteNode.SystemName;
+            siteMap.Url = siteNode.Url;
+
             if (siteNode.PermissionNames.Any())
             {
                 if (siteNode.AllPermissions)
                 {
-                    siteNode.Visible = true;
+                    siteMap.Visible = true;
                     foreach (var permissionName in siteNode.PermissionNames)
                     {
                         if (!await _permissionService.Authorize(permissionName.Trim()))
-                            siteNode.Visible = false;
+                            siteMap.Visible = false;
                     }
                 }
                 else
                 {
-                    siteNode.Visible = false;
+                    siteMap.Visible = false;
                     foreach (var permissionName in siteNode.PermissionNames)
                     {
                         if (await _permissionService.Authorize(permissionName.Trim()))
-                            siteNode.Visible = true;
+                            siteMap.Visible = true;
                     }
                 }
             }
             else
             {
-                siteNode.Visible = true;
+                siteMap.Visible = true;
             }
         }
     }

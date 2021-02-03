@@ -7,7 +7,7 @@
     string url = "javascript:;";
     if (!string.IsNullOrEmpty(Model.ControllerName) && !string.IsNullOrEmpty(Model.ActionName))
     {
-        url = Url.Action(Model.ActionName, Model.ControllerName, Model.RouteValues, null, null);
+        url = Url.Action(Model.ActionName, Model.ControllerName);
     }
     else if (!string.IsNullOrEmpty(Model.Url))
     {

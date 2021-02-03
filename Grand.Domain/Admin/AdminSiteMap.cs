@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 
-//code from Telerik MVC Extensions
-namespace Grand.Framework.Menu
+namespace Grand.Domain.Admin
 {
-    public class SiteMapNode
+    /// <summary>
+    /// Represents an admin menu
+    /// </summary>
+    public partial class AdminSiteMap : BaseEntity
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SiteMapNode"/> class.
-        /// </summary>
-        public SiteMapNode()
+        public AdminSiteMap()
         {
-            ChildNodes = new List<SiteMapNode>();
+            ChildNodes = new List<AdminSiteMap>();
             PermissionNames = new List<string>();
         }
 
@@ -34,7 +33,6 @@ namespace Grand.Framework.Menu
         /// </summary>
         public string ActionName { get; set; }
 
-
         /// <summary>
         /// Gets or sets the URL.
         /// </summary>
@@ -43,17 +41,12 @@ namespace Grand.Framework.Menu
         /// <summary>
         /// Gets or sets the child nodes.
         /// </summary>
-        public IList<SiteMapNode> ChildNodes { get; set; }
+        public virtual IList<AdminSiteMap> ChildNodes { get; set; }
 
         /// <summary>
-        /// Gets or sets the icon class (Font Awesome: http://fontawesome.io/)
+        /// Gets or sets the icon class 
         /// </summary>
         public string IconClass { get; set; }
-
-        /// <summary>
-        /// Gets or sets the item is visible
-        /// </summary>
-        public bool Visible { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to open url in new tab (window) or not

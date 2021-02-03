@@ -46,6 +46,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Grand.Core.Data;
+using Grand.Domain.Admin;
+using Grand.Services.Admin;
 
 namespace Grand.Services.Installation
 {
@@ -54,6 +56,7 @@ namespace Grand.Services.Installation
         #region Fields
 
         private readonly IRepository<GrandNodeVersion> _versionRepository;
+        private readonly IRepository<AdminSiteMap> _adminRepository;
         private readonly IRepository<Bid> _bidRepository;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Affiliate> _affiliateRepository;
@@ -147,6 +150,7 @@ namespace Grand.Services.Installation
         public CodeFirstInstallationService(IServiceProvider serviceProvider)
         {
             _versionRepository = serviceProvider.GetRequiredService<IRepository<GrandNodeVersion>>();
+            _adminRepository= serviceProvider.GetRequiredService<IRepository<AdminSiteMap>>();
             _bidRepository = serviceProvider.GetRequiredService<IRepository<Bid>>();
             _addressRepository = serviceProvider.GetRequiredService<IRepository<Address>>();
             _affiliateRepository = serviceProvider.GetRequiredService<IRepository<Affiliate>>();
@@ -250,6 +254,11 @@ namespace Grand.Services.Installation
                 DataBaseVersion = GrandVersion.SupportedDBVersion
             };
             await _versionRepository.InsertAsync(version);
+        }
+
+        protected virtual async Task InstallMenuAdminSiteMap()
+        {
+            await _adminRepository.InsertManyAsync(StandardAdminSiteMap.SiteMap);
         }
 
         protected virtual async Task InstallStores(string companyName, string companyAddress, string companyPhoneNumber, string companyEmail)
@@ -11115,11 +11124,12 @@ namespace Grand.Services.Installation
         public virtual async Task InstallData(string defaultUserEmail,
             string defaultUserPassword, string collation, bool installSampleData = true, string companyName = "", string companyAddress = "", string companyPhoneNumber = "", string companyEmail = "")
         {
-
             defaultUserEmail = defaultUserEmail.ToLower();
+
             await CreateTables(collation);
             await CreateIndexes();
             await InstallVersion();
+            await InstallMenuAdminSiteMap();
             await InstallStores(companyName, companyAddress, companyPhoneNumber, companyEmail);
             await InstallMeasures();
             await InstallTaxCategories();
