@@ -5,7 +5,7 @@
     string controlId = string.Format("customer_attribute_{0}", attribute.Id);
     string textPrompt = attribute.Name;
     <div class="row">
-            <div class="col-12 form-group custom-attributes">
+        <div class="col-12 form-group custom-attributes">
             @switch (attribute.AttributeControlType)
             {
                 case AttributeControlType.DropdownList:
@@ -34,7 +34,7 @@
                                     <fieldset>
                                         <legend class="sr-only">@(controlId)</legend>
                                         <label class="custom-control custom-radio">
-                                            <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@(attributeValue.IsPreSelected)"/>
+                                            <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@(attributeValue.IsPreSelected)" />
                                             <span class="custom-control-label"></span>
                                             <span class="custom-control-description">@attributeValue.Name</span>
                                         </label>
@@ -65,6 +65,11 @@
                         </ul>
                     }
                     break;
+                case AttributeControlType.Hidden:
+                    {
+                        <input name="@(controlId)" type="hidden" id="@(controlId)" />
+                    }
+                    break;
                 case AttributeControlType.TextBox:
                     {
                         <label for="@(controlId)" class="col-form-label">@textPrompt:</label>
@@ -86,6 +91,6 @@
                     }
                     break;
             }
-    </div>
+        </div>
     </div>
 }

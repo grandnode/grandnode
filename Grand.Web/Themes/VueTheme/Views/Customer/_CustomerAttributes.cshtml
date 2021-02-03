@@ -83,6 +83,11 @@
                         <span class="field-validation-error">{{veeErrors.first('@(controlId)')}}</span>
                     }
                     break;
+                case AttributeControlType.Hidden:
+                    {
+                        <input name="@(controlId)" type="hidden" id="@(controlId)"/>
+                    }
+                    break;
                 case AttributeControlType.Datepicker:
                 case AttributeControlType.FileUpload:
                 case AttributeControlType.ColorSquares:

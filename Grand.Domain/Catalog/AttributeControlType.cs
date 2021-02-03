@@ -22,6 +22,10 @@ namespace Grand.Domain.Catalog
         /// </summary>
         TextBox = 4,
         /// <summary>
+        /// Hidden
+        /// </summary>
+        Hidden = 5,
+        /// <summary>
         /// Multiline textbox
         /// </summary>
         MultilineTextbox = 10,

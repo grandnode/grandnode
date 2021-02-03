@@ -18325,6 +18325,9 @@
   <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.FileUpload">
     <Value>File upload</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.Hidden">
+    <Value>Hidden field</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Grand.Domain.Catalog.AttributeControlType.MultilineTextbox">
     <Value>Multiline textbox</Value>
   </LocaleResource>

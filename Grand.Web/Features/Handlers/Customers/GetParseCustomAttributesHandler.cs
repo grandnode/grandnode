@@ -72,6 +72,7 @@ namespace Grand.Web.Features.Handlers.Customers
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
+                    case AttributeControlType.Hidden:
                         {
                             var ctrlAttributes = request.Form[controlId].ToString();
                             if (!string.IsNullOrEmpty(ctrlAttributes))
