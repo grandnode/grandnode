@@ -5144,7 +5144,7 @@ namespace Grand.Services.Installation
 
             await _settingService.SaveSetting(new StoreInformationSettings {
                 StoreClosed = false,
-                DefaultStoreTheme = "DefaultClean",
+                DefaultStoreTheme = "VueTheme",
                 AllowCustomerToSelectTheme = false,
                 DisplayEuCookieLawWarning = false,
                 FacebookLink = "https://www.facebook.com/grandnodecom",
