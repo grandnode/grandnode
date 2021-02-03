@@ -338,13 +338,7 @@
                     <div class="captcha-box form-group">
                         <captcha />
                     </div>
-                }
-                @if (Model.HoneypotEnabled)
-                {
-                    <div class="form-group">
-                        @Html.Raw(Html.GenerateHoneypotInput())
-                    </div>
-                }
+                }                
             </div>
         </div>
 

@@ -100,7 +100,6 @@ namespace Grand.Web.Features.Handlers.Customers
             model.AcceptPrivacyPolicyEnabled = _customerSettings.AcceptPrivacyPolicyEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
-            model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
 
             //countries and states

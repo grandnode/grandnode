@@ -135,8 +135,7 @@ namespace Grand.Web.Models.Customer
         [GrandResourceDisplayName("Account.Fields.VatNumber")]
         public string VatNumber { get; set; }
         public bool DisplayVatNumber { get; set; }
-
-        public bool HoneypotEnabled { get; set; }
+        
         public bool DisplayCaptcha { get; set; }
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }

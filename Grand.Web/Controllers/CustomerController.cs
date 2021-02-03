@@ -416,7 +416,6 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [ValidateCaptcha]
-        [ValidateHoneypot]
         [AutoValidateAntiforgeryToken]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]

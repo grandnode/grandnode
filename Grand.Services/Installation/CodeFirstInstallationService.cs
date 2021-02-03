@@ -4863,8 +4863,6 @@ namespace Grand.Services.Installation
                 AdminAreaAllowedIpAddresses = null,
                 EnableXsrfProtectionForAdminArea = true,
                 EnableXsrfProtectionForPublicStore = true,
-                HoneypotEnabled = false,
-                HoneypotInputName = "hpinput",
                 AllowNonAsciiCharInHeaders = true,
             });
             await _settingService.SaveSetting(new MediaSettings {

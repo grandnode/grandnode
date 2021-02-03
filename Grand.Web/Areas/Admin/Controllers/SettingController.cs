@@ -1664,7 +1664,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             model.SecuritySettings.EnableXsrfProtectionForAdminArea = securitySettings.EnableXsrfProtectionForAdminArea;
             model.SecuritySettings.EnableXsrfProtectionForPublicStore = securitySettings.EnableXsrfProtectionForPublicStore;
-            model.SecuritySettings.HoneypotEnabled = securitySettings.HoneypotEnabled;
             model.SecuritySettings.CaptchaEnabled = captchaSettings.Enabled;
             model.SecuritySettings.CaptchaShowOnLoginPage = captchaSettings.ShowOnLoginPage;
             model.SecuritySettings.CaptchaShowOnRegistrationPage = captchaSettings.ShowOnRegistrationPage;
@@ -1843,7 +1842,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
             securitySettings.EnableXsrfProtectionForAdminArea = model.SecuritySettings.EnableXsrfProtectionForAdminArea;
             securitySettings.EnableXsrfProtectionForPublicStore = model.SecuritySettings.EnableXsrfProtectionForPublicStore;
-            securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
             await _settingService.SaveSetting(securitySettings);
             captchaSettings.Enabled = model.SecuritySettings.CaptchaEnabled;
             captchaSettings.ShowOnLoginPage = model.SecuritySettings.CaptchaShowOnLoginPage;

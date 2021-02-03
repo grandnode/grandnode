@@ -206,9 +206,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore")]
             public bool EnableXsrfProtectionForPublicStore { get; set; }
 
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled")]
-            public bool HoneypotEnabled { get; set; }
-
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled")]
             public bool CaptchaEnabled { get; set; }

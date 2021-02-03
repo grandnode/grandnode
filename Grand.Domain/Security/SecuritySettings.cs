@@ -26,15 +26,6 @@ namespace Grand.Domain.Security
         public bool EnableXsrfProtectionForPublicStore { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether honeypot is enabled on the registration page
-        /// </summary>
-        public bool HoneypotEnabled { get; set; }
-        /// <summary>
-        /// Gets or sets a honeypot input name
-        /// </summary>
-        public string HoneypotInputName { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to allow non-ASCII characters in headers
         /// </summary>
         public bool AllowNonAsciiCharInHeaders { get; set; }

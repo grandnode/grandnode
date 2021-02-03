@@ -91,19 +91,7 @@
                 </label>
                 <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForPublicStore"></span>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-8 col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="SecuritySettings.HoneypotEnabled" class="control-label" />
-            </div>
-            <div class="col-4 col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="SecuritySettings.HoneypotEnabled" />
-                    <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="SecuritySettings.HoneypotEnabled"></span>
-            </div>
-        </div>
+        </div>        
         <div class="form-group">
             <div class="note note-info">
                 A CAPTCHA is a program that can tell whether its user is a human or a computer.

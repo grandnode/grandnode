@@ -1,5 +1,4 @@
 ﻿@model RegisterModel
-@using System.Text.Encodings.Web
 @inject IPageHeadBuilder pagebuilder
 @{
     Layout = "_ColumnsOne";
@@ -474,13 +473,7 @@
                     <div class="captcha-box form-group">
                         <captcha />
                     </div>
-                }
-                @if (Model.HoneypotEnabled)
-                {
-                    <div class="form-group">
-                        @Html.Raw(Html.GenerateHoneypotInput())
-                    </div>
-                }
+                }                
             </b-card-text>
         </b-card>
 
