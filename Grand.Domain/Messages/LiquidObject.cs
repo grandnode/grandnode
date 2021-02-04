@@ -23,8 +23,6 @@ namespace Grand.Domain.Messages
 
         public Drop Customer { get; set; }
 
-        public Drop Forums { get; set; }
-
         public Drop GiftCard { get; set; }
 
         public Drop Knowledgebase { get; set; }
@@ -34,8 +32,6 @@ namespace Grand.Domain.Messages
         public Drop NewsLetterSubscription { get; set; }
 
         public Drop Order { get; set; }
-
-        public Drop PrivateMessage { get; set; }
 
         public Drop Product { get; set; }
 

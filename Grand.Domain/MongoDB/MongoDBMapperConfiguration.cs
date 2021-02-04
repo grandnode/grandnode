@@ -4,7 +4,6 @@ using Grand.Domain.Customers;
 using Grand.Domain.Directory;
 using Grand.Domain.Discounts;
 using Grand.Domain.Documents;
-using Grand.Domain.Forums;
 using Grand.Domain.Logging;
 using Grand.Domain.Media;
 using Grand.Domain.Messages;
@@ -62,7 +61,6 @@ namespace Grand.Domain.MongoDB
             RegisterClassCustomerReminderHistory();
             RegisterClassCustomerRole();
             RegisterClassDiscount();
-            RegisterClassForumTopic();
             RegisterClassLog();
             RegisterClassDownload();
             RegisterClassCampaign();
@@ -305,14 +303,6 @@ namespace Grand.Domain.MongoDB
                 cm.AutoMap();
                 cm.UnmapMember(c => c.DiscountType);
                 cm.UnmapMember(c => c.DiscountLimitation);
-            });
-        }
-        private static void RegisterClassForumTopic()
-        {
-            BsonClassMap.RegisterClassMap<ForumTopic>(cm =>
-            {
-                cm.AutoMap();
-                cm.UnmapMember(c => c.ForumTopicType);
             });
         }
         private static void RegisterClassLog()

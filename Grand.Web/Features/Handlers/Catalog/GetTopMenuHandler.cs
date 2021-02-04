@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Grand.Core.Caching;
+﻿using Grand.Core.Caching;
 using Grand.Domain.Blogs;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
-using Grand.Domain.Forums;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
@@ -16,6 +10,10 @@ using Grand.Web.Features.Models.Catalog;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using MediatR;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Features.Handlers.Catalog
 {
@@ -27,17 +25,15 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IManufacturerService _manufacturerService;
         private readonly CatalogSettings _catalogSettings;
         private readonly BlogSettings _blogSettings;
-        private readonly ForumSettings _forumSettings;
         private readonly MenuItemSettings _menuItemSettings;
 
         public GetTopMenuHandler(
-            IMediator mediator, 
-            ITopicService topicService, 
-            ICacheManager cacheManager, 
-            IManufacturerService manufacturerService, 
-            CatalogSettings catalogSettings, 
-            BlogSettings blogSettings, 
-            ForumSettings forumSettings, 
+            IMediator mediator,
+            ITopicService topicService,
+            ICacheManager cacheManager,
+            IManufacturerService manufacturerService,
+            CatalogSettings catalogSettings,
+            BlogSettings blogSettings,
             MenuItemSettings menuItemSettings)
         {
             _mediator = mediator;
@@ -46,7 +42,6 @@ namespace Grand.Web.Features.Handlers.Catalog
             _manufacturerService = manufacturerService;
             _catalogSettings = catalogSettings;
             _blogSettings = blogSettings;
-            _forumSettings = forumSettings;
             _menuItemSettings = menuItemSettings;
         }
 
@@ -86,13 +81,11 @@ namespace Grand.Web.Features.Handlers.Catalog
                 Manufacturers = cachedManufacturerModel,
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
-                ForumEnabled = _forumSettings.ForumsEnabled,
                 DisplayHomePageMenu = _menuItemSettings.DisplayHomePageMenu,
                 DisplayNewProductsMenu = _menuItemSettings.DisplayNewProductsMenu,
                 DisplaySearchMenu = _menuItemSettings.DisplaySearchMenu,
                 DisplayCustomerMenu = _menuItemSettings.DisplayCustomerMenu,
                 DisplayBlogMenu = _menuItemSettings.DisplayBlogMenu,
-                DisplayForumsMenu = _menuItemSettings.DisplayForumsMenu,
                 DisplayContactUsMenu = _menuItemSettings.DisplayContactUsMenu
             };
 

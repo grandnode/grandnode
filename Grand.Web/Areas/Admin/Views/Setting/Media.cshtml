@@ -56,16 +56,6 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-8 col-md-4 col-sm-4 text-right">
-                                    @Html.OverrideStoreCheckboxFor(model => model.AvatarPictureSize_OverrideForStore, model => model.AvatarPictureSize, Model.ActiveStoreScopeConfiguration)
-                                    <admin-label asp-for="AvatarPictureSize" class="control-label" />
-                                </div>
-                                <div class="col-4 col-md-8 col-sm-8">
-                                    <admin-input asp-for="AvatarPictureSize" />
-                                    <span asp-validation-for="AvatarPictureSize"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSize_OverrideForStore, model => model.ProductThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ProductThumbPictureSize" class="control-label" />
                                 </div>

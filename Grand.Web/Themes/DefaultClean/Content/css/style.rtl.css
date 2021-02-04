@@ -2822,24 +2822,6 @@ list settings .list__item,
 	font-weight: 500;
 }
 
-/*forum*/
-
-.forum-edit-page .forum-post-text {
-	min-height: 200px;
-}
-.forum-topic-page .forum-post {
-	border-right: 1px solid #d9d9d9;
-}
-.forum-edit-page .card textarea.form-control {
-	min-height: 200px;
-}
-.forums-table-section table tbody tr:nth-child(even) {
-	background-color: #f1f1f1;
-}
-.avatar {
-	overflow: hidden;
-	display: table-cell;
-}
 /*price*/
 
 .overview-buttons .prices {

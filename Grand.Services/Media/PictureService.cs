@@ -293,19 +293,10 @@ namespace Grand.Services.Media
             PictureType defaultPictureType = PictureType.Entity,
             string storeLocation = null)
         {
-            string defaultImageFileName;
-            switch (defaultPictureType)
-            {
-                case PictureType.Avatar:
-                    defaultImageFileName = _settingService.GetSettingByKey("Media.Customer.DefaultAvatarImageName", "default-avatar.jpg");
-                    break;
-                case PictureType.Entity:
-                default:
-                    defaultImageFileName = _settingService.GetSettingByKey("Media.DefaultImageName", "default-image.png");
-                    break;
-            }
-
-            string filePath = GetPictureLocalPath(defaultImageFileName);
+            var defaultImageFileName = defaultPictureType switch {
+                _ => _settingService.GetSettingByKey("Media.DefaultImageName", "default-image.png"),
+            };
+            var filePath = GetPictureLocalPath(defaultImageFileName);
 
             if (!File.Exists(filePath))
             {

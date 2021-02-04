@@ -4,7 +4,6 @@ namespace Grand.Domain.Media
 {
     public class MediaSettings : ISettings
     {
-        public int AvatarPictureSize { get; set; }
         public int BlogThumbPictureSize { get; set; }
         public int NewsThumbPictureSize { get; set; }
         public int NewsListThumbPictureSize { get; set; }

@@ -13,7 +13,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<CustomerUserSettingsModel.CustomerSettingsModel, CustomerSettings>()
                 .ForMember(dest => dest.HashedPasswordFormat, mo => mo.Ignore())
-                .ForMember(dest => dest.AvatarMaximumSizeBytes, mo => mo.Ignore())
                 .ForMember(dest => dest.DownloadableProductsValidateUser, mo => mo.Ignore())
                 .ForMember(dest => dest.OnlineCustomerMinutes, mo => mo.Ignore())
                 .ForMember(dest => dest.SuffixDeletedCustomers, mo => mo.Ignore());

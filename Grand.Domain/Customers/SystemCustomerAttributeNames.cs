@@ -23,9 +23,6 @@ namespace Grand.Domain.Customers
         //Other attributes
         public static string DiscountCoupons { get { return "DiscountCoupons"; } }
         public static string GiftCardCoupons { get { return "GiftCardCoupons"; } }
-        public static string AvatarPictureId { get { return "AvatarPictureId"; } }
-        public static string ForumPostCount { get { return "ForumPostCount"; } }
-        public static string Signature { get { return "Signature"; } }
         public static string UrlReferrer { get { return "UrlReferrer"; } }
         public static string PasswordRecoveryToken { get { return "PasswordRecoveryToken"; } }
         public static string PasswordRecoveryTokenDateGenerated { get { return "PasswordRecoveryTokenDateGenerated"; } }
@@ -52,7 +49,6 @@ namespace Grand.Domain.Customers
         public static string ShippingOptionAttributeDescription { get { return "ShippingOptionAttributeDescription"; } }
         public static string ShippingOptionAttributeXml { get { return "ShippingOptionAttributeXml"; } }
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
-        public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }
         public static string WorkingThemeName { get { return "WorkingThemeName"; } }
         public static string AdminThemeName { get { return "AdminThemeName"; } }
         public static string TaxDisplayTypeId { get { return "TaxDisplayTypeId"; } }

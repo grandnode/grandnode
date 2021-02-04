@@ -63,7 +63,7 @@
         </ul>
     </li>
 }
-@if (Model.DisplaySearchMenu | Model.DisplayNewProductsMenu | Model.DisplayCustomerMenu | Model.DisplayBlogMenu | Model.DisplayForumsMenu | Model.DisplayContactUsMenu)
+@if (Model.DisplaySearchMenu | Model.DisplayNewProductsMenu | Model.DisplayCustomerMenu | Model.DisplayBlogMenu | Model.DisplayContactUsMenu)
 {
     @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenu)
     {
@@ -94,14 +94,6 @@
         <li>
             <a href="@Url.RouteUrl("Blog")">
                 <span class="title">@T("Blog")</span>
-            </a>
-        </li>
-    }
-    @if (Model.ForumEnabled && Model.DisplayForumsMenu)
-    {
-        <li>
-            <a href="@Url.RouteUrl("Boards")">
-                <span class="title">@T("Forum.Forums")</span>
             </a>
         </li>
     }

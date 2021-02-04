@@ -17,7 +17,6 @@ using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Documents;
 using Grand.Services.ExportImport;
-using Grand.Services.Forums;
 using Grand.Services.Helpers;
 using Grand.Services.Installation;
 using Grand.Services.Knowledgebase;
@@ -85,8 +84,6 @@ namespace Grand.Services.Infrastructure
             RegisterDocumentsService(serviceCollection);
 
             RegisterExportImportService(serviceCollection);
-
-            RegisterForumService(serviceCollection);
 
             RegisterInstallService(serviceCollection);
 
@@ -272,11 +269,6 @@ namespace Grand.Services.Infrastructure
         {
             serviceCollection.AddScoped<IExportManager, ExportManager>();
             serviceCollection.AddScoped<IImportManager, ImportManager>();
-        }
-
-        private void RegisterForumService(IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddScoped<IForumService, ForumService>();
         }
 
         private void RegisterInstallService(IServiceCollection serviceCollection)

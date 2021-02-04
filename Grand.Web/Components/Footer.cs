@@ -2,7 +2,6 @@
 using Grand.Domain.Blogs;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
-using Grand.Domain.Forums;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.News;
 using Grand.Domain.Stores;
@@ -29,7 +28,6 @@ namespace Grand.Web.ViewComponents
         private readonly IPermissionService _permissionService;
 
         private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly ForumSettings _forumSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly BlogSettings _blogSettings;
         private readonly KnowledgebaseSettings _knowledgebaseSettings;
@@ -43,7 +41,6 @@ namespace Grand.Web.ViewComponents
             ITopicService topicService,
             IPermissionService permissionService,
             StoreInformationSettings storeInformationSettings,
-            ForumSettings forumSettings,
             CatalogSettings catalogSettings,
             BlogSettings blogSettings,
             KnowledgebaseSettings knowledgebaseSettings,
@@ -57,7 +54,6 @@ namespace Grand.Web.ViewComponents
             _permissionService = permissionService;
 
             _storeInformationSettings = storeInformationSettings;
-            _forumSettings = forumSettings;
             _catalogSettings = catalogSettings;
             _blogSettings = blogSettings;
             _knowledgebaseSettings = knowledgebaseSettings;
@@ -109,7 +105,6 @@ namespace Grand.Web.ViewComponents
                 BlogEnabled = _blogSettings.Enabled,
                 KnowledgebaseEnabled = _knowledgebaseSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
-                ForumEnabled = _forumSettings.ForumsEnabled,
                 NewsEnabled = _newsSettings.Enabled,
                 RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
                 RecommendedProductsEnabled = _catalogSettings.RecommendedProductsEnabled,

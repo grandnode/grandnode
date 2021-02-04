@@ -137,24 +137,6 @@
                                                                              {<text>inactive</text>}"><b-icon icon="trash"></b-icon> <span>@T("Account.DeleteAccount")</span></a>
                                                                         </li>
                                                                     }
-        @if (!Model.HideAvatar)
-        {
-            <li class="customer-avatar">
-                <a href="@Url.RouteUrl("CustomerAvatar")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Avatar)
-                                                                     {<text>active</text>}
-                                                                     else
-                                                                     {<text>inactive</text>}"><b-icon icon="person-circle"></b-icon> <span>@T("Account.Avatar")</span></a>
-                                                                </li>
-                                                            }
-        @if (!Model.HideForumSubscriptions)
-        {
-            <li class="customer-forum">
-                <a href="@Url.RouteUrl("CustomerForumSubscriptions")" class="@if (Model.SelectedTab == CustomerNavigationEnum.ForumSubscriptions)
-                                                                                 {<text>active</text>}
-                                                                                 else
-                                                                                 {<text>inactive</text>}"><b-icon icon="file-earmark-ruled"></b-icon> <span>@T("Account.ForumSubscriptions")</span></a>
-                                                                            </li>
-                                                                        }
         @if (Model.ShowVendorInfo)
         {
             <li class="customer-vendor">

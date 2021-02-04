@@ -1,5 +1,4 @@
 ﻿using Grand.Domain.Customers;
-using Grand.Domain.Forums;
 using Grand.Domain.Localization;
 using Grand.Domain.Messages;
 using Grand.Domain.Tax;
@@ -34,7 +33,6 @@ namespace Grand.Web.Commands.Handler.Customers
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly ForumSettings _forumSettings;
 
         public UpdateCustomerInfoCommandHandler(
             ICustomerRegistrationService customerRegistrationService,
@@ -48,8 +46,7 @@ namespace Grand.Web.Commands.Handler.Customers
             DateTimeSettings dateTimeSettings,
             CustomerSettings customerSettings,
             TaxSettings taxSettings,
-            LocalizationSettings localizationSettings,
-            ForumSettings forumSettings)
+            LocalizationSettings localizationSettings)
         {
             _customerRegistrationService = customerRegistrationService;
             _authenticationService = authenticationService;
@@ -63,7 +60,6 @@ namespace Grand.Web.Commands.Handler.Customers
             _customerSettings = customerSettings;
             _taxSettings = taxSettings;
             _localizationSettings = localizationSettings;
-            _forumSettings = forumSettings;
         }
 
         public async Task<bool> Handle(UpdateCustomerInfoCommand request, CancellationToken cancellationToken)
@@ -109,9 +105,6 @@ namespace Grand.Web.Commands.Handler.Customers
             {
                 await UpdateNewsletter(request);
             }
-
-            if (_forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled)
-                await _genericAttributeService.SaveAttribute(request.Customer, SystemCustomerAttributeNames.Signature, request.Model.Signature);
 
             //save customer attributes
             await _customerService.UpdateCustomerField(request.Customer, x => x.Attributes, request.CustomerAttributes);

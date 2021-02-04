@@ -33,10 +33,6 @@
                         {
                             <li class="list-group-item"><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
                         }
-                        @if (Model.ForumEnabled)
-                        {
-                            <li class="list-group-item"><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
-                        }
                         @if (Model.KnowledgebaseEnabled)
                         {
                             <li class="list-group-item"><a href="@Url.RouteUrl("Knowledgebase")">@T("Knowledgebase")</a></li>

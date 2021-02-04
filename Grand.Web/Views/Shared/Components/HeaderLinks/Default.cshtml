@@ -20,16 +20,6 @@
             <span class="text text-uppercase ml-3">@T("Account.CustomerOrders")</span>
         </a>
     </li>
-    @if (Model.AllowPrivateMessages)
-    {
-        <li class="nav-item">
-            <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
-                <span class="mdi mdi-email"></span>
-                <span class="text text-uppercase ml-3">@T("PrivateMessages.Inbox")</span>
-                <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
-            </a>
-        </li>
-    }
     <li class="nav-item">
         <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("Logout")">
             <span class="mdi mdi-lock"></span>
@@ -56,13 +46,4 @@ else
     </li>
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })
-@if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
-{
-    //new private message notification
-    <script asp-location="Footer">
-            $(document).ready(function () {
-                displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
-            });
-    </script>
-}
 

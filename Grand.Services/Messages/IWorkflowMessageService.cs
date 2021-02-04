@@ -2,7 +2,6 @@
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
-using Grand.Domain.Forums;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.Messages;
 using Grand.Domain.News;
@@ -331,46 +330,6 @@ namespace Grand.Services.Messages
         /// <param name="order">Order</param>
         /// <returns>Queued email identifier</returns>
         Task<int> SendNewReturnRequestNoteAddedCustomerNotification(ReturnRequest returnRequest, ReturnRequestNote returnRequestNote, Order order);
-
-        #endregion
-
-        #region Forum Notifications
-
-        /// <summary>
-        /// Sends a forum subscription message to a customer
-        /// </summary>
-        /// <param name="customer">Customer instance</param>
-        /// <param name="topicauthor">Topic author</param>
-        /// <param name="forumTopic">Forum Topic</param>
-        /// <param name="forum">Forum</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        Task<int> SendNewForumTopicMessage(Customer customer, Customer topicauthor,
-            ForumTopic forumTopic, Forum forum, string languageId);
-
-        /// <summary>
-        /// Sends a forum subscription message to a customer
-        /// </summary>
-        /// <param name="customer">Customer instance</param>
-        /// <param name="customer">Post author</param>
-        /// <param name="forumPost">Forum post</param>
-        /// <param name="forumTopic">Forum Topic</param>
-        /// <param name="forum">Forum</param>
-        /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        Task<int> SendNewForumPostMessage(Customer customer, Customer postauthor,
-            ForumPost forumPost, ForumTopic forumTopic,
-            Forum forum, int friendlyForumTopicPageIndex,
-            string languageId);
-
-        /// <summary>
-        /// Sends a private message notification
-        /// </summary>
-        /// <param name="privateMessage">Private message</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        Task<int> SendPrivateMessageNotification(PrivateMessage privateMessage, string languageId);
 
         #endregion
 

@@ -11,10 +11,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         [GrandResourceDisplayName("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase")]
         public bool PicturesStoredIntoDatabase { get; set; }
 
-        [GrandResourceDisplayName("Admin.Configuration.Settings.Media.AvatarPictureSize")]
-        public int AvatarPictureSize { get; set; }
-        public bool AvatarPictureSize_OverrideForStore { get; set; }
-
         [GrandResourceDisplayName("Admin.Configuration.Settings.Media.ProductThumbPictureSize")]
         public int ProductThumbPictureSize { get; set; }
         public bool ProductThumbPictureSize_OverrideForStore { get; set; }

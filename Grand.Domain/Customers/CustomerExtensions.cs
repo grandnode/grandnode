@@ -97,16 +97,6 @@ namespace Grand.Domain.Customers
         }
 
         /// <summary>
-        /// Gets a value indicating whether customer is a forum moderator
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>Result</returns>
-        public static bool IsForumModerator(this Customer customer)
-        {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.ForumModerators);
-        }
-
-        /// <summary>
         /// Gets a value indicating whether customer is registered
         /// </summary>
         /// <param name="customer">Customer</param>

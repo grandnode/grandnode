@@ -17,14 +17,6 @@
                 <b-icon icon="handbag"></b-icon>
                 <span class="text text-uppercase ml-3">@T("Account.CustomerOrders")</span>
             </b-button>
-        @if (Model.AllowPrivateMessages)
-        {
-                <b-button variant="outline-secondary" class="w-100 mb-2" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
-                    <b-icon icon="envelope"></b-icon>
-                    <span class="text text-uppercase ml-3">@T("PrivateMessages.Inbox")</span>
-                    <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
-                </b-button>
-        }
             <b-button variant="outline-secondary" class="w-100 mb-2" href="@Url.RouteUrl("Logout")">
                 <b-icon icon="lock"></b-icon>
                 <span class="text text-uppercase ml-3">@T("Account.Logout")</span>
@@ -49,11 +41,4 @@
     }
 </div>
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })
-@if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
-{
-    //new private message notification
-    <script asp-location="Footer">
-                displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
-    </script>
-}
 

@@ -11,7 +11,6 @@ using Grand.Domain.Configuration;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
 using Grand.Domain.Discounts;
-using Grand.Domain.Forums;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.Localization;
 using Grand.Domain.Logging;
@@ -95,9 +94,6 @@ namespace Grand.Services.Installation
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IRepository<ForumGroup> _forumGroupRepository;
-        private readonly IRepository<Forum> _forumRepository;
-        private readonly IRepository<ForumPostVote> _forumPostVote;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<Discount> _discountRepository;
@@ -186,9 +182,6 @@ namespace Grand.Services.Installation
             _urlRecordRepository = serviceProvider.GetRequiredService<IRepository<UrlRecord>>();
             _emailAccountRepository = serviceProvider.GetRequiredService<IRepository<EmailAccount>>();
             _messageTemplateRepository = serviceProvider.GetRequiredService<IRepository<MessageTemplate>>();
-            _forumGroupRepository = serviceProvider.GetRequiredService<IRepository<ForumGroup>>();
-            _forumRepository = serviceProvider.GetRequiredService<IRepository<Forum>>();
-            _forumPostVote = serviceProvider.GetRequiredService<IRepository<ForumPostVote>>();
             _countryRepository = serviceProvider.GetRequiredService<IRepository<Country>>();
             _stateProvinceRepository = serviceProvider.GetRequiredService<IRepository<StateProvince>>();
             _discountRepository = serviceProvider.GetRequiredService<IRepository<Discount>>();
@@ -3983,14 +3976,6 @@ namespace Grand.Services.Installation
             };
             await _customerRoleRepository.InsertAsync(crAdministrators);
 
-            var crForumModerators = new CustomerRole {
-                Name = "Forum Moderators",
-                Active = true,
-                IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.ForumModerators,
-            };
-            await _customerRoleRepository.InsertAsync(crForumModerators);
-
             var crRegistered = new CustomerRole {
                 Name = "Registered",
                 Active = true,
@@ -4063,7 +4048,6 @@ namespace Grand.Services.Installation
             adminUser.BillingAddress = defaultAdminUserAddress;
             adminUser.ShippingAddress = defaultAdminUserAddress;
             adminUser.CustomerRoles.Add(crAdministrators);
-            adminUser.CustomerRoles.Add(crForumModerators);
             adminUser.CustomerRoles.Add(crRegistered);
             await _customerRepository.InsertAsync(adminUser);
 
@@ -4310,22 +4294,6 @@ namespace Grand.Services.Installation
                                            Name = "Customer.WelcomeMessage",
                                            Subject = "Welcome to {{Store.Name}}",
                                            Body = "We welcome you to <a href=\"{{Store.URL}}\"> {{Store.Name}}</a>.<br />\r\n<br />\r\nYou can now take part in the various services we have to offer you. Some of these services include:<br />\r\n<br />\r\nPermanent Cart - Any products added to your online cart remain there until you remove them, or check them out.<br />\r\nAddress Book - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.<br />\r\nOrder History - View your history of purchases that you have made with us.<br />\r\nProducts Reviews - Share your opinions on products with our other customers.<br />\r\n<br />\r\nFor help with any of our online services, please email the store-owner: <a href=\"mailto:{{Store.Email}}\">{{Store.Email}}</a>.<br />\r\n<br />\r\nNote: This email address was provided on our registration page. If you own the email and did not register on our site, please send an email to <a href=\"mailto:{{Store.Email}}\">{{Store.Email}}</a>.",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Forums.NewForumPost",
-                                           Subject = "{{Store.Name}}. New Post Notification.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new post has been created in the topic <a href=\"{{Forums.TopicURL}}\">\"{{Forums.TopicName}}\"</a> at <a href=\"{{Forums.ForumURL}}\">\"{{Forums.ForumName}}\"</a> forum.<br />\r\n<br />\r\nClick <a href=\"{{Forums.TopicURL}}\">here</a> for more info.<br />\r\n<br />\r\nPost author: {{Forums.PostAuthor}}<br />\r\nPost body: {{Forums.PostBody}}</p>",
-                                           IsActive = true,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
-                                           Name = "Forums.NewForumTopic",
-                                           Subject = "{{Store.Name}}. New Topic Notification.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new topic <a href=\"{{Forums.TopicURL}}\">\"{{Forums.TopicName}}\"</a> has been created at <a href=\"{{Forums.ForumURL}}\">\"{{Forums.ForumName}}\"</a> forum.<br />\r\n<br />\r\nClick <a href=\"{{Forums.TopicURL}}\">here</a> for more info.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4701,17 +4669,6 @@ namespace Grand.Services.Installation
                                        },
                                    new Topic
                                        {
-                                           SystemName = "ForumWelcomeMessage",
-                                           IncludeInSitemap = false,
-                                           IsPasswordProtected = false,
-                                           DisplayOrder = 1,
-                                           Title = "Forums",
-                                           Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id,
-                                           Published = true
-                                       },
-                                   new Topic
-                                       {
                                            SystemName = "HomePageText",
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
@@ -4832,7 +4789,6 @@ namespace Grand.Services.Installation
                 DisplaySearchMenu = !installSampleData,
                 DisplayCustomerMenu = !installSampleData,
                 DisplayBlogMenu = true,
-                DisplayForumsMenu = !installSampleData,
                 DisplayContactUsMenu = true
             });
 
@@ -4866,7 +4822,6 @@ namespace Grand.Services.Installation
                 AllowNonAsciiCharInHeaders = true,
             });
             await _settingService.SaveSetting(new MediaSettings {
-                AvatarPictureSize = 120,
                 BlogThumbPictureSize = 450,
                 ProductThumbPictureSize = 415,
                 ProductDetailsPictureSize = 800,
@@ -4928,9 +4883,6 @@ namespace Grand.Services.Installation
                         "subscribenewsletter",
                         "blog",
                         "knowledgebase",
-                        "boards",
-                        "inboxupdate",
-                        "sentupdate",
                         "news",
                         "sitemap",
                         "search",
@@ -5075,9 +5027,6 @@ namespace Grand.Services.Installation
                 FailedPasswordAllowedAttempts = 0,
                 FailedPasswordLockoutMinutes = 30,
                 UserRegistrationType = UserRegistrationType.Standard,
-                AllowCustomersToUploadAvatars = false,
-                AvatarMaximumSizeBytes = 20000,
-                DefaultAvatarEnabled = true,
                 ShowCustomersLocation = false,
                 ShowCustomersJoinDate = false,
                 AllowViewingProfiles = false,
@@ -5360,42 +5309,6 @@ namespace Grand.Services.Installation
                 MainPageNewsCount = 3,
                 NewsArchivePageSize = 10,
                 ShowHeaderRssUrl = false,
-            });
-
-            await _settingService.SaveSetting(new ForumSettings {
-                ForumsEnabled = false,
-                RelativeDateTimeFormattingEnabled = true,
-                AllowCustomersToDeletePosts = false,
-                AllowCustomersToEditPosts = false,
-                AllowCustomersToManageSubscriptions = false,
-                AllowGuestsToCreatePosts = false,
-                AllowGuestsToCreateTopics = false,
-                AllowPostVoting = true,
-                MaxVotesPerDay = 30,
-                TopicSubjectMaxLength = 450,
-                PostMaxLength = 4000,
-                StrippedTopicMaxLength = 45,
-                TopicsPageSize = 10,
-                PostsPageSize = 10,
-                SearchResultsPageSize = 10,
-                ActiveDiscussionsPageSize = 50,
-                LatestCustomerPostsPageSize = 10,
-                ShowCustomersPostCount = true,
-                ForumEditor = EditorType.BBCodeEditor,
-                SignaturesEnabled = true,
-                AllowPrivateMessages = false,
-                ShowAlertForPM = false,
-                PrivateMessagesPageSize = 10,
-                ForumSubscriptionsPageSize = 10,
-                NotifyAboutPrivateMessages = false,
-                PMSubjectMaxLength = 450,
-                PMTextMaxLength = 4000,
-                HomePageActiveDiscussionsTopicCount = 5,
-                ActiveDiscussionsFeedEnabled = false,
-                ActiveDiscussionsFeedCount = 25,
-                ForumFeedsEnabled = false,
-                ForumFeedCount = 10,
-                ForumSearchTermMinimumLength = 3,
             });
 
             await _settingService.SaveSetting(new VendorSettings {
@@ -9695,59 +9608,6 @@ namespace Grand.Services.Installation
             await _productRepository.UpdateAsync(allProducts);
         }
 
-        protected virtual async Task InstallForums()
-        {
-            var forumGroup = new ForumGroup {
-                Name = "General",
-                DisplayOrder = 5,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            };
-
-            await _forumGroupRepository.InsertAsync(forumGroup);
-
-            var newProductsForum = new Forum {
-                ForumGroupId = forumGroup.Id,
-                Name = "New Products",
-                Description = "Discuss new products and industry trends",
-                NumTopics = 0,
-                NumPosts = 0,
-                LastPostCustomerId = "",
-                LastPostTime = null,
-                DisplayOrder = 1,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            };
-            await _forumRepository.InsertAsync(newProductsForum);
-
-            var mobileDevicesForum = new Forum {
-                ForumGroupId = forumGroup.Id,
-                Name = "Mobile Devices Forum",
-                Description = "Discuss the mobile phone market",
-                NumTopics = 0,
-                NumPosts = 0,
-                LastPostCustomerId = "",
-                LastPostTime = null,
-                DisplayOrder = 10,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            };
-            await _forumRepository.InsertAsync(mobileDevicesForum);
-
-            var packagingShippingForum = new Forum {
-                ForumGroupId = forumGroup.Id,
-                Name = "Packaging & Shipping",
-                Description = "Discuss packaging & shipping",
-                NumTopics = 0,
-                NumPosts = 0,
-                LastPostTime = null,
-                DisplayOrder = 20,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            };
-            await _forumRepository.InsertAsync(packagingShippingForum);
-        }
-
         protected virtual async Task InstallDiscounts()
         {
             var discounts = new List<Discount>
@@ -10384,42 +10244,6 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
-                                                  SystemKeyword = "PublicStore.AddForumTopic",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add forum topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.EditForumTopic",
-                                                  Enabled = false,
-                                                  Name = "Public store. Edit forum topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.DeleteForumTopic",
-                                                  Enabled = false,
-                                                  Name = "Public store. Delete forum topic"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.AddForumPost",
-                                                  Enabled = false,
-                                                  Name = "Public store. Add forum post"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.EditForumPost",
-                                                  Enabled = false,
-                                                  Name = "Public store. Edit forum post"
-                                              },
-                                          new ActivityLogType
-                                              {
-                                                  SystemKeyword = "PublicStore.DeleteForumPost",
-                                                  Enabled = false,
-                                                  Name = "Public store. Delete forum post"
-                                              },
-                                          new ActivityLogType
-                                              {
                                                   SystemKeyword = "PublicStore.DeleteAccount",
                                                   Enabled = false,
                                                   Name = "Public store. Delete account"
@@ -10997,9 +10821,6 @@ namespace Grand.Services.Installation
             //message template
             await _messageTemplateRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<MessageTemplate>((Builders<MessageTemplate>.IndexKeys.Ascending(x => x.Name)), new CreateIndexOptions() { Name = "Name", Unique = false }));
 
-            //forum
-            await _forumPostVote.Collection.Indexes.CreateOneAsync(new CreateIndexModel<ForumPostVote>((Builders<ForumPostVote>.IndexKeys.Ascending(x => x.ForumPostId).Ascending(x => x.CustomerId)), new CreateIndexOptions() { Name = "Vote", Unique = true }));
-
             // Country and Stateprovince
             await _countryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Country>((Builders<Country>.IndexKeys.Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "DisplayOrder" }));
             await _stateProvinceRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<StateProvince>((Builders<StateProvince>.IndexKeys.Ascending(x => x.CountryId).Ascending(x => x.DisplayOrder).Ascending(x => x.Id)), new CreateIndexOptions() { Name = "Country" }));
@@ -11160,7 +10981,6 @@ namespace Grand.Services.Installation
                 await InstallCategories();
                 await InstallManufacturers();
                 await InstallProducts(defaultUserEmail);
-                await InstallForums();
                 await InstallDiscounts();
                 await InstallBlogPosts();
                 await InstallNews();

@@ -990,7 +990,6 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("IsGuest", null, customer.IsGuest().ToString());
                 xmlWriter.WriteElementString("IsRegistered", null, customer.IsRegistered().ToString());
                 xmlWriter.WriteElementString("IsAdministrator", null, customer.IsAdmin().ToString());
-                xmlWriter.WriteElementString("IsForumModerator", null, customer.IsForumModerator().ToString());
 
                 xmlWriter.WriteElementString("FirstName", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName));
                 xmlWriter.WriteElementString("LastName", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName));
@@ -1015,10 +1014,6 @@ namespace Grand.Services.ExportImport
                     bool subscribedToNewsletters = newsletter != null && newsletter.Active;
                     xmlWriter.WriteElementString(string.Format("Newsletter-in-store-{0}", store.Id), null, subscribedToNewsletters.ToString());
                 }
-
-                xmlWriter.WriteElementString("AvatarPictureId", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId)?.ToString());
-                xmlWriter.WriteElementString("ForumPostCount", null, customer.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.ForumPostCount).ToString());
-                xmlWriter.WriteElementString("Signature", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Signature));
 
                 xmlWriter.WriteEndElement();
             }
@@ -1275,7 +1270,6 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Customer>("IsGuest", p => p.IsGuest()),
                 new PropertyByName<Customer>("IsRegistered", p => p.IsRegistered()),
                 new PropertyByName<Customer>("IsAdministrator", p => p.IsAdmin()),
-                new PropertyByName<Customer>("IsForumModerator", p => p.IsForumModerator()),
                 //attributes
                 new PropertyByName<Customer>("FirstName", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName)),
                 new PropertyByName<Customer>("LastName", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName)),
@@ -1292,9 +1286,6 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Customer>("VatNumber", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber)),
                 new PropertyByName<Customer>("VatNumberStatusId", p => p.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.VatNumberStatusId)),
                 new PropertyByName<Customer>("TimeZoneId", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.TimeZoneId)),
-                new PropertyByName<Customer>("AvatarPictureId", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId)),
-                new PropertyByName<Customer>("ForumPostCount", p => p.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.ForumPostCount)),
-                new PropertyByName<Customer>("Signature", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Signature)),
             };
             return properties;
         }
@@ -1384,7 +1375,6 @@ namespace Grand.Services.ExportImport
             helper.ObjectList.Add(new PropertyHelperList<Customer>("IsGuest", p => p.IsGuest()));
             helper.ObjectList.Add(new PropertyHelperList<Customer>("IsRegistered", p => p.IsRegistered()));
             helper.ObjectList.Add(new PropertyHelperList<Customer>("IsAdministrator", p => p.IsAdmin()));
-            helper.ObjectList.Add(new PropertyHelperList<Customer>("IsForumModerator", p => p.IsForumModerator()));
             //attributes
             helper.ObjectList.Add(new PropertyHelperList<Customer>("FirstName", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName)));
             helper.ObjectList.Add(new PropertyHelperList<Customer>("LastName", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName)));
@@ -1419,8 +1409,6 @@ namespace Grand.Services.ExportImport
             helper.ObjectList.Add(new PropertyHelperList<Customer>("Phone", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone)));
             helper.ObjectList.Add(new PropertyHelperList<Customer>("Fax", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Fax)));
             helper.ObjectList.Add(new PropertyHelperList<Customer>("VatNumber", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber)));
-            helper.ObjectList.Add(new PropertyHelperList<Customer>("ForumPostCount", p => p.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.ForumPostCount)));
-            helper.ObjectList.Add(new PropertyHelperList<Customer>("Signature", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Signature)));
 
             return helper;
         }

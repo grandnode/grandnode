@@ -53,7 +53,6 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageBlog = new PermissionRecord { Name = "Admin area. Manage Blog", SystemName = PermissionSystemName.Blog, Category = "Content Management", Actions = new List<string> { PermissionActionName.List, PermissionActionName.Create, PermissionActionName.Edit, PermissionActionName.Preview, PermissionActionName.Delete } };
         public static readonly PermissionRecord ManageWidgets = new PermissionRecord { Name = "Admin area. Manage Widgets", SystemName = PermissionSystemName.Widgets, Category = "Content Management", Actions = new List<string> { PermissionActionName.List, PermissionActionName.Edit } };
         public static readonly PermissionRecord ManageTopics = new PermissionRecord { Name = "Admin area. Manage Topics", SystemName = PermissionSystemName.Topics, Category = "Content Management", Actions = new List<string> { PermissionActionName.List, PermissionActionName.Create, PermissionActionName.Edit, PermissionActionName.Preview, PermissionActionName.Delete } };
-        public static readonly PermissionRecord ManageForums = new PermissionRecord { Name = "Admin area. Manage Forums", SystemName = PermissionSystemName.Forums, Category = "Content Management", Actions = new List<string> { PermissionActionName.List, PermissionActionName.Create, PermissionActionName.Edit, PermissionActionName.Preview, PermissionActionName.Delete } };
         public static readonly PermissionRecord ManageKnowledgebase = new PermissionRecord { Name = "Admin area. Manage Knowledgebase", SystemName = PermissionSystemName.Knowledgebase, Category = "Content Management", Actions = new List<string> { PermissionActionName.List, PermissionActionName.Create, PermissionActionName.Edit, PermissionActionName.Preview, PermissionActionName.Delete } };
         public static readonly PermissionRecord ManageCourses = new PermissionRecord { Name = "Admin area. Manage Courses", SystemName = PermissionSystemName.Courses, Category = "Content Management", Actions = new List<string> { PermissionActionName.List, PermissionActionName.Create, PermissionActionName.Edit, PermissionActionName.Preview, PermissionActionName.Delete } };
         public static readonly PermissionRecord ManageMessageTemplates = new PermissionRecord { Name = "Admin area. Manage Message Templates", SystemName = PermissionSystemName.MessageTemplates, Category = "Content Management", Actions = new List<string> { PermissionActionName.List, PermissionActionName.Create, PermissionActionName.Edit, PermissionActionName.Preview, PermissionActionName.Delete } };
@@ -140,7 +139,6 @@ namespace Grand.Services.Security
                 ManageBlog,
                 ManageWidgets,
                 ManageTopics,
-                ManageForums,
                 ManageKnowledgebase,
                 ManageCourses,
                 ManageMessageTemplates,
@@ -222,7 +220,6 @@ namespace Grand.Services.Security
                         ManageBlog,
                         ManageWidgets,
                         ManageTopics,
-                        ManageForums,
                         ManageKnowledgebase,
                         ManageCourses,
                         ManageMessageTemplates,
@@ -258,17 +255,6 @@ namespace Grand.Services.Security
                         ManageInteractiveForm,
                         ManageActions,
                         ManageReminders
-                    }
-                },
-                new DefaultPermissionRecord
-                {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.ForumModerators,
-                    PermissionRecords = new[]
-                    {
-                        DisplayPrices,
-                        EnableShoppingCart,
-                        EnableWishlist,
-                        PublicStoreAllowNavigation
                     }
                 },
                 new DefaultPermissionRecord

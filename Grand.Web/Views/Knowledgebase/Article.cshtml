@@ -100,32 +100,9 @@
                     @foreach (var comment in Model.Comments)
                     {
                         <div class="card comment blog-comment text-center text-sm-left">
-                            @if (comment.AllowViewingProfiles)
-                            {
-                                <h5 class="card-header"><a href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="username">@(comment.CustomerName)</a></h5>
-                            }
-                            else
-                            {
-                                <h5 class="username card-header">@(comment.CustomerName)</h5>
-                            }
+                            <h5 class="username card-header">@(comment.CustomerName)</h5>
                             <div class="card-body row">
-                                @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
-                                {
-                                    <div class="col-12 col-xl-2 col-lg-3 col-sm-4 col-md-3 d-flex justify-content-center user-info">
-                                        <div class="avatar">
-                                            @if (comment.AllowViewingProfiles)
-                                            {
-                                                <a href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="avatar-img-link">
-                                                    <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
-                                                </a>
-                                            }
-                                            else
-                                            {
-                                                <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
-                                            }
-                                        </div>
-                                    </div>
-                                }
+                               
                                 <div class="col-12 col-sm-9 comment-content">
                                     <div class="comment-time">
                                         <label>@T("Knowledgebase.Article.Comments.CreatedOn"):</label>

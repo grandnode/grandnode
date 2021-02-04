@@ -47,7 +47,6 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.Fax, mo => mo.MapFrom(src => src.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Fax, "")))
                 .ForMember(dest => dest.Gender, mo => mo.MapFrom(src => src.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Gender, "")))
                 .ForMember(dest => dest.Phone, mo => mo.MapFrom(src => src.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone, "")))
-                .ForMember(dest => dest.Signature, mo => mo.MapFrom(src => src.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Signature, "")))
                 .ForMember(dest => dest.StateProvinceId, mo => mo.MapFrom(src => src.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId, "")))
                 .ForMember(dest => dest.StreetAddress, mo => mo.MapFrom(src => src.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress, "")))
                 .ForMember(dest => dest.StreetAddress2, mo => mo.MapFrom(src => src.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress2, "")))

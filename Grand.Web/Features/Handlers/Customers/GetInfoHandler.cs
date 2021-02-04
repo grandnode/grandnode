@@ -1,5 +1,4 @@
 ﻿using Grand.Domain.Customers;
-using Grand.Domain.Forums;
 using Grand.Domain.Tax;
 using Grand.Services.Authentication.External;
 using Grand.Services.Common;
@@ -32,7 +31,6 @@ namespace Grand.Web.Features.Handlers.Customers
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly ForumSettings _forumSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
 
         public GetInfoHandler(
@@ -47,7 +45,6 @@ namespace Grand.Web.Features.Handlers.Customers
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings,
-            ForumSettings forumSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings)
         {
             _dateTimeHelper = dateTimeHelper;
@@ -61,7 +58,6 @@ namespace Grand.Web.Features.Handlers.Customers
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
             _taxSettings = taxSettings;
-            _forumSettings = forumSettings;
             _externalAuthenticationSettings = externalAuthenticationSettings;
         }
 
@@ -129,7 +125,6 @@ namespace Grand.Web.Features.Handlers.Customers
             model.StateProvinceId = request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId);
             model.Phone = request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone);
             model.Fax = request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Fax);
-            model.Signature = request.Customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Signature);
             model.Email = request.Customer.Email;
             model.Username = request.Customer.Username;
         }
@@ -222,7 +217,6 @@ namespace Grand.Web.Features.Handlers.Customers
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowUsersToChangeEmail = _customerSettings.AllowUsersToChangeEmail;
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
-            model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
             model.Is2faEnabled = request.Customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled);
 
         }

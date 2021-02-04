@@ -3,17 +3,14 @@ using Grand.Core.Caching;
 using Grand.Domain.Customers;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.Localization;
-using Grand.Domain.Media;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
-using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
-using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Seo;
@@ -43,15 +40,24 @@ namespace Grand.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly CustomerSettings _customerSettings;
-        private readonly MediaSettings _mediaSettings;
-        private readonly IPictureService _pictureService;
         private readonly IPermissionService _permissionService;
 
-        public KnowledgebaseController(KnowledgebaseSettings knowledgebaseSettings, IKnowledgebaseService knowledgebaseService, IWorkContext workContext,
-            IStoreContext storeContext, ICacheManager cacheManager, IAclService aclService, IStoreMappingService storeMappingService, ILocalizationService localizationService,
-            CaptchaSettings captchaSettings, LocalizationSettings localizationSettings, IWorkflowMessageService workflowMessageService,
-            ICustomerActivityService customerActivityService, IDateTimeHelper dateTimeHelper, CustomerSettings customerSettings,
-            MediaSettings mediaSettings, IPictureService pictureService, IPermissionService permissionService)
+        public KnowledgebaseController(
+            KnowledgebaseSettings knowledgebaseSettings,
+            IKnowledgebaseService knowledgebaseService,
+            IWorkContext workContext,
+            IStoreContext storeContext,
+            ICacheManager cacheManager,
+            IAclService aclService,
+            IStoreMappingService storeMappingService,
+            ILocalizationService localizationService,
+            CaptchaSettings captchaSettings,
+            LocalizationSettings localizationSettings,
+            IWorkflowMessageService workflowMessageService,
+            ICustomerActivityService customerActivityService,
+            IDateTimeHelper dateTimeHelper,
+            CustomerSettings customerSettings,
+            IPermissionService permissionService)
         {
             _knowledgebaseSettings = knowledgebaseSettings;
             _knowledgebaseService = knowledgebaseService;
@@ -67,8 +73,6 @@ namespace Grand.Web.Controllers
             _customerActivityService = customerActivityService;
             _dateTimeHelper = dateTimeHelper;
             _customerSettings = customerSettings;
-            _mediaSettings = mediaSettings;
-            _pictureService = pictureService;
             _permissionService = permissionService;
         }
 
@@ -221,17 +225,7 @@ namespace Grand.Web.Controllers
                     CustomerName = customer.FormatUserName(_customerSettings.CustomerNameFormat),
                     CommentText = ac.CommentText,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(ac.CreatedOnUtc, DateTimeKind.Utc),
-                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                 };
-                if (_customerSettings.AllowCustomersToUploadAvatars)
-                {
-                    commentModel.CustomerAvatarUrl = await _pictureService.GetPictureUrl(
-                        customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId),
-                        _mediaSettings.AvatarPictureSize,
-                        _customerSettings.DefaultAvatarEnabled,
-                        defaultPictureType: PictureType.Avatar);
-                }
-
                 model.Comments.Add(commentModel);
             }
 

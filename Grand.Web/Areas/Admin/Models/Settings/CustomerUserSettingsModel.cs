@@ -39,12 +39,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UserRegistrationType")]
             public int UserRegistrationType { get; set; }
 
-            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowCustomersToUploadAvatars")]
-            public bool AllowCustomersToUploadAvatars { get; set; }
-
-            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultAvatarEnabled")]
-            public bool DefaultAvatarEnabled { get; set; }
-
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GeoEnabled")]
             public bool GeoEnabled { get; set; }
 

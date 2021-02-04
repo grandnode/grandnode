@@ -453,7 +453,7 @@ namespace Grand.Services.Admin
                     SystemName = "Content Management",
                     ResourceName = "Admin.ContentManagement",
                     PermissionNames = new List<string> { PermissionSystemName.Polls, PermissionSystemName.News, PermissionSystemName.Blog, 
-                        PermissionSystemName.Topics, PermissionSystemName.Forums, PermissionSystemName.MessageTemplates, 
+                        PermissionSystemName.Topics, PermissionSystemName.MessageTemplates, 
                         PermissionSystemName.Knowledgebase, PermissionSystemName.Courses },
                     IconClass = "icon-layers",
                     ChildNodes = new List<AdminSiteMap>() {
@@ -517,14 +517,6 @@ namespace Grand.Services.Admin
                                     IconClass = "fa fa-dot-circle-o"
                                 }
                             }
-                        },
-                        new AdminSiteMap {
-                            SystemName = "Manage forums",
-                            ResourceName = "Admin.ContentManagement.Forums",
-                            PermissionNames = new List<string> { PermissionSystemName.Forums },
-                            ControllerName = "Forum",
-                            ActionName = "List",
-                            IconClass = "fa fa-dot-circle-o"
                         },
                         new AdminSiteMap {
                             SystemName = "Knowledgebase",
@@ -698,13 +690,6 @@ namespace Grand.Services.Admin
                                     ResourceName = "Admin.Configuration.Settings.News",
                                     ControllerName = "Setting",
                                     ActionName = "News",
-                                    IconClass = "fa fa-dot-circle-o"
-                                },
-                                new AdminSiteMap {
-                                    SystemName = "Forums settings",
-                                    ResourceName = "Admin.Configuration.Settings.Forums",
-                                    ControllerName = "Setting",
-                                    ActionName = "Forum",
                                     IconClass = "fa fa-dot-circle-o"
                                 },
                                 new AdminSiteMap {

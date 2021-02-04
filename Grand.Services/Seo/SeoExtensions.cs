@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain;
 using Grand.Domain.Catalog;
-using Grand.Domain.Forums;
 using Grand.Domain.Localization;
 using Grand.Domain.Seo;
 using Grand.Services.Localization;
@@ -35,57 +34,6 @@ namespace Grand.Services.Seo
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
             var seName = GenerateSlug(productTag.GetLocalized(x => x.Name, languageId), false, false);
-            return seName;
-        }
-
-        #endregion
-
-        #region Forum
-
-        /// <summary>
-        /// Gets ForumGroup SE (search engine) name
-        /// </summary>
-        /// <param name="forumGroup">ForumGroup</param>
-        /// <returns>ForumGroup SE (search engine) name</returns>
-        public static string GetSeName(this ForumGroup forumGroup)
-        {
-            if (forumGroup == null)
-                throw new ArgumentNullException("forumGroup");
-            var seName = GenerateSlug(forumGroup.Name, false, true);
-            return seName;
-        }
-
-        /// <summary>
-        /// Gets Forum SE (search engine) name
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <returns>Forum SE (search engine) name</returns>
-        public static string GetSeName(this Forum forum)
-        {
-            if (forum == null)
-                throw new ArgumentNullException("forum");
-            var seName = GenerateSlug(forum.Name, false, true);
-            return seName;
-        }
-
-        /// <summary>
-        /// Gets ForumTopic SE (search engine) name
-        /// </summary>
-        /// <param name="forumTopic">ForumTopic</param>
-        /// <returns>ForumTopic SE (search engine) name</returns>
-        public static string GetSeName(this ForumTopic forumTopic)
-        {
-            if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
-            var seName = GenerateSlug(forumTopic.Subject, false, true);
-
-            // Trim SE name to avoid URLs that are too long
-            var maxLength = 100;
-            if (seName.Length > maxLength)
-            {
-                seName = seName.Substring(0, maxLength);
-            }
-
             return seName;
         }
 
@@ -263,7 +211,7 @@ namespace Grand.Services.Seo
                     {
                         var strLeft = conversion.Split(":").FirstOrDefault();
                         var strRight = conversion.Split(":").LastOrDefault();
-                        if (!string.IsNullOrEmpty(strLeft) &&  !_seoCharacterTable.ContainsKey(strLeft))
+                        if (!string.IsNullOrEmpty(strLeft) && !_seoCharacterTable.ContainsKey(strLeft))
                         {
                             _seoCharacterTable.Add(strLeft.Trim(), strRight.Trim());
                         }

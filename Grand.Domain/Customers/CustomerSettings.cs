@@ -60,21 +60,6 @@ namespace Grand.Domain.Customers
         public UserRegistrationType UserRegistrationType { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether customers are allowed to upload avatars.
-        /// </summary>
-        public bool AllowCustomersToUploadAvatars { get; set; }
-
-        /// <summary>
-        /// Gets or sets a maximum avatar size (in bytes)
-        /// </summary>
-        public int AvatarMaximumSizeBytes { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to display default user avatar.
-        /// </summary>
-        public bool DefaultAvatarEnabled { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether customers location is shown
         /// </summary>
         public bool ShowCustomersLocation { get; set; }

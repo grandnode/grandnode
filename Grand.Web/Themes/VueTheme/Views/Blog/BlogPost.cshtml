@@ -110,23 +110,6 @@
                             </template>
                             <b-col cols="12" class="px-0">
                                 <b-row>
-                                    @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
-                                    {
-                                        <b-col xl="2" lg="2" md="3" sm="3" cols="12" class="user-info">
-                                            <div class="avatar">
-                                                @if (comment.AllowViewingProfiles)
-                                                {
-                                                    <b-link href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="avatar-img-link">
-                                                        <b-img rounded src="@(comment.CustomerAvatarUrl)" class="avatar-img border" alt="avatar" />
-                                                    </b-link>
-                                                }
-                                                else
-                                                {
-                                                    <b-img rounded src="@(comment.CustomerAvatarUrl)" class="avatar-img img-fluid border" alt="avatar" />
-                                                }
-                                            </div>
-                                        </b-col>
-                                    }
                                     <b-col>
                                         @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(comment.CommentText))
                                     </b-col>

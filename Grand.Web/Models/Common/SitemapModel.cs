@@ -27,7 +27,6 @@ namespace Grand.Web.Models.Common
 
         public bool NewsEnabled { get; set; }
         public bool BlogEnabled { get; set; }
-        public bool ForumEnabled { get; set; }
         public bool KnowledgebaseEnabled { get; set; }
     }
 }

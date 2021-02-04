@@ -3134,28 +3134,6 @@ list settings .list__item,
         font-weight: 500;
     }
 
-/*forum*/
-
-.forum-edit-page .forum-post-text {
-    min-height: 200px;
-}
-
-.forum-topic-page .forum-post {
-    border-right: 1px solid #d9d9d9;
-}
-
-.forum-edit-page .card textarea.form-control {
-    min-height: 200px;
-}
-
-.forums-table-section table tbody tr:nth-child(even) {
-    background-color: #f1f1f1;
-}
-
-.avatar {
-    overflow: hidden;
-    display: table-cell;
-}
 /*price*/
 
 .overview-buttons .prices {
@@ -5681,10 +5659,6 @@ footer .socicon-pinterest:hover {
         width: 49%;
     }
 
-    .forum-topic-page .post-user {
-        border-right: 1px solid #d9d9d9;
-    }
-
     .shopping-cart tr:nth-child(2n+1) {
         clear: both;
         margin-left: 0;
@@ -6791,10 +6765,7 @@ footer .socicon-pinterest:hover {
         min-height: 225px;
     }
 
-    .forum-topic-page ul.user-stats {
-        border-right: none;
-    }
-
+    
     .topic-posts .send-pm {
         border-bottom: 1px solid #dddddd;
     }
@@ -6863,10 +6834,7 @@ footer .socicon-pinterest:hover {
         display: none;
     }
 
-    .forum-media-header {
-        max-height: 38px;
-    }
-
+    
     .product-quantity,
     .form-control.qty-input {
         max-width: 100px;
@@ -6927,10 +6895,7 @@ footer .socicon-pinterest:hover {
         min-height: 225px;
     }
 
-    .forum-topic-page ul.user-stats {
-        border-right: none;
-    }
-
+    
     .topic-posts .send-pm {
         border-bottom: 1px solid #dddddd;
     }

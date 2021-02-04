@@ -4,7 +4,6 @@ using Grand.Domain.Customers;
 using Grand.Domain.Media;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Blogs;
-using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -118,15 +117,6 @@ namespace Grand.Web.Features.Handlers.Blogs
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
             };
-            if (_customerSettings.AllowCustomersToUploadAvatars)
-            {
-                model.CustomerAvatarUrl = await _pictureService.GetPictureUrl(
-                    customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId),
-                    _mediaSettings.AvatarPictureSize,
-                    _customerSettings.DefaultAvatarEnabled,
-                    defaultPictureType: PictureType.Avatar);
-            }
-
             return model;
         }
     }

@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Domain.Blogs;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
-using Grand.Domain.Forums;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.News;
 using Grand.Services.Blogs;
@@ -52,7 +51,6 @@ namespace Grand.Services.Seo
         private readonly KnowledgebaseSettings _knowledgebaseSettings;
         private readonly NewsSettings _newsSettings;
         private readonly BlogSettings _blogSettings;
-        private readonly ForumSettings _forumSettings;
 
         #endregion
 
@@ -70,8 +68,7 @@ namespace Grand.Services.Seo
             CommonSettings commonSettings,
             BlogSettings blogSettings,
             KnowledgebaseSettings knowledgebaseSettings,
-            NewsSettings newsSettings,
-            ForumSettings forumSettings)
+            NewsSettings newsSettings)
         {
             _categoryService = categoryService;
             _productService = productService;
@@ -84,7 +81,6 @@ namespace Grand.Services.Seo
             _knowledgebaseService = knowledgebaseService;
             _knowledgebaseSettings = knowledgebaseSettings;
             _newsSettings = newsSettings;
-            _forumSettings = forumSettings;
             _blogSettings = blogSettings;
         }
 
@@ -181,13 +177,6 @@ namespace Grand.Services.Seo
                 sitemapUrls.Add(new SitemapUrl(url, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
             }
 
-            //forums
-            if (_forumSettings.ForumsEnabled)
-            {
-                var url = urlHelper.RouteUrl("Boards", null, GetHttpProtocol());
-                sitemapUrls.Add(new SitemapUrl(url, string.Empty, UpdateFrequency.Weekly, DateTime.UtcNow));
-            }
-
             //categories
             if (_commonSettings.SitemapIncludeCategories)
                 sitemapUrls.AddRange(await GetCategoryUrls(urlHelper, "", language));
@@ -199,7 +188,7 @@ namespace Grand.Services.Seo
             //products
             if (_commonSettings.SitemapIncludeProducts)
                 sitemapUrls.AddRange(await GetProductUrls(urlHelper, language, store));
-            
+
             //topics
             sitemapUrls.AddRange(await GetTopicUrls(urlHelper, language, store));
 
@@ -230,9 +219,9 @@ namespace Grand.Services.Seo
             {
                 var url = urlHelper.RouteUrl("Category", new { SeName = category.GetSeName(language) }, GetHttpProtocol());
                 var imageurl = string.Empty;
-                if(_commonSettings.SitemapIncludeImage)
+                if (_commonSettings.SitemapIncludeImage)
                 {
-                    if(!string.IsNullOrEmpty(category.PictureId))
+                    if (!string.IsNullOrEmpty(category.PictureId))
                     {
                         imageurl = await _pictureService.GetPictureUrl(category.PictureId, showDefaultPicture: false, storeLocation: storeLocation);
                     }
@@ -294,7 +283,7 @@ namespace Grand.Services.Seo
                 products.Add(new SitemapUrl(url, imageurl, UpdateFrequency.Weekly, product.UpdatedOnUtc));
             }
             return products;
-            
+
         }
 
         /// <summary>
@@ -337,7 +326,7 @@ namespace Grand.Services.Seo
                 }
                 blog.Add(new SitemapUrl(url, imageurl, UpdateFrequency.Weekly, DateTime.UtcNow));
             }
-            
+
             return blog;
         }
 

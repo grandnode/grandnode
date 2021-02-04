@@ -1,7 +1,6 @@
 ﻿using Grand.Domain.Data;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
-using Grand.Domain.Forums;
 using Grand.Domain.Orders;
 using Grand.Domain.Security;
 using Grand.Core.Tests.Caching;
@@ -31,8 +30,6 @@ namespace Grand.Services.Customers.Tests
         private IRepository<CustomerNote> _customerNoteRepo;
         private IRepository<CustomerRoleProduct> _customerRoleProductRepo;
         private IRepository<Order> _orderRepo;
-        private IRepository<ForumPost> _forumPostRepo;
-        private IRepository<ForumTopic> _forumTopicRepo;
         private IGenericAttributeService _genericAttributeService;
         private IEncryptionService _encryptionService;
         private ICustomerService _customerService;
@@ -142,8 +139,6 @@ namespace Grand.Services.Customers.Tests
 
             _customerRoleRepo = new Mock<IRepository<CustomerRole>>().Object;
             _orderRepo = new Mock<IRepository<Order>>().Object;
-            _forumPostRepo = new Mock<IRepository<ForumPost>>().Object;
-            _forumTopicRepo = new Mock<IRepository<ForumTopic>>().Object;
             _customerProductPriceRepo = new Mock<IRepository<CustomerProductPrice>>().Object;
             _customerProductRepo = new Mock<IRepository<CustomerProduct>>().Object;
             _customerHistoryRepo = new Mock<IRepository<CustomerHistoryPassword>>().Object;

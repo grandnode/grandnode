@@ -43,7 +43,6 @@
         public const string Blog = "ManageBlog";
         public const string Widgets = "ManageWidgets";
         public const string Topics = "ManageTopics";
-        public const string Forums = "ManageForums";
         public const string Knowledgebase = "ManageKnowledgebase";
         public const string Courses = "ManageCourses";
         public const string MessageTemplates = "ManageMessageTemplates";

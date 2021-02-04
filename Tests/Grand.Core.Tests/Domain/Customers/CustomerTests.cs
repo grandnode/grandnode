@@ -41,12 +41,7 @@ namespace Grand.Domain.Customers.Tests
         public void Can_check_whether_customer_is_admin()
         {
             Customer customer = new Customer();
-            customer.CustomerRoles.Add(new CustomerRole {
-                Active = true, //for further tests, it should be always set to true
-                SystemName = SystemCustomerRoleNames.ForumModerators,
-                IsSystemRole = true
-            });
-
+            
             //2 ways to check it
             //1st way
             Assert.IsFalse(customer.IsInCustomerRole(SystemCustomerRoleNames.Administrators));

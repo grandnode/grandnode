@@ -1,6 +1,5 @@
 ﻿using Grand.Framework;
 using Grand.Services.Localization;
-using Grand.Web.Models.Boards;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,10 +10,6 @@ namespace Grand.Web.Extensions
 {
     public static class HtmlExtensions
     {
-
-        //we have two pagers:
-        //The first one can have custom routes
-        //The second one just adds query string parameter
         public static IHtmlContent Pager<TModel>(this IHtmlHelper<TModel> html, ILocalizationService localizationService, PagerModel model)
         {
             if (model.TotalRecords == 0)
@@ -140,48 +135,6 @@ namespace Grand.Web.Extensions
                 result = "<ul class=\"pagination\">" + result + "</ul>";
             }
             return new HtmlString(result);
-        }
-        public static IHtmlContent ForumTopicSmallPager<TModel>(this IHtmlHelper<TModel> html, ILocalizationService localizationService, ForumTopicRowModel model)
-        {
-            var forumTopicId = model.Id;
-            var forumTopicSlug = model.SeName;
-            var totalPages = model.TotalPostPages;
-
-            if (totalPages > 0)
-            {
-                var links = new StringBuilder();
-
-                if (totalPages <= 4)
-                {
-                    for (int x = 1; x <= totalPages; x++)
-                    {
-                        links.Append(html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, pageNumber = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) }).ToHtmlString());
-                        if (x < totalPages)
-                        {
-                            links.Append(", ");
-                        }
-                    }
-                }
-                else
-                {
-                    links.Append(html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, pageNumber = (1), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), 1) }).ToHtmlString());
-                    links.Append(" ... ");
-
-                    for (int x = (totalPages - 2); x <= totalPages; x++)
-                    {
-                        links.Append(html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, pageNumber = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) }));
-
-                        if (x < totalPages)
-                        {
-                            links.Append(", ");
-                        }
-                    }
-                }
-
-                // Inserts the topic page links into the localized string ([Go to page: {0}])
-                return new HtmlString(String.Format(localizationService.GetResource("Forum.Topics.GotoPostPager"), links));
-            }
-            return new HtmlString(string.Empty);
         }
     }
 }

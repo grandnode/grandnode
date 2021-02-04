@@ -48,10 +48,6 @@ namespace Grand.Web.Infrastructure
 
             RegisterCmsRoute(routeBuilder, pattern);
 
-            RegisterBoardsRoute(routeBuilder, pattern);
-
-            RegisterPrivateMessagesRoute(routeBuilder, pattern);
-
             RegisterBlogRoute(routeBuilder, pattern);
 
             RegisterNewsletterRoute(routeBuilder, pattern);
@@ -183,10 +179,6 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("CustomerDeleteAccount",
                             pattern + "customer/deleteaccount",
                             new { controller = "Customer", action = "DeleteAccount" });
-
-            routeBuilder.MapControllerRoute("CustomerAvatar",
-                            pattern + "customer/avatar",
-                            new { controller = "Customer", action = "Avatar" });
 
             routeBuilder.MapControllerRoute("CustomerAddressEdit",
                             pattern + "customer/addressedit/{addressId}",
@@ -546,149 +538,6 @@ namespace Grand.Web.Infrastructure
                             pattern + "poll/vote",
                             new { controller = "Poll", action = "Vote" });
 
-        }
-
-        private void RegisterPrivateMessagesRoute(IEndpointRouteBuilder routeBuilder, string pattern)
-        {
-
-            //private messages
-            routeBuilder.MapControllerRoute("PrivateMessages",
-                            pattern + "privatemessages/{tab?}",
-                            new { controller = "PrivateMessages", action = "Index" });
-
-            routeBuilder.MapControllerRoute("PrivateMessagesPaged",
-                            pattern + "privatemessages/{tab}/page/{pageNumber}",
-                            new { controller = "PrivateMessages", action = "Index" });
-
-            routeBuilder.MapControllerRoute("PrivateMessagesInbox",
-                            pattern + "inboxupdate",
-                            new { controller = "PrivateMessages", action = "InboxUpdate" });
-
-            routeBuilder.MapControllerRoute("PrivateMessagesSent",
-                            pattern + "sentupdate",
-                            new { controller = "PrivateMessages", action = "SentUpdate" });
-
-            routeBuilder.MapControllerRoute("SendPM",
-                            pattern + "sendpm/{toCustomerId}",
-                            new { controller = "PrivateMessages", action = "SendPM" });
-
-            routeBuilder.MapControllerRoute("SendPMReply",
-                            pattern + "sendpm/{toCustomerId}/{replyToMessageId}",
-                            new { controller = "PrivateMessages", action = "SendPM" });
-
-            routeBuilder.MapControllerRoute("ViewPM",
-                            pattern + "viewpm/{privateMessageId}",
-                            new { controller = "PrivateMessages", action = "ViewPM" });
-
-            routeBuilder.MapControllerRoute("DeletePM",
-                            pattern + "deletepm/{privateMessageId}",
-                            new { controller = "PrivateMessages", action = "DeletePM" });
-        }
-
-        private void RegisterBoardsRoute(IEndpointRouteBuilder routeBuilder, string pattern)
-        {
-            //forum
-            routeBuilder.MapControllerRoute("Boards",
-                            pattern + "boards",
-                            new { controller = "Boards", action = "Index" });
-
-            routeBuilder.MapControllerRoute("CustomerForumSubscriptions",
-                           pattern + "boards/forumsubscriptions",
-                           new { controller = "Boards", action = "CustomerForumSubscriptions" });
-
-            routeBuilder.MapControllerRoute("CustomerForumSubscriptionsPaged",
-                            pattern + "boards/forumsubscriptions/{pageNumber}",
-                            new { controller = "Boards", action = "CustomerForumSubscriptions" });
-
-            //forums
-            routeBuilder.MapControllerRoute("ActiveDiscussions",
-                            pattern + "boards/activediscussions",
-                            new { controller = "Boards", action = "ActiveDiscussions" });
-
-            routeBuilder.MapControllerRoute("ActiveDiscussionsPaged",
-                            pattern + "boards/activediscussions/page/{pageNumber}",
-                            new { controller = "Boards", action = "ActiveDiscussions" });
-
-            routeBuilder.MapControllerRoute("ActiveDiscussionsRSS",
-                            pattern + "boards/activediscussionsrss",
-                            new { controller = "Boards", action = "ActiveDiscussionsRSS" });
-
-            routeBuilder.MapControllerRoute("PostEdit",
-                            pattern + "boards/postedit/{id}",
-                            new { controller = "Boards", action = "PostEdit" });
-
-            routeBuilder.MapControllerRoute("PostDelete",
-                            pattern + "boards/postdelete/{id}",
-                            new { controller = "Boards", action = "PostDelete" });
-
-            routeBuilder.MapControllerRoute("PostCreate",
-                            pattern + "boards/postcreate/{id}",
-                            new { controller = "Boards", action = "PostCreate" });
-
-            routeBuilder.MapControllerRoute("PostCreateQuote",
-                            pattern + "boards/postcreate/{id}/{quote}",
-                            new { controller = "Boards", action = "PostCreate" });
-
-            routeBuilder.MapControllerRoute("TopicEdit",
-                            pattern + "boards/topicedit/{id}",
-                            new { controller = "Boards", action = "TopicEdit" });
-
-            routeBuilder.MapControllerRoute("TopicDelete",
-                            pattern + "boards/topicdelete/{id}",
-                            new { controller = "Boards", action = "TopicDelete" });
-
-            routeBuilder.MapControllerRoute("TopicCreate",
-                            pattern + "boards/topiccreate/{id}",
-                            new { controller = "Boards", action = "TopicCreate" });
-
-            routeBuilder.MapControllerRoute("TopicMove",
-                            pattern + "boards/topicmove/{id}",
-                            new { controller = "Boards", action = "TopicMove" });
-
-            routeBuilder.MapControllerRoute("TopicWatch",
-                            pattern + "boards/topicwatch/{id}",
-                            new { controller = "Boards", action = "TopicWatch" });
-
-            routeBuilder.MapControllerRoute("TopicSlug",
-                            pattern + "boards/topic/{id}/{slug}",
-                            new { controller = "Boards", action = "Topic" });
-
-            routeBuilder.MapControllerRoute("TopicSlugPaged",
-                            pattern + "boards/topic/{id}/{slug}/page/{pageNumber}",
-                            new { controller = "Boards", action = "Topic" });
-
-            routeBuilder.MapControllerRoute("ForumWatch",
-                            pattern + "boards/forumwatch/{id}",
-                            new { controller = "Boards", action = "ForumWatch" });
-
-            routeBuilder.MapControllerRoute("ForumRSS",
-                            pattern + "boards/forumrss/{id}",
-                            new { controller = "Boards", action = "ForumRSS" });
-
-            routeBuilder.MapControllerRoute("ForumSlug",
-                            pattern + "boards/forum/{id}/{slug}",
-                            new { controller = "Boards", action = "Forum" });
-
-            routeBuilder.MapControllerRoute("ForumSlugPaged",
-                            pattern + "boards/forum/{id}/{slug}/page/{pageNumber}",
-                            new { controller = "Boards", action = "Forum" });
-
-            routeBuilder.MapControllerRoute("ForumGroupSlug",
-                            pattern + "boards/forumgroup/{id}/{slug}",
-                            new { controller = "Boards", action = "ForumGroup" });
-
-            routeBuilder.MapControllerRoute("Search",
-                            pattern + "boards/search",
-                            new { controller = "Boards", action = "Search" });
-
-            //customer profile page
-            routeBuilder.MapControllerRoute("CustomerProfile",
-                            pattern + "profile/{id}",
-                            new { controller = "Profile", action = "Index" });
-
-            routeBuilder.MapControllerRoute("CustomerProfilePaged",
-                            pattern + "profile/{id}/page/{pageNumber}",
-                            new { controller = "Profile", action = "Index" });
         }
 
         private void RegisterBlogRoute(IEndpointRouteBuilder routeBuilder, string pattern)

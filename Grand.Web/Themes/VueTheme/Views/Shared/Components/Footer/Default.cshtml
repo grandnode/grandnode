@@ -31,10 +31,6 @@
                         {
                             <b-list-group-item href="@Url.RouteUrl("Blog")">@T("Blog")</b-list-group-item>
                         }
-                        @if (Model.ForumEnabled)
-                        {
-                            <b-list-group-item href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</b-list-group-item>
-                        }
                         @if (Model.KnowledgebaseEnabled)
                         {
                             <b-list-group-item href="@Url.RouteUrl("Knowledgebase")">@T("Knowledgebase")</b-list-group-item>

@@ -14,8 +14,6 @@ namespace Grand.Domain.Common
 
         public bool DisplayBlogMenu { get; set; }
 
-        public bool DisplayForumsMenu { get; set; }
-
         public bool DisplayContactUsMenu { get; set; }
     }
 }

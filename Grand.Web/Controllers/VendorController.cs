@@ -47,7 +47,7 @@ namespace Grand.Web.Controllers
         private readonly VendorSettings _vendorSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly CommonSettings _commonSettings;
-        private readonly MediaSettings _mediaSettings;
+
         #endregion
 
         #region Constructors
@@ -66,8 +66,7 @@ namespace Grand.Web.Controllers
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
             CaptchaSettings captchaSettings,
-            CommonSettings commonSettings,
-            MediaSettings mediaSettings)
+            CommonSettings commonSettings)
         {
             _workContext = workContext;
             _storeContext = storeContext;
@@ -83,7 +82,6 @@ namespace Grand.Web.Controllers
             _vendorSettings = vendorSettings;
             _captchaSettings = captchaSettings;
             _commonSettings = commonSettings;
-            _mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -252,7 +250,7 @@ namespace Grand.Web.Controllers
             model.Email = vendor.Email;
             model.Name = vendor.Name;
             model.GenericAttributes = vendor.GenericAttributes;
-            model.PictureUrl = await _pictureService.GetPictureUrl(vendor.PictureId, _mediaSettings.AvatarPictureSize, false);
+            model.PictureUrl = await _pictureService.GetPictureUrl(vendor.PictureId);
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
             model.Address = await _mediator.Send(new GetVendorAddress() {
                 Language = _workContext.WorkingLanguage,

@@ -18,14 +18,12 @@ namespace Grand.Web.Models.Catalog
 
         public bool BlogEnabled { get; set; }
         public bool NewProductsEnabled { get; set; }
-        public bool ForumEnabled { get; set; }
 
         public bool DisplayHomePageMenu { get; set; }
         public bool DisplayNewProductsMenu { get; set; }
         public bool DisplaySearchMenu { get; set; }
         public bool DisplayCustomerMenu { get; set; }
         public bool DisplayBlogMenu { get; set; }
-        public bool DisplayForumsMenu { get; set; }
         public bool DisplayContactUsMenu { get; set; }
 
         #region Nested classes

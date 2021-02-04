@@ -1,7 +1,6 @@
 ﻿using Grand.Core.Caching;
 using Grand.Domain.Blogs;
 using Grand.Domain.Common;
-using Grand.Domain.Forums;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.News;
 using Grand.Services.Blogs;
@@ -39,7 +38,6 @@ namespace Grand.Web.Features.Handlers.Common
 
         private readonly CommonSettings _commonSettings;
         private readonly BlogSettings _blogSettings;
-        private readonly ForumSettings _forumSettings;
         private readonly NewsSettings _newsSettings;
         private readonly KnowledgebaseSettings _knowledgebaseSettings;
 
@@ -52,7 +50,6 @@ namespace Grand.Web.Features.Handlers.Common
             IKnowledgebaseService knowledgebaseService,
             CommonSettings commonSettings,
             BlogSettings blogSettings,
-            ForumSettings forumSettings,
             NewsSettings newsSettings,
             KnowledgebaseSettings knowledgebaseSettings)
         {
@@ -66,7 +63,6 @@ namespace Grand.Web.Features.Handlers.Common
 
             _commonSettings = commonSettings;
             _blogSettings = blogSettings;
-            _forumSettings = forumSettings;
             _newsSettings = newsSettings;
             _knowledgebaseSettings = knowledgebaseSettings;
         }
@@ -81,7 +77,6 @@ namespace Grand.Web.Features.Handlers.Common
             {
                 var model = new SitemapModel {
                     BlogEnabled = _blogSettings.Enabled,
-                    ForumEnabled = _forumSettings.ForumsEnabled,
                     NewsEnabled = _newsSettings.Enabled,
                     KnowledgebaseEnabled = _knowledgebaseSettings.Enabled
                 };
@@ -121,7 +116,7 @@ namespace Grand.Web.Features.Handlers.Common
                     .ToList();
                 model.Topics = topics.Select(topic => new TopicModel {
                     Id = topic.Id,
-                    SystemName = topic.GetLocalized(x=>x.SystemName, request.Language.Id),
+                    SystemName = topic.GetLocalized(x => x.SystemName, request.Language.Id),
                     IncludeInSitemap = topic.IncludeInSitemap,
                     IsPasswordProtected = topic.IsPasswordProtected,
                     Title = topic.GetLocalized(x => x.Title, request.Language.Id),

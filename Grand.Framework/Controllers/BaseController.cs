@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Domain.Customers;
-using Grand.Framework.Components;
 using Grand.Framework.Events;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Localization;
@@ -386,7 +385,7 @@ namespace Grand.Framework.Controllers
         /// <returns>Access denied json data</returns>
         protected JsonResult AccessDeniedKendoGridJson()
         {
-            var localizationService = HttpContext.RequestServices.GetRequiredService<ILocalizationService > ();
+            var localizationService = HttpContext.RequestServices.GetRequiredService<ILocalizationService>();
             return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
 

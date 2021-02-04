@@ -3,7 +3,6 @@ using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
-using Grand.Domain.Forums;
 using Grand.Domain.Messages;
 using Grand.Domain.Tax;
 using Grand.Framework.Extensions;
@@ -14,7 +13,6 @@ using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
-using Grand.Services.Forums;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -1143,24 +1141,7 @@ namespace Grand.Web.Areas.Admin.Services
             await queuedEmailService.InsertQueuedEmail(email);
             await _customerActivityService.InsertActivity("CustomerAdmin.SendEmail", "", _localizationService.GetResource("ActivityLog.SendEmailfromAdminPanel"), customer, model.Subject);
         }
-        public virtual async Task SendPM(Customer customer, CustomerModel.SendPmModel model)
-        {
-            var forumService = _serviceProvider.GetRequiredService<IForumService>();
-            var privateMessage = new PrivateMessage {
-                StoreId = _storeContext.CurrentStore.Id,
-                ToCustomerId = customer.Id,
-                FromCustomerId = _workContext.CurrentCustomer.Id,
-                Subject = model.Subject,
-                Text = model.Message,
-                IsDeletedByAuthor = false,
-                IsDeletedByRecipient = false,
-                IsRead = false,
-                CreatedOnUtc = DateTime.UtcNow
-            };
-
-            await forumService.InsertPrivateMessage(privateMessage);
-            await _customerActivityService.InsertActivity("CustomerAdmin.SendPM", "", _localizationService.GetResource("ActivityLog.SendPMfromAdminPanel"), customer, model.Subject);
-        }
+        
         public virtual async Task<IEnumerable<CustomerModel.RewardPointsHistoryModel>> PrepareRewardPointsHistoryModel(string customerId)
         {
             var model = new List<CustomerModel.RewardPointsHistoryModel>();

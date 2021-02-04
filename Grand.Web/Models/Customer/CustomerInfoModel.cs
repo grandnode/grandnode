@@ -118,11 +118,6 @@ namespace Grand.Web.Models.Customer
         [GrandResourceDisplayName("Account.Fields.Newsletter")]
         public bool Newsletter { get; set; }
 
-        //preferences
-        public bool SignatureEnabled { get; set; }
-        [GrandResourceDisplayName("Account.Fields.Signature")]
-        public string Signature { get; set; }
-
         //2factory
         public bool Is2faEnabled { get; set; }
 

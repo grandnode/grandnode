@@ -102,14 +102,7 @@
                         <b-card class="mb-3">
                             <template v-slot:header>
                                 <div class="d-inline-flex w-100">
-                                    @if (comment.AllowViewingProfiles)
-                                    {
-                                        <b-link href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })"><h6 class="mb-0">@(comment.CustomerName)</h6></b-link>
-                                    }
-                                    else
-                                    {
-                                        <h6 class="mb-0">@comment.CustomerName</h6>
-                                    }
+                                    <h6 class="mb-0">@comment.CustomerName</h6>
                                     <b-icon icon="calendar2-check" variant="info" class="mx-2"></b-icon>
                                     <small class="date text-muted">
                                         <span>@T("Knowledgebase.Article.Comments.CreatedOn"):</span>
@@ -119,23 +112,6 @@
                             </template>
                             <b-col cols="12" class="px-0">
                                 <b-row>
-                                    @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
-                                    {
-                                        <b-col xl="2" lg="2" md="3" sm="3" cols="12" class="user-info">
-                                            <div class="avatar">
-                                                @if (comment.AllowViewingProfiles)
-                                                {
-                                                    <b-link href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="avatar-img-link">
-                                                        <b-img rounded src="@(comment.CustomerAvatarUrl)" class="avatar-img border img-fluid" alt="avatar" />
-                                                    </b-link>
-                                                }
-                                                else
-                                                {
-                                                    <b-img rounded src="@(comment.CustomerAvatarUrl)" class="avatar-img border img-fluid" alt="avatar" />
-                                                }
-                                            </div>
-                                        </b-col>
-                                    }
                                     <b-col>
                                         @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(comment.CommentText))
                                     </b-col>

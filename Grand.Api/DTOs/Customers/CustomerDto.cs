@@ -40,7 +40,6 @@ namespace Grand.Api.DTOs.Customers
         public string Fax { get; set; }
         public string VatNumber { get; set; }
         public string VatNumberStatusId { get; set; }
-        public string Signature { get; set; }
         public IList<string> CustomerRoles { get; set; }
         public IList<AddressDto> Addresses { get; set; }
     }

@@ -7,7 +7,6 @@ using Grand.Domain.Common;
 using Grand.Domain.Configuration;
 using Grand.Domain.Customers;
 using Grand.Domain.Directory;
-using Grand.Domain.Forums;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.Localization;
 using Grand.Domain.Media;
@@ -331,85 +330,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Vendor");
-        }
-
-        public async Task<IActionResult> Forum()
-        {
-            //load settings for a chosen store scope
-            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
-            var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
-            var model = forumSettings.ToModel();
-            model.ActiveStoreScopeConfiguration = storeScope;
-            if (!String.IsNullOrEmpty(storeScope))
-            {
-                model.ForumsEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumsEnabled, storeScope);
-                model.RelativeDateTimeFormattingEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.RelativeDateTimeFormattingEnabled, storeScope);
-                model.ShowCustomersPostCount_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ShowCustomersPostCount, storeScope);
-                model.AllowGuestsToCreatePosts_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowGuestsToCreatePosts, storeScope);
-                model.AllowGuestsToCreateTopics_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowGuestsToCreateTopics, storeScope);
-                model.AllowCustomersToEditPosts_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowCustomersToEditPosts, storeScope);
-                model.AllowCustomersToDeletePosts_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowCustomersToDeletePosts, storeScope);
-                model.AllowCustomersToManageSubscriptions_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeScope);
-                model.TopicsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.TopicsPageSize, storeScope);
-                model.PostsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.PostsPageSize, storeScope);
-                model.ForumEditor_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumEditor, storeScope);
-                model.SignaturesEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.SignaturesEnabled, storeScope);
-                model.AllowPrivateMessages_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowPrivateMessages, storeScope);
-                model.ShowAlertForPM_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ShowAlertForPM, storeScope);
-                model.NotifyAboutPrivateMessages_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.NotifyAboutPrivateMessages, storeScope);
-                model.ActiveDiscussionsFeedEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ActiveDiscussionsFeedEnabled, storeScope);
-                model.ActiveDiscussionsFeedCount_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ActiveDiscussionsFeedCount, storeScope);
-                model.ForumFeedsEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumFeedsEnabled, storeScope);
-                model.ForumFeedCount_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumFeedCount, storeScope);
-                model.SearchResultsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.SearchResultsPageSize, storeScope);
-                model.ActiveDiscussionsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ActiveDiscussionsPageSize, storeScope);
-                model.AllowPostVoting_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowPostVoting, storeScope);
-                model.MaxVotesPerDay_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.MaxVotesPerDay, storeScope);
-            }
-            model.ForumEditorValues = forumSettings.ForumEditor.ToSelectList(HttpContext);
-
-            return View(model);
-        }
-        [HttpPost]
-        public async Task<IActionResult> Forum(ForumSettingsModel model)
-        {
-            //load settings for a chosen store scope
-            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
-            var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
-            forumSettings = model.ToEntity(forumSettings);
-
-            await UpdateOverrideForStore(storeScope, model.ForumsEnabled_OverrideForStore, forumSettings, x => x.ForumsEnabled);
-            await UpdateOverrideForStore(storeScope, model.RelativeDateTimeFormattingEnabled_OverrideForStore, forumSettings, x => x.RelativeDateTimeFormattingEnabled);
-            await UpdateOverrideForStore(storeScope, model.ShowCustomersPostCount_OverrideForStore, forumSettings, x => x.ShowCustomersPostCount);
-            await UpdateOverrideForStore(storeScope, model.AllowGuestsToCreatePosts_OverrideForStore, forumSettings, x => x.AllowGuestsToCreatePosts);
-            await UpdateOverrideForStore(storeScope, model.AllowGuestsToCreateTopics_OverrideForStore, forumSettings, x => x.AllowGuestsToCreateTopics);
-            await UpdateOverrideForStore(storeScope, model.AllowCustomersToEditPosts_OverrideForStore, forumSettings, x => x.AllowCustomersToEditPosts);
-            await UpdateOverrideForStore(storeScope, model.AllowCustomersToDeletePosts_OverrideForStore, forumSettings, x => x.AllowCustomersToDeletePosts);
-            await UpdateOverrideForStore(storeScope, model.AllowCustomersToManageSubscriptions_OverrideForStore, forumSettings, x => x.AllowCustomersToManageSubscriptions);
-            await UpdateOverrideForStore(storeScope, model.TopicsPageSize_OverrideForStore, forumSettings, x => x.TopicsPageSize);
-            await UpdateOverrideForStore(storeScope, model.PostsPageSize_OverrideForStore, forumSettings, x => x.PostsPageSize);
-            await UpdateOverrideForStore(storeScope, model.ForumEditor_OverrideForStore, forumSettings, x => x.ForumEditor);
-            await UpdateOverrideForStore(storeScope, model.SignaturesEnabled_OverrideForStore, forumSettings, x => x.SignaturesEnabled);
-            await UpdateOverrideForStore(storeScope, model.AllowPrivateMessages_OverrideForStore, forumSettings, x => x.AllowPrivateMessages);
-            await UpdateOverrideForStore(storeScope, model.ShowAlertForPM_OverrideForStore, forumSettings, x => x.ShowAlertForPM);
-            await UpdateOverrideForStore(storeScope, model.NotifyAboutPrivateMessages_OverrideForStore, forumSettings, x => x.NotifyAboutPrivateMessages);
-            await UpdateOverrideForStore(storeScope, model.ActiveDiscussionsFeedEnabled_OverrideForStore, forumSettings, x => x.ActiveDiscussionsFeedEnabled);
-            await UpdateOverrideForStore(storeScope, model.ActiveDiscussionsFeedCount_OverrideForStore, forumSettings, x => x.ActiveDiscussionsFeedCount);
-            await UpdateOverrideForStore(storeScope, model.ForumFeedsEnabled_OverrideForStore, forumSettings, x => x.ForumFeedsEnabled);
-            await UpdateOverrideForStore(storeScope, model.ForumFeedCount_OverrideForStore, forumSettings, x => x.ForumFeedCount);
-            await UpdateOverrideForStore(storeScope, model.SearchResultsPageSize_OverrideForStore, forumSettings, x => x.SearchResultsPageSize);
-            await UpdateOverrideForStore(storeScope, model.ActiveDiscussionsPageSize_OverrideForStore, forumSettings, x => x.ActiveDiscussionsPageSize);
-            await UpdateOverrideForStore(storeScope, model.AllowPostVoting_OverrideForStore, forumSettings, x => x.AllowPostVoting);
-            await UpdateOverrideForStore(storeScope, model.MaxVotesPerDay_OverrideForStore, forumSettings, x => x.MaxVotesPerDay);
-
-            //now clear cache
-            await ClearCache();
-
-            //activity log
-            await _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
-
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
-            return RedirectToAction("Forum");
         }
 
         public async Task<IActionResult> News()
@@ -1381,7 +1301,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.ActiveStoreScopeConfiguration = storeScope;
             if (!String.IsNullOrEmpty(storeScope))
             {
-                model.AvatarPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.AvatarPictureSize, storeScope);
                 model.ProductThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductThumbPictureSize, storeScope);
                 model.ProductDetailsPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductDetailsPictureSize, storeScope);
                 model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage, storeScope);
@@ -1409,7 +1328,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
             mediaSettings = model.ToEntity(mediaSettings);
 
-            await UpdateOverrideForStore(storeScope, model.AvatarPictureSize_OverrideForStore, mediaSettings, x => x.AvatarPictureSize);
             await UpdateOverrideForStore(storeScope, model.ProductThumbPictureSize_OverrideForStore, mediaSettings, x => x.ProductThumbPictureSize);
             await UpdateOverrideForStore(storeScope, model.ProductDetailsPictureSize_OverrideForStore, mediaSettings, x => x.ProductDetailsPictureSize);
             await UpdateOverrideForStore(storeScope, model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore, mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage);
@@ -1727,7 +1645,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.DisplayMenuSettings.DisplaySearchMenu = displayMenuItemSettings.DisplaySearchMenu;
             model.DisplayMenuSettings.DisplayCustomerMenu = displayMenuItemSettings.DisplayCustomerMenu;
             model.DisplayMenuSettings.DisplayBlogMenu = displayMenuItemSettings.DisplayBlogMenu;
-            model.DisplayMenuSettings.DisplayForumsMenu = displayMenuItemSettings.DisplayForumsMenu;
             model.DisplayMenuSettings.DisplayContactUsMenu = displayMenuItemSettings.DisplayContactUsMenu;
             //override settings
             if (!String.IsNullOrEmpty(storeScope))
@@ -1737,7 +1654,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.DisplayMenuSettings.DisplaySearchMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplaySearchMenu, storeScope);
                 model.DisplayMenuSettings.DisplayCustomerMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayCustomerMenu, storeScope);
                 model.DisplayMenuSettings.DisplayBlogMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayBlogMenu, storeScope);
-                model.DisplayMenuSettings.DisplayForumsMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayForumsMenu, storeScope);
                 model.DisplayMenuSettings.DisplayContactUsMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayContactUsMenu, storeScope);
             }
 
@@ -1909,7 +1825,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             displayMenuItemSettings.DisplaySearchMenu = model.DisplayMenuSettings.DisplaySearchMenu;
             displayMenuItemSettings.DisplayCustomerMenu = model.DisplayMenuSettings.DisplayCustomerMenu;
             displayMenuItemSettings.DisplayBlogMenu = model.DisplayMenuSettings.DisplayBlogMenu;
-            displayMenuItemSettings.DisplayForumsMenu = model.DisplayMenuSettings.DisplayForumsMenu;
             displayMenuItemSettings.DisplayContactUsMenu = model.DisplayMenuSettings.DisplayContactUsMenu;
 
             await UpdateOverrideForStore(storeScope, model.DisplayMenuSettings.DisplayHomePageMenu_OverrideForStore, displayMenuItemSettings, x => x.DisplayHomePageMenu);
@@ -1917,7 +1832,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             await UpdateOverrideForStore(storeScope, model.DisplayMenuSettings.DisplaySearchMenu_OverrideForStore, displayMenuItemSettings, x => x.DisplaySearchMenu);
             await UpdateOverrideForStore(storeScope, model.DisplayMenuSettings.DisplayCustomerMenu_OverrideForStore, displayMenuItemSettings, x => x.DisplayCustomerMenu);
             await UpdateOverrideForStore(storeScope, model.DisplayMenuSettings.DisplayBlogMenu_OverrideForStore, displayMenuItemSettings, x => x.DisplayBlogMenu);
-            await UpdateOverrideForStore(storeScope, model.DisplayMenuSettings.DisplayForumsMenu_OverrideForStore, displayMenuItemSettings, x => x.DisplayForumsMenu);
             await UpdateOverrideForStore(storeScope, model.DisplayMenuSettings.DisplayContactUsMenu_OverrideForStore, displayMenuItemSettings, x => x.DisplayContactUsMenu);
 
             //Knowledgebase
@@ -2027,7 +1941,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-            
+
             //selected tab
             await SaveSelectedTabIndex();
 

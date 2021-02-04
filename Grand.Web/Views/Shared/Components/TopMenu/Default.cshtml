@@ -54,7 +54,7 @@
             </ul>
         </li>
     }
-    @if (Model.DisplaySearchMenu | Model.DisplayNewProductsMenu | Model.DisplayCustomerMenu | Model.DisplayBlogMenu | Model.DisplayForumsMenu | Model.DisplayContactUsMenu)
+    @if (Model.DisplaySearchMenu | Model.DisplayNewProductsMenu | Model.DisplayCustomerMenu | Model.DisplayBlogMenu | Model.DisplayContactUsMenu)
     {
                 <li class="blank-link d-lg-flex d-none"></li>
                 @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenu)
@@ -74,10 +74,6 @@
                 @if (Model.BlogEnabled && Model.DisplayBlogMenu)
                 {
                     <li class="nav-item solo-link-item"><a class="nav-link" href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
-                }
-                @if (Model.ForumEnabled && Model.DisplayForumsMenu)
-                {
-                    <li class="nav-item"><a class="nav-link" href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
                 }
                 @if (Model.DisplayContactUsMenu)
                 {

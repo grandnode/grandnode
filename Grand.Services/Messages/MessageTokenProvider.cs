@@ -1,7 +1,6 @@
 ﻿using Grand.Domain.Blogs;
 using Grand.Domain.Catalog;
 using Grand.Domain.Customers;
-using Grand.Domain.Forums;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.Localization;
 using Grand.Domain.Messages;
@@ -63,14 +62,12 @@ namespace Grand.Services.Messages
                 typeof(LiquidContactUs),
                 typeof(LiquidCustomer),
                 typeof(LiquidEmailAFriend),
-                typeof(LiquidForums),
                 typeof(LiquidGiftCard),
                 typeof(LiquidKnowledgebase),
                 typeof(LiquidNewsComment),
                 typeof(LiquidNewsLetterSubscription),
                 typeof(LiquidOrder),
                 typeof(LiquidOrderItem),
-                typeof(LiquidPrivateMessage),
                 typeof(LiquidProduct),
                 typeof(LiquidProductReview),
                 typeof(RecurringPayment),
@@ -241,24 +238,6 @@ namespace Grand.Services.Messages
             var liquidAttributeCombination = await _mediator.Send(new GetAttributeCombinationTokensCommand() { Product = product, Combination = combination });
             liquidObject.AttributeCombination = liquidAttributeCombination;
             await _mediator.EntityTokensAdded(combination, liquidAttributeCombination, liquidObject);
-        }
-
-        public async Task AddForumTokens(LiquidObject liquidObject, Customer customer, Store store, Forum forum, ForumTopic forumTopic = null, ForumPost forumPost = null,
-            int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "")
-        {
-            var liquidForum = new LiquidForums(forum, forumTopic, forumPost, customer, store, friendlyForumTopicPageIndex, appendedPostIdentifierAnchor);
-            liquidObject.Forums = liquidForum;
-            await _mediator.EntityTokensAdded(forum, liquidForum, liquidObject);
-            await _mediator.EntityTokensAdded(forumTopic, liquidForum, liquidObject);
-            await _mediator.EntityTokensAdded(forumPost, liquidForum, liquidObject);
-        }
-
-        public async Task AddPrivateMessageTokens(LiquidObject liquidObject, PrivateMessage privateMessage)
-        {
-            var liquidPrivateMessage = new LiquidPrivateMessage(privateMessage);
-            liquidObject.PrivateMessage = liquidPrivateMessage;
-
-            await _mediator.EntityTokensAdded(privateMessage, liquidPrivateMessage, liquidObject);
         }
 
         public async Task AddBackInStockTokens(LiquidObject liquidObject, Product product, BackInStockSubscription subscription, Store store, Language language)

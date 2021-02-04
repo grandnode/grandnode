@@ -2,7 +2,6 @@
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
-using Grand.Domain.Forums;
 using Grand.Domain.Tax;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
@@ -355,7 +354,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ModelState.AddModelError("", "You can't assign own email");
             }
 
-            if(_workContext.CurrentCustomer.IsSalesManager() && customer.Id == _workContext.CurrentCustomer.Id)
+            if (_workContext.CurrentCustomer.IsSalesManager() && customer.Id == _workContext.CurrentCustomer.Id)
                 ModelState.AddModelError("", "You can't edit own data from admin panel");
 
             if (ModelState.IsValid)
@@ -613,37 +612,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Edit", new { id = customer.Id });
         }
 
-        [PermissionAuthorizeAction(PermissionActionName.Edit)]
-        public async Task<IActionResult> SendPm(CustomerModel model, [FromServices] ForumSettings forumSettings)
-        {
-            var customer = await _customerService.GetCustomerById(model.Id);
-            if (customer == null || customer.Deleted || CheckSalesManager(customer))
-                //No customer found with the specified id
-                return RedirectToAction("List");
-
-            try
-            {
-                if (!forumSettings.AllowPrivateMessages)
-                    throw new GrandException("Private messages are disabled");
-                if (customer.IsGuest())
-                    throw new GrandException("Customer should be registered");
-                if (String.IsNullOrWhiteSpace(model.SendPm.Subject))
-                    throw new GrandException("PM subject is empty");
-                if (String.IsNullOrWhiteSpace(model.SendPm.Message))
-                    throw new GrandException("PM message is empty");
-
-                await _customerViewModelService.SendPM(customer, model.SendPm);
-
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendPM.Sent"));
-            }
-            catch (Exception exc)
-            {
-                ErrorNotification(exc.Message);
-            }
-
-            return RedirectToAction("Edit", new { id = customer.Id });
-        }
-
         #endregion
 
         #region Reward points history
@@ -820,7 +788,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [PermissionAuthorizeAction(PermissionActionName.Preview)]
         [HttpPost]
-        public async Task<IActionResult> OrderList(string customerId, DataSourceRequest command, 
+        public async Task<IActionResult> OrderList(string customerId, DataSourceRequest command,
             [FromServices] IOrderViewModelService orderViewModelService)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))

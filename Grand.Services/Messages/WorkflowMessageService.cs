@@ -1,10 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Domain;
 using Grand.Domain.Blogs;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
-using Grand.Domain.Forums;
 using Grand.Domain.Knowledgebase;
 using Grand.Domain.Localization;
 using Grand.Domain.Messages;
@@ -1364,142 +1362,6 @@ namespace Grand.Services.Messages
 
         #endregion
 
-        #region Forum Notifications
-
-        /// <summary>
-        /// Sends a forum subscription message to a customer
-        /// </summary>
-        /// <param name="customer">Customer instance</param>
-        /// <param name="topicauthor">Topic author</param>
-        /// <param name="forumTopic">Forum Topic</param>
-        /// <param name="forum">Forum</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual async Task<int> SendNewForumTopicMessage(Customer customer, Customer topicauthor,
-            ForumTopic forumTopic, Forum forum, string languageId)
-        {
-            if (customer == null)
-            {
-                throw new ArgumentNullException("customer");
-            }
-
-            var store = await GetStore(customer.StoreId);
-            var language = await EnsureLanguageIsActive(languageId, store.Id);
-
-            var messageTemplate = await GetMessageTemplate("Forums.NewForumTopic", store.Id);
-            if (messageTemplate == null)
-                return 0;
-
-            //email account
-            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
-
-            LiquidObject liquidObject = new LiquidObject();
-            await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
-            await _messageTokenProvider.AddForumTokens(liquidObject, customer, store, forum, forumTopic);
-            await _messageTokenProvider.AddCustomerTokens(liquidObject, topicauthor, store, language);
-
-            //event notification
-            await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
-
-            var toEmail = customer.Email;
-            var toName = customer.GetFullName();
-
-            return await SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
-        }
-
-        /// <summary>
-        /// Sends a forum subscription message to a customer
-        /// </summary>
-        /// <param name="customer">Customer instance</param>
-        /// <param name="customer">Post author</param>
-        /// <param name="forumPost">Forum post</param>
-        /// <param name="forumTopic">Forum Topic</param>
-        /// <param name="forum">Forum</param>
-        /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual async Task<int> SendNewForumPostMessage(Customer customer,
-            Customer postauthor,
-            ForumPost forumPost, ForumTopic forumTopic,
-            Forum forum, int friendlyForumTopicPageIndex, string languageId)
-        {
-            if (customer == null)
-            {
-                throw new ArgumentNullException("customer");
-            }
-
-            var store = await GetStore(customer.StoreId);
-
-            var language = await EnsureLanguageIsActive(languageId, store.Id);
-            var messageTemplate = await GetMessageTemplate("Forums.NewForumPost", store.Id);
-            if (messageTemplate == null)
-            {
-                return 0;
-            }
-
-            //email account
-            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
-
-            LiquidObject liquidObject = new LiquidObject();
-            await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
-            await _messageTokenProvider.AddForumTokens(liquidObject, postauthor, store, forum, forumTopic, forumPost, friendlyForumTopicPageIndex);
-            await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
-
-            //event notification
-            await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
-
-            var toEmail = customer.Email;
-            var toName = customer.GetFullName();
-
-            return await SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
-        }
-
-        /// <summary>
-        /// Sends a private message notification
-        /// </summary>
-        /// <param name="privateMessage">Private message</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual async Task<int> SendPrivateMessageNotification(PrivateMessage privateMessage, string languageId)
-        {
-            if (privateMessage == null)
-            {
-                throw new ArgumentNullException("privateMessage");
-            }
-
-            var store = await GetStore(privateMessage.StoreId);
-
-            var language = await EnsureLanguageIsActive(languageId, store.Id);
-
-            var messageTemplate = await GetMessageTemplate("Customer.NewPM", store.Id);
-            if (messageTemplate == null)
-            {
-                return 0;
-            }
-
-            //email account
-            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
-
-            LiquidObject liquidObject = new LiquidObject();
-            await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
-            await _messageTokenProvider.AddPrivateMessageTokens(liquidObject, privateMessage);
-
-            var tocustomer = await _mediator.Send(new GetCustomerByIdQuery() { Id = privateMessage.ToCustomerId });
-
-            if (tocustomer != null)
-                await _messageTokenProvider.AddCustomerTokens(liquidObject, tocustomer, store, language);
-
-            //event notification
-            await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
-
-            var toEmail = tocustomer.Email;
-            var toName = tocustomer.GetFullName();
-
-            return await SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
-        }
-
-        #endregion
-
         #region Misc
         /// <summary>
         /// Sends 'New vendor account submitted' message to a store owner
@@ -2196,7 +2058,7 @@ namespace Grand.Services.Messages
             var toName = customer.GetFullName();
 
             if (string.IsNullOrEmpty(toEmail))
-               return 0;
+                return 0;
 
             return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,

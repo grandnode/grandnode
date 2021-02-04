@@ -16,7 +16,6 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         {
             AvailableTimeZones = new List<SelectListItem>();
             SendEmail = new SendEmailModel() { SendImmediately = true };
-            SendPm = new SendPmModel();
             AvailableCustomerRoles = new List<CustomerRoleModel>();
             AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
             AvailableCountries = new List<SelectListItem>();
@@ -219,8 +218,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         //send email model
         public SendEmailModel SendEmail { get; set; }
-        //send PM model
-        public SendPmModel SendPm { get; set; }
+
         //send the welcome message
         public bool AllowSendingOfWelcomeMessage { get; set; }
         //re-send the activation message
@@ -287,15 +285,6 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             [GrandResourceDisplayName("Admin.Customers.Customers.SendEmail.DontSendBeforeDate")]
             [UIHint("DateTimeNullable")]
             public DateTime? DontSendBeforeDate { get; set; }
-        }
-
-        public partial class SendPmModel : BaseModel
-        {
-            [GrandResourceDisplayName("Admin.Customers.Customers.SendPM.Subject")]
-            public string Subject { get; set; }
-
-            [GrandResourceDisplayName("Admin.Customers.Customers.SendPM.Message")]
-            public string Message { get; set; }
         }
 
         public partial class OrderModel : BaseEntityModel

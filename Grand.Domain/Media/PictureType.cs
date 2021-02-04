@@ -9,9 +9,5 @@ namespace Grand.Domain.Media
         /// Entities (products, categories, manufacturers)
         /// </summary>
         Entity = 1,
-        /// <summary>
-        /// Avatar
-        /// </summary>
-        Avatar = 10,
     }
 }

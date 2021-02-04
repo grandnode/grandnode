@@ -371,29 +371,18 @@
                 </div>
             </div>
         }
-        @if (Model.AllowCustomersToSetTimeZone || Model.SignatureEnabled)
+        @if (Model.AllowCustomersToSetTimeZone)
         {
             <div class="card mb-3">
                 <h3 class="card-header">@T("Account.Preferences")</h3>
                 <div class="card-body">
                     <fieldset class="form-fields">
                         <legend class="sr-only">@T("account.fields.timezone")</legend>
-                        @if (Model.AllowCustomersToSetTimeZone)
-                        {
                             <div class="form-group">
                                 <label asp-for="TimeZoneId" class="col-form-label">@T("Account.Fields.TimeZone"):</label>
                                 <select asp-for="TimeZoneId" class="custom-select form-control" asp-items="Model.AvailableTimeZones"></select>
                                 <span asp-validation-for="TimeZoneId"></span>
                             </div>
-                        }
-
-                        @if (Model.SignatureEnabled)
-                        {
-                            <div class="form-group">
-                                <label asp-for="Signature" class="col-form-label">@T("Account.Fields.Signature"):</label>
-                                <textarea asp-for="Signature" class="form-control account-signature-text"></textarea>
-                            </div>
-                        }
                     </fieldset>
                 </div>
             </div>

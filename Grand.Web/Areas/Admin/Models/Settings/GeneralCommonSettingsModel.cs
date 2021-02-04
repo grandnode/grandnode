@@ -338,10 +338,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayBlogMenu")]
             public bool DisplayBlogMenu { get; set; }
             public bool DisplayBlogMenu_OverrideForStore { get; set; }
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayForumsMenu")]
-            public bool DisplayForumsMenu { get; set; }
-            public bool DisplayForumsMenu_OverrideForStore { get; set; }
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayContactUsMenu")]
             public bool DisplayContactUsMenu { get; set; }
             public bool DisplayContactUsMenu_OverrideForStore { get; set; }
         }

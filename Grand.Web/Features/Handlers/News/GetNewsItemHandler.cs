@@ -4,7 +4,6 @@ using Grand.Domain.Customers;
 using Grand.Domain.Media;
 using Grand.Domain.News;
 using Grand.Framework.Security.Captcha;
-using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -91,16 +90,7 @@ namespace Grand.Web.Features.Handlers.News
                     CommentTitle = nc.CommentTitle,
                     CommentText = nc.CommentText,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(nc.CreatedOnUtc, DateTimeKind.Utc),
-                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                 };
-                if (_customerSettings.AllowCustomersToUploadAvatars)
-                {
-                    commentModel.CustomerAvatarUrl = await _pictureService.GetPictureUrl(
-                        customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId),
-                        _mediaSettings.AvatarPictureSize,
-                        _customerSettings.DefaultAvatarEnabled,
-                        defaultPictureType: PictureType.Avatar);
-                }
                 model.Comments.Add(commentModel);
             }
         }

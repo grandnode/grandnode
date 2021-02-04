@@ -44,33 +44,6 @@
 
         #endregion
 
-        #region Forum
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        public static string FORUMGROUP_ALL_KEY => "Grand.forumgroup.all";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : forum group ID
-        /// </remarks>
-        public static string FORUM_ALLBYFORUMGROUPID_KEY => "Grand.forum.allbyforumgroupid-{0}";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        public static string FORUMGROUP_PATTERN_KEY => "Grand.forumgroup.";
-
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        public static string FORUM_PATTERN_KEY => "Grand.forum.";
-
-        #endregion
-
         #region Languages & localization
 
         /// <summary>
