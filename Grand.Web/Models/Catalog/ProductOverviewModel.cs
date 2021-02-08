@@ -32,6 +32,7 @@ namespace Grand.Web.Models.Catalog
         public bool IsFreeShipping { get; set; }
         public bool ShowSku { get; set; }
         public bool ShowQty { get; set; }
+        public bool LowStock { get; set; }
         public DateTime? EndTime { get; set; }
         public DateTime? EndTimeLocalTime { get; set; }
         public TaxDisplayType TaxDisplayType { get; set; }

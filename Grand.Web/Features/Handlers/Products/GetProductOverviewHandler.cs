@@ -152,6 +152,7 @@ namespace Grand.Web.Features.Handlers.Products
                 Flag = product.Flag,
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 IsFreeShipping = product.IsFreeShipping,
+                LowStock = product.LowStock,
                 ShowSku = _catalogSettings.ShowSkuOnCatalogPages,
                 TaxDisplayType = _workContext.TaxDisplayType,
                 EndTime = product.AvailableEndDateTimeUtc,
