@@ -16,7 +16,7 @@
     </script>
     <div class="shipping-method">
         @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_method_top" })
-        <template v-if="vmorder.ShippingMethodWarnings">
+        <template v-if="vmorder.ShippingMethodWarnings.length < 1">
             <ul class="method-list px-0">
                 <li v-for="(shippingMethod, index) in vmorder.ShippingMethods">
                     <label class="custom-control custom-checkbox">

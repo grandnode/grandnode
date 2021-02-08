@@ -18,7 +18,7 @@ var Checkout = {
 
     _disableEnableAll: function (element, isDisabled) {
         var descendants = element.querySelectorAll('*');
-        descendants.forEach(function(d) {
+        descendants.forEach(function (d) {
             if (isDisabled) {
                 d.setAttribute('disabled', 'disabled');
             } else {
@@ -27,10 +27,10 @@ var Checkout = {
         });
 
         if (isDisabled) {
-                element.setAttribute('disabled', 'disabled');
-            } else {
-                element.removeAttribute('disabled');
-            }
+            element.setAttribute('disabled', 'disabled');
+        } else {
+            element.removeAttribute('disabled');
+        }
     },
 
     setLoadWaiting: function (step, keepDisabled) {
@@ -135,7 +135,7 @@ var Checkout = {
                 }
 
                 this.updateOrderTotal();
-                
+
             }
             if (response.data.goto_section == "confirm_order") {
                 var model = response.data.update_section.model;
@@ -165,7 +165,7 @@ var Checkout = {
                 document.querySelector('#button-' + e).classList.add('allow');
             });
         }
-        
+
         if (document.querySelector("#billing-address-select")) {
             Billing.newAddress(!document.querySelector('#billing-address-select').value);
         }
@@ -271,7 +271,7 @@ var Billing = {
             alert(error);
         }).then(function () {
             this.Billing.resetLoadWaiting();
-        }); 
+        });
     },
 
     resetLoadWaiting: function () {
@@ -366,7 +366,7 @@ var Shipping = {
             error.axiosFailure;
         }).then(function () {
             this.Billing.resetLoadWaiting();
-        }); 
+        });
     },
 
     resetLoadWaiting: function () {
@@ -399,14 +399,14 @@ var ShippingMethod = {
         this.saveUrl = saveUrl;
     },
 
-    validate: function() {
+    validate: function () {
         var methods = document.getElementsByName('shippingoption');
-        if (methods.length==0) {
+        if (methods.length == 0) {
             alert('Your order cannot be completed at this time as there is no shipping methods available for it. Please make necessary changes in your shipping address.');
             return false;
         }
 
-        for (var i = 0; i< methods.length; i++) {
+        for (var i = 0; i < methods.length; i++) {
             if (methods[i].checked) {
                 return true;
             }
@@ -414,13 +414,13 @@ var ShippingMethod = {
         alert('Please specify shipping method.');
         return false;
     },
-    
+
     save: function () {
         if (Checkout.loadWaiting != false) return;
-        
+
         if (this.validate()) {
             Checkout.setLoadWaiting('shipping-method');
-        
+
             var form = document.querySelector(this.form);
             var data = new FormData(form);
             axios({
@@ -434,7 +434,7 @@ var ShippingMethod = {
                 error.axiosFailure;
             }).then(function () {
                 this.ShippingMethod.resetLoadWaiting();
-            }); 
+            });
         }
     },
 
@@ -483,7 +483,7 @@ var PaymentMethod = {
             alert('Your order cannot be completed at this time as there is no payment methods available for it.');
             return false;
         }
-        
+
         for (var i = 0; i < methods.length; i++) {
             if (methods[i].checked) {
                 return true;
@@ -492,10 +492,10 @@ var PaymentMethod = {
         alert('Please specify payment method.');
         return false;
     },
-    
+
     save: function () {
         if (Checkout.loadWaiting != false) return;
-        
+
         if (this.validate()) {
             Checkout.setLoadWaiting('payment-method');
             var form = document.querySelector(this.form);
@@ -509,11 +509,14 @@ var PaymentMethod = {
                     this.PaymentMethod.nextStep(response);
                     document.querySelector('#back-' + response.data.goto_section).setAttribute('onclick', 'document.querySelector("#button-payment-method").click()');
                 }
+                if (response.data.error) {
+                    alert(response.data.message);
+                }
             }).catch(function (error) {
                 error.axiosFailure;
             }).then(function () {
                 this.PaymentMethod.resetLoadWaiting();
-            }); 
+            });
         }
     },
 
@@ -549,7 +552,7 @@ var PaymentInfo = {
 
     save: function () {
         if (Checkout.loadWaiting != false) return;
-        
+
         Checkout.setLoadWaiting('payment-info');
         var form = document.querySelector(this.form);
         var data = new FormData(form);
@@ -567,7 +570,7 @@ var PaymentInfo = {
                 var model = response.data.update_section.model;
                 vm.DisplayOrderTotals = model.DisplayOrderTotals;
                 vm.PaymentViewComponentName = model.PaymentViewComponentName,
-                vm.PaymentInfo = true;
+                    vm.PaymentInfo = true;
 
                 axios({
                     baseURL: '/Component/Form?Name=' + model.PaymentViewComponentName,
@@ -577,14 +580,14 @@ var PaymentInfo = {
                     var html = response.data;
                     document.querySelector('.payment-info .info').innerHTML = html;
                 })
-                
+
             }
 
         }).catch(function (error) {
             error.axiosFailure;
         }).then(function () {
             this.PaymentInfo.resetLoadWaiting()
-        }); 
+        });
     },
 
     resetLoadWaiting: function () {
@@ -620,7 +623,7 @@ var ConfirmOrder = {
 
     save: function () {
         if (Checkout.loadWaiting != false) return;
-        
+
         // terms of service
         var termOfServiceOk = true;
         if (termOfServiceOk) {
@@ -634,12 +637,12 @@ var ConfirmOrder = {
                 error.axiosFailure;
             }).then(function () {
                 this.ConfirmOrder.resetLoadWaiting()
-            }); 
+            });
         } else {
             return false;
         }
     },
-    
+
     resetLoadWaiting: function (transport) {
         Checkout.setLoadWaiting(false, ConfirmOrder.isSuccess);
     },
@@ -654,7 +657,7 @@ var ConfirmOrder = {
 
             return false;
         }
-        
+
         if (response.data.redirect) {
             ConfirmOrder.isSuccess = true;
             location.href = response.data.redirect;
