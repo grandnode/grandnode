@@ -4976,7 +4976,6 @@ namespace Grand.Services.Installation
                 SearchPagePageSizeOptions = "6, 3, 9, 18",
                 ProductsAlsoPurchasedEnabled = true,
                 ProductsAlsoPurchasedNumber = 3,
-                AjaxProcessAttributeChange = true,
                 NumberOfProductTags = 15,
                 ProductsByTagPageSize = 6,
                 IncludeShortDescriptionInCompareProducts = false,

@@ -1,21 +1,16 @@
 ﻿@model IList<ProductDetailsModel.ProductAttributeModel>
 @using System.Text;
 @using Grand.Services.Media;
-@using Grand.Domain.Media
 @inject IDownloadService downloadService
-@inject CatalogSettings catalogSettings
 
     <div id="product-attributes"></div>
     @{
         //dynamic update support
         var attributesHaveConditions = Model.Any(x => x.HasCondition);
         var attributesHaveAssociatedPictures = true;
-        var dynamicPriceUpdate = catalogSettings.AjaxProcessAttributeChange;
         var attributeChangeScriptsBuilder = new StringBuilder();
         var productId = Model.First().ProductId;
         var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);
-        if (dynamicPriceUpdate)
-        {
             //generate change event script
             foreach (var attribute in Model)
             {
@@ -177,5 +172,4 @@
                     })
                     new ProductAttributes().$mount('#product-attributes')
         </script>
-        }
     }
