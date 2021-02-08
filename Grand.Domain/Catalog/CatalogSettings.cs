@@ -448,5 +448,10 @@ namespace Grand.Domain.Catalog
         /// Gets or sets a display order of ProductSortingEnum values 
         /// </summary>
         public Dictionary<int, int> ProductSortingEnumDisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets a sorting by availability
+        /// </summary>
+        public bool SortingByAvailability { get; set; }
     }
 }
