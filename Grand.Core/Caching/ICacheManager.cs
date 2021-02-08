@@ -35,21 +35,6 @@ namespace Grand.Core.Caching
         Task SetAsync(string key, object data, int cacheTime);
 
         /// <summary>
-        /// Adds the specified key and object to the cache.
-        /// </summary>
-        /// <param name="key">key</param>
-        /// <param name="data">Data</param>
-        /// <param name="cacheTime">Cache time</param>
-        void Set(string key, object data, int cacheTime);
-
-        /// <summary>
-        /// Gets a value indicating whether the value associated with the specified key is cached
-        /// </summary>
-        /// <param name="key">key</param>
-        /// <returns>Result</returns>
-        bool IsSet(string key);
-
-        /// <summary>
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">/key</param>

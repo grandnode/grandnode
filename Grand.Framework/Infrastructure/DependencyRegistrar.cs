@@ -94,8 +94,14 @@ namespace Grand.Framework.Infrastructure
 
         private void RegisterCache(IServiceCollection serviceCollection, GrandConfig config)
         {
-            serviceCollection.AddLazyCache();
-            serviceCollection.AddSingleton<ICacheManager,LazyCacheManager>();
+            if (config.UseLazyCache)
+            {
+                serviceCollection.AddLazyCache();
+                serviceCollection.AddSingleton<ICacheManager, LazyCacheManager>();
+            }
+            else
+                serviceCollection.AddSingleton<ICacheManager, MemoryCacheManager>();
+
             if (config.RedisPubSubEnabled)
             {
                 var redis = ConnectionMultiplexer.Connect(config.RedisPubSubConnectionString);

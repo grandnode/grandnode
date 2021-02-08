@@ -227,6 +227,11 @@ namespace Grand.Core.Configuration
         public bool UseSerilogRequestLogging { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether we use lazy cache
+        /// </summary>
+        public bool UseLazyCache { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating for allow to request with JSON response for Public Controller 
         /// </summary>
         public bool AllowToJsonResponse { get; set; }

@@ -5,9 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,7 +39,7 @@ namespace Grand.Core.Caching
             _allKeys = new ConcurrentDictionary<string, bool>();
         }
 
-        public LazyCacheManager(IMemoryCache cache, IMediator mediator,IAppCache appCache)
+        public LazyCacheManager(IMemoryCache cache, IMediator mediator, IAppCache appCache)
         {
             _cache = cache;
             _mediator = mediator;
@@ -190,30 +188,6 @@ namespace Grand.Core.Caching
                 _appCache.Add(AddKey(key), data, GetMemoryCacheEntryOptions(cacheTime));
             }
             return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Adds the specified key and object to the cache
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <param name="data">Value for caching</param>
-        /// <param name="cacheTime">Cache time in minutes</param>
-        public void Set(string key, object data, int cacheTime)
-        {
-            if (data != null)
-            {
-                _appCache.Add(AddKey(key), data, GetMemoryCacheEntryOptions(cacheTime));
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the value associated with the specified key is cached
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>True if item already is in cache; otherwise false</returns>
-        public virtual bool IsSet(string key)
-        {
-            return _cache.TryGetValue(key, out object _);
         }
 
         /// <summary>
