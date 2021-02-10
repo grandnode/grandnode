@@ -2604,9 +2604,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page Size Options should not have duplicate items.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Parent">
     <Value>Parent category</Value>
   </LocaleResource>
@@ -2885,9 +2882,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page Size options should have unique items.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Picture">
     <Value>Picture</Value>
@@ -17086,9 +17080,6 @@
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page Size options should have unique items.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Picture">
     <Value>Picture</Value>
   </LocaleResource>
@@ -17149,9 +17140,6 @@
   <LocaleResource Name="Api.Catalog.Category.Fields.Name.Required">
     <Value>Category name is required</Value>
   </LocaleResource>
-  <LocaleResource Name="Api.Catalog.Category.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page size should have unique items</Value>
-  </LocaleResource>
   <LocaleResource Name="Api.Catalog.Category.Fields.ParentCategoryId.NotExists">
     <Value>Category Id does not exist</Value>
   </LocaleResource>
@@ -17166,9 +17154,6 @@
   </LocaleResource>
   <LocaleResource Name="Api.Catalog.Manufacturer.Fields.Name.Required">
     <Value>Manufacturer name is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="Api.Catalog.Manufacturer.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page size should have unique items</Value>
   </LocaleResource>
   <LocaleResource Name="Api.Catalog.Manufacturer.Fields.PictureId.NotExists">
     <Value>Picture Id does not exist</Value>

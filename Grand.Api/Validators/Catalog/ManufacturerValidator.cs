@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Grand.Api.DTOs.Catalog;
-using Grand.Core.Extensions;
 using Grand.Core.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
@@ -11,12 +10,11 @@ namespace Grand.Api.Validators.Catalog
 {
     public class ManufacturerValidator : BaseGrandValidator<ManufacturerDto>
     {
-        public ManufacturerValidator(IEnumerable<IValidatorConsumer<ManufacturerDto>> validators, 
+        public ManufacturerValidator(IEnumerable<IValidatorConsumer<ManufacturerDto>> validators,
             ILocalizationService localizationService, IPictureService pictureService, IManufacturerService manufacturerService, IManufacturerTemplateService manufacturerTemplateService)
             : base(validators)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.Manufacturer.Fields.Name.Required"));
-            RuleFor(x => x.PageSizeOptions).Must(FluentValidationUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResource("Api.Catalog.Manufacturer.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
             RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.PictureId))
