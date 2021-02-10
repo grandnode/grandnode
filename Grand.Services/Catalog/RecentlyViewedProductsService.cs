@@ -128,7 +128,7 @@ namespace Grand.Services.Catalog
             }
 
             //Clear cache
-            await _cacheBase.RemoveByPrefixAsync(string.Format(CacheKey.RECENTLY_VIEW_PRODUCTS_PATTERN_KEY, customerId));
+            await _cacheBase.RemoveByPrefix(string.Format(CacheKey.RECENTLY_VIEW_PRODUCTS_PATTERN_KEY, customerId));
 
         }
 

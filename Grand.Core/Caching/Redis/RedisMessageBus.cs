@@ -75,7 +75,7 @@ namespace Grand.Core.Caching.Redis
                         await cache.RemoveAsync(message.Key, false);
                         break;
                     case (int)MessageEventType.RemoveByPrefix:
-                        await cache.RemoveByPrefixAsync(message.Key, false);
+                        await cache.RemoveByPrefix(message.Key, false);
                         break;
                     case (int)MessageEventType.ClearCache:
                         await cache.Clear(false);

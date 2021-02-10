@@ -40,7 +40,7 @@ namespace Grand.Core.Caching.Redis
         /// <param name="publisher">publisher</param>
         public override Task RemoveByPrefix(string prefix, bool publisher = true)
         {
-            var keysToRemove = _allKeys.Keys.Where(x => x.ToString().StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
+            var keysToRemove = _allCacheKeys.Keys.Where(x => x.ToString().StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
             foreach (var key in keysToRemove)
             {
                 _cache.Remove(RemoveKey(key));
@@ -51,15 +51,6 @@ namespace Grand.Core.Caching.Redis
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Removes items by key prefix
-        /// </summary>
-        /// <param name="prefix">String prefix</param>
-        /// <param name="publisher">publisher</param>
-        public override Task RemoveByPrefixAsync(string prefix, bool publisher = true)
-        {
-            return RemoveByPrefix(prefix, publisher);
-        }
         ///<summary>
         /// Clear cache
         ///</summary>
@@ -69,6 +60,7 @@ namespace Grand.Core.Caching.Redis
             base.Clear();
             if (publisher)
                 _messageBus.PublishAsync(new MessageEvent() { Key = "", MessageType = (int)MessageEventType.ClearCache });
+
             return Task.CompletedTask;
         }
     }
