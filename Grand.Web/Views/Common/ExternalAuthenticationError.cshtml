@@ -1,0 +1,18 @@
+﻿@model IEnumerable<string>
+@{
+    Layout = "_ColumnsOne";
+
+}
+<div class="page contact-page">
+    <div class="generalMarginSupporter text-xs-left">
+        <div class="result">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var error in Model)
+                {
+                    <div class="result card bg-danger p-3 text-white">@error</div>
+                }
+            }
+        </div>
+    </div>
+</div>

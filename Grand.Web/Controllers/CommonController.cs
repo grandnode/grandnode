@@ -73,6 +73,12 @@ namespace Grand.Web.Controllers
             return View();
         }
 
+        //external authentication error
+        public virtual IActionResult ExternalAuthenticationError(IEnumerable<string> errors)
+        {
+            return View(errors);
+        }
+
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> SetLanguage(
