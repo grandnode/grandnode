@@ -2,6 +2,7 @@
 using Grand.Domain.News;
 using Grand.Domain.Seo;
 using Grand.Framework.Extensions;
+using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -134,7 +135,7 @@ namespace Grand.Web.Areas.Admin.Services
                 commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                 commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
                 commentModel.CommentTitle = newsComment.CommentTitle;
-                commentModel.CommentText = Core.Html.HtmlHelper.FormatText(newsComment.CommentText);
+                commentModel.CommentText = FormatText.ConvertText(newsComment.CommentText);
                 items.Add(commentModel);
             }
             return (items, comments.Count);

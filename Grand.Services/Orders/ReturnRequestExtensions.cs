@@ -1,5 +1,5 @@
 ﻿using Grand.Domain.Orders;
-using Grand.Core.Html;
+using Grand.Services.Common;
 using System;
 
 namespace Grand.Services.Orders
@@ -11,14 +11,7 @@ namespace Grand.Services.Orders
             if (returnRequestNote == null)
                 throw new ArgumentNullException("returnRequestNote");
 
-            string text = returnRequestNote.Note;
-
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text);
-
-            return text;
+            return FormatText.ConvertText(returnRequestNote.Note);
         }
     }
 }

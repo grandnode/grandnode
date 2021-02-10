@@ -1,4 +1,5 @@
-﻿using Grand.Services.Messages;
+﻿using Grand.Services.Common;
+using Grand.Services.Messages;
 using Grand.Web.Commands.Models.Products;
 using MediatR;
 using System.Threading;
@@ -20,7 +21,7 @@ namespace Grand.Web.Commands.Handler.Products
             await _workflowMessageService.SendProductEmailAFriendMessage(request.Customer, request.Store,
                                request.Language.Id, request.Product,
                                request.Model.YourEmailAddress, request.Model.FriendEmail,
-                               Core.Html.HtmlHelper.FormatText(request.Model.PersonalMessage));
+                               FormatText.ConvertText(request.Model.PersonalMessage));
 
             return true;
         }

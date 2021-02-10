@@ -116,14 +116,14 @@
                         </div>
                         <div class="review-content">
                             <div class="review-text">
-                                @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReviewText))
+                                @review.ReviewText
                             </div>
                         </div>
                         @if (!string.IsNullOrEmpty(review.ReplyText))
                         {
                             <div class="reply-content">
                                 <blockquote class="blockquote-footer">
-                                    @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReplyText))
+                                    @review.ReplyText
                                     <p>@review.Signature</p>
                                 </blockquote>
                             </div>

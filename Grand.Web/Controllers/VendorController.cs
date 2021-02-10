@@ -8,6 +8,7 @@ using Grand.Domain.Vendors;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
+using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
@@ -182,7 +183,7 @@ namespace Grand.Web.Controllers
                         pictureId = picture.Id;
                 }
 
-                var description = Core.Html.HtmlHelper.EnsureOnlyAllowedHtml(model.Description);
+                var description = FormatText.ConvertText(model.Description);
                 var address = new Address();
                 //disabled by default
                 var vendor = new Vendor {
@@ -301,7 +302,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
-                var description = Core.Html.HtmlHelper.EnsureOnlyAllowedHtml(model.Description);
+                var description = FormatText.ConvertText(model.Description);
 
                 vendor.Name = model.Name;
                 vendor.Email = model.Email;

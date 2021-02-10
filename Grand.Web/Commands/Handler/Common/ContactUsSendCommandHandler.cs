@@ -2,6 +2,7 @@
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Stores;
+using Grand.Services.Common;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
@@ -404,7 +405,7 @@ namespace Grand.Web.Commands.Handler.Common
         private async Task<ContactUsModel> SendContactUs(ContactUsModel model, Store store)
         {
             var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-            var body = Core.Html.HtmlHelper.FormatText(model.Enquiry);
+            var body = FormatText.ConvertText(model.Enquiry);
 
             await _workflowMessageService.SendContactUsMessage(_workContext.CurrentCustomer, store, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body, model.ContactAttributeInfo, model.ContactAttribute);
 

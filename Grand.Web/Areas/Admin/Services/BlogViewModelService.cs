@@ -6,6 +6,7 @@ using Grand.Domain.Seo;
 using Grand.Framework.Extensions;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -182,7 +183,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var customer = await _customerService.GetCustomerById(blogComment.CustomerId);
                 commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                 commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
-                commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText);
+                commentModel.Comment = FormatText.ConvertText(blogComment.CommentText);
                 commentsList.Add(commentModel);
             }
             return (commentsList, comments.Count);

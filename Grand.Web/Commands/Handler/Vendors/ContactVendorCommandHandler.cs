@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Domain.Common;
+using Grand.Services.Common;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Web.Commands.Models.Vendors;
@@ -30,7 +31,7 @@ namespace Grand.Web.Commands.Handler.Vendors
         public async Task<ContactVendorModel> Handle(ContactVendorSendCommand request, CancellationToken cancellationToken)
         {
             var subject = _commonSettings.SubjectFieldOnContactUsForm ? request.Model.Subject : null;
-            var body = Core.Html.HtmlHelper.FormatText(request.Model.Enquiry);
+            var body = FormatText.ConvertText(request.Model.Enquiry);
 
             await _workflowMessageService.SendContactVendorMessage(_workContext.CurrentCustomer, request.Store, request.Vendor, _workContext.WorkingLanguage.Id,
                 request.Model.Email.Trim(), request.Model.FullName, subject, body);

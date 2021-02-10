@@ -1,6 +1,6 @@
 ﻿using DotLiquid;
 using Grand.Domain.Orders;
-using Grand.Core.Html;
+using Grand.Services.Common;
 using System;
 using System.Collections.Generic;
 
@@ -17,38 +17,31 @@ namespace Grand.Services.Messages.DotLiquidDrops
             AdditionalTokens = new Dictionary<string, string>();
         }
 
-        public string SenderName
-        {
+        public string SenderName {
             get { return _giftCard.SenderName; }
         }
 
-        public string SenderEmail
-        {
+        public string SenderEmail {
             get { return _giftCard.SenderEmail; }
         }
 
-        public string RecipientName
-        {
+        public string RecipientName {
             get { return _giftCard.RecipientName; }
         }
 
-        public string RecipientEmail
-        {
+        public string RecipientEmail {
             get { return _giftCard.RecipientEmail; }
         }
 
         public string Amount { get; set; }
 
-        public string CouponCode
-        {
+        public string CouponCode {
             get { return _giftCard.GiftCardCouponCode; }
         }
 
-        public string Message
-        {
-            get
-            {
-                var giftCardMesage = !String.IsNullOrWhiteSpace(_giftCard.Message) ? HtmlHelper.FormatText(_giftCard.Message) : "";
+        public string Message {
+            get {
+                var giftCardMesage = !String.IsNullOrWhiteSpace(_giftCard.Message) ? FormatText.ConvertText(_giftCard.Message) : "";
                 return giftCardMesage;
             }
         }

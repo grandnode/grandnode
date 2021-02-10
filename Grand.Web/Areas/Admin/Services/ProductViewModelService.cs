@@ -10,6 +10,7 @@ using Grand.Domain.Seo;
 using Grand.Domain.Tax;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
@@ -728,8 +729,8 @@ namespace Grand.Web.Areas.Admin.Services
                 model.Title = productReview.Title;
                 if (formatReviewText)
                 {
-                    model.ReviewText = Core.Html.HtmlHelper.FormatText(productReview.ReviewText);
-                    model.ReplyText = Core.Html.HtmlHelper.FormatText(productReview.ReplyText);
+                    model.ReviewText = FormatText.ConvertText(productReview.ReviewText);
+                    model.ReplyText = FormatText.ConvertText(productReview.ReplyText);
                 }
                 else
                 {

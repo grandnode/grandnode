@@ -1,10 +1,10 @@
 ﻿using DotLiquid;
 using Grand.Domain.Orders;
 using Grand.Domain.Stores;
-using Grand.Core.Html;
+using Grand.Services.Common;
 using Grand.Services.Orders;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -21,17 +21,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
             _order = order;
             _store = store;
             _returnRequestNote = returnRequestNote;
-                       
+
             AdditionalTokens = new Dictionary<string, string>();
         }
 
-        public string Id
-        {
+        public string Id {
             get { return _returnRequest.Id; }
         }
 
-        public int ReturnNumber
-        {
+        public int ReturnNumber {
             get { return _returnRequest.ReturnNumber; }
         }
 
@@ -39,8 +37,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _returnRequest.ExternalId; }
         }
 
-        public string OrderId
-        {
+        public string OrderId {
             get { return _order.Id; }
         }
         public string OrderNumber {
@@ -51,14 +48,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _order.Code; }
         }
 
-        public string CustomerComment
-        {
-            get { return HtmlHelper.FormatText(_returnRequest.CustomerComments); }
+        public string CustomerComment {
+            get { return FormatText.ConvertText(_returnRequest.CustomerComments); }
         }
 
-        public string StaffNotes
-        {
-            get { return HtmlHelper.FormatText(_returnRequest.StaffNotes); }
+        public string StaffNotes {
+            get { return FormatText.ConvertText(_returnRequest.StaffNotes); }
         }
 
         public string Status { get; set; }
@@ -69,68 +64,56 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _returnRequest.CreatedOnUtc; }
         }
 
-        public string PickupDate
-        {
+        public string PickupDate {
             get { return _returnRequest.PickupDate.ToShortDateString(); }
         }
         public DateTime PickupDateUtc {
             get { return _returnRequest.PickupDate; }
         }
 
-        public string PickupAddressFirstName
-        {
+        public string PickupAddressFirstName {
             get { return _returnRequest.PickupAddress.FirstName; }
         }
 
-        public string PickupAddressLastName
-        {
+        public string PickupAddressLastName {
             get { return _returnRequest.PickupAddress.LastName; }
         }
 
-        public string PickupAddressPhoneNumber
-        {
+        public string PickupAddressPhoneNumber {
             get { return _returnRequest.PickupAddress.PhoneNumber; }
         }
 
-        public string PickupAddressEmail
-        {
+        public string PickupAddressEmail {
             get { return _returnRequest.PickupAddress.Email; }
         }
 
-        public string PickupAddressFaxNumber
-        {
+        public string PickupAddressFaxNumber {
             get { return _returnRequest.PickupAddress.FaxNumber; }
         }
 
-        public string PickupAddressCompany
-        {
+        public string PickupAddressCompany {
             get { return _returnRequest.PickupAddress.Company; }
         }
 
-        public string PickupAddressVatNumber
-        {
+        public string PickupAddressVatNumber {
             get { return _returnRequest.PickupAddress.VatNumber; }
         }
 
-        public string PickupAddressAddress1
-        {
+        public string PickupAddressAddress1 {
             get { return _returnRequest.PickupAddress.Address1; }
         }
 
-        public string PickupAddressAddress2
-        {
+        public string PickupAddressAddress2 {
             get { return _returnRequest.PickupAddress.Address2; }
         }
 
-        public string PickupAddressCity
-        {
+        public string PickupAddressCity {
             get { return _returnRequest.PickupAddress.City; }
         }
 
         public string PickupAddressStateProvince { get; set; }
 
-        public string PickupAddressZipPostalCode
-        {
+        public string PickupAddressZipPostalCode {
             get { return _returnRequest.PickupAddress.ZipPostalCode; }
         }
 

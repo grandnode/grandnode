@@ -1,8 +1,8 @@
-using Grand.Core.Html;
 using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Localization;
+using Grand.Services.Common;
 using Grand.Services.Localization;
 using System.Collections.Generic;
 using System.Linq;
@@ -182,7 +182,7 @@ namespace Grand.Services.Customers
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr));
+                            formattedAttribute = string.Format("{0}: {1}", attributeName, FormatText.ConvertText(valueStr));
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)

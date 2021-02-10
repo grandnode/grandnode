@@ -1,5 +1,5 @@
 ﻿using Grand.Domain.Shipping;
-using Grand.Core.Html;
+using Grand.Services.Common;
 using System;
 
 namespace Grand.Services.Shipping
@@ -16,14 +16,7 @@ namespace Grand.Services.Shipping
             if (shipmentNote == null)
                 throw new ArgumentNullException("orderNote");
 
-            string text = shipmentNote.Note;
-
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text);
-
-            return text;
+            return FormatText.ConvertText(shipmentNote.Note);
         }
 
     }

@@ -1,5 +1,5 @@
 ﻿using Grand.Domain.Vendors;
-using Grand.Core.Html;
+using Grand.Services.Common;
 using System;
 
 namespace Grand.Services.Vendors
@@ -16,14 +16,7 @@ namespace Grand.Services.Vendors
             if (vendorNote == null)
                 throw new ArgumentNullException("vendorNote");
 
-            string text = vendorNote.Note;
-
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text);
-
-            return text;
+            return FormatText.ConvertText(vendorNote.Note);
         }
     }
 }

@@ -109,7 +109,7 @@
                                         <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
                                     </div>
                                     <div class="comment-body text-center text-sm-left">
-                                        @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(comment.CommentText))
+                                        @comment.CommentText
                                     </div>
                                 </div>
                             </div>

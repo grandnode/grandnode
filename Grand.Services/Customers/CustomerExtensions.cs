@@ -1,5 +1,4 @@
 using Grand.Core;
-using Grand.Core.Html;
 using Grand.Domain.Customers;
 using Grand.Services.Common;
 using System;
@@ -276,14 +275,7 @@ namespace Grand.Services.Customers
             if (customerNote == null)
                 throw new ArgumentNullException("customerNote");
 
-            string text = customerNote.Note;
-
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text);
-
-            return text;
+            return FormatText.ConvertText(customerNote.Note);
         }
     }
 }

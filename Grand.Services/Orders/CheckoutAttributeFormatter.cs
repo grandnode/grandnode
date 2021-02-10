@@ -1,19 +1,19 @@
 using Grand.Core;
 using Grand.Domain.Catalog;
+using Grand.Domain.Common;
 using Grand.Domain.Customers;
-using Grand.Core.Html;
 using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Tax;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Grand.Domain.Common;
 
 namespace Grand.Services.Orders
 {
@@ -69,9 +69,9 @@ namespace Grand.Services.Orders
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
         public virtual async Task<string> FormatAttributes(IList<CustomAttribute> customAttributes,
-            Customer customer, 
-            string serapator = "<br />", 
-            bool htmlEncode = true, 
+            Customer customer,
+            string serapator = "<br />",
+            bool htmlEncode = true,
             bool renderPrices = true,
             bool allowHyperlinks = true)
         {
@@ -99,7 +99,7 @@ namespace Grand.Services.Orders
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr));
+                            formattedAttribute = string.Format("{0}: {1}", attributeName, FormatText.ConvertText(valueStr));
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
@@ -147,24 +147,24 @@ namespace Grand.Services.Orders
                     }
                     else
                     {
-                            var attributeValue = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
-                            if (attributeValue != null)
+                        var attributeValue = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault();
+                        if (attributeValue != null)
+                        {
+                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                            if (renderPrices)
                             {
-                                formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
-                                if (renderPrices)
+                                decimal priceAdjustmentBase = (await _taxService.GetCheckoutAttributePrice(attribute, attributeValue, customer)).checkoutPrice;
+                                decimal priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                if (priceAdjustmentBase > 0)
                                 {
-                                    decimal priceAdjustmentBase = (await _taxService.GetCheckoutAttributePrice(attribute, attributeValue, customer)).checkoutPrice;
-                                    decimal priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
-                                    if (priceAdjustmentBase > 0)
-                                    {
-                                        string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment);
-                                        formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
-                                    }
+                                    string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment);
+                                    formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
                                 }
                             }
-                            //encode (if required)
-                            if (htmlEncode)
-                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
+                        }
+                        //encode (if required)
+                        if (htmlEncode)
+                            formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                     }
 
                     if (!String.IsNullOrEmpty(formattedAttribute))

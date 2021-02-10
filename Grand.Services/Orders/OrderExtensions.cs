@@ -1,12 +1,10 @@
 ﻿using Grand.Domain.Orders;
-using Grand.Core.Html;
 using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Shipping;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Text;
-using System.Collections.Generic;
 
 namespace Grand.Services.Orders
 {
@@ -22,17 +20,10 @@ namespace Grand.Services.Orders
             if (orderNote == null)
                 throw new ArgumentNullException("orderNote");
 
-            string text = orderNote.Note;
-
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text);
-
-            return text;
+            return FormatText.ConvertText(orderNote.Note);
         }
 
-        
+
         /// <summary>
         /// Gets a total number of items in all shipments
         /// </summary>
@@ -137,7 +128,7 @@ namespace Grand.Services.Orders
                     result += si.Quantity;
                 }
             }
-            
+
             return result;
         }
 
@@ -266,6 +257,6 @@ namespace Grand.Services.Orders
 
             bool result = order.OrderTags.FirstOrDefault(t => t == orderTag.Id) != null;
             return result;
-        }        
+        }
     }
 }

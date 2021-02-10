@@ -84,7 +84,7 @@
                                         <strong class="comment-text">@comment.CommentTitle</strong>
                                     </div>
                                     <div class="comment-body text-xs-left">
-                                        <p class="comment-text">@Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(comment.CommentText))</p>
+                                        <p class="comment-text">@comment.CommentText</p>
                                     </div>
                                 </div>
                                 @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_inside_comment", additionalData = Model.Id })

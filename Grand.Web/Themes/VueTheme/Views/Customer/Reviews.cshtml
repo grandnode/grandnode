@@ -37,7 +37,7 @@
                     </div>
                     <div class="review-content">
                         <div class="review-text">
-                            @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReviewText))
+                            @review.ReviewText
                         </div>
                     </div>
                     <template v-slot:footer>
@@ -46,7 +46,7 @@
                             <div class="reply-content">
                                 <blockquote class="administration-response">
                                     <h5 class="administration-response-header">@T("Reviews.AdministrationResponse")</h5>
-                                    <i>@Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReplyText))</i>
+                                    <i>@review.ReplyText</i>
                                     <p class="h6 mb-0 mt-2">@review.Signature</p>
                                 </blockquote>
                             </div>

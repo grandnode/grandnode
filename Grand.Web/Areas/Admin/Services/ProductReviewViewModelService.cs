@@ -3,6 +3,7 @@ using Grand.Domain.Customers;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -73,8 +74,8 @@ namespace Grand.Web.Areas.Admin.Services
                 model.Title = productReview.Title;
                 if (formatReviewText)
                 {
-                    model.ReviewText = Core.Html.HtmlHelper.FormatText(productReview.ReviewText);
-                    model.ReplyText = Core.Html.HtmlHelper.FormatText(productReview.ReplyText);
+                    model.ReviewText = FormatText.ConvertText(productReview.ReviewText);
+                    model.ReplyText = FormatText.ConvertText(productReview.ReplyText);
                 }
                 else
                 {
