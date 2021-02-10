@@ -40,7 +40,7 @@
 }
 @if (themeName == "VueTheme")
 {
-    <b-carousel id="GrandCarousel"  fade controls indicators img-width="1024" img-height="267" interval="6000">
+    <b-carousel id="GrandCarousel"  fade controls indicators img-width="1024" img-height="267" :interval="6000">
         @foreach (var item in Model.Slide)
         {
             if (string.IsNullOrEmpty(item.PictureUrl))
