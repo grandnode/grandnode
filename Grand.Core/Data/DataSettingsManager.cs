@@ -1,9 +1,9 @@
-﻿using Grand.Core.Infrastructure;
-using Grand.Domain.Data;
+﻿using Grand.Domain.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Core.Data
 {
@@ -15,10 +15,12 @@ namespace Grand.Core.Data
         protected const char separator = ':';
         protected const string filename = "Settings.txt";
 
+        private DataSettings _dataSettings;
+
         protected string RemoveSpecialCharacters(string str)
         {
             var sb = new StringBuilder();
-            foreach (char c in str)
+            foreach (var c in str)
             {
                 if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
                 {
@@ -36,7 +38,7 @@ namespace Grand.Core.Data
         protected virtual DataSettings ParseSettings(string text)
         {
             var shellSettings = new DataSettings();
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return shellSettings;
 
             var settings = new List<string>();
@@ -96,13 +98,10 @@ namespace Grand.Core.Data
         /// <summary>
         /// Load settings
         /// </summary>
-        /// <param name="filePath">File path; pass null to use default settings file path</param>
-        /// <returns></returns>
         public virtual DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
         {
-
-            if (!reloadSettings && Singleton<DataSettings>.Instance != null)
-                return Singleton<DataSettings>.Instance;
+            if (!reloadSettings && _dataSettings != null)
+                return _dataSettings;
 
             if (string.IsNullOrEmpty(filePath))
                 filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
@@ -111,8 +110,8 @@ namespace Grand.Core.Data
                 return new DataSettings();
 
             var text = File.ReadAllText(filePath);
-            Singleton<DataSettings>.Instance = ParseSettings(text);
-            return Singleton<DataSettings>.Instance;
+            _dataSettings = ParseSettings(text);
+            return _dataSettings;
 
         }
 
@@ -120,24 +119,15 @@ namespace Grand.Core.Data
         /// Save settings to a file
         /// </summary>
         /// <param name="settings"></param>
-        public virtual void SaveSettings(DataSettings settings)
+        public virtual async Task SaveSettings(DataSettings settings)
         {
-            if (settings == null)
-                throw new ArgumentNullException("settings");
-
-            Singleton<DataSettings>.Instance = settings;
-
-            string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
+            var filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))
             {
-                using (File.Create(filePath))
-                {
-                    //we use 'using' to close the file after it's created
-                }
+                File.Create(filePath);
             }
-
             var text = ComposeSettings(settings);
-            File.WriteAllText(filePath, text);
+            await File.WriteAllTextAsync(filePath, text);
         }
     }
 }

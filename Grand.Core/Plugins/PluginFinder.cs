@@ -50,18 +50,12 @@ namespace Grand.Core.Plugins
             if (pluginDescriptor == null)
                 throw new ArgumentNullException("pluginDescriptor");
 
-            switch (loadMode)
-            {
-                case LoadPluginsMode.All:
-                    //no filering
-                    return true;
-                case LoadPluginsMode.InstalledOnly:
-                    return pluginDescriptor.Installed;
-                case LoadPluginsMode.NotInstalledOnly:
-                    return !pluginDescriptor.Installed;
-                default:
-                    throw new Exception("Not supported LoadPluginsMode");
-            }
+            return loadMode switch {
+                LoadPluginsMode.All => true,//no filering
+                LoadPluginsMode.InstalledOnly => pluginDescriptor.Installed,
+                LoadPluginsMode.NotInstalledOnly => !pluginDescriptor.Installed,
+                _ => throw new Exception("Not supported LoadPluginsMode"),
+            };
         }
 
         /// <summary>
@@ -75,7 +69,7 @@ namespace Grand.Core.Plugins
             if (pluginDescriptor == null)
                 throw new ArgumentNullException("pluginDescriptor");
 
-            if (String.IsNullOrEmpty(group))
+            if (string.IsNullOrEmpty(group))
                 return true;
 
             return group.Equals(pluginDescriptor.Group, StringComparison.OrdinalIgnoreCase);
@@ -102,7 +96,7 @@ namespace Grand.Core.Plugins
                 throw new ArgumentNullException("pluginDescriptor");
 
             //no validation required
-            if (String.IsNullOrEmpty(storeId))
+            if (string.IsNullOrEmpty(storeId))
                 return true;
 
             if (!pluginDescriptor.LimitedToStores.Any())

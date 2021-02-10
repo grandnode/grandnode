@@ -27,7 +27,7 @@ namespace Grand.Core.Plugins
                 string str;
                 while ((str = reader.ReadLine()) != null)
                 {
-                    if (String.IsNullOrWhiteSpace(str))
+                    if (string.IsNullOrWhiteSpace(str))
                         continue;
                     lines.Add(str.Trim());
                 }
@@ -35,7 +35,7 @@ namespace Grand.Core.Plugins
             return lines;
         }
 
-        public static async Task SaveInstalledPluginsFile(IList<String> pluginSystemNames, string filePath)
+        public static async Task SaveInstalledPluginsFile(IList<string> pluginSystemNames, string filePath)
         {
             string result = "";
             foreach (var sn in pluginSystemNames)

@@ -19,8 +19,8 @@ namespace Grand.Core.Data
             {
                 var manager = new DataSettingsManager();
                 var settings = manager.LoadSettings();
-                _databaseIsInstalled = settings != null && !String.IsNullOrEmpty(settings.DataConnectionString);
-                if (!String.IsNullOrEmpty(settings.DataConnectionString))
+                _databaseIsInstalled = settings != null && !string.IsNullOrEmpty(settings.DataConnectionString);
+                if (!string.IsNullOrEmpty(settings.DataConnectionString))
                     _connectionString = settings.DataConnectionString;
             }
             return _databaseIsInstalled.Value;
@@ -29,7 +29,7 @@ namespace Grand.Core.Data
         {
             var manager = new DataSettingsManager();
             var settings = manager.LoadSettings();
-            if (!String.IsNullOrEmpty(settings.DataConnectionString))
+            if (!string.IsNullOrEmpty(settings.DataConnectionString))
                 _connectionString = settings.DataConnectionString;
         }
         public static string ConnectionString()

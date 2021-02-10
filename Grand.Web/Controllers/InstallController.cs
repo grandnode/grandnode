@@ -175,7 +175,7 @@ namespace Grand.Web.Controllers
                         DataProvider = "mongodb",
                         DataConnectionString = connectionString
                     };
-                    settingsManager.SaveSettings(settings);
+                    await settingsManager.SaveSettings(settings);
 
                     var dataProviderInstance = _serviceProvider.GetRequiredService<BaseDataProviderManager>().LoadDataProvider();
                     dataProviderInstance.InitDatabase();
