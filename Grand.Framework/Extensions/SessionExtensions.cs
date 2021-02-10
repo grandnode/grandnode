@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace Grand.Core.Http
+namespace Grand.Framework.Extensions
 {
     /// <summary>
     /// Represents extensions of ISession
