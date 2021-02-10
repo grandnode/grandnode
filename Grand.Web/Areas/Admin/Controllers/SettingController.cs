@@ -1429,8 +1429,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 });
             }
 
-            model.ExternalAuthenticationSettings.AutoRegisterEnabled = externalAuthenticationSettings.AutoRegisterEnabled;
-
             return View(model);
         }
         [HttpPost]
@@ -1440,8 +1438,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeScope);
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
-            var externalAuthenticationSettings = _settingService.LoadSetting<ExternalAuthenticationSettings>(storeScope);
-
+            
             customerSettings = model.CustomerSettings.ToEntity(customerSettings);
             await _settingService.SaveSetting(customerSettings);
 
@@ -1451,9 +1448,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             dateTimeSettings.DefaultStoreTimeZoneId = model.DateTimeSettings.DefaultStoreTimeZoneId;
             dateTimeSettings.AllowCustomersToSetTimeZone = model.DateTimeSettings.AllowCustomersToSetTimeZone;
             await _settingService.SaveSetting(dateTimeSettings);
-
-            externalAuthenticationSettings.AutoRegisterEnabled = model.ExternalAuthenticationSettings.AutoRegisterEnabled;
-            await _settingService.SaveSetting(externalAuthenticationSettings);
 
             //now clear cache
             await ClearCache();

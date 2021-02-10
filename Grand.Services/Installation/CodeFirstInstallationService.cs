@@ -5101,11 +5101,6 @@ namespace Grand.Services.Installation
                 PinterestLink = "",
             });
 
-            await _settingService.SaveSetting(new ExternalAuthenticationSettings {
-                AutoRegisterEnabled = true,
-                RequireEmailValidation = false
-            });
-
             await _settingService.SaveSetting(new RewardPointsSettings {
                 Enabled = true,
                 ExchangeRate = 1,

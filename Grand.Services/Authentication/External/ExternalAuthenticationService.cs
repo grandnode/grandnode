@@ -152,18 +152,11 @@ namespace Grand.Services.Authentication.External
         /// <returns>Result of an authentication</returns>
         protected virtual async Task<IActionResult> RegisterNewUser(ExternalAuthenticationParameters parameters, string returnUrl)
         {
-            //if auto registration is disabled redirect to login page
-            //TODO remove this setting
-            if (!_externalAuthenticationSettings.AutoRegisterEnabled)
-            {
-                ExternalAuthorizerHelper.StoreParametersForRoundTrip(parameters, _httpContextAccessor);
-                return new RedirectToActionResult("Login", "Customer", !string.IsNullOrEmpty(returnUrl) ? new { ReturnUrl = returnUrl } : null);
-            }
-
+            
             //or try to auto register new user
             //registration is approved if validation isn't required
             var registrationIsApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard ||
-                (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation && !_externalAuthenticationSettings.RequireEmailValidation);
+                (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation);
 
             //create registration request
             var registrationRequest = new CustomerRegistrationRequest(_workContext.CurrentCustomer,
